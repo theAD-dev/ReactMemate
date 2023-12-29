@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.cce5d4ae.css",
-    "main.js": "/static/js/main.b22f6e87.js",
+    "main.css": "/static/css/main.d6dd111a.css",
+    "main.js": "/static/js/main.6f45864e.js",
     "static/media/login_slider.jpg": "/static/media/login_slider.a2d4adbe3987e0737791.jpg",
     "static/media/login_slider1.jpg": "/static/media/login_slider1.a2d4adbe3987e0737791.jpg",
     "static/media/login_slider2.jpg": "/static/media/login_slider2.a2d4adbe3987e0737791.jpg",
@@ -42,6 +42,7 @@
     "static/media/ManagementIcon.svg": "/static/media/ManagementIcon.dc06a826c65afe21ea0ef8daf817ff17.svg",
     "static/media/StatisticsIcon.svg": "/static/media/StatisticsIcon.73e4a1bf29f9a9321ca40c890c90106f.svg",
     "static/media/suppliersIcon.svg": "/static/media/suppliersIcon.24ecdd425df9711554321a51ce5464e5.svg",
+    "static/media/archive.svg": "/static/media/archive.a93d5d4bb5e805d41614288a785b8375.svg",
     "static/media/roboto-greek-ext-400-normal.woff2": "/static/media/roboto-greek-ext-400-normal.169619821ea93019d1bb.woff2",
     "static/media/roboto-greek-ext-400-normal.woff": "/static/media/roboto-greek-ext-400-normal.f708607d2a7290fb8bfa.woff",
     "static/media/exclamation-circle.svg": "/static/media/exclamation-circle.cae916ce28e0a8d8d07a477235f7a993.svg",
@@ -49,11 +50,11 @@
     "static/media/envelope.svg": "/static/media/envelope.c9c11cfa6a43774942324c9ac7f33f2d.svg",
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.cce5d4ae.css.map": "/static/css/main.cce5d4ae.css.map",
-    "main.b22f6e87.js.map": "/static/js/main.b22f6e87.js.map"
+    "main.d6dd111a.css.map": "/static/css/main.d6dd111a.css.map",
+    "main.6f45864e.js.map": "/static/js/main.6f45864e.js.map"
   },
   "entrypoints": [
-    "static/css/main.cce5d4ae.css",
-    "static/js/main.b22f6e87.js"
+    "static/css/main.d6dd111a.css",
+    "static/js/main.6f45864e.js"
   ]
 }
