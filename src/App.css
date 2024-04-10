@@ -1,38 +1,464 @@
-.App {
-  text-align: center;
+:root {
+    --color1: #7F56D9;
+    --color2: #ffffff;
+    --color3: #F7F9FC;
+    --color4: #D6BBFB;
+    --color5: #1976d2;
+    --color6: #F04438;
+    --color7: #F9F5FF;
+    --color8: #9f9f9f;
+    --color9: #F9FAFB;
+    --color10: #EAECF0;
+
+
+    /* Grey */
+    --colorG1: #344054;
+    --colorG2: #EAECF0;
+    --colorG3: #475467;
+    --colorG4: #667085;
+    --colorG5: #D0D5DD;
+    --colorG6: #98A2B3;
+
+ 
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.styleGrey01{
+    color: #667085;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.styleGrey02{
+    color: #98A2B3;
+}
+.table-responsive {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+}
+.slide-up {
+    transition: transform 0.9s ease-in-out;
+    transform: translateY(-100%);
   }
+li {
+    list-style: none;
+}
+textarea.form-control:focus {
+    outline: none;
+    box-shadow: 0 0 0 0 rgba(13,110,253,.25);
+    border-color: #9e77ed;
+    border: 1px solid #9e77ed;
+}
+.disPlayInline li {
+    display: inline-block;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.disPlayInlineCenter {
+    text-align: center;
 }
 
-.App-link {
-  color: #61dafb;
+img {
+    max-width: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+table thead tr th {
+    background: linear-gradient(to top,#EAECF0, #EAECF0 1px, #ffffff 1px, #ffffff 100%);
+    border-bottom: 0;
+}
+table thead tr th,table tbody tr td{
+    border-right: 1px solid var(--Gray-200, #EAECF0);
+}
+.table-responsive {
+    border-top: 1px solid var(--color10);
+    height: calc(100vh - 220px);
+}
+
+table thead tr th:first-child, table tbody tr td:first-child {
+    position: sticky;
+    left: 0;
+    width: 40px;
+    z-index: 8;
+    border-right: 0;
+    text-align: left;
+    padding: 0px 6px 0 16px !important;
+}
+
+table tbody tr td:first-child {
+    border-right: 0;
+}
+table tbody tr td:first-child label {
+    visibility: hidden;
+}
+table tbody tr:hover td:first-child label ,
+table tbody tr.selected-row td:first-child label 
+{
+    visibility: visible;
+}
+table tbody tr.selected-row .linkByttonStyle{
+opacity: 1;
+}
+/* table thead tr th{
+   border-bottom: 0px;
+} */
+/* table thead tr th:before {
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    z-index: 9;
+} */
+
+
+
+table thead tr th:nth-child(4) span.react-resizable-handle.react-resizable-handle-se ,
+table thead tr th:nth-child(3) span.react-resizable-handle.react-resizable-handle-se ,
+table thead tr th:nth-child(2) span.react-resizable-handle.react-resizable-handle-se ,
+table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handle-se 
+{
+    display: none;
+}
+
+
+
+.selected-row.tableTopBar {
+    background: #F9F5FF;
+}
+.tableTopBar {
+    padding: 6px 33px;
+}
+.boxLogin p.error-text {
+    color: var(--color6);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+
+span.react-resizable-handle.react-resizable-handle-se {
+    position: absolute;
+    background: #7f56d9;
+    width: 5px;
+    height: 26px;
+    right: -19px;
+    top: -3px;
+    cursor: row-resize;
+    opacity: 0;
+}
+span.react-resizable-handle.react-resizable-handle-se:hover {
+    opacity: 1;
+}
+.table>thead tr th .react-resizable-handle-se:before:hover {
+    opacity: 1;
+}
+.react-resizable {
+    position: relative;
+}
+tr.selected-row td {
+    background: #F9F5FF !important;
+}
+.customCheckBox {
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+  .customCheckBox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
   }
-  to {
-    transform: rotate(360deg);
+  .customCheckBox .checkmark {
+    position: relative;
+    top: 4px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+  .customCheckBox input:checked ~ .checkmark {
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Primary-500, #9E77ED);
+    background: var(--Primary-50, #F9F5FF);
+}
+.customCheckBox .checkmark svg {
+    opacity: 0;
+}
+  .customCheckBox .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
   }
+  .customCheckBox input:checked ~ .checkmark:after {
+    display: block;
+  }
+  .customCheckBox input:checked ~ .checkmark svg {
+    opacity: 1;
+}
+.menu-item ul li a,
+.headerNav ul li a,
+.menu-item ul li a.menuActive,
+.company_logo,
+.boxLogin input {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.boxLogin p.signuptext {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+.filterSearch input:focus {
+    outline: none;
+}
+.boxLogin h2,
+.boxLogin h2 span {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: -0.33px;
+}
+.selected-row td {
+    border-bottom: 1px solid #EAECF0;
+    background: #F9F5FF;
+}
+.avatar-info,
+.avatar-info span,
+.boxLogin .fillbtn,
+.boxLogin .fillbtn:hover,
+.boxLogin .textbtn,
+.boxLogin .textbtn:hover,
+.boxLogin .textbtn {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.boxLogin label {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+}
+.userImgStyle {
+    width: 100%;
+}
+.headerNav {
+    border-top: 1px solid var(--colorG2);
+    border-bottom: 1px solid var(--colorG2);
+}
+
+span.lightColorStyle {
+    opacity: .56;
+}
+.MuiDataGrid-columnHeader {
+    border-right: 1px solid #EAECF0 ;
+    position: sticky !important;
+    left: 0;
+}
+.css-9cbj60-MuiDataGrid-root .MuiDataGrid-iconSeparator {
+    display: none;
+}
+.MuiDataGrid-columnHeaders {
+    min-height: 44px !important;
+    max-height: 44px !important;
+    height: 44px !important;
+}
+/* Model Style */
+
+
+
+.modelStyleBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+    padding: 24px;
+}
+.radioSelectButton.btn-group {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.radioSelectButton .radioSelectButtons:nth-child(2) {
+    padding: 0 20px;
+}
+.modelHeader span {
+    margin-bottom: 20px;
+    color: var(--Gray-900, var(--Gray-900, #101828));
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+}
+.SalesContact .modelHeader span {
+    margin-bottom: 0;
+}
+.ContactModel fieldset {
+    bottom: 6px;
+    right: 0;
+    top: -15px;
+}
+.SalesContact .modal-body {
+    padding: 0;
+}
+.ContactModelIn {
+    padding: 0 23px 12px;
+}
+.SalesContact .popoverbottom {
+    padding: 30px 23px;
+}
+.contactButListIn2:focus-visible,.contactButListIn1:focus-visible,.contactButList:focus-visible{
+    outline: 0;
+}
+.radioSelectButtons svg {
+    margin-left: 6px;
+}
+.modelHeader span .iconOutStyle {
+    margin-bottom: 16px;
+}
+.radioSelectButton label {
+    border-radius: 4px;
+    border: 1px solid #D0D5DD !important;
+    background: #fff;
+    color: #344054;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 116px;
+    height: 44px;
+}
+.datepickerField {
+    width: 173px;
+}
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+    border-radius: 4px;
+    border: 1px solid var(--Border, #D0D5DD);
+}
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #9E77ED !important;
+    border-width: 1px !important;
+}
+.radioSelectButton .btn-check:checked+.btn, .radioSelectButton .btn.active, .radioSelectButton .btn.show, .radioSelectButton .btn:first-child:active, .radioSelectButton :not(.btn-check)+.btn:active {
+    color: #9E77ED;
+    border-color: #9E77ED;
+    border: 1px solid !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--Primary-50, #F9F5FF);
+}
+.radioSelectButtons {
+    width: 100%;
+}
+
+.event {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 150px;
+    bottom: 2px;
+    left: calc(50% - 1.5px);
+    content: " ";
+    display: block;
+    background: #98A2B3;
+}
+
+.event.busy {
+    background: #9E77ED;
+}
+.flatpickr-day.today {
+    border-color: #9E77ED;
+    border-radius: 20px;
+    background: #9E77ED;
+    color: #FFF;
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+}
+.flatpickr-day {
+    color: #344054 !important;
+    text-align: center !important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400 !important;
+}
+span.flatpickr-day.today{
+    color: #fff !important;
+}
+span.flatpickr-day.prevMonthDay,span.flatpickr-day.nextMonthDay{
+    color: #667085 !important;
+}
+.flatpickr-innerContainer {
+    padding-bottom: 20px;
+}
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+    background: #9E77ED !important; 
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #fff;
+    border-color: #9E77ED !important;
+}
+span.flatpickr-weekday {
+    color: var(--Gray-700, #344054) !important;
+    text-align: center !important;
+    font-size: 14px !important;
+    font-style: normal;
+    font-weight: 500 !important;
+    line-height: 20px !important;
+    background: #fff !important;
+}
+.flatpickr-day {
+    margin: 3px !important;
+}
+.flatpickr-weekdays {
+    background: #fff !important;
+    height: 40px;
+}
+.flatpickr-months .flatpickr-month, .flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: #ffffff !important;
+    color: #344054 !important;
+}
+.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
+    color: #000!important;
+    fill: #000!important;
+}
+.filterSearchTab {
+    margin: 8px 8px 8px;
+    width: 92% !important;
+}
+
+
+
+.rowBorderHide, .rowBorderHide td {
+    border: 0 !important;
+    background-color: transparent !important;
+    text-align: center !important;
+    width: 100%;
+    width: 100%;
+    color: #344054;
+    font-size: 20px;
 }
