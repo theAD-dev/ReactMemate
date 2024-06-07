@@ -66,10 +66,11 @@ table thead tr th,table tbody tr td{
     border-right: 1px solid var(--Gray-200, #EAECF0);
 }
 .table-responsive {
+    border-top: 1px solid #eaecf0;
     border-top: 1px solid var(--color10);
-    height: calc(100vh - 220px);
+    height: calc(100vh - 164px);
+    padding-bottom: 2px;
 }
-
 table thead tr th:first-child, table tbody tr td:first-child {
     position: sticky;
     left: 0;
@@ -279,37 +280,44 @@ span.lightColorStyle {
     height: 44px !important;
 }
 /* Model Style */
-
-
-
 .modelStyleBox {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 12px;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Gray-200, #EAECF0);
     background: var(--Base-White, #FFF);
-    box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
-    padding: 24px;
+    box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+    padding: 16px 0px;
+}
+.modelStyleBox.QuoteWon .stepBoxStyle,.modelStyleBox.QuoteLost .stepBoxStyle {
+    background: var(--Gray-25, #FCFCFD);
+    padding: 32px 24px;
+    border-top: 1px solid #EAECF0;
+    margin-top: 12px;
 }
 .radioSelectButton.btn-group {
     width: 100%;
     justify-content: space-between;
     align-items: center;
 }
-.radioSelectButton .radioSelectButtons:nth-child(2) {
+/* .radioSelectButton .radioSelectButtons:nth-child(2) {
     padding: 0 20px;
-}
+} */
 .modelHeader span {
-    margin-bottom: 20px;
-    color: var(--Gray-900, var(--Gray-900, #101828));
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
     line-height: 28px;
+    letter-spacing: -0.27px;
 }
 .SalesContact .modelHeader span {
     margin-bottom: 0;
+    display: flex;
+    align-items: center;
 }
 .ContactModel fieldset {
     bottom: 6px;
@@ -320,7 +328,10 @@ span.lightColorStyle {
     padding: 0;
 }
 .ContactModelIn {
-    padding: 0 23px 12px;
+    padding: 6px 23px 24px;
+    background: var(--Gray-25, #FCFCFD);
+    border-top: 1px solid #EAECF0;
+    margin-top: 12px;
 }
 .SalesContact .popoverbottom {
     padding: 30px 23px;
@@ -332,7 +343,7 @@ span.lightColorStyle {
     margin-left: 6px;
 }
 .modelHeader span .iconOutStyle {
-    margin-bottom: 16px;
+    margin-bottom: 0;
 }
 .radioSelectButton label {
     border-radius: 4px;

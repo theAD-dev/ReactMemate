@@ -10,6 +10,7 @@ import App from './App';
 import "@fontsource/inter"; // Defaults to weight 400
 import "@fontsource/roboto"; // Defaults to weight 400
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   

@@ -122,14 +122,14 @@ table.innerTableStyle tr, table.innerTableStyle {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-right: 24px;
+  margin-right: 11px;
 }
 
 .iconinStyle {
   width: 32px;
   background: #DCFAE6;
   height: 32px;
-  padding: 4px;
+  /* padding: 4px; */
   border-radius: 100%;
   display: flex;
   align-items: center;
@@ -145,7 +145,7 @@ table.innerTableStyle tr, table.innerTableStyle {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 0px;
 }
 .modelStyle .modal-header span, .popoverHead span {
   display: flex;
@@ -206,10 +206,18 @@ table.innerTableStyle tr, table.innerTableStyle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 288px;
+
 }
-.SalesContact .popoverbottom .closebox {
-  width: 192.47px;
+.ContactModelIn .text-danger {
+  color: var(--Error-500, #F04438);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+.btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
+  border-color: transparent;
 }
 .closebox:hover, .popoverbottom .closebox:hover {
   border-radius: 4px;
@@ -227,19 +235,17 @@ table.innerTableStyle tr, table.innerTableStyle {
   justify-content: center;
   /* width: 288px; */
 }
-.modelStyle .modal-footer ,.popoverbottom{
-  justify-content: space-between;
+.modelStyle .modal-footer, .popoverbottom {
+  justify-content: flex-end;
   display: flex;
 }
-.modelStyle .modal-footer button,.popoverbottom button {
-  width: 48%;
-}
+
 .modelStyle .modal-header,.popoverHead {
   border-bottom: 1px solid #EAECF0;
 }
 .modelStyle .modal-footer, .popoverbottom {
   border-top: 1px solid #EAECF0;
-  padding: 24px 24px !important;
+  padding: 12px 24px 16px !important;
   margin-top: 13px;
 }
 .modelStyle textarea {
@@ -272,9 +278,63 @@ tr.nodataTableRow td {
  border: 0;
  border-radius: 4px;
  background: #fff;
-
 }
-
+.QuoteLost .iconinnerStyle {
+  border-radius: 16px;
+  border: 1px solid #fef3f2;
+  background: #FEE4E2;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+.flatpickr-current-month input.cur-year {
+  background: #fff !important; 
+}
+.numInputWrapper span {
+  border: 0px solid rgba(72,72,72,0.15)!important; 
+  right: -8px!important; 
+}
+.flatpickr-current-month .numInputWrapper span.arrowUp:after {
+  border-bottom-color: #000!important; 
+}
+.flatpickr-current-month .numInputWrapper span.arrowDown:after {
+  border-top-color: #000!important; 
+}
+.numInputWrapper span:hover {
+  background: rgb(0 0 0 / 0%)!important; 
+}
+.QuoteLost .iconOutStyle {
+  width: 48px;
+  height: 48px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 11px;
+  border-radius: 28px;
+  border: 8px solid var(--Error-50, #FEF3F2);
+  background: var(--Error-100, #FEE4E2);
+}
+.tableTopBar .tabActive {
+  border-radius: 4px;
+  border: 1px solid #7F56D9;
+  background: #7F56D9;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  margin-left: 9px;
+  padding: 4px 13px;
+  color: #fff !important;
+  min-width: 59px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
 table.table {
   margin-bottom: 0;
 }
@@ -559,9 +619,52 @@ ul.listStyle li:last-child {
 }
 .bigBoxHome {
   border-radius: var(--radius-xl, 12px);
-  border: 1px solid var(--Gray-100, #F2F4F7);
+  border: 2px solid var(--Gray-100, #F2F4F7);
   background: #FFF;
   padding: 24px;
+  position: relative;
+  border-radius: 4px;
+}
+.tobePaidWrap:hover {
+  border-radius: var(--radius-xs, 4px);
+  border: 2px solid #f74fac40;
+  background: linear-gradient(135deg, rgba(247, 79, 172, 0.03) 0%, rgba(252, 178, 79, 0.03) 100%), #FFF;
+  border-radius: 4px;
+}
+
+.tobePaidWrap:hover .tobePaidH {
+  border-radius: 4px;
+  border: 1px solid #f74fab49;
+  background: linear-gradient(135deg, rgba(247, 79, 172, 0.20) 0%, rgba(252, 178, 79, 0.20) 100%);
+}
+.TooltipOverlay [data-popper-placement^=top] .tooltip-arrow::before, .TooltipOverlay  .tooltip-arrow::before {
+  top: -1px;
+  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * .5) 0;
+  border-top-color: #fff;
+}
+.TooltipWrapper button:hover, .TooltipWrapper button:focus, .TooltipWrapper button:active, .TooltipWrapper button:active:focus-visible {
+  background: transparent;
+  border: 0;
+  box-shadow: none !important;
+}
+.TooltipOverlay .tooltip-inner {
+  background: #fff;
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  border: 6px;
+  color: #000;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 17px;
+  padding: 10px;
+}
+.TooltipWrapper button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  position: absolute;
+  right: 15px;
+  top: 4px;
 }
 .bigBoxHome h3 {
   color: var(--Gray-600, #475467);
@@ -591,14 +694,20 @@ ul.listStyle li:last-child {
   gap: var(--spacing-md, 8px);
   margin: 16px auto 21px;
   position: relative;
+  border: 1px solid #fff;
 }
 .countNoBox.tobePaidH {
-  border-radius: 16px;
+  border-radius: 4px;
   background: linear-gradient(135deg, rgba(247, 79, 172, 0.15) 0%, rgba(252, 178, 79, 0.15) 100%);
 }
 .countNoBox.invoiceDueH {
-  border-radius: 16px;
+  border-radius: 4px;
   background: linear-gradient(45deg, rgba(74, 135, 154, 0.15) 0%, rgba(197, 237, 245, 0.15) 100%);
+}
+.bigBoxHome.invoiceDuewrap {
+    border-radius: var(--radius-xs, 4px);
+    border: 2px solid #4a879a3b;
+    background: linear-gradient(45deg, rgba(74, 135, 154, 0.03) 0%, rgba(197, 237, 245, 0.03) 100%), #FFF;
 }
 .tobePaidH span {
   background: linear-gradient(to top, #FCB24F 0%, #F74FAC 100%);
@@ -652,21 +761,26 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   background: linear-gradient(0deg, rgba(155, 35, 234, 0.15) 0%, rgba(95, 114, 189, 0.15) 100%);
 }
 .goodHeading {
-  position: sticky;
-  top: 0;
+  /* position: sticky; */
+  /* top: 0; */
   background: #f7f9fc;
-  padding: 37px 0 13px;
+  padding: 13px 0 13px;
   z-index: 9;
+}
+.imageBoxHome:hover {
+  -webkit-filter: sepia(1);
+  filter: sepia(1);
 }
 .HomePageWrap {
   background: var(--BG, #F7F9FC);
   overflow-y: auto;
-  height: calc(100vh - 368px);
+  height: calc(100vh - 149px);
   padding-bottom: 16px;
 }
 .homeBottom {
-  background: var(--BG, #F7F9FC);
-  padding-bottom: 28px;
+    background: var(--BG, #F7F9FC);
+    padding-bottom: 28px;
+    padding-top: 15px;
 }
 .HomePageWrap::-webkit-scrollbar {
   width: 8px;
@@ -779,6 +893,13 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   justify-content: center;
   cursor: pointer;
 }
+.bigBoxHome .pluslgIcon:hover svg {
+  fill: #fff;
+}
+.bigBoxHome .pluslgIcon:hover {
+  background: #4A879A ;
+  box-shadow: 0px 2px 5px 0px rgba(16, 24, 40, 0.05);
+}
 .centerTabSales ul li {
   display: inline-block;
 }
@@ -786,11 +907,11 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   display: flex;
   justify-content: center;
 }
- .centerTabSales ul li a {
+.centerTabSales ul li a {
   color: #344054;
   font-size: 18px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 28px;
 }
  .styleT2{
@@ -819,6 +940,8 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
 }
 .filterSearch input[type="text"] {
   width: 100%;
+  font-size: 14px;
+  font-weight: 400;
 }
  .filterDropDown {
   cursor: pointer;
@@ -1217,4 +1340,54 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   display: flex;
   align-items: flex-end;
   justify-content: center;
+}
+.my-component {
+  transition: all 0.5s ease;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -243px;
+}
+.my-component.show {
+  bottom: -243px;
+}
+.my-component.hide {
+  bottom: 0px;
+}
+.my-component .downArrowIcon {
+  border: 0;
+  background: transparent;
+}
+.my-component .downArrowIcon svg {
+  fill: #475467;
+}
+
+.boxLogin .inputInfo button.eyeButton {
+  border: 0;
+  background: transparent;
+}
+.my-component .downArrowIcon {
+  transform: translateX(-50%);
+  animation: arrowAnimation 1s infinite alternate; /* Adjust animation duration as needed */
+}
+
+@keyframes arrowAnimation {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-5px); /* Adjust vertical movement distance */
+  }
+}
+
+
+
+
+@media only screen and (max-width: 1600px) and (min-width: 1280px)  {
+table thead tr th, table tbody tr td {
+  border-right: 1px solid var(--Gray-200, #EAECF0);
+  white-space: nowrap;
+}
+
 }
