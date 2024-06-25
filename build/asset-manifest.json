@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.d555b773.css",
-    "main.js": "/static/js/main.3e17df59.js",
+    "main.css": "/static/css/main.1572c13e.css",
+    "main.js": "/static/js/main.4329c685.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.53baea11.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.b1283128.chunk.js",
     "reactPlayerVimeo.js": "/static/js/reactPlayerVimeo.1a595079.chunk.js",
@@ -55,7 +55,6 @@
     "static/media/roboto-latin-ext-400-normal.woff2": "/static/media/roboto-latin-ext-400-normal.861b791f9de857a6e7bc.woff2",
     "static/media/inter-greek-400-normal.woff": "/static/media/inter-greek-400-normal.1eeaf1d0bde712085ffc.woff",
     "static/media/Linepatterntop.png": "/static/media/Linepatterntop.b8d8aa4ae7099a7dace9.png",
-    "static/media/logo98.229.svg": "/static/media/logo98.229.ff8ee80354a9b1c13b68c8dd1f873211.svg",
     "static/media/roboto-latin-ext-400-normal.woff": "/static/media/roboto-latin-ext-400-normal.e757c42df6aaa3e11b62.woff",
     "static/media/InvoicesIcon.svg": "/static/media/InvoicesIcon.a532cc181502dd92cd057cc120186311.svg",
     "static/media/inter-cyrillic-ext-400-normal.woff2": "/static/media/inter-cyrillic-ext-400-normal.ac62c8eba7f954b48546.woff2",
@@ -89,8 +88,8 @@
     "index.html": "/index.html",
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.d555b773.css.map": "/static/css/main.d555b773.css.map",
-    "main.3e17df59.js.map": "/static/js/main.3e17df59.js.map",
+    "main.1572c13e.css.map": "/static/css/main.1572c13e.css.map",
+    "main.4329c685.js.map": "/static/js/main.4329c685.js.map",
     "reactPlayerYouTube.53baea11.chunk.js.map": "/static/js/reactPlayerYouTube.53baea11.chunk.js.map",
     "reactPlayerSoundCloud.b1283128.chunk.js.map": "/static/js/reactPlayerSoundCloud.b1283128.chunk.js.map",
     "reactPlayerVimeo.1a595079.chunk.js.map": "/static/js/reactPlayerVimeo.1a595079.chunk.js.map",
@@ -107,7 +106,7 @@
     "reactPlayerPreview.eeb2f0ac.chunk.js.map": "/static/js/reactPlayerPreview.eeb2f0ac.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d555b773.css",
-    "static/js/main.3e17df59.js"
+    "static/css/main.1572c13e.css",
+    "static/js/main.4329c685.js"
   ]
 }
