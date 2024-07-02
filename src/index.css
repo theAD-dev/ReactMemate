@@ -59,7 +59,7 @@ table tbody tr:nth-child(odd) td {
   background: #F9FAFB;
 }
 table tbody tr:hover td {
-  background: #F9F5FF;
+  background: #EBF8FF;
 }
 .filterSearch:focus-visible,.filterSearch input {
   border: 0 !important;
@@ -161,16 +161,16 @@ table.innerTableStyle tr, table.innerTableStyle {
   line-height: 28px;
   letter-spacing: -0.33px;
 }
-.savebox,.popoverbottom .savebox {
+.savebox, .popoverbottom .savebox {
   border-radius: 4px;
-  background: #9E77ED;
+  background: #158ECC;
   padding: 10px 18px;
   color: #fff;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  border: 1px solid #9E77ED;
+  border: 1px solid #158ECC;
   height: 44px;
   display: flex;
   align-items: center;
@@ -178,14 +178,14 @@ table.innerTableStyle tr, table.innerTableStyle {
 }
 .savebox:hover, .popoverbottom .savebox:hover {
   border-radius: 4px;
-  background: #9E77ED;
+  background: #158ECC;
   padding: 10px 18px;
   color: #fff;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  border: 1px solid #9E77ED;
+  border: 1px solid #158ECC;
   opacity: .98;
   height: 44px;
   display: flex;
@@ -221,14 +221,14 @@ table.innerTableStyle tr, table.innerTableStyle {
 }
 .closebox:hover, .popoverbottom .closebox:hover {
   border-radius: 4px;
-  background: #9E77ED;
+  background: #158ECC;
   padding: 10px 18px;
   color: #fff;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  border: 1px solid #9E77ED;
+  border: 1px solid #158ECC;
   height: 44px;
   display: flex;
   align-items: center;
@@ -321,8 +321,8 @@ tr.nodataTableRow td {
 }
 .tableTopBar .tabActive {
   border-radius: 4px;
-  border: 1px solid #7F56D9;
-  background: #7F56D9;
+  border: 1px solid #158ECC;
+  background: #158ECC;
   font-size: 14px !important;
   font-style: normal;
   font-weight: 600;
@@ -342,7 +342,7 @@ table.table {
   padding: 15px;
 }
 .linkByttonStyle, .linkByttonStyle:hover {
-  color: #9E77ED;
+  color: #158ECC;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -351,7 +351,7 @@ table.table {
   padding: 0;
 }
 .clientAddress .linkByttonStyle{
-  color: #9E77ED;
+  color: #158ECC;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -542,8 +542,8 @@ ul.listStyle li:last-child {
 .HomePageWrap .grid-item.active .boxCheckNo .ckeckIcon {
   display: flex;
   border-radius: 28px;
-  border: 4px solid var(--Primary-50, #F9F5FF);
-  background: var(--Primary-100, #F4EBFF);
+  border: 4px solid var(--Primary-50, #EBF8FF);
+  background: var(--Primary-100, #BAE8FF);
   mix-blend-mode: multiply;
   width: 32px;
   height: 32px;
@@ -567,21 +567,21 @@ ul.listStyle li:last-child {
   padding: 16px 24px;
 }
 .boxItemBut button {
-  color: #6941C6;
+  color: #106B99;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: 20px;
   text-decoration: none;
   border-radius: 4px;
-  border: 1px solid var(--Primary-200, #E9D7FE);
-  background: var(--Primary-50, #F9F5FF);
+  border: 1px solid var(--Primary-200, #A3E0FF);
+  background: var(--Primary-50, #EBF8FF);
   padding: 8px 14px;
 }
 .HomePageWrap .grid-item.active .boxItemBut button {
   border-radius: 4px;
-  border: 1px solid var(--Primary-600, #7F56D9);
-  background: var(--Primary-600, #7F56D9);
+  border: 1px solid var(--Primary-600, #158ECC);
+  background: var(--Primary-600, #158ECC);
   color: #FFF;
 }
 .HomePageWrap .boxItem h2 {
@@ -604,8 +604,8 @@ ul.listStyle li:last-child {
 }
 .HomePageWrap .grid-item:hover button {
   border-radius: 4px;
-  border: 1px solid var(--Primary-600, #7F56D9);
-  background: var(--Primary-600, #7F56D9);
+  border: 1px solid var(--Primary-600, #158ECC);
+  background: var(--Primary-600, #158ECC);
   color: #FFF;
 }
 .HomePageWrap .grid-item input[type="radio"] {
@@ -614,8 +614,8 @@ ul.listStyle li:last-child {
 }
 .HomePageWrap .grid-item.active {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Primary-200, #E9D7FE);
-  background: var(--Primary-50, #F9F5FF);
+  border: 1px solid var(--Primary-200, #A3E0FF);
+  background: var(--Primary-50, #EBF8FF);
 }
 .bigBoxHome {
   border-radius: var(--radius-xl, 12px);
@@ -625,17 +625,10 @@ ul.listStyle li:last-child {
   position: relative;
   border-radius: 4px;
 }
-.tobePaidWrap:hover {
-  border-radius: var(--radius-xs, 4px);
-  border: 2px solid #f74fac40;
-  background: linear-gradient(135deg, rgba(247, 79, 172, 0.03) 0%, rgba(252, 178, 79, 0.03) 100%), #FFF;
-  border-radius: 4px;
-}
 
-.tobePaidWrap:hover .tobePaidH {
-  border-radius: 4px;
-  border: 1px solid #f74fab49;
-  background: linear-gradient(135deg, rgba(247, 79, 172, 0.20) 0%, rgba(252, 178, 79, 0.20) 100%);
+.tobePaidWrap .tobePaidH {
+  border-radius: var(--radius-xs, 4px);
+background: linear-gradient(135deg, rgba(247, 79, 172, 0.15) 0%, rgba(252, 178, 79, 0.15) 100%);
 }
 .TooltipOverlay [data-popper-placement^=top] .tooltip-arrow::before, .TooltipOverlay  .tooltip-arrow::before {
   top: -1px;
@@ -704,11 +697,7 @@ ul.listStyle li:last-child {
   border-radius: 4px;
   background: linear-gradient(45deg, rgba(74, 135, 154, 0.15) 0%, rgba(197, 237, 245, 0.15) 100%);
 }
-.bigBoxHome.invoiceDuewrap {
-    border-radius: var(--radius-xs, 4px);
-    border: 2px solid #4a879a3b;
-    background: linear-gradient(45deg, rgba(74, 135, 154, 0.03) 0%, rgba(197, 237, 245, 0.03) 100%), #FFF;
-}
+
 .tobePaidH span {
   background: linear-gradient(to top, #FCB24F 0%, #F74FAC 100%);
   -webkit-background-clip: text;
@@ -721,14 +710,12 @@ ul.listStyle li:last-child {
   -webkit-text-fill-color: transparent;
 }
 .jobScheduledH span {
-  background: #9B23EA;
-  background: linear-gradient(to top, #9B23EA 0%, #4A879A 78%);
+  background: linear-gradient(0deg, #97C3D9 0%, #106B99 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .activeQouteH span {
-  background: #9B23EA;
-  background: linear-gradient(to top, #9B23EA 0%, #4A879A 78%);
+  background: linear-gradient(0deg, #97C3D9 0%, #106B99 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -745,20 +732,20 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
 -webkit-text-fill-color: transparent;
 }
 .jobScheduledH {
-  border-radius: 16px;
-  background: linear-gradient(0deg, rgba(155, 35, 234, 0.15) 0%, rgba(95, 114, 189, 0.15) 100%);
+  border-radius: var(--radius-xs, 4px);
+  background: linear-gradient(180deg, rgba(186, 232, 255, 0.15) 0%, rgba(16, 107, 153, 0.15) 100%);
 }
 .ActiveProjectH {
-  border-radius: 16px;
+  border-radius: var(--radius-xs, 4px);
   background: linear-gradient(135deg, rgba(137, 247, 254, 0.15) 0%, rgba(102, 166, 255, 0.15) 100%);
 }
 .jobWaitingH {
-  border-radius: 16px;
+  border-radius: var(--radius-xs, 4px);
   background: linear-gradient(45deg, rgba(255, 184, 0, 0.15) 0%, rgba(255, 245, 0, 0.15) 100%);
 }
 .activeQouteH {
-  border-radius: 16px;
-  background: linear-gradient(0deg, rgba(155, 35, 234, 0.15) 0%, rgba(95, 114, 189, 0.15) 100%);
+  border-radius: var(--radius-xs, 4px);
+  background: linear-gradient(180deg, rgba(186, 232, 255, 0.15) 0%, rgba(16, 107, 153, 0.15) 100%);
 }
 .goodHeading {
   /* position: sticky; */
@@ -883,7 +870,7 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   right: -7px;
   top: -11px;
   border-radius: 300px;
-  background: var(--Primary-100, #F4EBFF);
+  background: #BAE8FF;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   width: 24px;
   height: 24px;
@@ -894,11 +881,11 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   cursor: pointer;
 }
 .bigBoxHome .pluslgIcon:hover svg {
-  fill: #fff;
+  fill: #34637b;
 }
 .bigBoxHome .pluslgIcon:hover {
-  background: #4A879A ;
-  box-shadow: 0px 2px 5px 0px rgba(16, 24, 40, 0.05);
+  background: #BAE8FF;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }
 .centerTabSales ul li {
   display: inline-block;
@@ -914,17 +901,17 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   font-weight: 500;
   line-height: 28px;
 }
- .styleT2{
+.styleT2 {
   border-radius: 16px;
-    border: 1px solid rgb(233, 215, 254);
-    background: rgb(249, 245, 255);
-    color: rgb(158, 119, 237);
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: 0.12px;
-    padding: 1px 8px;
-    margin: 0px 8px;
+  border: 1px solid #A3E0FF;
+  background: #EBF8FF;
+  color: #1AB2FF;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  padding: 1px 8px;
+  margin: 0px 8px;
 }
  .styleT3 {
   color: rgb(71, 84, 103);
@@ -1010,14 +997,14 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   box-shadow: none;
 }
  .filtterBoxWrapper li.nav-item button.active svg{
-  fill: #9e77ed;
+  fill: #158ECC;
 }
- .filtterBoxWrapper li.nav-item button.active, .filtterBoxWrapper li.nav-item button:hover.active  {
-  background: #f9f5ff;
-  background: var(--Primary-50,#f9f5ff);
+.filtterBoxWrapper li.nav-item button.active, .filtterBoxWrapper li.nav-item button:hover.active {
+  background: #EBF8FF;
+  background: var(--Primary-50,#EBF8FF);
   border-radius: 6px;
-  color: #9e77ed;
-  color: var(--Primary-500,#9e77ed);
+  color: #158ECC;
+  color: var(--Primary-500,#158ECC);
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -1065,10 +1052,10 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   width: 100%;
 }
   .tab-content .buttomBottom .tabApply:hover, .tab-content .buttomBottom .tabApply {
-  background: #7f56d9;
-  background: var(--Primary-600,#7f56d9);
-  border: 1px solid #7f56d9;
-  border: 1px solid var(--Primary-600,#7f56d9);
+  background: #158ECC;
+  background: var(--Primary-600,#158ECC);
+  border: 1px solid #158ECC;
+  border: 1px solid var(--Primary-600,#158ECC);
   border-radius: 4px;
   color: #fff;
   width: 100%;
@@ -1183,11 +1170,12 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   line-height: 24px;
   letter-spacing: 0.08px;
 }
- .calenderBut .tabApply {
-  background: #7f56d9;
-  background: var(--Primary-600, #7f56d9);
-  border: 1px solid #7f56d9;
-  border: 1px solid var(--Primary-600, #7f56d9);
+
+.calenderBut .tabApply {
+  background: #158ECC;
+  background: var(--Primary-600, #158ECC);
+  border: 1px solid #158ECC;
+  border: 1px solid var(--Primary-600, #158ECC);
   border-radius: 4px;
   color: #fff;
   width: 100%;
