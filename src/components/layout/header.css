@@ -1,0 +1,334 @@
+.menu-item ul li {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.menu-item ul li:nth-child(2) {
+    margin: 0 40px;
+}
+
+.headerTop {
+    padding: 12px 18px;
+    position: relative;
+    z-index: 999;
+}
+
+.SelectOptionHead .css-13cymwt-control,
+.css-t3ipsp-control,
+.SelectOptionHead .css-13cymwt-control:focus {
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.menu-item ul li a,
+.headerNav ul li a {
+    border-bottom: 2px solid var(--color2);
+    padding: 9px 15px;
+    color: var(--colorG1);
+    text-align: center;
+    border-radius: 6px;
+}
+
+.company_logo {
+    display: flex;
+    align-items: center;
+    color: var(--colorG1);
+    text-align: center;
+    letter-spacing: -0.16px;
+}
+
+.company_logo img {
+    height: 40px;
+}
+
+.avatar-info {
+    text-align: left;
+    color: var(--colorG1);
+}
+
+.avatar-info span {
+    display: block;
+    color: var(--colorG3);
+    font-weight: 400;
+}
+
+.company_logo span:before {
+    position: absolute;
+    content: "";
+    background: var(--colorG2);
+    width: 1px;
+    height: 38px;
+    top: -5px;
+    left: 16px;
+}
+
+.company_logo span:after {
+    position: absolute;
+    content: "";
+    background: var(--colorG2);
+    width: 1px;
+    height: 38px;
+    top: -5px;
+    right: -16px;
+}
+
+.SelectOptionHead {
+    margin-left: 20px;
+}
+
+.company_logo span {
+    position: relative;
+    padding-left: 32px;
+}
+
+.SelectOptionHead .css-1dimb5e-singleValue span {
+    display: inline-block;
+    width: 131px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    color: #101828;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.SelectOptionHead .css-1u9des2-indicatorSeparator {
+    display: none;
+}
+
+/* Header main */
+.headerNav {
+    padding: 4px 12px;
+}
+
+.headerNav ul li {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 4px;
+}
+
+.headerNav ul li a {
+    padding: 10px 20px;
+    border-radius: 6px;
+}
+
+.menuActive.managementMain {
+    background: #F2FAFF;
+    color: #158ECC;
+}
+
+.managementMain:hover {
+    background: #e6f4fd;
+    color: #158ECC;
+}
+
+.menuActive.sales {
+    color: #6FBAFF;
+    background: linear-gradient(135deg, #89f7fe1a, #66a6ff1a);
+}
+
+.sales:hover {
+    color: #6FBAFF;
+    background: linear-gradient(135deg, #89f7fe1a, #66a6ff1a);
+}
+
+.management.menuActive {
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+    color: #FE8890;
+}
+
+.management:hover {
+    color: #FE8890;
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+}
+
+.management.work {
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+    color: #FE8890;
+}
+
+.work:hover {
+    color: #FE8890;
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+}
+
+.menuActive.sales {
+    color: #6FBAFF;
+}
+
+.menuActive.clients {
+    background: linear-gradient(135deg, rgba(114, 237, 242, 0.10) 0%, rgba(81, 81, 229, 0.10) 100%);
+    color: #222;
+}
+
+.clients:hover {
+    background: linear-gradient(135deg, rgba(114, 237, 242, 0.10) 0%, rgba(81, 81, 229, 0.10) 100%);
+    /* color: #5C83EA; */
+    color: #222;
+}
+
+.menuActive.expense {
+    background: linear-gradient(135deg, rgba(247, 79, 172, 0.10) 0%, rgba(252, 178, 79, 0.10) 100%), #FFF;
+    color: #F96A94;
+}
+
+.expense:hover {
+    background: linear-gradient(135deg, rgba(247, 79, 172, 0.10) 0%, rgba(252, 178, 79, 0.10) 100%), #FFF;
+    color: #F96A94;
+}
+
+.menuActive.invoices {
+    background: linear-gradient(0deg, rgba(132, 250, 176, 0.10) 0%, rgba(172, 203, 238, 0.10) 100%);
+    color: #4fc182;
+}
+
+.invoices:hover {
+    background: linear-gradient(0deg, rgba(132, 250, 176, 0.10) 0%, rgba(172, 203, 238, 0.10) 100%);
+    color: #A8D1E7;
+}
+
+.menuActive.orders {
+    background: linear-gradient(45deg, rgba(74, 135, 154, 0.10) 0%, rgba(197, 237, 245, 0.10) 100%), #FFF;
+    color: #508C9E;
+}
+
+.orders:hover {
+    background: linear-gradient(45deg, rgba(74, 135, 154, 0.10) 0%, rgba(197, 237, 245, 0.10) 100%), #FFF;
+    color: #508C9E;
+}
+
+.menuActive.statistics {
+    color: #FF8508;
+    background: linear-gradient(45deg, rgba(255, 122, 0, 0.10) 0%, rgba(255, 212, 57, 0.10) 100%), #FFF;
+}
+
+.statistics:hover {
+    background: linear-gradient(45deg, rgba(255, 122, 0, 0.10) 0%, rgba(255, 212, 57, 0.10) 100%), #FFF;
+    color: #FF8508;
+}
+
+.menuActive.suppliers {
+    color: #8149d5;
+    background: linear-gradient(0deg, rgba(155, 35, 234, 0.10) 0%, rgba(95, 114, 189, 0.10) 100%);
+}
+
+.suppliers:hover {
+    background: linear-gradient(0deg, rgba(155, 35, 234, 0.10) 0%, rgba(95, 114, 189, 0.10) 100%);
+    color: #8149d5;
+}
+.tasks:hover {
+    color: #D16CB6;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.news:hover {
+    color: #344054;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.news:hover {
+    color: #9890E3;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.approval:hover {
+    color: #9EC2A2;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.dashboard:hover {
+    color: #292D32;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.jobs:hover {
+    color: #FFB800;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.people:hover {
+    color: #344054;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+
+.headerNav ul.left li:first-child {
+    padding-left: 0;
+}
+
+.headerNav ul.right li:last-child {
+    padding-right: 0;
+}
+
+.headerNav ul li a {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item {
+    text-align: center;
+}
+
+.headerNav ul li a img {
+    margin-right: 12px;
+}
+
+.avatar-wrap ul li {
+    display: inline-block;
+    list-style: none;
+    margin: 0 12px;
+}
+
+.avatar-wrap ul:before {
+    position: absolute;
+    content: "";
+    background: var(--colorG2);
+    width: 1px;
+    height: 38px;
+    top: -5px;
+    right: -10px;
+}
+
+.avatar-wrap ul {
+    margin-right: 32px;
+    position: relative;
+}
+
+.userImageBox {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 200px;
+    border: 1px solid var(--Gray-200, #EAECF0);
+    background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%), #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    color: var(--Gray-600, #475467);
+    text-align: center;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+.userImageBox:hover {
+    border-radius: 200px;
+    border: 1px solid var(--Primary-200, #E9D7FE);
+    background: linear-gradient(180deg, #F9FAFB 0%, #EDEAFC 100%), #FFF;
+    color: var(--Primary-600, #158ECC);
+    text-align: center;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+@media (min-width: 1280px) and (max-width: 1500px) {
+    .headerNav ul li a img {
+        margin-right: 7px;
+    }
+
+}

@@ -1,0 +1,1264 @@
+.settings-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0 43px;
+}
+
+.settings-content {
+    width: calc(100% - 280px);
+    padding: 0 0px 0 24px;
+}
+
+.settings-menu {
+    width: 280px;
+    border-right: 1px solid var(--Gray-200, #EAECF0);
+    background: var(--Base-White, #FFF);
+
+}
+
+.settings-content {
+    width: calc(100% - 280px);
+    text-align: left;
+}
+
+.content_wrap_main.isEditingwrap {
+    overflow: auto;
+    height: calc(100vh - 345px);
+}
+
+.content_wrap_main {
+    overflow: auto;
+    height: calc(100vh - 266px);
+    margin-top: 23px;
+}
+
+.headSticky {
+    position: sticky;
+    top: 0;
+}
+
+.settings-menu .menuList .topList {
+    height: calc(100vh - 264px);
+}
+
+.logoutBottom {
+    /* width: 250px; */
+    text-align: left;
+    float: left;
+}
+
+.editwrapper {
+    width: 368px;
+    border-radius: var(--radius-xs, 4px);
+    background: var(--Gray-50, #F9FAFB);
+    padding: 110px 60px 32px 32px;
+    /* margin-top: 22px; */
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.settings-menu .menuList ul li {
+    text-align: left;
+    margin-right: 12px;
+}
+
+.settings-menu .menuList ul li a {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.08px;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+}
+
+.settings-menu .menuList ul li a svg {
+    margin-right: 9px;
+}
+
+.settings-menu .menuList ul li .activelist {
+    border-radius: 6px;
+    background: var(--Primary-50, #EBF8FF);
+}
+.settings-menu .menuList ul li:hover {
+    border-radius: 6px;
+    background: var(--Primary-50, #EBF8FF);
+}
+
+.settings-menu .menuList ul li a.activelist {
+    color: var(--Primary-600, #158ECC);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.08px;
+}
+
+.settings-menu .menuList ul li a.activelist svg {
+    fill: var(--Primary-600, #158ECC);
+}
+
+.settings-menu .menuList ul li:hover a {
+    color: var(--Primary-600, #158ECC);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.08px;
+}
+
+.settings-menu .menuList ul li:hover a svg {
+    fill: var(--Primary-600, #158ECC);
+}
+
+.menuList h2 {
+    text-align: left;
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    padding: 13px 0 2px;
+}
+
+.menuList {
+    margin-top: 22px;
+}
+
+.userNameList p strong {
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.userNameList p {
+    text-align: left;
+}
+
+.userNameList p span {
+    display: block;
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.logoutBottom {
+    color: var(--Gray-800, #1D2939);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 8px 14px;
+}
+
+.logoutBottom img {
+    margin-left: 7px;
+}
+
+
+.contentMenuTab ul li a {
+    color: var(--Gray-500, #667085);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.175px;
+    padding-left: 17px;
+    padding-right: 17px;
+}
+
+.contentMenuTab ul li {
+    display: inline-block;
+}
+
+.contentMenuTab ul li.menuActive a {
+    color: var(--Primary-700, #106B99);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.175px;
+    border-bottom: 2px solid var(--Primary-700, #106B99);
+    padding-bottom: 8px;
+}
+
+.contentMenuTab ul li:hover a {
+    color: var(--Primary-700, #106B99);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.175px;
+    border-bottom: 2px solid var(--Primary-700, #106B99);
+    padding-bottom: 8px;
+}
+
+.contentMenuTab ul {
+    border-bottom: 1px solid var(--Gray-200, #EAECF0);
+    padding-bottom: 5px;
+}
+
+.settings-content h1 {
+    color: var(--Gray-800, #1D2939);
+    font-family: Inter;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.39px;
+    margin-top: 27px;
+    margin-bottom: 17px;
+}
+
+/* .content_wrapper {
+    border-radius: var(--radius-xs, 4px);
+    background: var(--Gray-50, #F9FAFB);
+    padding: 32px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+} */
+/* General Information */
+.listwrapper {
+    border-radius: var(--radius-xs, 4px);
+    background: var(--Gray-50, #F9FAFB);
+    padding: 32px;
+    /* margin-top: 24px; */
+    margin-bottom: 0;
+    width: 100%;
+    margin-right: 12px;
+}
+
+.content_wrap_main .rightText {
+    padding-left: 24px;
+    padding-right: 18px;
+}
+
+.content_wrapper {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.topHeadStyle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topHeadStyle h2 {
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+}
+
+.topHeadStyle a {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+}
+
+.topHeadStyle a svg {
+    margin-left: 10px;
+}
+
+.listwrapper ul li span {
+    color: var(--Gray-800, #1D2939);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+
+.listwrapper ul li strong {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.08px;
+}
+
+.listwrapper ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.listwrapper ul li {
+    display: grid;
+    grid-template-columns: 361px 1fr 1fr;
+    padding: 20px 0;
+    border-top: 1px solid #EAECF0;
+    align-items: center;
+}
+a.editInline {
+    text-align: right;
+}
+.listwrapper ul li span {
+    font-weight: bold;
+}
+
+.listwrapper ul li strong {
+    margin-left: 10px;
+}
+.listwrapper ul li strong {
+    display: flex;
+    align-items: center;
+}
+.listwrapper ul li strong svg {
+    margin-left: 9px;
+}
+.selectInputWidth {
+    width: 316px;
+}
+
+.listwrapper ul li input,
+.listwrapper1 ul li input {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 10px 14px;
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.08px;
+    width: 316px;
+}
+
+.editwrapper p {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.updateButtonGeneral .save {
+    border-radius: 4px;
+    border: 1px solid var(--Primary-600, #158ECC);
+    background: var(--Primary-600, #158ECC);
+    padding: 10px 18px;
+    color: #FFF;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    margin-top: 17px;
+    margin-right: 14px;
+}
+
+button.cancel {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 10px 18px;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    margin-right: 14px;
+    margin-top: 17px;
+}
+
+.updateButtonGeneral {
+    text-align: right;
+    margin-top: 14px;
+    border-top: 1px solid var(--Gray-200, #EAECF0);
+    background: #FFF;
+    display: inline-block;
+    width: 100%;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 316px;
+}
+
+.flexStyleProfile {
+    display: flex;
+    align-items: center;
+}
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    display: inline-block;
+}
+
+.iconBulding {
+    background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+    border-radius: 4px;
+    border: 0.75px solid #cfcfcf;
+    display: inline-block;
+    padding: 12px;
+}
+
+.iconPerson {
+    border-radius: 36px;
+    border: 0.75px solid #cfcfcf;
+    display: inline-block;
+    padding: 12px;
+}
+
+.editwrapper .logo {
+    padding-top: 100px;
+}
+
+.upload-btn-wrapper .btnup {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Gray-200, #EAECF0);
+    background: var(--Base-White, #FFF);
+    padding: 16px 24px;
+    width: 316px;
+}
+
+.upload-btn-wrapper .textbtm p span {
+    color: var(--Primary-700, #6941C6);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.upload-btn-wrapper .textbtm p {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+}
+
+.upload-btn-wrapper .textbtm {
+    margin-top: 8px;
+}
+
+.content_wrap_main::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    padding: 5px;
+}
+
+.content_wrap_main::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 0px #fff;
+    border-radius: 10px;
+}
+
+.content_wrap_main::-webkit-scrollbar-thumb {
+    background: #EAECF0;
+    border-radius: 10px;
+}
+
+.content_wrap_main::-webkit-scrollbar-thumb:hover {
+    background: #EAECF0;
+}
+
+/* Subscription */
+.progressSubsWrap {
+    display: flex;
+    align-items: self-start;
+    justify-content: space-between;
+}
+
+.progressSubsstart {
+    border-radius: var(--radius-xs, 4px);
+    background: #FFF;
+    padding: 16px;
+    border: 1px solid #EAECF0;
+}
+
+.actibeSubscription {
+    border: 1px solid #72EDF2;
+}
+
+.actibeSubscription .progressSubsWrap .progressWrapMain span {
+    color: var(--Primary-500, #9E77ED);
+}
+
+.marginTopSpance {
+    margin-top: 20px;
+}
+
+.progressSubsIcon {
+    border-radius: var(--radius-full, 9999px);
+    background: linear-gradient(135deg, rgba(114, 237, 242, 0.15) 0%, rgba(81, 81, 229, 0.15) 100%);
+    padding: 10px;
+    display: inline;
+    width: 40px;
+    height: 40px;
+    margin-right: 13px;
+}
+
+.subscription-page .listwrapper li {
+    display: block;
+}
+
+.progressSubsIn {
+    width: 100%;
+}
+
+.progressWrapSubs {
+    display: flex;
+    height: 16px;
+    overflow: hidden;
+    font-size: .75rem;
+    border-radius: 17px;
+    background: var(--Gray-200, #EAECF0);
+    width: 100%;
+    margin-right: 13px;
+}
+
+.bg-businessBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 62px;
+    background: linear-gradient(135deg, #72EDF2 0%, #5151E5 100%), var(--Primary-400, #B692F6);
+    transition: width .6s ease;
+}
+
+.bg-companyBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 47px;
+    background: linear-gradient(135deg, #FFD3A5 0%, #FD6585 100%), var(--Primary-400, #B692F6);
+    transition: width .6s ease;
+}
+
+.bg-WorkBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 47px;
+    background: linear-gradient(0deg, #84FAB0 0%, #ACCBEE 100%), var(--Primary-300, #D6BBFB);
+    transition: width .6s ease;
+}
+
+.bg-appBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 47px;
+    background: linear-gradient(45deg, #4A879A 0%, #C5EDF5 100%), linear-gradient(135deg, #FFD3A5 0%, #FD6585 100%), var(--Primary-400, #B692F6);
+    transition: width .6s ease;
+}
+
+.bg-locationsBar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 47px;
+    background: linear-gradient(0deg, #106B99 0%, #5F72BD 100%), linear-gradient(45deg, #4A879A 0%, #C5EDF5 100%), linear-gradient(135deg, #FFD3A5 0%, #FD6585 100%), var(--Primary-400, #B692F6);
+    transition: width .6s ease;
+}
+
+.progressWrapMain {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progressSubsWrap .progressWrapMain span {
+    color: #344054;
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.progressSubsIn h4 {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.progressButton .paynow {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    color: var(--Gray-800, #1D2939);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 8px 14px;
+}
+
+.progressButton {
+    margin-top: 18px;
+}
+
+.progressButton .close {
+    border-radius: 4px;
+    border: 1px solid var(--Error-300, #FDA29B);
+    background: var(--Base-White, #FFF);
+    color: var(--Gray-800, #B42318);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 8px 14px;
+    margin-left: 12px;
+}
+
+button.closeSubscription {
+    color: #B42318;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    border: 0;
+    background: transparent;
+}
+
+.selectInputWidth .css-13cymwt-control {
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: default;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0 !important;
+    position: relative;
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
+    background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 80%);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 3px 0px;
+    color: var(--Gray-400, #98A2B3);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.selectInputWidth .css-t3ipsp-control {
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: default;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0 !important;
+    position: relative;
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
+    background-color: hsl(0, 0%, 100%);
+    border-color: #2684FF;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 0 0 1px #2684FF;
+    box-sizing: border-box;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #D0D5DD) !important;
+    background: var(--Base-White, #FFF);
+    padding: 3px 0px;
+    color: var(--Gray-400, #98A2B3);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+.selectInputWidth .css-1u9des2-indicatorSeparator {
+    width: 0;
+}
+
+.selectInputWidth .css-1dimb5e-singleValue {
+    color: var(--Gray-400, #98A2B3);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+/* Bills */
+.subscriptionBill {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Gray-200, #EAECF0);
+    width: 100%;
+}
+
+.subscriptionBill .topHeadStyle {
+    justify-content: center;
+    border-bottom: 1px solid #EAECF0;
+    background: var(--Gray-50, #F9FAFB);
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.subscriptionBill .topHeadStyle h2 {
+    color: #344054;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px;
+    margin: 0;
+}
+
+.subscriptionBill .table thead tr th {
+    border-bottom: 1px solid var(--Gray-200, #EAECF0);
+    background: var(--Base-White, #FFF);
+    color: #475467;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.12px;
+}
+
+.textCenter {
+    text-align: center;
+}
+
+.billsPage table thead tr th,
+.billsPage table tbody tr td {
+    border-right: 1px solid var(--Gray-200, #EAECF0);
+}
+
+.billsPage tr td:first-child {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+
+.billsPage tr td {
+    color: var(--Gray-500, #667085);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+
+.billsPage table tr td {
+    padding: 16.5px 16px !important;
+}
+
+.bottomPagenation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--Gray-200, #EAECF0);
+    background: #FFF;
+    padding: 12px 24px 16px 24px;
+}
+
+.bottomPagenation ul.pagination li button {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 8px 14px;
+    color: var(--Gray-800, #1D2939);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.bottomPagenation ul.pagination li button:last-child {
+    margin-left: 10px;
+}
+
+.bottomPagenation .countpage p {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    margin: 0;
+}
+
+.billsPage .billsStatus span {
+    border-radius: 16px;
+    border: 1px solid var(--Success-200, #A9EFC5);
+    background: var(--Success-50, #ECFDF3);
+    mix-blend-mode: multiply;
+    color: var(--Success-700, #067647);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    padding: 2px 8px;
+}
+
+.billsPage .CreditCard2FrontIcon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.billsPage .CreditCard2FrontIcon span {
+    border-radius: 19px;
+    border: 0.75px solid #1018284a;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+}
+
+/* Billing Info */
+.topHeadStyle h2.Exclamation span {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-200, #EAECF0);
+    background: var(--Base-White, #FFF);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.topHeadStyle h2.Exclamation {
+    display: flex;
+    align-items: center;
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    margin: 0;
+}
+
+.topHeadStyle h2.Exclamation strong {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600 !important;
+    line-height: 20px;
+    margin-right: 4px;
+}
+
+.gridInfoWrap {
+    display: flex;
+}
+
+.settings-BillingInfo .dflex {
+    display: flex;
+    align-items: self-start;
+}
+
+.content_wrapper1 .topHeadStyle {
+    padding-bottom: 12px;
+    margin-bottom: 27px;
+    border-bottom: 1px solid #EAECF0;
+    background: var(--Base-White, #FFF);
+}
+
+.gridInfoWrap ul li span {
+    display: block;
+    color: var(--Gray-500, #667085);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+
+.gridInfoWrap ul li strong {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.08px;
+}
+
+.gridInfoWrap {
+    display: flex;
+    width: 100%;
+}
+
+.gridInfoWrap ul {
+    width: 33.33%;
+}
+
+.gridInfoWrap ul li {
+    margin-bottom: 34px;
+    padding-right: 19px;
+}
+.billingwrapper .head {
+    border-bottom: 1px solid #EAECF0;
+}
+.billingwrapper .head h2 {
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+    margin-bottom: 14px;
+}
+.billingwrapper .boxWrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.billingwrapper label {
+    display: flex;
+    justify-content: space-between;
+}   
+.billingwrapper .grid-item {
+    margin-top: 25px;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid #EAECF0;
+    background: #FFF;
+    padding: var(--spacing-xl, 16px);
+}
+.billingwrapper .boxItem h2 {
+    color: #344054;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    
+}
+.billingwrapper .boxItem p {
+    color: #475467;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    margin: 0;
+}
+.billingwrapper .boxItem {
+    margin-left: 12px;
+}
+.billingwrapper button {
+    color: #475467;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin-top: 8px;
+}
+.billingwrapper button.close {
+    color: #F04438;
+    margin-left: 12px;
+}
+.billingwrapper .boxCheckNo .ckeckIcon {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid #D0D5DD;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.billingwrapper label input[type="radio"] {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    display: none;
+}
+.billingwrapper .grid-item.active {
+    border-radius: var(--radius-xs, 4px);
+    border: 2px solid #158ECC;
+    background: #FFF;
+}
+.billingwrapper .grid-item.active .boxCheckNo .ckeckIcon {
+    border-radius: var(--radius-xs, 4px);
+    background: #158ECC;
+}
+.billingwrapper .grid-item.active .boxCheckNo .ckeckIcon svg {
+    fill: #ffffff;
+}
+
+
+
+
+.stepBoxStylePayment .formgroup .inputInfo {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    margin: 4px 0 22px;
+    padding: 10px 8px 6px;
+}
+.stepBoxStylePayment .formgroup label {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+.stepBoxStylePayment .formgroup .inputInfo input {
+    color: var(--Gray-500, #667085);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.08px;
+    width: 100%;
+}
+.modelHeadFlex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.modelHeadFlex h2 {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: -0.27px;
+    margin: 0;
+}
+.modelHeaderBillig {
+    padding: 16px 24px 12px 24px;
+    border-bottom: 1px solid #EAECF0;
+}
+.stepBoxStylePayment {
+    padding: 10px 23px 13px 23px;
+    background: var(--Gray-25, #FCFCFD);
+    display: grid;
+    gap: 0 18px;
+    grid-template-columns: 58% 39%;
+}
+.footerButton {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-top: 1px solid #EAECF0;
+    padding: 12px 24px 16px !important;
+}
+.footerButton button.save {
+    border-radius: 4px;
+    background: #9E77ED;
+    padding: 10px 18px;
+    color: #fff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    border: 1px solid #9E77ED;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter';
+}
+.footerButton button.Cancel {
+    border-radius: 4px;
+    background: #fff;
+    padding: 10px 18px;
+    color: #344054;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    border: 1px solid #D0D5DD;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-family: 'Inter';
+}
+.setModalelBoots .topHeadStyle button {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 10px 18px;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+.setModalelBoots table thead tr th:first-child, .setModalelBoots table tbody tr td:first-child {
+    width: auto;
+    border-right: 1px solid var(--Gray-200, #EAECF0);
+}
+.inlineEditFiled input[type="text"] {
+    border: 0;
+    background: transparent;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0.08px;
+}
+.updateButtoninline .close {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 8px 18px;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    margin-top: 17px;
+    margin-right: 11px;
+}
+.updateButtoninline .save {
+    border-radius: 4px;
+    border: 1px solid var(--Primary-600, #158ECC);
+    background: var(--Primary-600, #158ECC);
+    padding: 8px 18px;
+    color: var(--Gray-700, #ffffff);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    margin-top: 17px;
+    margin-right: 11px;
+
+}
+
+.table-row {
+    transition: transform 0.3s ease;
+  }
+  
+  .table-row.dragged {
+    background-color: #f00;
+  }
+
+
+
+

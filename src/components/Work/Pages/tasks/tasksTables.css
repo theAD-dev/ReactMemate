@@ -1,0 +1,220 @@
+.tasksTableWrap .styleProject {
+  text-align: left;
+  align-items: center;
+}
+.tasksTableWrap .styleProject .textWrap p {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  padding: 0;
+  margin: 0;
+}
+.tasksTableWrap .styleProject .textWrap span {
+  color: var(--Gray-400, #98A2B3);
+font-family: Inter;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 22px;
+letter-spacing: 0.12px;
+}
+.tasksTableWrap .styleProject .leftIcon {
+  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+  border-radius: 4px;
+  border: 0.75px solid #EDF0F3;
+  text-align: center;
+  margin-right: 12px;
+  padding: 2px 6px 6px;
+}
+.tasksTableWrap .mainStyle.taskStatusStyle span {
+  border-radius: 16px;
+  border: 1px solid var(--Success-200, #ABEFC6);
+  background: var(--Success-50, #ECFDF3);
+  mix-blend-mode: multiply;
+  padding: 2px 8px;
+  color: var(--Success-700, #067647);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+.tasksTableWrap .mainStyle.taskStatusStyle{
+  text-align: center;
+}
+
+
+.tasksTableWrap .tasksAssigne em {
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  border-radius: 200px;
+  border: 1px solid var(--Gray-200, #EAECF0);
+  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%), #FFF;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  margin-right: 7px;
+}
+.tasksTableWrap .tasksAssigne span {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.tasksTableWrap  .taskTitle {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.tasksTableWrap .clientTdFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tasksTableWrap .styleColor1 {
+  text-align: left;
+}
+.tasksTableWrap .styleColor1 strong {
+  color: #667085;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  text-wrap: nowrap;
+}
+
+.tasksTableWrap .taskDatesDue {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.tasksTableWrap .btn-newTaskBut {
+  border-radius: 4px;
+  border: 1px solid #158ECC;
+  background: #158ECC;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  margin-left: 9px;
+  padding: 4px 13px;
+  color: #fff !important;
+  min-width: 59px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.newtaskaddModal .modelHeader span img {
+  margin-right: 21px;
+}
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 1600px) and (min-width: 1280px)  {
+  .tasksTableWrap .mainStyleMin {
+    width: 221px;
+  }
+  .tasksTableWrap table thead tr th:nth-child(3) {
+    position: sticky;
+    left: 131px;
+    z-index: 5;
+    border-right: 0px solid var(--color10) !important;
+}
+  .tasksTableWrap .table-responsive {
+    overflow-x: auto;
+}
+.tasksTableWrap .select-menu {
+  position: relative;
+  width: 200px;
+}
+ .tasksTableWrap table thead tr th:nth-child(2), .tasksTableWrap table tbody tr td:nth-child(2) 
+{
+    position: sticky;
+    left: 42px;
+    z-index: 8;
+    border-right: 0px solid var(--color10) !important;
+    padding-left: 0px !important;
+}
+.tasksTableWrap table tbody tr td:nth-child(2):before
+{
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+}
+.tasksTableWrap table thead tr th:nth-child(2):before
+{
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    z-index: 0;
+} 
+
+.tasksTableWrap table thead tr th:nth-child(3) {
+left: 406px;
+}
+.tasksTableWrap table thead tr th:nth-child(3), .tasksTableWrap table tbody tr td:nth-child(3) {
+  position: sticky;
+  left: 170px;
+  border-left: 0  !important;
+  border-right: 0px solid var(--color10) !important;
+  z-index: 8;
+}
+.tasksTableWrap tr td {
+  white-space: nowrap !important;
+}
+.tasksTableWrap table tbody tr td:nth-child(3)::after,.tasksTableWrap table thead tr th:nth-child(3)::after {
+  position: absolute;
+  background: var(--color10);
+  content: "";
+  right: 0;
+  width: 1px;
+  height: 100%;
+  top: 0;
+  box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10);
+  z-index: 0;
+} 
+.tasksTableWrap table thead tr th:nth-child(2) {
+  left: 42px;
+}
+}

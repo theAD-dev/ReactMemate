@@ -1,0 +1,420 @@
+.requestDemoWrap .sliderRightOrg{
+    height: 100vh;
+}
+
+.requestDemoWrap .step-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 43px;
+}
+
+.requestDemoWrap .step-progress .step {
+    border-radius: var(--radius-full, 9999px);
+    background: var(--Colors-Background-bg-quaternary, #EAECF0);
+    height: 8px;
+    width: 66.5px;
+    margin: 0 8px;
+}
+.requestDemoWrap .react-international-phone-input-container .react-international-phone-input {
+    border: 0px solid !important;
+}
+.requestDemoWrap .react-international-phone-country-selector-button {
+    border: 0px solid !important;
+    background-color: transparent !important;
+}
+.requestDemoWrap .inputInfoSizeCheck {
+    display: inline-block;
+    padding: 5px 14px;
+    box-shadow: none !important;
+    margin: 0 15px 15px 0;
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+}
+.requestDemoWrap .inputInfoSizeCheck.active {
+    border: 1px solid #7f56d9;
+    background-color: #7f56d9;
+}
+.requestDemoWrap .inputInfoSizeCheck.active label {
+    color: #fff;
+}
+.requestDemoWrap .boxLogin input.radioBtn {
+    letter-spacing: -0.08px;
+    padding: 4px 0 4px;
+    width: 100%;
+    color: #101828;
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+.requestDemoWrap .inputInfoSizeCheck label {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.08px;
+    padding: 0;
+    margin: 0;
+    padding: 10px 18px;
+    cursor: pointer;
+}
+.requestDemoWrap .inputInfoSizeCheck.active input{
+    color: #fff; 
+}
+.requestDemoWrap .step-progress .step.active {
+    background: var(--Colors-Background-bg-quaternary, #7F56D9);
+}
+.requestDemoWrap .boxLogin .inputInfo textarea {
+    width: 100%;
+    border: 0;
+}
+.requestDemoWrap .CuRegional select,.DiscoverMemate select{
+    width: 100%;
+    border: 0;
+    color: var(--Gray-400, #98A2B3);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+.requestDemoWrap .colgridpaymentwrap {
+    display: flex;
+    align-items: flex-end;
+}
+.requestDemoWrap .colgridpaymentwrap .middle {
+    margin: 0 18px;
+}
+.requestDemoWrap .BusinessPlanBox {
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--Gray-200, #EAECF0);
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+    padding: 40px;
+    width: 617px;
+    margin: 0 auto;
+}
+
+.requestDemoWrap .BusinessPlanwrap {
+    height: 100vh;
+    background: var(--Gray-100, #F2F4F7);
+    padding-left: 41px;
+    padding-right: 62px;
+    display: flex;
+    align-items: center;
+}
+.requestDemoWrap .BusinessPlanBox .headPlan {
+    text-align: center;
+}
+.requestDemoWrap .BusinessPlanBox .headPlan h1 {
+    color: var(--Gray-900, #101828);
+    text-align: center;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 60px;
+    letter-spacing: -0.96px;
+}
+.requestDemoWrap .BusinessPlanBox .headPlan h3 {
+    color: var(--Gray-900, #101828);
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+    margin: 0;
+}
+.requestDemoWrap .BusinessPlanBox .headPlan p {
+    color: var(--Gray-600, #475467);
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    margin: 0;
+}
+.requestDemoWrap .BusinessPlanBox .listPlan ul li {
+    color: var(--Gray-600, #475467);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    padding: 6.3px 0;
+}
+.requestDemoWrap .BusinessPlanBox .listPlan ul {
+    width: 50%;
+}
+
+.requestDemoWrap .BusinessPlanBox .listPlan {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 0;
+}
+.requestDemoWrap .BusinessPlanBox p {
+    color: var(--Gray-600, #475467);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+.requestDemoWrap .BusinessPlanBox p strong {
+    font-weight: 500;
+}
+.requestDemoWrap .BusinessPlanBox .listPlan ul li img {
+    float: left;
+    width: 25px;
+    margin-right: 12px;
+}
+.requestDemoWrap .verifyEmail input.vi {
+    opacity: 0;
+}
+.requestDemoWrap .verifyEmail .vi__character {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    color: var(--Gray-300, #D0D5DD);
+    text-align: center;
+    font-family: Inter;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60px;
+    letter-spacing: -0.96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.requestDemoWrap .verifyEmail  .vi__character--filled {
+    border-radius: 4px;
+    border: 2px solid var(--Primary-600, #7F56D9);
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #F4EBFF;
+    color: var(--Primary-600, #7F56D9);
+    text-align: center;
+    font-family: Inter;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 60px;
+    letter-spacing: -0.96px;
+}
+.requestDemoWrap .verifyEmail form p.emailDis {
+    margin: 8px 0px 36px !important;
+}
+.requestDemoWrap .verifyEmail .vi__container {
+    margin: 0 auto;
+}
+.requestDemoWrap .timezoneWrapGroup .css-b62m3t-container,.requestDemoWrap .timezoneWrapGroup .css-b62m3t-container {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+}
+.requestDemoWrap .timezoneWrapGroup .css-13cymwt-control,.requestDemoWrap .timezoneWrapGroup .css-13cymwt-control {
+    width: 100% !important;
+    border: 0;
+}
+.requestDemoWrap .timezoneWrapGroup .inputInfo {
+    border-radius: 4px;
+    padding: 5px 0px;
+    border: 1px solid var(--colorG5);
+    background: var(--color2);
+    box-shadow: none !important;
+    height: 44px !important;
+}
+.requestDemoWrap .removeBorder1 .inputInfo {
+    height: 44px !important;
+    padding: 5px 0px;
+}
+.requestDemoWrap .SinglBgRight {
+    height: 100vh;
+    background-position: center center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.requestDemoWrap .SinglBgRight:before {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) -14.5%, rgba(0, 0, 0, 0.00) 23.66%), linear-gradient(180deg, rgba(0, 0, 0, 0.00) 70.94%, rgba(0, 0, 0, 0.40) 100%);
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100vh;
+}
+.requestDemoWrap .SinglBgRight p {
+    color: var(--Base-White, #FFF);
+    text-align: center;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 38px;
+    z-index: 999;
+    width: 616px;
+}
+.requestDemoWrap .removeBorder:first-child div {
+    border: 0;
+    color: var(--Gray-400, #98A2B3);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+
+}
+.requestDemoWrap .removeBorder {
+    width: 100%;
+}
+.requestDemoWrap .Timercount {
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid #EAECF0;
+    background: #FBFCFD;
+    width: 157px;
+    height: 70px;
+    vertical-align: middle;
+    display: inline-block;
+    padding: 2px 0;
+    margin-top: 37px;
+    position: relative;
+}
+.requestDemoWrap .Timercount span {
+    position: absolute;
+    border: 0.75px solid #10182829;
+    padding: 7px;
+    left: 0;
+    right: 0;
+    top: -21px;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    border-radius: 62px;
+    background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+    padding: 5px;
+}
+.requestDemoWrap .Timercount .text {
+    margin-top: 20px;
+    color: var(--Gray-600, #475467);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.12px;
+    margin-bottom: 0;
+}   
+.requestDemoWrap .inputInfo.verifyEmail {
+    border: 0;
+    padding: 0;
+}
+.requestDemoWrap button.fillbtn.flexcenterbox:disabled {
+    opacity: .5;
+}
+.timezoneWrapGroup .css-1dimb5e-singleValue {
+    font-weight: 600;
+}
+.requestDemoWrap .boxLogin h2 {
+    color: #101828;
+    margin-bottom: 32px;
+    margin-top: 0;
+    line-height: 44px;
+    font-size: 36px;
+}
+.requestDemoWrap .boxinfo .boxLogin {
+    width: 380px;
+    margin: 0 auto;
+}
+.requestDemoWrap .Timercount .timer {
+    color: var(--Gray-600, #475467);
+    text-align: center;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+.inputInfocheckbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .inputInfocheckbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  .formgroup.formgroupHide {
+    display: none;
+}
+  .checkmarkdata {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #fafafa;
+    border: 1px solid var(--colorG5);
+}
+  .inputInfocheckbox:hover input ~ .checkmarkdata {
+    background-color: #fafafa;
+    border: 1px solid var(--colorG5);
+  }
+  .inputInfocheckbox input:checked ~ .checkmarkdata {
+    background-color: #fafafa;
+    border: 1px solid var(--colorG5);
+}
+  .checkmarkdata:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .inputInfocheckbox input:checked ~ .checkmarkdata:after {
+    display: block;
+  }
+  .requestAllset .boxLogin {
+    text-align: center;
+}
+  span.checkmarkdata.agree_marketing-border {
+    border: 1px solid #f04438;
+}
+  /* Style the checkmark/indicator */
+  .inputInfocheckbox .checkmarkdata:after {
+    left: 7px;
+    top: 3px;
+    width: 7px;
+    height: 12px;
+    border: solid #7f56d9;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+  #inputInfocheckbox {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    user-select: none;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
