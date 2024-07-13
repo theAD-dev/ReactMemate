@@ -12,8 +12,8 @@
 
 
 # production
-/src
-/public
+# /src
+# /public
 
 
 # misc
