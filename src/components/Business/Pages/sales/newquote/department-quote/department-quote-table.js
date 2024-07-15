@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 import DepartmentQuoteTableRow from './department-quote-table-row';
+import { calcDepartment } from '../../../../../../APIs/CalApi';
+import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 
-const DepartmentQuoteTable = () => {
-  const departments = ""
+const DepartmentQuoteTable = React.memo(() => {
+  const { data: departments, isLoading, isError } = useQuery({
+    queryKey: ['calcIndexes'],
+    queryFn: calcDepartment,
+    enabled: true,
+  });
 
   console.log(departments);
   // Example data for rows
@@ -37,21 +44,25 @@ const DepartmentQuoteTable = () => {
           <tr>
             <th style={{ width: '2%' }}></th>
             <th style={{ width: '5%', textAlign: 'center' }}>Order</th>
-            <th style={{ width: '10%' }}>Department</th>
+            <th style={{ width: '15%' }}>Department</th>
             <th style={{ width: '25%' }}>Description</th>
             <th style={{ width: '12%' }}>Rate</th>
             <th style={{ width: '11%' }}>Qty / Unit</th>
             <th style={{ width: '11%' }}>Markup / Margin</th>
             <th style={{ width: '5%' }}>Discount</th>
-            <th style={{ width: '18%' }}>Amount</th>
+            <th style={{ width: '13%' }}>Amount</th>
             <th style={{ width: '2%' }}></th>
           </tr>
         </thead>
         <Droppable droppableId="departmentQuoteTable">
           {(provided) => (
             <tbody {...provided.droppableProps} ref={provided.innerRef}>
-              {rows.map((row, index) => (
-                <DepartmentQuoteTableRow key={row.id} row={row} index={index}/>
+              {isLoading && (
+                <DepartmentQuoteTableRowLoading />
+              )}
+
+              {!isLoading && !isError && departments.map((row, index) => (
+                <DepartmentQuoteTableRow key={row.id} row={row} index={index} />
               ))}
               {provided.placeholder}
             </tbody>
@@ -60,6 +71,6 @@ const DepartmentQuoteTable = () => {
       </table>
     </DragDropContext>
   );
-};
+});
 
 export default DepartmentQuoteTable;

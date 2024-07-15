@@ -464,3 +464,16 @@ span.flatpickr-weekday {
     color: #344054;
     font-size: 20px;
 }
+
+.insiderowtr, .insiderowtr:hover td{
+    background: #fff !important;
+    border: none !important;
+}
+
+.insiderowtr .insiderowtd td:first-child {
+  position: static !important;
+}
+
+.insiderowtr .insiderowtd {
+    padding: 20px !important;
+}

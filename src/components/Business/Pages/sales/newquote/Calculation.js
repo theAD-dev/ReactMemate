@@ -287,6 +287,7 @@ const Calculation = () => {
           <Col sm={12} className='text-start'>
         
              <DepartmentQuote />
+             {/* <QuoteTable/> */}
     
           </Col>
         </Row>
