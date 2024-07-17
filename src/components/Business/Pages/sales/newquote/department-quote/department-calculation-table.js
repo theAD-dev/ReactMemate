@@ -65,7 +65,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             {
                                                 index === 0 && (
                                                     <>
-                                                        <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={true} title={value.label}/>
+                                                        <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={true} title={value.label} />
                                                     </>
                                                 )
                                             }
@@ -261,8 +261,8 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
 
     useEffect(() => {
         console.log('data: ', data);
-        if(data && data.length) data[0].label = subItemLabel;
-        else if(data && data.length === 0) {
+        if (data && data.length) data[0].label = subItemLabel;
+        else if (data && data.length === 0) {
             data.push({})
             data[0].label = subItemLabel;
         }
@@ -275,6 +275,37 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
 
     }, [data]);
 
+    const calculateSummary = () => {
+        let budget = 0;
+        let subtotal = 0;
+
+        Object.values(rows).forEach(departmentRows => {
+            departmentRows.forEach(item => {
+                let rate = item.type === "Hourly" ? parseFloat(item.per_hour) || 0 : parseFloat(item.cost) || 0;
+                let quantity = item.type === "Hourly" ? parseFloat(item.assigned_hours) || 0 : parseFloat(item.quantity) || 0;
+                let cost = rate * quantity;
+                budget += parseFloat(cost || 0);
+                subtotal += parseFloat(item.total || 0);
+            });
+        });
+
+        const tax = subtotal * 0.10;
+        const total = subtotal + tax;
+        const operationalProfit = subtotal - budget;
+
+        return {
+            budget: budget.toFixed(2),
+            operationalProfit: operationalProfit.toFixed(2),
+            subtotal: subtotal.toFixed(2),
+            tax: tax.toFixed(2),
+            total: total.toFixed(2)
+        };
+    }
+
+    useEffect(() => {
+        const summary = calculateSummary();
+        setTotals(summary);
+    }, [rows]);
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <table className='w-100 department-calculation'>

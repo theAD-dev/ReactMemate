@@ -394,15 +394,15 @@ const Calculation = () => {
         <Row className='rowWrapTop  '>
           <Col sm={5} className='text-start'>
             <ul className='left'>
-              <li><span>Budget</span><p>$ {totals.budget.toFixed(2)}</p></li>
-              <li className='budgetColor'><span>Operational Profit</span><p>$ {totals.operationalProfit.toFixed(2)}</p></li>
+              <li><span>Budget</span><p>$ {totals.budget}</p></li>
+              <li className='budgetColor'><span>Operational Profit</span><p>$ {totals.operationalProfit}</p></li>
             </ul>
           </Col>
           <Col sm={7} className='text-end'>
           <ul className='right'>
-              <li><span>Subtotal</span><p>$ {totals.subtotal.toFixed(2)}</p></li>
-              <li><span>Tax ( 10% ) </span><p>$ {totals.tax.toFixed(2)}</p></li>
-              <li className='total'><span>Total </span><p>$ {totals.total.toFixed(2)}</p></li>
+              <li><span>Subtotal</span><p>$ {totals.subtotal}</p></li>
+              <li><span>Tax ( 10% ) </span><p>$ {totals.tax}</p></li>
+              <li className='total'><span>Total </span><p>$ {totals.total}</p></li>
             </ul>
           </Col>
         </Row>
