@@ -108,6 +108,32 @@
     text-align: right;
     display: block;
 }
+.newtaskaddModal .inputInfo textarea {
+    width: 100%;
+    min-height: 140px;
+    border: 0;
+}
+.newtaskaddModal .leftTaskActionBtn button, .newtaskaddModal .leftTaskActionBtn button:hover {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    width: auto;
+    min-width: 0 !important;
+    margin-right: 12px;
+}
+.newtaskaddModal .modal-content {
+    width: 534px;
+}
+.taskBottonBar {
+    justify-content: space-between !important;
+    align-items: center;
+}
+.newtaskaddModal .inputInfo {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 8px 14px;
+}
 .contactFinanceWrap .leftFormWrap {
     border-radius: var(--radius-xs, 4px);
     border: 1px solid var(--Gray-200, #EAECF0);

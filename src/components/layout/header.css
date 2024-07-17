@@ -106,15 +106,18 @@
 .headerNav ul li {
     display: inline-block;
     vertical-align: middle;
-    margin: 0 4px;
+    margin: 0 2px;
 }
-
 .headerNav ul li a {
     padding: 10px 20px;
     border-radius: 6px;
 }
 
-.menuActive.managementMain {
+.business .menuActive.managementMain {
+    background: #F2FAFF;
+    color: #158ECC;
+}
+.work .menuActive.managementMain1 {
     background: #F2FAFF;
     color: #158ECC;
 }
@@ -144,15 +147,15 @@
     background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
 }
 
-.management.work {
+.managementMain1.work {
     background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
     color: #FE8890;
 }
 
-.work:hover {
+/* .work:hover {
     color: #FE8890;
     background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
-}
+} */
 
 .menuActive.sales {
     color: #6FBAFF;
@@ -222,31 +225,54 @@
     color: #D16CB6;
     background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
 }
+.menuActive.tasks{
+    color: #D16CB6;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
 .news:hover {
     color: #344054;
     background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
 }
 .news:hover {
     color: #9890E3;
-    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+    background: linear-gradient(45deg, #8fefff54 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.menuActive.news {
+    color: #9890E3;
+    background: linear-gradient(45deg, #8fefff54 0%, rgba(255, 234, 246, 0.10) 100%);
 }
 .approval:hover {
-    color: #9EC2A2;
-    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+    color: #78997C;
+    background: linear-gradient(0deg, rgba(158, 194, 162, 0.10) 0%, rgba(192, 227, 189, 0.10) 100%);
+}
+.menuActive.approval{
+    color: #78997C;
+    background: linear-gradient(0deg, rgba(158, 194, 162, 0.10) 0%, rgba(192, 227, 189, 0.10) 100%);
 }
 .dashboard:hover {
-    color: #292D32;
-    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+    color: #6DA7BD;
+    background: linear-gradient(270deg, rgba(116, 235, 213, 0.10) 0%, rgba(159, 172, 230, 0.10) 100%);
+}
+.menuActive.dashboard{
+    color: #6DA7BD;
+    background: linear-gradient(270deg, rgba(116, 235, 213, 0.10) 0%, rgba(159, 172, 230, 0.10) 100%);
 }
 .jobs:hover {
     color: #FFB800;
-    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+    background: linear-gradient(45deg, rgba(255, 184, 0, 0.10) 0%, rgba(255, 245, 0, 0.10) 100%);
+}
+.menuActive.jobs{
+    color: #FFB800;
+    background: linear-gradient(45deg, rgba(255, 184, 0, 0.10) 0%, rgba(255, 245, 0, 0.10) 100%);
 }
 .people:hover {
-    color: #344054;
-    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+    color: #A66DAA;
+   background: linear-gradient(135deg, rgba(255, 245, 195, 0.10) 0%, rgba(148, 82, 165, 0.10) 100%);
 }
-
+.menuActive.people{
+    color: #A66DAA;
+    background: linear-gradient(135deg, rgba(255, 245, 195, 0.10) 0%, rgba(148, 82, 165, 0.10) 100%);
+}
 .headerNav ul.left li:first-child {
     padding-left: 0;
 }
