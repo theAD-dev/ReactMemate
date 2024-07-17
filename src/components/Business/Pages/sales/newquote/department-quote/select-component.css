@@ -1,0 +1,24 @@
+.main-select {
+  width: 200px;
+  border: 1px solid red;
+}
+
+.option-container {
+  position: relative;
+}
+
+.sub-options-container {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 150px;
+  border: 1px solid green;
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000; /* Ensure it appears above other content */
+}
+
+.sub-options-container div {
+  margin: 5px 0;
+}

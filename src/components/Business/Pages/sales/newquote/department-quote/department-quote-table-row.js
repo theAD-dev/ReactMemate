@@ -6,13 +6,6 @@ import { Draggable } from '@hello-pangea/dnd';
 import DepartmentQuoteTableInsideRow from './department-quote-table-inside-row';
 
 const DepartmentQuoteTableRow = React.memo(({ row, index }) => {
-  const [isOpened, setIsOpened] = useState(false);
-  const [expandedRows, setExpandedRows] = useState({});
-  
-  const toggleRow = (rowId) => {
-    setIsOpened(!isOpened);
-  };
-
   return (
     <React.Fragment>
       <Draggable draggableId={`row-${row.id}`} index={index}>
@@ -38,23 +31,52 @@ const DepartmentQuoteTableRow = React.memo(({ row, index }) => {
             <td style={{ width: '15%' }}>
               <div className='d-flex w-100 justify-content-between'>
                 {row.name}
-                <ExpandMore style={{ cursor: 'pointer' }} onClick={() => toggleRow(row.id)}/>
               </div>
             </td>
-            <td style={{ width: '25%' }}>{row.description}</td>
-            <td style={{ width: '12%' }}>{row.rate}</td>
-            <td style={{ width: '11%' }}>{row.qty}</td>
-            <td style={{ width: '11%' }}>{row.markup}</td>
-            <td style={{ width: '5%' }}>{row.discount}</td>
-            <td style={{ width: '13%' }}>{row.amount}</td>
+            <td style={{ width: '25%' }}>
+              <textarea value={row.description}></textarea>
+            </td>
+            <td style={{ width: '12%' }}>
+              {
+                row.type == 'Cost of sale'
+                  ? <input type='text' value={row.cost} />
+                  : <input type='text' value={row.per_hour} />
+              }
+            </td>
+            <td style={{ width: '11%' }}>
+              {row.qty}
+              <div style={{ display: 'flex', borderBottom: '1px solid #D0D5DD' }}>
+                {
+                  row.type == 'Cost of sale'
+                    ? <input type='text' value={row.quantity || 1} />
+                    : <input type='text' value={row.assigned_hours || 1} />
+                }
+                <select value={"Hourly"} onChange={() => { }}>
+                  <option value="Cost of sale">1/Q</option>
+                  <option value="Hourly">1/H</option>
+                </select>
+              </div>
+            </td>
+            <td style={{ width: '11%' }}>
+              <div style={{ display: 'flex', borderBottom: '1px solid #D0D5DD' }}>
+                <input type='text' value={row.margin || 0.00} />
+                <select value={"margin"}>
+                  <option value={"margin"}>Margin  %</option>
+                  <option value={"amount"}>Amount $</option>
+                  <option value={"markup"}>Markup %</option>
+                </select>
+              </div>
+            </td>
+            <td style={{ width: '5%' }}>
+              <input type='text' value={`${row.discount || 0}%`} />
+            </td>
+            <td style={{ width: '13%' }}>$ {row.total}</td>
             <td style={{ width: '2%' }}>
               <Delete />
             </td>
           </tr>
         )}
       </Draggable>
-
-      { isOpened && <DepartmentQuoteTableInsideRow row={row} expandedRows={expandedRows} setExpandedRows={setExpandedRows} /> }
     </React.Fragment>
   )
 });

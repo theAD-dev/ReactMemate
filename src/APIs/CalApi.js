@@ -41,8 +41,6 @@ export const calcReferenceId = async (subItem) => {
   try {
     const response = await fetch(`${API_BASE_URL}/references/calculators/${subItem}/`, requestOptions);
     const result = await response.json();
-    if(result?.length) result[0].subItemId = subItem;
-    console.log('result: ', result);
     return result;
   } catch (error) {
     console.error(error);

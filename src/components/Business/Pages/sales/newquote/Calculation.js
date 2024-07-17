@@ -38,6 +38,13 @@ const Calculation = () => {
   const [position, setPosition] = useState('Manager');
   const [contactPhone, setContactPhone] = useState('+61458987490');
   const [contactEmail, setContactEmail] = useState('personal@email.com');
+  const [totals, setTotals] = useState({
+    budget: 0,
+    operationalProfit: 0,
+    subtotal: 0,
+    tax: 0,
+    total: 0,
+});
   
   const [value, setValue] = useState(dayjs());
   const handleRadioChange = (e) => {
@@ -286,7 +293,7 @@ const Calculation = () => {
         <Row className='boxGreyBox mt-3 calStyleBox01'>
           <Col sm={12} className='text-start'>
         
-             <DepartmentQuote />
+             <DepartmentQuote totals={totals} setTotals={setTotals}/>
              {/* <QuoteTable/> */}
     
           </Col>
@@ -387,15 +394,15 @@ const Calculation = () => {
         <Row className='rowWrapTop  '>
           <Col sm={5} className='text-start'>
             <ul className='left'>
-              <li><span>Budget</span><p>$ 12,240.00</p></li>
-              <li className='budgetColor'><span>Operational Profit</span><p>$ 8,200.00</p></li>
+              <li><span>Budget</span><p>$ {totals.budget.toFixed(2)}</p></li>
+              <li className='budgetColor'><span>Operational Profit</span><p>$ {totals.operationalProfit.toFixed(2)}</p></li>
             </ul>
           </Col>
           <Col sm={7} className='text-end'>
           <ul className='right'>
-              <li><span>Subtotal</span><p>$ 1,351.00</p></li>
-              <li><span>Tax ( 10% ) </span><p>$ 1,250.42</p></li>
-              <li className='total'><span>Total </span><p>$ 28,200.00</p></li>
+              <li><span>Subtotal</span><p>$ {totals.subtotal.toFixed(2)}</p></li>
+              <li><span>Tax ( 10% ) </span><p>$ {totals.tax.toFixed(2)}</p></li>
+              <li className='total'><span>Total </span><p>$ {totals.total.toFixed(2)}</p></li>
             </ul>
           </Col>
         </Row>

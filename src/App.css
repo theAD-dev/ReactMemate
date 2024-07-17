@@ -453,27 +453,14 @@ span.flatpickr-weekday {
     width: 92% !important;
 }
 
-
-
-.rowBorderHide, .rowBorderHide td {
-    border: 0 !important;
-    background-color: transparent !important;
-    text-align: center !important;
-    width: 100%;
-    width: 100%;
-    color: #344054;
-    font-size: 20px;
+table.department-calculation tbody tr td,  table.department-calculation thead tr th {
+  border-right: none !important;
+  background-color: #fff !important;
+}
+table.department-calculation tbody tr:hover td {
+    background-color: #F2FAFF !important;
 }
 
-.insiderowtr, .insiderowtr:hover td{
-    background: #fff !important;
-    border: none !important;
-}
-
-.insiderowtr .insiderowtd td:first-child {
-  position: static !important;
-}
-
-.insiderowtr .insiderowtd {
-    padding: 20px !important;
+table.department-calculation tbody tr:hover .checkbox{
+    visibility: visible !important;
 }
