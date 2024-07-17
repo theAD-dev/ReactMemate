@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fetchClients } from "../../../../APIs/ClientsApi";
+import { fetchTasks } from "../../../../APIs/TasksApi";
 import TasksTables from "./TasksTables";
 import "./tasksTables.css"
 const Tasks = () => {
@@ -31,7 +31,8 @@ const Tasks = () => {
     try {
       const limit = 50 ; // Specify the limit
       const offset = page * limit; // Calculate the offset based on the current page
-      const response = await fetchClients(limit, offset); // Pass limit and offset to fetchClients
+      const response = await fetchTasks(limit, offset); // Pass limit and offset to fetchClients
+      
       const data = await response.results;
       if (data.length === 0) {
         setHasMore(false);

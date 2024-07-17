@@ -18,14 +18,16 @@ import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 import { Table } from "react-bootstrap";
 import TableTopBar from "./TableTopBar";
 import { Resizable } from 'react-resizable';
+import ViewTaskModal from "./ViewTaskModal";
 
 
   const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
+    console.log('TasksData: ', TasksData);
   const [sortField, setSortField] = useState("Quote");
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const ClientsResults = Array.isArray(TasksData) ? TasksData : TasksData.results;
+  const TasksResults = Array.isArray(TasksData) ? TasksData : TasksData.results;
 
   const toggleSort = (field) => {
     setSortField(field);
@@ -33,8 +35,20 @@ import { Resizable } from 'react-resizable';
       prevDirection === "asc" ? "desc" : "asc"
     );
   };
+// Formate Date
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp * 1000);
+  const day = date.getDate();
+  const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+  }).format(date);
+  const year = date.getFullYear();
+  return `${day} ${monthAbbreviation} ${year}`;
+};
 
-  const sortedClientsData = [...ClientsResults].sort((a, b) => {
+
+
+  const sortedClientsData = [...TasksResults].sort((a, b) => {
     const aValue = a[sortField];
     const bValue = b[sortField];
   
@@ -64,7 +78,7 @@ import { Resizable } from 'react-resizable';
 
   const [selectedRows, setSelectedRows] = useState([]);
   const handleSelectAllCheckboxChange = () => {
-    const allRowIds = ClientsResults.map((sale) => sale.id);
+    const allRowIds = TasksResults.map((sale) => sale.id);
     if (selectedRows.length === allRowIds.length) {
       setSelectedRows([]);
     } else {
@@ -76,12 +90,12 @@ import { Resizable } from 'react-resizable';
 
   const [columns, setColumns] = useState([
     {
-      field: "Quote",
+      field: "number",
       width: 163,
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("Quote")}>
+        <div className="styleColor1" onClick={() => toggleSort("number")}>
         <span>Task ID	</span>
-        {sortField === "Quote" && (
+        {sortField === "number" && (
           <span>
             {sortDirection === "asc" ? (
               <ArrowUp size={16} color="#475467" />
@@ -96,20 +110,20 @@ import { Resizable } from 'react-resizable';
       renderCell: (params) => (
         <div className="styleColor1 clientTdFlex">
           <div>
-          <strong>T240001</strong>
+          <strong>{params.value}</strong>
           
           </div>
-          <Button className="linkByttonStyle" variant="link">Open</Button>
+         <ViewTaskModal taskId={params.row.id}/>
         </div>
       ),
     },
 
     {
-      field: "Client",
+      field: "title",
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("Client")}>
+        <div className="styleColor1" onClick={() => toggleSort("title")}>
         <span>Task Title</span>
-        {sortField === "Client" && (
+        {sortField === "title" && (
           <span>
             {sortDirection === "asc" ? (
               <ArrowUp size={16} color="#475467" />
@@ -127,48 +141,56 @@ import { Resizable } from 'react-resizable';
         className="mainStyle taskTitle"
         style={{ whiteSpace: "nowrap", textAlign: "left" }}
       >
-        Master Code Initiative for Next-Gen Solutions
+        <strong>{params.value}</strong>
       
       </div>
       ),
       
     },
     {
-      field: "category",
+      field: "userName",
+      // userName: TaskData.user,
+      // aliasTask: TaskData.user.alias,
       width: 191,
       sortable: false,
-      headerName: "Assigne",
+      headerName: "userName",
       renderCell: (params) => (
         <div
           className="mainStyle tasksAssigne"
           style={{ whiteSpace: "nowrap", textAlign: "left" }}
         >
-          <em>CF</em><span>Cody Fisher</span>
+          <em>{params.row.aliasTask}</em><span>{params.value}</span>
         
         </div>
       ),
     },
     {
-      field: "days_in_company",
+      field: "TaskStatus",
       sortable: false,
       headerName: "Status",
       width: 128,
       renderCell: (params) => {
-        var number = params.value;
-        var days = Math.floor(number / 24);
         return (
           <div
-            className="mainStyle taskStatusStyle"
+            className={`mainStyle taskStatusStyle ${params.value}`}
             style={{ whiteSpace: "nowrap", textAlign: "center" }}
           >
-          <span>Complete</span>
+          
+          {params.value ? (
+                  <>
+                   <span>Complete</span> 
+                  </>
+                ) : (
+                  <span>Not Complete</span> 
+                )}
+        
           </div>
         );
       },
     },
     
     {
-      field: "jobsdone",
+      field: "taskProject",
       width: 574,
       sortable: false,
       headerName: (
@@ -191,33 +213,33 @@ import { Resizable } from 'react-resizable';
         <div className="styleProject d-flex">
          <div className="leftIcon"> <FileText size={16} color="#475467" /></div>
          <div className="textWrap"> 
-          <p>Advanced Code Mastery for Smart Systems</p>
+          <p>PGS | Monthly maintenance | October</p>
           <span>P2400091</span>
          </div>
         </div>
       ),
     },
     {
-      field: "total_turnover",
+      field: "TaskStartDate",
       sortable: false,
       headerName: "Start Date",
       width: 122,
       renderCell: (params) => (
         <div className="taskDatesDue">
-         09 Dec 2029
+           <p>{formatDate(params.value)}</p>
         </div>
       ),
     },
   
     {
-      field: "average_pd",
+      field: "TaskStartEnd",
       sortable: false,
       headerName: "Due Date",
       width: 137,
       renderCell: (params) => (
         <div
         className="taskDatesDue">
-         12 Dec 2029
+          <p>{formatDate(params.value)}</p>
         </div>
       ),
     },
@@ -228,18 +250,26 @@ import { Resizable } from 'react-resizable';
 
   const [rows, setRows] = useState([]);
   useEffect(()=> {
-    const rows = ClientsResults.map((client) => {
+    const rows = TasksResults.map((TaskData) => {
   
     
       return {
-        isSelected: selectedRows.includes(client.id),
-        id: client.id,
+        isSelected: selectedRows.includes(TaskData.id),
+        id: TaskData.id,
+        number: TaskData.number,
+        title: TaskData.title,
+        userName: TaskData.user.full_name,
+        aliasTask: TaskData.user.alias,
+        TaskStatus: TaskData.finished,
+        TaskStartDate: TaskData.from_date,
+        TaskStartEnd: TaskData.to_date,
+        // taskProject: TaskData.project.reference,
     
       };
     });
     
     setRows(rows)
-  }, [ClientsResults,selectedRows])
+  }, [TasksResults,selectedRows])
   
 
   const onResize = (index) => (event, { size }) => {
@@ -248,6 +278,7 @@ import { Resizable } from 'react-resizable';
       nextColumns[index] = {
         ...nextColumns[index],
         width: size.width,
+       
       };
       return nextColumns;
     });
@@ -269,11 +300,20 @@ import { Resizable } from 'react-resizable';
   
   const handleRowsFilterChange = (filteredRows) => {
     
-    const rows = filteredRows.map((client) => {
+    const rows = filteredRows.map((TaskData) => {
     
       return {
-        isSelected: selectedRows.includes(client.id),
-        id: client.id,
+
+        isSelected: selectedRows.includes(TaskData.id),
+        id: TaskData.id,
+        number: TaskData.number,
+        title: TaskData.title,
+        userName: TaskData.user,
+        aliasTask: TaskData.user.alias,
+        TaskStatus: TaskData.finished,
+        TaskStartDate: TaskData.from_date,
+        TaskStartEnd: TaskData.to_date,
+        // taskProject: TaskData.project.reference,
     
       };
     });
@@ -284,7 +324,7 @@ import { Resizable } from 'react-resizable';
 
   return (
     <div className="tasksTableWrap">
-      <TableTopBar TasksData={ClientsResults} rowsfilter={rowsfilter} onRowsFilterChange={handleRowsFilterChange} rows={sortedClientsData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
+      <TableTopBar TasksData={TasksResults} rowsfilter={rowsfilter} onRowsFilterChange={handleRowsFilterChange} rows={sortedClientsData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
       <Table responsive>
       <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
           <tr>
@@ -292,7 +332,7 @@ import { Resizable } from 'react-resizable';
           <label className="customCheckBox">
           <input
             type="checkbox"
-            checked={selectedRows.length === ClientsResults.length}
+            checked={selectedRows.length === TasksResults.length}
             onChange={handleSelectAllCheckboxChange}
           />
           <span className="checkmark">

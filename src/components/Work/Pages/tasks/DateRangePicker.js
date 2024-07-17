@@ -20,14 +20,14 @@ const DateRangePicker = ({ onDataApply }) => {
     setSelectedDates(selectedDates);
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     if (selectedDates.length === 2) {
       const startDate = selectedDates[0];
       const endDate = selectedDates[1];
       setStartDate(startDate);
       setEndDate(endDate);
     }
-  }, [selectedDates])
+  }, [selectedDates]);
 
   const updateCustomDiv = () => {
     const monthElement = document.querySelector(".flatpickr-months");
@@ -37,7 +37,10 @@ const DateRangePicker = ({ onDataApply }) => {
         existingCustomDiv.textContent = `${startDate.toISOString().split('T')[0]} - ${endDate.toISOString().split('T')[0]}`;
       } else {
         if (monthElement) {
-            
+          const customDiv = document.createElement('div');
+          customDiv.className = "custom-div";
+          customDiv.innerHTML = `<p>${startDate.toISOString().split('T')[0]} - ${endDate.toISOString().split('T')[0]}</p>`;
+          monthElement.parentNode.insertBefore(customDiv, monthElement.nextSibling);
         }
       }
     }
@@ -74,11 +77,12 @@ const DateRangePicker = ({ onDataApply }) => {
           dayElem.innerHTML += "<span class='event'></span>";
       else if (Math.random() > 0.85)
           dayElem.innerHTML += "<span class='event busy'></span>";
-  }
+    }
   };
 
   useEffect(() => {
     if (isApplying) {
+      // Custom logic when applying
     }
   }, [isApplying]);
 
@@ -106,14 +110,9 @@ const DateRangePicker = ({ onDataApply }) => {
       }
     }
   }, [startDate, endDate]);
-  
-  
-  
-  
 
   return (
     <div>
-     
       <Flatpickr
         options={flatpickrOptions}
         value={selectedDates}

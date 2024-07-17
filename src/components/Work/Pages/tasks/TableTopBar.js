@@ -13,6 +13,7 @@ import DateRangePicker from "./DateRangePicker";
 import NewTaskModal from "../../../layout/modals/NewTaskModal";
 
 const TableTopBar = ({rows,onRowsFilterChange, TasksData, selectedRowCount,selectClass,selectedRow }) => {
+  console.log('TasksData: ', TasksData);
   const [totalAmount, setTotalAmount] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);
@@ -57,7 +58,7 @@ const TableTopBar = ({rows,onRowsFilterChange, TasksData, selectedRowCount,selec
   }, [selectedRange])
   
   
-  const fullNames = [...new Set(TasksData.map(item => item.category))];
+  const fullNames = [...new Set(TasksData.map(item => item.user.full_name))];
 
   
   const fullCategoryJson = JSON.stringify(fullNames, null, 2);

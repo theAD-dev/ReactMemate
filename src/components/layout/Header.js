@@ -118,7 +118,11 @@ const Header = ({ onClick }) => {
   }
   return (
     <>
-      <div className="headerTop">
+    
+      <div className="headerNav1">
+        {menuswitch?
+        <>
+          <div className="headerTop business">
         <Container fluid>
           <Row>
             {profileData && (
@@ -163,7 +167,7 @@ const Header = ({ onClick }) => {
                           <NavLink
                             to="/dashboard"
                             className={({ isActive }) =>
-                              isActive ? "menuActive" : "link" + "work"
+                              isActive ? "menuActive" : "link" + ""
                             }
                             onClick={changeMenu}
                           >
@@ -186,9 +190,7 @@ const Header = ({ onClick }) => {
           </Row>
         </Container>
       </div>
-      <div className="headerNav">
-        {menuswitch?
-          <Container fluid>
+          <Container fluid className="headerNav">
           <Row>
             <Col xs={3} md={3}>
               <ul className="left">
@@ -291,7 +293,80 @@ const Header = ({ onClick }) => {
               </ul>
             </Col>
           </Row>
-        </Container>:<Container fluid>
+       
+        </Container>
+        </>
+        :
+        <>
+          <div className="headerTop work">
+        <Container fluid className="">
+          <Row>
+            {profileData && (
+              <>
+                <Col className="d-flex align-items-center">
+                  <div className="company_logo colMinWidth">
+                    {profileData.organization.logo ? (
+                      <img
+                        src={profileData.organization.logo}
+                        alt="Company Logo"
+                      />
+                    ) : (
+                      <img src={AvatarImg} alt="DummyImg" />
+                    )}
+                    <span>{profileData.organization.name}</span>
+                  </div>
+                  <div className="SelectOptionHead">
+                    <SelectOption />
+                  </div>
+                </Col>
+                <Col>
+                  <nav className="colMinWidth">
+                    <div className="menu-item">
+                      <ul>
+                        <li>
+                          <NavLink
+                            to=""
+                            className={`managementMain ${
+                              activeLink === "" ? "menuActive1" : ""
+                            }`}
+                            onClick={selectBussniess}
+                          >
+                            Business
+                          </NavLink>
+                        </li>
+                        <li>
+                          <a href="/">
+                            <img src={Logo} alt="Logo" />
+                          </a>
+                        </li>
+                        <li>
+                        <NavLink
+                            to="/dashboard"
+                            className={`managementMain1 menuActive ${
+                              activeLink === "" ? "menuActive" : ""
+                            }`}
+                            onClick={selectBussniess}
+                          >
+                            Work
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </div>
+                  </nav>
+                </Col>
+                <Col>
+                  <ProfileInfo
+                    username={profileData.full_name}
+                    userType={profileData.type}
+                    aliasName={profileData.alias_name}
+                  />
+                </Col>
+              </>
+            )}
+          </Row>
+        </Container>
+      </div>
+        <Container fluid className="headerNav">
           <Row>
             <Col xs={3} md={3}>
               <ul className="left">
@@ -353,6 +428,7 @@ const Header = ({ onClick }) => {
                     className={({ isActive }) =>
                       (isActive ? "menuActive" : "link") + " tasks"
                     }
+                    
                   >
                     <img src={calendarTick} alt="calendarTick" />
                     Tasks
@@ -373,6 +449,7 @@ const Header = ({ onClick }) => {
             </Col>
           </Row>
         </Container>
+        </>
         }
         
         
