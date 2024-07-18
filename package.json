@@ -35,8 +35,6 @@
     "react-bootstrap-icons": "^1.10.3",
     "react-circular-progressbar": "^2.1.0",
     "react-countup": "^6.5.3",
-    "react-credit-card-input": "^1.1.5",
-    "react-credit-cards": "^0.8.3",
     "react-datepicker": "^5.0.0",
     "react-dom": "^18.2.0",
     "react-dom-confetti": "^0.2.0",
