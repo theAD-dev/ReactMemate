@@ -279,8 +279,8 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
         let budget = 0;
         let subtotal = 0;
 
-        Object.values(rows).forEach(departmentRows => {
-            departmentRows.forEach(item => {
+        Object.values(rows)?.forEach(departmentRows => {
+            departmentRows?.forEach(item => {
                 let rate = item.type === "Hourly" ? parseFloat(item.per_hour) || 0 : parseFloat(item.cost) || 0;
                 let quantity = item.type === "Hourly" ? parseFloat(item.assigned_hours) || 0 : parseFloat(item.quantity) || 0;
                 let cost = rate * quantity;

@@ -53,7 +53,7 @@ const SelectComponent = ({ departments, handleChange, isShowlabel = false, title
                 }
             >
                 {options?.map(option => (
-                    <SubMenu key={option.value} label={option.label}>
+                    <SubMenu disabled={isShowlabel} key={option.value} label={option.label}>
                         {option.options.map(subOption => (
                             <MenuItem key={subOption.value} onClick={() => handleSubMenuClick(subOption.label, subOption.value)}>
                                 {subOption.label}
