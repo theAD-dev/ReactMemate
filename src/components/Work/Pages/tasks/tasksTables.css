@@ -60,8 +60,81 @@ letter-spacing: 0.12px;
 .tasksTableWrap .mainStyle.taskStatusStyle{
   text-align: center;
 }
-
-
+.delaskaddModal .ContactModelIn {
+  text-align: center;
+  padding: 25px 0;
+}
+.delaskaddModal .deltaskText {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-100, #F2F4F7);
+  margin: 11px 24px 28px;
+  padding: 8px 16px;
+}
+.delaskaddModal .taskBottonBar .btn-outline-secondary {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: #FFF;
+  padding: 10px 18px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.delaskaddModal .taskBottonBar .btn-outline-danger ,.EditaskaddModal .btn-outline-danger{
+  border-radius: 4px;
+  border: 1px solid var(--Error-600, #D92D20);
+  background: var(--Error-600, #D92D20);
+  padding: 10px 18px;
+  color: #FFF;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.delaskaddModal .deltaskText p {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  margin-bottom: 0;
+}
+.delaskaddModal .deltaskText h2 {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.08px;
+}
+.delaskaddModal .modal-header {
+  display: inline-block !important;
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+}
+.delaskaddModal button.btn-close {
+  position: absolute;
+  right: 26px;
+  top: 23px;
+}
+.delaskaddModal .modelHeader span {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.27px;
+  display: inline-block !important;
+  width: 100%;
+}
 .tasksTableWrap .tasksAssigne em {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -89,7 +162,7 @@ letter-spacing: 0.12px;
   line-height: 22px;
   letter-spacing: 0.14px;
 }
-.tasksTableWrap  .taskTitle {
+.tasksTableWrap .taskTitle strong {
   color: var(--Gray-700, #344054);
   font-family: Inter;
   font-size: 14px;
@@ -128,10 +201,11 @@ span.taskUserPic {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+.footerTaskNewCol {
+  padding: 8px 30px;
+  border-top: 1px solid #EAECF0;
+}
 .tasksTableWrap .btn-newTaskBut {
-  border-radius: 4px;
-  border: 1px solid #158ECC;
-  background: #158ECC;
   font-size: 14px !important;
   font-style: normal;
   font-weight: 600;
@@ -144,27 +218,45 @@ span.taskUserPic {
   display: flex;
   align-items: center;
   cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid var(--Orange-600, #D59346) !important;
+  background: var(--Orange-600, #D59346) !important;
 }
 .newtaskaddModal .modelHeader span img {
-  margin-right: 21px;
+  margin-right: 14px;
 }
 
 
 /* src/CustomSelect.css */
-.custom-select-container {
+/* .custom-select-container {
   position: relative;
   width: 280px;
   cursor: pointer;
+} */
+.custom-select-selected span.checkbox-icon {
+  display: none;
 }
-.taskBottonBar .dropdown-menu h3 {
-  color: var(--Gray-600, #475467);
+.custom-select-selected  .custom-optionText {
+  display: flex;
+  align-items: center;
+}
+.leftTaskActionBtn {
+  display: flex;
+  align-items: center;
+}
+.custom-select-selected .option-text {
+  color: var(--Gray-900, #101828);
   font-family: Inter;
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 22px;
-  letter-spacing: 0.14px;
-  
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+  display: inline-block;
+  width: 87px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
 }
 .dateSelectdTaskBar {
   color: var(--Gray-700, #344054);
@@ -184,14 +276,7 @@ span.taskUserPic {
 .taskBottonBar .dropdown-menu  {
   padding: 19px;
 }
-.custom-select-selected {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  background-color: white;
-}
+
 
 .custom-select-options {
   position: absolute;
@@ -213,7 +298,9 @@ span.taskUserPic {
 .custom-select-option:hover {
   background-color: #f0f0f0;
 }
-
+.custom-select-selected {
+  margin-right: 10px;
+}
 .option-image {
   width: 24px;
   height: 24px;
@@ -221,9 +308,14 @@ span.taskUserPic {
   border-radius: 200px;
   border: 0.5px solid var(--Gray-900, #10182833);
 }
-
 .option-text {
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
   font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
 }
 .leftTaskActionBtn .dropdown-menu {
   border: 0;
@@ -374,6 +466,11 @@ span.iconStyleCircle {
   align-items: center;
   border-radius: 200px;
   margin-right: 7px;
+}
+.ContactModel fieldset {
+  bottom: 6px;
+  right: 0;
+  top: -15px;
 }
 span.taskUserPic {
   display: flex;

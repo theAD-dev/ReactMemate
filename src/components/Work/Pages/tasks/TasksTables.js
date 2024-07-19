@@ -22,7 +22,6 @@ import ViewTaskModal from "./ViewTaskModal";
 
 
   const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
-    console.log('TasksData: ', TasksData);
   const [sortField, setSortField] = useState("Quote");
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRow, setSelectedRow] = useState(null);
@@ -113,7 +112,7 @@ const formatDate = (timestamp) => {
           <strong>{params.value}</strong>
           
           </div>
-         <ViewTaskModal taskId={params.row.id}/>
+         <ViewTaskModal taskId={params.row.id} />
         </div>
       ),
     },

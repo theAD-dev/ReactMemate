@@ -1,5 +1,6 @@
 const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Fetch API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasks = async (limit, offset) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");
@@ -26,6 +27,9 @@ export const fetchTasks = async (limit, offset) => {
     throw error;
   }
 };
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> View Task API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasksRead = async (taskId) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");
@@ -50,7 +54,10 @@ export const fetchTasksRead = async (taskId) => {
     throw error;
   }
 };
-export const fetchTasksUpdate= async (taskId) => {
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Task Update API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+export const fetchTasksUpdate= async (mainData,taskId) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
@@ -59,6 +66,7 @@ export const fetchTasksUpdate= async (taskId) => {
   const requestOptions = {
     method: 'PUT',
     headers: myHeaders,
+    body: JSON.stringify(mainData),
     redirect: 'follow'
   };
 
@@ -76,7 +84,7 @@ export const fetchTasksUpdate= async (taskId) => {
 };
 
 
-
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Task Create API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasksNew = async (formData) => {
 
   const myHeaders = new Headers();
@@ -101,6 +109,7 @@ export const fetchTasksNew = async (formData) => {
   }
 };
 
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Fetch Task Project API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasksProject = async () => {
  
   const myHeaders = new Headers();
@@ -124,6 +133,8 @@ export const fetchTasksProject = async () => {
   }
 };
 
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Fetch Task Uses API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasksUsers = async () => {
  
   const myHeaders = new Headers();
@@ -144,5 +155,32 @@ export const fetchTasksUsers = async () => {
   } catch (error) {
     console.error(error);
     throw error; // Rethrow the error if needed
+  }
+};
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DELETE Task  API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+export const fetchTasksDelete = async (taskId) => {
+  const myHeaders = new Headers();
+  const accessToken = sessionStorage.getItem("access_token");
+  myHeaders.append("Authorization", `Bearer ${accessToken}`);
+  myHeaders.append("Content-Type", `application/json`);
+
+  const requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  try {
+    // Append the limit and offset parameters to the URL query string
+    const url = new URL(`${API_BASE_URL}/tasks/delete/${taskId}`);
+
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Tasks fetch error:', error);
+    throw error;
   }
 };

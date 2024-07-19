@@ -13,7 +13,6 @@ import DateRangePicker from "./DateRangePicker";
 import NewTaskModal from "../../../layout/modals/NewTaskModal";
 
 const TableTopBar = ({rows,onRowsFilterChange, TasksData, selectedRowCount,selectClass,selectedRow }) => {
-  console.log('TasksData: ', TasksData);
   const [totalAmount, setTotalAmount] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);

@@ -96,8 +96,8 @@ const NewTaskModal = (dateRange) => {
     const formattedToDate = formData.to_date;
     const dateS = parseISO(formattedFromDate); // Parse ISO string to Date object
     const dateE = parseISO(formattedToDate); // Parse ISO string to Date object
-    const formattedDateS = format(dateS, 'MMMM dd, yyyy HH:mm:ss'); 
-    const formattedDateE = format(dateE, 'MMMM dd, yyyy HH:mm:ss'); 
+    // const formattedDateS = format(dateS, 'MMMM dd, yyyy HH:mm:ss'); 
+    // const formattedDateE = format(dateE, 'MMMM dd, yyyy HH:mm:ss'); 
 
    // Format dates to ISO string with time component
   //  const formattedFromDate = formData.from_date instanceof Date ? formData.from_date.toISOString() : '';
@@ -111,8 +111,8 @@ const NewTaskModal = (dateRange) => {
         user: formData.selectedUser,
         // from_date: formattedFromDate,
         // to_date: formattedToDate
-        from_date: formattedDateS,
-        to_date: formattedDateE,
+        from_date: "2019-08-24T14:15:22Z",
+        to_date: "2024-08-24T14:15:22Z",
       };
       const response = await fetchTasksNew(taskData);
       console.log('Task created:', response);
@@ -137,9 +137,6 @@ const NewTaskModal = (dateRange) => {
     setIsOpen(!isOpen);
   };
 
-
-
-  
   return (
    <>
      <Button variant="newTaskBut" onClick={handleShow}>
@@ -160,7 +157,7 @@ const NewTaskModal = (dateRange) => {
             <div className='ContactModelIn'>
             <Row className='text-left mt-0'>
             <Col>
-                <div className="formgroup mb-2 mt-0">
+                <div className="formgroup mb-2 mt-3">
                   <label>Task Title</label>
                   <div className={`inputInfo ${errors.taskTitle ? 'error-border' : ''}`}>
                     <input
@@ -188,9 +185,8 @@ const NewTaskModal = (dateRange) => {
                         placeholder='Enter a description...'
                         onChange={handleInputChange}
                       />
-                     
+                      {errors.description && <p className="error-message">{errors.description}</p>}
                       </div>
-                       {errors.description && <p className="error-message">{errors.description}</p>}
                     </div>
                     </Col>
                     </Row>
@@ -201,9 +197,6 @@ const NewTaskModal = (dateRange) => {
                       <div className={`inputInfo ${errors.customerCategory ? 'error-border' : ''}`}>
                       <FormControl className='customerCategory' sx={{ m: 0, minWidth: `100%` }}>
                         <Select
-                        MenuProps={{
-                          className: 'customScroll',
-                        }}
                           value={customerCategory}
                           onChange={handleChange}
                           displayEmpty
@@ -226,20 +219,20 @@ const NewTaskModal = (dateRange) => {
                     </Col>
                   </Row>
             </div>
-            <div className='popoverbottom taskBottonBar mt-0 pt-4'>
-              <div className='leftTaskActionBtn'>
+            <div className='footerTaskNewCol'>
+            <div className='leftTaskActionBtn'>
                 <div className="dropdown">
-                  <Button onClick={toggleDropdown} className="dropdown-toggle" >
-                    {isOpen ? <span className='iconStyleCircle'><Person color="#475467" size={18} /></span> : <span className='iconStyleCircle'><Person color="#475467" size={18} /></span>}
-                  </Button>
-                  {isOpen && (
-                    <div className="dropdown-menu">
-                      <h3>Assign team member</h3>
+                {/* <span className='iconStyleCircle'><Person color="#475467" size={18} /></span>  */}
                        <CustomSelect onSelect={handleUserSelect} />
-                    </div>
-                  )}
                 </div>
                 <TaskDatePIcker dateRange={dateRange} />
+              </div>
+
+              </div>
+            <div className='popoverbottom taskBottonBar mt-0 pt-4'>
+              <div className='leftTaskActionBtn'>
+               
+              
               </div>
               <Button className='savebox' onClick={handleCreateTasks}>
                 Create Task

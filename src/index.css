@@ -1229,7 +1229,20 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
  #controlled-tab-example-tabpane-Status label .userName {
   margin-left: 20px;
 }
-
+.tableTopBar .styleT3 .styleT2 {
+  border-radius: 16px;
+  border: 1px solid #FFF0C1;
+  background: #FFFAEB;
+  mix-blend-mode: multiply;
+  color: #FFC301;
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+}
  #controlled-tab-example-tabpane-Status label {
   justify-content: flex-start !important;
 }
