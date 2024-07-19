@@ -1,56 +1,68 @@
 import React, { useState } from 'react';
-import Select, { components } from "react-select";
-import './select-component.css'; // Custom CSS for styling
+import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
+import { ExpandMore } from '@mui/icons-material';
 
-const options = [
-    {
-        value: 'option1',
-        label: 'Option 1',
-        subOptions: [
-            { value: 'sub1-1', label: 'Sub Option 1-1' },
-            { value: 'sub1-2', label: 'Sub Option 1-2' },
-        ],
-    },
-    {
-        value: 'option2',
-        label: 'Option 2',
-        subOptions: [
-            { value: 'sub2-1', label: 'Sub Option 2-1' },
-            { value: 'sub2-2', label: 'Sub Option 2-2' },
-        ],
-    },
-];
+const SelectComponent = ({ departments, handleChange, isShowlabel = false, title }) => {
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedSubOption, setSelectedSubOption] = useState(title || null);
 
-const CustomOption = (props) => {
-    const [showSubOptions, setShowSubOptions] = useState(false);
+    const options = departments?.map(item => ({
+        value: item.id,
+        label: item.name,
+        options: item.subindexes.map(subitem => ({
+            value: subitem.id,
+            label: subitem.name
+        }))
+    }));
+    
+    const handleMenuItemClick = (value, label) => {
+        setSelectedOption(label);
+        setSelectedSubOption(null); // Reset sub option on main menu item click
+    };
+
+    const handleSubMenuClick = (label, value) => {
+        if(isShowlabel) setSelectedSubOption(label);
+        handleChange(value, label);
+    };
 
     return (
-        <div
-            className="option-container"
-            onMouseEnter={() => setShowSubOptions(true)}
-            onMouseLeave={() => setShowSubOptions(false)}
-        >
-            <components.Option {...props} />
-            {/* {showSubOptions && props.data.subOptions && ( */}
-                <div className="sub-options-container">
-                    <h1>Sourav</h1>
-                    {props.data.subOptions.map((subOption) => (
-                        <div key={subOption.value}>{subOption.label}</div>
-                    ))}
-                </div>
-            {/* )} */}
+        <div style={{ position: 'relative', width: '200px' }}>
+            <Menu
+                style={{
+                    maxHeight: '200px', // Max height for the menu to enable scrolling
+                    overflowY: 'auto', // Enable vertical scrolling
+                    border: '1px solid #ccc', // Optional: Add border to the menu container
+                    borderRadius: '4px', // Optional: Add border radius to the menu container
+                }}
+                menuButton={
+                    <MenuButton
+                        style={{
+                            minWidth: '150px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            color: '#212529',
+                            border: '1px solid #ccc'
+                        }}
+                    >
+                        {selectedSubOption || selectedOption || "Select an option"} <span><ExpandMore /></span>
+                    </MenuButton>
+                }
+            >
+                {options?.map(option => (
+                    <SubMenu disabled={isShowlabel} key={option.value} label={option.label}>
+                        {option.options.map(subOption => (
+                            <MenuItem key={subOption.value} onClick={() => handleSubMenuClick(subOption.label, subOption.value)}>
+                                {subOption.label}
+                            </MenuItem>
+                        ))}
+                    </SubMenu>
+                ))}
+            </Menu>
         </div>
-    );
-};
-
-const SelectComponent = () => {
-    return (
-        <Select
-            options={options}
-            components={{ Option: CustomOption }}
-            placeholder="Select an option"
-            className="main-select"
-        />
     );
 };
 
