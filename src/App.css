@@ -122,7 +122,7 @@ table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handl
     background: #EBF8FF;
 }
 .tableTopBar {
-    padding: 6px 33px;
+    padding: 6px 11px;
 }
 .boxLogin p.error-text {
     color: var(--color6);

@@ -237,7 +237,9 @@ const NewTaskModal = (dateRange) => {
               {imagehide?
               <span className='iconStyleCircle iconStyleCircleRight'> <Person color="#475467" size={18} onClick={handelselect}/></span>
             
-              :''}
+              :''
+              }
+              
               </div>
                 <TaskDatePIcker dateRange={dateRange} />
               </div>

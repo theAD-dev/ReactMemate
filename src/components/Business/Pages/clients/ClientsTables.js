@@ -97,7 +97,7 @@ import { Resizable } from 'react-resizable';
         <div className="styleColor1 clientTdFlex">
           <div>
           <strong>{params.value.substring(4)} </strong>
-          <p>{params.row.created}</p>
+        
           </div>
           <Button className="linkByttonStyle" variant="link">Open</Button>
         </div>

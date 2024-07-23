@@ -22,6 +22,7 @@ import ViewTaskModal from "./ViewTaskModal";
 
 
   const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
+    console.log('TasksData: ', TasksData);
   const [sortField, setSortField] = useState("Quote");
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRow, setSelectedRow] = useState(null);
@@ -152,7 +153,7 @@ const formatDate = (timestamp) => {
       // aliasTask: TaskData.user.alias,
       width: 191,
       sortable: false,
-      headerName: "userName",
+      headerName: "Assigne",
       renderCell: (params) => (
         <div
           className="mainStyle tasksAssigne"
@@ -210,10 +211,10 @@ const formatDate = (timestamp) => {
      
       renderCell: (params) => (
         <div className="styleProject d-flex">
-         <div className="leftIcon"> <FileText size={16} color="#475467" /></div>
+         <div className="leftIcon"> <FileText size={13.71} color="#475467" /></div>
          <div className="textWrap"> 
-          <p>PGS | Monthly maintenance | October</p>
-          <span>P2400091</span>
+         <p>{params.value}</p>
+          <span>{params.row.taskProjectNo}</span>
          </div>
         </div>
       ),
@@ -224,9 +225,9 @@ const formatDate = (timestamp) => {
       headerName: "Start Date",
       width: 122,
       renderCell: (params) => (
-        <div className="taskDatesDue">
-           <p>{formatDate(params.value)}</p>
-        </div>
+       
+          <div className="taskDatesDue">{formatDate(params.value)}</div>
+       
       ),
     },
   
@@ -236,10 +237,7 @@ const formatDate = (timestamp) => {
       headerName: "Due Date",
       width: 137,
       renderCell: (params) => (
-        <div
-        className="taskDatesDue">
-          <p>{formatDate(params.value)}</p>
-        </div>
+        <div className="taskDatesDue">{formatDate(params.value)}</div>
       ),
     },
    
@@ -262,7 +260,9 @@ const formatDate = (timestamp) => {
         TaskStatus: TaskData.finished,
         TaskStartDate: TaskData.from_date,
         TaskStartEnd: TaskData.to_date,
-        // taskProject: TaskData.project.reference,
+        taskProject: TaskData.project.reference,
+        taskProjectNo: TaskData.project.number,
+      
     
       };
     });
@@ -312,7 +312,8 @@ const formatDate = (timestamp) => {
         TaskStatus: TaskData.finished,
         TaskStartDate: TaskData.from_date,
         TaskStartEnd: TaskData.to_date,
-        // taskProject: TaskData.project.reference,
+        taskProject: TaskData.project.reference,
+     
     
       };
     });
