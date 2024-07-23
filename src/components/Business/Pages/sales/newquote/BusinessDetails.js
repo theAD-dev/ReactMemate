@@ -148,15 +148,15 @@ const BusinessDetails = () => {
         </div>
         <div className='navStepClient'>
                 <ul>
-                    <li><span><People color="#D0D5DD" size={15} /></span> <p>Choose Client</p></li>
-                    <li className='activeClientTab'><span><InfoSquare color="#D0D5DD" size={15} /></span> <p>Client Information</p> </li>
-                    <li><span><CardList color="#D0D5DD" size={15} /></span> <p>Scope of Work</p> </li>
+                    <li><span><People color="#1AB2FF" size={15} /></span> <p>Choose Client</p></li>
+                    <li className='activeClientTab'><span><InfoSquare color="#1AB2FF" size={15} /></span> <p>Client Information</p> </li>
+                    <li><span><CardList color="#1AB2FF" size={15} /></span> <p>Scope of Work</p> </li>
                 </ul>
               </div>
               <div className="formgroupWrap1">
                <ul className='mt-4'>
                <li>
-                <NavLink className="ActiveClient businessTab" to="#"><span><Building color="#667085" size={24} /></span> Business Client</NavLink>
+                <NavLink className="ActiveClient businessTab" to="#"><span><Building color="#1AB2FF " size={24} /></span> Business Client</NavLink>
                 </li>
               
                  </ul>

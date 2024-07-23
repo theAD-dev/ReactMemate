@@ -137,7 +137,7 @@ const Header = ({ onClick }) => {
                     ) : (
                       <img src={AvatarImg} alt="DummyImg" />
                     )}
-                    <span>{profileData.organization.name}</span>
+                    {/* <span>{profileData.organization.name}</span> */}
                   </div>
                   <div className="SelectOptionHead">
                     <SelectOption />

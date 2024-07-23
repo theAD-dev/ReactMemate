@@ -30,7 +30,7 @@ const SelectClientType = () => {
                   to="/sales/Newquote/selectyourclient/existing-clients"
                 >
                   <span>
-                    <People color="#9E77ED" size={24} />
+                    <People color="#1AB2FF" size={24} />
                   </span>{" "}
                   Existing Client{" "}
                 </NavLink>
@@ -41,7 +41,7 @@ const SelectClientType = () => {
                   to="/sales/newquote/client-information/step1"
                 >
                   <span>
-                    <PersonAdd color="#9E77ED" size={24} />
+                    <PersonAdd color="#1AB2FF" size={24} />
                   </span>{" "}
                   New Client{" "}
                 </NavLink>

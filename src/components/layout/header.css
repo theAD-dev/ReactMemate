@@ -28,15 +28,25 @@
     text-align: center;
     border-radius: 6px;
 }
-
 .company_logo {
     display: flex;
     align-items: center;
     color: var(--colorG1);
     text-align: center;
     letter-spacing: -0.16px;
+    border-radius: var(--radius-xs, 4px);
+    border: 0.5px solid var(--Gray-100, #F2F4F7);
+   
 }
-
+.avatar-wrap:hover .userImageBox {
+    border-radius: 200px;
+    border: 1px solid var(--Primary-200, #A3E0FF);
+    background: linear-gradient(180deg, #F9FAFB 0%, #E4F6FF 100%), #FFF;
+    color: var(--Primary-600, #158ECC);
+    text-align: center;
+    font-feature-settings: 'clig' off, 'liga' off;
+    letter-spacing: 0.25px;
+}
 .company_logo img {
     height: 40px;
 }
@@ -45,7 +55,12 @@
     text-align: left;
     color: var(--colorG1);
 }
-
+.avatar-wrap:hover .avatar-info span {
+    color: var(--Primary-600, #158ECC);
+}
+.avatar-wrap:hover .avatar-info  {
+    color: var(--Primary-600, #0A4766);
+}
 .avatar-info span {
     display: block;
     color: var(--colorG3);

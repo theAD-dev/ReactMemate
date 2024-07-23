@@ -351,7 +351,7 @@ table.table {
   padding: 0;
   cursor: pointer;
 }
-.clientAddress .linkByttonStyle{
+.clientAddress .linkByttonStyle {
   color: #158ECC;
   font-size: 14px;
   font-style: normal;
@@ -359,12 +359,12 @@ table.table {
   text-decoration: none;
   display: inline-block;
   padding: 0;
-  border-radius: 8px;
-  border: 1px solid var(--Primary-200, #E9D7FE);
-  background: var(--Primary-50, #F9F5FF);
   width: 40px;
   height: 40px;
   text-align: center;
+  border-radius: 8px;
+  border: 1px solid var(--Primary-200, #A3E0FF);
+  background: var(--Primary-25, #F2FAFF);
 }
 .clientAddress .linkByttonStyle svg{
   margin-left: 0;
