@@ -233,11 +233,14 @@ const NewTaskModal = (dateRange) => {
             <div className='footerTaskNewCol'>
             <div className='leftTaskActionBtn'>
             <div className="dropdown">
-              {showselect && <CustomSelect onSelect={handleUserSelect} selectstatus = {true}/>}
-              {imagehide?
-              <span className='iconStyleCircle iconStyleCircleRight'> <Person color="#475467" size={18} onClick={handelselect}/></span>
-            
-              :''}
+              {
+                <CustomSelect onSelect={handleUserSelect} selectstatus={showselect} />
+              }
+              {
+              <span className='iconStyleCircle iconStyleCircleRight'>
+                <Person color="#475467" size={18} onClick={handelselect}/>
+              </span>
+              }
               </div>
                 <TaskDatePIcker dateRange={dateRange} />
               </div>

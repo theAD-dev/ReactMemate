@@ -1,5 +1,4 @@
 import React from 'react'
-import DepartmentQuoteTable from './department-quote-table'
 import DepartmentCalculationTable from './department-calculation-table';
 
 const DepartmentQuote = React.memo(({ totals, setTotals }) => {

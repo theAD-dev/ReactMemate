@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import CustomOption from '../tasks/CustomOption';
 import { fetchTasksUsers } from "../../../../APIs/TasksApi";
 
-const CustomSelect = ({ onSelect,selectstatus }) => {
+const CustomSelect = ({ onSelect, selectstatus }) => {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [isOpen, setIsOpen] = useState(selectstatus?true:false);
+  const [isOpen, setIsOpen] = useState(selectstatus ? true : false);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
