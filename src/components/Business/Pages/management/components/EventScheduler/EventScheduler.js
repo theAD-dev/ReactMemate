@@ -8,14 +8,34 @@ function EventScheduler() {
     daypilotScript.src =
       "https://my.memate.com.au/static/js/daypilot-all.min.js";
     daypilotScript.id = "daypilot-script-ele";
+
+    const handleError = () => {
+      console.error("Failed to load DayPilot script.");
+      // Handle the error as needed
+    };
+
+    const handleLoad = () => {
+      try {
+        initDaypilot(CALENDAR_ID);
+      } catch (error) {
+        console.error("Error initializing DayPilot:", error);
+      }
+    };
+
+    daypilotScript.addEventListener('error', handleError);
+    daypilotScript.addEventListener('load', handleLoad);
+
     document.body.appendChild(daypilotScript);
-    setTimeout(() => {
-      initDaypilot(CALENDAR_ID);
-    }, 0);
+
     return () => {
-      document.body.removeChild(daypilotScript);
+      daypilotScript.removeEventListener('error', handleError);
+      daypilotScript.removeEventListener('load', handleLoad);
+      if (document.body.contains(daypilotScript)) {
+        document.body.removeChild(daypilotScript);
+      }
     };
   }, []);
+
   return <div id={CALENDAR_ID}></div>;
 }
 
