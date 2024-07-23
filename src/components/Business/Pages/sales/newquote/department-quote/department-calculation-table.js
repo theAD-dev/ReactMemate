@@ -81,16 +81,8 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 <input
                                                     type="text"
                                                     style={{ padding: '4px' }}
-                                                    value={
-                                                        value.type === "Hourly"
-                                                            ? `${value.per_hour || '0.00'}`
-                                                            : `${value.cost || '0.00'}`
-                                                    }
-                                                    onChange={
-                                                        value.type === "Hourly"
-                                                            ? (e) => updateData(key, value.id, 'per_hour', e.target.value)
-                                                            : (e) => updateData(key, value.id, 'cost', e.target.value)
-                                                    }
+                                                    value={`${value.cost || '0.00'}`}
+                                                    onChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
                                                 />
                                             </div>
                                         </td>
@@ -99,19 +91,11 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 <input
                                                     type="text"
                                                     style={{ padding: '4px' }}
-                                                    value={
-                                                        value.type === "Hourly"
-                                                            ? `${value.assigned_hours || '0.00'}`
-                                                            : `${value.quantity || '0.00'}`
-                                                    }
-                                                    onChange={
-                                                        value.type === "Hourly"
-                                                            ? (e) => updateData(key, value.id, 'assigned_hours', e.target.value)
-                                                            : (e) => updateData(key, value.id, 'quantity', e.target.value)
-                                                    }
+                                                    value={`${value.quantity || '0.00'}`}
+                                                    onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
                                                 />
                                                 <select value={value.type} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
-                                                    <option value="Cost of sale">1/Q</option>
+                                                    <option value="Cost">1/Q</option>
                                                     <option value="Hourly">1/H</option>
                                                 </select>
                                             </div>
@@ -121,13 +105,13 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 <input
                                                     type="text"
                                                     style={{ padding: '4px' }}
-                                                    value={value.margin}
-                                                    onChange={(e) => updateData(key, value.id, 'margin', e.target.value)}
+                                                    value={value.profit_type_value}
+                                                    onChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
                                                 />
-                                                <select value={value.margin_type} onChange={(e) => updateData(key, value.id, 'margin_type', e.target.value)}>
-                                                    <option value={"margin"}>MRG %</option>
-                                                    <option value={"amount"}>Amt $</option>
-                                                    <option value={"markup"}>MRK %</option>
+                                                <select value={value.profit_type} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
+                                                    <option value={"MRG"}>MRG %</option>
+                                                    <option value={"AMT"}>Amt $</option>
+                                                    <option value={"MRK"}>MRK %</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -210,16 +194,16 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
     }
 
     const calculateTotal = (item) => {
-        let rate = item.type === "Hourly" ? parseFloat(item.per_hour) || 0 : parseFloat(item.cost) || 0;
-        let quantity = item.type === "Hourly" ? parseFloat(item.assigned_hours) || 0 : parseFloat(item.quantity) || 0;
+        let rate = parseFloat(item.cost) || 0;
+        let quantity = parseFloat(item.quantity) || 0;
         let subtotal = rate * quantity;
 
-        let margin = parseFloat(item.margin) || 0;
-        if (item.margin_type === "markup") {
+        let margin = parseFloat(item.profit_type_value) || 0;
+        if (item.profit_type === "MRK") {
             subtotal += (subtotal * margin) / 100;
-        } else if (item.margin_type === "margin") {
+        } else if (item.profit_type === "MRG") {
             subtotal = subtotal / (1 - margin / 100);
-        } else if (item.margin_type === "amount") {
+        } else if (item.profit_type === "AMT") {
             subtotal += margin;
         }
 
@@ -261,18 +245,24 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
 
     useEffect(() => {
         console.log('data: ', data);
-        if (data && data.length) data[0].label = subItemLabel;
-        else if (data && data.length === 0) {
-            data.push({})
-            data[0].label = subItemLabel;
+        if(data) {
+            if (data.length) {
+                data[0].label = subItemLabel;
+            } else {
+                data.push({ label: subItemLabel });
+            }     
+
+            let filteredData = data.filter((item, index, self) =>
+                index === self.findIndex((t) => t.id === item.id)
+            );
+    
+            if (subItem && !rows[subItem]) {
+                setRows((prevRows) => ({
+                    ...prevRows,
+                    [`_${subItem}_`]: filteredData,
+                }));
+            }   
         }
-
-        if (subItem && !rows[subItem])
-            setRows((prevRows) => ({
-                ...prevRows,
-                [`_${subItem}_`]: data,
-            }));
-
     }, [data]);
 
     const calculateSummary = () => {
@@ -281,8 +271,8 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
 
         Object.values(rows)?.forEach(departmentRows => {
             departmentRows?.forEach(item => {
-                let rate = item.type === "Hourly" ? parseFloat(item.per_hour) || 0 : parseFloat(item.cost) || 0;
-                let quantity = item.type === "Hourly" ? parseFloat(item.assigned_hours) || 0 : parseFloat(item.quantity) || 0;
+                let rate = parseFloat(item.cost) || 0;
+                let quantity = parseFloat(item.quantity) || 0;
                 let cost = rate * quantity;
                 budget += parseFloat(cost || 0);
                 subtotal += parseFloat(item.total || 0);
@@ -303,9 +293,11 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
     }
 
     useEffect(() => {
+        console.log(rows);
         const summary = calculateSummary();
         setTotals(summary);
     }, [rows]);
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <table className='w-100 department-calculation'>
