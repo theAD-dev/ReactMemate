@@ -3,15 +3,15 @@ import React, { useState, useEffect } from 'react';
 import CustomOption from '../tasks/CustomOption';
 import { fetchTasksUsers } from "../../../../APIs/TasksApi";
 
-const CustomSelect = ({ onSelect }) => {
+const CustomSelect = ({ onSelect,selectstatus }) => {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(selectstatus?true:false);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
+     try {
         const users = await fetchTasksUsers();
         const formattedUsers = users.map(user => ({
           value: user.id,
@@ -19,7 +19,10 @@ const CustomSelect = ({ onSelect }) => {
           image: user.photo // Adjust according to the actual user data structure
         }));
         setOptions(formattedUsers);
-        setSelectedOption(formattedUsers[0]); // Default to the first user if exists
+        {selectstatus?
+          setSelectedOption()
+        : setSelectedOption(formattedUsers[0])}// Default to the first user if exists
+
         onSelect(formattedUsers[0].value); // Pass the initial selected value to the parent component
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -60,11 +63,20 @@ const CustomSelect = ({ onSelect }) => {
               className="custom-select-option"
               onClick={() => handleOptionClick(option)}
             >
-              <CustomOption
+                {
+              selectstatus?
+                <CustomOption
                 image={option.image}
                 text={option.text}
                 isSelected={option.value === selectedOption?.value}
-              />
+                />
+                :
+                <CustomOption
+                  image={option.image}
+                  text={option.text}
+                  isSelected={option.value === selectedOption?.value}
+                />
+              }
             </div>
           ))}
         </div>

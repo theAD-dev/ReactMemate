@@ -21,7 +21,8 @@ const NewTaskModal = (dateRange) => {
   const [errors, setErrors] = useState({});
   const [customerCategory, setCustomerCategory] = useState('');
   const [projects, setProjects] = useState([]);
- 
+  const [showselect,setShowSelect] = useState(false);
+  const [imagehide,setImageHide] = useState(true);
   const startDate = dateRange.startDate ? dateRange.startDate.toISOString().split('T')[0] : '';
   const endDate = dateRange.endDate ? dateRange.endDate.toISOString().split('T')[0] : '';
   
@@ -136,7 +137,16 @@ const NewTaskModal = (dateRange) => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  const handelselect = ()=>{
+    setShowSelect(true);
+    setImageHide(false);
 
+  }
+  const MenuProps = {
+    PaperProps: {
+      className: 'my-custom-class',
+    },
+  };
   return (
    <>
      <Button variant="newTaskBut" onClick={handleShow}>
@@ -200,13 +210,14 @@ const NewTaskModal = (dateRange) => {
                           value={customerCategory}
                           onChange={handleChange}
                           displayEmpty
+                          MenuProps={MenuProps}
                           inputProps={{ 'aria-label': 'Without label' }}
                           IconComponent={KeyboardArrowDownIcon}>
                           <MenuItem value="">
                           Select project
                           </MenuItem>
                           {projects.map((project) => (
-                            <MenuItem key={project.id} value={project.id} data-value={project.id}>
+                            <MenuItem  key={project.id} value={project.id} data-value={project.id}>
                               <p>{project.reference}</p>
                               <span>{project.number.substring(4) }</span>
                             </MenuItem>
@@ -221,10 +232,13 @@ const NewTaskModal = (dateRange) => {
             </div>
             <div className='footerTaskNewCol'>
             <div className='leftTaskActionBtn'>
-                <div className="dropdown">
-                {/* <span className='iconStyleCircle'><Person color="#475467" size={18} /></span>  */}
-                       <CustomSelect onSelect={handleUserSelect} />
-                </div>
+            <div className="dropdown">
+              {showselect && <CustomSelect onSelect={handleUserSelect} selectstatus = {true}/>}
+              {imagehide?
+              <span className='iconStyleCircle iconStyleCircleRight'> <Person color="#475467" size={18} onClick={handelselect}/></span>
+            
+              :''}
+              </div>
                 <TaskDatePIcker dateRange={dateRange} />
               </div>
 

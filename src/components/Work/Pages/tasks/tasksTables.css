@@ -82,6 +82,10 @@ letter-spacing: 0.12px;
   font-weight: 600;
   line-height: 24px;
 }
+.iconStyleCircleRight {
+  margin-right: 16px;
+  cursor: pointer;
+}
 .delaskaddModal .taskBottonBar .btn-outline-danger ,.EditaskaddModal .btn-outline-danger{
   border-radius: 4px;
   border: 1px solid var(--Error-600, #D92D20);
@@ -280,7 +284,7 @@ span.taskUserPic {
 
 .custom-select-options {
   position: absolute;
-  top: -320px;
+  top: -344px;
   left: 0;
   right: 0;
   border: 1px solid #ccc;
@@ -636,14 +640,14 @@ span.taskUserPic {
 .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
   display: block !important;
 }
-.customScroll .MuiPaper-root {
+.my-custom-class {
   top: 215px !important;
 }
-.customScroll .MuiPaper-root {
+.my-custom-class {
   overflow-y: hidden;
   overflow-x: hidden;
 }
-.customScroll .MuiPaper-root ul {
+.my-custom-class ul {
   overflow-y: scroll;
   height: 400px;
 }
@@ -651,21 +655,20 @@ span.taskUserPic {
 
 
 
-
-.customScroll .MuiPaper-root ul::-webkit-scrollbar {
+.my-custom-class ul::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
-.customScroll .MuiPaper-root ul::-webkit-scrollbar-track {
+.my-custom-class ul::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff; 
   border-radius: 10px;
 }
-.customScroll .MuiPaper-root ul::-webkit-scrollbar-thumb {
+.my-custom-class ul::-webkit-scrollbar-thumb {
   background: #EAECF0; 
   border-radius: 10px;
 }
-.customScroll .MuiPaper-root ul::-webkit-scrollbar-thumb:hover {
+.my-custom-class ul::-webkit-scrollbar-thumb:hover {
   background: #d9d9da; 
 }
 
