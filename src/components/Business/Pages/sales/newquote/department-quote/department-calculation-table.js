@@ -2,12 +2,110 @@ import React, { useEffect, useState } from 'react';
 import { Delete, DragIndicator, ExpandMore } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import Select from 'react-select';
+import { ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
 import { Checkbox } from '@mui/material';
 
 import { calcDepartment } from '../../../../../../APIs/CalApi';
 import { calcReferenceId } from '../../../../../../APIs/CalApi';
 import SelectComponent from './select-component';
+import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
+import './select-component.css';
+import { Button } from 'react-bootstrap';
+
+const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const toggleOptions = () => {
+        const openDropdowns = document.querySelectorAll(".options.active");
+        openDropdowns.forEach((dropdown) => dropdown.classList.remove("active"));
+        setDropdownOpen((prevState) => !prevState);
+    };
+
+    return (
+        <tr>
+            <td style={{ width: '2%' }}></td>
+            <td style={{ width: '5%', textAlign: 'center' }}>0</td>
+            <td style={{ width: '15%' }}>
+                <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
+
+                {/* <div className="select-menu w-100 d-flex justify-content-between">
+                    <div className="select-btn" onClick={toggleOptions}>
+                        Department
+                        <ChevronDown color="#98A2B3" size={16} />
+                    </div>
+                    <ul className={`options ${dropdownOpen ? "active" : ""}`}>
+                        {
+                            departments?.map(item => (
+                                <li>{item.name}</li>
+                            ))
+                        }
+                    </ul>
+                </div> */}
+
+            </td>
+            <td style={{ width: '25%', paddingTop: '10px' }}>
+                <textarea rows={1} placeholder='Enter a description...' style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} onChange={(e) => { }}></textarea>
+            </td>
+            <td style={{ width: '12%' }}>
+                <div className='d-flex align-items-center'>
+                    <span style={{ color: '#475467' }}>$</span>
+                    <input
+                        type="text"
+                        disabled
+                        style={{ padding: '4px', width: '100px', background: 'transparent', color: '#98A2B3' }}
+                        value={`${'0.00'}`}
+                        onChange={(e) => { }}
+                    />
+                </div>
+            </td>
+            <td style={{ width: '11%' }}>
+                <div className='d-flex align-items-center'>
+                    <input
+                        type="text"
+                        disabled
+                        style={{ padding: '4px', width: '40px', background: 'transparent', color: '#98A2B3' }}
+                        value={`${'0.00'}`}
+                        onChange={(e) => { }}
+                    />
+                    <select value={"Cost"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => { }}>
+                        <option value="Cost">1/Q</option>
+                        <option value="Hourly">1/H</option>
+                    </select>
+                </div>
+            </td>
+            <td style={{ width: '11%' }}>
+                <div className='d-flex align-items-center'>
+                    <input
+                        type="text"
+                        disabled
+                        style={{ padding: '4px', width: '40px', background: 'transparent', color: '#98A2B3' }}
+                        value={`${'0.00'}`}
+                        onChange={(e) => { }}
+                    />
+                    <select value={"MRG"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => { }}>
+                        <option value={"MRG"}>MRG %</option>
+                        <option value={"AMT"}>Amt $</option>
+                        <option value={"MRK"}>MRK %</option>
+                    </select>
+                </div>
+            </td>
+            <td style={{ width: '5%' }}>
+                <div className='d-flex align-items-center'>
+                    <input
+                        type="text"
+                        style={{ width: '20px', padding: '4px', background: 'transparent',color: '#98A2B3' }}
+                        value={`${0}`}
+                        onChange={(e) => { }}
+                    />
+                    <span>%</span>
+                </div>
+            </td>
+            <td style={{ width: '13%' }}>$ {0}</td>
+            <td style={{ width: '2%' }}>
+            <Trash color="#98A2B3" onClick={() => {}} />
+            </td>
+        </tr>
+    )
+}
 
 const DepartmentCalculationTableHead = () => {
     return (
@@ -35,7 +133,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                 <React.Fragment key={key}>
                     {
                         values?.map((value, index) =>
-                            <Draggable draggableId={`row-${key}`} key={`${key}-${value.id}`} index={id}>
+                            <Draggable draggableId={`row-${key}-${value.id}`} key={`${key}-${value.id}`} index={id}>
                                 {(provided) => (
                                     <tr
                                         key={value.id}
@@ -48,7 +146,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                     >
                                         <td {...provided.dragHandleProps} style={{ width: "2%" }}>
                                             {
-                                                index === 0 && <DragIndicator style={{ cursor: 'move' }} />
+                                                index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
                                             }
                                         </td>
                                         <td style={{ width: '5%', textAlign: 'center' }}>
@@ -64,14 +162,12 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                         <td style={{ width: '15%' }}>
                                             {
                                                 index === 0 && (
-                                                    <>
-                                                        <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={true} title={value.label} />
-                                                    </>
+                                                    <div className='disabledSelectBox'><div title={value.label} className='disabledSelectBoxLabel'>{value.label}</div> <ChevronDown color="#98A2B3" size={15} /></div>
                                                 )
                                             }
                                         </td>
                                         <td style={{ width: '25%' }}>
-                                            <textarea value={value.description}
+                                            <textarea rows={1} style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} value={value.description}
                                                 onChange={(e) => updateData(key, value.id, 'description', e.target.value)}
                                             ></textarea>
                                         </td>
@@ -80,17 +176,9 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 <span>$</span>
                                                 <input
                                                     type="text"
-                                                    style={{ padding: '4px' }}
-                                                    value={
-                                                        value.type === "Hourly"
-                                                            ? `${value.per_hour || '0.00'}`
-                                                            : `${value.cost || '0.00'}`
-                                                    }
-                                                    onChange={
-                                                        value.type === "Hourly"
-                                                            ? (e) => updateData(key, value.id, 'per_hour', e.target.value)
-                                                            : (e) => updateData(key, value.id, 'cost', e.target.value)
-                                                    }
+                                                    style={{ padding: '4px', width: '100px', background: 'transparent' }}
+                                                    value={`${value.cost || '0.00'}`}
+                                                    onChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
                                                 />
                                             </div>
                                         </td>
@@ -98,20 +186,12 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
-                                                    style={{ padding: '4px' }}
-                                                    value={
-                                                        value.type === "Hourly"
-                                                            ? `${value.assigned_hours || '0.00'}`
-                                                            : `${value.quantity || '0.00'}`
-                                                    }
-                                                    onChange={
-                                                        value.type === "Hourly"
-                                                            ? (e) => updateData(key, value.id, 'assigned_hours', e.target.value)
-                                                            : (e) => updateData(key, value.id, 'quantity', e.target.value)
-                                                    }
+                                                    style={{ padding: '4px', width: '60px', background: 'transparent' }}
+                                                    value={`${value.quantity || '0.00'}`}
+                                                    onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
                                                 />
-                                                <select value={value.type} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
-                                                    <option value="Cost of sale">1/Q</option>
+                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
+                                                    <option value="Cost">1/Q</option>
                                                     <option value="Hourly">1/H</option>
                                                 </select>
                                             </div>
@@ -120,14 +200,14 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
-                                                    style={{ padding: '4px' }}
-                                                    value={value.margin}
-                                                    onChange={(e) => updateData(key, value.id, 'margin', e.target.value)}
+                                                    style={{ padding: '4px', width: '60px', background: 'transparent' }}
+                                                    value={`${value.profit_type_value || '0.00'}`}
+                                                    onChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
                                                 />
-                                                <select value={value.margin_type} onChange={(e) => updateData(key, value.id, 'margin_type', e.target.value)}>
-                                                    <option value={"margin"}>MRG %</option>
-                                                    <option value={"amount"}>Amt $</option>
-                                                    <option value={"markup"}>MRK %</option>
+                                                <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
+                                                    <option value={"MRG"}>MRG %</option>
+                                                    <option value={"AMT"}>Amt $</option>
+                                                    <option value={"MRK"}>MRK %</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -135,7 +215,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
-                                                    style={{ width: '30px', padding: '4px' }}
+                                                    style={{ width: '30px', padding: '4px', background: 'transparent' }}
                                                     value={`${value.discount || 0}`}
                                                     onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
                                                 />
@@ -144,7 +224,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                         </td>
                                         <td style={{ width: '13%' }}>$ {value.total}</td>
                                         <td style={{ width: '2%' }}>
-                                            <Delete onClick={() => deleteRow(key, value.id)} />
+                                            <Trash color="#98A2B3" onClick={() => deleteRow(key, value.id)} />
                                         </td>
                                     </tr>
                                 )}
@@ -166,13 +246,14 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
         queryFn: calcDepartment,
         enabled: true,
     });
-    const { isLoadingSubIndex, error, data, refetch } = useQuery({
+    const { isLoading: isLoadingSubItem, error, data, refetch } = useQuery({
         queryKey: ['calcReferenceId', subItem],
         queryFn: () => calcReferenceId(subItem),
         enabled: !!subItem,
         retry: 1,
     });
 
+    console.log('isLoadingSubItem: ', isLoadingSubItem);
     const onDragEnd = (result) => {
         const { source, destination } = result;
 
@@ -210,16 +291,16 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
     }
 
     const calculateTotal = (item) => {
-        let rate = item.type === "Hourly" ? parseFloat(item.per_hour) || 0 : parseFloat(item.cost) || 0;
-        let quantity = item.type === "Hourly" ? parseFloat(item.assigned_hours) || 0 : parseFloat(item.quantity) || 0;
+        let rate = parseFloat(item.cost) || 0;
+        let quantity = parseFloat(item.quantity) || 0;
         let subtotal = rate * quantity;
 
-        let margin = parseFloat(item.margin) || 0;
-        if (item.margin_type === "markup") {
+        let margin = parseFloat(item.profit_type_value) || 0;
+        if (item.profit_type === "MRK") {
             subtotal += (subtotal * margin) / 100;
-        } else if (item.margin_type === "margin") {
+        } else if (item.profit_type === "MRG") {
             subtotal = subtotal / (1 - margin / 100);
-        } else if (item.margin_type === "amount") {
+        } else if (item.profit_type === "AMT") {
             subtotal += margin;
         }
 
@@ -261,18 +342,26 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
 
     useEffect(() => {
         console.log('data: ', data);
-        if (data && data.length) data[0].label = subItemLabel;
-        else if (data && data.length === 0) {
-            data.push({})
-            data[0].label = subItemLabel;
+        if (data) {
+            if (data.length) {
+                data.forEach((item) => {
+                    item.label = subItemLabel;
+                })
+            } else {
+                data.push({ label: subItemLabel });
+            }
+
+            let filteredData = data.filter((item, index, self) =>
+                index === self.findIndex((t) => t.id === item.id)
+            );
+
+            if (subItem && !rows[subItem]) {
+                setRows((prevRows) => ({
+                    ...prevRows,
+                    [`_${subItem}_`]: filteredData,
+                }));
+            }
         }
-
-        if (subItem && !rows[subItem])
-            setRows((prevRows) => ({
-                ...prevRows,
-                [`_${subItem}_`]: data,
-            }));
-
     }, [data]);
 
     const calculateSummary = () => {
@@ -281,8 +370,8 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
 
         Object.values(rows)?.forEach(departmentRows => {
             departmentRows?.forEach(item => {
-                let rate = item.type === "Hourly" ? parseFloat(item.per_hour) || 0 : parseFloat(item.cost) || 0;
-                let quantity = item.type === "Hourly" ? parseFloat(item.assigned_hours) || 0 : parseFloat(item.quantity) || 0;
+                let rate = parseFloat(item.cost) || 0;
+                let quantity = parseFloat(item.quantity) || 0;
                 let cost = rate * quantity;
                 budget += parseFloat(cost || 0);
                 subtotal += parseFloat(item.total || 0);
@@ -303,9 +392,11 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
     }
 
     useEffect(() => {
+        console.log(rows);
         const summary = calculateSummary();
         setTotals(summary);
     }, [rows]);
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <table className='w-100 department-calculation'>
@@ -321,16 +412,17 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
                                 departments={departments}
                                 handleChange={handleChange}
                             />
+
+                            {
+                                isLoadingSubItem && <DepartmentQuoteTableRowLoading />
+                            }
+
+                            <DepartmentCalculationTableEmptyRow departments={departments} handleChange={handleChange} />
                             {provided.placeholder}
                         </tbody>
                     )}
                 </Droppable>
             </table>
-
-            <div style={{ width: '250px', padding: '10px' }}>
-                <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
-            </div>
-
         </DragDropContext>
     )
 }

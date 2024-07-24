@@ -69,7 +69,7 @@ const NewTaskModal = (dateRange) => {
     });
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const handleChange = (event) => {
     setCustomerCategory(event.target.value);
   };
 
@@ -137,11 +137,7 @@ const NewTaskModal = (dateRange) => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  const handelselect = ()=>{
-    setShowSelect(true);
-    setImageHide(false);
-
-  }
+  
   const MenuProps = {
     PaperProps: {
       className: 'my-custom-class',
@@ -233,13 +229,7 @@ const NewTaskModal = (dateRange) => {
             <div className='footerTaskNewCol'>
             <div className='leftTaskActionBtn'>
             <div className="dropdown">
-              {showselect && <CustomSelect onSelect={handleUserSelect} selectstatus = {true}/>}
-              {imagehide?
-              <span className='iconStyleCircle iconStyleCircleRight'> <Person color="#475467" size={18} onClick={handelselect}/></span>
-            
-              :''
-              }
-              
+                <CustomSelect onSelect={handleUserSelect} />
               </div>
                 <TaskDatePIcker dateRange={dateRange} />
               </div>

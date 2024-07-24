@@ -29,6 +29,7 @@ const ViewTaskModal = ({ taskId }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [updateDis, setUpdateDis] = useState('');
   const [updateTitle, setUpdateTitle] = useState('');
+  const [user, setUser] = useState(null);
   const [updateUser, setUpdateUser] = useState('');
   const [deleteShow, setDeleteShow] = useState(false);
 
@@ -76,9 +77,11 @@ const ViewTaskModal = ({ taskId }) => {
   const fetchData = async () => {
     try {
       const data = await fetchTasksRead(taskId);
+      console.log('data: ', data);
       setTaskRead(data); // Assuming data is already parsed
       setUpdateTitle(data.title); // Initialize updateTitle with fetched task data
       setUpdateDis(data.description); // Initialize updateDis with fetched task data
+      setUser(data.user);
     } catch (error) {
       console.error('Error fetching task information:', error);
     }
@@ -402,7 +405,7 @@ const ViewTaskModal = ({ taskId }) => {
               <Row>
                 <Col>
                   <div className="dropdown formgroup mb-2 mt-2">
-                    <CustomSelect onSelect={handleUserSelect} />
+                    <CustomSelect onSelect={handleUserSelect} assigneduser={user}/>
                     <span className='viewTaskDate'>
                       {start} - {end}
                     </span>

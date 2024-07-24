@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import { ExpandMore } from '@mui/icons-material';
+import { ChevronDown } from 'react-bootstrap-icons';
 
 const SelectComponent = ({ departments, handleChange, isShowlabel = false, title }) => {
     const [selectedOption, setSelectedOption] = useState(null);
@@ -29,32 +30,26 @@ const SelectComponent = ({ departments, handleChange, isShowlabel = false, title
     return (
         <div style={{ position: 'relative', width: '200px' }}>
             <Menu
-                style={{
-                    maxHeight: '200px', // Max height for the menu to enable scrolling
-                    overflowY: 'auto', // Enable vertical scrolling
-                    border: '1px solid #ccc', // Optional: Add border to the menu container
-                    borderRadius: '4px', // Optional: Add border radius to the menu container
-                }}
                 menuButton={
                     <MenuButton
                         style={{
-                            minWidth: '150px',
+                            width: '150px',
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            padding: '8px 12px',
+                            padding: '8px 0px',
                             cursor: 'pointer',
-                            color: '#212529',
-                            border: '1px solid #ccc'
+                            color: '#98A2B3',
+                            fontWeight: 400,
                         }}
                     >
-                        {selectedSubOption || selectedOption || "Select an option"} <span><ExpandMore /></span>
+                        {selectedSubOption || selectedOption || "Department"} <span><ChevronDown color="#98A2B3" size={15}/></span>
                     </MenuButton>
                 }
             >
                 {options?.map(option => (
                     <SubMenu disabled={isShowlabel} key={option.value} label={option.label}>
-                        {option.options.map(subOption => (
+                        {option?.options?.map(subOption => (
                             <MenuItem key={subOption.value} onClick={() => handleSubMenuClick(subOption.label, subOption.value)}>
                                 {subOption.label}
                             </MenuItem>

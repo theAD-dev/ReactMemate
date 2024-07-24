@@ -3,72 +3,58 @@ import Placeholder from 'react-bootstrap/Placeholder';
 
 export const DepartmentQuoteTableRowLoading = () => {
     return (
-        <React.Fragment>{
-            [1, 2].map((index) => (
-                <tr key={index}>
-                    <td style={{ width: "2%" }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
+        <tr>
+            <td style={{ width: "2%" }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
 
-                    <td style={{ width: '5%', textAlign: 'center' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '15%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '25%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '12%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '11%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '11%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '5%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '13%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                    <td style={{ width: '2%' }}>
-                        <Placeholder as="p" animation="wave">
-                            <Placeholder xs={12} />
-                        </Placeholder>
-                    </td>
-                </tr>
-            ))
-        }</React.Fragment>
+            <td style={{ width: '5%', textAlign: 'center' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '15%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '25%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '12%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '11%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '11%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '5%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '13%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '2%' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+        </tr>
     );
 };
-
-export const DepartmentQuoteInsideTableRowLoading = () => {
-    return (
-        <React.Fragment>
-            {
-
-            }
-        </React.Fragment>
-    );
-}

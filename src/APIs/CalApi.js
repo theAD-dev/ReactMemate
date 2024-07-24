@@ -41,7 +41,7 @@ export const calcReferenceId = async (subItem) => {
   try {
     const response = await fetch(`${API_BASE_URL}/references/calculators/${subItem}/`, requestOptions);
     const result = await response.json();
-    return result;
+    return result || [];
   } catch (error) {
     console.error(error);
     throw error; // Rethrow the error if needed
