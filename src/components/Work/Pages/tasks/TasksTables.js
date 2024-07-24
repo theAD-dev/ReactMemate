@@ -159,7 +159,7 @@ const formatDate = (timestamp) => {
           className="mainStyle tasksAssigne"
           style={{ whiteSpace: "nowrap", textAlign: "left" }}
         >
-          <em>{params.row.aliasTask}</em><span>{params.value}</span>
+          <em><i>{params.row.aliasTask}</i></em><span>{params.value}</span>
         
         </div>
       ),

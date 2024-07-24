@@ -4,8 +4,8 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { fetchTasksRead, fetchTasksProject, fetchTasksUpdate,fetchTasksDelete } from '../../../../APIs/TasksApi';
-
-import { ArrowRight, CheckCircleFill } from "react-bootstrap-icons";
+import TaskDetailsIcon from "../../../../assets/images/icon/TaskDetailsIcon.svg";
+import { ArrowRight, CheckCircleFill ,X} from "react-bootstrap-icons";
 import taskbinImage from '../../../../assets/images/icon/taskbinImage.png';
 import taskEditIcon from '../../../../assets/images/icon/taskEditIcon.svg';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -36,6 +36,7 @@ const ViewTaskModal = ({ taskId }) => {
   const handleClose = () => {
     setViewShow(false);
     setDeleteShow(false);
+    setShow(false);
    
   };
 
@@ -192,7 +193,11 @@ const ViewTaskModal = ({ taskId }) => {
     }
   };
   
-
+  const MenuProps = {
+    PaperProps: {
+      className: 'my-custom-class',
+    },
+  };
   // Handle opening edit modal
   const handleEditShow = () => {
     setViewShow(false);
@@ -222,12 +227,16 @@ const ViewTaskModal = ({ taskId }) => {
         onHide={handleClose}
         animation={false}
       >
-        <Modal.Header className="mb-0 pb-0 border-0" closeButton>
+        <Modal.Header className="mb-0 pb-0 border-0">
           <div className="modelHeader d-flex justify-content-between align-items-start">
             <span>
+            <img src={TaskDetailsIcon} alt="NewTaskAdd" />
               Task Details
             </span>
           </div>
+          <button className='CustonCloseModal' onClick={handleClose}>
+        <X size={24} color='#667085'/>
+      </button>
         </Modal.Header>
         <Modal.Body>
           {taskRead && (
@@ -290,12 +299,13 @@ const ViewTaskModal = ({ taskId }) => {
                   <Button onClick={toggleDropdown} className={`statusBut ${taskRead.finished}`}>
                     {taskRead.finished ? (
                       <>
-                        Incomplete <CheckCircleFill size={20} color="#B42318" />
-                      </>
-                    ) : (
-                      <>
-                        Complete <CheckCircleFill size={20} color="#17B26A" />
-                      </>
+                     Incomplete <CheckCircleFill size={20} color="#F04438" />
+                    </>
+                  ) : (
+                    <>
+                      Complete <CheckCircleFill size={20} color="#17B26A" />
+                      
+                    </>
                     )}
                   </Button>
                 </div>
@@ -314,7 +324,7 @@ const ViewTaskModal = ({ taskId }) => {
         onHide={handleEditClose}
         animation={false}
       >
-        <Modal.Header className="mb-0 pb-0 border-0" closeButton>
+        <Modal.Header className="mb-0 pb-0 border-0" >
           <div className="modelHeader d-flex justify-content-between align-items-start">
             <span>
             <img src={taskEditIcon} alt="NewTaskAdd" />
@@ -322,17 +332,21 @@ const ViewTaskModal = ({ taskId }) => {
               Edit Task
             </span>
           </div>
+          <button className='CustonCloseModal' onClick={handleClose}>
+        <X size={24} color='#667085'/>
+      </button>
         </Modal.Header>
         <Modal.Body>
           <div className="ContactModel">
             <div className="ContactModelIn">
               <Row>
                 <Col>
-                  <div className="formgroup mt-2">
+                  <div className="formgroup  mt-2">
                     <label>Project Task</label>
                     <div className={`inputInfo ${errors.customerCategory ? 'error-border' : ''}`}>
                       <FormControl className='customerCategory' sx={{ m: 0, minWidth: `100%` }}>
                         <Select
+                         MenuProps={MenuProps}
                           value={taskRead?.project?.reference || ''}
                           onChange={(e) => handleChange({ target: { name: 'project', value: e.target.value } })}
                           inputProps={{ 'aria-label': 'Without label' }}

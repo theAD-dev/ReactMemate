@@ -35,7 +35,6 @@ const TaskDatePicker = () => {
   };
 
   const handleDataApply = (data) => {
-    console.log("Selected Dates:", data);
     setDateRange(data);
     setAnchorEl(null);
   };

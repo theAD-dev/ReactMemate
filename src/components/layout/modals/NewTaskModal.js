@@ -11,7 +11,7 @@ import exclamationCircle from "../../../assets/images/icon/exclamation-circle.sv
 import NewTaskAdd from "../../../assets/images/icon/newTaskAdd.svg";
 import TaskDatePIcker from '../../Work/Pages/tasks/TaskDatePIcker';
 import CustomSelect from '../../Work/Pages/tasks/CustomSelect';
-import { Person } from "react-bootstrap-icons";
+import { QuestionCircle,X } from "react-bootstrap-icons";
 import { fetchTasksNew, fetchTasksProject } from "../../../APIs/TasksApi";
 import { format, parseISO } from 'date-fns';
 
@@ -149,14 +149,19 @@ const NewTaskModal = (dateRange) => {
      New
      </Button>
      <Modal show={show} aria-labelledby="contained-modal-title-vcenter"
-      centered className='SalesContact newtaskaddModal formgroupboxs ' onHide={handleClose} animation={false}>
-        <Modal.Header className='mb-0 pb-0 border-0' closeButton>
+      centered className='SalesContact newtaskaddModal formgroupboxs '  animation={false}>
+        <Modal.Header className='mb-0 pb-0 border-0' >
           <div className='modelHeader d-flex justify-content-between align-items-start'>
             <span>
               <img src={NewTaskAdd} alt="NewTaskAdd" />
               New Task
+              
             </span>
+            
           </div>
+          <button className='CustonCloseModal' onClick={handleClose}>
+        <X size={24} color='#667085'/>
+      </button>
         </Modal.Header>
         <Modal.Body>
           <div className='ContactModel'>
@@ -173,7 +178,7 @@ const NewTaskModal = (dateRange) => {
                       placeholder='Enter task title '
                       onChange={handleInputChange}
                     />
-                    {errors.taskTitle && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                    <QuestionCircle color="#98A2B3" size={16} />
                   </div>
                   {errors.taskTitle && <p className="error-message">{errors.taskTitle}</p>}
                 </div>
@@ -198,7 +203,7 @@ const NewTaskModal = (dateRange) => {
                     </Row>
                     <Row>
                     <Col >
-                    <div className="formgroup mt-2">
+                    <div className="formgroup formgroupSelect mt-2">
                       <label>Project Task</label>
                       <div className={`inputInfo ${errors.customerCategory ? 'error-border' : ''}`}>
                       <FormControl className='customerCategory' sx={{ m: 0, minWidth: `100%` }}>
