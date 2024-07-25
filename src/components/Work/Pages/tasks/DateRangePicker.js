@@ -85,7 +85,7 @@ const DateRangePicker = ({ onDataApply }) => {
       // Custom logic when applying
     }
   }, [isApplying]);
-  // ${formattedCurrentDate} 
+
   useEffect(() => {
     if (!startDate && !endDate) {
       const currentDate = new Date();
@@ -95,17 +95,15 @@ const DateRangePicker = ({ onDataApply }) => {
       const currentDate = new Date();
       const formattedCurrentDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
       const textContent = `${startDate.toISOString().split('T')[0]} - ${endDate.toISOString().split('T')[0]}`;
-      const newContent = `<p>${textContent}</p><span>
-       Today
-      </span>`;
+      const newContent = `<p>${textContent}</p><span>${formattedCurrentDate}</span>`;
       const monthsElement = document.querySelector(".flatpickr-months");
       if (monthsElement) {
-        const existingCustomDiv = document.querySelector(".custom-div custom-divWrap");
+        const existingCustomDiv = document.querySelector(".custom-div");
         if (existingCustomDiv) {
           existingCustomDiv.innerHTML = newContent;
         } else {
           const customDiv = document.createElement('div');
-          customDiv.className = "custom-div custom-divWrap";
+          customDiv.className = "custom-div";
           customDiv.innerHTML = newContent;
           monthsElement.parentNode.insertBefore(customDiv, monthsElement.nextSibling);
         }

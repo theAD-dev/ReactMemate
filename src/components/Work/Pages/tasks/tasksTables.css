@@ -298,7 +298,7 @@ span.taskUserPic {
 
 .custom-select-options {
   position: absolute;
-  top: -344px;
+  top: -328px;
   left: 0;
   right: 0;
   border: 1px solid #ccc;
@@ -598,13 +598,39 @@ span.taskUserPic {
   letter-spacing: -0.08px;
 }
 .newtaskaddModal .inputInfo input {
-  color: var(--Gray-400, #98A2B3);
+  /* color: var(--Gray-400, #98A2B3); */
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.08px;
+}
+span.iconStyleCircle.iconStyleCircleRight.isOpen svg ,.iconStyleCircletrue svg{
+  fill: #1AB2FF;
+}
+.customSelectMenuList span {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+span.iconStyleCircle.iconStyleCircleRight.isOpen,.iconStyleCircletrue {
+  border-radius: 27px;
+  border: 1px dashed var(--Primary-400, #48C1FF);
+}
+.customSelectMenuList p {
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+.MuiSelect-select {
+  color: #98A2B3 !important;
 }
 .EditaskaddModal .inputInfo input {
   color: var(--Gray-900, #101828);
@@ -684,19 +710,20 @@ span.taskUserPic {
 .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
   display: block !important;
 }
-.my-custom-class {
+/* .my-custom-class {
   top: 215px !important;
-}
+} */
 .my-custom-class {
   overflow-y: hidden;
   overflow-x: hidden;
 }
 .my-custom-class ul {
   overflow-y: scroll;
-  height: 400px;
+  height: 284px;
 }
-
-
+.delaskaddModal .modal-header {
+  padding: 18px 0 3px !important;
+}
 .custom-divWrap span, .custom-divWrap p {
   border-radius: 4px;
   border: 1px solid var(--Gray-300, #D0D5DD);

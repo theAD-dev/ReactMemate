@@ -270,7 +270,7 @@ button.CustonCloseModal {
     letter-spacing: -0.18px;
 }
 .formgroupboxs .inputInfo input {
-    color: var(--Gray-500, #667085);
+    /* color: var(--Gray-500, #667085); */
     font-family: Inter;
     font-size: 16px;
     font-style: normal;
@@ -677,7 +677,7 @@ button.CustonCloseModal {
     letter-spacing: -0.08px;
 }
 .calStyleBox01 button {
-    color: #6941C6;
+    color: #158ECC;
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
@@ -867,15 +867,27 @@ letter-spacing: 0.12px;
     background: var(--Base-White, #FFF);
     box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
 }
+table.department-calculation tbody tr:hover td:first-child svg {
+    fill: #1AB2FF;
+}
+.calMainWrap table tbody tr td {
+    padding: 4.8px 10px !important;
+}
+.calMainWrap table thead tr th {
+    padding: 11px 10px !important;
+}
+/* .calMainWrap .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
+    padding: 0;
+} */
   .toggle-switch input[type="checkbox"]:checked + .switch::before {
     transform: translateX(20px);
-    background: var(--Base-White, #FFF);
+    background: var(--Base-White, #1AB2FF);
 
 /* Shadows/shadow-sm */
 box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
   }
   .toggle-switch input[type="checkbox"]:checked + .switch {
-    background-color: #F2F4F7;
+    background-color: #EBF8FF;
 }
   /* Toggle Switch */
   .footerCalAction ul li {
@@ -948,15 +960,28 @@ box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24,
     margin-right: 20px;
 }
 .footerCalAction ul li.invoicePDF a {
-    color: var(--Primary-700, #6941C6);
+    color: var(--Primary-700, #106B99);
     font-family: Inter;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 24px;
 }
+.calMainWrap table thead tr th:first-child, .calMainWrap table tbody tr td:first-child {
+    padding: 0px 0px 0 7px !important;
+    text-align: center;
+}
+.footerCalAction .CreateProposalCal a {
+    color: var(--Primary-700, #106B99);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    margin-left: 20px;
+}
 .footerCalAction ul.right li.SaveDraftBut button {
-    color: var(--Primary-700, #6941C6);
+    color: var(--Primary-700, #106B99);
     font-family: Inter;
     font-size: 16px;
     font-style: normal;
@@ -967,22 +992,19 @@ box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24,
     background: transparent;
 }
 .footerCalAction ul.right li.SaveButtonCal button {
-    border-radius: 4px;
-    border: 1px solid var(--Primary-200, #E9D7FE);
-    background: var(--Gray-50, #F9FAFB);
     padding: 10px 18px;
-    color: var(--Primary-700, #6941C6);
+    color: var(--Primary-700, #106B99);
     font-family: Inter;
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 24px;
     margin-right: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--Primary-200, #A3E0FF);
+    background: var(--Primary-50, #EBF8FF);
 }
 .footerCalAction ul.right li.SaveandSendBut button {
-    border-radius: 4px;
-    border: 1px solid var(--Primary-600, #7F56D9);
-    background: var(--Primary-600, #7F56D9);
     color: #FFF;
     font-family: Inter;
     font-size: 16px;
@@ -990,6 +1012,9 @@ box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24,
     font-weight: 600;
     line-height: 24px;
     padding: 10px 18px;
+    border-radius: 4px;
+    border: 1px solid var(--Primary-600, #158ECC);
+    background: var(--Primary-600, #158ECC);
 }
 .calActionBottom {
     padding: 8px 21px;
@@ -1066,8 +1091,18 @@ box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24,
 .quoteInvoice .css-tj5bde-Svg {
     fill: #98A2B3;
 }
+.updateButtonGeneral .CancelActionBut button {
+    color: var(--Error-700, #B42318);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    background: transparent;
+    border: 0;
+}
 .formgroupSelect .inputInfo {
-    padding: 6px 8px !important;
+    padding: 6px 15px !important;
 }
 .quoteInvoice .css-12a83d4-MultiValueRemove:hover{
     background: transparent;
@@ -1355,6 +1390,7 @@ table.indexCalname tbody tr td:nth-child(9) {
     border-radius: var(--radius-xs, 4px);
     border: 1px solid var(--Primary-300, #76D1FF);
     background: var(--Base-White, #FFF);
+    margin: 0 4px;
 }
 .DepartmentQuote textarea:focus {
     border-radius: var(--radius-xs, 4px) !important;

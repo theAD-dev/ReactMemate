@@ -473,9 +473,10 @@ span.flatpickr-weekday {
     width: 92% !important;
 }
 
-table.department-calculation tbody tr td,  table.department-calculation thead tr th {
-  border-right: none !important;
-  background-color: #fff !important;
+table.department-calculation tbody tr td, table.department-calculation thead tr th {
+    border-right: none !important;
+    background-color: #fff !important;
+    white-space: nowrap;
 }
 table.department-calculation tbody tr:hover td {
     background-color: #F2FAFF !important;

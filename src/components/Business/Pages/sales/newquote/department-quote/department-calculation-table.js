@@ -13,6 +13,7 @@ import './select-component.css';
 import { Button } from 'react-bootstrap';
 
 const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
+ 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggleOptions = () => {
         const openDropdowns = document.querySelectorAll(".options.active");
@@ -22,9 +23,9 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
 
     return (
         <tr>
-            <td style={{ width: '2%' }}></td>
-            <td style={{ width: '5%', textAlign: 'center' }}>0</td>
-            <td style={{ width: '15%' }}>
+            <td style={{ width: '24px' }}></td>
+            <td style={{ width: '64px', textAlign: 'center' }}>0</td>
+            <td style={{ width: '192px' }}>
                 <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
 
                 {/* <div className="select-menu w-100 d-flex justify-content-between">
@@ -42,10 +43,10 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
                 </div> */}
 
             </td>
-            <td style={{ width: '25%', paddingTop: '10px' }}>
+            <td style={{ width: '100%', paddingTop: '10px' }}>
                 <textarea rows={1} placeholder='Enter a description...' style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} onChange={(e) => { }}></textarea>
             </td>
-            <td style={{ width: '12%' }}>
+            <td style={{ width: '128px' }}>
                 <div className='d-flex align-items-center'>
                     <span style={{ color: '#475467' }}>$</span>
                     <input
@@ -57,7 +58,7 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
                     />
                 </div>
             </td>
-            <td style={{ width: '11%' }}>
+            <td style={{ width: '166px' }}>
                 <div className='d-flex align-items-center'>
                     <input
                         type="text"
@@ -72,7 +73,7 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
                     </select>
                 </div>
             </td>
-            <td style={{ width: '11%' }}>
+            <td style={{ width: '185px' }}>
                 <div className='d-flex align-items-center'>
                     <input
                         type="text"
@@ -88,7 +89,7 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
                     </select>
                 </div>
             </td>
-            <td style={{ width: '5%' }}>
+            <td style={{ width: '83px' }}>
                 <div className='d-flex align-items-center'>
                     <input
                         type="text"
@@ -99,28 +100,31 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
                     <span>%</span>
                 </div>
             </td>
-            <td style={{ width: '13%' }}>$ {0}</td>
-            <td style={{ width: '2%' }}>
+            <td style={{ width: '118px' }}>$ {0}</td>
+            <td style={{ width: '32px' }}>
             <Trash color="#98A2B3" onClick={() => {}} />
             </td>
         </tr>
     )
 }
 
-const DepartmentCalculationTableHead = () => {
+
+const DepartmentCalculationTableHead = (isDiscountActive) => {
+    
+    console.log('isDiscountActive>>>>>>>>>>>>>>>>>>>>>>>: ', isDiscountActive);
     return (
         <thead>
             <tr>
-                <th style={{ width: '2%' }}></th>
-                <th style={{ width: '5%', textAlign: 'center' }}>Order</th>
-                <th style={{ width: '15%' }}>Department</th>
-                <th style={{ width: '25%' }}>Description</th>
-                <th style={{ width: '12%' }}>Rate</th>
-                <th style={{ width: '11%' }}>Qty / Unit</th>
-                <th style={{ width: '11%' }}>Markup / Margin</th>
-                <th style={{ width: '5%' }}>Discount</th>
-                <th style={{ width: '13%' }}>Amount</th>
-                <th style={{ width: '2%' }}></th>
+                <th style={{ width: '24px'}}></th>
+                <th style={{ width: '64px', textAlign: 'left' }}>Order</th>
+                <th style={{ width: '192px' }}>Department</th>
+                <th style={{ width: '100%' }}>Description</th>
+                <th style={{ width: '128px' }}>Rate</th>
+                <th style={{ width: '166px' }}>Qty / Unit</th>
+                <th style={{ width: '185px' }}>Markup / Margin</th>
+                <th className={isDiscountActive ? 'discount-active' : 'discount-inactive'} style={{ width: '83px' }}>Discount</th>
+                <th style={{ width: '118px' }}>Amount</th>
+                <th style={{ width: '32px' }}></th>
             </tr>
         </thead>
     )
@@ -144,34 +148,34 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             cursor: 'default',
                                         }}
                                     >
-                                        <td {...provided.dragHandleProps} style={{ width: "2%" }}>
+                                        <td {...provided.dragHandleProps} style={{width: '24px'}}>
                                             {
                                                 index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
                                             }
                                         </td>
-                                        <td style={{ width: '5%', textAlign: 'center' }}>
+                                        <td style={{ width: '64px', textAlign: 'left' }}>
                                             {
                                                 index === 0 && (
-                                                    <div className='d-flex align-items-center justify-content-center'>
-                                                        {/* <Checkbox className="checkbox" style={{ visibility: 'hidden' }} /> */}
+                                                    <div className='d-flex align-items-center justify-content-start'>
+                                                        <Checkbox className="checkbox" style={{ visibility: 'hidden' }} />
                                                         {id + 1}
                                                     </div>
                                                 )
                                             }
                                         </td>
-                                        <td style={{ width: '15%' }}>
+                                        <td style={{ width: '192px' }}>
                                             {
                                                 index === 0 && (
                                                     <div className='disabledSelectBox'><div title={value.label} className='disabledSelectBoxLabel'>{value.label}</div> <ChevronDown color="#98A2B3" size={15} /></div>
                                                 )
                                             }
                                         </td>
-                                        <td style={{ width: '25%' }}>
+                                        <td style={{ width: '100%' }}>
                                             <textarea rows={1} style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} value={value.description}
                                                 onChange={(e) => updateData(key, value.id, 'description', e.target.value)}
                                             ></textarea>
                                         </td>
-                                        <td style={{ width: '12%' }}>
+                                        <td style={{ width: '128px' }}>
                                             <div className='d-flex align-items-center'>
                                                 <span>$</span>
                                                 <input
@@ -182,7 +186,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 />
                                             </div>
                                         </td>
-                                        <td style={{ width: '11%' }}>
+                                        <td style={{ width: '166px' }}>
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
@@ -196,7 +200,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 </select>
                                             </div>
                                         </td>
-                                        <td style={{ width: '11%' }}>
+                                        <td style={{ width: '185px' }}>
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
@@ -211,7 +215,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 </select>
                                             </div>
                                         </td>
-                                        <td style={{ width: '5%' }}>
+                                        <td style={{ width: '83px' }}>
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
@@ -222,8 +226,8 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 <span>%</span>
                                             </div>
                                         </td>
-                                        <td style={{ width: '13%' }}>$ {value.total}</td>
-                                        <td style={{ width: '2%' }}>
+                                        <td style={{ width: '118px' }}>$ {value.total}</td>
+                                        <td style={{ width: '32px' }}>
                                             <Trash color="#98A2B3" onClick={() => deleteRow(key, value.id)} />
                                         </td>
                                     </tr>
@@ -237,7 +241,9 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
     );
 }
 
-const DepartmentCalculationTable = ({ totals, setTotals }) => {
+const DepartmentCalculationTable = ({ totals, setTotals ,isDiscountActive}) => {
+    
+ 
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
@@ -400,7 +406,7 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <table className='w-100 department-calculation'>
-                <DepartmentCalculationTableHead />
+                <DepartmentCalculationTableHead isDiscountActive={isDiscountActive}/>
                 <Droppable droppableId="departmentQuoteTable">
                     {(provided) => (
                         <tbody {...provided.droppableProps} ref={provided.innerRef}>
@@ -411,6 +417,7 @@ const DepartmentCalculationTable = ({ totals, setTotals }) => {
                                 deleteRow={deleteRow}
                                 departments={departments}
                                 handleChange={handleChange}
+                             
                             />
 
                             {

@@ -16,15 +16,18 @@ import CustomOption from './CustomOption';
 import Select1 from 'react-select';
 import { useLocation } from 'react-router-dom';
 // import { fetchCalcIndexes } from "../../../../../APIs/ReferencesApi";
-import { newQuoteClientListids } from "../../../../../APIs/NewQuoteApis";
+import { newQuoteClientListids,DesktopUserInfo } from "../../../../../APIs/NewQuoteApis";
 import DepartmentQuote from './department-quote';
 
-const colourOptions = [
-  { value: 'red', label: 'Red', image: 'https://dev.memate.com.au/media/no_org.png' },
-  { value: 'green', label: 'Green', image: 'https://dev.memate.com.au/media/no_org.png' },
-  { value: 'blue', label: 'Blue', image: 'https://dev.memate.com.au/media/no_org.png ' },
-  // Add more options here
-];
+// const colourOptions = [
+//   { value: 'red', label: 'Red', image: 'https://dev.memate.com.au/media/no_org.png' },
+//   { value: 'green', label: 'Green', image: 'https://dev.memate.com.au/media/no_org.png' },
+//   { value: 'blue', label: 'Blue', image: 'https://dev.memate.com.au/media/no_org.png ' },
+//   // Add more options here
+// ];
+
+
+
 const Calculation = () => {
   const [itemList, setItemList] = useState([]);
   const [selectedValue, setSelectedValue] = useState('Standard');
@@ -46,15 +49,38 @@ const Calculation = () => {
     total: 0,
 });
   
+const [desktopUser,setDesktopUser] = useState()
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const data = await DesktopUserInfo();
+      const parsedData = JSON.parse(data);
+      setDesktopUser(parsedData);
+    } catch (error) {
+      console.error("Error fetching Desktop User:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+
+const colourOptions = (desktopUser || []).map(colour => ({
+  value: colour.id,
+  label: colour.name,
+  image: colour.imageUrl || 'https://dev.memate.com.au/media/no_org.png' 
+}));
+
+
   const [value, setValue] = useState(dayjs());
+
   const handleRadioChange = (e) => {
     setSelectedValue(e.target.value);
   };
 
   const location = useLocation();
-  const  {id}  = location.state;
-
-
+ 
+  const { id, orderReference, orderDescription, file } = location.state;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -105,6 +131,14 @@ const Calculation = () => {
     setTempContactEmail(contactEmail);
     setIsEditing(false);
   };
+
+  const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(false);
+  
+
+  // Function to handle toggle switch change
+  const handleToggleChange = () => {
+    setIsDiscountDisplayed(prevState => !prevState);
+  };
   
   return (
     <div className="calMainWrap">
@@ -115,7 +149,7 @@ const Calculation = () => {
         <Col sm={4} className='text-start'>
           <div className="newQuoteBack">
             <button>
-              <NavLink to="/sales/newquote/client-information/step1">
+              <NavLink to="/sales/newquote/client-information/step3/scope-of-work/:id?">
                 <ChevronLeft color="#000000" size={20} /> Go Back
               </NavLink>
             </button>
@@ -146,6 +180,8 @@ const Calculation = () => {
               value="Subscription"
               checked={selectedValue === 'Subscription'}
               onChange={handleRadioChange}
+              
+
             />
             <CustomRadioButton
               label="Retainer"
@@ -175,9 +211,10 @@ const Calculation = () => {
                     ))} 
                      </div>
               </h3>
-            <p>Website Redesign and Development</p>
+          
+            <p>{orderReference}</p>
             <h3>Description</h3>
-            <p>{itemList.description}</p>
+            <p> {orderDescription}</p>
           </Col>
           <Col sm={4} className='QuoteToborder text-start'>
             <h3>Quote To 
@@ -244,7 +281,7 @@ const Calculation = () => {
               <ul>
                 <li>{itemList.name}</li>
                 <li>ABN: {itemList.abn}</li>
-                <li>{itemList.phone}<Telephone color="#9E77ED" size={16} /></li>
+                <li>{itemList.phone}</li>
                 <li>{itemList.address}</li>
               </ul>
             )}
@@ -293,7 +330,7 @@ const Calculation = () => {
         <Row className='boxGreyBox mt-3 calStyleBox01'>
           <Col sm={12} className='text-start'>
         
-             <DepartmentQuote totals={totals} setTotals={setTotals}/>
+             <DepartmentQuote totals={totals} setTotals={setTotals} isDiscountDisplayed={isDiscountDisplayed}/>
              {/* <QuoteTable/> */}
     
           </Col>
@@ -367,14 +404,14 @@ const Calculation = () => {
           <div className="radio-buttons mt-5">
             <CustomRadioButton
               label={<><b>Request Payment </b> <span> Create an invoice requesting <br></br>payment on a specific date</span></>}
-              name="customRadio"
+              name="customRadio1"
               value="Standard1"
               checked={selectedValue === 'Standard1'}
               onChange={handleRadioChange}
             />
            <CustomRadioButton
             label={<><b>Autocharge Customer </b> <span> Automatically charge a payment<br></br> method on file</span></>}
-            name="customRadio"
+            name="customRadio1"
             value="Recurring1"
             checked={selectedValue === 'Recurring1'}
             onChange={handleRadioChange}
@@ -382,8 +419,8 @@ const Calculation = () => {
           </div>
           <div className='toggle-switch-wrap'>
             <label className="toggle-switch">
-            <input type="checkbox" />
-            <span className="switch" />
+            <input type="checkbox" checked={isDiscountDisplayed} onChange={handleToggleChange} />
+          <span className="switch" />
           </label>
           <em>Display Discounts</em>
           </div>
@@ -410,7 +447,8 @@ const Calculation = () => {
           <Col sm={5} className='text-start'>
           <ul className='left'>
               <li className='cancel'><button>Cancel</button></li>
-              <li className='invoicePDF'><NavLink to="">Invoice PDF</NavLink></li>
+              <li className='invoicePDF'><NavLink to="">Quote PDF</NavLink></li>
+              <li className='CreateProposalCal'><NavLink to="">Create Proposal</NavLink></li>
             </ul>
           </Col>
           <Col sm={7} className='text-end'>

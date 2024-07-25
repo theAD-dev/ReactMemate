@@ -212,13 +212,14 @@ const NewTaskModal = (dateRange) => {
                           onChange={handleChange}
                           displayEmpty
                           MenuProps={MenuProps}
+                           
                           inputProps={{ 'aria-label': 'Without label' }}
                           IconComponent={KeyboardArrowDownIcon}>
                           <MenuItem value="">
                           Select project
                           </MenuItem>
                           {projects.map((project) => (
-                            <MenuItem  key={project.id} value={project.id} data-value={project.id}>
+                            <MenuItem  key={project.id} className='customSelectMenuList' value={project.id} data-value={project.id}>
                               <p>{project.reference}</p>
                               <span>{project.number.substring(4) }</span>
                             </MenuItem>

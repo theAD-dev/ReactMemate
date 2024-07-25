@@ -107,7 +107,7 @@ const CustomSelect = ({ onSelect, assigneduser }) => {
           <CustomOption image={selectedOption.image} text={selectedOption.text} isSelected={true} />
         </div>
       ) : (
-        <span className='iconStyleCircle iconStyleCircleRight'>
+        <span className={`iconStyleCircle iconStyleCircleRight ${isOpen ? 'isOpen' : ''}`}>
           <Person color="#475467" size={18} onClick={handelselect} />
         </span>
       )
