@@ -971,7 +971,7 @@ box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24,
     padding: 0px 0px 0 7px !important;
     text-align: center;
 }
-.footerCalAction .CreateProposalCal a {
+.CreateProposalCal .linkByttonStyle {
     color: var(--Primary-700, #106B99);
     font-family: Inter;
     font-size: 16px;
@@ -979,6 +979,8 @@ box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24,
     font-weight: 600;
     line-height: 24px;
     margin-left: 20px;
+    background: transparent !important;
+    text-transform: capitalize;
 }
 .footerCalAction ul.right li.SaveDraftBut button {
     color: var(--Primary-700, #106B99);
@@ -1431,4 +1433,74 @@ line-height: 24px; /* 150% */
     background: #d9d9da; 
   }
   
-  
+  /* Create Proposal */
+  .creteProposalModel .modal-dialog {
+    max-width: 878px;
+}
+.creteProposalModel  .modal-content {
+    width: 100%;
+}
+.cancelProposalBut {
+    color: var(--Error-700, #B42318) !important;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    background: transparent !important;
+    border: 0 !important;
+    text-align: left;
+    padding: 0;
+}
+.popoverbottom .rightBut .addNewBut {
+    border-radius: 4px;
+    border: 1px solid var(--Primary-200, #A3E0FF);
+    background: var(--Primary-50, #EBF8FF);
+    padding: 10px 18px;
+    color: var(--Primary-700, #106B99);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+.popoverbottom .rightBut .createAndSave {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: #FFF;
+    padding: 10px 18px;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    margin: 0 9px;
+}
+.popoverbottom .rightBut .sendProposalBut {
+    border-radius: 4px;
+    border: 1px solid var(--Primary-600, #158ECC);
+    background: var(--Primary-600, #158ECC);
+    padding: 10px 18px;
+    color: #FFF;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+.modelInputSelectStyle input, .modelInputSelectStyle .inputInfo {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: 10px 14px;
+    margin: 8px 0;
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.08px;
+    width: 100%;
+}

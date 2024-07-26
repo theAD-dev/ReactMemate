@@ -157,7 +157,8 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             {
                                                 index === 0 && (
                                                     <div className='d-flex align-items-center justify-content-start'>
-                                                        <Checkbox className="checkbox" style={{ visibility: 'hidden' }} />
+                                                        <Checkbox className="checkbox" style={{ visibility: 'hidden' }} 
+                                                        />
                                                         {id + 1}
                                                     </div>
                                                 )

@@ -40,8 +40,24 @@
 
 .settings-menu .menuList .topList {
     height: calc(100vh - 264px);
+    overflow: auto;
 }
-
+.settings-menu .menuList .topList::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    padding: 5px;
+  }
+  .settings-menu .menuList .topList::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 0px #fff; 
+    border-radius: 10px;
+  }
+  .settings-menu .menuList .topList::-webkit-scrollbar-thumb {
+    background: #EAECF0; 
+    border-radius: 10px;
+  }
+  .settings-menu .menuList .topList::-webkit-scrollbar-thumb:hover {
+    background: #d9d9da; 
+  }
 .logoutBottom {
     /* width: 250px; */
     text-align: left;

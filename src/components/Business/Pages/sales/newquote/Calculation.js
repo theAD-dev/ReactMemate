@@ -18,6 +18,7 @@ import { useLocation } from 'react-router-dom';
 // import { fetchCalcIndexes } from "../../../../../APIs/ReferencesApi";
 import { newQuoteClientListids,DesktopUserInfo } from "../../../../../APIs/NewQuoteApis";
 import DepartmentQuote from './department-quote';
+import CreateProposalModel from './department-quote/CreateProposalModel';
 
 // const colourOptions = [
 //   { value: 'red', label: 'Red', image: 'https://dev.memate.com.au/media/no_org.png' },
@@ -448,7 +449,9 @@ const colourOptions = (desktopUser || []).map(colour => ({
           <ul className='left'>
               <li className='cancel'><button>Cancel</button></li>
               <li className='invoicePDF'><NavLink to="">Quote PDF</NavLink></li>
-              <li className='CreateProposalCal'><NavLink to="">Create Proposal</NavLink></li>
+              <li className='CreateProposalCal'>
+                <CreateProposalModel />
+              </li>
             </ul>
           </Col>
           <Col sm={7} className='text-end'>
