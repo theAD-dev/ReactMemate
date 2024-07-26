@@ -141,7 +141,19 @@ function startDaypilot(elementId, responses) {
             ${formattedTitle}
           </div>`,
           children: data.tasks.map((task) => {
-            // events.push()
+            events.push(
+              {
+                start: "2024-07-26T12:00:00",
+                end: "2024-08-25T12:00:00",
+                id: task.id,
+                cssClass: "childEvent",
+                resource: task.id,
+                backColor: "#F2F4F7",
+                borderColor: "#F2F4F7",
+                text: task.title,
+                bubbleHtml: "<div style='font-weight:bold'>Event Details</div><div>Scheduler Event 1</div>"
+              },
+            )
             const statusIMG = task.finished ?
             `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="20" height="20" rx="10" fill="#DCFAE6"/>
@@ -154,6 +166,7 @@ function startDaypilot(elementId, responses) {
             </svg>`
 
             return {
+              id: task.id,
               name: `<div class="task-list">
                 <div class="flex">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -183,9 +196,8 @@ function startDaypilot(elementId, responses) {
                 </div>
                 <div class="completion-status">${statusIMG}</div>
               </div>`,
-              id: task.id,
-              cssClass: "my-event",
-              minHeight: 40
+              minHeight: 40,
+              marginBottom: 4
             }
           })
         }
