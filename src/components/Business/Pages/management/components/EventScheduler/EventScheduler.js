@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { initDaypilot } from "./utils";
+import { getManagement } from "../../../../../../APIs/management-api";
+import { Spinner } from "react-bootstrap";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
@@ -11,12 +13,12 @@ function EventScheduler() {
 
     const handleError = () => {
       console.error("Failed to load DayPilot script.");
-      // Handle the error as needed
     };
 
-    const handleLoad = () => {
+    const handleLoad = async () => {
       try {
-        initDaypilot(CALENDAR_ID);
+        const response = await getManagement();
+        initDaypilot(CALENDAR_ID, response);
       } catch (error) {
         console.error("Error initializing DayPilot:", error);
       }
@@ -36,7 +38,11 @@ function EventScheduler() {
     };
   }, []);
 
-  return <div id={CALENDAR_ID}></div>;
+  return <div id={CALENDAR_ID}>
+    <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  </div>;
 }
 
 export default EventScheduler;

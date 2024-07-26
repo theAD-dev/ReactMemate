@@ -384,6 +384,11 @@ span.iconStyleCircle {
   justify-content: center;
   align-items: center;
 }
+
+span.iconStyleCircle.active {
+  border: 1px dashed var(--Gray-400, #1AB2FF) !important;
+}
+
 .dropdown-menu {
   display: block;
   position: absolute;
