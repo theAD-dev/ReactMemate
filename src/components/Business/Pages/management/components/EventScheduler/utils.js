@@ -26,7 +26,7 @@ function adjustColor(color, amount) {
   );
 }
 
-function startDaypilot(elementId, responses) {
+function startDaypilot(elementId, responses, viewTaskDetails) {
   console.log("response: ", responses);
   const isDaypilotLoaded =
     typeof window !== undefined && Boolean(window.DayPilot);
@@ -162,6 +162,8 @@ function startDaypilot(elementId, responses) {
         else if (data.jobs_done === 0) jobsStatus = "not-done";
         else if (data.jobs_done) jobsStatus = "pending";
 
+        data.booking_start = "2024-07-29T12:00:00"
+        data.booking_end = "2024-08-25T12:00:00"
         // add job-event
         events.push({
           start: new Date(1000 * +data.booking_start),
@@ -292,9 +294,7 @@ function startDaypilot(elementId, responses) {
               resource: task.id,
               backColor: "#F2F4F7",
               borderColor: "#F2F4F7",
-              text: task.title,
-              bubbleHtml:
-                "<div style='font-weight:bold'>Event Details</div><div>Scheduler Event 1</div>",
+              text: task.title
             });
 
 
@@ -310,7 +310,7 @@ function startDaypilot(elementId, responses) {
 
             return {
               id: task.id,
-              name: `<div class="task-list">
+              name: `<div class="task-list" task-id="${task.id}">
                 <div class="flex">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_5999_560822)">
@@ -346,6 +346,16 @@ function startDaypilot(elementId, responses) {
           }),
         };
       });
+
+      dp.onEventClicked = function(args) {
+        const taskId = args.e.id();
+        console.log('args: ', args.div.className.includes("task-item"));
+        if (args.div.className.includes("task-item") && taskId) {
+          viewTaskDetails(taskId);
+        } 
+      };
+
+
       dp.update({ resources, events });
     },
   };
@@ -381,9 +391,9 @@ function startDaypilot(elementId, responses) {
   app.init();
 }
 
-export function initDaypilot(elementId, response) {
+export function initDaypilot(elementId, response, viewTaskDetails) {
   try {
-    startDaypilot(elementId, response);
+    startDaypilot(elementId, response, viewTaskDetails);
   } catch (error) {
     console.log(error);
   }

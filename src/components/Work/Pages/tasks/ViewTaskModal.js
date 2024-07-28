@@ -19,6 +19,7 @@ import TaskDatePicker from './TaskDatePIcker';
 import { format, parseISO } from 'date-fns';
 
 const ViewTaskModal = ({ taskId }) => {
+  console.log('taskId: ', taskId);
   const [viewShow, setViewShow] = useState(false);
   const [taskRead, setTaskRead] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
