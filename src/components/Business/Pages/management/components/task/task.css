@@ -126,3 +126,23 @@
   background: var(--Success-50, #ecfdf3);
   color: var(--Success-700, #067647);
 }
+
+.save-button,
+.save-button:hover {
+  gap: 8px;
+  display: flex;
+  padding: 10px 16px;
+  justify-content: center;
+  align-items: center;
+
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+
+  border-radius: 4px;
+  border: 1px solid var(--Primary-600, #158ecc);
+  background: var(--Primary-600, #158ecc);
+  color: #fff;
+}

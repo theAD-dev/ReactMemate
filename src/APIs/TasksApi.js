@@ -10,7 +10,6 @@ export const fetchTasks = async (limit, offset) => {
   const requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
   };
 
   try {
@@ -39,7 +38,6 @@ export const fetchTasksRead = async (taskId) => {
   const requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
   };
 
   try {
@@ -66,8 +64,7 @@ export const fetchTasksUpdate= async (mainData,taskId) => {
   const requestOptions = {
     method: 'PUT',
     headers: myHeaders,
-    body: JSON.stringify(mainData),
-    redirect: 'follow'
+    body: JSON.stringify(mainData)
   };
 
   try {
@@ -79,6 +76,32 @@ export const fetchTasksUpdate= async (mainData,taskId) => {
     return data;
   } catch (error) {
     console.error('Tasks fetch error:', error);
+    throw error;
+  }
+};
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Task partials Update API  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+export const partialsTasksUpdate= async (taskId, data) => {
+  console.log('taskId: ', taskId);
+  console.log('data: ', data);
+  const myHeaders = new Headers();
+  const accessToken = sessionStorage.getItem("access_token");
+  myHeaders.append("Authorization", `Bearer ${accessToken}`);
+  myHeaders.append("Content-Type", `application/json`);
+
+  const requestOptions = {
+    method: 'PATCH',
+    headers: myHeaders,
+    body: JSON.stringify(data),
+  };
+
+  try {
+    const url = new URL(`${API_BASE_URL}/tasks/update/${taskId}`);
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Partials update error:', error);
     throw error;
   }
 };
