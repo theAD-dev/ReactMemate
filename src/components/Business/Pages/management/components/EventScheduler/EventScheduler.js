@@ -1,10 +1,27 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { initDaypilot } from "./utils";
 import { getManagement } from "../../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
+import ViewTask from "../task/view-task";
+import CreateTask from "../task/create-task";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
+  const [show, setShow] = useState(false);
+  const [taskId, setTaskId] = useState(null);
+  function viewTaskDetails (id) {
+    setTaskId(id);
+  }
+
+  function handleEdit (id, data) {
+    console.log('id: ', id);
+  } 
+
+  function createTask(reference) {
+    console.log('reference: ', reference);
+
+  }
+
   useEffect(() => {
     const daypilotScript = document.createElement("script");
     daypilotScript.src =
@@ -18,7 +35,7 @@ function EventScheduler() {
     const handleLoad = async () => {
       try {
         const response = await getManagement();
-        initDaypilot(CALENDAR_ID, response);
+        initDaypilot(CALENDAR_ID, response, viewTaskDetails, createTask);
       } catch (error) {
         console.error("Error initializing DayPilot:", error);
       }
@@ -38,11 +55,39 @@ function EventScheduler() {
     };
   }, []);
 
-  return <div id={CALENDAR_ID}>
-    <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
-  </div>;
+
+  const handleViewTask = () => {
+    console.log('handleViewTask: ',);
+
+  }
+
+  useEffect(() => {
+    const taskList = document.querySelector(".task-list");
+    if (taskList) {
+      let taskId = taskList.getAttribute('task-id')
+      console.log('taskId: ', taskId);
+      taskList.addEventListener("click", handleViewTask());
+    }
+
+    return () => {
+      if (taskList) {
+        let taskId = taskList.getAttribute('task-id')
+        console.log('taskId: ', taskId);
+        taskList.removeEventListener("click", handleViewTask);
+      }
+    };
+  }, []);
+
+  return <React.Fragment>
+    <div id={CALENDAR_ID}>
+      <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>
+    
+    <ViewTask taskId={taskId} handleEdit={handleEdit} />
+    <CreateTask show={show} setShow={setShow} />
+  </React.Fragment>
 }
 
 export default EventScheduler;

@@ -1,11 +1,11 @@
-import React, { useEffect, useState ,forwardRef} from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import defaultIcon from "../../../../assets/images/icon/default.png";
 import {
   Check,
-  ChevronLeft,ArrowDown,ArrowUp,FileText ,Building,Person
+  ChevronLeft, ArrowDown, ArrowUp, FileText, Building, Person
 } from "react-bootstrap-icons";
 
 
@@ -21,8 +21,7 @@ import { Resizable } from 'react-resizable';
 import ViewTaskModal from "./ViewTaskModal";
 
 
-  const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
-    console.log('TasksData: ', TasksData);
+const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
   const [sortField, setSortField] = useState("Quote");
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRow, setSelectedRow] = useState(null);
@@ -35,28 +34,28 @@ import ViewTaskModal from "./ViewTaskModal";
       prevDirection === "asc" ? "desc" : "asc"
     );
   };
-// Formate Date
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp * 1000);
-  const day = date.getDate();
-  const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-  }).format(date);
-  const year = date.getFullYear();
-  return `${day} ${monthAbbreviation} ${year}`;
-};
+  // Formate Date
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+    }).format(date);
+    const year = date.getFullYear();
+    return `${day} ${monthAbbreviation} ${year}`;
+  };
 
 
 
   const sortedClientsData = [...TasksResults].sort((a, b) => {
     const aValue = a[sortField];
     const bValue = b[sortField];
-  
-    
+
+
     if (aValue === undefined || bValue === undefined) {
-      return 0; 
+      return 0;
     }
-  
+
     if (sortDirection === "asc") {
       return aValue.localeCompare(bValue, undefined, { numeric: true });
     } else {
@@ -71,11 +70,7 @@ const formatDate = (timestamp) => {
     setShow(true)
   };
 
- 
-
-    const handleClose = () => setShow(false);
-
-
+  const handleClose = () => setShow(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const handleSelectAllCheckboxChange = () => {
     const allRowIds = TasksResults.map((sale) => sale.id);
@@ -94,26 +89,26 @@ const formatDate = (timestamp) => {
       width: 163,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("number")}>
-        <span>Task ID	</span>
-        {sortField === "number" && (
-          <span>
-            {sortDirection === "asc" ? (
-              <ArrowUp size={16} color="#475467" />
-            ) : (
-              <ArrowDown size={16} color="#475467" />
-            )}
-          </span>
-        )}
-      </div>
+          <span>Task ID	</span>
+          {sortField === "number" && (
+            <span>
+              {sortDirection === "asc" ? (
+                <ArrowUp size={16} color="#475467" />
+              ) : (
+                <ArrowDown size={16} color="#475467" />
+              )}
+            </span>
+          )}
+        </div>
       ),
- 
+
       renderCell: (params) => (
         <div className="styleColor1 clientTdFlex">
           <div>
-          <strong>{params.value}</strong>
-          
+            <strong>{params.value}</strong>
+
           </div>
-         <ViewTaskModal taskId={params.row.id} />
+          <ViewTaskModal taskId={params.row.id} />
         </div>
       ),
     },
@@ -122,30 +117,30 @@ const formatDate = (timestamp) => {
       field: "title",
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("title")}>
-        <span>Task Title</span>
-        {sortField === "title" && (
-          <span>
-            {sortDirection === "asc" ? (
-              <ArrowUp size={16} color="#475467" />
-            ) : (
-              <ArrowDown size={16} color="#475467" />
-            )}
-          </span>
-        )}
-        
-      </div>
+          <span>Task Title</span>
+          {sortField === "title" && (
+            <span>
+              {sortDirection === "asc" ? (
+                <ArrowUp size={16} color="#475467" />
+              ) : (
+                <ArrowDown size={16} color="#475467" />
+              )}
+            </span>
+          )}
+
+        </div>
       ),
-  
+
       renderCell: (params) => (
         <div
-        className="mainStyle taskTitle"
-        style={{ whiteSpace: "nowrap", textAlign: "left" }}
-      >
-        <strong>{params.value}</strong>
-      
-      </div>
+          className="mainStyle taskTitle"
+          style={{ whiteSpace: "nowrap", textAlign: "left" }}
+        >
+          <strong>{params.value}</strong>
+
+        </div>
       ),
-      
+
     },
     {
       field: "userName",
@@ -175,47 +170,47 @@ const formatDate = (timestamp) => {
             className={`mainStyle taskStatusStyle ${params.value}`}
             style={{ whiteSpace: "nowrap", textAlign: "center" }}
           >
-          
-          {params.value ? (
-                  <>
-                   <span>Complete</span> 
-                  </>
-                ) : (
-                  <span>Not Complete</span> 
-                )}
-        
+
+            {params.value ? (
+              <>
+                <span>Complete</span>
+              </>
+            ) : (
+              <span>Not Complete</span>
+            )}
+
           </div>
         );
       },
     },
-    
+
     {
-      field: "taskProject",
+      field: "TaskProject",
       width: 574,
       sortable: false,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Status")}>
-        <span>Project</span>
-        {sortField === "Status" && (
-          <span>
-            {sortDirection === "asc" ? (
-              <ArrowUp size={16} color="#475467" />
-            ) : (
-              <ArrowDown size={16} color="#475467" />
-              
-            )}
-          </span>
-        )}
-      </div>
+          <span>Project</span>
+          {sortField === "Status" && (
+            <span>
+              {sortDirection === "asc" ? (
+                <ArrowUp size={16} color="#475467" />
+              ) : (
+                <ArrowDown size={16} color="#475467" />
+
+              )}
+            </span>
+          )}
+        </div>
       ),
-     
+
       renderCell: (params) => (
         <div className="styleProject d-flex">
-         <div className="leftIcon"> <FileText size={13.71} color="#475467" /></div>
-         <div className="textWrap"> 
-         <p>{params.value}</p>
-          <span>{params.row.taskProjectNo}</span>
-         </div>
+          <div className="leftIcon"> <FileText size={16} color="#475467" /></div>
+          <div className="textWrap">
+            <p>{params.value.reference}</p>
+            <span>{params.value.number}</span>
+          </div>
         </div>
       ),
     },
@@ -225,31 +220,31 @@ const formatDate = (timestamp) => {
       headerName: "Start Date",
       width: 122,
       renderCell: (params) => (
-       
-          <div className="taskDatesDue">{formatDate(params.value)}</div>
-       
+        <div className="taskDatesDue">
+          <p>{formatDate(params.value)}</p>
+        </div>
       ),
     },
-  
+
     {
       field: "TaskStartEnd",
       sortable: false,
       headerName: "Due Date",
       width: 137,
       renderCell: (params) => (
-        <div className="taskDatesDue">{formatDate(params.value)}</div>
+        <div
+          className="taskDatesDue">
+          <p>{formatDate(params.value)}</p>
+        </div>
       ),
     },
-   
-   
-  
   ]);
 
   const [rows, setRows] = useState([]);
-  useEffect(()=> {
+  useEffect(() => {
     const rows = TasksResults.map((TaskData) => {
-  
-    
+
+
       return {
         isSelected: selectedRows.includes(TaskData.id),
         id: TaskData.id,
@@ -260,16 +255,13 @@ const formatDate = (timestamp) => {
         TaskStatus: TaskData.finished,
         TaskStartDate: TaskData.from_date,
         TaskStartEnd: TaskData.to_date,
-        taskProject: TaskData.project.reference,
-        taskProjectNo: TaskData.project.number,
-      
-    
+        TaskProject: TaskData.project,
       };
     });
-    
+
     setRows(rows)
-  }, [TasksResults,selectedRows])
-  
+  }, [TasksResults, selectedRows])
+
 
   const onResize = (index) => (event, { size }) => {
     setColumns((prevColumns) => {
@@ -277,12 +269,12 @@ const formatDate = (timestamp) => {
       nextColumns[index] = {
         ...nextColumns[index],
         width: size.width,
-       
+
       };
       return nextColumns;
     });
   };
-  
+
   const handleCheckboxChange = (rowId) => {
     const updatedSelectedRows = [...selectedRows];
     if (updatedSelectedRows.includes(rowId)) {
@@ -296,11 +288,11 @@ const formatDate = (timestamp) => {
   };
   const isSelected = selectedRows.length > 0;
   const [rowsfilter, setRowsFilter] = useState([]);
-  
+
   const handleRowsFilterChange = (filteredRows) => {
-    
+
     const rows = filteredRows.map((TaskData) => {
-    
+
       return {
 
         isSelected: selectedRows.includes(TaskData.id),
@@ -312,12 +304,10 @@ const formatDate = (timestamp) => {
         TaskStatus: TaskData.finished,
         TaskStartDate: TaskData.from_date,
         TaskStartEnd: TaskData.to_date,
-        taskProject: TaskData.project.reference,
-     
-    
+        TaskProject: TaskData.project,
       };
     });
-    
+
     setRows(rows);
     setRowsFilter(rows);
   };
@@ -326,22 +316,22 @@ const formatDate = (timestamp) => {
     <div className="tasksTableWrap">
       <TableTopBar TasksData={TasksResults} rowsfilter={rowsfilter} onRowsFilterChange={handleRowsFilterChange} rows={sortedClientsData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
       <Table responsive>
-      <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
+        <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
           <tr>
-          <th>
-          <label className="customCheckBox">
-          <input
-            type="checkbox"
-            checked={selectedRows.length === TasksResults.length}
-            onChange={handleSelectAllCheckboxChange}
-          />
-          <span className="checkmark">
-            <Check color="#1AB2FF" size={20} />
-          </span>
-        </label>
-          </th>
+            <th>
+              <label className="customCheckBox">
+                <input
+                  type="checkbox"
+                  checked={selectedRows.length === TasksResults.length}
+                  onChange={handleSelectAllCheckboxChange}
+                />
+                <span className="checkmark">
+                  <Check color="#1AB2FF" size={20} />
+                </span>
+              </label>
+            </th>
             {columns.map((column, index) => (
-                <th key={column.field} style={{ width: column.width }}>
+              <th key={column.field} style={{ width: column.width }}>
                 <Resizable
                   width={column.width || 100} // Provide a default width if undefined
                   height={0}
@@ -349,51 +339,51 @@ const formatDate = (timestamp) => {
                 >
                   <div>
                     {column.headerName}
-                  </div> 
+                  </div>
                 </Resizable>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          { rows && rows.length && 
+          {rows && rows.length &&
             rows.map((row) => (
-            <tr data-clientuniqueid={row.clientUniqueId}
-              key={row.id} className={row.isSelected ? "selected-row" : ""}
+              <tr data-clientuniqueid={row.clientUniqueId}
+                key={row.id} className={row.isSelected ? "selected-row" : ""}
               >
                 <td>
-                <label className="customCheckBox">
-                <input
-                  type="checkbox"
-                  checked={selectedRows.includes(row.id)}
-                  onChange={() => handleCheckboxChange(row.id)}
-                />
-                <span className="checkmark">
-                  <Check color="#1AB2FF" size={20} />
-                </span>
-              </label>
+                  <label className="customCheckBox">
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.includes(row.id)}
+                      onChange={() => handleCheckboxChange(row.id)}
+                    />
+                    <span className="checkmark">
+                      <Check color="#1AB2FF" size={20} />
+                    </span>
+                  </label>
                 </td>
-              {columns.map((column) => (
+                {columns.map((column) => (
                   <td key={column.field} onClick={["Quote", "Client", "category"].includes(column.field) ? () => handleRowClick(row.id) : null}>
-                  {column.renderCell({ value: row[column.field], row })}
-                </td>
-              ))}
-            </tr>
+                    {column.renderCell({ value: row[column.field], row })}
+                  </td>
+                ))}
+              </tr>
             ))
           }
 
-           {/* intersection observer target ref set */}
-           <tr className="rowBorderHide targetObserver">
-          <td className="targetObserver" ref={ref} colSpan={12}>
-            {isFetching && 'Loading...'}
-          </td>
-        </tr>
+          {/* intersection observer target ref set */}
+          <tr className="rowBorderHide targetObserver">
+            <td className="targetObserver" ref={ref} colSpan={12}>
+              {isFetching && 'Loading...'}
+            </td>
+          </tr>
 
           {rows && rows.length === 0 && (
             <tr className="nodataTableRow">
               <td colSpan={columns.length} style={{ textAlign: "center" }}>
                 <div style={{ textAlign: "center", marginTop: "20px" }}>
-                  
+
                   <div
                     className="Nodata"
                     style={{ background: `url(${nodataBg})` }}
@@ -427,17 +417,17 @@ const formatDate = (timestamp) => {
           )}
         </tbody>
       </Table>
-        {/* Sidebar */}
-        {selectedRow && (
-       <Offcanvas show={show} placement="end" onHide={handleClose}>
-       <Offcanvas.Header closeButton>
-         <Offcanvas.Title><strong>{selectedRow}.</strong> Client Edit Data Head</Offcanvas.Title>
-       </Offcanvas.Header>
-       <Offcanvas.Body>
-        
-       </Offcanvas.Body>
-     </Offcanvas>
-     
+      {/* Sidebar */}
+      {selectedRow && (
+        <Offcanvas show={show} placement="end" onHide={handleClose}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title><strong>{selectedRow}.</strong> Client Edit Data Head</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+
+          </Offcanvas.Body>
+        </Offcanvas>
+
       )}
     </div>
   );

@@ -101,6 +101,7 @@ letter-spacing: 0.14px !important;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .scheduler_default_rowheader_inner {
   position: relative;
   inset: 0px;
@@ -109,6 +110,7 @@ letter-spacing: 0.14px !important;
   display: flex;
   align-items: center;
 }
+
 .scheduler_default_timeheadergroup_inner.scheduler_default_timeheader_cell_inner {
   color: #475467;
   font-family: Inter;
@@ -120,6 +122,7 @@ letter-spacing: 0.14px !important;
   border: 0;
   background: #fff;
 }
+
 .scheduler_default_timeheadercol_inner.scheduler_default_timeheader_cell_inner {
   color: #475467;
   font-family: Inter;
@@ -131,6 +134,7 @@ letter-spacing: 0.14px !important;
   border: 0;
   background: #fff;
 }
+
 .scheduler_default_separator:after {
   position: absolute;
   content: "";
@@ -139,15 +143,18 @@ letter-spacing: 0.14px !important;
   height: 12px;
   border-radius: 100%;
   left: -4px;
-  z-index: 99999;
+  z-index: 9;
   top: 0;
 }
+
 .scheduler_default_cell.scheduler_default_cell_business {
   background-color: #fcfcfd;
 }
+
 .resourceList {
   border-top: 1px solid #eaecf0 !important;
 }
+
 .gantt_default_tree_image_expand {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPjxwYXRoIGQ9J00gMS41IDAuNSBMIDYuNSA1IEwgMS41IDkuNScgc3R5bGU9J2ZpbGw6bm9uZTtzdHJva2U6Izk5OTk5OTtzdHJva2Utd2lkdGg6MjtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLWxpbmVjYXA6YnV0dCcgLz48L3N2Zz4=");
 }
@@ -155,9 +162,11 @@ letter-spacing: 0.14px !important;
 .gantt_default_tree_image_collapse {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0nMTAnIGhlaWdodD0nMTAnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHBhdGggZD0nTSAwLjUgMS41IEwgNSA2LjUgTCA5LjUgMS41JyBzdHlsZT0nZmlsbDpub25lO3N0cm9rZTojOTk5OTk5O3N0cm9rZS13aWR0aDoyO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbGluZWNhcDpidXR0JyAvPjwvc3ZnPg==");
 }
+
 .eventInnerText {
   padding-left: 25px;
 }
+
 ul.resourceMan {
   display: flex;
   justify-content: flex-start;
@@ -165,6 +174,7 @@ ul.resourceMan {
   padding: 9px 4px 9px 25px;
   background: #fcfcfd;
 }
+
 ul.resourceMan li {
   color: var(--Gray-500, #667085);
   font-family: Inter;
@@ -175,8 +185,8 @@ ul.resourceMan li {
   letter-spacing: 0.12px;
   margin-right: 14px;
 }
+
 ul.resourceMan li span {
-  color: var(--Warning-500, #f79009);
   text-align: center;
   font-family: Inter;
   font-size: 12px;
@@ -184,14 +194,39 @@ ul.resourceMan li span {
   font-weight: 500;
   line-height: 18px;
   border-radius: 16px;
-  border: 1px solid var(--Warning-200, #fedf89);
   background: var(--Warning-25, #fffcf5);
   mix-blend-mode: multiply;
   padding: 2px 8px;
 }
+
+ul.resourceMan li span.pending {
+  color: var(--Warning-500, #f79009) !important;
+  background: var(--Warning-25, #fffcf5) !important;
+  border: 1px solid var(--Warning-200, #fedf89) !important;
+}
+
+ul.resourceMan li span.done {
+  color: var(--Success-500, #17b26a) !important;
+  background: var(--Success-25, #f6fef9) !important;
+  border: 1px solid var(--Success-200, #a9efc5) !important;
+}
+
+ul.resourceMan li span.not-started {
+  color: var(--Gray-500, #667085) !important;
+  background: var(--Gray-50, #f9fafb) !important;
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+}
+
+ul.resourceMan li span.not-done {
+  color: var(--Error-500, #f04438) !important;
+  background: var(--Error-25, #fffbfa) !important;
+  border: 1px solid var(--Error-200, #fecdca) !important;
+}
+
 .resourceList {
   text-align: left;
 }
+
 .resourceList .small {
   color: var(--Gray-500, #667085);
   font-family: Inter;
@@ -205,6 +240,7 @@ ul.resourceMan li span {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .resourceList h2 {
   color: var(--Gray-600, #475467);
   font-family: Inter;
@@ -214,12 +250,10 @@ ul.resourceMan li span {
   line-height: 22px;
   letter-spacing: 0.175px;
 }
+
 .resourceList em {
   border-radius: 16px;
-  border: 1px solid var(--Warning-200, #fedf89);
-  background: var(--Warning-50, #fffaeb);
   mix-blend-mode: multiply;
-  color: var(--Warning-700, #b54708);
   text-align: center;
   font-family: Inter;
   font-size: 12px;
@@ -227,16 +261,27 @@ ul.resourceMan li span {
   font-weight: 500;
   line-height: 18px;
   padding: 2px 8px;
+  /* color: var(--Warning-700, #b54708);
+  background: var(--Warning-50, #fffaeb);
+  border: 1px solid var(--Warning-200, #fedf89); */
 }
+
+.scheduler_default_event.job-item {
+  margin-top: 40px !important;
+  height: 48px !important;
+}
+
 .scheduler_default_event_inner {
   display: inline-grid;
   align-items: center;
 }
+
 .scheduler_default_event_inner ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .scheduler_default_event_inner {
   border-radius: 5px;
   background: var(--Primary-100, #bae8ff);
@@ -245,12 +290,12 @@ ul.resourceMan li span {
   border: 0;
   padding: 2px 9px 2px 20px;
 }
+
 .scheduler_default_event_inner ul li span,
 .scheduler_default_event_float ul li span {
   border-radius: 225px;
   border: 2px solid var(--Primary-200, #a3e0ff);
   background: #f5f7f8;
-  padding: 8px;
   color: var(--Gray-600, #475467);
   font-family: Inter;
   font-size: 12px;
@@ -258,7 +303,11 @@ ul.resourceMan li span {
   font-weight: 600;
   line-height: 22px;
   letter-spacing: 0.15px;
-  /* margin-left: 20px; */
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
 }
 
 .scheduler_default_tree_image_expand {
@@ -282,22 +331,40 @@ ul.resourceMan li span {
 .scheduler_default_event_float ul li span {
   margin-left: 20px;
 }
+
 .scheduler_default_rowheader_inner_text {
   margin-left: 0 !important;
   padding-left: 0;
 }
+
 .resourcesRow .scheduler_default_rowheader_inner_text .resourceList .small,
 .resourcesRow .scheduler_default_rowheader_inner_text .resourceList h2,
 .resourcesRow .scheduler_default_rowheader_inner_text .resourceList em {
   margin-left: 25px;
 }
+
 ul.eventStyleCal li:first-child span {
   background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
   border-radius: 4px;
   border: 0.75px solid #d1d1d1;
-  padding: 3px;
+  padding: 4px 0px 5px 4px;
   margin-right: 6px;
 }
+
+ul.eventStyleCal li:first-child {
+  max-width: 85%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+}
+
+.scheduler_default_event.job-item .scheduler_default_event_float_inner::after {
+  top: 16px !important;
+}
+
 ul.eventStyleCal li:nth-child(2) {
   color: var(--Primary-800, #0a4766);
   font-family: Inter;
@@ -307,20 +374,25 @@ ul.eventStyleCal li:nth-child(2) {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 ul.eventStyleCal {
   display: flex;
 }
-.scheduler_default_rowheader:before {
+
+.scheduler_default_rowheader .resourceList:before {
   position: absolute;
   right: 0;
   content: "";
-  background: #f79009;
+  background: var(--main-color);
   width: 5px;
-  height: 114px;
+  height: 130px;
+  z-index: 10;
 }
+
 .scheduler_default_rowheader {
   position: relative;
 }
+
 #calender .scheduler_default_rowheader_inner {
   position: absolute;
   inset: 0px;
@@ -330,33 +402,40 @@ ul.eventStyleCal {
   align-items: center;
   background: #f2faff;
 }
+
 .scheduler_default_rowheader .scheduler_default_resourcedivider {
   background: transparent;
 }
+
 .scheduler_default_tree_image_collapse {
   right: 8px;
 }
+
 .scheduler_default_tree_image_expand {
   right: 8px;
 }
 
 .scheduler_default_event_inner {
-  padding: 12px 19px !important;
+  padding: 6px 19px !important;
   border-radius: 10px !important;
   box-shadow: 0px 3px 5px 0px rgba(16, 24, 40, 0.1),
     0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
   border: 0 !important;
   display: block !important;
 }
+
 .scheduler_default_rowheader {
   text-align: left;
 }
+
 #calender .scheduler_default_tree_image_no_children {
   display: none;
 }
+
 #calender .scheduler_default_rowheader_inner_indent {
   margin-left: 0 !important;
 }
+
 .scheduler_default_rowheader_inner_text {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -366,17 +445,21 @@ ul.eventStyleCal {
   line-height: 22px;
   letter-spacing: 0.12px;
 }
+
 .scheduler_default_event {
   overflow: visible !important;
 }
+
 .my-event1 {
   padding: 7px 0;
 }
+
 .childEvent .childEventborder {
   border: 0 !important;
   border-radius: 0 !important;
   padding: 0 !important;
 }
+
 .childEvent .scheduler_default_event_inner {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -437,4 +520,24 @@ ul.eventStyleCal {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.create-task-div {
+  height: 75px;
+  display: flex;
+  align-items: end;
+  margin-left: 25px;
+}
+
+.create-task-div button {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+  color: var(--Primary-600, #158ECC);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
 }

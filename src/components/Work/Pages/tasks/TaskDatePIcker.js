@@ -21,9 +21,8 @@ const DateRangeComponent = ({ startDate, endDate }) => {
   );
 };
 
-const TaskDatePicker = () => {
+const TaskDatePicker = ({ dateRange, setDateRange }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
