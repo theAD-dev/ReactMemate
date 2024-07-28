@@ -1131,10 +1131,12 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   align-items: center;
   justify-content: space-between;
   margin: 19px 10px;
+  gap: 10px;
 }
  .custom-div p {
  padding: 0;
  margin: 0;
+ white-space: noWrap;
 }
  .flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
   background-color: #ffffff !important;
@@ -1153,6 +1155,7 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   font-weight: 600;
   line-height: 20px;
   padding: 10px 5px;
+  flex: 1;
 }
  input.flatpickr-input {
   display: none;
