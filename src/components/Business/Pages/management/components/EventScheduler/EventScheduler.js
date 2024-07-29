@@ -85,7 +85,7 @@ function EventScheduler() {
       </Spinner>
     </div>
     
-    <ViewTask taskId={taskId} handleEdit={handleEdit} />
+    <ViewTask taskId={taskId} setTaskId={setTaskId} handleEdit={handleEdit} />
     <CreateTask show={show} setShow={setShow} />
   </React.Fragment>
 }

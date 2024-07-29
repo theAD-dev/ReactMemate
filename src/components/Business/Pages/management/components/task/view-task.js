@@ -7,7 +7,7 @@ import taskdetails from '../../../../../../assets/images/task-details.svg';
 import './task.css';
 import { ArrowRight } from 'react-bootstrap-icons';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { fetchTasksRead, fetchTasksUpdate, partialsTasksUpdate } from '../../../../../../APIs/TasksApi';
+import { fetchTasksRead, TaskCompleteJob } from '../../../../../../APIs/TasksApi';
 
 const TaskLoadingView = () => {
   return (
@@ -19,62 +19,63 @@ const TaskLoadingView = () => {
         <Placeholder xs={12} bg="secondary" style={{ height: '80px' }} size='lg' />
       </Placeholder>
       <table className='task-deatils-table w-100'>
-        <tr style={{ marginBottom: '12px' }}>
-          <td style={{ width: '122px', paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-          <td style={{ paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-        </tr>
-        <tr style={{ marginBottom: '12px' }}>
-          <td style={{ width: '122px', paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-          <td style={{ paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-        </tr>
-        <tr style={{ marginBottom: '12px' }}>
-          <td style={{ width: '122px', paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-          <td style={{ paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-        </tr>
-        <tr style={{ marginBottom: '12px' }}>
-          <td style={{ width: '122px', paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-          <td style={{ paddingBottom: '12px' }}>
-            <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
-              <Placeholder xs={12} bg="secondary" />
-            </Placeholder>
-          </td>
-        </tr>
+        <tbody>
+          <tr style={{ marginBottom: '12px' }}>
+            <td style={{ width: '122px', paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+            <td style={{ paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+          </tr>
+          <tr style={{ marginBottom: '12px' }}>
+            <td style={{ width: '122px', paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+            <td style={{ paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+          </tr>
+          <tr style={{ marginBottom: '12px' }}>
+            <td style={{ width: '122px', paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+            <td style={{ paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+          </tr>
+          <tr style={{ marginBottom: '12px' }}>
+            <td style={{ width: '122px', paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+            <td style={{ paddingBottom: '12px' }}>
+              <Placeholder as="p" animation="wave" style={{ marginBottom: '4px' }}>
+                <Placeholder xs={12} bg="secondary" />
+              </Placeholder>
+            </td>
+          </tr>
+        </tbody>
       </table>
 
     </>
   )
 }
 
-const ViewTask = ({ taskId, handleEdit }) => {
-  console.log('taskId: ', taskId);
+const ViewTask = ({ taskId, setTaskId, handleEdit }) => {
   const [show, setShow] = useState(false);
   const { isLoading, data, isError, refetch } = useQuery({
     queryKey: ['taskId', taskId],
@@ -83,16 +84,15 @@ const ViewTask = ({ taskId, handleEdit }) => {
     retry: 1,
   });
   const mutation = useMutation({
-    mutationFn: (updateData) => fetchTasksUpdate(updateData, taskId),
+    mutationFn: (updateData) => TaskCompleteJob(taskId, updateData),
     onSuccess: () => {
-      // Optionally refetch data or show success message
+      handleClose();
+      setTaskId(null);
     },
     onError: (error) => {
       console.error('Error updating task:', error);
     }
   });
-
-  console.log('statusUpdated: ', mutation);
 
   useEffect(() => {
     if (taskId) {
@@ -100,9 +100,9 @@ const ViewTask = ({ taskId, handleEdit }) => {
     }
   }, [taskId])
 
-  const handleInComplete = () => mutation.mutate({ finished: false });
-  const handleComplete = () => mutation.mutate({ finished: true });
-  const handleClose = () => setShow(false);
+  const handleInComplete = () => mutation.mutate(false);
+  const handleComplete = () => mutation.mutate(true);
+  const handleClose = () => { setShow(false); setTaskId(null); }
   const handleShow = () => setShow(true);
   const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";
@@ -129,29 +129,31 @@ const ViewTask = ({ taskId, handleEdit }) => {
                 <p className='task-description'>{data?.description || "-"}</p>
 
                 <table className='task-deatils-table'>
-                  <tr style={{ marginBottom: '12px' }}>
-                    <td style={{ width: '122px', paddingBottom: '12px' }}>Project Task</td>
-                    <td style={{ paddingBottom: '12px' }}>{data?.project && data.project.reference ? data.project.reference : '-'}</td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: '122px', paddingBottom: '12px' }}>ID</td>
-                    <td style={{ paddingBottom: '12px' }}>{data?.number || "-"}</td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: '122px', paddingBottom: '12px' }}>Assigned</td>
-                    <td style={{ paddingBottom: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <img src={data?.user?.has_photo ? data?.user.photo : placeholderUser} alt='img-assigned' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
-                      <span>{data?.user?.full_name || "-"}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ width: '122px', paddingBottom: '12px' }}>Date</td>
-                    <td style={{ paddingBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span>{dateFormat(data?.from_date)}</span>
-                      <ArrowRight size={20} color="#475467" />
-                      <span>{dateFormat(data?.to_date)}</span>
-                    </td>
-                  </tr>
+                  <tbody>
+                    <tr style={{ marginBottom: '12px' }}>
+                      <td style={{ width: '122px', paddingBottom: '12px' }}>Project Task</td>
+                      <td style={{ paddingBottom: '12px' }}>{data?.project && data.project.reference ? data.project.reference : '-'}</td>
+                    </tr>
+                    <tr>
+                      <td style={{ width: '122px', paddingBottom: '12px' }}>ID</td>
+                      <td style={{ paddingBottom: '12px' }}>{data?.number || "-"}</td>
+                    </tr>
+                    <tr>
+                      <td style={{ width: '122px', paddingBottom: '12px' }}>Assigned</td>
+                      <td style={{ paddingBottom: '12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <img src={data?.user?.has_photo ? data?.user.photo : placeholderUser} alt='img-assigned' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+                        <span>{data?.user?.full_name || "-"}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ width: '122px', paddingBottom: '12px' }}>Date</td>
+                      <td style={{ paddingBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>{dateFormat(data?.from_date)}</span>
+                        <ArrowRight size={20} color="#475467" />
+                        <span>{dateFormat(data?.to_date)}</span>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </>
             )

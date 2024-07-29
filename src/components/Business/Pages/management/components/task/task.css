@@ -55,6 +55,11 @@
   font-weight: 400;
   line-height: 22px; /* 157.143% */
   letter-spacing: 0.14px;
+  padding: unset !important;
+  padding-bottom: 12px !important;
+  padding-right: 4px !important;
+  background: unset !important;
+  border: unset !important;
 }
 .task-deatils-table tr td:last-child {
   color: var(--Gray-600, #475467);
@@ -64,6 +69,10 @@
   font-weight: 400;
   line-height: 22px; /* 157.143% */
   letter-spacing: 0.14px;
+  padding: unset !important;
+  padding-bottom: 12px !important;
+  background: unset !important;
+  border: unset !important;
 }
 
 .edit-button,
