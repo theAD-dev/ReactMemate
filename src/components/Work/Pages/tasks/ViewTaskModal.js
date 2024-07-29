@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { fetchTasksRead, fetchTasksProject, fetchTasksUpdate,fetchTasksDelete } from '../../../../APIs/TasksApi';
+import { fetchTasksRead, fetchTasksProject, fetchTasksUpdate,fetchTasksDelete,TaskCompleteJob } from '../../../../APIs/TasksApi';
 import TaskDetailsIcon from "../../../../assets/images/icon/TaskDetailsIcon.svg";
 import { ArrowRight, CheckCircleFill ,X} from "react-bootstrap-icons";
 import taskbinImage from '../../../../assets/images/icon/taskbinImage.png';
@@ -19,7 +19,6 @@ import TaskDatePicker from './TaskDatePIcker';
 import { format, parseISO } from 'date-fns';
 
 const ViewTaskModal = ({ taskId }) => {
-  console.log('taskId: ', taskId);
   const [viewShow, setViewShow] = useState(false);
   const [taskRead, setTaskRead] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +49,18 @@ const ViewTaskModal = ({ taskId }) => {
     setIsOpen(!isOpen);
   };
 
+
+  const handleToggleComplete = async () => {
+    const isComplete = !taskRead.finished; // Toggle the current status
+    try {
+      await TaskCompleteJob(taskId, isComplete); // Pass the new status to the function
+      setTaskRead({ ...taskRead, finished: isComplete }); // Update local state
+    } catch (error) {
+      console.error('Error toggling task completion:', error);
+    }
+  };
+
+
   // Format Date
   const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -79,7 +90,6 @@ const ViewTaskModal = ({ taskId }) => {
   const fetchData = async () => {
     try {
       const data = await fetchTasksRead(taskId);
-      console.log('data: ', data);
       setTaskRead(data); // Assuming data is already parsed
       setUpdateTitle(data.title); // Initialize updateTitle with fetched task data
       setUpdateDis(data.description); // Initialize updateDis with fetched task data
@@ -297,7 +307,7 @@ const ViewTaskModal = ({ taskId }) => {
                   <div className='editBut' onClick={handleEditShow}>
                     Edit Task
                   </div>
-                  <Button onClick={toggleDropdown} className={`statusBut ${taskRead.finished}`}>
+                  <Button onClick={handleToggleComplete} className={`statusBut ${taskRead.finished}`}>
                     {taskRead.finished ? (
                       <>
                      Incomplete <CheckCircleFill size={20} color="#F04438" />

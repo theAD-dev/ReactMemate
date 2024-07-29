@@ -13,7 +13,7 @@ import { fetchHomePage } from "../APIs/HomeApi";
 import { fetchProfile } from "../APIs/ProfileApi";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-
+import { Link } from 'react-router-dom';
 
 
 
@@ -283,7 +283,7 @@ const Home = () => {
                      </div>
                     <h3>Active Quotes</h3>
                     <div className='countNoBox activeQouteH'> 
-                    <div className='pluslgIcon'><PlusLg size={20} color="#106B99" /></div>
+                    <div className='pluslgIcon'> <Link to="/tasks"><PlusLg size={20} color="#106B99" /></Link></div>
                     <span> <CountUp start={0} end={homeData.active_quotes.cnt} duration={5} /></span></div>
                         <h4>{formatCurrency(homeData.active_quotes.sum)}</h4>
                 </div>

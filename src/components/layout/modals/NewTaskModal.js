@@ -37,7 +37,6 @@ const NewTaskModal = () => {
         const projectsData = await fetchTasksProject();
 
         if (Array.isArray(projectsData)) {
-          console.log("projectsData: ", projectsData);
           const projectsOptions = projectsData.map((project) => {
             return { value: project.id, label: project.reference };
           });

@@ -83,8 +83,8 @@ const ExistingClients = () => {
           <div className='navStepClient'>
             <ul>
               <li className='activeClientTab'><span><People color="#D0D5DD" size={15} /></span> <p>Choose Client</p></li>
-              <li><span><InfoSquare color="#A3E0FF" size={15} /></span> <p>Client Information</p> </li>
-              <li><span><CardList color="#A3E0FF" size={15} /></span> <p>Scope of Work</p> </li>
+              <li className='deactiveColorBox'><span><InfoSquare color="#A3E0FF" size={15} /></span> <p>Client Information</p> </li>
+              <li className='deactiveColorBox'><span><CardList color="#A3E0FF" size={15} /></span> <p>Scope of Work</p> </li>
             </ul>
           </div>
 

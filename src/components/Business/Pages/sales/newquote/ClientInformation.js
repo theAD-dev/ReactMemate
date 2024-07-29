@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 
 const ClientInformation = () => {
   return (
-    <div className="newQuotePage existingClients">
+    <div className="newQuotePage existingClients borderSkyColor">
     <div className="dFlex">
     <div className="newQuoteBack">
         <button><NavLink to="/sales/newquote/selectyourclient/step1"><ChevronLeft color="#000000" size={20} /> Go Back</NavLink></button>
@@ -16,8 +16,8 @@ const ClientInformation = () => {
               <div className='navStepClient'>
                 <ul>
                     <li className='activeClientTab'><span><Person color="#D0D5DD" size={15} /></span> <p>Choose Client</p></li>
-                    <li><span><InfoSquare color="#D0D5DD" size={15} /></span> <p>Client Information</p> </li>
-                    <li><span><CardList color="#D0D5DD" size={15} /></span> <p>Scope of Work</p> </li>
+                    <li className='deactiveColorBox'><span><InfoSquare color="#D0D5DD" size={15} /></span> <p>Client Information</p> </li>
+                    <li className='deactiveColorBox'><span><CardList color="#D0D5DD" size={15} /></span> <p>Scope of Work</p> </li>
                 </ul>
               </div>
               <div className="formgroupWrap clstep01">

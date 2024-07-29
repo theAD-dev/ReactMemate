@@ -15,7 +15,7 @@ export const DepartmentQuoteTableRowLoading = () => {
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '100%' }}>
+            <td style={{ width: '600px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>

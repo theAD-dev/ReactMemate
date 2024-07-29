@@ -209,10 +209,26 @@
 .navStepClient .activeClientTab span svg {
     fill: #158ECC;
 }
+.navStepClient ul li svg {
+    fill: #76D1FF;
+}
 .navStepClient .activeClientTab span {
     border-radius: 4px;
     border: 1px solid var(--Primary-300, #76D1FF);
     background: var(--Primary-50, #EBF8FF);
+}
+.navStepClient .activeClientTab span {
+    border-radius: 4px;
+    border: 1px solid var(--Primary-300, #76D1FF) !important;
+    background: var(--Primary-50, #EBF8FF) !important;
+}
+.deactiveColorBox span {
+    border-radius: 4px !important;
+    border: 1px solid var(--Gray-200, #EAECF0) !important;
+    background: var(--Base-White, #FFF) !important;
+}
+.deactiveColorBox span svg {
+    fill: #D0D5DD !important;
 }
 /* Business Detils Page */
 .bsdpage .formgroupWrap1 .businessTab {
@@ -431,7 +447,7 @@ button.CustonCloseModal {
     border-width: 0px;
 }
 .bsdScope .inputInfo textarea {
-    color: var(--Gray-400, #98A2B3);
+    /* color: var(--Gray-400, #98A2B3); */
     font-family: Inter;
     font-size: 16px;
     font-style: normal;
@@ -1504,3 +1520,10 @@ line-height: 24px; /* 150% */
     letter-spacing: -0.08px;
     width: 100%;
 }
+.borderSkyColor .navStepClient ul li span {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-200, #EAECF0);
+    background: var(--Base-White, #FFF);
+}
+
+

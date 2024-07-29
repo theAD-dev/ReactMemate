@@ -1373,9 +1373,9 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   border: 0;
   background: transparent;
 }
-.my-component .downArrowIcon {
+/* .my-component .downArrowIcon {
   transform: translateX(-50%);
-  animation: arrowAnimation 1s infinite alternate; /* Adjust animation duration as needed */
+  animation: arrowAnimation 1s infinite alternate; 
 }
 
 @keyframes arrowAnimation {
@@ -1383,9 +1383,9 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
     transform: translateX(-50%) translateY(0);
   }
   100% {
-    transform: translateX(-50%) translateY(-5px); /* Adjust vertical movement distance */
+    transform: translateX(-50%) translateY(-5px);
   }
-}
+} */
 
 
 

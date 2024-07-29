@@ -110,8 +110,6 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
 
 
 const DepartmentCalculationTableHead = (isDiscountActive) => {
-    
-    console.log('isDiscountActive>>>>>>>>>>>>>>>>>>>>>>>: ', isDiscountActive);
     return (
         <thead>
             <tr>
@@ -243,8 +241,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
 }
 
 const DepartmentCalculationTable = ({ totals, setTotals ,isDiscountActive}) => {
-    
- 
+
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
@@ -418,9 +415,7 @@ const DepartmentCalculationTable = ({ totals, setTotals ,isDiscountActive}) => {
                                 deleteRow={deleteRow}
                                 departments={departments}
                                 handleChange={handleChange}
-                             
                             />
-
                             {
                                 isLoadingSubItem && <DepartmentQuoteTableRowLoading />
                             }

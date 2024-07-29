@@ -207,3 +207,37 @@ export const fetchTasksDelete = async (taskId) => {
     throw error;
   }
 };
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Complete Task  API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+export const TaskCompleteJob = async (taskId, finished) => {
+  const myHeaders = new Headers();
+  const accessToken = sessionStorage.getItem("access_token");
+  myHeaders.append("Authorization", `Bearer ${accessToken}`);
+  myHeaders.append("Content-Type", `application/json`);
+
+  const raw = JSON.stringify({
+    "finished": finished
+  });
+
+  const requestOptions = {
+    method: "PATCH",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow"
+  };
+
+  try {
+    const url = new URL(`${API_BASE_URL}/tasks/complete/${taskId}`);
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Tasks fetch error:', error);
+    throw error;
+  }
+};
+
+
+
+
