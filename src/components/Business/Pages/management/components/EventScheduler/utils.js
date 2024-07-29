@@ -110,8 +110,6 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
         else if (data.jobs_done === 0) jobsStatus = "not-done";
         else if (data.jobs_done) jobsStatus = "pending";
 
-        data.booking_start = "2024-07-29T12:00:00"
-        data.booking_end = "2024-08-25T12:00:00"
         // add job-event
         events.push({
           start: new Date(1000 * +data.booking_start),
