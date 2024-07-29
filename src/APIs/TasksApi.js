@@ -237,6 +237,3 @@ export const TaskCompleteJob = async (taskId, finished) => {
     throw error;
   }
 };
-
-
-

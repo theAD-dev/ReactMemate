@@ -44,11 +44,60 @@
   padding: 0;
   margin: 0;
 }
-
+.dropdown.dropdown1551 {
+  margin-top: 200px;
+}
 .DepartmentQuote .options.active {
   display: block;
 }
+.DepartmentQuote .szh-menu__item.szh-menu__item--submenu,li.szh-menu__item {
+  border-radius: var(--radius-sm, 6px);
+  background: var(--Primary-50, #ffffff);
+  padding: 10px 10px 10px var(--spacing-md, 8px);
+  width: 95%;
+  margin: 0 auto;
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; 
+  white-space: normal;
+}
+.szh-menu__submenu .szh-menu {
+  margin-left: 8px !important;
+  overflow: auto;
+  height: 320px;
+  width: 320px;
+}
+.szh-menu__submenu .szh-menu::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+.szh-menu__submenu .szh-menu::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px #fff; 
+  border-radius: 10px;
+}
+.szh-menu__submenu .szh-menu::-webkit-scrollbar-thumb {
+  background: #EAECF0; 
+  border-radius: 10px;
+}
+.szh-menu__submenu .szh-menu::-webkit-scrollbar-thumb:hover {
+  background: #d9d9da; 
+}
 
+.DepartmentQuote .szh-menu__item.szh-menu__item--submenu:hover,li.szh-menu__item:hover {
+  border-radius: var(--radius-sm, 6px);
+  background: var(--Primary-50, #EBF8FF);
+  padding: 10px 10px 10px var(--spacing-md, 8px);
+  color: var(--Primary-600, #158ECC);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; 
+}
 .DepartmentQuote .select-menu .options {
   position: absolute;
   padding: 0 6px;
@@ -74,4 +123,45 @@
   align-items: center;
   background: #fff;
   margin: 6px 0;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+.submenu {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.submenu-item {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.submenu-item:hover {
+  background-color: #f1f1f1;
 }

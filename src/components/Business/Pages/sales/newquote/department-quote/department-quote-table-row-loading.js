@@ -4,53 +4,49 @@ import Placeholder from 'react-bootstrap/Placeholder';
 export const DepartmentQuoteTableRowLoading = () => {
     return (
         <tr>
-            <td style={{ width: "2%" }}>
+            <td style={{ width: "24px" }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
 
-            <td style={{ width: '5%', textAlign: 'center' }}>
+            <td style={{ width: '64px', textAlign: 'center' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '15%' }}>
+            <td style={{ width: '600px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '25%' }}>
+         
+            <td style={{ width: '128px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '12%' }}>
+            <td style={{ width: '166px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '11%' }}>
+            <td style={{ width: '185px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '11%' }}>
+            <td style={{ width: '83px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '5%' }}>
+            <td style={{ width: '118px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-            <td style={{ width: '13%' }}>
-                <Placeholder as="p" animation="wave">
-                    <Placeholder xs={12} />
-                </Placeholder>
-            </td>
-            <td style={{ width: '2%' }}>
+            <td style={{ width: '32px' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>

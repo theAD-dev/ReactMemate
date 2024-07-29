@@ -5,8 +5,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import NewTaskAdd from "../../../assets/images/icon/newTaskAdd.svg";
-import TaskDatePIcker from "../../Work/Pages/tasks/TaskDatePIcker";
-import CustomSelect from "../../Work/Pages/tasks/CustomSelect";
+import TaskDatePIcker from '../../Work/Pages/tasks/TaskDatePIcker';
+import CustomSelect from '../../Work/Pages/tasks/CustomSelect';
+import { QuestionCircle,X } from "react-bootstrap-icons";
 import { fetchTasksNew, fetchTasksProject } from "../../../APIs/TasksApi";
 import CustomProgram from "../../Work/Pages/tasks/customProgram";
 
@@ -36,7 +37,6 @@ const NewTaskModal = () => {
         const projectsData = await fetchTasksProject();
 
         if (Array.isArray(projectsData)) {
-          console.log("projectsData: ", projectsData);
           const projectsOptions = projectsData.map((project) => {
             return { value: project.id, label: project.reference };
           });
@@ -117,25 +117,24 @@ const NewTaskModal = () => {
 
 
   return (
-    <>
-      <Button variant="newTaskBut" onClick={handleShow}>
-        New
-      </Button>
-      <Modal
-        show={show}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        className="SalesContact newtaskaddModal formgroupboxs "
-        onHide={handleClose}
-        animation={false}
-      >
-        <Modal.Header className="mb-0 pb-0 border-0" closeButton>
-          <div className="modelHeader d-flex justify-content-between align-items-start">
+   <>
+     <Button variant="newTaskBut" onClick={handleShow}>
+     New
+     </Button>
+     <Modal show={show} aria-labelledby="contained-modal-title-vcenter"
+      centered className='SalesContact newtaskaddModal formgroupboxs '  animation={false}>
+        <Modal.Header className='mb-0 pb-0 border-0' >
+          <div className='modelHeader d-flex justify-content-between align-items-start'>
             <span>
               <img src={NewTaskAdd} alt="NewTaskAdd" />
               New Task
+              
             </span>
+            
           </div>
+          <button className='CustonCloseModal' onClick={handleClose}>
+        <X size={24} color='#667085'/>
+      </button>
         </Modal.Header>
         <Modal.Body>
           <div className="ContactModel">
@@ -156,13 +155,13 @@ const NewTaskModal = () => {
                         placeholder="Enter task title "
                         onChange={handleInputChange}
                       />
-                      {errors.taskTitle && (
+                      {errors.taskTitle ? (
                         <img
                           className="ExclamationCircle"
                           src={exclamationCircle}
                           alt="Exclamation Circle"
                         />
-                      )}
+                      ): <QuestionCircle color="#98A2B3" size={16} />}
                     </div>
                     {errors.taskTitle && (
                       <p className="error-message">{errors.taskTitle}</p>

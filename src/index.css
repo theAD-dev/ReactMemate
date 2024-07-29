@@ -958,7 +958,7 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   border: 1px solid var(--Border, #D0D5DD);
   background: var(--Base-White, #FFF);
   padding: 2px 8px;
-  margin-left: 17px;
+  margin-left: 16px;
   width: 184px;
   height: 32px;
   display: flex;
@@ -978,9 +978,13 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   font-weight: 400;
   line-height: 24px;
 }
- .filterSearch span {
+.filterSearch span {
   margin-right: 9px;
   cursor: pointer;
+  margin-top: -2px;
+}
+.supplierTableWrap .bs-tooltip-top {
+  white-space: nowrap;
 }
  .filtterBoxWrapper li.nav-item button, .filtterBoxWrapper li.nav-item button:hover {
   align-items: center;
@@ -1176,30 +1180,27 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
 }
 
 .calenderBut .tabApply {
-  background: #158ECC;
-  background: var(--Primary-600, #158ECC);
-  border: 1px solid #158ECC;
-  border: 1px solid var(--Primary-600, #158ECC);
-  border-radius: 4px;
   color: #fff;
   width: 100%;
   margin: 0 6px;
-}
- .calenderBut .tabCancel {
-  background: #fff;
-  background: var(--Base-White, #fff);
-  border: 1px solid #d0d5dd;
-  border: 1px solid var(--Gray-300, #d0d5dd);
   border-radius: 4px;
-  color: #1d2939;
-  color: var(--Gray-800, #1d2939);
+  border: 1px solid var(--Primary-600, #158ECC);
+  background: var(--Primary-600, #158ECC);
+  padding: 8px 14px;
+}
+.calenderBut .tabCancel {
+  padding: 8px 14px;
+  width: 100%;
+  margin: 0 6px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: #FFF;
+  color: var(--Gray-800, #1D2939);
+  font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: 20px;
-  padding: 8px 14px;
-  width: 100%;
-  margin: 0 6px;
 }
  .calenderBut {
   display: flex;
@@ -1372,9 +1373,9 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
   border: 0;
   background: transparent;
 }
-.my-component .downArrowIcon {
+/* .my-component .downArrowIcon {
   transform: translateX(-50%);
-  animation: arrowAnimation 1s infinite alternate; /* Adjust animation duration as needed */
+  animation: arrowAnimation 1s infinite alternate; 
 }
 
 @keyframes arrowAnimation {
@@ -1382,9 +1383,30 @@ background: linear-gradient(to top, #89F7FE 0%, #66A6FF 78%);
     transform: translateX(-50%) translateY(0);
   }
   100% {
-    transform: translateX(-50%) translateY(-5px); /* Adjust vertical movement distance */
+    transform: translateX(-50%) translateY(-5px);
   }
+} */
+
+
+
+
+input::-webkit-input-placeholder {
+  color: #98A2B3;
 }
+input:focus::-webkit-input-placeholder {
+  color: #98A2B3;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

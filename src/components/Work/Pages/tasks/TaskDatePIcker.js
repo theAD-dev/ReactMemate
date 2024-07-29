@@ -34,7 +34,6 @@ const TaskDatePicker = ({ dateRange, setDateRange }) => {
   };
 
   const handleDataApply = (data) => {
-    console.log("Selected Dates:", data);
     setDateRange(data);
     setAnchorEl(null);
   };
@@ -55,7 +54,10 @@ const TaskDatePicker = ({ dateRange, setDateRange }) => {
             </span>
           </>
         ) : (
-          <span className='iconStyleCircle'><Calendar2Event color="#475467" size={18} /></span>
+          <span className={`iconStyleCircle ${open ? 'iconStyleCircletrue' : ''}`}>
+  <Calendar2Event color="#475467" size={18} />
+</span>
+
         )}
       </Button>
       <Menu

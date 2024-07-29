@@ -283,7 +283,9 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
                     <span class="task-title">${task.title}</span>
                   </div> 
                 </div>
-                <div class="completion-status">${statusIMG}</div>
+                <div class="completion-status ${statusIMG === 'completed' ? 'completed-class' : 'incomplete-class'}">
+  ${statusIMG}
+</div>
               </div>
               `,
               minHeight: 40,

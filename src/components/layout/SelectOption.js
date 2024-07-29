@@ -1,38 +1,31 @@
 import React, { useState } from "react";
 import Select, { components } from "react-select";
 import {
-  BuildingCheck,
-  Person,
   ChevronExpand,
-  GeoAlt,
 } from "react-bootstrap-icons";
 
-const SelectOption = () => {
+const SelectOption = ({profileUserName}) => {
   const data = [
     {
       value: 1,
       text: "OfficeCityCenter",
-      icon: <GeoAlt size={20} color="#667085" className="icon" />,
     },
     {
       value: 2,
       text: "Floyd Miles",
-      icon: <BuildingCheck size={20} color="#667085" className="icon" />,
+
     },
     {
       value: 3,
       text: "Ronald Richards",
-      icon: <Person size={20} color="#667085" className="icon" />,
     },
     {
       value: 4,
       text: "Johnson & Johnson",
-      icon: <BuildingCheck size={20} color="#667085" className="icon" />,
     },
     {
       value: 5,
       text: "Jacob Jones",
-      icon: <Person size={20} color="#667085" className="icon" />,
     },
   ];
 
@@ -54,6 +47,8 @@ const SelectOption = () => {
 
   return (
     <>
+   <div className="HeaderLocationWrapper">
+   <h6>{profileUserName}</h6>
       <Select
         placeholder="Select Option"
         value={selectedOption}
@@ -62,16 +57,20 @@ const SelectOption = () => {
         components={{ DropdownIndicator }}
         getOptionLabel={(e) => (
           <div style={{ display: "flex", alignItems: "center" }}>
-            {e.icon}
+            {/* {e.icon} */}
             <span
               style={{
-                marginLeft: 5,
+                marginLeft: 0,
                 maxWidth: "150px",
-                fontSize: "16px",
-                color: "#101828",
+                fontSize: "12px",
+                color: "#667085",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
+                background: "transparent",
+                padding: 0,
+                lineHeight: "14px"
+
               }}
             >
               {e.text}
@@ -79,6 +78,7 @@ const SelectOption = () => {
           </div>
         )}
       />
+   </div>
     </>
   );
 };

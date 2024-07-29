@@ -78,9 +78,8 @@ table thead tr th:first-child, table tbody tr td:first-child {
     z-index: 8;
     border-right: 0;
     text-align: left;
-    padding: 0px 6px 0 16px !important;
+    padding: 0px 6px 0 22px !important;
 }
-
 table tbody tr td:first-child {
     border-right: 0;
 }
@@ -122,7 +121,7 @@ table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handl
     background: #EBF8FF;
 }
 .tableTopBar {
-    padding: 6px 33px;
+    padding: 6px 11px;
 }
 .boxLogin p.error-text {
     color: var(--color6);
@@ -434,7 +433,28 @@ span.flatpickr-weekday {
     background: #fff !important;
 }
 .flatpickr-day {
-    margin: 3px !important;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 150px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #484848;
+    cursor: pointer;
+    font-weight: 400;
+    width: 14.2857143%;
+    -ms-flex-preferred-size: 14.2857143%;
+    -webkit-flex-basis: 14.2857143%;
+    flex-basis: 14.2857143%;
+    max-width: 30px;
+    height: 30px;
+    line-height: 28px;
+    margin: 5px;
+    display: inline-block;
+    position: relative;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    text-align: center;
 }
 .flatpickr-weekdays {
     background: #fff !important;
@@ -453,9 +473,10 @@ span.flatpickr-weekday {
     width: 92% !important;
 }
 
-table.department-calculation tbody tr td,  table.department-calculation thead tr th {
-  border-right: none !important;
-  background-color: #fff !important;
+table.department-calculation tbody tr td, table.department-calculation thead tr th {
+    border-right: none !important;
+    background-color: #fff !important;
+    white-space: nowrap;
 }
 table.department-calculation tbody tr:hover td {
     background-color: #F2FAFF !important;

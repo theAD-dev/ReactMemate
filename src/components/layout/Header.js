@@ -140,7 +140,7 @@ const Header = ({ onClick }) => {
                     {/* <span>{profileData.organization.name}</span> */}
                   </div>
                   <div className="SelectOptionHead">
-                    <SelectOption />
+                    <SelectOption profileUserName={profileData.organization.name}/>
                   </div>
                 </Col>
                 <Col>

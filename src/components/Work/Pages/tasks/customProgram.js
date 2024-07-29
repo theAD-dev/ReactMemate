@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import Button from '@atlaskit/button';
 import Select from 'react-select';
@@ -7,20 +6,30 @@ import { defaultTheme } from 'react-select';
 const { colors } = defaultTheme;
 
 const selectStyles = {
-  control: (provided) => ({
+  control: (provided, state) => ({
     ...provided,
     minWidth: 240,
     margin: 8,
+    padding: 3,
+    height: 44,
+    borderColor: state.isFocused ? 'blue' : provided.borderColor, // Change border color on focus
+    boxShadow: state.isFocused ? '0 0 0 1px blue' : provided.boxShadow, // Add box shadow on focus
   }),
   menu: () => ({ boxShadow: 'inset 0 1px 0 rgba(0, 0, 0, 0.1)' }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? colors.primary : provided.backgroundColor,
+    color: state.isSelected ? 'white' : provided.color,
+  }),
 };
 
-const CustomProgram = ({ projects, handleChange, error}) => {
+const CustomProgram = ({ projects, handleChange, error }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState(null);
-  useEffect(()=> {
-    handleChange(value?.value)
-  }, [value])
+
+  useEffect(() => {
+    handleChange(value?.value);
+  }, [value]);
 
   return (
     <Dropdown
@@ -32,8 +41,8 @@ const CustomProgram = ({ projects, handleChange, error}) => {
           iconAfter={<ChevronDown />}
           onClick={() => setIsOpen((prev) => !prev)}
           isSelected={isOpen}
-          className={`w-100 text-left border ${error ? "border-danger": ''}`}
-          style={{ background: 'transparent', fontWeight: 'normal' }}
+          className={`w-100 text-left border ${error ? "border-danger" : ''}`}
+          style={{ background: 'transparent', padding: '4px 12px', height: '44px', fontWeight: 'normal' }}
         >
           {value ? `${value.label}` : 'Select a State'}
         </Button>
@@ -51,11 +60,10 @@ const CustomProgram = ({ projects, handleChange, error}) => {
           setValue(newValue);
           setIsOpen(false);
         }}
-        className='border select-position-absolute'
-        style={{ position: 'absolute' }}
+        className='border select-position-absolute select-control'
+        styles={selectStyles}
         options={projects}
         placeholder="Search..."
-        styles={selectStyles}
         tabSelectsValue={false}
         value={value}
       />

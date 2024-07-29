@@ -27,8 +27,13 @@ letter-spacing: 0.12px;
   border-radius: 4px;
   border: 0.75px solid #EDF0F3;
   text-align: center;
-  margin-right: 12px;
-  padding: 2px 6px 6px;
+  margin-right: 10px;
+  padding: 1px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .tasksTableWrap .mainStyle.taskStatusStyle span {
   border-radius: 16px;
@@ -142,9 +147,8 @@ letter-spacing: 0.12px;
 .tasksTableWrap .tasksAssigne em {
   color: var(--Gray-600, #475467);
   text-align: center;
-  font-feature-settings: 'clig' off, 'liga' off;
   font-family: Roboto;
-  font-size: 14px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
@@ -154,8 +158,18 @@ letter-spacing: 0.12px;
   background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%), #FFF;
   width: 24px;
   height: 24px;
-  padding: 5px;
-  margin-right: 7px;
+  padding: 0px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mainStyle.tasksAssigne {
+  display: flex;
+  align-items: center;
+}
+.tasksTableWrap .tasksAssigne em i {
+  font-style: normal;
 }
 .tasksTableWrap .tasksAssigne span {
   color: var(--Gray-700, #344054);
@@ -218,7 +232,7 @@ span.taskUserPic {
   padding: 4px 13px;
   color: #fff !important;
   min-width: 59px;
-  height: 28px;
+  /* height: 28px; */
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -284,7 +298,7 @@ span.taskUserPic {
 
 .custom-select-options {
   position: absolute;
-  top: -344px;
+  top: -328px;
   left: 0;
   right: 0;
   border: 1px solid #ccc;
@@ -450,7 +464,7 @@ span.iconStyleCircle.active {
 }
 .viewtaskaddModal .col ul li {
   display: grid;
-  grid: 33px / 31% 69%;
+  grid: 36px / 31% 69%;
   align-items: center;
 }
 .taskUserImage img {
@@ -506,26 +520,26 @@ span.taskUserPic {
   line-height: 20px;
   cursor: pointer;
 }
-.viewFooterModalBox .statusBut.false{
-  border-radius: 4px;
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-50, #FEF3F2);
+.viewFooterModalBox .statusBut.false {
   padding: 10px 16px;
-  color: var(--Error-700, #B42318);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid var(--Success-200, #A9EFC5);
+  background: var(--Success-50, #ECFDF3);
+  color: var(--Success-700, #067647);
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
   line-height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-width: 126px;
 }
 .viewFooterModalBox .statusBut.true {
-    border-radius: 4px;
-    border: 1px solid var(--Success-200, #A9EFC5);
-    background: var(--Success-50, #ECFDF3);
-    color: var(--Success-700, #067647);
+  border-radius: 4px;
+  border: 1px solid var(--Error-200, #FECDCA);
+  background: var(--Error-50, #FEF3F2);
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
@@ -535,6 +549,8 @@ span.taskUserPic {
     display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--Error-700, #B42318);
+
 }
 .viewFooterModalBox .statusBut svg {
   margin-left: 5px;
@@ -556,16 +572,70 @@ span.taskUserPic {
   line-height: 20px;
 }
 .EditaskaddModal .taskBottonBar .save {
-  border-radius: 4px;
   border: 1px solid var(--Primary-600, #158ECC);
   background: var(--Primary-600, #158ECC);
-  padding: 10px 16px;
+  border-radius: 4px;
+  padding: 10px 18px;
   color: #FFF;
   font-family: Inter;
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px;
+  line-height: 24px;
+}
+.newtaskaddModal .modal-header {
+  padding: 14px 16px 0 !important;
+}
+.customerCategory fieldset {
+  border: 0;
+  top: 0;
+}
+.formgroupSelect .inputInfo {
+  padding: 10px 0;
+  min-height: 44px;
+}
+.newtaskaddModal .inputInfo textarea {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+}
+.newtaskaddModal .inputInfo input {
+  /* color: var(--Gray-400, #98A2B3); */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+}
+span.iconStyleCircle.iconStyleCircleRight.isOpen svg ,.iconStyleCircletrue svg{
+  fill: #1AB2FF;
+}
+.customSelectMenuList span {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+span.iconStyleCircle.iconStyleCircleRight.isOpen,.iconStyleCircletrue {
+  border-radius: 27px;
+  border: 1px dashed var(--Primary-400, #48C1FF);
+}
+.customSelectMenuList p {
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+.MuiSelect-select {
+  color: #98A2B3 !important;
 }
 .EditaskaddModal .inputInfo input {
   color: var(--Gray-900, #101828);
@@ -645,20 +715,33 @@ span.taskUserPic {
 .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
   display: block !important;
 }
-.my-custom-class {
+/* .my-custom-class {
   top: 215px !important;
-}
+} */
 .my-custom-class {
   overflow-y: hidden;
   overflow-x: hidden;
 }
 .my-custom-class ul {
   overflow-y: scroll;
-  height: 400px;
+  height: 284px;
 }
-
-
-
+.delaskaddModal .modal-header {
+  padding: 18px 0 3px !important;
+}
+.custom-divWrap span, .custom-divWrap p {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  padding: 10px 5px;
+  width: 110px;
+  color: var(--Gray-800, #1D2939);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
 
 .my-custom-class ul::-webkit-scrollbar {
   width: 8px;
@@ -676,9 +759,41 @@ span.taskUserPic {
 .my-custom-class ul::-webkit-scrollbar-thumb:hover {
   background: #d9d9da; 
 }
+.css-1n6sfyn-MenuList::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+/* .css-1n6sfyn-MenuList::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px #fff; 
+  border-radius: 10px;
+}
+.css-1n6sfyn-MenuList::-webkit-scrollbar-thumb {
+  background: #EAECF0; 
+  border-radius: 10px;
+} */
+.css-itln5v-ButtonBase span.css-udadfb-ButtonBase {
+  color: #101828;
+}
+.css-1n6sfyn-MenuList::-webkit-scrollbar-thumb:hover {
+  background: #d9d9da; 
+}
+.taskDatesDue p {
+  padding: 0;
+  margin: 0;
+}
+.newtaskaddModal .ContactModelIn {
+  padding: 6px 16px 24px;
+}
+.css-itln5v-ButtonBase .css-udadfb-ButtonBase {
+  color: #98A2B3;
+}
 
-
-
+.elect-position-absolute div[aria-selected="true"] {
+  color: #101828;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--Gray-50, #F9FAFB);
+}
 
 
 

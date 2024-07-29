@@ -148,14 +148,14 @@ const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
       // aliasTask: TaskData.user.alias,
       width: 191,
       sortable: false,
-      headerName: "userName",
+      headerName: "Assigne",
       renderCell: (params) => (
         <div
           className="mainStyle tasksAssigne"
           style={{ whiteSpace: "nowrap", textAlign: "left" }}
         >
-          <em>{params.row.aliasTask}</em><span>{params.value}</span>
-
+          <em><i>{params.row.aliasTask}</i></em><span>{params.value}</span>
+        
         </div>
       ),
     },
@@ -304,8 +304,7 @@ const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
         TaskStatus: TaskData.finished,
         TaskStartDate: TaskData.from_date,
         TaskStartEnd: TaskData.to_date,
-        // taskProject: TaskData.project.reference,
-
+        TaskProject: TaskData.project,
       };
     });
 

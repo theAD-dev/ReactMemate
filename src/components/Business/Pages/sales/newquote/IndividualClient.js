@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { People, InfoSquare, ChevronLeft, CardList, Person } from "react-bootstrap-icons";
+import { Person, InfoSquare, ChevronLeft, CardList } from "react-bootstrap-icons";
 import { NavLink, useNavigate } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -109,9 +109,9 @@ const IndividualClient = () => {
           </div>
           <div className='navStepClient'>
             <ul>
-              <li><span><People color="#D0D5DD" size={15} /></span> <p>Choose Client</p></li>
+              <li><span><Person color="#D0D5DD" size={15} /></span> <p>Choose Client</p></li>
               <li className='activeClientTab'><span><InfoSquare color="#D0D5DD" size={15} /></span> <p>Client Information</p> </li>
-              <li><span><CardList color="#D0D5DD" size={15} /></span> <p>Scope of Work</p> </li>
+              <li className='deactiveColorBox'><span><CardList color="#D0D5DD" size={15} /></span> <p>Scope of Work</p> </li>
             </ul>
           </div>
           <div className="formgroupWrap1">
