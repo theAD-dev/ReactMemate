@@ -8,6 +8,7 @@ import './task.css';
 import { ArrowRight } from 'react-bootstrap-icons';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { fetchTasksRead, TaskCompleteJob } from '../../../../../../APIs/TasksApi';
+import EditTask from './edit-task';
 
 const TaskLoadingView = () => {
   return (
@@ -75,8 +76,9 @@ const TaskLoadingView = () => {
   )
 }
 
-const ViewTask = ({ taskId, setTaskId, handleEdit }) => {
+const ViewTask = ({ taskId, setTaskId }) => {
   const [show, setShow] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const { isLoading, data, isError, refetch } = useQuery({
     queryKey: ['taskId', taskId],
     queryFn: () => fetchTasksRead(taskId),
@@ -93,13 +95,6 @@ const ViewTask = ({ taskId, setTaskId, handleEdit }) => {
       console.error('Error updating task:', error);
     }
   });
-
-  useEffect(() => {
-    if (taskId) {
-      handleShow();
-    }
-  }, [taskId])
-
   const handleInComplete = () => mutation.mutate(false);
   const handleComplete = () => mutation.mutate(true);
   const handleClose = () => { setShow(false); setTaskId(null); }
@@ -112,8 +107,21 @@ const ViewTask = ({ taskId, setTaskId, handleEdit }) => {
     const formattedDate = date.toLocaleDateString('en-US', options)?.replace(/,/g, '');
     return formattedDate;
   }
+
+  function handleEdit () {
+    setShowEditModal(true);
+    handleClose();
+  }
+  
+  useEffect(() => {
+    if (taskId) {
+      handleShow();
+    }
+  }, [taskId])
+
   return (
     <>
+      {/* View Task Modal container */}
       <Modal show={show} centered onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>
@@ -196,6 +204,9 @@ const ViewTask = ({ taskId, setTaskId, handleEdit }) => {
           }
         </Modal.Footer>
       </Modal>
+
+      {/* Edit Task Modal container */}
+      <EditTask show={showEditModal} setShow={setShowEditModal} data={data} />
     </>
   )
 }

@@ -7,7 +7,8 @@ import { Col, Row } from 'react-bootstrap';
 import './task.css';
 import taskEditIcon from '../../../../../../assets/images/icon/taskEditIcon.svg';
 
-const EditTask = ({ show, setShow }) => {
+const EditTask = ({ show, setShow, data }) => {
+    console.log('data: ', data);
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;

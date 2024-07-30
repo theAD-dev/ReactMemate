@@ -4,26 +4,37 @@ import { getManagement } from "../../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
-import EditTask from "../task/edit-task";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
   const [show, setShow] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [taskId, setTaskId] = useState(null);
   function viewTaskDetails (id) {
     setTaskId(id);
-  }
-
-  function handleEdit (id, data) {
-    console.log('id: ', id);
-    setShowEditModal(id);
   } 
 
   function createTask(reference) {
     console.log('reference: ', reference);
 
   }
+
+  
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (!(e.target instanceof HTMLSelectElement)) {
+        if (e.target.closest('.create-task-button')) {
+          const projectNumber = e.target.getAttribute('number');
+          const reference = e.target.getAttribute('reference');
+          
+        }
+      }
+    };
+    document.addEventListener('click', handleClick);
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, []);
 
   useEffect(() => {
     const daypilotScript = document.createElement("script");
@@ -88,9 +99,9 @@ function EventScheduler() {
       </Spinner>
     </div>
     
-    <ViewTask taskId={taskId} setTaskId={setTaskId} handleEdit={handleEdit} />
+    <ViewTask taskId={taskId} setTaskId={setTaskId} />
     <CreateTask show={show} setShow={setShow} />
-    <EditTask show={showEditModal} setShow={setShowEditModal} />
+    
   </React.Fragment>
 }
 
