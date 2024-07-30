@@ -138,7 +138,7 @@ const EditTask = ({ show, setShow, data }) => {
                     </div>
                     <Modal.Footer className='d-flex justify-content-between'>
                         <Button type='button' className='delete-button' onClick={() => { }}>Delete Task</Button>
-                        <Button type='submit' className='save-button' onClick={handleSubmit}>Save Task</Button>
+                        <Button type='submit' className='save-button' onClick={handleSubmit}>{mutation.isPending ? 'Loading...' : 'Save Task'}</Button>
                     </Modal.Footer>
                 </Modal>
             </Form>
