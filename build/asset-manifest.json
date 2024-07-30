@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.f41f26ba.css",
-    "main.js": "/static/js/main.5d954bfe.js",
+    "main.css": "/static/css/main.485156d6.css",
+    "main.js": "/static/js/main.df08666a.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.53baea11.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.b1283128.chunk.js",
     "reactPlayerVimeo.js": "/static/js/reactPlayerVimeo.1a595079.chunk.js",
@@ -92,7 +92,9 @@
     "static/media/roboto-greek-ext-400-normal.woff": "/static/media/roboto-greek-ext-400-normal.f708607d2a7290fb8bfa.woff",
     "static/media/taskEditIcon.svg": "/static/media/taskEditIcon.5073a6098e75cbfe59e3f782e1a2d772.svg",
     "static/media/task-details.svg": "/static/media/task-details.6c24fdfe452b19f485da192519e9cbe3.svg",
+    "static/media/TaskDetailsIcon.svg": "/static/media/TaskDetailsIcon.b8f35dcecd335db7bdac03fb67e34dd2.svg",
     "static/media/exclamation-circle.svg": "/static/media/exclamation-circle.cae916ce28e0a8d8d07a477235f7a993.svg",
+    "static/media/CreateProposalIcon.svg": "/static/media/CreateProposalIcon.46982ac8db5260866e48b47073903a71.svg",
     "static/media/unlock.svg": "/static/media/unlock.5229ed0737dba142ff1428b223a851a0.svg",
     "static/media/envelope.svg": "/static/media/envelope.c9c11cfa6a43774942324c9ac7f33f2d.svg",
     "index.html": "/index.html",
@@ -100,8 +102,8 @@
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "static/media/newTaskAdd.svg": "/static/media/newTaskAdd.d67b4091dd3fbc4db540e612a91301d6.svg",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.f41f26ba.css.map": "/static/css/main.f41f26ba.css.map",
-    "main.5d954bfe.js.map": "/static/js/main.5d954bfe.js.map",
+    "main.485156d6.css.map": "/static/css/main.485156d6.css.map",
+    "main.df08666a.js.map": "/static/js/main.df08666a.js.map",
     "reactPlayerYouTube.53baea11.chunk.js.map": "/static/js/reactPlayerYouTube.53baea11.chunk.js.map",
     "reactPlayerSoundCloud.b1283128.chunk.js.map": "/static/js/reactPlayerSoundCloud.b1283128.chunk.js.map",
     "reactPlayerVimeo.1a595079.chunk.js.map": "/static/js/reactPlayerVimeo.1a595079.chunk.js.map",
@@ -118,7 +120,7 @@
     "reactPlayerPreview.eeb2f0ac.chunk.js.map": "/static/js/reactPlayerPreview.eeb2f0ac.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f41f26ba.css",
-    "static/js/main.5d954bfe.js"
+    "static/css/main.485156d6.css",
+    "static/js/main.df08666a.js"
   ]
 }
