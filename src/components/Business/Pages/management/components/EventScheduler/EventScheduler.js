@@ -4,29 +4,54 @@ import { getManagement } from "../../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
+import { fetchTasksProject } from "../../../../../../APIs/TasksApi";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
   const [show, setShow] = useState(false);
+  const [view, setView] = useState(false);
   const [taskId, setTaskId] = useState(null);
-  function viewTaskDetails (id) {
+  const [projectDetails, setProjectDetails] = useState({});
+  const [projects, setProjects] = useState([]);
+  function viewTaskDetails(id) {
     setTaskId(id);
-  } 
-
-  function createTask(reference) {
-    console.log('reference: ', reference);
-
+    setView(true);
   }
 
-  
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectsData = await fetchTasksProject();
+        if (Array.isArray(projectsData)) {
+          const projectsOptions = projectsData.map((project) => {
+            return { value: project.id, label: project.reference, number: project.number };
+          });
 
+          setProjects(projectsOptions);
+        } else {
+          console.error("Unexpected projects data format");
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    }
+
+    if (projects && projects.length === 0) fetchProjects();
+  }, []);
+
+
+  // This useEffect for open create model
   useEffect(() => {
     const handleClick = (e) => {
       if (!(e.target instanceof HTMLSelectElement)) {
         if (e.target.closest('.create-task-button')) {
-          const projectNumber = e.target.getAttribute('number');
+          const number = e.target.getAttribute('number');
           const reference = e.target.getAttribute('reference');
-          
+
+          const selectedProject = projects.find((project)=> project.label === reference);
+
+          setProjectDetails({ number, reference, value: selectedProject?.value });
+          setShow(true);
         }
       }
     };
@@ -34,7 +59,7 @@ function EventScheduler() {
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [projects]);
 
   useEffect(() => {
     const daypilotScript = document.createElement("script");
@@ -49,7 +74,7 @@ function EventScheduler() {
     const handleLoad = async () => {
       try {
         const response = await getManagement();
-        initDaypilot(CALENDAR_ID, response, viewTaskDetails, createTask);
+        initDaypilot(CALENDAR_ID, response, viewTaskDetails);
       } catch (error) {
         console.error("Error initializing DayPilot:", error);
       }
@@ -98,10 +123,10 @@ function EventScheduler() {
         <span className="visually-hidden">Loading...</span>
       </Spinner>
     </div>
-    
-    <ViewTask taskId={taskId} setTaskId={setTaskId} />
-    <CreateTask show={show} setShow={setShow} />
-    
+
+    <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} />
+    <CreateTask show={show} setShow={setShow} project={projectDetails} />
+
   </React.Fragment>
 }
 

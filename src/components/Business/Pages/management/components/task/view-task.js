@@ -76,8 +76,7 @@ const TaskLoadingView = () => {
   )
 }
 
-const ViewTask = ({ taskId, setTaskId }) => {
-  const [show, setShow] = useState(false);
+const ViewTask = ({ view, setView, taskId, setTaskId }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const { isLoading, data, isError, refetch } = useQuery({
     queryKey: ['taskId', taskId],
@@ -97,8 +96,8 @@ const ViewTask = ({ taskId, setTaskId }) => {
   });
   const handleInComplete = () => mutation.mutate(false);
   const handleComplete = () => mutation.mutate(true);
-  const handleClose = () => { setShow(false); setTaskId(null); }
-  const handleShow = () => setShow(true);
+  const handleClose = () => setView(false);
+  const handleShow = () => setView(true);
   const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";
 
@@ -112,17 +111,11 @@ const ViewTask = ({ taskId, setTaskId }) => {
     setShowEditModal(true);
     handleClose();
   }
-  
-  useEffect(() => {
-    if (taskId) {
-      handleShow();
-    }
-  }, [taskId])
 
   return (
     <>
       {/* View Task Modal container */}
-      <Modal show={show} centered onHide={handleClose}>
+      <Modal show={view} centered onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>
             <img src={taskdetails} alt='task-details' style={{ width: '48px', height: '48px' }} />
@@ -206,7 +199,10 @@ const ViewTask = ({ taskId, setTaskId }) => {
       </Modal>
 
       {/* Edit Task Modal container */}
-      <EditTask show={showEditModal} setShow={setShowEditModal} data={data} />
+      {
+        data && <EditTask show={showEditModal} setShow={setShowEditModal} data={data} />
+      }
+      
     </>
   )
 }
