@@ -90,6 +90,7 @@ const ViewTaskModal = ({ taskId }) => {
   const fetchData = async () => {
     try {
       const data = await fetchTasksRead(taskId);
+      console.log('data: ', data);
       setTaskRead(data); // Assuming data is already parsed
       setUpdateTitle(data.title); // Initialize updateTitle with fetched task data
       setUpdateDis(data.description); // Initialize updateDis with fetched task data
@@ -190,9 +191,10 @@ const ViewTaskModal = ({ taskId }) => {
       from_date: "2019-08-24T14:15:22Z", // Ensure this is in the correct ISO 8601 format
       to_date: "2024-08-24T14:15:22Z",     // Ensure this is in the correct ISO 8601 format
       project: projectId,            // Ensure this is the project ID, not reference
-      user: updateUser               // Ensure this is the correct user ID
-    };
-  
+      user: user               // Ensure this is the correct user ID
+      };
+    console.log('mainData: ', mainData);
+    
     try {
       const updatedTask = await fetchTasksUpdate(mainData, taskId);
       console.log('Updated task data:', updatedTask);

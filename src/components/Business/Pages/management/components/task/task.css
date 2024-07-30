@@ -155,3 +155,27 @@
   background: var(--Primary-600, #158ecc);
   color: #fff;
 }
+
+.task-form .form-label {
+  color: var(--Gray-600, #475467);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.task-form .form-control {
+  display: flex;
+  padding: 10px 14px;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+
+  align-self: stretch;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
