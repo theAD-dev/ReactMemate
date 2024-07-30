@@ -4,6 +4,7 @@ import { getManagement } from "../../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
+import ProjectCardModel from "../../ProjectCardModel";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
@@ -35,6 +36,7 @@ function EventScheduler() {
     const handleLoad = async () => {
       try {
         const response = await getManagement();
+        
         initDaypilot(CALENDAR_ID, response, viewTaskDetails, createTask);
       } catch (error) {
         console.error("Error initializing DayPilot:", error);
@@ -79,7 +81,9 @@ function EventScheduler() {
   }, []);
 
   return <React.Fragment>
+     <ProjectCardModel />
     <div id={CALENDAR_ID}>
+     
       <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
         <span className="visually-hidden">Loading...</span>
       </Spinner>

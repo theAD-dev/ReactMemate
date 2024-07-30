@@ -541,3 +541,333 @@ ul.eventStyleCal {
   font-weight: 600;
   line-height: 20px; /* 142.857% */
 }
+
+
+/* Project Card Model */
+.projectCardModel .modal-dialog {
+  min-width: 1284px;
+}
+strong.dollorIcon {
+  border-radius: 28px;
+  border: 0px solid var(--Error-50, #FEF3F2);
+  background: var(--Error-100, #FEE4E2);
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.projectCardModel .cardId {
+  margin-left: 16px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.27px;
+}
+.projectCardModel label select {
+  border-radius: 16px;
+  border: 1px solid var(--Error-100, #FEE4E2);
+  background: var(--Error-50, #FEF3F2);
+  mix-blend-mode: multiply;
+  padding: 4px;
+  color: var(--Error-700, #B42318);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  margin: 0 14px;
+}
+.projectCardModel .refrencesTag {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+}
+.projectCardModel .refrencesTag strong {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.08px;
+}
+.projectCardModel .modal-header {
+  border-bottom: 1px solid #EAECF0;
+  padding: 16px 16px !important;
+}
+
+.customScrollBar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+.customScrollBar::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 8px #F2F4F7; 
+  border-radius: 10px;
+}
+.customScrollBar::-webkit-scrollbar-thumb {
+  background: #76D1FF; 
+  border-radius: 10px;
+}
+.customScrollBar::-webkit-scrollbar-thumb:hover {
+  background: #76D1FF; 
+}
+.orderDiscription .customScrollBar {
+  height: 137px;
+  overflow: auto;
+  color: var(--Text-Dark-Gray, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+  padding-right: 22px;
+}
+.orderDiscription strong {
+  color: var(--Gray-800, #1D2939);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+}
+.currentJobsTable h5 {
+  color: var(--Gray-800, #1D2939);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+}
+.currentJobsTable table thead th {
+  color: #475467;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+}
+.currentJobsTable table tbody td{
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  height: 40px;
+}
+.currentJobsTable table tbody td:first-child ,.currentJobsTable table thead th:first-child {
+  width: 136px;
+  text-align: left;
+}
+.currentJobsTable table tbody td:last-child ,.currentJobsTable table thead th:last-child {
+  width: 96px;
+  text-align: center;
+}
+.currentJobsTable table tbody td:nth-child(2) ,.currentJobsTable table thead th:nth-child(2) {
+  width: 230px;
+  text-align: left;
+}
+.currentJobsTable table tbody td:nth-child(3) ,.currentJobsTable table thead th:nth-child(3) {
+  width: 76px;
+  text-align: center;
+}
+.currentJobsTable table tbody td:nth-child(4) ,.currentJobsTable table thead th:nth-child(4) {
+  width: 116px;
+  text-align: right;
+}
+.currentJobsTable table tbody td:first-child,.currentJobsTable table thead th:first-child {
+  border-right: 1px solid var(--Gray-200, #EAECF0);
+}
+.currentJobsTable table {
+  border-top: 1px solid var(--Gray-200, #EAECF0);
+  border-bottom: 1px solid var(--Gray-200, #EAECF0);
+  border-left: 1px solid var(--Gray-200, #EAECF0);
+  background: var(--Base-White, #FFF);
+}
+.orderDiscription.col {
+  border-right: 1px solid #EAECF0;
+  padding: 16px 8px 8px 24px;
+}
+.tabModelMenu {
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  padding: 8px;
+  border-radius: 6px;
+  min-width: 89%;
+}
+.projectHistoryCol {
+  padding: 16px 24px;
+}
+.tabModelMenu .col {
+  text-align: center;
+}
+.tabModelMenu .linkByttonStyle {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+  padding: 0 24px;
+}
+.projectHistoryCol .filter span {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: #FFF;
+  padding: 10px;
+}
+.projectHistoryCol .filter {
+  min-width: 11%;
+}
+.projectHistorygroup ul {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.projectHistorygroup ul li {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+.projectHistorygroup ul li strong {
+  color: var(--Text-Dark-Gray, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.08px;
+}
+.projectHistoryWrap h3 {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+}
+.projectHistorygroup h6 {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  margin: 0;
+  padding: 0;
+}
+.projectHistorygroup p {
+  color: var(--Gray-400, #98A2B3);
+  font-family: Inter;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.1px;
+  margin: 0;
+  padding: 0;
+}
+.projectHistoryScroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+.currentJobsTable .table-responsive::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  /* padding: 5px; */
+}
+.projectHistoryScroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 8px #F2F4F7; 
+  border-radius: 10px;
+}
+.currentJobsTable .table-responsive::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 8px #F2F4F7; 
+  border-radius: 10px;
+}
+.projectHistoryWrap {
+  margin-top: 16px;
+}
+.projectHistoryScroll::-webkit-scrollbar-thumb {
+  background: #76D1FF; 
+  border-radius: 10px;
+}
+.currentJobsTable .table-responsive::-webkit-scrollbar-thumb {
+  background: #76D1FF; 
+  border-radius: 10px;
+}
+.projectHistoryScroll::-webkit-scrollbar-thumb:hover {
+  background: #76D1FF; 
+}
+.currentJobsTable .table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #76D1FF; 
+}
+.projectHistoryScroll {
+  height: 478px;
+  overflow: auto;
+  margin-right: 15px;
+}
+.projectHistorygroup {
+  margin-bottom: 18px;
+}
+.projectHistorygroup:last-child {
+  margin-bottom: 0px;
+}
+
+.currentJobsTable .table-responsive {
+  height: 478px;
+}
+.currentJobsTable table tbody td span {
+  color: var(--Error-700, #B42318);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--Error-200, #FECDCA);
+  background: var(--Error-50, #FEF3F2);
+  mix-blend-mode: multiply;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.projectCardButWrap button,.projectCardButWrap button:hover {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  padding: 10px 18px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.projectCardButWrap .col {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 29px 38px;
+}
