@@ -10,7 +10,7 @@ import { ChevronDown, QuestionCircle } from 'react-bootstrap-icons';
 import SelectUser from './select-user';
 import SelectDate from './select-date';
 import { useMutation } from '@tanstack/react-query';
-import { fetchTasksUpdate } from '../../../../../../APIs/TasksApi';
+import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../../APIs/TasksApi';
 
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";
@@ -46,6 +46,20 @@ const EditTask = ({ show, setShow, data }) => {
         }
     });
 
+    const deleteMutation = useMutation({
+        mutationFn: (data) => fetchTasksDelete(taskId),
+        onSuccess: () => {
+            setShow(false);
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        }
+    });
+
+    const handleDelete = () => {
+        deleteMutation.mutate();
+    }
+    
     const handleSubmit = () => {
         const newErrors = {
             taskTitle: !taskTitle,
@@ -137,8 +151,8 @@ const EditTask = ({ show, setShow, data }) => {
                         {errors.date && <Form.Text className="text-danger">Date is required</Form.Text>}
                     </div>
                     <Modal.Footer className='d-flex justify-content-between'>
-                        <Button type='button' className='delete-button' onClick={() => { }}>Delete Task</Button>
-                        <Button type='submit' className='save-button' onClick={handleSubmit}>{mutation.isPending ? 'Loading...' : 'Save Task'}</Button>
+                        <Button type='button' className='delete-button' onClick={handleDelete}>{deleteMutation.isPending ? 'Loading...' : 'Delete Task'}</Button>
+                        <Button type='button' className='save-button' onClick={handleSubmit}>{mutation.isPending ? 'Loading...' : 'Save Task'}</Button>
                     </Modal.Footer>
                 </Modal>
             </Form>
