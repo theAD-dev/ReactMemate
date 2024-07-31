@@ -821,9 +821,13 @@ strong.dollorIcon {
   background: #76D1FF; 
 }
 .projectHistoryScroll {
-  height: 478px;
+  height: 429px;
   overflow: auto;
   margin-right: 15px;
+}
+.projectCardMain {
+  border-bottom: 1px solid #f1f1f1;
+  margin: 0;
 }
 .projectHistorygroup {
   margin-bottom: 18px;
@@ -831,9 +835,8 @@ strong.dollorIcon {
 .projectHistorygroup:last-child {
   margin-bottom: 0px;
 }
-
 .currentJobsTable .table-responsive {
-  height: 478px;
+  height: 320px;
 }
 .currentJobsTable table tbody td span {
   color: var(--Error-700, #B42318);
@@ -849,6 +852,12 @@ strong.dollorIcon {
   mix-blend-mode: multiply;
   padding: 2px 8px;
   white-space: nowrap;
+}
+.projectCardButWrap.row {
+  margin: 0;
+}
+.projectCardButWrap button img {
+  margin-left: 7px;
 }
 .projectCardButWrap button,.projectCardButWrap button:hover {
   border-radius: 4px;
@@ -869,5 +878,169 @@ strong.dollorIcon {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 29px 38px;
+  padding: 16px 24px;
+}
+.projectCardCalculation.row {
+  margin: 0;
+  border-top: 1px solid #EAECF0;
+  border-bottom: 1px solid #EAECF0;
+}
+.proBuget {
+  background: var(--Gray-50, #F9FAFB);
+  max-width: 236.75px;
+}
+.proBuget h5,.proBuget p {
+color: #475467;
+}
+.proRealCost {
+  background: #F3FFFF;
+  max-width: 236.75px;
+}
+.proRealCost h5,.proRealCost p{
+  color: #2A928F;
+}
+
+.proCostSale {
+  background: var(--Error-50, #FEF3F2);
+  max-width: 236.75px;
+}
+.proCostSale h5,.proCostSale p{
+  color: #B42318;
+
+}
+
+.proLabour {
+  background: var(--Warning-50, #FFFAEB);
+  max-width: 236.75px;
+}
+.proLabour h5,.proLabour p{
+  color: #93370D;
+}
+
+.proProfit {
+  background: var(--Success-100, #DCFAE6);
+  max-width: 337px;
+  justify-content: space-between !important;
+}
+.proProfit span svg {
+  margin-left: 8px;
+}
+.projectColBg {
+  text-align: right;
+  padding: 4px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.projectColBg h5 {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+  margin: 0;
+}
+.projectColBg p {
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+  margin: 0;
+}
+.proProfit span {
+  color: var(--Success-800, #085D3A);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+  display: flex;
+  align-items: center;
+}
+.proProfit strong{
+  color: var(--Success-800, #085D3A);
+  font-family: Inter;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.33px;
+}
+.projectCardactionBut.row {
+  margin: 0;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #EAECF0;
+}
+.projectCardactionBut .actionLeftSide button ,.projectCardactionBut .actionLeftSide button:hover{
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.projectCardactionBut .actionLeftSide button.declineAction {
+  color: #B42318;
+}
+.projectCardactionBut .actionLeftSide button.duplicateAction {
+  color: #106B99;
+}
+.projectCardactionBut .actionLeftSide button.sendBackAction {
+  color: #475467;
+}
+.projectCardactionBut .actionLeftSide button.duplicateAction {
+  padding: 0 32px;
+}
+.projectCardactionBut .actionRightSide button,.projectCardactionBut .actionRightSide button:hover {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: #FFF;
+  padding: 10px 18px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.projectCardactionBut .actionRightSide {
+  text-align: right;
+}
+.projectCardactionBut .actionRightSide button.ProgressAction {
+  margin: 0 8px;
+}
+.projectCardactionBut .actionRightSide button.CompleteActionBut {
+  border-radius: 4px;
+  border: 1px solid var(--Primary-600, #158ECC);
+  background: var(--Primary-600, #158ECC);
+  color: #FFF;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.projectBreakdown.row {
+  margin: 0;
+  padding: 8px 24px;
+  text-align: center;
+}
+.projectBreakdown.row button, .projectBreakdown.row button:hover {
+  color: var(--Primary-700, #106B99);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  background: transparent;
+  border: 0;
 }
