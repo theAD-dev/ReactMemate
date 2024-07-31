@@ -5,6 +5,7 @@ import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
 import { fetchTasksProject } from "../../../../../../APIs/TasksApi";
+import ProjectCardModel from "../../ProjectCardModel";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
@@ -118,7 +119,9 @@ function EventScheduler() {
   }, []);
 
   return <React.Fragment>
+     <ProjectCardModel />
     <div id={CALENDAR_ID}>
+     
       <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
         <span className="visually-hidden">Loading...</span>
       </Spinner>

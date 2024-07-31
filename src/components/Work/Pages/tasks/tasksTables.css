@@ -759,6 +759,42 @@ span.iconStyleCircle.iconStyleCircleRight.isOpen,.iconStyleCircletrue {
 .my-custom-class ul::-webkit-scrollbar-thumb:hover {
   background: #d9d9da; 
 }
+.newtaskaddModal .inputInfo textarea::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+.newtaskaddModal .inputInfo textarea::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px #fff; 
+  border-radius: 10px;
+}
+.newtaskaddModal .inputInfo textarea::-webkit-scrollbar-thumb {
+  background: #EAECF0; 
+  border-radius: 10px;
+}
+.newtaskaddModal .inputInfo textarea::-webkit-scrollbar-thumb:hover {
+  background: #d9d9da; 
+}
+.taskViewScroll {
+  overflow: auto;
+  height: 180px;
+}
+.taskViewScroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+.taskViewScroll::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px #fff; 
+  border-radius: 10px;
+}
+.taskViewScroll::-webkit-scrollbar-thumb {
+  background: #EAECF0; 
+  border-radius: 10px;
+}
+.taskViewScroll::-webkit-scrollbar-thumb:hover {
+  background: #d9d9da; 
+}
 .css-1n6sfyn-MenuList::-webkit-scrollbar {
   width: 8px;
   height: 8px;

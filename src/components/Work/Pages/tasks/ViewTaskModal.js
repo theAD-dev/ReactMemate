@@ -258,7 +258,7 @@ const ViewTaskModal = ({ taskId }) => {
                 <Row className="text-left mt-3">
                   <Col>
                     <h2>{taskRead.title}</h2>
-                    <p>{taskRead.description}</p>
+                    <p className='taskViewScroll'>{taskRead.description}</p>
                   </Col>
                 </Row>
                 <Row className="text-left mt-0">
@@ -477,7 +477,7 @@ const ViewTaskModal = ({ taskId }) => {
           <div className="deltaskText">
                   
                     <h2>{taskRead.title}</h2>
-                    <p>{taskRead.description}</p>
+                    <p className='taskViewScroll'>{taskRead.description}</p>
                  
                 </div>
           )}
