@@ -24,10 +24,23 @@ const CreateTask = ({ show, setShow, project, reInitilize }) => {
         date: false
     });
 
+    const reset = () => {
+        setTaskTitle("");
+        setDescription("");
+        setUser(null);
+        setDate(null);
+        setErrors({
+            taskTitle: false,
+            description: false,
+            user: false,
+            date: false
+        })
+    }
     const mutation = useMutation({
         mutationFn: (data) => fetchTasksNew(data),
         onSuccess: () => {
             setShow(false);
+            reset();
             reInitilize();
         },
         onError: (error) => {

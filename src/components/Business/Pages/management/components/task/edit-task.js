@@ -20,7 +20,7 @@ const dateFormat = (dateInMiliSec) => {
     return date;
 }
 
-const EditTask = ({ show, setShow, data }) => {
+const EditTask = ({ show, setShow, data, reInitilize }) => {
     console.log('data: ', data);
 
     const taskId = data?.id;
@@ -40,6 +40,7 @@ const EditTask = ({ show, setShow, data }) => {
         mutationFn: (data) => fetchTasksUpdate(data, taskId),
         onSuccess: () => {
             setShow(false);
+            reInitilize();
         },
         onError: (error) => {
             console.error('Error creating task:', error);
@@ -51,6 +52,7 @@ const EditTask = ({ show, setShow, data }) => {
         onSuccess: () => {
             console.log('Delete success');
             setShow(false);
+            reInitilize();
         },
         onError: (error) => {
             console.error('Error creating task:', error);

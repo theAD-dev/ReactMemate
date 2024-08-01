@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { initDaypilot } from "./utils";
+import { initDaypilot, reInitilizeData } from "./utils";
 import { getManagement } from "../../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
@@ -12,6 +12,7 @@ function EventScheduler() {
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
   const [viewProjectModel, setViewProjectModel] = useState(false);
+  const [isReinitilize, setIsReinitilize] = useState(false);
 
   const [taskId, setTaskId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
@@ -51,14 +52,14 @@ function EventScheduler() {
           const number = e.target.getAttribute('number');
           const reference = e.target.getAttribute('reference');
 
-          const selectedProject = projects.find((project)=> project.label === reference);
+          const selectedProject = projects.find((project) => project.label === reference);
 
           setProjectDetails({ number, reference, value: selectedProject?.value });
           setShow(true);
         } else if (e.target.closest('.task-list')) {
           const taskId = e.target.closest('.task-list').getAttribute('task-id');
           console.log('task-list: ....', taskId);
-          if(taskId) viewTaskDetails(taskId);
+          if (taskId) viewTaskDetails(taskId);
         } else if (e.target.closest(".project-content")) {
           setViewProjectModel(true);
         }
@@ -106,12 +107,14 @@ function EventScheduler() {
 
   const reInitilize = async () => {
     try {
+      setIsReinitilize(true);
       const response = await getManagement();
-      initDaypilot(CALENDAR_ID, response, viewTaskDetails);
+      reInitilizeData(response);
+      setIsReinitilize(false);
     } catch (error) {
       console.error("Error initializing DayPilot:", error);
     }
-  } 
+  }
 
   const handleViewTask = () => {
     console.log('handleViewTask: ',);
@@ -137,16 +140,23 @@ function EventScheduler() {
 
   return <React.Fragment>
     <div id={CALENDAR_ID}>
-     
+
       <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
         <span className="visually-hidden">Loading...</span>
       </Spinner>
     </div>
 
-    <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} />
-    <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize}/>
+    <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize}/>
+    <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize} />
 
-     <ProjectCardModel viewShow={viewProjectModel} setViewShow={setViewProjectModel} />
+    <ProjectCardModel viewShow={viewProjectModel} setViewShow={setViewProjectModel} />
+    {
+      isReinitilize && <div style={{ position: 'absolute', top: '50%', left: '50%', width: '30px', height: '40px' }}>
+        <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    }
   </React.Fragment>
 }
 
