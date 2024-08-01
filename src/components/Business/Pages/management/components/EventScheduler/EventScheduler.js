@@ -6,6 +6,7 @@ import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
 import { fetchTasksProject } from "../../../../../../APIs/TasksApi";
 import ProjectCardModel from "../../ProjectCardModel";
+import EventFilters from "./event-filters";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
@@ -139,8 +140,17 @@ function EventScheduler() {
   }, []);
 
   return <React.Fragment>
-    <div id={CALENDAR_ID}>
+    <div className="topbar">
+      <div className="searchBox"></div>
+      <div className="featureName">
+        <h1 className="title">Management</h1>
+      </div>
+      <div className="filters">
+        <EventFilters/>
+      </div>
+    </div>
 
+    <div id={CALENDAR_ID}>
       <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
         <span className="visually-hidden">Loading...</span>
       </Spinner>
