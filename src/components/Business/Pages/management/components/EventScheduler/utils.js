@@ -183,7 +183,7 @@ function loadData(responses) {
           return {
             id: task.id,
             name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${originalColor}; height: ${data.tasks?.length ? '85px' : '65px'}">
-              <button class="create-task-button" number="${data?.number}" reference="${data?.reference}" style="margin-bottom: ${data.tasks?.length ? '16px' : '6px'}">Create Task
+              <button class="create-task-button" project-id="${data.id}" number="${data?.number}" reference="${data?.reference}" style="margin-bottom: ${data.tasks?.length ? '16px' : '6px'}">Create Task
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#106B99"/>
               </svg>

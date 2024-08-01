@@ -4,7 +4,6 @@ import { getManagement } from "../../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
-import { fetchTasksProject } from "../../../../../../APIs/TasksApi";
 import ProjectCardModel from "../../ProjectCardModel";
 import EventFilters from "./event-filters";
 
@@ -17,33 +16,10 @@ function EventScheduler() {
 
   const [taskId, setTaskId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
-  const [projects, setProjects] = useState([]);
   function viewTaskDetails(id) {
     setTaskId(id);
     setView(true);
   }
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const projectsData = await fetchTasksProject();
-        if (Array.isArray(projectsData)) {
-          const projectsOptions = projectsData.map((project) => {
-            return { value: project.id, label: project.reference, number: project.number };
-          });
-
-          setProjects(projectsOptions);
-        } else {
-          console.error("Unexpected projects data format");
-        }
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    }
-
-    if (projects && projects.length === 0) fetchProjects();
-  }, []);
-
 
   // This useEffect for open create model
   useEffect(() => {
@@ -52,10 +28,9 @@ function EventScheduler() {
         if (e.target.closest('.create-task-button')) {
           const number = e.target.getAttribute('number');
           const reference = e.target.getAttribute('reference');
+          const projectId = e.target.getAttribute('project-id');
 
-          const selectedProject = projects.find((project) => project.label === reference);
-
-          setProjectDetails({ number, reference, value: selectedProject?.value });
+          setProjectDetails({ number, reference, value: projectId });
           setShow(true);
         } else if (e.target.closest('.task-list')) {
           const taskId = e.target.closest('.task-list').getAttribute('task-id');
@@ -70,7 +45,7 @@ function EventScheduler() {
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, [projects]);
+  }, []);
 
   useEffect(() => {
     const daypilotScript = document.createElement("script");
