@@ -362,7 +362,7 @@ ul.eventStyleCal li:first-child {
 }
 
 .scheduler_default_event.job-item .scheduler_default_event_float_inner::after {
-  top: 16px !important;
+  top: 10px !important;
 }
 
 ul.eventStyleCal li:nth-child(2) {
@@ -378,16 +378,27 @@ ul.eventStyleCal li:nth-child(2) {
 ul.eventStyleCal {
   display: flex;
 }
+.scheduler_default_corner_inner {
+  background: #fff;
+}
 
-.scheduler_default_rowheader .resourceList:before {
+.rowResourceEvent:before {
   position: absolute;
   right: 0;
   content: "";
   background: var(--main-color);
-  width: 5px;
+  width: 3px;
   height: 130px;
   z-index: 10;
 }
+
+.task-list.rowResourceEvent:before {
+  top: -10px;
+}
+
+.create-task-div.rowResourceEvent:before {
+  bottom: -10px;
+} 
 
 .scheduler_default_rowheader {
   position: relative;
@@ -400,7 +411,7 @@ ul.eventStyleCal {
   padding: 0;
   display: inherit;
   align-items: center;
-  background: #f2faff;
+  background: #ffff;
 }
 
 .scheduler_default_rowheader .scheduler_default_resourcedivider {
@@ -416,7 +427,7 @@ ul.eventStyleCal {
 }
 
 .scheduler_default_event_inner {
-  padding: 6px 19px !important;
+  padding: 12px 19px !important;
   border-radius: 10px !important;
   box-shadow: 0px 3px 5px 0px rgba(16, 24, 40, 0.1),
     0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
@@ -472,12 +483,14 @@ ul.eventStyleCal {
   padding: 7px !important;
 }
 
+
 .task-list {
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
-  padding: 0px 25px;
+  padding: 5px 25px;
   height: 38px;
-  margin-bottom: 4px;
+  background-color: #f2faff !important;
 }
 
 .task-list .flex {
@@ -523,10 +536,11 @@ ul.eventStyleCal {
 }
 
 .create-task-div {
-  height: 75px;
   display: flex;
   align-items: end;
-  margin-left: 25px;
+  padding-left: 25px;
+  padding-bottom: 20px;
+  background-color: #f2faff !important;
 }
 
 .create-task-div button {
@@ -540,6 +554,28 @@ ul.eventStyleCal {
   font-style: normal;
   font-weight: 600;
   line-height: 20px; /* 142.857% */
+}
+
+.scheduler_default_tree_image_collapse {
+  position: relative;
+}
+
+.scheduler_default_tree_image_collapse::after {
+  position: absolute;
+    top: -300px;
+    right: 29px;
+    content: "";
+    background: #f2faff;
+    width: 100px;
+    height: 323px;
+    z-index: -1;
+}
+
+.project-content {
+  padding-top: 6px;
+  position:relative;
+  z-index: 10;
+  cursor: pointer;
 }
 
 

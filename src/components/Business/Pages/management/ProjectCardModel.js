@@ -19,11 +19,7 @@ import FolderFileIcon from "../../../../assets/images/icon/folderFileIcon.svg";
 import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
 
-const ProjectCardModel = () => {
-  const [viewShow, setViewShow] = useState(false);
-
-
- 
+const ProjectCardModel = ({viewShow, setViewShow}) => {
   const handleClose = () => {
     setViewShow(false);
   };
@@ -34,11 +30,6 @@ const ProjectCardModel = () => {
 
   return (
     <>
-      {/* View modal trigger */}
-      <div className="linkByttonStyle" onClick={handleShow}>
-         Project Card
-      </div>
-
       {/* View modal */}
       <Modal
         show={viewShow}
@@ -72,7 +63,7 @@ const ProjectCardModel = () => {
             <div className="ContactModel">
                 <Row className="text-left mt-0 projectCardMain">
                 <Col className='orderDiscription'>
-                 <stron>Order Description</stron>
+                 <strong>Order Description</strong>
                  <p className='customScrollBar'>Order ID 875309, placed on January 22, 2024, by customer Alex Johnson, includes two main items. The first item is a pair of stainless steel water bottles, each priced at $15.99, bringing the total for this item to $31.98. Alongside this, the order also contains one set of wireless Bluetooth headphones, with a noise-canceling feature, priced at $89.99. The overall total for the order, combining both items, comes to $121.97...</p>
                   <div className='currentJobsTable'>
                     <h5>Current Jobs / Expense for this order</h5>

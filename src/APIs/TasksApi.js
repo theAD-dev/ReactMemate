@@ -200,8 +200,11 @@ export const fetchTasksDelete = async (taskId) => {
     const url = new URL(`${API_BASE_URL}/tasks/delete/${taskId}`);
 
     const response = await fetch(url, requestOptions);
-    const data = await response.json();
-    return data;
+    if (response.ok) 
+    return { message: 'Task deleted successfully' }
+    else
+    throw new Error("Error during deleting"); 
+    
   } catch (error) {
     console.error('Tasks fetch error:', error);
     throw error;

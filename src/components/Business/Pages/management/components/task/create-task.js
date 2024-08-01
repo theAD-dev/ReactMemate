@@ -12,7 +12,7 @@ import './task.css';
 import { useMutation } from '@tanstack/react-query';
 import { fetchTasksNew } from '../../../../../../APIs/TasksApi';
 
-const CreateTask = ({ show, setShow, project }) => {
+const CreateTask = ({ show, setShow, project, reInitilize }) => {
     const [taskTitle, setTaskTitle] = useState('');
     const [description, setDescription] = useState('');
     const [user, setUser] = useState(null);
@@ -28,6 +28,7 @@ const CreateTask = ({ show, setShow, project }) => {
         mutationFn: (data) => fetchTasksNew(data),
         onSuccess: () => {
             setShow(false);
+            reInitilize();
         },
         onError: (error) => {
             console.error('Error creating task:', error);

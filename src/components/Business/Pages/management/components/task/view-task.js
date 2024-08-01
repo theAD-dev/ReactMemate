@@ -112,6 +112,10 @@ const ViewTask = ({ view, setView, taskId, setTaskId }) => {
     handleClose();
   }
 
+  useEffect(() => {
+     if(!showEditModal) setTaskId(null);
+  }, [showEditModal])
+
   return (
     <>
       {/* View Task Modal container */}
@@ -200,7 +204,7 @@ const ViewTask = ({ view, setView, taskId, setTaskId }) => {
 
       {/* Edit Task Modal container */}
       {
-        data && <EditTask show={showEditModal} setShow={setShowEditModal} data={data} />
+        data && <EditTask key={showEditModal} show={showEditModal} setShow={setShowEditModal} data={data} />
       }
       
     </>

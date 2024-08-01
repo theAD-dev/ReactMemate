@@ -28,21 +28,16 @@ function adjustColor(color, amount) {
 
 function startDaypilot(elementId, responses, viewTaskDetails) {
   console.log("response: ", responses);
-  const isDaypilotLoaded =
-    typeof window !== undefined && Boolean(window.DayPilot);
+  const isDaypilotLoaded = typeof window !== undefined && Boolean(window.DayPilot);
   if (!isDaypilotLoaded) return;
 
   const DP = window.DayPilot;
 
   const dp = new DP.Scheduler(elementId, {
-    separators: [{ color: "#48C1FF", location: new DayPilot.Date(), width: 5 }],
-    treeImage: "img/nochildren.png",
     days: 365,
     scale: "Day",
-    cellDuration: 1440,
-    cellWidthSpec: "Auto",
-    cellWidthMin: 56,
-    // eventHeight:40,
+    separators: [{ color: "#48C1FF", width: 5 }],
+    treeImage: "img/nochildren.png",
     rowMinHeight: 130,
     eventEndSpec: "Date",
     durationBarVisible: false,
@@ -54,11 +49,14 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     rowHeaderWidth: 324,
     timeHeaders: [
       { groupBy: "Month", format: "MMMM yyyy" },
-      { groupBy: "Cell", format: "d" },
+      { groupBy: "Day", format: "d" }
     ],
-
     treeEnabled: true,
     progressiveRowRendering: true,
+    treePreventParentUsage: true,
+    scrollDelayEvents: 0,
+    infiniteScrollingEnabled: true,
+    infiniteScrollingStepDays: 100,
   });
 
   dp.onBeforeRowHeaderRender = function (args) {
@@ -71,7 +69,6 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const day = String(today.getDate()).padStart(2, "0");
   const formattedDate = `${year}-${month}-${day}`;
-
   dp.scrollTo(formattedDate);
 
   const app = {
@@ -82,25 +79,41 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     loadData() {
       const events = [];
       const colorMapping = {
-        "#b54708": { borderColor: "#FEDF89", backgroundColor: "#FFFAEB" },
-        "#b42318": { borderColor: "#FECDCA", backgroundColor: "#FEF3F2" },
-        "#067647": { borderColor: "#ABEFC6", backgroundColor: "#ECFDF3" },
-        "#344054": { borderColor: "#EAECF0", backgroundColor: "#F9FAFB" },
-        "#6941c6": { borderColor: "#E9D7FE", backgroundColor: "#F9FAFB" },
+        "#1AB2FF": { font: "#0A4766", background: "#BAE8FF" },
+        "#2970FF": { font: "#0040C1", background: "#D1E0FF" },
+        "#4E5BA6": { font: "#293056", background: "#EAECF5" },
+        "#FFB258": { font: "#6D471A", background: "#FFE8CD" },
+        "#66C61C": { font: "#326212", background: "#E3FBCC" },
+        "#15B79E": { font: "#125D56", background: "#CCFBEF" },
+        "#7A5AF8": { font: "#4A1FB8", background: "#EBE9FE" },
+        "#D444F1": { font: "#821890", background: "#FBE8FF" },
+        "#F63D68": { font: "#A11043", background: "#FFE4E8" },
+        "#FFD700": { font: "#997100", background: "#FFF8D1" },
+        "#6C6C1C": { font: "#444403", background: "#E1E1B8" },
+        "#FF007F": { font: "#6F0A3C", background: "#FFCCE5" },
       };
 
       const resources = responses?.map((data) => {
-        const originalColor = data?.status?.color;
-        var borderColor = adjustColor(originalColor, 0);
-        var backgroundColor = adjustColor(originalColor, 120);
+        let color = data?.status?.color?.toUpperCase();
+        let background = data?.status?.background;
+        let font = data?.status?.font;
 
-        if (colorMapping[originalColor]) {
-          borderColor = colorMapping[originalColor]["borderColor"];
-          backgroundColor = colorMapping[originalColor]["backgroundColor"];
+        var originalColor = font;
+        var borderColor = color;
+        var backgroundColor = background;
+
+        if (!background || !font) {
+           if(colorMapping[color]) {
+            backgroundColor = colorMapping[color]["background"]
+            originalColor = colorMapping[color]["font"]
+           } else {
+            backgroundColor = adjustColor(color, 120);
+            originalColor = adjustColor(color, 0);
+           }
         }
 
         const formattedTitle = data?.status?.title
-          ? `<em style='color:${originalColor}; background:${backgroundColor}; border: 1px solid ${borderColor}'>${data.status.title}</em>`
+          ? `<em style='color:${font || originalColor}; background:${background || backgroundColor}; border: 1px solid ${color || borderColor}'>${data.status.title}</em>`
           : "";
 
         let jobsStatus = "not-started";
@@ -117,8 +130,8 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
           id: DP.guid(),
           cssClass: 'job-item',
           resource: data.unique_id,
-          backColor: "#FFE599",
-          borderColor: "#F1C232",
+          backColor: background || backgroundColor,
+          borderColor: color || borderColor,
           text: `<ul class="eventStyleCal">
             <li>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -154,19 +167,14 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
                 </defs>
               </svg>
               &nbsp;
-              <strong>${data.reference}</strong>
-            </li>
-            <li>
-              <span>${data?.contact_person?.firstname?.charAt(
-            0
-          )}${data?.contact_person?.lastname?.charAt(0)}</span>
+              <strong style="color: ${font || originalColor}">${data.reference}</strong>
             </li>
           </ul>`,
         });
 
         return {
           id: data.unique_id,
-          name: `<div class="resourceList" style="--main-color: ${originalColor}">
+          name: `<div class="resourceList rowResourceEvent" style="--main-color: ${originalColor};">
             <ul class="resourceMan">
               <li>${data.number}</li>
               <li>
@@ -208,9 +216,11 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
             }</span>
               </li>
             </ul>
-            <span class="small">${data?.client?.name}</span>
-            <h2>${data.reference}</h2>
-            ${formattedTitle}
+            <div class="project-content">
+              <span class="small">${data?.client?.name}</span>
+              <h2>${data.reference}</h2>
+              ${formattedTitle}
+            </div>
           </div>`,
           children: [...data.tasks, { title: 'create-task', id: data.number }].map((task, index) => {
 
@@ -218,8 +228,8 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
             if (task.title === 'create-task') {
               return {
                 id: task.id,
-                name: `<div class="create-task-div">
-                  <button class="create-task-button" number="${data?.number}" reference="${data?.reference}">Create Task
+                name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${originalColor}; height: ${ data.tasks?.length ? '85px' : '65px'}">
+                  <button class="create-task-button" number="${data?.number}" reference="${data?.reference}" style="margin-bottom: ${data.tasks?.length ? '16px': '6px' }">Create Task
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#106B99"/>
                   </svg>
@@ -256,7 +266,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
 
             return {
               id: task.id,
-              name: `<div class="task-list" task-id="${task.id}">
+              name: `<div task-id="${task.id}" class="task-list rowResourceEvent" style="--main-color: ${originalColor}" task-id="${task.id}">
                 <div class="flex">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_5999_560822)">
@@ -295,12 +305,12 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
         };
       });
 
-      dp.onEventClicked = function(args) {
+      dp.onEventClicked = function (args) {
         const taskId = args.e.id();
         console.log('args: ', args.div.className.includes("task-item"));
         if (args.div.className.includes("task-item") && taskId) {
           viewTaskDetails(taskId);
-        } 
+        }
       };
 
 
@@ -340,6 +350,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
 }
 
 export function initDaypilot(elementId, response, viewTaskDetails) {
+  console.log('elementId: ', elementId);
   try {
     startDaypilot(elementId, response, viewTaskDetails);
   } catch (error) {

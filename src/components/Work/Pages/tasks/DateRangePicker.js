@@ -2,13 +2,21 @@ import React, { useState, useRef, useEffect } from "react";
 import "flatpickr/dist/themes/material_green.css";
 import Flatpickr from "react-flatpickr";
 
-const DateRangePicker = ({ onDataApply }) => {
+const DateRangePicker = ({ onDataApply, dateRange }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   const calendarRef = useRef(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [isApplying, setIsApplying] = useState(false);
   const [formattedCurrentDate, setFormattedCurrentDate] = useState("");
+
+  useEffect(()=> {
+    if(dateRange) {
+      setSelectedDates([dateRange?.startDate, dateRange?.endDate]);
+      setStartDate(dateRange?.startDate);
+      setEndDate(dateRange?.endDate);
+    }
+  }, [])
 
   useEffect(() => {
     const currentDate = new Date();
@@ -26,6 +34,9 @@ const DateRangePicker = ({ onDataApply }) => {
       const endDate = selectedDates[1];
       setStartDate(startDate);
       setEndDate(endDate);
+    } else if (selectedDates.length === 1) {
+      const startDate = selectedDates[0];
+      setStartDate(startDate);
     }
   }, [selectedDates]);
 

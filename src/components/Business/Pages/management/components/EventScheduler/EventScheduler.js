@@ -11,6 +11,8 @@ const CALENDAR_ID = "calender";
 function EventScheduler() {
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
+  const [viewProjectModel, setViewProjectModel] = useState(false);
+
   const [taskId, setTaskId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
   const [projects, setProjects] = useState([]);
@@ -53,6 +55,12 @@ function EventScheduler() {
 
           setProjectDetails({ number, reference, value: selectedProject?.value });
           setShow(true);
+        } else if (e.target.closest('.task-list')) {
+          const taskId = e.target.closest('.task-list').getAttribute('task-id');
+          console.log('task-list: ....', taskId);
+          if(taskId) viewTaskDetails(taskId);
+        } else if (e.target.closest(".project-content")) {
+          setViewProjectModel(true);
         }
       }
     };
@@ -96,6 +104,15 @@ function EventScheduler() {
   }, []);
 
 
+  const reInitilize = async () => {
+    try {
+      const response = await getManagement();
+      initDaypilot(CALENDAR_ID, response, viewTaskDetails);
+    } catch (error) {
+      console.error("Error initializing DayPilot:", error);
+    }
+  } 
+
   const handleViewTask = () => {
     console.log('handleViewTask: ',);
 
@@ -119,7 +136,6 @@ function EventScheduler() {
   }, []);
 
   return <React.Fragment>
-     <ProjectCardModel />
     <div id={CALENDAR_ID}>
      
       <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
@@ -128,8 +144,9 @@ function EventScheduler() {
     </div>
 
     <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} />
-    <CreateTask show={show} setShow={setShow} project={projectDetails} />
+    <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize}/>
 
+     <ProjectCardModel viewShow={viewProjectModel} setViewShow={setViewProjectModel} />
   </React.Fragment>
 }
 
