@@ -12,7 +12,7 @@ import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loa
 import './select-component.css';
 import { Button } from 'react-bootstrap';
 
-const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
+const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
  
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggleOptions = () => {
@@ -24,7 +24,7 @@ const DepartmentCalculationTableEmptyRow = ({ departments, handleChange }) => {
     return (
         <tr>
             <td style={{ width: '24px' }}></td>
-            <td style={{ width: '64px', textAlign: 'center' }}>0</td>
+            <td style={{ width: '64px', textAlign: 'right' }}>{srNo + 1}</td>
             <td style={{ width: '192px' }}>
                 <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
 
@@ -420,7 +420,7 @@ const DepartmentCalculationTable = ({ totals, setTotals ,isDiscountActive}) => {
                                 isLoadingSubItem && <DepartmentQuoteTableRowLoading />
                             }
 
-                            <DepartmentCalculationTableEmptyRow departments={departments} handleChange={handleChange} />
+                            <DepartmentCalculationTableEmptyRow srNo={Object.keys(rows || {}).length} departments={departments} handleChange={handleChange} />
                             {provided.placeholder}
                         </tbody>
                     )}
