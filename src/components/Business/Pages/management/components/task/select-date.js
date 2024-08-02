@@ -58,7 +58,7 @@ const SelectDate = ({ setDateRange, dateRange }) => {
             </div>
             {isPickerVisible && (
                 <div className='select-date-range' style={{ position: 'absolute', bottom: '40px', background: '#fff', zIndex: 1000 }}>
-                    <DateRangePicker onDataApply={handleDataApply} onClose={() => setIsPickerVisible(false)} />
+                    <DateRangePicker onDataApply={handleDataApply} dateRange={dateRange} onClose={() => setIsPickerVisible(false)} />
                 </div>
             )}
         </div>

@@ -20,14 +20,14 @@ const dateFormat = (dateInMiliSec) => {
     return date;
 }
 
-const EditTask = ({ show, setShow, data }) => {
+const EditTask = ({ show, setShow, data, reInitilize }) => {
     console.log('data: ', data);
 
     const taskId = data?.id;
     const project = { value: data?.project?.id, reference: data?.project?.reference, number: data?.project?.number };
     const [taskTitle, setTaskTitle] = useState(data.title || "");
     const [description, setDescription] = useState(data.description || "");
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(data?.user?.id || null);
     const [date, setDate] = useState({ startDate: dateFormat(data.from_date), endDate: dateFormat(data.to_date) });
     const [errors, setErrors] = useState({
         taskTitle: false,
@@ -40,6 +40,7 @@ const EditTask = ({ show, setShow, data }) => {
         mutationFn: (data) => fetchTasksUpdate(data, taskId),
         onSuccess: () => {
             setShow(false);
+            reInitilize();
         },
         onError: (error) => {
             console.error('Error creating task:', error);
@@ -49,7 +50,9 @@ const EditTask = ({ show, setShow, data }) => {
     const deleteMutation = useMutation({
         mutationFn: (data) => fetchTasksDelete(taskId),
         onSuccess: () => {
+            console.log('Delete success');
             setShow(false);
+            reInitilize();
         },
         onError: (error) => {
             console.error('Error creating task:', error);
@@ -59,7 +62,7 @@ const EditTask = ({ show, setShow, data }) => {
     const handleDelete = () => {
         deleteMutation.mutate();
     }
-    
+
     const handleSubmit = () => {
         const newErrors = {
             taskTitle: !taskTitle,
@@ -143,7 +146,7 @@ const EditTask = ({ show, setShow, data }) => {
                         gap: '16px', borderTop: '1px solid #eaecf0',
                         padding: "12px 30px 8px 30px"
                     }}>
-                        <SelectUser onSelect={setUser} />
+                        <SelectUser onSelect={setUser} assignedUser={data?.user}/>
                         <SelectDate dateRange={date} setDateRange={setDate} />
                     </div>
                     <div className='d-flex align-items-center' style={{ gap: '16px', padding: "0 30px 8px 30px" }}>

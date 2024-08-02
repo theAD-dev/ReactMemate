@@ -76,7 +76,7 @@ const TaskLoadingView = () => {
   )
 }
 
-const ViewTask = ({ view, setView, taskId, setTaskId }) => {
+const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const { isLoading, data, isError, refetch } = useQuery({
     queryKey: ['taskId', taskId],
@@ -89,6 +89,7 @@ const ViewTask = ({ view, setView, taskId, setTaskId }) => {
     onSuccess: () => {
       handleClose();
       setTaskId(null);
+      reInitilize();
     },
     onError: (error) => {
       console.error('Error updating task:', error);
@@ -111,6 +112,10 @@ const ViewTask = ({ view, setView, taskId, setTaskId }) => {
     setShowEditModal(true);
     handleClose();
   }
+
+  useEffect(() => {
+     if(!showEditModal) setTaskId(null);
+  }, [showEditModal])
 
   return (
     <>
@@ -200,7 +205,7 @@ const ViewTask = ({ view, setView, taskId, setTaskId }) => {
 
       {/* Edit Task Modal container */}
       {
-        data && <EditTask show={showEditModal} setShow={setShowEditModal} data={data} />
+        data && <EditTask key={showEditModal} show={showEditModal} setShow={setShowEditModal} data={data} reInitilize={reInitilize}/>
       }
       
     </>
