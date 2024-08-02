@@ -24,7 +24,7 @@ export const getManagement = async () => {
 
 
 
-export const ProjectCardApi = async () => {
+export const ProjectCardApi = async (unique_id) => {
     const myHeaders = new Headers();
     const accessToken = sessionStorage.getItem("access_token");
     myHeaders.append("Authorization", `Bearer ${accessToken}`);
@@ -37,7 +37,7 @@ export const ProjectCardApi = async () => {
     };
 
     try {
-        const response = await fetch(`${API_BASE_URL}/project-card/3f9ccecc-43b3-44a1-88ad-abcd9c5b6bc9/`, requestOptions);
+        const response = await fetch(`${API_BASE_URL}/project-card/${unique_id}/`, requestOptions);
         const result = await response.json();
         return result; // Return the result if needed
     } catch (error) {

@@ -19,7 +19,7 @@ import FolderFileIcon from "../../../../assets/images/icon/folderFileIcon.svg";
 import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
 
-const ProjectCardModel = ({viewShow, setViewShow}) => {
+const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
   const handleClose = () => {
     setViewShow(false);
   };
@@ -198,7 +198,7 @@ const ProjectCardModel = ({viewShow, setViewShow}) => {
                 </Col>
                 <Col className='projectHistoryCol'>
                  <Row>
-                    <Col className='tabModelMenu d-flex justify-content-between align-items-center' ><AddNote /><NewTask /><SendSMS /><ComposeEmail /></Col>
+                    <Col className='tabModelMenu d-flex justify-content-between align-items-center' ><AddNote /> <NewTask project={project} reInitilize={reInitilize} /> <SendSMS /><ComposeEmail /></Col>
                     <Col className='d-flex justify-content-center align-items-center filter'  ><span><Filter size={20} color='#344054'/></span></Col>
                  </Row>
                  <Row className='projectHistoryWrap'>

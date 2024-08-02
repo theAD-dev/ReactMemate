@@ -137,7 +137,7 @@ const Home = () => {
                             
                         </label>
                         <div className='boxItemBut'>
-                                <Button variant="link">Add Details</Button>
+                                <Link to="/settings/generalinformation/bank-details"><Button variant="link">Add Details</Button></Link>
                             </div>
                     </div>
                 </Col>
@@ -187,7 +187,7 @@ const Home = () => {
                             </div> 
                         </label>
                         <div className='boxItemBut'>
-                                <Button variant="link">Create New Request</Button>
+                                <Link to="/sales/newquote/selectyourclient/step1"><Button variant="link">Create New Request</Button></Link>
                             </div>
                     </div>
                 </Col>
@@ -283,7 +283,8 @@ const Home = () => {
                      </div>
                     <h3>Active Quotes</h3>
                     <div className='countNoBox activeQouteH'> 
-                    <div className='pluslgIcon'> <Link to="/tasks"><PlusLg size={20} color="#106B99" /></Link></div>
+                    <Link to="/tasks">
+                    <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div></Link>
                     <span> <CountUp start={0} end={homeData.active_quotes.cnt} duration={5} /></span></div>
                         <h4>{formatCurrency(homeData.active_quotes.sum)}</h4>
                 </div>
@@ -328,7 +329,10 @@ const Home = () => {
                     ))} 
                      </div>
                     <h3>Active Projects</h3>
-                    <div className='countNoBox ActiveProjectH'> <span> <CountUp start={0} end={homeData.projects.cnt} duration={4} formattingFn={formatter}  /></span></div>
+                    <div className='countNoBox ActiveProjectH'> <span> 
+                    <CountUp start={0} end={homeData.projects.cnt} duration={4} />
+                        {/* <CountUp start={0} end={homeData.projects.cnt} duration={4} formattingFn={formatter}  /> */}
+                        </span></div>
                         <h4>{formatCurrency(homeData.projects.sum)}</h4>
                 </div>
                 </Col>

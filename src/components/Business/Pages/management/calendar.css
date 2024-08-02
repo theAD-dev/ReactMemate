@@ -1070,6 +1070,10 @@ strong.dollorIcon {
 }
 .projectCardactionBut .actionRightSide {
   text-align: right;
+  padding-right: 0;
+}
+.projectCardactionBut .actionLeftSide {
+  padding-left: 0;
 }
 .projectCardactionBut .actionRightSide button.ProgressAction {
   margin: 0 8px;
@@ -1150,4 +1154,71 @@ strong.dollorIcon {
   border-radius: 4px;
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: #fff;
+}
+.taskModelProject .modal-header {
+  border-bottom: 1px solid #EAECF0 !important;
+}
+.taskModelProject .modal-header span img {
+  margin-right: 12px;
+}
+.taskModelProject .inputInfo {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  padding: 8px 14px;
+}
+.taskModelProject .inputInfo textarea {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
+  width: 100%;
+  min-height: 140px;
+  border: 0;
+}
+.taskModelProject  .upload-btn-wrapper {
+  display: block;
+  width: 100% !important;
+}
+.taskModelProject .upload-btn-wrapper button.btnup {
+  width: 100%;
+}
+.taskModelProject .upload-btn-wrapper .textbtm p span {
+  color: var(--Primary-700, #106B99);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+.taskModelProject .popoverbottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 0 !important;
+}
+.taskModelProject .popoverbottom .btn-outline-danger,.taskModelProject .popoverbottom .btn-outline-danger:hover {
+  color: var(--Error-700, #B42318);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  background: transparent;
+}
+.taskModelProject .popoverbottom .save ,.taskModelProject .popoverbottom .save:hover{
+  border-radius: 4px;
+  border: 1px solid var(--Primary-600, #158ECC);
+  background: var(--Primary-600, #158ECC);
+  color: #FFF;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
 }
