@@ -167,7 +167,7 @@ const ViewTaskModal = ({ taskId }) => {
     await fetchTasksDelete(taskId);
     //console.log('Task deleted successfully');
     setDeleteShow(false);
-    handleClose(); // Close the modal and perform any additional actions needed
+    handleClose(true); // Close the modal and perform any additional actions needed
     //fetchData();
 
   } catch (error) {

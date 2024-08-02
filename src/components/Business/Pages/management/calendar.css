@@ -384,8 +384,17 @@ ul.eventStyleCal {
   right: 0;
   content: "";
   background: var(--main-color);
-  width: 5px;
-  height: 130px;
+  width: 4px;
+  height: 100vh;
+  z-index: 10;
+}
+.create-task-div:before {
+  position: absolute;
+  right: 0;
+  content: "";
+  background: var(--main-color);
+  width: 4px;
+  height: 100vh;
   z-index: 10;
 }
 
@@ -400,7 +409,7 @@ ul.eventStyleCal {
   padding: 0;
   display: inherit;
   align-items: center;
-  background: #f2faff;
+  background: #FCFCFD;
 }
 
 .scheduler_default_rowheader .scheduler_default_resourcedivider {
@@ -523,7 +532,7 @@ ul.eventStyleCal {
 }
 
 .create-task-div {
-  height: 75px;
+  height: 100vh;
   display: flex;
   align-items: end;
   margin-left: 25px;

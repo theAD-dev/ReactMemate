@@ -61,7 +61,6 @@ import CompanyEthos from "./settings/companyethos/CompanyEthos";
 import Integrations from "./settings/Integrations";
 import RecurringQuotes from "./settings/quotesjobs/RecurringQuotes ";
 import RecurringJobs from "./settings/quotesjobs/RecurringJobs";
-import OrganisationSetting from "./settings/OrganisationSetting";
 import TermsandConditions from "./settings/termsandconditions/TermsandConditions";
 import TermsConditionsInvoice from "./settings/termsandconditions/TermsConditionsInvoice";
 import Industries from "./settings/customerssettings/Industries";
@@ -78,6 +77,8 @@ import News from "../Work/Pages/News";
 import Approval from "../Work/Pages/Approval";
 import Jobs from "../Work/Pages/Jobs";
 import People from "../Work/Pages/People";
+import ProjectStatus from "./settings/projectstatus/ProjectStatus";
+import Item2 from "./settings/projectstatus/Item2";
 
 
 
@@ -578,9 +579,14 @@ const Header = ({ onClick }) => {
             element={<RecurringJobs />}
           />
           <Route
-            path="/settings/organisation-setting"
-            element={<OrganisationSetting />}
+            path="/settings/projectstatus/project-status"
+            element={<ProjectStatus />}
           />
+          <Route
+            path="/settings/projectstatus/item2"
+            element={<Item2 />}
+          />
+          
           <Route
             path="/settings/termsandconditions/terms-and-conditions"
             element={<TermsandConditions />}

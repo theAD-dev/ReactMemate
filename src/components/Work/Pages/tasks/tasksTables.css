@@ -795,6 +795,17 @@ span.iconStyleCircle.iconStyleCircleRight.isOpen,.iconStyleCircletrue {
 .taskViewScroll::-webkit-scrollbar-thumb:hover {
   background: #d9d9da; 
 }
+.css-1ie1w8g-control:hover ,.css-1ie1w8g-control{
+  border-color: #d9d9da !important;
+  box-shadow: none !important;
+  /* cursor: pointer; */
+}
+.css-18qm1zx-option,.css-d7l1ni-option  {
+  border-radius: var(--radius-sm, 6px);
+  background: var(--Gray-50, #F9FAFB) !important;
+  color: var(--Gray-900, #101828) !important;
+}
+
 .css-1n6sfyn-MenuList::-webkit-scrollbar {
   width: 8px;
   height: 8px;

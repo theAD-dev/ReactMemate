@@ -189,7 +189,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
               <li>
                 {" "}
                 <Link
-                  to="/settings/organisation-setting"
+                  to="/settings/projectstatus/project-status"
                   className={`sidebar-tab ${
                     activeTab === "organisation-setting" ? "activelist" : ""
                   }`}
