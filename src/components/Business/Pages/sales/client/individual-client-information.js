@@ -93,7 +93,7 @@ const IndividualClientInformation = () => {
             console.log('Creating new record:', data);
         }
         login(data);
-        //navigate('/sales/newquote/selectyourclient/client-information/scope-of-work');
+        navigate('/sales/newquote/selectyourclient/client-information/scope-of-work');
     };
 
     return (

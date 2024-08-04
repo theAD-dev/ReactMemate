@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Delete, DragIndicator, ExpandMore } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
+import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
 import { Checkbox } from '@mui/material';
 
 import { calcDepartment } from '../../../../../../APIs/CalApi';
@@ -10,38 +9,15 @@ import { calcReferenceId } from '../../../../../../APIs/CalApi';
 import SelectComponent from './select-component';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import './select-component.css';
-import { Button } from 'react-bootstrap';
+import MergeItems from './merge-items';
 
-const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
- 
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const toggleOptions = () => {
-        const openDropdowns = document.querySelectorAll(".options.active");
-        openDropdowns.forEach((dropdown) => dropdown.classList.remove("active"));
-        setDropdownOpen((prevState) => !prevState);
-    };
-
+const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, isDiscountActive }) => {
     return (
         <tr>
             <td style={{ width: '24px' }}></td>
             <td style={{ width: '64px', textAlign: 'right' }}>{srNo + 1}</td>
             <td style={{ width: '192px' }}>
                 <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
-
-                {/* <div className="select-menu w-100 d-flex justify-content-between">
-                    <div className="select-btn" onClick={toggleOptions}>
-                        Department
-                        <ChevronDown color="#98A2B3" size={16} />
-                    </div>
-                    <ul className={`options ${dropdownOpen ? "active" : ""}`}>
-                        {
-                            departments?.map(item => (
-                                <li>{item.name}</li>
-                            ))
-                        }
-                    </ul>
-                </div> */}
-
             </td>
             <td style={{ width: '100%', paddingTop: '10px' }}>
                 <textarea rows={1} placeholder='Enter a description...' style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} onChange={(e) => { }}></textarea>
@@ -63,7 +39,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                     <input
                         type="text"
                         disabled
-                        style={{ padding: '4px', width: '40px', background: 'transparent', color: '#98A2B3' }}
+                        style={{ padding: '4px', width: '60px', background: 'transparent', color: '#98A2B3' }}
                         value={`${'0.00'}`}
                         onChange={(e) => { }}
                     />
@@ -78,7 +54,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                     <input
                         type="text"
                         disabled
-                        style={{ padding: '4px', width: '40px', background: 'transparent', color: '#98A2B3' }}
+                        style={{ padding: '4px', width: '60px', background: 'transparent', color: '#98A2B3' }}
                         value={`${'0.00'}`}
                         onChange={(e) => { }}
                     />
@@ -89,38 +65,39 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                     </select>
                 </div>
             </td>
-            <td style={{ width: '83px' }}>
-                <div className='d-flex align-items-center'>
-                    <input
-                        type="text"
-                        style={{ width: '20px', padding: '4px', background: 'transparent',color: '#98A2B3' }}
-                        value={`${0}`}
-                        onChange={(e) => { }}
-                    />
-                    <span>%</span>
-                </div>
-            </td>
-            <td style={{ width: '118px' }}>$ {0}</td>
+            {isDiscountActive &&
+                <td style={{ width: '83px' }}>
+                    <div className='d-flex align-items-center'>
+                        <input
+                            type="text"
+                            style={{ width: '30px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
+                            value={`${0}`}
+                            onChange={(e) => { }}
+                        />
+                        <span>%</span>
+                    </div>
+                </td>
+            }
+            <td style={{ width: '118px', textAlign: 'left' }}>$ {0}</td>
             <td style={{ width: '32px' }}>
-            <Trash color="#98A2B3" onClick={() => {}} />
+                <Trash color="#98A2B3" style={{ cursor: 'not-allowed', opacity: '.5' }} onClick={() => { }} />
             </td>
         </tr>
     )
 }
 
-
-const DepartmentCalculationTableHead = (isDiscountActive) => {
+const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
     return (
         <thead>
             <tr>
-                <th style={{ width: '24px'}}></th>
+                <th style={{ width: '24px' }}></th>
                 <th style={{ width: '64px', textAlign: 'left' }}>Order</th>
                 <th style={{ width: '192px' }}>Department</th>
                 <th style={{ width: '100%' }}>Description</th>
                 <th style={{ width: '128px' }}>Rate</th>
                 <th style={{ width: '166px' }}>Qty / Unit</th>
                 <th style={{ width: '185px' }}>Markup / Margin</th>
-                <th className={isDiscountActive ? 'discount-active' : 'discount-inactive'} style={{ width: '83px' }}>Discount</th>
+                {isDiscountActive && <th style={{ width: '83px' }}>Discount</th>}
                 <th style={{ width: '118px' }}>Amount</th>
                 <th style={{ width: '32px' }}></th>
             </tr>
@@ -128,7 +105,29 @@ const DepartmentCalculationTableHead = (isDiscountActive) => {
     )
 }
 
-const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow, departments, handleChange }) => {
+const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, setSelectItem, mapMergeItemWithNo }) => {
+    const handleChange = (event, key, values) => {
+        setSelectItem((oldItems) => {
+            if (event.target.checked) {
+                const { label, total } = values.reduce((acc, value, index) => {
+                    if (index === 0) acc.label = value.label;
+                    acc.total += parseFloat(value.total || 0.00);
+                    return acc;
+                }, { label: '', total: 0 });
+
+                return {
+                    ...oldItems,
+                    [key]: { label, total }
+                };
+            } else {
+                const updatedItems = { ...oldItems };
+                if (updatedItems[key]) delete updatedItems[key];
+                return updatedItems;
+            }
+        });
+    };
+
+
     return (
         <>
             {Object.entries(rows).map(([key, values], id) => (
@@ -146,7 +145,7 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             cursor: 'default',
                                         }}
                                     >
-                                        <td {...provided.dragHandleProps} style={{width: '24px'}}>
+                                        <td {...provided.dragHandleProps} style={{ width: '24px' }}>
                                             {
                                                 index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
                                             }
@@ -155,8 +154,20 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                             {
                                                 index === 0 && (
                                                     <div className='d-flex align-items-center justify-content-start'>
-                                                        <Checkbox className="checkbox" style={{ visibility: 'hidden' }} 
-                                                        />
+                                                        {mapMergeItemWithNo[key] ? (
+                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '10px' }}>
+                                                                {mapMergeItemWithNo[key]}
+                                                            </div>
+                                                        ) : (
+                                                            <label className="customCheckBox checkbox" style={{ marginRight: '10px' }}>
+                                                                <input type="checkbox" onChange={(e) => handleChange(e, key, values)} />
+                                                                <span className="checkmark" style={{ top: '0px' }}>
+                                                                    <Check color="#1AB2FF" size={20} />
+                                                                </span>
+                                                            </label>
+                                                        )
+                                                        }
+
                                                         {id + 1}
                                                     </div>
                                                 )
@@ -214,18 +225,20 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
                                                 </select>
                                             </div>
                                         </td>
-                                        <td style={{ width: '83px' }}>
-                                            <div className='d-flex align-items-center'>
-                                                <input
-                                                    type="text"
-                                                    style={{ width: '30px', padding: '4px', background: 'transparent' }}
-                                                    value={`${value.discount || 0}`}
-                                                    onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
-                                                />
-                                                <span>%</span>
-                                            </div>
-                                        </td>
-                                        <td style={{ width: '118px' }}>$ {value.total}</td>
+                                        {isDiscountActive &&
+                                            <td style={{ width: '83px' }}>
+                                                <div className='d-flex align-items-center'>
+                                                    <input
+                                                        type="text"
+                                                        style={{ width: '30px', padding: '4px', background: 'transparent' }}
+                                                        value={`${value.discount || 0}`}
+                                                        onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
+                                                    />
+                                                    <span>%</span>
+                                                </div>
+                                            </td>
+                                        }
+                                        <td style={{ width: '118px', textAlign: 'left' }}>$ {value.total || 0.00}</td>
                                         <td style={{ width: '32px' }}>
                                             <Trash color="#98A2B3" onClick={() => deleteRow(key, value.id)} />
                                         </td>
@@ -240,24 +253,27 @@ const DepartmentCalculationTableBody = ({ rows, onDragEnd, updateData, deleteRow
     );
 }
 
-const DepartmentCalculationTable = ({ totals, setTotals ,isDiscountActive}) => {
-
+const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive }) => {
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
-    const { data: departments, isLoading, isError } = useQuery({
+    const [mergeItems, setMergeItems] = useState({});
+    console.log('mergeItems: ', mergeItems);
+    const [selectItem, setSelectItem] = useState({});
+    const [mapMergeItemWithNo, setMapMergeItemWithNo] = useState({});
+    console.log('mapMergeItemWithNo: ', mapMergeItemWithNo);
+    const { data: departments } = useQuery({
         queryKey: ['calcIndexes'],
         queryFn: calcDepartment,
         enabled: true,
     });
-    const { isLoading: isLoadingSubItem, error, data, refetch } = useQuery({
+    const { isLoading: isLoadingSubItem, data } = useQuery({
         queryKey: ['calcReferenceId', subItem],
         queryFn: () => calcReferenceId(subItem),
         enabled: !!subItem,
         retry: 1,
     });
 
-    console.log('isLoadingSubItem: ', isLoadingSubItem);
     const onDragEnd = (result) => {
         const { source, destination } = result;
 
@@ -345,7 +361,6 @@ const DepartmentCalculationTable = ({ totals, setTotals ,isDiscountActive}) => {
     };
 
     useEffect(() => {
-        console.log('data: ', data);
         if (data) {
             if (data.length) {
                 data.forEach((item) => {
@@ -396,38 +411,100 @@ const DepartmentCalculationTable = ({ totals, setTotals ,isDiscountActive}) => {
     }
 
     useEffect(() => {
-        console.log(rows);
         const summary = calculateSummary();
         setTotals(summary);
     }, [rows]);
 
-    return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <table className='w-100 department-calculation'>
-                <DepartmentCalculationTableHead isDiscountActive={isDiscountActive}/>
-                <Droppable droppableId="departmentQuoteTable">
-                    {(provided) => (
-                        <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                            <DepartmentCalculationTableBody
-                                rows={rows}
-                                onDragEnd={onDragEnd}
-                                updateData={updateData}
-                                deleteRow={deleteRow}
-                                departments={departments}
-                                handleChange={handleChange}
-                            />
-                            {
-                                isLoadingSubItem && <DepartmentQuoteTableRowLoading />
-                            }
+    useEffect(() => {
+        let map = {};
+        if(Object.keys(mergeItems)?.length) {
+            Object.entries(mergeItems)?.map(([key, value]) => {
+                return value?.keys.map(key => {
+                    return map[key] = value.romanNo;
+                })
+            })
+        }
+      
+        console.log('map: ', map);
+        setMapMergeItemWithNo(map);
+    }, [mergeItems]);
 
-                            <DepartmentCalculationTableEmptyRow srNo={Object.keys(rows || {}).length} departments={departments} handleChange={handleChange} />
-                            {provided.placeholder}
-                        </tbody>
-                    )}
-                </Droppable>
-            </table>
-        </DragDropContext>
+    const deleteMergeItem = (key) => {
+        setMergeItems((oldItems) => {
+            const updatedItems = { ...oldItems };
+            if (updatedItems[key]) delete updatedItems[key];
+
+            Object.keys(updatedItems).forEach((itemKey, index) => {
+                updatedItems[itemKey] = {
+                    ...updatedItems[itemKey],
+                    romanNo: romanize(index + 1),
+                };
+            });
+
+            return updatedItems;
+        }) 
+    }
+
+    return (
+        <div>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <table className='w-100 department-calculation'>
+                    <DepartmentCalculationTableHead isDiscountActive={isDiscountActive} />
+                    <Droppable droppableId="departmentQuoteTable">
+                        {(provided) => (
+                            <tbody {...provided.droppableProps} ref={provided.innerRef}>
+                                <DepartmentCalculationTableBody
+                                    rows={rows}
+                                    updateData={updateData}
+                                    deleteRow={deleteRow}
+                                    isDiscountActive={isDiscountActive}
+                                    setSelectItem={setSelectItem}
+                                    mapMergeItemWithNo={mapMergeItemWithNo}
+                                />
+                                {
+                                    isLoadingSubItem && <DepartmentQuoteTableRowLoading isDiscountActive={isDiscountActive} />
+                                }
+
+                                <DepartmentCalculationTableEmptyRow srNo={Object.keys(rows || {}).length} departments={departments} handleChange={handleChange} isDiscountActive={isDiscountActive} />
+                                {provided.placeholder}
+                            </tbody>
+                        )}
+                    </Droppable>
+                </table>
+            </DragDropContext>
+
+            <div className='merge-section' style={{ marginTop: '20px', textAlign: 'left' }}>
+                <MergeItems mergeItems={mergeItems} setMergeItems={setMergeItems} selectItems={selectItem} setSelectItems={setSelectItem} setMapMergeItemWithNo={setMapMergeItemWithNo} />
+                <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "20px 0px" }}></div>
+                {(Object.keys(mergeItems)?.length && <p className='mb-0' style={{ fontSize: '14px', fontWeight: '500', color: '#475467' }}>Merged Items</p>) || ''}
+
+                {
+                    Object.entries(mergeItems)?.map(([key, value]) =>
+                        <div key={key} className='d-flex align-items-center' style={{ margin: '20px 0px' }}>
+                            <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2FAFF', border: '1px solid #A3E0FF', color: '#106B99', fontSize: '10px' }}>{value.romanNo}</div>
+                            <div className='my-0' style={{ color: '#101828', fontSize: '16px', marginLeft: '10px', marginRight: '56px', minWidth: '283px' }}>{value.title}</div>
+                            <span style={{ color: '#667085', fontSize: '14px', marginRight: '37px' }}>$ &nbsp; {value.total}</span>
+                            <Trash onClick={()=>deleteMergeItem(key)} color="#98A2B3" style={{ cursor: 'pointer' }} />
+                        </div>)
+                }
+
+                {(Object.keys(mergeItems || {})?.length && <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "0px 0px 20px 0px" }}></div>) || ""}
+
+            </div>
+
+        </div>
     )
+}
+
+function romanize(num) {
+    var lookup = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 }, roman = '', i;
+    for (i in lookup) {
+        while (num >= lookup[i]) {
+            roman += i;
+            num -= lookup[i];
+        }
+    }
+    return roman;
 }
 
 export default DepartmentCalculationTable;

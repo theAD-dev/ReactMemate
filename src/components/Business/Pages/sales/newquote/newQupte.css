@@ -320,7 +320,7 @@ button.CustonCloseModal {
 }
 
 .formgroupboxs .inputInfo.textarea {
-    height: unset !important;
+  height: unset !important;
 }
 /* .newQuotePage .dFlex {
     display: flex;
@@ -1661,7 +1661,8 @@ ul.client {
   padding: 16px 24px;
 }
 
-.individual.bottomBox .submit-button {
+.individual.bottomBox .submit-button,
+.calculation-quote-bottom .submit-button {
   color: #fff;
   font-family: Inter;
   font-size: 16px;
@@ -1734,7 +1735,8 @@ ul.client {
   align-items: center;
 }
 
-.delete-button-client, .delete-button-client:hover {
+.delete-button-client,
+.delete-button-client:hover {
   color: var(--Error-700, #b42318);
 
   /* Text sm/Semibold */
@@ -1753,7 +1755,10 @@ ul.client {
   background: var(--Base-White, #fff);
 }
 
-.add-button-client, .add-button-client:hover {
+.add-button-client,
+.add-button-client:hover,
+.back-button,
+.back-button:hover {
   color: var(--Gray-700, #344054);
 
   /* Text sm/Semibold */
@@ -1772,10 +1777,69 @@ ul.client {
   background: var(--Base-White, #fff);
 }
 
-.formgroupboxs .inputInfo > *, .formgroupboxs .inputInfo .MuiInputBase-root.MuiOutlinedInput-root > * {
-    color: #101828 !important;
+.formgroupboxs .inputInfo > *,
+.formgroupboxs .inputInfo .MuiInputBase-root.MuiOutlinedInput-root > * {
+  color: #101828 !important;
 }
 
 .formgroupboxs .inputInfo > *::placeholder {
-    color: #667085 !important;
+  color: #667085 !important;
+}
+
+.button-custom {
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  display: flex;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 4px;
+}
+
+.calculation-quote-bottom .text-button,
+.calculation-quote-bottom .text-button:hover {
+  color: #106b99;
+  border: none;
+  background-color: transparent;
+}
+
+.calculation-quote-bottom .submit-button-light,
+.calculation-quote-bottom .submit-button-light:hover {
+  color: #106b99 !important;
+  border-radius: 4px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.calculation-quote-bottom .item {
+    text-align: left;
+    min-width: 158px;
+}
+
+.calculation-quote-bottom .item label {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.08px;
+}
+
+.calculation-quote-bottom .item .amount {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 133.333% */
+  letter-spacing: -0.18px;
+}
+
+.text-button.padding-left-0 {
+    padding-left:  0px !important;
 }

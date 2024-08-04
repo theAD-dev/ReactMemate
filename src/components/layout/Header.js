@@ -549,15 +549,14 @@ const Header = ({ onClick }) => {
               path="quote-calculation/client"
               element={<CalculateQuote />}
             />
+            <Route
+              path="quote-calculation/client/:id"
+              element={<CalculateQuote />}
+            />
           </Route>
 
 
-
-
-
-
-
-
+          
 
           <Route
             path="/sales/newquote/client-information/step2/business-details/"
@@ -579,6 +578,10 @@ const Header = ({ onClick }) => {
             path="/sales/newquote/calculation"
             element={<Calculation />}
           />
+
+
+
+
           <Route
             path="/settings/calculators/departments"
             element={<Departments />}

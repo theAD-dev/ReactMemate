@@ -5,7 +5,7 @@ import {
   FilePdf,
   Link45deg,
   Check,
-  ChevronLeft,ArrowDown,ArrowUp,Person, 
+  ChevronLeft, ArrowDown, ArrowUp, Person,
 } from "react-bootstrap-icons";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -24,7 +24,7 @@ import { Table } from "react-bootstrap";
 import TableTopBar from "./TableTopBar";
 import { Resizable } from 'react-resizable';
 
-const SalesTables = ({ profileData,salesData, fetchData }) => {
+const SalesTables = ({ profileData, salesData, fetchData }) => {
   const [sortField, setSortField] = useState("Quote");
   const [sortDirection, setSortDirection] = useState("asc");
   const [salesDataState, setSalesDataState] = useState([]);
@@ -50,11 +50,11 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
   const sortedSalesData = [salesData && salesData].sort((a, b) => {
     const aValue = a[sortField];
     const bValue = b[sortField];
-  
+
     if (aValue === undefined || bValue === undefined) {
-      return 0; 
+      return 0;
     }
-  
+
     if (sortDirection === "asc") {
       return aValue.localeCompare(bValue, undefined, { numeric: true });
     } else {
@@ -66,7 +66,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
     fetchData()
   };
 
-  const refreshData = () =>{
+  const refreshData = () => {
     fetchData()
   }
 
@@ -77,14 +77,14 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
   );
 
   const [selectedRows, setSelectedRows] = useState([]);
-  
+
   const handleSelectAllCheckboxChange = () => {
     const allRowIds = salesData && salesData.length && salesData.map((sale) => sale.id);
     if (selectedRows.length === allRowIds.length) {
-     
+
       setSelectedRows([]);
     } else {
-      
+
       setSelectedRows(allRowIds);
     }
   };
@@ -97,19 +97,19 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       width: 70,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Quote")}>
-        <span>Quote</span>
-        {sortField === "Quote" && (
-          <span>
-            {sortDirection === "asc" ? (
-              <ArrowUp size={16} color="#475467" />
-            ) : (
-              <ArrowDown size={16} color="#475467" />
-            )}
-          </span>
-        )}
-      </div>
+          <span>Quote</span>
+          {sortField === "Quote" && (
+            <span>
+              {sortDirection === "asc" ? (
+                <ArrowUp size={16} color="#475467" />
+              ) : (
+                <ArrowDown size={16} color="#475467" />
+              )}
+            </span>
+          )}
+        </div>
       ),
- 
+
       renderCell: (params) => (
         <div className="styleColor1">
           <strong>{params.value.substring(4)}</strong>
@@ -123,19 +123,19 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       width: 400,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Client")}>
-        <span>Client</span>
-        {sortField === "Client" && (
-          <span>
-            {sortDirection === "asc" ? (
-              <ArrowUp size={16} color="#475467" />
-            ) : (
-              <ArrowDown size={16} color="#475467" />
-            )}
-          </span>
-        )}
-      </div>
+          <span>Client</span>
+          {sortField === "Client" && (
+            <span>
+              {sortDirection === "asc" ? (
+                <ArrowUp size={16} color="#475467" />
+              ) : (
+                <ArrowDown size={16} color="#475467" />
+              )}
+            </span>
+          )}
+        </div>
       ),
-  
+
       renderCell: (params) => (
         <div className="userImgStyle">
           <div className="innerFlex styleColor2 d-flex justify-content-between">
@@ -151,7 +151,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
           </div>
         </div>
       ),
-      
+
     },
     {
       field: "Reference",
@@ -171,17 +171,17 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       sortable: false,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Status")}>
-        <span>Status</span>
-        {sortField === "Status" && (
-          <span>
-            {sortDirection === "asc" ? (
-              <ArrowUp size={16} color="#475467" />
-            ) : (
-              <ArrowDown size={16} color="#475467" />
-            )}
-          </span>
-        )}
-      </div>
+          <span>Status</span>
+          {sortField === "Status" && (
+            <span>
+              {sortDirection === "asc" ? (
+                <ArrowUp size={16} color="#475467" />
+              ) : (
+                <ArrowDown size={16} color="#475467" />
+              )}
+            </span>
+          )}
+        </div>
       ),
       width: 118,
       renderCell: (params) => (
@@ -241,15 +241,15 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
                 }
               >
                 <span variant="light" className="">
-                {params.value ? (
-                  <>
-                    {params.value}
-                  </>
-                ) : (
-                  <div className="iconPerson">
-                    <Person size={24} color="#667085" />
-                  </div>
-                )}
+                  {params.value ? (
+                    <>
+                      {params.value}
+                    </>
+                  ) : (
+                    <div className="iconPerson">
+                      <Person size={24} color="#667085" />
+                    </div>
+                  )}
 
                 </span>
               </OverlayTrigger>
@@ -265,7 +265,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       width: 183,
       renderCell: (params) => (
         <div>
-          <ContactSales type={params.value}  saleUniqueId={params.row.saleUniqueId} refreshData={refreshData}/>
+          <ContactSales type={params.value} saleUniqueId={params.row.saleUniqueId} refreshData={refreshData} />
         </div>
       ),
     },
@@ -273,26 +273,26 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       field: "Progress",
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Progress")}>
-        <span>Progress</span>
-        {sortField === "Progress" && (
-          <span>
-            {sortDirection === "asc" ? (
-              <ArrowUp size={16} color="#475467" />
-            ) : (
-              <ArrowDown size={16} color="#475467" />
-            )}
-          </span>
-        )}
-      </div>
+          <span>Progress</span>
+          {sortField === "Progress" && (
+            <span>
+              {sortDirection === "asc" ? (
+                <ArrowUp size={16} color="#475467" />
+              ) : (
+                <ArrowDown size={16} color="#475467" />
+              )}
+            </span>
+          )}
+        </div>
       ),
 
       width: 232,
       renderCell: (params) => (
         <div style={{ width: "100%" }}>
           <Progress
-            progressName1={params.row.progressName}  
-            progressPercentage1={params.row.progressPercentage} salesUniqId1={params.row.saleUniqueId}  onRemoveRow={removeRow}
-            />
+            progressName1={params.row.progressName}
+            progressPercentage1={params.row.progressPercentage} salesUniqId1={params.row.saleUniqueId} onRemoveRow={removeRow}
+          />
         </div>
       ),
     },
@@ -313,7 +313,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
               saleId={params.row.id}
               onRemoveRow={removeRow}
               fetchData1={setRows}
-              salesData={salesDataState} 
+              salesData={salesDataState}
               quoteType="lost"
             />
             <QuoteWon
@@ -324,7 +324,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
               saleId={params.row.id}
               onRemoveRow={removeRow}
               fetchData1={setRows}
-              salesData={salesDataState} 
+              salesData={salesDataState}
               quoteType="won"
             />
           </div>
@@ -338,7 +338,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       width: 72,
       className: "ActionBtn",
       renderCell: (params) => (
-     <ActionsDots saleUniqueId={params.row.saleUniqueId}  refreshData={refreshData}/> 
+        <ActionsDots saleUniqueId={params.row.saleUniqueId} refreshData={refreshData} />
       ),
     },
   ]);
@@ -347,8 +347,8 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
     setSalesDataState([...salesData]);
   }, [salesData]);
 
-  useEffect(()=> {
-    
+  useEffect(() => {
+
     const rows = salesData.map((sale) => ({
       isSelected: selectedRows.includes(sale.id),
       id: sale.id,
@@ -375,7 +375,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       Actions: "Actions",
     }));
     setRows(rows)
-  }, [salesData,selectedRows])
+  }, [salesData, selectedRows])
 
 
 
@@ -389,21 +389,21 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       return nextColumns;
     });
   };
-  
+
 
   const handleCheckboxChange = (rowId) => {
     const updatedSelectedRows = [...selectedRows];
     if (updatedSelectedRows.includes(rowId)) {
       // Row is already selected, remove it
       updatedSelectedRows.splice(updatedSelectedRows.indexOf(rowId), 1);
-      
+
     } else {
       // Row is not selected, add it
       updatedSelectedRows.push(rowId);
     }
     setSelectedRows(updatedSelectedRows);
   };
-  
+
   // Define selected1UniqueIds as a function that returns the selected unique IDs
   const selected1UniqueIds = () => {
     // Get the unique_id of the selected rows
@@ -412,7 +412,7 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
       .map(row => row.unique_id);
     return selectedUniqueIds;
   };
-  
+
   const isSelected = selectedRows.length > 0;
   const [rowsfilter, setRowsFilter] = useState([]);
   const handleRowsFilterChange = (filteredRows) => {
@@ -447,24 +447,24 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
 
   return (
     <div className="salesTableWrap">
-      <TableTopBar profileData={profileData} salesData={salesData} rowsfilter={rowsfilter} removeRowMulti={removeRow} selectedUniqueIds={selected1UniqueIds()} onRowsFilterChange={handleRowsFilterChange} rows={sortedSalesData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />    
+      <TableTopBar profileData={profileData} salesData={salesData} rowsfilter={rowsfilter} removeRowMulti={removeRow} selectedUniqueIds={selected1UniqueIds()} onRowsFilterChange={handleRowsFilterChange} rows={sortedSalesData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
       <Table responsive>
-      <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
+        <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
           <tr>
-          <th>
-          <label className="customCheckBox">
-          <input
-            type="checkbox"
-            checked={selectedRows.length === salesData.length}
-            onChange={handleSelectAllCheckboxChange}
-          />
-          <span className="checkmark">
-            <Check color="#1AB2FF" size={20} />
-          </span>
-        </label>
-          </th>
-          {columns.map((column, index) => (
-                <th key={column.field} style={{ width: column.width }}>
+            <th>
+              <label className="customCheckBox">
+                <input
+                  type="checkbox"
+                  checked={selectedRows.length === salesData.length}
+                  onChange={handleSelectAllCheckboxChange}
+                />
+                <span className="checkmark">
+                  <Check color="#1AB2FF" size={20} />
+                </span>
+              </label>
+            </th>
+            {columns.map((column, index) => (
+              <th key={column.field} style={{ width: column.width }}>
                 <Resizable
                   width={column.width || 100} // Provide a default width if undefined
                   height={0}
@@ -472,14 +472,14 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
                 >
                   <div>
                     {column.headerName}
-                  </div> 
+                  </div>
                 </Resizable>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-        {rows.length === 0 ? (
+          {rows.length === 0 ? (
             <tr className="nodataTableRow">
               <td colSpan={columns.length} style={{ textAlign: "center" }}>
                 <div style={{ textAlign: "center", marginTop: "20px" }}>
@@ -517,19 +517,19 @@ const SalesTables = ({ profileData,salesData, fetchData }) => {
             rows.map((row) => (
               <tr data-saleuniqueid={row.saleUniqueId}
                 key={row.id} className={row.isSelected ? "selected-row" : ""}>
-                  <td>
+                <td>
                   <label className="customCheckBox">
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.includes(row.id)}
-                    onChange={() => handleCheckboxChange(row.id)}
-                  />
-                  <span className="checkmark">
-                    <Check color="#1AB2FF" size={20} />
-                  </span>
-                </label>
-                  </td>
-                  {columns.map((column) => (
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.includes(row.id)}
+                      onChange={() => handleCheckboxChange(row.id)}
+                    />
+                    <span className="checkmark">
+                      <Check color="#1AB2FF" size={20} />
+                    </span>
+                  </label>
+                </td>
+                {columns.map((column) => (
                   <td key={column.field}>
                     {column.renderCell({ value: row[column.field], row })}
                   </td>

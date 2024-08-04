@@ -482,6 +482,14 @@ table.department-calculation tbody tr:hover td {
     background-color: #F2FAFF !important;
 }
 
+/* table.department-calculation tbody tr .checkbox {
+    visibility: hidden;
+}
+
 table.department-calculation tbody tr:hover .checkbox{
+    visibility: visible;
+} */
+
+.checkbox:has(table.department-calculation tbody tr input[type="checkbox"]:checked) {
     visibility: visible !important;
 }

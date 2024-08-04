@@ -188,7 +188,8 @@
   letter-spacing: 0.14px;
 }
 
-.task-form .form-control {
+.task-form .form-control, 
+.task-form .form-control:focus {
   display: flex;
   padding: 10px 14px;
   align-items: center;

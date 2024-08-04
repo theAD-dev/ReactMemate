@@ -40,10 +40,10 @@ const ScopeOfWorkComponent = () => {
         files.forEach(file => {
             formData.append('files', file.file);
         });
-        
+
         console.log('formData: ', formData);
-        navigate('/sales/newquote/selectyourclient/client-information/scope-of-work');
-        
+        navigate('/sales/quote-calculation/client');
+
         // fetch('/api/submit', {
         //     method: 'POST',
         //     body: formData,
@@ -73,11 +73,11 @@ const ScopeOfWorkComponent = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="newQuotePage existingClients borderSkyColor border border-danger">
+            <div className="newQuotePage existingClients borderSkyColor">
                 <div style={{ height: 'calc(100vh - 249px)' }}>
                     <div className="newQuoteBack">
                         <NavLink to={""}>
-                            <button onClick={() => {navigate(-1)} }>
+                            <button onClick={() => { navigate(-1) }}>
                                 <ChevronLeft color="#000000" size={20} /> &nbsp;&nbsp;Go Back
                             </button>
                         </NavLink>
@@ -106,12 +106,12 @@ const ScopeOfWorkComponent = () => {
 
                                     <Col sm={12}>
                                         <div className="formgroup mb-2 mt-0">
-                                            <label>Describe requirements for the order below <br/>
-                                            <small style={{ color: '#475467', fontWeight: 400 }}>Use for organisation. Not customer-facing.</small>
+                                            <label>Describe requirements for the order below <br />
+                                                <small style={{ color: '#475467', fontWeight: 400 }}>Use for organisation. Not customer-facing.</small>
                                             </label>
                                             <div style={{ position: 'relative' }} className={`inputInfo textarea ${errors.requirements ? 'error-border' : ''}`}>
                                                 <textarea {...register("requirements")} placeholder='Enter a description...' />
-                                                {errors.requirements && <img className="ExclamationCircle" style={{ position: 'absolute', right: '10px', bottom: '10px'}} src={exclamationCircle} alt="Exclamation Circle" />}
+                                                {errors.requirements && <img className="ExclamationCircle" style={{ position: 'absolute', right: '10px', bottom: '10px' }} src={exclamationCircle} alt="Exclamation Circle" />}
                                             </div>
                                             {errors.requirements && <p className="error-message">{errors.requirements.message}</p>}
                                         </div>
@@ -147,16 +147,22 @@ const ScopeOfWorkComponent = () => {
                                 </Row>
                             </div>
                         </div>
-                        <div className='individual bottomBox'>
-                            <Link to={""} onClick={() => {navigate(-1)}}>
-                                <button type="button" className="cancel-button">
+                        <div className='individual bottomBox justify-content-between'>
+                            <Link to={""} onClick={() => { navigate(-1) }}>
+                                <button type="button" className="cancel-button border-0 text-danger">
                                     Cancel
                                 </button>
                             </Link>
 
-                            <button type="submit" className="submit-button">
-                                Next Step
-                            </button>
+                            <div className='d-flex' style={{ gap: '12px' }}>
+                                <button type="button" className="cancel-button">
+                                    Save Draft
+                                </button>
+
+                                <button type="submit" className="submit-button">
+                                    Calculate
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
