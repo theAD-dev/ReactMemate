@@ -51,7 +51,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
 
 
-  export const newQuoteClientList = async (limit,offset) => {
+  export const newQuoteClientList = async (limit,offset,name) => {
       const myHeaders = new Headers();
       const accessToken = sessionStorage.getItem("access_token");
       myHeaders.append("Authorization", `Bearer ${accessToken}`);
@@ -68,6 +68,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
         const url = new URL(`${API_BASE_URL}/clients`);
         url.searchParams.append("limit", limit);
         url.searchParams.append("offset", offset);
+        if(name) url.searchParams.append("name", name);
         const response = await fetch(url, requestOptions);
         const result = await response.json();
         return result; // Return the result if needed

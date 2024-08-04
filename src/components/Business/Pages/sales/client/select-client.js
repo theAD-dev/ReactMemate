@@ -27,7 +27,7 @@ const SelectClientType = () => {
               <li>
                 <NavLink
                   className="ActiveClient"
-                  to="/sales/Newquote/selectyourclient/existing-clients"
+                  to="/sales/newquote/selectyourclient/existing-clients"
                 >
                   <span>
                     <People color="#1AB2FF" size={24} />
@@ -38,7 +38,7 @@ const SelectClientType = () => {
               <li>
                 <NavLink
                   className="ActiveClient"
-                  to="/sales/newquote/client-information/step1"
+                  to="/sales/newquote/selectyourclient/new-clients"
                 >
                   <span>
                     <PersonAdd color="#1AB2FF" size={24} />
@@ -51,7 +51,7 @@ const SelectClientType = () => {
           <div className="formgroupWrap1">
             <ul className="mt-4">
               <li>
-                <NavLink className="ActiveClient" to="/">
+                <NavLink className="ActiveClient" to="#">
                   <span>
                     <HouseDoor color="#667085" size={24} />
                   </span>{" "}

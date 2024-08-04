@@ -8,15 +8,15 @@
   background: none;
 }
 .salesTableWrap .table-responsive::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 0px #fff; 
+  box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
 .salesTableWrap .table-responsive::-webkit-scrollbar-thumb {
-  background: #EAECF0; 
+  background: #eaecf0;
   border-radius: 10px;
 }
 .salesTableWrap .table-responsive::-webkit-scrollbar-thumb:hover {
-  background: #EAECF0; 
+  background: #eaecf0;
 }
 
 .salesTableWrap button.btn.btn-ContactAdd {
@@ -32,8 +32,8 @@
 }
 .salesTableWrap .tabActive {
   border-radius: 4px;
-  border: 1px solid #158ECC;
-  background: #158ECC;
+  border: 1px solid #158ecc;
+  background: #158ecc;
   font-size: 14px !important;
   font-style: normal;
   font-weight: 600;
@@ -45,11 +45,17 @@
   height: 28px;
   display: flex;
   align-items: center;
-  font-family: 'Inter';
+  font-family: "Inter";
 }
-.salesTableWrap .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), 
-.salesTableWrap .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), 
-.salesTableWrap .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+.salesTableWrap
+  .flatpickr-day.selected.startRange
+  + .endRange:not(:nth-child(7n + 1)),
+.salesTableWrap
+  .flatpickr-day.startRange.startRange
+  + .endRange:not(:nth-child(7n + 1)),
+.salesTableWrap
+  .flatpickr-day.endRange.startRange
+  + .endRange:not(:nth-child(7n + 1)) {
   box-shadow: -13px 0 0 #7f56d9c7, 13px 0 0 #7f56d9c7 !important;
 }
 .salesTableWrap .flatpickr-day.inRange {
@@ -63,7 +69,7 @@
 
 .salesTableWrap .contactButList {
   width: 40px;
-  background: #EBF8FF;
+  background: #ebf8ff;
   height: 40px;
   padding: 4px;
   border-radius: 100%;
@@ -75,7 +81,7 @@
 }
 .salesTableWrap .contactButListIn1 {
   width: 32px;
-  background: #F2FAFF;
+  background: #f2faff;
   height: 32px;
   padding: 4px;
   border-radius: 100%;
@@ -97,7 +103,7 @@
   justify-content: flex-end;
 }
 .salesTableWrap .styleT4 {
-  color: #1AB2FF;
+  color: #1ab2ff;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -108,13 +114,13 @@
   align-items: center;
   justify-content: flex-end;
 }
-.salesTableWrap .styleT1{
+.salesTableWrap .styleT1 {
   color: rgb(7, 148, 85);
 }
 .salesTableWrap .contactButListIn2 {
   border-radius: 16px;
-  border: 1px solid #76D1FF;
-  background: #EBF8FF;
+  border: 1px solid #76d1ff;
+  background: #ebf8ff;
   width: 24px;
   height: 24px;
   display: flex;
@@ -133,8 +139,9 @@
 .salesTableWrap .SalesContact .modal-dialog .modal-content {
   width: 449px;
   border-radius: 12px;
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03),
+    0px 20px 24px -4px rgba(16, 24, 40, 0.08);
   border: 0;
 }
 .salesTableWrap .styleColor1 {
@@ -152,8 +159,8 @@
 }
 .salesTableWrap .saleNoteBorder span {
   border-radius: 16px;
-  border: 1px solid #EAECF0;
-  background: #FFF;
+  border: 1px solid #eaecf0;
+  background: #fff;
   color: #667085;
   text-align: center;
   font-size: 12px;
@@ -188,8 +195,8 @@
   letter-spacing: 0.14px;
 }
 .salesTableWrap .noteInfo.Yes span {
-  border-color: #17B26A;
-  color: #17B26A;
+  border-color: #17b26a;
+  color: #17b26a;
 }
 
 .salesTableWrap .styleColor1 p {
@@ -221,12 +228,13 @@
 } */
 div#popoverStyleChange {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
 }
 #placeholderColor {
-  color: var(--Gray-400, #98A2B3);
+  color: var(--Gray-400, #98a2b3);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -248,7 +256,7 @@ div#popoverStyleChange {
   letter-spacing: 0.14px;
 }
 .popupcrossInfomain {
-  background: var(--Gray-25, #FCFCFD);
+  background: var(--Gray-25, #fcfcfd);
 }
 .popoverendflex .popoverbottom {
   justify-content: end;
@@ -261,8 +269,8 @@ div#popoverStyleChange {
 }
 .salesTableWrap .contactInfo .iconStyle {
   border-radius: 4px;
-  border: 1px solid var(--gray-200, #EAECF0);
-  background: var(--base-white, #FFF);
+  border: 1px solid var(--gray-200, #eaecf0);
+  background: var(--base-white, #fff);
   padding: 7px 9px 9px;
   width: 48px;
   text-align: center;
@@ -292,65 +300,68 @@ div#popoverStyleChange {
   margin: 0;
 }
 
-.salesTableWrap .statusInfo.Saved a, .salesTableWrap .Saved .NameStatus {
-  color: #1AB2FF;
-  border: 1px solid #A3E0FF;
-  background: #EBF8FF;
+.salesTableWrap .statusInfo.Saved a,
+.salesTableWrap .Saved .NameStatus {
+  color: #1ab2ff;
+  border: 1px solid #a3e0ff;
+  background: #ebf8ff;
 }
 .LmenuList {
   display: flex !important;
   justify-content: space-between !important;
-  align-items: center!important;
+  align-items: center !important;
 }
 .salesTableWrap .flexBoxLabel {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
 }
-.salesTableWrap .statusInfo.Accepted a ,.salesTableWrap .Accepted .NameStatus{
+.salesTableWrap .statusInfo.Accepted a,
+.salesTableWrap .Accepted .NameStatus {
   color: #067647;
-  border: 1px solid #ABEFC6;
-  background: #ECFDF3;
+  border: 1px solid #abefc6;
+  background: #ecfdf3;
 }
 .salesTableWrap .countStatus {
   border-radius: 16px;
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
   padding: 2px 8px;
   margin-left: 24px;
 }
-.salesTableWrap .statusInfo.Sent a,.salesTableWrap .Sent .NameStatus {
-  color: #026AA2;
-  border: 1px solid #B9E6FE;
-  background: #F0F9FF;
+.salesTableWrap .statusInfo.Sent a,
+.salesTableWrap .Sent .NameStatus {
+  color: #026aa2;
+  border: 1px solid #b9e6fe;
+  background: #f0f9ff;
 }
 
 .salesTableWrap .statusInfo.Recurring a {
-  color: #175CD3;
-  border: 1px solid #B2DDFF;
-  background: #EFF8FF;
+  color: #175cd3;
+  border: 1px solid #b2ddff;
+  background: #eff8ff;
 }
 .salesTableWrap .statusInfo.Review a {
-  color: #175CD3;
-  border: 1px solid #B2DDFF;
-  background: #EFF8FF;
+  color: #175cd3;
+  border: 1px solid #b2ddff;
+  background: #eff8ff;
 }
 
 .salesTableWrap .statusInfo.Declined a {
-  color: #B42318;
-  border: 1px solid #FECDCA;
-  background: #FEF3F2;
+  color: #b42318;
+  border: 1px solid #fecdca;
+  background: #fef3f2;
 }
 .salesTableWrap .statusInfo.Accepted a {
   color: #067647;
-  border: 1px solid #ABEFC6;
-  background: #ECFDF3;
+  border: 1px solid #abefc6;
+  background: #ecfdf3;
 }
 
 .salesTableWrap .statusInfo.Required a {
-  color: #B54708;
-  border: 1px solid #FEDF89;
-  background: #FFFAEB;
+  color: #b54708;
+  border: 1px solid #fedf89;
+  background: #fffaeb;
 }
 /* .salesTableWrap .disPlayInlineCenter li:nth-child(2) {
   padding: 0 25px;
@@ -362,26 +373,26 @@ div#popoverStyleChange {
   border-radius: 6px;
   width: 41px;
 }
-.salesTableWrap .disPlayInline li:first-child:hover{
+.salesTableWrap .disPlayInline li:first-child:hover {
   background: #fefaec;
 }
-.salesTableWrap .disPlayInline li:first-child:hover svg{
-  fill: #FDB022;
+.salesTableWrap .disPlayInline li:first-child:hover svg {
+  fill: #fdb022;
 }
-.salesTableWrap .disPlayInline li:nth-child(2):hover{
+.salesTableWrap .disPlayInline li:nth-child(2):hover {
   background: #fcf3f2;
 }
-.salesTableWrap .disPlayInline li:nth-child(2):hover svg{
-  fill: #FF0000;
+.salesTableWrap .disPlayInline li:nth-child(2):hover svg {
+  fill: #ff0000;
 }
-.salesTableWrap .disPlayInline li:last-child:hover{
+.salesTableWrap .disPlayInline li:last-child:hover {
   background: #eff3fe;
 }
-.salesTableWrap .disPlayInline li:last-child:hover svg{
- fill: #3366CC;
+.salesTableWrap .disPlayInline li:last-child:hover svg {
+  fill: #3366cc;
 }
 .salesTableWrap .disPlayInlineCenter li.disable svg {
-  fill: #98A2B3;
+  fill: #98a2b3;
 }
 .salesTableWrap .disPlayInlineCenter li {
   cursor: pointer;
@@ -389,8 +400,8 @@ div#popoverStyleChange {
 
 .salesTableWrap .circleImgStyle {
   border-radius: 200px;
-  border: 1px solid var(--gray-200, #EAECF0);
-  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%), #FFF;
+  border: 1px solid var(--gray-200, #eaecf0);
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%), #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -410,7 +421,7 @@ div#popoverStyleChange {
   text-transform: uppercase;
   color: var(--Gray-600, #475467);
   text-align: center;
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings: "clig" off, "liga" off;
   font-family: Roboto;
   font-size: 14px;
   font-style: normal;
@@ -423,7 +434,7 @@ div#popoverStyleChange {
 }
 .salesTableWrap #tooltip-top-start .tooltip-inner {
   border-radius: var(--radius-md, 8px);
-  background: var(--Base-White, #FFF);
+  background: var(--Base-White, #fff);
   padding: 8px 12px;
   color: var(--Gray-700, #344054);
   text-align: center;
@@ -435,17 +446,21 @@ div#popoverStyleChange {
 }
 
 .salesTableWrap #tooltip-top-start {
-  box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
+  box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03),
+    0px 12px 16px -4px rgba(16, 24, 40, 0.08);
 }
 
 .salesTableWrap #tooltip-top-start .tooltip-arrow {
-  border-bottom-color: #434A54;
+  border-bottom-color: #434a54;
 }
 
-.salesTableWrap #tooltip-top-start[data-popper-placement^=top] .tooltip-arrow::before,
+.salesTableWrap
+  #tooltip-top-start[data-popper-placement^="top"]
+  .tooltip-arrow::before,
 .salesTableWrap #tooltip-top-start .tooltip-arrow::before {
   top: -1px;
-  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * .5) 0;
+  border-width: var(--bs-tooltip-arrow-height)
+    calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-top-color: #fff;
 }
 
@@ -454,8 +469,8 @@ div#popoverStyleChange {
   overflow: hidden;
   background-color: #f5f5f5;
   border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .salesTableWrap .progress-bar {
@@ -467,11 +482,11 @@ div#popoverStyleChange {
   color: #fff;
   text-align: center;
   background-color: #337ab7;
-  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-  -webkit-transition: width .6s ease;
-  -o-transition: width .6s ease;
-  transition: width .6s ease;
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  -webkit-transition: width 0.6s ease;
+  -o-transition: width 0.6s ease;
+  transition: width 0.6s ease;
 }
 
 .salesTableWrap img.truePhotoStyle {
@@ -511,7 +526,6 @@ div#popoverStyleChange {
   text-align: left;
 }
 
-  
 .salesTableWrap .styleColor2 {
   color: var(--colorG4);
   font-size: 14px;
@@ -574,7 +588,7 @@ div#popoverStyleChange {
   border-style: solid;
   position: absolute;
   top: 0;
-  border-color: #1AB2FF;
+  border-color: #1ab2ff;
 }
 .salesTableWrap .progress .progress-left .progress-bar {
   left: 100%;
@@ -1817,11 +1831,13 @@ Due to the split circle of progress-left and progress right, we must use the ani
     transform: rotate(180deg);
   }
 }
-.salesTableWrap li.option.active, .salesTableWrap li.option:hover {
+.salesTableWrap li.option.active,
+.salesTableWrap li.option:hover {
   border-radius: 6px;
-  background: var(--primary-50, #EBF8FF);
+  background: var(--primary-50, #ebf8ff);
 }
-.salesTableWrap .checkbox-custom, .salesTableWrap .radio-custom {
+.salesTableWrap .checkbox-custom,
+.salesTableWrap .radio-custom {
   opacity: 0;
   position: absolute;
   width: 100%;
@@ -1835,7 +1851,8 @@ Due to the split circle of progress-left and progress right, we must use the ani
   margin-right: 11px;
 } */
 
-.salesTableWrap .checkbox-custom-label, .salesTableWrap .radio-custom-label {
+.salesTableWrap .checkbox-custom-label,
+.salesTableWrap .radio-custom-label {
   position: relative;
   display: none;
 }
@@ -1855,7 +1872,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   text-align: center;
 } */
 
-.salesTableWrap .checkbox-custom:checked+.checkbox-custom-label:before {
+.salesTableWrap .checkbox-custom:checked + .checkbox-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -1863,13 +1880,13 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
+.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--primary-500, #9E77ED);
-  background: var(--primary-50, #F9F5FF);
+  border: 1px solid var(--primary-500, #9e77ed);
+  background: var(--primary-50, #f9f5ff);
 }
 
-.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
+.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -1877,8 +1894,8 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .checkbox-custom:focus+.checkbox-custom-label,
-.salesTableWrap .radio-custom:focus+.radio-custom-label {
+.salesTableWrap .checkbox-custom:focus + .checkbox-custom-label,
+.salesTableWrap .radio-custom:focus + .radio-custom-label {
   outline: 1px solid #ddd;
 }
 
@@ -1922,7 +1939,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   width: 100%;
 }
 .salesTableWrap .progress-light-grey {
-  background-color: #EAECF0;
+  background-color: #eaecf0;
   width: 175px;
   border-radius: 8px;
   height: 8px;
@@ -1972,9 +1989,10 @@ Due to the split circle of progress-left and progress right, we must use the ani
   z-index: 99;
   left: -99px;
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
 }
 .salesTableWrap .select-menu.active .options {
   display: block;
@@ -1998,7 +2016,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 
 @property --percentage {
-  syntax: '<number>';
+  syntax: "<number>";
   inherits: true;
   initial-value: 0;
 }
@@ -2010,10 +2028,10 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 .salesTableWrap .styleActionBtn button {
   border-radius: 4px;
-  border: 1px solid var(--gray-300, #D0D5DD);
-  background: var(--base-white, #FFF);
+  border: 1px solid var(--gray-300, #d0d5dd);
+  background: var(--base-white, #fff);
   padding: 10px;
-  color: #D92D20;
+  color: #d92d20;
   vertical-align: middle;
   display: inline-grid;
   align-items: center;
@@ -2023,13 +2041,13 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 .salesTableWrap .styleActionBtn button.quoteWon:hover {
   border-radius: 4px;
-  border: 1px solid var(--Success-200, #A9EFC5);
-  background: var(--Success-50, #ECFDF3);
+  border: 1px solid var(--Success-200, #a9efc5);
+  background: var(--Success-50, #ecfdf3);
 }
 .salesTableWrap .styleActionBtn button.quoteLost:hover {
   border-radius: 4px;
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-100, #FEE4E2);
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-100, #fee4e2);
 }
 .salesTableWrap .ActionsDotsBox ul {
   padding: 0;
@@ -2070,8 +2088,8 @@ Due to the split circle of progress-left and progress right, we must use the ani
   text-align: left;
   padding: 2px 6px;
   border-radius: 4px 0px 0px 4px;
-  border: 1px solid var(--gray-200, #EAECF0);
-  background: var(--base-white, #FFF);
+  border: 1px solid var(--gray-200, #eaecf0);
+  background: var(--base-white, #fff);
 }
 
 .salesTableWrap .multiDropdown .subMenuDropdown ul.subMenuDropdown {
@@ -2105,7 +2123,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   border: 0;
 }
 .salesTableWrap .contactButListIn2:hover {
-  border: 1px solid #76D1FF;
+  border: 1px solid #76d1ff;
   background: #76d1ff57;
 }
 /* button.btn.btn-saleContacte,.salesTableWrap .selected-row .disPlayInline svg ,.salesTableWrap .disPlayInlineCenter svg{
@@ -2116,10 +2134,10 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 } */
 
 .contactInfoflex .ClosePopover {
-    position: relative;
-    top: 0;
-    padding: 0;
-    margin: 0;
+  position: relative;
+  top: 0;
+  padding: 0;
+  margin: 0;
 }
 .contactInfoflex {
   display: flex;
@@ -2128,14 +2146,15 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 .salesTableWrap.bs-popover-bottom {
   border-radius: 4px;
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03),
+    0px 20px 24px -4px rgba(16, 24, 40, 0.08);
   border: 0;
   padding: 24px;
   max-width: 400px;
   width: 400px;
 }
-.salesTableWrap .btn-saleContacte:focus{
+.salesTableWrap .btn-saleContacte:focus {
   border: 0;
 }
 .salesTableWrap .btn-saleContacte div {
@@ -2145,7 +2164,6 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 400;
   line-height: 22px;
   letter-spacing: 0.12px;
- 
 }
 .salesTableWrap .ContactModel span {
   display: block;
@@ -2162,24 +2180,25 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 
 /* Progress */
-.salesTableWrap  .QuoteActionStyle .modelHeader span{
+.salesTableWrap .QuoteActionStyle .modelHeader span {
   display: flex;
   align-items: flex-start;
 }
 .salesTableWrap .QuoteActionStyle .modelHeader span .iconOutStyle {
   margin-bottom: 0;
 }
-.salesTableWrap  .QuoteLost .modelHeader span .iconOutStyle {
-  background: #FEF3F2;
+.salesTableWrap .QuoteLost .modelHeader span .iconOutStyle {
+  background: #fef3f2;
 }
 .salesTableWrap .QuoteLost .modelHeader span .iconinStyle {
-  background: #FEE4E2;
+  background: #fee4e2;
 }
 .salesTableWrap .QuoteLost .modelHeader span .iconinnerStyle {
-  background: #FEE4E2;
-  border: 1px solid #FEE4E2;
+  background: #fee4e2;
+  border: 1px solid #fee4e2;
 }
-.salesTableWrap .stepBoxStyle ul,.salesTableWrap .stepBoxStyle ul li {
+.salesTableWrap .stepBoxStyle ul,
+.salesTableWrap .stepBoxStyle ul li {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -2193,7 +2212,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 .salesTableWrap .stepBoxStyle ul li strong {
   border-radius: var(--radius-lg, 10px);
-  border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #EAECF0);
+  border: 1px solid
+    var(
+      --Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border,
+      #eaecf0
+    );
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   width: 48px;
   height: 48px;
@@ -2203,7 +2226,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 .salesTableWrap .stepBoxStyle ul li em.lineHor {
   border-radius: var(--spacing-xxs, 2px);
-  background: var(--Colors-Border-border-secondary, #EAECF0);
+  background: var(--Colors-Border-border-secondary, #eaecf0);
   width: 48px;
   height: 2px;
   display: inline-block;
@@ -2239,10 +2262,12 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin-top: 16px;
   margin-bottom: 3px;
 }
-.salesTableWrap .datepickerField .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+.salesTableWrap
+  .datepickerField
+  .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 16.5px 14px;
   padding-right: 0;
-  color: var(--Gray-400, #98A2B3);
+  color: var(--Gray-400, #98a2b3);
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -2250,7 +2275,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-family: Inter;
 }
 .salesTableWrap .SalesContact textarea.form-control {
-  min-height: calc(1.5em + .75rem + calc(var(--bs-border-width) * 2));
+  min-height: calc(1.5em + 0.75rem + calc(var(--bs-border-width) * 2));
   color: var(--Gray-500, #667085);
   font-size: 16px;
   font-style: normal;
@@ -2276,8 +2301,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 .salesTableWrap .footerBorder button {
   border-radius: 4px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
   padding: 10px 18px;
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -2287,90 +2312,92 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   line-height: 24px;
 }
 .salesTableWrap .footerBorder {
-  border-top: 1px solid #EAECF0;
+  border-top: 1px solid #eaecf0;
   padding: 24px;
   margin-top: 13px;
 }
 
-  /* Nodata */
-   .Nodata {
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-size: contain !important;
-    float: left;
-    width: 100%;
-  }
-   .Nodata .image {
-    position: relative;
-  }
-   .Nodata .image img.SearchIcon {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 13px;
-    margin: 0 auto;
-  }
-   .gobackButton, .gobackButton:hover {
-    border-radius: 4px;
-    border: 1px solid var(--Gray-300, #D0D5DD);
-    background: var(--Base-White, #FFF);
-    color: var(--Gray-700, #344054);
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-  }
-  .gobackSupport, .gobackSupport:hover {
-    text-decoration: none;
-    color: var(--Primary-700, #106B99);
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px;
+/* Nodata */
+.Nodata {
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  float: left;
+  width: 100%;
 }
-  
-  .salesTableWrap .tooltipBox{
-    color: #344054;
+.Nodata .image {
+  position: relative;
+}
+.Nodata .image img.SearchIcon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 13px;
+  margin: 0 auto;
+}
+.gobackButton,
+.gobackButton:hover {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  color: var(--Gray-700, #344054);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.gobackSupport,
+.gobackSupport:hover {
+  text-decoration: none;
+  color: var(--Primary-700, #106b99);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.salesTableWrap .tooltipBox {
+  color: #344054;
   text-align: center;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
   line-height: 18px;
-  }
-  .iconOutStyleflex {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0px 24px 3px;
+}
+.iconOutStyleflex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0px 24px 3px;
 }
 .flexIconWrap {
   display: flex;
   align-items: center;
 }
 .salesTableWrap .footerBorder {
-  border-top: 1px solid #EAECF0;
+  border-top: 1px solid #eaecf0;
   padding: 12px 24px 0px;
   margin-top: 0;
   display: flex;
   justify-content: flex-end;
 }
-  /* Top Filter tags */
-  
-  .salesTableWrap .mainTagsWrapper {
-    border-top: 1px solid #EAECF0;
-    background: #EBF8FF;
-    padding: 0px 45px;
-    text-align: left;
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
+/* Top Filter tags */
+
+.salesTableWrap .mainTagsWrapper {
+  border-top: 1px solid #eaecf0;
+  background: #ebf8ff;
+  padding: 0px 45px;
+  text-align: left;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar {
   width: 8px;
@@ -2378,233 +2405,232 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   padding: 5px;
 }
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 0px #fff; 
+  box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar-thumb {
-  background: #EAECF0; 
+  background: #eaecf0;
   border-radius: 10px;
 }
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar-thumb:hover {
-  background: #EAECF0; 
+  background: #eaecf0;
 }
 
-
-  .salesTableWrap .tags-input-container .tag-item-wrap {
-    display: inline-block;
-  }
-  .salesTableWrap .tags-input-container {
-    margin-right: 20px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap button,.mainTagsWrapper button {
-    padding: 0;
-  }
- 
-  .salesTableWrap .tags-input-container .tag-item-wrap button {
-    padding: 0;
-    margin: 0;
-    display: inline-flex;
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap {
-    border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--Gray-300, #D0D5DD);
-    background: var(--Base-White, #FFF);
-    margin-right: 8px;
-    align-items: center;
-    color: var(--Gray-700, #344054);
-    text-align: center;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 14px;
-    padding: 3px 8px;
-    display: flex;
+.salesTableWrap .tags-input-container .tag-item-wrap {
+  display: inline-block;
 }
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item {
-    border-radius: 6px;
-    border: 1px solid var(--Gray-300, #D0D5DD);
-    background: var(--Base-White, #FFF);
-    display: flex;
-    padding: 3px 4px 3px 8px;
-    align-items: center;
-    margin-right: 8px;
-    
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item:last-child {
-    margin-right: 0;
-  }
-  .salesTableWrap .tags-input-container .tag-item span.text {
-    color: var(--Gray-700, #344054);
-    text-align: center;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 18px;
-  }
-  .salesTableWrap .tags-input-container .close {
-    cursor: pointer;
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item .close {
-    margin-left: 7px;
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green {
-    border-radius: 16px;
-    border: 1px solid var(--Success-200, #ABEFC6);
-    background: var(--Success-50, #ECFDF3);
-    mix-blend-mode: multiply;
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green span.text {
-    color: var(--Success-700, var(--Success-700, #067647));
-    text-align: center;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 18px;
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue {
-    border-radius: 16px;
-    border: 1px solid var(--Blue-200, #B2DDFF);
-    background: var(--Blue-50, #EFF8FF);
-    mix-blend-mode: multiply;
-  }
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue span.text {
-    color: var(--Blue-700, #175CD3);
-    text-align: center;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 18px;
-  }
-  .salesTableWrap .tableTopBar div#example-fade-text {
-    position: absolute;
-  }
-  .salesTableWrap  .tableTopBar div#example-fade-text .filterWrap {
-    position: absolute;
-    z-index: 999;
-    left: 0;
-    top: 21px;
-  }
- 
-  .salesTableWrap  .colfilterSmall {
-    border-radius: 4px 0px 0px 4px;
-    border: 1px solid var(--Gray-200, #EAECF0);
-    background: var(--Base-White, #FFF);
-    width: 211px;
-    padding: 2px 6px;
-  }
-  .salesTableWrap .colfilterSmall .nav-item a.active {
-    border-radius: 6px;
-    background: var(--Primary-50, #F9F5FF);
-    color: var(--Primary-500, #9E77ED);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 22px;
-    letter-spacing: 0.175px;
-  }
-  .salesTableWrap .colfilterSmall .nav-item a {
-    color: var(--Gray-700, #344054);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: 0.14px;
-    display: flex;
-    align-items: center;
-    padding: 9px 10px;
-  }
-  
-  .salesTableWrap .colfilterSmall .nav-item a svg {
-    margin-right: 12px;
-  }
-  .filterWrapmain {
-    display: flex;
-    align-items: flex-start;
-  }
-  .salesTableWrap .colfilterbig {
-    border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
-    border: 1px solid var(--Gray-100, #F2F4F7);
-    background: var(--Base-White, #FFF);
-    padding: 16px 0px 0;
-    min-width: 278px;
-  }
-  .salesTableWrap .colfilterSmall .nav-item a.active svg {
-    fill: #9E77ED;
-  }
-  .salesTableWrap .ClosePopover {
-    position: absolute;
-    right: 0;
-    padding-top: 0;
-    top: 13px;
-  }
-  
-  .salesTableWrap .tags-input-container .tag-item-wrap .tag-item {
-    border: 1px solid #d0d5dd;
-    border: 1px solid var(--Gray-300,#d0d5dd);
-    border-radius: 6px;
-    padding: 3px 4px 3px 8px;
-  }
-  
-  .salesTableWrap .tags-input-container .tag-item-wrap li {
-    border: 1px solid #d0d5dd;
-    border: 1px solid var(--Gray-300,#d0d5dd);
-    border-radius: 6px;
-    padding: 3px 4px 3px 8px;
-    color: var(--Gray-700, #344054);
-    text-align: center;
-    display: inline-block;
-    margin-right: 6px;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 18px;
-  }
-  
-  .salesTableWrap .tags-input-container ul {
-    border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--Gray-300, #D0D5DD);
-    background: var(--Base-White, #FFF);
-    padding: 6.5px 14px;
-    display: flex;
-    align-items: center;
-  }
-  .salesTableWrap .ProgressTag .option .progressWrapper {
-    margin-left: 16px;
-  }
-  .salesTableWrap .ProgressTag .option {
-    display: flex;
-    align-items: center;
-  }
-  .salesTableWrap .ProgressTag .option input:checked ~ .checkmark {
-    border-radius: var(--radius-sm, 6px);
-    border: 1px solid var(--Primary-500, #9E77ED) !important;
-    background: var(--Primary-50, #F9F5FF);
-  }
-  .salesTableWrap .ProgressTag .option .checkmark {
-    border: 1px solid #d0d5dd !important;
-    border: 1px solid var(--Gray-300,#d0d5dd) !important;
-  }
-  
-  
-
-  .salesTableWrap table thead tr th:nth-child(3) {
-    position: sticky;
-    left: 130px;
-    z-index: 5;
-    border-right: 1px solid var(--color10) !important;
-  }
-  .salesTableWrap table thead tr th:nth-child(4) {
-    position: sticky;
-    left: 333px;
-    border-left: 0  !important;
-    border-right: 1px solid var(--color10) !important;
-    z-index: 8;
+.salesTableWrap .tags-input-container {
+  margin-right: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
-.salesTableWrap table tbody tr td:nth-child(4):before, .salesTableWrap table thead tr th:nth-child(4):before {
+.salesTableWrap .tags-input-container .tag-item-wrap button,
+.mainTagsWrapper button {
+  padding: 0;
+}
+
+.salesTableWrap .tags-input-container .tag-item-wrap button {
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  margin-right: 8px;
+  align-items: center;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  padding: 3px 8px;
+  display: flex;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item {
+  border-radius: 6px;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  display: flex;
+  padding: 3px 4px 3px 8px;
+  align-items: center;
+  margin-right: 8px;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item:last-child {
+  margin-right: 0;
+}
+.salesTableWrap .tags-input-container .tag-item span.text {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+.salesTableWrap .tags-input-container .close {
+  cursor: pointer;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item .close {
+  margin-left: 7px;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green {
+  border-radius: 16px;
+  border: 1px solid var(--Success-200, #abefc6);
+  background: var(--Success-50, #ecfdf3);
+  mix-blend-mode: multiply;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green span.text {
+  color: var(--Success-700, var(--Success-700, #067647));
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue {
+  border-radius: 16px;
+  border: 1px solid var(--Blue-200, #b2ddff);
+  background: var(--Blue-50, #eff8ff);
+  mix-blend-mode: multiply;
+}
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue span.text {
+  color: var(--Blue-700, #175cd3);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+.salesTableWrap .tableTopBar div#example-fade-text {
+  position: absolute;
+}
+.salesTableWrap .tableTopBar div#example-fade-text .filterWrap {
+  position: absolute;
+  z-index: 999;
+  left: 0;
+  top: 21px;
+}
+
+.salesTableWrap .colfilterSmall {
+  border-radius: 4px 0px 0px 4px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  width: 211px;
+  padding: 2px 6px;
+}
+.salesTableWrap .colfilterSmall .nav-item a.active {
+  border-radius: 6px;
+  background: var(--Primary-50, #f9f5ff);
+  color: var(--Primary-500, #9e77ed);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+}
+.salesTableWrap .colfilterSmall .nav-item a {
+  color: var(--Gray-700, #344054);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  display: flex;
+  align-items: center;
+  padding: 9px 10px;
+}
+
+.salesTableWrap .colfilterSmall .nav-item a svg {
+  margin-right: 12px;
+}
+.filterWrapmain {
+  display: flex;
+  align-items: flex-start;
+}
+.salesTableWrap .colfilterbig {
+  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px)
+    var(--radius-md, 8px);
+  border: 1px solid var(--Gray-100, #f2f4f7);
+  background: var(--Base-White, #fff);
+  padding: 16px 0px 0;
+  min-width: 278px;
+}
+.salesTableWrap .colfilterSmall .nav-item a.active svg {
+  fill: #9e77ed;
+}
+.salesTableWrap .ClosePopover {
+  position: absolute;
+  right: 0;
+  padding-top: 0;
+  top: 13px;
+}
+
+.salesTableWrap .tags-input-container .tag-item-wrap .tag-item {
+  border: 1px solid #d0d5dd;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  border-radius: 6px;
+  padding: 3px 4px 3px 8px;
+}
+
+.salesTableWrap .tags-input-container .tag-item-wrap li {
+  border: 1px solid #d0d5dd;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  border-radius: 6px;
+  padding: 3px 4px 3px 8px;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.salesTableWrap .tags-input-container ul {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  padding: 6.5px 14px;
+  display: flex;
+  align-items: center;
+}
+.salesTableWrap .ProgressTag .option .progressWrapper {
+  margin-left: 16px;
+}
+.salesTableWrap .ProgressTag .option {
+  display: flex;
+  align-items: center;
+}
+.salesTableWrap .ProgressTag .option input:checked ~ .checkmark {
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Primary-500, #9e77ed) !important;
+  background: var(--Primary-50, #f9f5ff);
+}
+.salesTableWrap .ProgressTag .option .checkmark {
+  border: 1px solid #d0d5dd !important;
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+}
+
+.salesTableWrap table thead tr th:nth-child(3) {
+  position: sticky;
+  left: 130px;
+  z-index: 5;
+  border-right: 1px solid var(--color10) !important;
+}
+.salesTableWrap table thead tr th:nth-child(4) {
+  position: sticky;
+  left: 333px;
+  border-left: 0 !important;
+  border-right: 1px solid var(--color10) !important;
+  z-index: 8;
+}
+.salesTableWrap table tbody tr td:nth-child(4):before,
+.salesTableWrap table thead tr th:nth-child(4):before {
   position: absolute;
   background: var(--color10);
   content: "";
@@ -2614,65 +2640,65 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   top: 0;
   z-index: 0;
 }
-  .salesTableWrap table tbody tr td:nth-child(4)::after, .salesTableWrap table thead tr th:nth-child(4)::after {
-    position: absolute;
-    background: var(--color10);
-    content: "";
-    right: -1px;
-    width: 1px;
-    height: 100%;
-    top: 0;
-    /* box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10); */
-    z-index: 0;
+.salesTableWrap table tbody tr td:nth-child(4)::after,
+.salesTableWrap table thead tr th:nth-child(4)::after {
+  position: absolute;
+  background: var(--color10);
+  content: "";
+  right: -1px;
+  width: 1px;
+  height: 100%;
+  top: 0;
+  /* box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10); */
+  z-index: 0;
 }
-  .salesTableWrap table thead tr th:nth-child(2) {
-    position: sticky;
-    left: 40px;
-    z-index: 8;
-    border-right: 0px solid var(--color10) !important;
-    padding-left: 0px !important;
+.salesTableWrap table thead tr th:nth-child(2) {
+  position: sticky;
+  left: 40px;
+  z-index: 8;
+  border-right: 0px solid var(--color10) !important;
+  padding-left: 0px !important;
 }
-  .salesTableWrap table tbody tr td:nth-child(2):before
-  {
-      position: absolute;
-      background: var(--color10);
-      content: "";
-      right: 0;
-      width: 1px;
-      height: 100%;
-      top: 0;
-  }
-  .salesTableWrap table tbody tr td:nth-child(4):before, .salesTableWrap table thead tr th:nth-child(4):before {
-    left: 0px;
-    width: 0px;
+.salesTableWrap table tbody tr td:nth-child(2):before {
+  position: absolute;
+  background: var(--color10);
+  content: "";
+  right: 0;
+  width: 1px;
+  height: 100%;
+  top: 0;
+}
+.salesTableWrap table tbody tr td:nth-child(4):before,
+.salesTableWrap table thead tr th:nth-child(4):before {
+  left: 0px;
+  width: 0px;
 }
 .salesTableWrap table thead tr th:nth-child(4) {
   border-right: 0px solid var(--color10) !important;
 }
-  .salesTableWrap table thead tr th:nth-child(2):before  
-  {
-      position: absolute;
-      background: var(--color10);
-      content: "";
-      right: 0;
-      width: 1px;
-      height: 100%;
-      top: 0;
-      z-index: 0;
-  } 
-  .salesTableWrap table tbody tr td:nth-child(2) {
-    padding-left: 0 !important;
-  }
-  .salesTableWrap .saleNoteBorder {
-    white-space: nowrap;
-  }
-  .salesTableWrap .disPlayInlineCenter {
-    text-align: center;
-    white-space: nowrap;
-  }
-  .salesTableWrap .SalesContact.modal-header {
-    padding: 16px 24px 12px;
-    align-items: center;
+.salesTableWrap table thead tr th:nth-child(2):before {
+  position: absolute;
+  background: var(--color10);
+  content: "";
+  right: 0;
+  width: 1px;
+  height: 100%;
+  top: 0;
+  z-index: 0;
+}
+.salesTableWrap table tbody tr td:nth-child(2) {
+  padding-left: 0 !important;
+}
+.salesTableWrap .saleNoteBorder {
+  white-space: nowrap;
+}
+.salesTableWrap .disPlayInlineCenter {
+  text-align: center;
+  white-space: nowrap;
+}
+.salesTableWrap .SalesContact.modal-header {
+  padding: 16px 24px 12px;
+  align-items: center;
 }
 .SalesContact .modal-content {
   position: relative;
@@ -2687,19 +2713,24 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   border-radius: var(--bs-modal-border-radius);
   outline: 0;
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
   margin: 0 auto;
 }
-.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
-  border-color: #D0D5DD;
+.SalesContact
+  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #d0d5dd;
 }
-.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: #D0D5DD;
+.SalesContact
+  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #d0d5dd;
 }
 .SalesContact textarea.form-control {
-  color: var(--Gray-400, #98A2B3);
+  color: var(--Gray-400, #98a2b3);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -2712,92 +2743,96 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .SalesContact .popoverbottom button {
   min-width: 90px;
 }
-.SalesContact .modelStyle .modal-footer, .SalesContact .popoverbottom {
+.SalesContact .modelStyle .modal-footer,
+.SalesContact .popoverbottom {
   justify-content: flex-end;
   display: flex;
 }
 
-  @media only screen and (max-width: 1600px) and (min-width: 1280px)  {
-    .salesTableWrap .mainStyleMin {
-      width: 221px;
-    }
-    .salesTableWrap table tbody tr td:nth-child(4):before, .salesTableWrap table thead tr th:nth-child(4):before {
-      left: 0px;
-      width: 1px;
+@media only screen and (max-width: 1600px) and (min-width: 1280px) {
+  .salesTableWrap .mainStyleMin {
+    width: 221px;
   }
-    .salesTableWrap table tbody tr td:nth-child(4)::after, .salesTableWrap table thead tr th:nth-child(4)::after{
-      position: absolute;
-      background: var(--color10);
-      content: "";
-      right: 0;
-      width: 1px;
-      height: 100%;
-      top: 0;
-      box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10);
-      z-index: 0;
-    } 
-    .salesTableWrap table thead tr th:nth-child(3) {
-      position: sticky;
-      left: 126px;
-      z-index: 5;
-      border-right: 0px solid var(--color10) !important;
+  .salesTableWrap table tbody tr td:nth-child(4):before,
+  .salesTableWrap table thead tr th:nth-child(4):before {
+    left: 0px;
+    width: 1px;
   }
-    .salesTableWrap .table-responsive {
-      overflow-x: auto;
+  .salesTableWrap table tbody tr td:nth-child(4)::after,
+  .salesTableWrap table thead tr th:nth-child(4)::after {
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.1);
+    z-index: 0;
+  }
+  .salesTableWrap table thead tr th:nth-child(3) {
+    position: sticky;
+    left: 126px;
+    z-index: 5;
+    border-right: 0px solid var(--color10) !important;
+  }
+  .salesTableWrap .table-responsive {
+    overflow-x: auto;
   }
   .salesTableWrap .select-menu {
     position: relative;
     width: 200px;
   }
-  .salesTableWrap .salesTableWrap table thead tr th:nth-child(2), .salesTableWrap table tbody tr td:nth-child(2) 
-  {
-      position: sticky;
-      left: 42px;
-     
-      z-index: 8;
-      border-right: 0px solid var(--color10) !important;
-      padding-left: 0px !important;
+  .salesTableWrap .salesTableWrap table thead tr th:nth-child(2),
+  .salesTableWrap table tbody tr td:nth-child(2) {
+    position: sticky;
+    left: 42px;
+
+    z-index: 8;
+    border-right: 0px solid var(--color10) !important;
+    padding-left: 0px !important;
   }
-  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(2):before
-  {
-      position: absolute;
-      background: var(--color10);
-      content: "";
-      right: 0;
-      width: 1px;
-      height: 100%;
-      top: 0;
+  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(2):before {
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
   }
-  .salesTableWrap .salesTableWrap table thead tr th:nth-child(2):before
-  {
-      position: absolute;
-      background: var(--color10);
-      content: "";
-      right: 0;
-      width: 1px;
-      height: 100%;
-      top: 0;
-      z-index: 0;
-  } 
-  
-  .salesTableWrap .salesTableWrap table thead tr th:nth-child(3), .salesTableWrap table tbody tr td:nth-child(3) {
+  .salesTableWrap .salesTableWrap table thead tr th:nth-child(2):before {
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    z-index: 0;
+  }
+
+  .salesTableWrap .salesTableWrap table thead tr th:nth-child(3),
+  .salesTableWrap table tbody tr td:nth-child(3) {
     position: sticky;
     left: 126px;
     z-index: 5;
     border-right: 0px solid var(--color10) !important;
-}
+  }
 
-.salesTableWrap table thead tr th:nth-child(4) {
-  left: 401px;
-}
-.salesTableWrap .salesTableWrap table thead tr th:nth-child(4), .salesTableWrap table tbody tr td:nth-child(4) {
-  position: sticky;
-  left: 401px;
-  border-left: 0  !important;
-  border-right: 0px solid var(--color10) !important;
-  z-index: 8;
-}
-  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(4):before,.salesTableWrap table thead tr th:nth-child(4):before  {
+  .salesTableWrap table thead tr th:nth-child(4) {
+    left: 401px;
+  }
+  .salesTableWrap .salesTableWrap table thead tr th:nth-child(4),
+  .salesTableWrap table tbody tr td:nth-child(4) {
+    position: sticky;
+    left: 401px;
+    border-left: 0 !important;
+    border-right: 0px solid var(--color10) !important;
+    z-index: 8;
+  }
+  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(4):before,
+  .salesTableWrap table thead tr th:nth-child(4):before {
     position: absolute;
     background: var(--color10);
     content: "";
@@ -2807,7 +2842,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
     top: 0;
     z-index: 0;
   }
-  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(4)::after,.salesTableWrap table thead tr th:nth-child(4)::after {
+  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(4)::after,
+  .salesTableWrap table thead tr th:nth-child(4)::after {
     position: absolute;
     background: var(--color10);
     content: "";
@@ -2815,11 +2851,10 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
     width: 1px;
     height: 100%;
     top: 0;
-    box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10);
+    box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.1);
     z-index: 0;
-  } 
+  }
   .salesTableWrap table thead tr th:nth-child(2) {
     left: 42px;
-}
   }
-  
+}

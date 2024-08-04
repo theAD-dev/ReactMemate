@@ -1,4 +1,4 @@
-import React, { useEffect, useState  } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -43,9 +43,8 @@ import Bills from "../layout/settings/subscription/Bills";
 import BillingInfo from "../layout/settings/subscription/BillingInfo";
 import Users from "../layout/settings/users/Users";
 import MobileApp from "../layout/settings/users/MobileApp";
-import ExistingClients from "../Business/Pages/sales/newquote/ExistingClients";
-import SelectClientType from "../Business/Pages/sales/newquote/SelectClientType";
-import ClientInformation from "../Business/Pages/sales/newquote/ClientInformation";
+import ExistingClients from "../Business/Pages/sales/client/existing-clients";
+import SelectClientType from "../Business/Pages/sales/client/select-client";
 import BusinessDetails from "../Business/Pages/sales/newquote/BusinessDetails";
 import ScopeofWork from "../Business/Pages/sales/newquote/ScopeofWork";
 import IndividualClient from "../Business/Pages/sales/newquote/IndividualClient";
@@ -79,6 +78,12 @@ import Jobs from "../Work/Pages/Jobs";
 import People from "../Work/Pages/People";
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import Item2 from "./settings/projectstatus/Item2";
+import NewClient from "../Business/Pages/sales/client/new-client";
+import ClientLayout from "../Business/Pages/sales/client";
+import IndividualClientInformation from "../Business/Pages/sales/client/individual-client-information";
+import BusinessClientInformation from "../Business/Pages/sales/client/business-client-information";
+import ScopeOfWorkComponent from "../Business/Pages/sales/client/scope-of-work";
+import CalculateQuote from "../Business/Pages/sales/client/calculate-quote";
 
 
 
@@ -86,8 +91,8 @@ const Header = ({ onClick }) => {
   const location = useLocation();
   const [profileData, setProfileData] = useState(null);
   const [activeLink, setActiveLink] = useState(null);
-  const [menuswitch,SetMenuSwitch]  = useState(true);
-  
+  const [menuswitch, SetMenuSwitch] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -111,349 +116,346 @@ const Header = ({ onClick }) => {
     }
   }, [location.pathname]);
 
-  const changeMenu = () =>{
+  const changeMenu = () => {
     SetMenuSwitch(false);
   }
-  const selectBussniess = () =>{
+  const selectBussniess = () => {
     SetMenuSwitch(true);
   }
   return (
     <>
-    
+
       <div className="headerNav1">
-        {menuswitch?
-        <>
-          <div className="headerTop business">
-        <Container fluid>
-          <Row>
-            {profileData && (
-              <>
-                <Col className="d-flex align-items-center">
-                  <div className="company_logo colMinWidth">
-                    {profileData.organization.logo ? (
-                      <img
-                        src={profileData.organization.logo}
-                        alt="Company Logo"
-                      />
-                    ) : (
-                      <img src={AvatarImg} alt="DummyImg" />
-                    )}
-                    {/* <span>{profileData.organization.name}</span> */}
-                  </div>
-                  <div className="SelectOptionHead">
-                    <SelectOption locations={profileData.organization.locations}  profileUserName={profileData.organization.name}/>
-                  </div>
+        {menuswitch ?
+          <>
+            <div className="headerTop business">
+              <Container fluid>
+                <Row>
+                  {profileData && (
+                    <>
+                      <Col className="d-flex align-items-center">
+                        <div className="company_logo colMinWidth">
+                          {profileData.organization.logo ? (
+                            <img
+                              src={profileData.organization.logo}
+                              alt="Company Logo"
+                            />
+                          ) : (
+                            <img src={AvatarImg} alt="DummyImg" />
+                          )}
+                          {/* <span>{profileData.organization.name}</span> */}
+                        </div>
+                        <div className="SelectOptionHead">
+                          <SelectOption locations={profileData.organization.locations} profileUserName={profileData.organization.name} />
+                        </div>
+                      </Col>
+                      <Col>
+                        <nav className="colMinWidth">
+                          <div className="menu-item">
+                            <ul>
+                              <li>
+                                <NavLink
+                                  to=""
+                                  className={`managementMain ${activeLink === "" ? "menuActive" : ""
+                                    }`}
+                                  onClick={selectBussniess}
+                                >
+                                  Business
+                                </NavLink>
+                              </li>
+                              <li>
+                                <a href="/">
+                                  <img src={Logo} alt="Logo" />
+                                </a>
+                              </li>
+                              <li>
+                                <NavLink
+                                  to="/dashboard"
+                                  className={({ isActive }) =>
+                                    isActive ? "menuActive" : "link" + ""
+                                  }
+                                  onClick={changeMenu}
+                                >
+                                  Work
+                                </NavLink>
+                              </li>
+                            </ul>
+                          </div>
+                        </nav>
+                      </Col>
+                      <Col>
+                        <ProfileInfo
+                          username={profileData.full_name}
+                          userType={profileData.type}
+                          aliasName={profileData.alias_name}
+                        />
+                      </Col>
+                    </>
+                  )}
+                </Row>
+              </Container>
+            </div>
+            <Container fluid className="headerNav">
+              <Row>
+                <Col xs={3} md={3}>
+                  <ul className="left">
+                    <li>
+                      <NavLink
+                        to="/clients"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " clients"
+                        }
+                      >
+                        <img src={ClientsIcon} alt="ClientsIcon" />
+                        Clients
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/suppliers"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " suppliers"
+                        }
+                      >
+                        <img src={SuppliersIcon} alt="SuppliersIcon" />
+                        Suppliers
+                      </NavLink>
+                    </li>
+                  </ul>
                 </Col>
-                <Col>
-                  <nav className="colMinWidth">
-                    <div className="menu-item">
-                      <ul>
-                        <li>
-                          <NavLink
-                            to=""
-                            className={`managementMain ${
-                              activeLink === "" ? "menuActive" : ""
-                            }`}
-                            onClick={selectBussniess}
-                          >
-                            Business
-                          </NavLink>
-                        </li>
-                        <li>
-                          <a href="/">
-                            <img src={Logo} alt="Logo" />
-                          </a>
-                        </li>
-                        <li>
-                          <NavLink
-                            to="/dashboard"
-                            className={({ isActive }) =>
-                              isActive ? "menuActive" : "link" + ""
-                            }
-                            onClick={changeMenu}
-                          >
-                            Work
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
-                  </nav>
+                <Col xs={6} md={6}>
+                  <ul className="middle">
+                    <li>
+                      <NavLink
+                        to="/sales"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " sales"
+                        }
+                      >
+                        <img src={SalesIcon} alt="SalesIcon" />
+                        Sales
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/management"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " management"
+                        }
+                      >
+                        <img src={ManagementIcon} alt="ManagementIcon" />
+                        Management
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/orders"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " orders"
+                        }
+                      >
+                        <img src={OrdersIcon} alt="OrdersIcon" />
+                        Orders
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/statistics"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " statistics"
+                        }
+                      >
+                        <img src={StatisticsIcon} alt="StatisticsIcon" />
+                        Statistics
+                      </NavLink>
+                    </li>
+                  </ul>
                 </Col>
-                <Col>
-                  <ProfileInfo
-                    username={profileData.full_name}
-                    userType={profileData.type}
-                    aliasName={profileData.alias_name}
-                  />
+                <Col xs={3} md={3} style={{ textAlign: "right" }}>
+                  <ul className="right">
+                    <li>
+                      <NavLink
+                        to="/expenses"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " expense"
+                        }
+                      >
+                        <img src={ExpenseIcon} alt="Expense" />
+                        Expense
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/invoices"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " invoices"
+                        }
+                      >
+                        <img src={InvoicesIcon} alt="Invoices" />
+                        Invoices
+                      </NavLink>
+                    </li>
+                  </ul>
                 </Col>
-              </>
-            )}
-          </Row>
-        </Container>
-      </div>
-          <Container fluid className="headerNav">
-          <Row>
-            <Col xs={3} md={3}>
-              <ul className="left">
-                <li>
-                  <NavLink
-                    to="/clients"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " clients"
-                    }
-                  >
-                    <img src={ClientsIcon} alt="ClientsIcon" />
-                    Clients
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/suppliers"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " suppliers"
-                    }
-                  >
-                    <img src={SuppliersIcon} alt="SuppliersIcon" />
-                    Suppliers
-                  </NavLink>
-                </li>
-              </ul>
-            </Col>
-            <Col xs={6} md={6}>
-              <ul className="middle">
-                <li>
-                  <NavLink
-                    to="/sales"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " sales"
-                    }
-                  >
-                    <img src={SalesIcon} alt="SalesIcon" />
-                    Sales
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/management"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " management"
-                    }
-                  >
-                    <img src={ManagementIcon} alt="ManagementIcon" />
-                    Management
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/orders"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " orders"
-                    }
-                  >
-                    <img src={OrdersIcon} alt="OrdersIcon" />
-                    Orders
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/statistics"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " statistics"
-                    }
-                  >
-                    <img src={StatisticsIcon} alt="StatisticsIcon" />
-                    Statistics
-                  </NavLink>
-                </li>
-              </ul>
-            </Col>
-            <Col xs={3} md={3} style={{ textAlign: "right" }}>
-              <ul className="right">
-                <li>
-                  <NavLink
-                    to="/expenses"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " expense"
-                    }
-                  >
-                    <img src={ExpenseIcon} alt="Expense" />
-                    Expense
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/invoices"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " invoices"
-                    }
-                  >
-                    <img src={InvoicesIcon} alt="Invoices" />
-                    Invoices
-                  </NavLink>
-                </li>
-              </ul>
-            </Col>
-          </Row>
-       
-        </Container>
-        </>
-        :
-        <>
-          <div className="headerTop work">
-        <Container fluid className="">
-          <Row>
-            {profileData && (
-              <>
-                <Col className="d-flex align-items-center">
-                  <div className="company_logo colMinWidth">
-                    {profileData.organization.logo ? (
-                      <img
-                        src={profileData.organization.logo}
-                        alt="Company Logo"
-                      />
-                    ) : (
-                      <img src={AvatarImg} alt="DummyImg" />
-                    )}
-                    <span>{profileData.organization.name}</span>
-                  </div>
-                  <div className="SelectOptionHead">
-                    <SelectOption />
-                  </div>
+              </Row>
+
+            </Container>
+          </>
+          :
+          <>
+            <div className="headerTop work">
+              <Container fluid className="">
+                <Row>
+                  {profileData && (
+                    <>
+                      <Col className="d-flex align-items-center">
+                        <div className="company_logo colMinWidth">
+                          {profileData.organization.logo ? (
+                            <img
+                              src={profileData.organization.logo}
+                              alt="Company Logo"
+                            />
+                          ) : (
+                            <img src={AvatarImg} alt="DummyImg" />
+                          )}
+                          <span>{profileData.organization.name}</span>
+                        </div>
+                        <div className="SelectOptionHead">
+                          <SelectOption />
+                        </div>
+                      </Col>
+                      <Col>
+                        <nav className="colMinWidth">
+                          <div className="menu-item">
+                            <ul>
+                              <li>
+                                <NavLink
+                                  to=""
+                                  className={`managementMain ${activeLink === "" ? "menuActive1" : ""
+                                    }`}
+                                  onClick={selectBussniess}
+                                >
+                                  Business
+                                </NavLink>
+                              </li>
+                              <li>
+                                <a href="/">
+                                  <img src={Logo} alt="Logo" />
+                                </a>
+                              </li>
+                              <li>
+                                <NavLink
+                                  to="/dashboard"
+                                  className={`managementMain1 menuActive ${activeLink === "" ? "menuActive" : ""
+                                    }`}
+                                  onClick={selectBussniess}
+                                >
+                                  Work
+                                </NavLink>
+                              </li>
+                            </ul>
+                          </div>
+                        </nav>
+                      </Col>
+                      <Col>
+                        <ProfileInfo
+                          username={profileData.full_name}
+                          userType={profileData.type}
+                          aliasName={profileData.alias_name}
+                        />
+                      </Col>
+                    </>
+                  )}
+                </Row>
+              </Container>
+            </div>
+            <Container fluid className="headerNav">
+              <Row>
+                <Col xs={3} md={3}>
+                  <ul className="left">
+                    <li>
+                      <NavLink
+                        to="/people"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " people"
+                        }
+                      >
+                        <img src={Profile3user} alt="Profile3user" />
+                        People
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/jobs"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " jobs"
+                        }
+                      >
+                        <img src={Briefcase} alt="briefcase" />
+                        Jobs
+                      </NavLink>
+                    </li>
+                  </ul>
                 </Col>
-                <Col>
-                  <nav className="colMinWidth">
-                    <div className="menu-item">
-                      <ul>
-                        <li>
-                          <NavLink
-                            to=""
-                            className={`managementMain ${
-                              activeLink === "" ? "menuActive1" : ""
-                            }`}
-                            onClick={selectBussniess}
-                          >
-                            Business
-                          </NavLink>
-                        </li>
-                        <li>
-                          <a href="/">
-                            <img src={Logo} alt="Logo" />
-                          </a>
-                        </li>
-                        <li>
-                        <NavLink
-                            to="/dashboard"
-                            className={`managementMain1 menuActive ${
-                              activeLink === "" ? "menuActive" : ""
-                            }`}
-                            onClick={selectBussniess}
-                          >
-                            Work
-                          </NavLink>
-                        </li>
-                      </ul>
-                    </div>
-                  </nav>
+                <Col xs={6} md={6}>
+                  <ul className="middle">
+                    <li>
+                      <NavLink
+                        to="/dashboard"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " dashboard"
+                        }
+                      >
+                        <img src={statusUp} alt="statusUp" />
+                        Dashboard
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/approval"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " approval"
+                        }
+                      >
+                        <img src={clipboardTick} alt="clipboard-tick" />
+                        Approval
+                      </NavLink>
+                    </li>
+                  </ul>
                 </Col>
-                <Col>
-                  <ProfileInfo
-                    username={profileData.full_name}
-                    userType={profileData.type}
-                    aliasName={profileData.alias_name}
-                  />
+                <Col xs={3} md={3} style={{ textAlign: "right" }}>
+                  <ul className="right">
+                    <li>
+                      <NavLink
+                        to="/tasks"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " tasks"
+                        }
+
+                      >
+                        <img src={calendarTick} alt="calendarTick" />
+                        Tasks
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/news"
+                        className={({ isActive }) =>
+                          (isActive ? "menuActive" : "link") + " news"
+                        }
+                      >
+                        <img src={bookSquare} alt="bookSquare" />
+                        News
+                      </NavLink>
+                    </li>
+                  </ul>
                 </Col>
-              </>
-            )}
-          </Row>
-        </Container>
-      </div>
-        <Container fluid className="headerNav">
-          <Row>
-            <Col xs={3} md={3}>
-              <ul className="left">
-                <li>
-                  <NavLink
-                    to="/people"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " people"
-                    }
-                  >
-                    <img src={Profile3user} alt="Profile3user" />
-                    People
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/jobs"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " jobs"
-                    }
-                  >
-                    <img src={Briefcase} alt="briefcase" />
-                    Jobs
-                  </NavLink>
-                </li>
-              </ul>
-            </Col>
-            <Col xs={6} md={6}>
-              <ul className="middle">
-                <li>
-                  <NavLink
-                    to="/dashboard"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " dashboard"
-                    }
-                  >
-                    <img src={statusUp} alt="statusUp" />
-                    Dashboard
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/approval"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " approval"
-                    }
-                  >
-                    <img src={clipboardTick} alt="clipboard-tick" />
-                    Approval
-                  </NavLink>
-                </li>
-              </ul>
-            </Col>
-            <Col xs={3} md={3} style={{ textAlign: "right" }}>
-              <ul className="right">
-                <li>
-                  <NavLink
-                    to="/tasks"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " tasks"
-                    }
-                    
-                  >
-                    <img src={calendarTick} alt="calendarTick" />
-                    Tasks
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/news"
-                    className={({ isActive }) =>
-                      (isActive ? "menuActive" : "link") + " news"
-                    }
-                  >
-                    <img src={bookSquare} alt="bookSquare" />
-                    News
-                  </NavLink>
-                </li>
-              </ul>
-            </Col>
-          </Row>
-        </Container>
-        </>
+              </Row>
+            </Container>
+          </>
         }
-        
-        
+
+
       </div>
       <div className="main-wrapper">
         <Routes>
@@ -504,23 +506,64 @@ const Header = ({ onClick }) => {
             path="/settings/users/mobile-app"
             element={<MobileApp />}
           />
+
+
+
+
+
           <Route
-            path="/sales/Newquote/selectyourclient/existing-clients"
-            element={<ExistingClients />}
-          />
-          <Route
-            path="/sales/newquote/selectyourclient/step1"
+            path="/sales/newquote/selectyourclient"
             element={<SelectClientType />}
           />
           <Route
-            path="/sales/newquote/client-information/step1"
-            element={<ClientInformation />}
+            path="/sales/newquote/selectyourclient/existing-clients"
+            element={<ExistingClients />}
           />
+          <Route
+            path="/sales/newquote/selectyourclient/new-clients"
+            element={<NewClient />}
+          />
+
+          <Route path="/sales" element={<ClientLayout />}>
+            <Route
+              path="newquote/selectyourclient/business-client"
+              element={<BusinessClientInformation />}
+            />
+            <Route
+              path="newquote/selectyourclient/business-client/:id"
+              element={<BusinessClientInformation />}
+            />
+            <Route
+              path="newquote/selectyourclient/individual-client"
+              element={<IndividualClientInformation />}
+            />
+            <Route
+              path="newquote/selectyourclient/individual-client/:id"
+              element={<IndividualClientInformation />}
+            />
+            <Route
+              path="newquote/selectyourclient/client-information/scope-of-work"
+              element={<ScopeOfWorkComponent />}
+            />
+            <Route
+              path="quote-calculation/client"
+              element={<CalculateQuote />}
+            />
+          </Route>
+
+
+
+
+
+
+
+
+
           <Route
             path="/sales/newquote/client-information/step2/business-details/"
             element={<BusinessDetails />}
           />
-           <Route
+          <Route
             path="/sales/newquote/client-information/step2/individual-client"
             element={<IndividualClient />}
           />
@@ -560,7 +603,7 @@ const Header = ({ onClick }) => {
             path="/settings/templates/proposal-templates"
             element={<ProposalTemplates />}
           />
-       
+
           <Route
             path="/settings/companyethos/company-ethos"
             element={<CompanyEthos />}
@@ -573,7 +616,7 @@ const Header = ({ onClick }) => {
             path="/settings/quotesjobs/recurring-quotes"
             element={<RecurringQuotes />}
           />
-        
+
           <Route
             path="/settings/quotesjobs/recurring-jobs"
             element={<RecurringJobs />}
@@ -586,7 +629,7 @@ const Header = ({ onClick }) => {
             path="/settings/projectstatus/item2"
             element={<Item2 />}
           />
-          
+
           <Route
             path="/settings/termsandconditions/terms-and-conditions"
             element={<TermsandConditions />}
@@ -603,28 +646,28 @@ const Header = ({ onClick }) => {
             path="/settings/customerssettings/customers-discount-category"
             element={<CustomersDiscountCategory />}
           />
-        
-         
+
+
           <Route
             path="/settings/accounting/expenses"
             element={<ExpensesAccount />}
           />
-        
+
           <Route
             path="/settings/accounting/department-turnover-plan"
             element={<DepartmentTurnoverPlan />}
           />
-         
+
           <Route
             path="/settings/notifications/dashboard-notifications"
             element={<DashboardNotifications />}
           />
-       
+
           <Route
             path="/settings/notifications/app-notifications"
             element={<AppNotifications />}
           />
-        
+
           <Route
             path="/settings/notifications/email-notifications"
             element={<EmailNotifications />}
@@ -633,7 +676,7 @@ const Header = ({ onClick }) => {
             path="/demo"
             element={<DemoTable />}
           />
-        
+
           <Route
             path="/dashboard"
             element={<Dashboard />}
@@ -658,26 +701,26 @@ const Header = ({ onClick }) => {
             path="/people"
             element={<People />}
           />
-       
-      
-       
-      
-         
-        
-        
-        
-       
-         
-          
-       
-       
-     
-         
-     
-        
-          
- 
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </Routes>
         <Outlet />
       </div>
