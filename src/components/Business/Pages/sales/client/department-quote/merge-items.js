@@ -37,14 +37,19 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
 
         setMergeItems((oldMergeItems) => {
             const updatedItems = { ...oldMergeItems };
-            
+
             Object.keys(updatedItems).forEach((itemKey, index) => {
                 updatedItems[itemKey] = {
                     ...updatedItems[itemKey],
                     romanNo: romanize(index + 1),
                 };
             });
-            updatedItems[key] = { title: data.title, description: data.description, total, romanNo, keys: Object.keys(selectItems) };
+            
+            updatedItems[key] = {
+                title: data.title, description: data.description, total, romanNo,
+                keys: Object.keys(selectItems),
+                items: Object.values(selectItems)
+            };
             return updatedItems;
         });
 
@@ -53,7 +58,7 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
         reset();
     };
     const handleOpen = () => {
-        if(Object.keys(selectItems)?.length > 1) setShow(true);
+        if (Object.keys(selectItems)?.length > 1) setShow(true);
     }
     const handleClose = () => setShow(false);
 
