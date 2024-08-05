@@ -11,6 +11,7 @@ const SendSMS = () => {
   const [updateDis, setUpdateDis] = useState('');
   const [errors, setErrors] = useState({});
   const [image, setImage] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const handleClose = () => {
     setViewShow(false);
   };
@@ -71,6 +72,25 @@ const SendSMS = () => {
         </Modal.Header>
         <Modal.Body>
             <div className="ContactModel">
+              <Row>
+                <Col>
+                <div className="formgroup sendSMSPhone mb-2 mt-0">
+                    <div className={`inputInfo ${errors.taskRead ? 'error-border' : ''}`}>
+                      <span>TO</span>
+                      <input
+                        type="text"
+                        name="title"
+                        value={phoneNumber}
+                        placeholder='Enter phone number'
+                        onChange={(e) => {
+                          setPhoneNumber(e.target.value);
+                          handleChange(e);
+                        }}
+                      />
+                    </div>
+                    </div>
+                </Col>
+              </Row>
             <Row>
              
              <Col>

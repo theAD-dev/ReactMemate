@@ -18,6 +18,8 @@ import GoogleReview from "../../../../assets/images/icon/googleReviewIcon.svg";
 import FolderFileIcon from "../../../../assets/images/icon/folderFileIcon.svg";
 import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
+import ProjectCardFilter from './components/ProjectCardFilter';
+import FilesModel from './FilesModel';
 
 const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
   const handleClose = () => {
@@ -199,7 +201,10 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
                 <Col className='projectHistoryCol'>
                  <Row>
                     <Col className='tabModelMenu d-flex justify-content-between align-items-center' ><AddNote /> <NewTask project={project} reInitilize={reInitilize} /> <SendSMS /><ComposeEmail /></Col>
-                    <Col className='d-flex justify-content-center align-items-center filter'  ><span><Filter size={20} color='#344054'/></span></Col>
+                    <Col className='d-flex justify-content-center align-items-center filter'  >
+                    {/* <span><Filter size={20} color='#344054'/></span> */}
+                    <ProjectCardFilter />
+                    </Col>
                  </Row>
                  <Row className='projectHistoryWrap'>
                     <Col className='p-0' >
@@ -298,7 +303,8 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
                     <Button>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>
                     <Button>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
                     <Button>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
-                   <Button>Files  <img src={FolderFileIcon} alt="FolderFileIcon" /></Button>
+               
+                   <FilesModel />
                     <Button>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button></Col>
                 </Row>
                 <Row className='projectCardCalculation'>
