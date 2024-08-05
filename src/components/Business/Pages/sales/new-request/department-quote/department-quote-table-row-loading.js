@@ -9,8 +9,12 @@ export const DepartmentQuoteTableRowLoading = ({ isDiscountActive }) => {
                     <Placeholder xs={12} />
                 </Placeholder>
             </td>
-
             <td style={{ width: '64px', textAlign: 'center' }}>
+                <Placeholder as="p" animation="wave">
+                    <Placeholder xs={12} />
+                </Placeholder>
+            </td>
+            <td style={{ width: '192px', textAlign: 'center' }}>
                 <Placeholder as="p" animation="wave">
                     <Placeholder xs={12} />
                 </Placeholder>

@@ -58,9 +58,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', border: '0px solid green', padding: '16px 32px' }}>
-
                 <DepartmentQuote totals={totals} setTotals={setTotals} />
-                <h1 style={{ marginTop: '1000px', }}>Hi!</h1>
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #EAECF0', boxShadow: '0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)' }}>

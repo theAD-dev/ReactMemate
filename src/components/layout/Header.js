@@ -43,8 +43,8 @@ import Bills from "../layout/settings/subscription/Bills";
 import BillingInfo from "../layout/settings/subscription/BillingInfo";
 import Users from "../layout/settings/users/Users";
 import MobileApp from "../layout/settings/users/MobileApp";
-import ExistingClients from "../Business/Pages/sales/client/existing-clients";
-import SelectClientType from "../Business/Pages/sales/client/select-client";
+import ExistingClients from "../Business/Pages/sales/new-request/existing-clients";
+import SelectClientType from "../Business/Pages/sales/new-request/select-client";
 import BusinessDetails from "../Business/Pages/sales/newquote/BusinessDetails";
 import ScopeofWork from "../Business/Pages/sales/newquote/ScopeofWork";
 import IndividualClient from "../Business/Pages/sales/newquote/IndividualClient";
@@ -78,12 +78,12 @@ import Jobs from "../Work/Pages/Jobs";
 import People from "../Work/Pages/People";
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import Item2 from "./settings/projectstatus/Item2";
-import NewClient from "../Business/Pages/sales/client/new-client";
-import ClientLayout from "../Business/Pages/sales/client";
-import IndividualClientInformation from "../Business/Pages/sales/client/individual-client-information";
-import BusinessClientInformation from "../Business/Pages/sales/client/business-client-information";
-import ScopeOfWorkComponent from "../Business/Pages/sales/client/scope-of-work";
-import CalculateQuote from "../Business/Pages/sales/client/calculate-quote";
+import NewClient from "../Business/Pages/sales/new-request/new-client";
+import ClientLayout from "../Business/Pages/sales/new-request";
+import IndividualClientInformation from "../Business/Pages/sales/new-request/individual-client-information";
+import BusinessClientInformation from "../Business/Pages/sales/new-request/business-client-information";
+import ScopeOfWorkComponent from "../Business/Pages/sales/new-request/scope-of-work";
+import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
 
 
 

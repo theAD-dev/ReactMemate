@@ -9,7 +9,8 @@ import { calcReferenceId } from '../../../../../../APIs/CalApi';
 import SelectComponent from './select-component';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import './select-component.css';
-import MergeItems from './merge-items';
+import MergeItems, { EditMergeItems } from './merge-items';
+import ViewMergeItems from './view-merge-items';
 
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, isDiscountActive }) => {
     return (
@@ -127,7 +128,6 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
         });
     };
 
-
     return (
         <>
             {Object.entries(rows).map(([key, values], id) => (
@@ -176,7 +176,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                         <td style={{ width: '192px' }}>
                                             {
                                                 index === 0 && (
-                                                    <div className='disabledSelectBox'><div title={value.label} className='disabledSelectBoxLabel'>{value.label}</div> <ChevronDown color="#98A2B3" size={15} /></div>
+                                                    <div className='disabledSelectBox'><div title={value.label} className='disabledSelectBoxLabel' style={{ color: '#101828' }}>{value.label}</div> <ChevronDown color="#98A2B3" size={15} /></div>
                                                 )
                                             }
                                         </td>
@@ -253,7 +253,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
     );
 }
 
-const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive }) => {
+const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_tax }) => {
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
@@ -383,10 +383,10 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive }) => 
         }
     }, [data]);
 
-    const calculateSummary = () => {
+    const calculateSummary = (taxType) => {
         let budget = 0;
         let subtotal = 0;
-
+    
         Object.values(rows)?.forEach(departmentRows => {
             departmentRows?.forEach(item => {
                 let rate = parseFloat(item.cost) || 0;
@@ -396,11 +396,24 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive }) => 
                 subtotal += parseFloat(item.total || 0);
             });
         });
-
-        const tax = subtotal * 0.10;
-        const total = subtotal + tax;
+    
+        let tax = 0;
+        let total = 0;
+    
+        if (taxType === 'ex') {
+            tax = subtotal * 0.10;
+            total = subtotal + tax;
+        } else if (taxType === 'in') {
+            total = subtotal;
+            tax = total * 0.10 / 1.10;
+            subtotal = total - tax;
+        } else if (taxType === 'no') {
+            tax = 0;
+            total = subtotal;
+        }
+    
         const operationalProfit = subtotal - budget;
-
+    
         return {
             budget: budget.toFixed(2),
             operationalProfit: operationalProfit.toFixed(2),
@@ -409,22 +422,23 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive }) => 
             total: total.toFixed(2)
         };
     }
+    
 
     useEffect(() => {
-        const summary = calculateSummary();
+        const summary = calculateSummary(xero_tax);
         setTotals(summary);
-    }, [rows]);
+    }, [rows, xero_tax]);
 
     useEffect(() => {
         let map = {};
-        if(Object.keys(mergeItems)?.length) {
+        if (Object.keys(mergeItems)?.length) {
             Object.entries(mergeItems)?.map(([key, value]) => {
                 return value?.keys.map(key => {
                     return map[key] = value.romanNo;
                 })
             })
         }
-      
+
         console.log('map: ', map);
         setMapMergeItemWithNo(map);
     }, [mergeItems]);
@@ -442,7 +456,7 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive }) => 
             });
 
             return updatedItems;
-        }) 
+        })
     }
 
     return (
@@ -481,17 +495,20 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive }) => 
                 {
                     Object.entries(mergeItems)?.map(([key, value]) =>
                         <div key={key} className='d-flex align-items-center' style={{ margin: '20px 0px' }}>
-                            <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2FAFF', border: '1px solid #A3E0FF', color: '#106B99', fontSize: '10px' }}>{value.romanNo}</div>
-                            <div className='my-0' style={{ color: '#101828', fontSize: '16px', marginLeft: '10px', marginRight: '56px', minWidth: '283px' }}>{value.title}</div>
+                            <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2FAFF', border: '1px solid #A3E0FF', color: '#106B99', fontSize: '10px' }}>
+                                {value.romanNo}
+                            </div>
+                            <div className='my-0 d-flex align-items-center' style={{ color: '#101828', fontSize: '16px', marginLeft: '10px', marginRight: '56px', minWidth: '283px', gap: '10px' }}>
+                                <ViewMergeItems romanNo={value.romanNo} items={value.items} title={value.title} />
+                                <EditMergeItems key={key} id={key} setMergeItems={setMergeItems} romanNo={value.romanNo} items={value.items} title={value.title} description={value.description} />
+                            </div>
                             <span style={{ color: '#667085', fontSize: '14px', marginRight: '37px' }}>$ &nbsp; {value.total}</span>
-                            <Trash onClick={()=>deleteMergeItem(key)} color="#98A2B3" style={{ cursor: 'pointer' }} />
+                            <Trash onClick={() => deleteMergeItem(key)} color="#98A2B3" style={{ cursor: 'pointer' }} />
                         </div>)
                 }
 
                 {(Object.keys(mergeItems || {})?.length && <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "0px 0px 20px 0px" }}></div>) || ""}
-
             </div>
-
         </div>
     )
 }

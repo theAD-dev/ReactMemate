@@ -1816,8 +1816,8 @@ ul.client {
 }
 
 .calculation-quote-bottom .item {
-    text-align: left;
-    min-width: 158px;
+  text-align: left;
+  min-width: 158px;
 }
 
 .calculation-quote-bottom .item label {
@@ -1841,5 +1841,15 @@ ul.client {
 }
 
 .text-button.padding-left-0 {
-    padding-left:  0px !important;
+  padding-left: 0px !important;
+}
+
+.disabled-no-pointer {
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+.btn.text-button {
+  font-size: 14px;
+  color: #158ecc;
 }

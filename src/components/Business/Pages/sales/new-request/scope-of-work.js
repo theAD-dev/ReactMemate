@@ -134,7 +134,7 @@ const ScopeOfWorkComponent = () => {
                                             <div className="uploaded-files pb-5">
                                                 <ul>
                                                     {files.map(file => (
-                                                        <li key={file.id}>
+                                                        <li key={file.id} className='ps-0'>
                                                             {getFileIcon(file.type)}
                                                             <span className='text-lowercase'>{file.file.name}</span>
                                                             <Trash color="#98A2B3" style={{ cursor: 'pointer', marginLeft: '20px' }} onClick={() => handleRemoveFile(file.id)} />
