@@ -240,7 +240,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                         }
                                         <td style={{ width: '118px', textAlign: 'left' }}>$ {value.total || 0.00}</td>
                                         <td style={{ width: '32px' }}>
-                                            <Trash color="#98A2B3" onClick={() => deleteRow(key, value.id)} />
+                                            <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id)} />
                                         </td>
                                     </tr>
                                 )}
