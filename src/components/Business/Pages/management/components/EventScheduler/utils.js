@@ -339,9 +339,13 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
 
   dp.onEventClicked = function (args) {
     const taskId = args.e.id();
+    console.log('taskId: ', taskId);
     console.log('args: ', args.div.className.includes("task-item"));
     if (args.div.className.includes("task-item") && taskId) {
       viewTaskDetails(taskId);
+    } else if(args.div.className.includes("job-item") && taskId) {
+      console.log('job-item: ', taskId);
+      viewTaskDetails(taskId, true);
     }
   };
 
@@ -356,6 +360,8 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
 
   app.init();
 }
+
+
 
 export function reInitilizeData(responses) {
   try {

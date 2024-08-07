@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRef, useState } from 'react';
-import { ControlledMenu, MenuItem, useClick } from '@szhsin/react-menu';
+import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import { CloseButton, ListGroup } from 'react-bootstrap';
 
