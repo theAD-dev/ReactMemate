@@ -210,6 +210,35 @@ li.szh-menu__item:hover {
   color: #98A2B3 !important;
 }
 
-.inputInfo {
-  
+.inputInfo .no-border-outline {
+  box-shadow: none !important;
+  outline: none !important;
+  border: none !important;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.border-right-0 {
+  border: left 0px;
+}
+
+.mui-select-custom .MuiSelect-select, .mui-select-custom .MuiOutlinedInput-notchedOutline {
+  padding: 11px 14px !important;
+  color: #101828 !important;
+  border: 1px solid #d0d5dd !important;
+}
+
+.mui-select-custom .MuiSelect-icon {
+  color: #98A2B3;
+}
+
+.basic-multi-select > * {
+  border: none !important;
+  outline: none !important;
+}
+
+.basic-multi-select span {
+  background: transparent !important;
 }

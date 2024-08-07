@@ -106,7 +106,7 @@ const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
     )
 }
 
-const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, setSelectItem, mapMergeItemWithNo }) => {
+const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, setSelectItem, mapMergeItemWithNo, checkedItems=[] }) => {
     const handleChange = (event, key, values) => {
         setSelectItem((oldItems) => {
             if (event.target.checked) {
@@ -144,6 +144,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                             ...provided.draggableProps.style,
                                             cursor: 'default',
                                         }}
+                                        className={`${checkedItems.includes(key) ? 'selected' : ''}`}
                                     >
                                         <td {...provided.dragHandleProps} style={{ width: '24px' }}>
                                             {
@@ -260,8 +261,8 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
     const [mergeItems, setMergeItems] = useState({});
     console.log('mergeItems: ', mergeItems);
     const [selectItem, setSelectItem] = useState({});
+    console.log('selectItem: ', selectItem);
     const [mapMergeItemWithNo, setMapMergeItemWithNo] = useState({});
-    console.log('mapMergeItemWithNo: ', mapMergeItemWithNo);
     const { data: departments } = useQuery({
         queryKey: ['calcIndexes'],
         queryFn: calcDepartment,
@@ -474,6 +475,7 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
                                     isDiscountActive={isDiscountActive}
                                     setSelectItem={setSelectItem}
                                     mapMergeItemWithNo={mapMergeItemWithNo}
+                                    checkedItems={Object.keys(selectItem)}
                                 />
                                 {
                                     isLoadingSubItem && <DepartmentQuoteTableRowLoading isDiscountActive={isDiscountActive} />

@@ -239,9 +239,10 @@ const Calculation = () => {
                   <ul>
                     <li>
                       <div className="formgroup mb-2">
-                        <div className={`inputInfo `}>
-                          <FormControl className='customerCategory' sx={{ m: 0, minWidth: `100%` }}>
+                        <div className={`inputInfo px-0`}>
+                          <FormControl className='customerCategory mx-2' sx={{ m: 0, minWidth: `100%` }}>
                             <Select
+                            className='mx-3'
                               value={company}
                               onChange={(e) => setCompany(e.target.value)}
                               displayEmpty

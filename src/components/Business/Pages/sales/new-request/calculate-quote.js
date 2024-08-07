@@ -57,7 +57,7 @@ const CalculateQuote = () => {
                 </div>
             </div>
 
-            <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', border: '0px solid green', padding: '16px 32px' }}>
+            <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', padding: '16px 32px' }}>
                 <DepartmentQuote totals={totals} setTotals={setTotals} />
             </div>
 

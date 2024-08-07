@@ -64,7 +64,7 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
 
     return (
         <>
-            <p onClick={handleOpen} className={`mb-0 ${Object.keys(selectItems)?.length < 2 ? 'disabled-no-pointer' : ''}`} style={{ fontSize: '14px', fontWeight: '600', color: '#475467', cursor: 'pointer' }}>Merge Items</p>
+            <p onClick={handleOpen} className={`mb-0 ${Object.keys(selectItems)?.length < 2 ? 'disabled-no-pointer' : ''}`} style={{ fontSize: '14px', fontWeight: '600', color: '#475467', cursor: 'pointer', width: 'fit-content' }}>Merge Items</p>
             <Modal
                 show={show}
                 centered

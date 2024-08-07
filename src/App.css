@@ -478,7 +478,7 @@ table.department-calculation tbody tr td, table.department-calculation thead tr 
     background-color: #fff !important;
     white-space: nowrap;
 }
-table.department-calculation tbody tr:hover td {
+table.department-calculation tbody tr:hover td, table.department-calculation tbody tr.selected td{
     background-color: #F2FAFF !important;
 }
 

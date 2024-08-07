@@ -174,7 +174,7 @@ const NewTaskModal = () => {
                   <div className="formgroup mb-2 mt-2">
                     <label>Description</label>
                     <div
-                      className={`inputInfo ${
+                      className={`inputInfo textarea ${
                         errors.description ? "error-border" : ""
                       }`}
                     >

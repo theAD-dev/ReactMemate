@@ -44,7 +44,7 @@ const CustomProgram = ({ projects, handleChange, error }) => {
           className={`w-100 text-left border ${error ? "border-danger" : ''}`}
           style={{ background: 'transparent', padding: '4px 12px', height: '44px', fontWeight: 'normal' }}
         >
-          {value ? `${value.label}` : 'Select a State'}
+          {value ? `${value.label}` : 'Select project'}
         </Button>
       }
     >
