@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { initDaypilot, reInitilizeData } from "./utils";
 import { getManagement } from "../../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
@@ -9,6 +9,7 @@ import EventFilters from "./event-filters";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
+  const [management, setManagement] = useState([]);
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
   const [viewProjectModel, setViewProjectModel] = useState(false);
@@ -60,6 +61,7 @@ function EventScheduler() {
     const handleLoad = async () => {
       try {
         const response = await getManagement();
+        setManagement(response);
         initDaypilot(CALENDAR_ID, response, viewTaskDetails);
       } catch (error) {
         console.error("Error initializing DayPilot:", error);
@@ -85,6 +87,7 @@ function EventScheduler() {
     try {
       setIsReinitilize(true);
       const response = await getManagement();
+      setManagement(response);
       reInitilizeData(response);
       setIsReinitilize(false);
     } catch (error) {
@@ -114,14 +117,40 @@ function EventScheduler() {
     };
   }, []);
 
+  const timeoutRef = useRef(null);
+  const handleSearch = (e) => {
+    const search = e.target.value;
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      console.log('Debounced search: ', search);
+      let filteredResponse = management.filter((data) => {
+        if (
+          (data?.number?.toLowerCase()?.startsWith(search?.toLowerCase() || ""))
+          ||
+          (data?.reference?.toLowerCase()?.startsWith(search?.toLowerCase() || ""))
+          ||
+          (data?.client?.name.toLowerCase()?.startsWith(search?.toLowerCase() || ""))
+        ) return true;
+        else return false;
+      })
+      reInitilizeData(filteredResponse || []);
+    }, 600);
+  }
+
   return <React.Fragment>
     <div className="topbar">
-      <div className="searchBox"></div>
+      <div className="searchBox">
+        <input type="text" onChange={handleSearch} className="border search-resource" />
+      </div>
       <div className="featureName">
         <h1 className="title">Management</h1>
       </div>
       <div className="filters">
-        <EventFilters/>
+        <EventFilters />
       </div>
     </div>
 
@@ -131,7 +160,7 @@ function EventScheduler() {
       </Spinner>
     </div>
 
-    <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize}/>
+    <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize} />
     <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize} />
 
     <ProjectCardModel viewShow={viewProjectModel} project={projectDetails} reInitilize={reInitilize} setViewShow={setViewProjectModel} />

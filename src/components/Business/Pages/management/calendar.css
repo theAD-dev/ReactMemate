@@ -1414,3 +1414,15 @@ strong.dollorIcon {
   padding: var(--spacing-xl, 16px) var(--spacing-none, 0px);
   text-align: center;
 }
+
+.scheduler_default_divider, .scheduler_default_splitter {
+  height: calc(100vh - 170px) !important;
+}
+
+.scheduler_default_rowheader {
+  background: transparent !important;
+}
+
+#calender {
+  height: auto !important;
+}
