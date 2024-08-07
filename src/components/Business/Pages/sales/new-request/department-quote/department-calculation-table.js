@@ -21,7 +21,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, i
                 <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
             </td>
             <td style={{ width: '100%', paddingTop: '10px' }}>
-                <textarea rows={1} placeholder='Enter a description...' style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} onChange={(e) => { }}></textarea>
+                <textarea disabled rows={1} placeholder='Enter a description...' style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} onChange={(e) => { }}></textarea>
             </td>
             <td style={{ width: '128px' }}>
                 <div className='d-flex align-items-center'>

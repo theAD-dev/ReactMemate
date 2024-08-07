@@ -546,6 +546,10 @@ const Header = ({ onClick }) => {
               element={<ScopeOfWorkComponent />}
             />
             <Route
+              path="newquote/selectyourclient/client-information/scope-of-work/:id"
+              element={<ScopeOfWorkComponent />}
+            />
+            <Route
               path="quote-calculation/client"
               element={<CalculateQuote />}
             />

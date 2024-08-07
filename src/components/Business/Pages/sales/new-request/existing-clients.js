@@ -106,7 +106,7 @@ const ExistingClients = () => {
               <ul className='client'>
                 {itemList && itemList.map((item) => (
                   <li key={item.id}>
-                    <Link to={item.is_business ? `/sales/newquote/selectyourclient/business-client/${item.id}` : `/sales/newquote/selectyourclient/individual-client/${item.id}`}
+                    <Link to={item.is_business ? `/sales/newquote/selectyourclient/client-information/scope-of-work/${item.id}` : `/sales/newquote/selectyourclient/client-information/scope-of-work/${item.id}`}
                       className='d-flex align-items-center w-100'>
                       <div className='icon1'>
                         {item.photo ? (

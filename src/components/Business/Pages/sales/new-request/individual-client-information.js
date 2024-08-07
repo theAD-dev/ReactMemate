@@ -41,7 +41,7 @@ const IndividualClientInformation = () => {
         lastname: '',
         email: '',
         phone: { country: '', number: '' },
-        country: '',
+        country: 'AU',
         address: {
             city: "",
             address: "",
@@ -175,6 +175,7 @@ const IndividualClientInformation = () => {
                                                     control={control}
                                                     render={({ field }) => (
                                                         <PhoneInput
+                                                            defaultCountry='au'
                                                             country={field.value?.country}
                                                             value={field.value?.number}
                                                             onChange={(phone) => field.onChange(phone)}
