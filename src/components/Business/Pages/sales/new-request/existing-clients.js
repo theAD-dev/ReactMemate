@@ -4,7 +4,7 @@ import { NavLink, Link } from "react-router-dom";
 import { newQuoteClientList } from "../../../../../APIs/NewQuoteApis";
 import nodata from "../../../../../assets/images/img/nodata.png";
 import nodatabg from "../../../../../assets/images/img/nodataBg.png";
-import { Placeholder } from 'react-bootstrap';
+import { Col, Placeholder, Row } from 'react-bootstrap';
 import { useDebounce } from 'use-debounce';
 
 const ExistingClients = () => {
@@ -130,13 +130,30 @@ const ExistingClients = () => {
                   <div className="targetObserver px-3" ref={elements}>
                     {isFetching && (
                       <>
-                        <Placeholder as="p" animation="wave" className="mb-4">
-                          <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                        </Placeholder>
-
-                        <Placeholder as="p" animation="wave" className="mb-4">
-                          <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                        </Placeholder>
+                        <Row>
+                          <Col sm={1}>
+                            <Placeholder as="p" animation="wave" className="mb-4">
+                              <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                            </Placeholder>
+                          </Col>
+                          <Col sm={11} className='ps-0'>
+                            <Placeholder as="p" animation="wave" className="mb-4">
+                              <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                            </Placeholder>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col sm={1}>
+                            <Placeholder as="p" animation="wave" className="mb-4">
+                              <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                            </Placeholder>
+                          </Col>
+                          <Col sm={11} className='ps-0'>
+                            <Placeholder as="p" animation="wave" className="mb-4">
+                              <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                            </Placeholder>
+                          </Col>
+                        </Row>
                       </>
                     )}
                   </div>

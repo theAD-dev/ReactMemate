@@ -8,6 +8,8 @@ import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 const QuoteToBusiness = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [name, setName] = useState('');
+    const [phone, setPhone] = useState('+61-8-8533-5602');
+    const [email, setEmail] = useState('company@email.com');
     const [contact_person, setContactPerson] = useState("");
     const [address, setAddress] = useState("");
     const [errors, setErrors] = useState({
@@ -23,7 +25,6 @@ const QuoteToBusiness = () => {
                     <Row>
                         <Col sm={6}>
                             <MUIFormControl className="mb-3 mui-select-custom" fullWidth>
-                                <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Task Title</Form.Label>
                                 <Select
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -37,7 +38,6 @@ const QuoteToBusiness = () => {
                         </Col>
                         <Col sm={6}>
                             <MUIFormControl className="mb-3 mui-select-custom" fullWidth>
-                                <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Task Title</Form.Label>
                                 <Select
                                     value={contact_person}
                                     onChange={(e) => setContactPerson(e.target.value)}
@@ -72,17 +72,17 @@ const QuoteToBusiness = () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter ABN"
-                                        value={'+61-8-8533-5602'}
+                                        placeholder="Enter phone"
+                                        value={phone}
                                         className='border-0 p-0'
                                         style={{ color: '#475467', fontWeight: 600, fontSize: '16px', boxShadow: 'none', outline: 'none' }}
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) => setPhone(e.target.value)}
                                     />
                                     <InputGroup.Text className='border-0 bg-white'>
                                         <Telephone color='#1AB2FF' />
                                     </InputGroup.Text>
                                 </InputGroup>
-                                {errors.taskTitle && <Form.Text className="text-danger">Task title is required</Form.Text>}
+                                {errors.taskTitle && <Form.Text className="text-danger">Phone number is required</Form.Text>}
                             </Form.Group>
                         </Col>
                         <Col sm={6}>
@@ -91,18 +91,17 @@ const QuoteToBusiness = () => {
                                 <Form.Control
                                     required
                                     type="text"
-                                    placeholder="Enter ABN"
-                                    value={'company@email.com'}
+                                    placeholder="Enter email"
+                                    value={email}
                                     className='border-0 p-0'
                                     style={{ color: '#475467', fontWeight: 600, fontSize: '16px', boxShadow: 'none', outline: 'none' }}
-                                    onChange={(e) => setName(e.target.value)}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                                 {errors.taskTitle && <Form.Text className="text-danger">Email is required</Form.Text>}
                             </Form.Group>
                         </Col>
                         <Col sm={6}>
                             <MUIFormControl className="mb-3 mui-select-custom" fullWidth>
-                                <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Task Title</Form.Label>
                                 <Select
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}

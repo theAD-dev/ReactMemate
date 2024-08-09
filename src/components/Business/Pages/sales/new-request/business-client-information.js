@@ -12,11 +12,13 @@ import { FormControl, Select as MuiSelect, SelectChangeEvent } from '@mui/materi
 import { PhoneInput } from 'react-international-phone';
 import { MenuItem } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
+import { useMutation } from '@tanstack/react-query';
+import { createNewBusinessClient } from '../../../../../APIs/ClientsApi';
 
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
-  category: yup.string().required('Category is required'),
+  category: yup.number().typeError("Enter a valid category").required('Category is required'),
   abn: yup.string().required('ABN is required'),
   phone: yup.string({
     country: yup.string().required("Country is required"),
@@ -27,10 +29,9 @@ const schema = yup.object({
 
   addresses: yup.array().of(
     yup.object({
-      // country: yup.string().required("Country is required"),
       address: yup.string().required('Address is required'),
-      city: yup.string().required('City is required'),
-      state: yup.string().required('State is required'),
+      city: yup.number().typeError("City must be a number").required("City is required"),
+      state: yup.number().typeError("State must be a number").required("State is required"),
       postcode: yup.string().required('Postcode is required'),
     })
   ).required(),
@@ -48,8 +49,8 @@ const schema = yup.object({
     })
   ).required(),
 
-  industry: yup.string().required('Industry is required'),
-  payment_terms: yup.string().required('Payment terms are required'),
+  industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
+  payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
 
 }).required();
 
@@ -59,7 +60,7 @@ const BusinessClientInformation = () => {
   const [files, setFiles] = useState({});
   const countryOptions = useMemo(() => countryList().getData(), []);
   const [defaultValues, setDefaultValues] = useState({
-    phone: { country: '', number: '' },
+    phone: { country: '', number: '+61' },
     contact_persons: [{}],
     addresses: [{}],
   });
@@ -126,14 +127,29 @@ const BusinessClientInformation = () => {
     }
   }, [id, setValue]);
 
+  const mutation = useMutation({
+    mutationFn: (data) => createNewBusinessClient(data),
+    onSuccess: (response) => {
+      console.log('response: ', response);
+      if (response.client)
+        navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${response.client}`);
+      else {
+        alert("Business Client could not be created. Try again later.");
+      }
+    },
+    onError: (error) => {
+      console.error('Error creating task:', error);
+      alert(error.message);
+    }
+  });
+
   const onSubmit = (data) => {
     if (id) {
       console.log('Updating record:', data);
     } else {
       console.log('Creating new record:', data);
+      mutation.mutate(data);
     }
-
-    navigate('/sales/newquote/selectyourclient/client-information/scope-of-work');
   };
 
   return (
@@ -193,17 +209,12 @@ const BusinessClientInformation = () => {
                             style={{ color: '#667085' }}
                           >
                             <MenuItem value="">Select category</MenuItem>
-                            <MenuItem value="Platinum">Platinum Customer</MenuItem>
-                            <MenuItem value="New">New Customer</MenuItem>
-                            <MenuItem value="Returning">Returning Customer</MenuItem>
-                            <MenuItem value="VIP">VIP Customer</MenuItem>
-                            <MenuItem value="Regular">Regular Customer</MenuItem>
-                            <MenuItem value="Prospect">Prospect</MenuItem>
-                            <MenuItem value="Wholesale">Wholesale Customer</MenuItem>
-                            <MenuItem value="Corporate">Corporate Customer</MenuItem>
-                            <MenuItem value="Individual">Individual Customer</MenuItem>
-                            <MenuItem value="Retail">Retail Customer</MenuItem>
-                            <MenuItem value="Online">Online Customer</MenuItem>
+                            <MenuItem value="37" data-value="0.00">Regular - 0.00%</MenuItem>
+                            <MenuItem value="38" data-value="2.50">Bronze - 2.50%</MenuItem>
+                            <MenuItem value="39" data-value="5.00">Silver - 5.00%</MenuItem>
+                            <MenuItem value="40" data-value="7.50">Gold - 7.50%</MenuItem>
+                            <MenuItem value="41" data-value="10.00">Platinum - 10.00%</MenuItem>
+                            <MenuItem value="42" data-value="12.50">Diamond - 12.50%</MenuItem>
                           </MuiSelect>
                         </FormControl>
                         {errors.category && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" style={{ position: 'relative', right: '26px' }} />}
@@ -323,10 +334,28 @@ const BusinessClientInformation = () => {
                         <Col sm={6}>
                           <div className="formgroup mb-3 mt-0">
                             <label>State</label>
-                            <div className={`inputInfo ${errors.addresses?.[index]?.state ? 'error-border' : ''}`}>
-                              <input {...register(`addresses.${index}.state`)} placeholder="State" />
-                              {errors.addresses?.[index]?.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
+                            <input {...register(`addresses.${index}.state`)} placeholder="State" />
+                            <Controller
+                              name={`addresses.${index}.state`}
+                              control={control}
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  placeholder="Select state"
+                                  className={`custom-select-country ${errors.addresses?.[index]?.state ? 'error-border' : ''}`}
+                                  options={[
+                                    { value: '2', label: 'NSW' },
+                                    { value: '3', label: 'QLD' },
+                                    { value: '4', label: 'SA' },
+                                    { value: '5', label: 'TAS' },
+                                    { value: '6', label: 'VIC' },
+                                    { value: '7', label: 'WA' }
+                                  ]}
+                                  onChange={(selectedOption) => field.onChange(selectedOption?.value)}
+                                  value={countryOptions.find(option => option.value === field.value)}
+                                />
+                              )}
+                            />
                             {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses[index].state.message}</p>}
                           </div>
                         </Col>
@@ -461,22 +490,39 @@ const BusinessClientInformation = () => {
                             defaultValue={""}
                             style={{ color: '#667085' }}
                           >
-                            <MenuItem value="" disabled>Select Industry</MenuItem>
-                            <MenuItem value="Technology">Technology</MenuItem>
-                            <MenuItem value="Healthcare">Healthcare</MenuItem>
-                            <MenuItem value="Finance">Finance</MenuItem>
-                            <MenuItem value="Retail">Retail</MenuItem>
-                            <MenuItem value="Manufacturing">Manufacturing</MenuItem>
-                            <MenuItem value="Education">Education</MenuItem>
-                            <MenuItem value="Real Estate">Real Estate</MenuItem>
-                            <MenuItem value="Energy">Energy</MenuItem>
-                            <MenuItem value="Telecommunications">Telecommunications</MenuItem>
-                            <MenuItem value="Entertainment">Entertainment</MenuItem>
-                            <MenuItem value="Automotive">Automotive</MenuItem>
-                            <MenuItem value="Travel & Hospitality">Travel & Hospitality</MenuItem>
-                            <MenuItem value="Construction">Construction</MenuItem>
-                            <MenuItem value="Agriculture">Agriculture</MenuItem>
-                            <MenuItem value="Non-Profit">Non-Profit</MenuItem>
+                            <MenuItem value="">Select Industry</MenuItem>
+                            <MenuItem value="193">Agriculture</MenuItem>
+                            <MenuItem value="194">Apparel</MenuItem>
+                            <MenuItem value="195">Automotive</MenuItem>
+                            <MenuItem value="196">Banking</MenuItem>
+                            <MenuItem value="197">Biotechnology</MenuItem>
+                            <MenuItem value="198">Chemicals</MenuItem>
+                            <MenuItem value="199">Communications</MenuItem>
+                            <MenuItem value="200">Construction</MenuItem>
+                            <MenuItem value="201">Education</MenuItem>
+                            <MenuItem value="202">Electronics</MenuItem>
+                            <MenuItem value="203">Energy</MenuItem>
+                            <MenuItem value="204">Engineering</MenuItem>
+                            <MenuItem value="205">Entertainment</MenuItem>
+                            <MenuItem value="206">Environmental</MenuItem>
+                            <MenuItem value="207">Finance</MenuItem>
+                            <MenuItem value="208">Food &amp; Beverage</MenuItem>
+                            <MenuItem value="209">Government</MenuItem>
+                            <MenuItem value="210">Healthcare</MenuItem>
+                            <MenuItem value="211">Hospitality</MenuItem>
+                            <MenuItem value="212">Insurance</MenuItem>
+                            <MenuItem value="213">Machinery</MenuItem>
+                            <MenuItem value="214">Manufacturing</MenuItem>
+                            <MenuItem value="215">Media</MenuItem>
+                            <MenuItem value="216">Non For Profit</MenuItem>
+                            <MenuItem value="217">Other</MenuItem>
+                            <MenuItem value="218">Recreation</MenuItem>
+                            <MenuItem value="219">Retail</MenuItem>
+                            <MenuItem value="220">Shipping</MenuItem>
+                            <MenuItem value="221">Software</MenuItem>
+                            <MenuItem value="222">Technology</MenuItem>
+                            <MenuItem value="223">Telecommunications</MenuItem>
+                            <MenuItem value="224">Utilities</MenuItem>
                           </MuiSelect>
                         </FormControl>
                         <input {...register("industry")} placeholder='Industry' />
@@ -500,17 +546,12 @@ const BusinessClientInformation = () => {
                             defaultValue={""}
                             style={{ color: '#667085' }}
                           >
-                            <MenuItem value="" disabled>Select Payment Terms</MenuItem>
-                            <MenuItem value="Credit Card">Credit Card</MenuItem>
-                            <MenuItem value="Debit Card">Debit Card</MenuItem>
-                            <MenuItem value="PayPal">PayPal</MenuItem>
-                            <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
-                            <MenuItem value="Check">Check</MenuItem>
-                            <MenuItem value="Cash">Cash</MenuItem>
-                            <MenuItem value="Digital Wallet">Digital Wallet</MenuItem>
-                            <MenuItem value="Cryptocurrency">Cryptocurrency</MenuItem>
-                            <MenuItem value="Invoice">Invoice</MenuItem>
-                            <MenuItem value="Gift Card">Gift Card</MenuItem>
+                            <MenuItem value="">Select Payment Terms</MenuItem>
+                            <MenuItem value="1">COD</MenuItem>
+                            <MenuItem value="0">Prepaid</MenuItem>
+                            <MenuItem value="7">Week</MenuItem>
+                            <MenuItem value="14">Two weeks</MenuItem>
+                            <MenuItem value="30">One month</MenuItem>
                           </MuiSelect>
                         </FormControl>
                         {errors.payment_terms && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" style={{ position: 'relative', right: '26px' }} />}
