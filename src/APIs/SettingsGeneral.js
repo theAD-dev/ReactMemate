@@ -28,13 +28,35 @@ const fetchAPI = async (endpoint, options = {}) => {
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
+    } 
+    
+    const contentType = response.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json();
+    } else {
+      // Handle non-JSON responses
+      const text = await response.text();
+      return { message: 'Non-JSON response', body: text };
     }
-    return await response.json();
+    
   } catch (error) {
     console.error('Fetch API error:', error);
     throw error;
   }
 };
+
+export const createProjectStatus = async (data) => {
+  if(data.id) delete data.id;
+  if(data.isNew) delete data.isNew;
+  
+  const endpoint = `/settings/project-statuses/new`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
 export const updateProjectStatusById = async (id, data) => {
   const endpoint = `/settings/project-statuses/update/${id}`;

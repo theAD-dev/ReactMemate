@@ -4,7 +4,7 @@ import '@szhsin/react-menu/dist/index.css';
 import Sidebar from '../Sidebar';
 import { Button, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
-import { deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
+import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 
@@ -29,6 +29,7 @@ const ProjectStatus = () => {
     const fetchData = async () => {
         try {
             const data = await ProjectStatusesList();
+            console.log('data: ', data);
             setOptions([...data]); // Include empty option
         } catch (error) {
             console.error("Error fetching project status data:", error);
@@ -36,9 +37,9 @@ const ProjectStatus = () => {
     };
 
     const updateMutation = useMutation({
-        mutationFn: (id, data) => updateProjectStatusById(id, data),
-        onSuccess: () => {
-            fetchData();
+        mutationFn: (data) => updateProjectStatusById(data.id, data),
+        onSuccess: async () => {
+            await fetchData();
         },
         onError: (error) => {
             console.error('Error creating task:', error);
@@ -47,6 +48,16 @@ const ProjectStatus = () => {
 
     const deleteMutation = useMutation({
         mutationFn: (id) => deleteProjectStatusById(id),
+        onSuccess: () => {
+            fetchData();
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        }
+    });
+
+    const createMutation = useMutation({
+        mutationFn: (data) => createProjectStatus(data),
         onSuccess: () => {
             fetchData();
         },
@@ -69,18 +80,19 @@ const ProjectStatus = () => {
 
     const saveOption = (id, isNew=false) => {
         const optionToSave = options.find(option => option.id === id);
-        console.log('optionToSave: ', optionToSave);
         if(isNew) {
             console.log('new options to create...', optionToSave);
+            //if (optionToSave.id) delete optionToSave.id;
+            createMutation.mutate(optionToSave);
         }else{
             console.log('options to update...', optionToSave);
-            
+            updateMutation.mutate(optionToSave);
         }
     };
 
     const removeOption = (id) => {
         let updatedOptions = options.filter(option => option.id !== id);
-        setOptions(updatedOptions);
+        if(updatedOptions) deleteMutation.mutate(id);
     };
 
     useEffect(() => {
@@ -146,8 +158,8 @@ const ProjectStatus = () => {
                                                     </div>
                                                 </td>
                                                 <td className="butactionOrg">
-                                                    <p><Button className="save" onClick={() => saveOption(option.id, option.isNew)}>{updateMutation.isPending ? "Loading..." : "Save"}</Button></p>
-                                                    <p><Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending ? "Loading..." : "Remove"}</Button></p>
+                                                    <p><Button className="save" onClick={() => saveOption(option.id, option.isNew)}>{(updateMutation.isPending && updateMutation?.variables?.id === option.id) || (createMutation.isPending && createMutation?.variables?.id === option.id) ? "Loading..." : "Save"}</Button></p>
+                                                    <p><Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables?.id === option.id ? "Loading..." : "Remove"}</Button></p>
                                                 </td>
                                             </tr>
                                         ))}
