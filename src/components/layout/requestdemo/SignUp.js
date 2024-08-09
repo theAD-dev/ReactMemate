@@ -1,0 +1,108 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
+import arrowRight from "../../../assets/images/icon/arrow.svg";
+import "./requestademo.css";
+import LoinLogo from "../../../assets/images/logo.svg";
+import RegionalSettings from "../../../assets/images/img/login_slider.jpg";
+
+const SignUp = () => {
+  const navigate = useNavigate();
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
+  const [firstNameError, setFirstNameError] = useState('');
+
+  const handleSignUp = () => {
+    // Validation
+    if (first_name.trim() === '') {
+      setFirstNameError('First name is required');
+      return;
+    } else if (first_name.trim().length !== first_name.length) {
+      setFirstNameError('First name cannot be spaces only');
+      return;
+    }
+    
+    // If validation passes, navigate to the next step
+    navigate("/selectcountry", { state: { first_name, last_name } });
+  };
+
+  return (
+    <>
+      <div className='requestDemoWrap'>
+        <div className="logohead">
+          <img src={LoinLogo} alt="Loin Logo" />
+        </div>
+        <div className="copywrite">© Memate 2024</div>
+        <div className='OnboardingStep1'>
+          <form>
+            <div className="loginPage">
+              <div className="boxinfo">
+                <div className="boxLogin">
+                  <h2>
+                    Yes, I want to <span>sign up</span><br></br> for a demo
+                  </h2>
+                  <div className="step-progress">
+                    <div className="step active"></div>
+                    <div className="step"></div>
+                    <div className="step"></div>
+                    <div className="step"></div>
+                    <div className="step"></div>
+                  </div>
+                  <div className="formgroup">
+                    <label>First Name</label>
+                    <div className={`inputInfo ${firstNameError ? 'error-border' : ''}`}>
+                      <input
+                        type="text"
+                        name="first_name"
+                        value={first_name}
+                        onChange={(e) => {
+                          setFirstName(e.target.value);
+                          setFirstNameError('');
+                        }}
+                        placeholder="First Name"
+                      />
+                      {firstNameError && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                    </div>
+                    {firstNameError && <p className="error-message">{firstNameError}</p>}
+                  </div>
+                  <div className="formgroup">
+                    <label>Last Name</label>
+                    <div className={`inputInfo`}>
+                      <input
+                        type="text"
+                        name="last_name"
+                        value={last_name}
+                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="Last Name"
+                      />
+                      <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />
+                    </div>
+                  </div>
+                  <button
+                    type='button'
+                    className="fillbtn flexcenterbox"
+                    onClick={() => handleSignUp()}
+                  >
+                    Next Step
+                    <img src={arrowRight} alt="Arrow Right" />
+                  </button>
+                  <div className="linkBottom"><p>Already have an account? <Link to="set-new-password">Sign in</Link></p></div>
+                </div>
+              </div>
+              <div className="sliderRight SinglBgRight" style={{
+                backgroundImage: `url(${RegionalSettings})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+              }}>
+                <p>Predict unprofitable business activities.</p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SignUp;
