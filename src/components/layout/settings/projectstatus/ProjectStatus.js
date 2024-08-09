@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Menu, MenuItem, MenuButton, MenuGroup } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import Sidebar from '../Sidebar';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Placeholder, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
 import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
 import { Link } from 'react-router-dom';
@@ -24,15 +24,19 @@ const colorOptions = [
 ];
 
 const ProjectStatus = () => {
+    const [isCreating, setIsCreating] = useState(false);
     const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
     const fetchData = async () => {
         try {
+            setIsCreating(true);
             const data = await ProjectStatusesList();
             console.log('data: ', data);
             setOptions([...data]); // Include empty option
         } catch (error) {
             console.error("Error fetching project status data:", error);
+        } finally {
+            setIsCreating(false);
         }
     };
 
@@ -78,13 +82,13 @@ const ProjectStatus = () => {
         setOptions(options.map(option => option.id === id ? { ...option, title } : option));
     };
 
-    const saveOption = (id, isNew=false) => {
+    const saveOption = (id, isNew = false) => {
         const optionToSave = options.find(option => option.id === id);
-        if(isNew) {
+        if (isNew) {
             console.log('new options to create...', optionToSave);
             //if (optionToSave.id) delete optionToSave.id;
             createMutation.mutate(optionToSave);
-        }else{
+        } else {
             console.log('options to update...', optionToSave);
             updateMutation.mutate(optionToSave);
         }
@@ -92,7 +96,7 @@ const ProjectStatus = () => {
 
     const removeOption = (id) => {
         let updatedOptions = options.filter(option => option.id !== id);
-        if(updatedOptions) deleteMutation.mutate(id);
+        if (updatedOptions) deleteMutation.mutate(id);
     };
 
     useEffect(() => {
@@ -119,7 +123,7 @@ const ProjectStatus = () => {
                                 <h4>Custom Order Status</h4>
                                 <Table>
                                     <tbody>
-                                        {options.map((option, index) => (
+                                        {!isCreating && options.map((option, index) => (
                                             <tr key={`option-${option.id}-${index}`}>
                                                 <td>Status</td>
                                                 <td>
@@ -163,6 +167,47 @@ const ProjectStatus = () => {
                                                 </td>
                                             </tr>
                                         ))}
+                                        {
+                                            isCreating && (
+                                                <>
+                                                <tr>
+                                                    <td>
+                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
+                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                                                        </Placeholder>
+                                                    </td>
+                                                    <td>
+                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
+                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                                                        </Placeholder>
+                                                    </td>
+                                                    <td>
+                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
+                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                                                        </Placeholder>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
+                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                                                        </Placeholder>
+                                                    </td>
+                                                    <td>
+                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
+                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                                                        </Placeholder>
+                                                    </td>
+                                                    <td>
+                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
+                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
+                                                        </Placeholder>
+                                                    </td>
+                                                </tr>
+
+                                                </>
+                                            )
+                                        }
                                         <tr>
                                             <td id='addmoreOption' colSpan={3}>
                                                 <Button onClick={addOption}>
