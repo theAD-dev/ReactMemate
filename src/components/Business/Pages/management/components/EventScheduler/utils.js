@@ -358,6 +358,13 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     }
   };
 
+
+  // dp.onBeforeTimeHeaderRender = (args) => {
+  //   console.log('args.header: ', args.header);
+  //   if (args.header.level === 1) 
+  //     args.header.html = args.header.start.getDayOfWeek() + 1;
+  // }
+
   app.init();
 }
 
