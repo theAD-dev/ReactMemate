@@ -173,7 +173,7 @@ function EventScheduler() {
     <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize} />
     <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize} />
 
-    <ProjectCardModel viewShow={viewProjectModel} project={projectDetails} reInitilize={reInitilize} setViewShow={setViewProjectModel} />
+    <ProjectCardModel management={management} viewShow={viewProjectModel} project={projectDetails} reInitilize={reInitilize} setViewShow={setViewProjectModel} />
     {
       isReinitilize && <div style={{ position: 'absolute', top: '50%', left: '50%', width: '30px', height: '40px' }}>
         <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>

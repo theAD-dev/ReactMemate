@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { X, CurrencyDollar ,Filter,FileEarmark,FilePdf,Link45deg,InfoCircle,XCircle,Files,Reply,Check2Circle,CardChecklist,ListCheck,PhoneVibrate,FolderSymlink
+import { X, CurrencyDollar ,Filter,FileEarmark,FilePdf,FileText,Link45deg,InfoCircle,XCircle,Files,Reply,Check2Circle,CardChecklist,ListCheck,PhoneVibrate,FolderSymlink
 } from "react-bootstrap-icons";
 import { Table } from 'react-bootstrap';
 import AddNote from './AddNote';
@@ -20,8 +20,14 @@ import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
 import ProjectCardFilter from './components/ProjectCardFilter';
 import FilesModel from './FilesModel';
+import ScheduleUpdate from './components/ScheduleUpdate';
+import { ProjectCardApi,cardScheduleUpdateApi } from "../../../../APIs/management-api";
 
-const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
+const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
+
+    const [cardData , setCardData] = useState()
+    console.log('cardData>>>>>>>>>>>>>>>>>>>>>>>>>: ', cardData);
+    
   const handleClose = () => {
     setViewShow(false);
   };
@@ -29,6 +35,42 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
     setViewShow(true);
 
   };
+
+
+
+
+
+
+
+
+  
+
+  useEffect(() => {
+    const handleClick = async (e) => {
+      // Check if the clicked element is not a select element
+      if (!(e.target instanceof HTMLSelectElement)) {
+        // Check for the 'project-content-name' class
+        if (e.target.closest('.project-content-name')) {
+          const projectElement = e.target.closest('.project-content-name');
+          const uniqueId = projectElement.getAttribute('unique-id');
+          
+          // Fetch data using the uniqueId
+          try {
+            const data = await ProjectCardApi(uniqueId);
+            setCardData(data);
+          } catch (error) {
+            console.error('Error fetching project card data:', error);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+    return () => {
+      document.removeEventListener('click', handleClick);
+    };
+  }, []); // Add dependencies if necessary
+
 
   return (
     <>
@@ -47,14 +89,14 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
             <li><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438'/></strong><span className='cardId'>Q-THE-230401-1</span></li>
             <li>
             <label>
-      <select name="selectedStatus">
+      <select name="selectedStatus">          
         <option value="">Status</option>
         <option value="">WN</option>
         <option value="">LOST</option>
       </select>
     </label>
             </li>
-            <li className='refrencesTag'>Reference: <strong>Front End Development / Dec 23</strong></li>
+            <li className='refrencesTag'>Reference: <strong>{cardData?.reference}</strong></li>
           </ul>
           </div>
           <button className='CustonCloseModal' onClick={handleClose}>
@@ -81,118 +123,28 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
                             </tr>
                         </thead>
                         <tbody>
+                    {cardData?.jobs?.length ? (
+                      cardData.jobs.map(({ id, number, status, total }) => (
                             <tr>
-                                <td>ELT-286535-1</td>
+                                <td>{number.substring(4)}</td>
                                 <td>Front End Developm...</td>
                                 <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
+                                <td>${total}</td>
+                                <td>   
+                                    {status === "Accepted" ? (
+                                    <span className={status ? "Accepted" : "Confirmed"}>Finish</span>
+                                      ) : (
+                                        <span className={status ? "Accepted" : "Confirmed"}>Not Finish</span>
+                                      )}
+                                 </td>
                             </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
-                            <tr>
-                                <td>ELT-286535-1</td>
-                                <td>Front End Developm...</td>
-                                <td>gh</td>
-                                <td>$1300</td>
-                                <td><span>Not finish</span></td>
-                            </tr>
+                             ))
+                            ) : (
+                              <tr>
+                                <td colSpan={5} className='noDataAvilable'> No history available</td>
+                              </tr>
+                             
+                            )}
                         </tbody>
                     </Table>
                    
@@ -210,95 +162,48 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
                     <Col className='p-0' >
                     <h3>Project History</h3>
                     <div className='projectHistoryScroll'>
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><FileEarmark size={16} color='#1AB2FF'/></li>
-                            <li><strong>Quote</strong></li>
+                    {cardData?.history?.length ? (
+                      cardData.history.map(({ id, type,text, title, created, manager }) => (
+                        <div className='projectHistorygroup' key={id}>
+                          <ul>
+                            <li>
+                            {type === "quote" ? (
+                         <FileEarmark size={16} color='#1AB2FF'/>
+                        ) : type === "order" ? (
+                          <Check2Circle size={16} color='#1AB2FF'/>
+                        ) : type === "note" ? (
+                          <CardChecklist size={16} color='#1AB2FF'/>
+                        ) : type === "tag" ? (
+                          <ListCheck size={16} color='#1AB2FF'/>
+                        ) : type === "invoice" ? (
+                          <FileText size={16} color='#1AB2FF'/>
+                        ) : type === "billing" ? (
+                          <PhoneVibrate size={16} color='#1AB2FF'/>
+                        ):(
+                          ''
+                        )}
+                            </li>
+                            <li><strong>{title}</strong></li>
                             <li><FilePdf size={16} color='#F04438'/></li>
                             <li><Link45deg size={16} color='#3366CC'/></li>
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><Check2Circle size={16} color='#1AB2FF'/></li>
-                            <li><strong>Job Created</strong></li>
-                          
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><CardChecklist size={16} color='#1AB2FF'/></li>
-                            <li><strong>Expense Linked</strong></li>
-                            
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><ListCheck size={16} color='#1AB2FF'/></li>
-                            <li><strong>SMS</strong></li>
-                        
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><PhoneVibrate size={16} color='#1AB2FF'/></li>
-                            <li><strong>Tasks</strong></li>
-                     
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><FolderSymlink size={16} color='#1AB2FF'/></li>
-                            <li><strong>Notes</strong></li>
-                        
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><FileEarmark size={16} color='#1AB2FF'/></li>
-                            <li><strong>Quote</strong></li>
-                       
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><FileEarmark size={16} color='#1AB2FF'/></li>
-                            <li><strong>Quote</strong></li>
-                      
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
-                    <div className='projectHistorygroup'>{/* Group Start */}
-                    <ul>
-                        <li><FileEarmark size={16} color='#1AB2FF'/></li>
-                            <li><strong>Quote</strong></li>
-                      
-                        </ul>
-                        <h6>This is example subtitle</h6>
-                        <p>17:19 PM | Tue | 06.02.2024 by Danny Vinkl</p>
-                    </div>{/* Group End */}
+                          </ul>
+                          <h6>{text}</h6>
+                          <p>{created} by {manager}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No history available</p>
+                    )}
+
+
                     </div>
                     </Col>
                  </Row>
                 </Col>
                 </Row>
                 <Row className='projectCardButWrap'>
-                    <Col><Button>Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" /></Button>
+                    <Col><Button><ScheduleUpdate /></Button>
+                   
                    <Button>Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                     <Button>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>
                     <Button>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
@@ -317,23 +222,23 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize }) => {
                   <Col className='proRealCost projectColBg'>
                   <div>
                   <h5>Real Cost</h5>
-                  <p>$18,209.14</p>
+                  <p>${cardData?.operating_expense}</p>
                   </div>
                   </Col>
                   <Col className='proCostSale projectColBg'>
                  <div>
                  <h5>Cost Of Sale</h5>
-                 <p>$1,430.31</p>
+                 <p>${cardData?.cost_of_sale}</p>
                  </div>
                   </Col>
                   <Col className='proLabour projectColBg'>
                  <div>
                  <h5>Labour</h5>
-                 <p>$5,321.40</p>
+                 <p>${cardData?.labor_expenses}</p>
                  </div>
                   </Col>
                   <Col className='proProfit projectColBg'>
-                 <span>Operational Profit <InfoCircle size={16} color='#1D2939'/></span><strong>$8,99.14</strong>
+                 <span>Operational Profit <InfoCircle size={16} color='#1D2939'/></span><strong>${cardData?.profit}</strong>
                   </Col>
                   
                 </Row>

@@ -714,9 +714,8 @@ strong.dollorIcon {
   letter-spacing: 0.12px;
   height: 40px;
 }
-.currentJobsTable table tbody td:first-child,
-.currentJobsTable table thead th:first-child {
-  width: 136px;
+.currentJobsTable table tbody td:first-child, .currentJobsTable table thead th:first-child {
+  width: 159px;
   text-align: left;
 }
 .currentJobsTable table tbody td:last-child,
