@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Menu, MenuItem, MenuButton, MenuRadioGroup } from '@szhsin/react-menu';
+import { Menu, MenuItem, MenuButton, MenuGroup } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import Sidebar from '../Sidebar';
 import { Button, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
-import { ProjectStatusesList } from "../../../../APIs/SettingsGeneral";
+import { deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
 import { Link } from 'react-router-dom';
+import { useMutation } from "@tanstack/react-query";
 
 const colorOptions = [
     { value: "#BAE8FF", color: "#1AB2FF", text: "Blue" },
@@ -23,40 +24,68 @@ const colorOptions = [
 ];
 
 const ProjectStatus = () => {
-    const [activeTab, setActiveTab] = useState('recurring-quotes');
+    const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
-    const [savedOptions, setSavedOptions] = useState([]);
-    // const [colorStatus, setColorStatus] = useState(); 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await ProjectStatusesList();
-                setOptions([...data, { id: data.length + 1, color: '#FFE8CD' }]); // Include empty option
-            } catch (error) {
-                console.error("Error fetching project status data:", error);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const addOption = () => {
-        setOptions([...options, { id: options.length + 1, color: '#FFE8CD' }]);
+    const fetchData = async () => {
+        try {
+            const data = await ProjectStatusesList();
+            setOptions([...data]); // Include empty option
+        } catch (error) {
+            console.error("Error fetching project status data:", error);
+        }
     };
 
-    const removeOption = (id) => {
-        setOptions(options.filter(option => option.id !== id));
-        setSavedOptions(savedOptions.filter(option => option.id !== id));
+    const updateMutation = useMutation({
+        mutationFn: (id, data) => updateProjectStatusById(id, data),
+        onSuccess: () => {
+            fetchData();
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        }
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id) => deleteProjectStatusById(id),
+        onSuccess: () => {
+            fetchData();
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        }
+    });
+
+    const addOption = () => {
+        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1, color: '#FFB258' }]);
     };
 
     const updateOptionColor = (id, color) => {
         setOptions(options.map(option => option.id === id ? { ...option, color } : option));
     };
 
-    const saveOption = (id) => {
-        const optionToSave = options.find(option => option.id === id);
-        setSavedOptions([...savedOptions.filter(option => option.id !== id), optionToSave]);
+    const updateOptionTitle = (id, title) => {
+        setOptions(options.map(option => option.id === id ? { ...option, title } : option));
     };
+
+    const saveOption = (id, isNew=false) => {
+        const optionToSave = options.find(option => option.id === id);
+        console.log('optionToSave: ', optionToSave);
+        if(isNew) {
+            console.log('new options to create...', optionToSave);
+        }else{
+            console.log('options to update...', optionToSave);
+            
+        }
+    };
+
+    const removeOption = (id) => {
+        let updatedOptions = options.filter(option => option.id !== id);
+        setOptions(updatedOptions);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <div className='settings-wrap'>
@@ -78,8 +107,8 @@ const ProjectStatus = () => {
                                 <h4>Custom Order Status</h4>
                                 <Table>
                                     <tbody>
-                                        {options.map(option => (
-                                            <tr key={option.id}>
+                                        {options.map((option, index) => (
+                                            <tr key={`option-${option.id}-${index}`}>
                                                 <td>Status</td>
                                                 <td>
                                                     <div className='statuswrapper'>
@@ -87,46 +116,45 @@ const ProjectStatus = () => {
                                                             <input
                                                                 type="text"
                                                                 value={option.title}
-                                                                onChange={(e) => setOptions(e.target.value)}
+                                                                onChange={(e) => updateOptionTitle(option.id, e.target.value)}
                                                             />
                                                         </div>
-                                                        <Menu 
-                                                            className='mainSelectMenu' 
+                                                        <Menu
+                                                            className='mainSelectMenu'
                                                             menuButton={
                                                                 <MenuButton className="colorSelectBut">
                                                                     <div className="butcolorIn" style={{ background: option.color }}>{colorOptions.text}</div>
-                                                                    <ChevronDown size={20} color='#98A2B3'/>
+                                                                    <ChevronDown size={20} color='#98A2B3' />
                                                                 </MenuButton>
-                                                            }>
-                                                                
-                                                            <MenuRadioGroup
-                                                                className='selectOptionMenu'
-                                                                value={option.color}
-                                                                onRadioChange={(color) => updateOptionColor(option.id, color)}>
-
-                                                                {colorOptions.map(({ value, color, text }) => (
-                                                                    <MenuItem key={value} type="radio" value={value}>
-                                                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                                            <div className='dflexColorStatus' style={{ borderLeft: `4px solid ${color}`, color, borderRadius: '4px', height: '30px', backgroundColor: value }}>
-                                                                                {text}
+                                                            }
+                                                            overflow={"auto"}
+                                                            position={"anchor"}
+                                                        >
+                                                            <MenuGroup takeOverflow style={{ maxHeight: '230px', overflow: 'auto', boxShadow: ' 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
+                                                                {colorOptions.map(({ value, color, text }, index) => (
+                                                                    <MenuItem onClick={() => updateOptionColor(option.id, value)} key={`${index}-${value}`} value={value} style={{ padding: '8px 10px 8px 8px' }}>
+                                                                        <div className="d-flex" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
+                                                                            <div className="h-100" style={{ width: '4px', background: `${color}` }}></div>
+                                                                            <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${value}` }}>
+                                                                                <span style={{ color: `${color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{text}</span>
                                                                             </div>
                                                                         </div>
                                                                     </MenuItem>
                                                                 ))}
-                                                            </MenuRadioGroup>
+                                                            </MenuGroup>
                                                         </Menu>
                                                     </div>
                                                 </td>
                                                 <td className="butactionOrg">
-                                                    <p><Button className="save" onClick={() => saveOption(option.id)}>Save</Button></p>
-                                                    <p><Button className="remove" onClick={() => removeOption(option.id)}>Remove</Button></p>
+                                                    <p><Button className="save" onClick={() => saveOption(option.id, option.isNew)}>{updateMutation.isPending ? "Loading..." : "Save"}</Button></p>
+                                                    <p><Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending ? "Loading..." : "Remove"}</Button></p>
                                                 </td>
                                             </tr>
                                         ))}
                                         <tr>
                                             <td id='addmoreOption' colSpan={3}>
                                                 <Button onClick={addOption}>
-                                                    Add an Option <PlusLg size={20} color='#000000'/>
+                                                    Add an Option <PlusLg size={20} color='#000000' />
                                                 </Button>
                                             </td>
                                         </tr>

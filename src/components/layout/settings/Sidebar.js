@@ -21,7 +21,6 @@ import { fetchProfile } from "../../../APIs/ProfileApi";
 import LogoutButton from "../Login/LogoutButton";
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const [profileData, setProfileData] = useState(null);
-  console.log('profileData: ', profileData);
 
   useEffect(() => {
     const fetchData = async () => {

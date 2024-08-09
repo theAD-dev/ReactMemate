@@ -1453,15 +1453,17 @@ td.butactionOrg p {
     align-items: center;
     justify-content: center;
 }
-.butactionOrg p button.save,.butactionOrg p button.save:hover {
-    border: 1px solid var(--Primary-200, #A3E0FF);
-    background: var(--Primary-50, #EBF8FF);
-    color: var(--Primary-700, #106B99);
+.butactionOrg p button.save, .butactionOrg p button.save:hover {
+    width: 85px !important;
+    border: 1px solid #A3E0FF !important;
+    background: var(--Primary-50, #EBF8FF) !important;
+    color: var(--Primary-700, #106B99) !important;
 }
-.butactionOrg p button.remove,.butactionOrg p button.remove:hover {
-    border: 1px solid var(--Gray-300, #D0D5DD);
-    background: #FFF;
-    color: var(--Gray-800, #1D2939);
+.butactionOrg p button.remove, .butactionOrg p button.remove:hover {
+    width: 85px !important;
+    border: 1px solid #FDA29B !important;
+    background: #FFF !important;
+    color: var(--Gray-800, #B42318) !important;
 }
 .statusTitle {
     border-radius: var(--radius-xs, 4px);
