@@ -47,6 +47,7 @@ const ProjectStatus = () => {
         },
         onError: (error) => {
             console.error('Error creating task:', error);
+            fetchData();
         }
     });
 
@@ -57,6 +58,7 @@ const ProjectStatus = () => {
         },
         onError: (error) => {
             console.error('Error creating task:', error);
+            fetchData();
         }
     });
 
@@ -67,6 +69,7 @@ const ProjectStatus = () => {
         },
         onError: (error) => {
             console.error('Error creating task:', error);
+            fetchData();
         }
     });
 
