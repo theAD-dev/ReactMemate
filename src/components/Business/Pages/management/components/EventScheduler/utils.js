@@ -10,7 +10,7 @@ function adjustColor(color, amount) {
   if (!color) return;
   let usePound = false;
 
-  if (color[0] == "#") {
+  if (color[0] === "#") {
     color = color.slice(1);
     usePound = true;
   }
@@ -260,7 +260,7 @@ ${statusIMG}
   });
 
   dp.update({ resources, events });
-  dp.onResourceExpand = function(args) {
+  dp.onResourceExpand = function (args) {
     expandRow = args.resource.id;
     console.log('expandRow: ', expandRow);
   }
@@ -343,7 +343,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     console.log('args: ', args.div.className.includes("task-item"));
     if (args.div.className.includes("task-item") && taskId) {
       viewTaskDetails(taskId);
-    } else if(args.div.className.includes("job-item") && taskId) {
+    } else if (args.div.className.includes("job-item") && taskId) {
       console.log('job-item: ', taskId);
       viewTaskDetails(taskId, true);
     }
