@@ -6,7 +6,6 @@ import { fetchProfile } from "../../APIs/ProfileApi";
 import { useLocation, NavLink, Outlet, Routes, Route } from "react-router-dom";
 import "./header.css";
 import Logo from "../../assets/images/logo.svg";
-import AvatarImg from "../../assets/images/img/Avatar.png";
 import ClientsIcon from "../../assets/images/icon/profile-2user.svg";
 import SuppliersIcon from "../../assets/images/icon/suppliersIcon.svg";
 import SalesIcon from "../../assets/images/icon/SalesIcon.svg";
@@ -705,25 +704,6 @@ const Header = ({ onClick }) => {
             path="/people"
             element={<People />}
           />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         </Routes>
         <Outlet />
