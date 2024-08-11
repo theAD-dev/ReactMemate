@@ -94,14 +94,7 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
     "@types/react-swipeable-views": "^0.13.5",
-    "@typescript-eslint/eslint-plugin": "^8.0.1",
-    "@typescript-eslint/parser": "^8.0.1",
-    "eslint": "^9.9.0",
-    "eslint-plugin-auto-import": "^0.1.1",
-    "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^4.6.2",
     "file-loader": "^6.2.0",
     "globals": "^15.9.0",
     "loader-utils": "3.2.1",
