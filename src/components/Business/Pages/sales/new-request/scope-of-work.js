@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CardList, ChevronLeft, InfoSquare, Person, FileText, FileImage, FileCode, FilePdf, FileWord, CloudUpload, Upload, Trash } from 'react-bootstrap-icons';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Col, Row } from 'react-bootstrap';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { v4 as uuidv4 } from 'uuid';
+import { ClientContext } from './client-provider';
 
 const schema = yup
     .object({
@@ -26,36 +27,35 @@ const getFileIcon = (fileType) => {
 
 const ScopeOfWorkComponent = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
+    let quoteFormData = {};
+    try {
+        const storedData = window.sessionStorage.getItem(`formData-${id}`);
+        if (storedData) {
+            quoteFormData = JSON.parse(storedData);
+        }
+    } catch (error) {
+        console.error('Failed to parse form data from sessionStorage', error);
+    }
     const [files, setFiles] = useState([]);
-
+    const [defaultValues, setDefaultValues] = useState({
+        reference: quoteFormData.reference || "",
+        requirements: quoteFormData.requirements || ""
+    })
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
+        defaultValues
     });
 
     const onSubmit = (data) => {
-        console.log('data: ', data);
-        const formData = new FormData();
-        formData.append('reference', data.reference);
-        formData.append('requirements', data.requirements);
-        files.forEach(file => {
-            formData.append('files', file.file);
-        });
-
-        console.log('formData: ', formData);
-        navigate('/sales/quote-calculation/client');
-
-        // fetch('/api/submit', {
-        //     method: 'POST',
-        //     body: formData,
-        // })
-        // .then(response => response.json())
-        // .then(result => {
-        //     console.log('Success:', result);
-        //     navigate('/sales/newquote/selectyourclient/client-information/scope-of-work');
-        // })
-        // .catch(error => {
-        //     console.error('Error:', error);
-        // });
+        const formObject = {
+            reference: data.reference,
+            requirements: data.requirements,
+            files: files.map(file => file.file)
+        };
+        console.log('formObject: ', formObject);
+        window.sessionStorage.setItem(`formData-${id}`, JSON.stringify(formObject));
+        navigate(`/sales/quote-calculation/client/${id}`);
     };
 
     const handleFileChange = (e) => {

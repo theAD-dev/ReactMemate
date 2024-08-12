@@ -5,13 +5,13 @@ import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, QuestionCircle, Telephone } from 'react-bootstrap-icons';
 import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 
-const QuoteToBusiness = () => {
+const QuoteToBusiness = ({ data }) => {
     const [isEdit, setIsEdit] = useState(false);
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('+61-8-8533-5602');
-    const [email, setEmail] = useState('company@email.com');
-    const [contact_person, setContactPerson] = useState("");
-    const [address, setAddress] = useState("");
+    const [name, setName] = useState(data.name || "");
+    const [phone, setPhone] = useState(data.phone || "");
+    const [email, setEmail] = useState(data.email || "");
+    const [contact_person, setContactPerson] = useState(data.contact_persons || []);
+    const [address, setAddress] = useState(data.address || []);
     const [errors, setErrors] = useState({
         name: false,
     });
@@ -120,14 +120,14 @@ const QuoteToBusiness = () => {
                     </Row>
                 )
                     : (
-                        <>
+                        <Row>
+
                             <Col>
                                 <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Company</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>The Creative Business</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>ABN: 78 167 098 704</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>+61 299660414</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '8px' }}>Unit 5 84 Reserve Rd. Artarmon NSW 2064</p>
-                                <button onClick={() => setIsEdit(!isEdit)} className='btn p-0' style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Edit info</button>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.name || "-"}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>ABN: {data?.abn || "-"}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.phone || "-"}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '8px' }}>{data?.address || "-"}</p>
                             </Col>
                             <Col>
                                 <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Main Contact</p>
@@ -136,7 +136,10 @@ const QuoteToBusiness = () => {
                                 <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>+61458987490</p>
                                 <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>personal@email.com</p>
                             </Col>
-                        </>)
+                            <Col sm={12}>
+                                <button onClick={() => setIsEdit(!isEdit)} className='btn p-0' style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Edit info</button>
+                            </Col>
+                        </Row>)
             }
         </>
     )

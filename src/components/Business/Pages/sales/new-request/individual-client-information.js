@@ -36,7 +36,6 @@ const schema = yup
 const IndividualClientInformation = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { login } = useContext(ClientContext);
     const countryOptions = useMemo(() => countryList().getData(), []);
     const [defaultValues, setDefaultValues] = useState({
         firstname: '',
