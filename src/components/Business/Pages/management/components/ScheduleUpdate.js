@@ -3,7 +3,7 @@ import DateRangePicker from '../../../../Work/Pages/tasks/DateRangePicker';
 import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 // import { fetchTasksNew } from '../../../../APIs/TasksApi';
 import { Button } from 'react-bootstrap';
-
+import PropTypes from 'prop-types';
 const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };
     const start = new Date(startDate).toLocaleDateString('en-US', options);
@@ -17,7 +17,8 @@ const DateRangeComponent = ({ startDate, endDate }) => (
     </div>
 );
 
-const ScheduleUpdate = ({ setDateRange, dateRange }) => {
+const ScheduleUpdate = ({ setDateRange, dateRange ,scheduleData  }) => {
+    console.log({ setDateRange, dateRange, scheduleData });
     console.log('dateRange: ', dateRange);
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const selectDateRef = useRef(null);
@@ -26,7 +27,9 @@ const ScheduleUpdate = ({ setDateRange, dateRange }) => {
 
     const handleDataApply = (data) => {
         setDateRange(data);
+        scheduleData(data); // Call scheduleData with the updated date range
         setIsPickerVisible(false);
+     
     };
 
     const handleClickOutside = (event) => {
@@ -66,5 +69,16 @@ const ScheduleUpdate = ({ setDateRange, dateRange }) => {
         </div>
     );
 };
+
+ScheduleUpdate.propTypes = {
+    setDateRange: PropTypes.func.isRequired,
+    dateRange: PropTypes.shape({
+        startDate: PropTypes.string,
+        endDate: PropTypes.string
+    }).isRequired,
+    scheduleData: PropTypes.func.isRequired
+};
+
+
 
 export default ScheduleUpdate;

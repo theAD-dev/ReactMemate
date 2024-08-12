@@ -9,24 +9,26 @@ import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 
 const colorOptions = [
-    { value: "#BAE8FF", color: "#1AB2FF", text: "Blue" },
-    { value: "#D1E0FF", color: "#0040C1", text: "Dark Blue" },
-    { value: "#EAECF5", color: "#4E5BA6", text: "Deep Blue" },
-    { value: "#EBE9FE", color: "#7A5AF8", text: "Light Purple" },
-    { value: "#CCFBEF", color: "#15B79E", text: "Green" },
-    { value: "#E3FBCC", color: "#66C61C", text: "Light Green" },
-    { value: "#FBE8FF", color: "#D444F1", text: "Magenta" },
-    { value: "#FFE4E8", color: "#F63D68", text: "Pink" },
-    { value: "#FFCCE5", color: "#FF007F", text: "Soft Pink" },
-    { value: "#FFE8CD", color: "#FFB258", text: "Orange" },
-    { value: "#FFF8D1", color: "#FFD700", text: "Yellow" },
-    { value: "#E1E1B8", color: "#6C6C1C", text: "Dark Yellow" }
+    { value: "#1AB2FF", color: "#1AB2FF", text: "Blue" },
+    { value: "#2970FF", color: "#2970FF", text: "Dark Blue" },
+    { value: "#4E5BA6", color: "#4E5BA6", text: "Deep Blue" },
+    { value: "#FFB258", color: "#FFB258", text: "Light Purple" },
+    { value: "#66C61C", color: "#66C61C", text: "Green" },
+    { value: "#15B79E", color: "#15B79E", text: "Light Green" },
+    { value: "#7A5AF8", color: "#7A5AF8", text: "Magenta" },
+    { value: "#F63D68", color: "#F63D68", text: "Pink" },
+    { value: "#FFD700", color: "#FFD700", text: "Soft Pink" },
+    { value: "#6C6C1C", color: "#6C6C1C", text: "Orange" },
+    { value: "#FF007F", color: "#FF007F", text: "Yellow" },
 ];
+
+
 
 const ProjectStatus = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
+    
     const fetchData = async () => {
         try {
             setIsCreating(true);
@@ -142,7 +144,9 @@ const ProjectStatus = () => {
                                                             className='mainSelectMenu'
                                                             menuButton={
                                                                 <MenuButton className="colorSelectBut">
-                                                                    <div className="butcolorIn" style={{ background: option.color }}>{colorOptions.text}</div>
+                                                         <div className="butcolorIn" style={{ background: option.color }}>
+                                                    {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
+                                                    </div>
                                                                     <ChevronDown size={20} color='#98A2B3' />
                                                                 </MenuButton>
                                                             }

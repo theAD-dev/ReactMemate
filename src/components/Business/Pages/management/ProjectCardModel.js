@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { X, CurrencyDollar ,Filter,FileEarmark,FilePdf,FileText,Link45deg,InfoCircle,XCircle,Files,Reply,Check2Circle,CardChecklist,ListCheck,PhoneVibrate,FolderSymlink
+import { X, CurrencyDollar ,PencilSquare,Github,FileEarmark,FilePdf,FileText,Link45deg,InfoCircle,XCircle,Files,Reply,Check2Circle,CardChecklist,ListCheck,PhoneVibrate,FolderSymlink
 } from "react-bootstrap-icons";
 import { Table } from 'react-bootstrap';
 import AddNote from './AddNote';
@@ -25,7 +25,10 @@ import { ProjectCardApi,cardScheduleUpdateApi } from "../../../../APIs/managemen
 const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
 
     const [cardData , setCardData] = useState()
-    console.log('cardData>>>>>>>>>>>>>>>>>>>>>>>>>: ', cardData);
+    const [scheduleData , setScheduleData] = useState()
+    const [isEditingReference, setIsEditingReference] = useState(false);
+    const [editedReference, setEditedReference] = useState('');
+
     
   const handleClose = () => {
     setViewShow(false);
@@ -56,7 +59,10 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
           // Fetch data using the uniqueId
           try {
             const data = await ProjectCardApi(uniqueId);
+           
             setCardData(data);
+             const scheduledata = await cardScheduleUpdateApi(uniqueId);
+             setScheduleData(scheduledata);
           } catch (error) {
             console.error('Error fetching project card data:', error);
           }
@@ -71,6 +77,50 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
   }, []); // Add dependencies if necessary
 
 
+
+  const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
+  const handleDateRangeChange = (range) => {
+    // Handle the date range update
+    console.log('New date range:', range);
+};
+
+
+
+
+const handleEditReference = () => {
+  setIsEditingReference(true);
+  setEditedReference(cardData?.reference || '');
+};
+
+const handleReferenceChange = (e) => {
+  setEditedReference(e.target.value);
+};
+
+const handleSaveReference = () => {
+  // Save the edited reference here (e.g., make an API call)
+  setCardData(prevData => ({
+      ...prevData,
+      reference: editedReference
+  }));
+  setIsEditingReference(false);
+};
+
+// Date Formate
+const formatTimestamp = (timestamp) => {
+  const date = new Date(timestamp * 1000);
+  const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+  const dayOptions = { weekday: 'short' };
+  const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
+  const dayString = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); 
+  const year = date.getFullYear();
+  const dateString = `${day}.${month}.${year}`;
+  return `${timeString} | ${dayString} | ${dateString}`;
+};
+
+
+
   return (
     <>
       {/* View modal */}
@@ -82,10 +132,10 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
         onHide={handleClose}
         animation={false}
       >
-        <Modal.Header className="mb-0 pb-0 ">
+        <Modal.Header className="mb-0 pb-0 justify-content-between ">
           <div className="modelHeader">
-          <ul className='d-flex justify-content-between align-items-center'>
-            <li><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438'/></strong><span className='cardId'>Q-THE-230401-1</span></li>
+          <ul className='d-flex justify-content-between align-items-center '>
+            <li><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438'/></strong><span className='cardId'>{cardData?.number}</span></li>
             <li>
             <label>
       <select name="selectedStatus">          
@@ -95,7 +145,23 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
       </select>
     </label>
             </li>
-            <li className='refrencesTag'>Reference: <strong>{cardData?.reference}</strong></li>
+            <li className='refrencesTag'>
+                                Reference: 
+                                 {isEditingReference ? (
+                                    <input 
+                                        type="text" 
+                                        value={editedReference}
+                                        onChange={handleReferenceChange}
+                                        onBlur={handleSaveReference}
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <>
+                                         <strong> {cardData?.reference}</strong>
+                                         <span> <PencilSquare size={16} color='#106B99' onClick={handleEditReference} style={{ cursor: 'pointer' }} /></span>
+                                    </>
+                                )}
+                            </li>
           </ul>
           </div>
           <button className='CustonCloseModal' onClick={handleClose}>
@@ -107,7 +173,23 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
                 <Row className="text-left mt-0 projectCardMain">
                 <Col className='orderDiscription'>
                  <strong>Order Description</strong>
-                 <p className='customScrollBar'>Order ID 875309, placed on January 22, 2024, by customer Alex Johnson, includes two main items. The first item is a pair of stainless steel water bottles, each priced at $15.99, bringing the total for this item to $31.98. Alongside this, the order also contains one set of wireless Bluetooth headphones, with a noise-canceling feature, priced at $89.99. The overall total for the order, combining both items, comes to $121.97...</p>
+                 <p className='customScrollBar'>
+                 <ul>
+                          {cardData?.calculator_descriptions?.length ? (
+            cardData.calculator_descriptions.map(({ description }, index) => (
+              <React.Fragment key={index}>
+               
+                <li>- {description}</li>
+            
+                </React.Fragment>
+            ))
+          ) : (
+            <div>No Description available</div>
+          )}
+           
+           </ul>
+
+                  </p>
                   <div className='currentJobsTable'>
                     <h5>Current Jobs / Expense for this order</h5>
                     <Table responsive>
@@ -127,7 +209,7 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
                             <tr>
                                 <td>{number.substring(4)}</td>
                                 <td>Front End Developm...</td>
-                                <td>gh</td>
+                                <td> <Github size={24} color='#101828'/></td>
                                 <td>${total}</td>
                                 <td>   
                                     {status === "Accepted" ? (
@@ -151,7 +233,8 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
                 </Col>
                 <Col className='projectHistoryCol'>
                  <Row>
-                    <Col className='tabModelMenu d-flex justify-content-between align-items-center' ><AddNote /> <NewTask project={project} reInitilize={reInitilize} /> <SendSMS /><ComposeEmail /></Col>
+                    <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
+                    <AddNote /> <NewTask project={project} reInitilize={reInitilize} /> <SendSMS /><ComposeEmail /></Col>
                     <Col className='d-flex justify-content-center align-items-center filter'  >
                     {/* <span><Filter size={20} color='#344054'/></span> */}
                     <ProjectCardFilter />
@@ -187,7 +270,7 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
                             <li><Link45deg size={16} color='#3366CC'/></li>
                           </ul>
                           <h6>{text}</h6>
-                          <p>{created} by {manager}</p>
+                          <p>{formatTimestamp(created)} by {manager}</p>
                         </div>
                       ))
                     ) : (
@@ -201,7 +284,13 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
                 </Col>
                 </Row>
                 <Row className='projectCardButWrap'>
-                    <Col><Button><ScheduleUpdate /></Button>
+                    <Col><Button>
+                    <ScheduleUpdate
+            setDateRange={setDateRange}
+            dateRange={dateRange}
+            scheduleData={handleDateRangeChange}
+        />
+                    </Button>
                    
                    <Button>Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                     <Button>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>

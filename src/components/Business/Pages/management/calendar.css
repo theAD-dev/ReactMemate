@@ -634,6 +634,9 @@ strong.dollorIcon {
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.08px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 .projectCardModel .refrencesTag strong {
   color: var(--Gray-600, #475467);
@@ -1160,6 +1163,7 @@ strong.dollorIcon {
 }
 .taskModelProject .modal-header {
   border-bottom: 1px solid #EAECF0 !important;
+  justify-content: space-between;
 }
 .taskModelProject .modal-header span img {
   margin-right: 12px;
@@ -1424,4 +1428,25 @@ strong.dollorIcon {
 
 #calender {
   height: auto !important;
+}
+.refrencesTag span {
+  border-radius: 300px;
+  background: var(--Primary-25, #F2FAFF);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 8px;
+}
+.orderDiscription ul li {
+  display: block;
+  padding-bottom: 8px;
+  color: var(--Text-Dark-Gray, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.08px;
 }

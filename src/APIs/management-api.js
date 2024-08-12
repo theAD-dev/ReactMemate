@@ -60,8 +60,9 @@ export const cardScheduleUpdateApi = async (uniqueId) => {
 
     try {
         const response = await fetch(`${API_BASE_URL}/project-card/schedule/${uniqueId}/`, requestOptions);
+        console.log('response: ', response);
         const result = await response.text();
-        console.log('result>>>>>>>>>>: ', result);
+        console.log('result>>>>>>>>>>11: ', result);
         return result; // Return the result if needed
     } catch (error) {
         console.error(error);
