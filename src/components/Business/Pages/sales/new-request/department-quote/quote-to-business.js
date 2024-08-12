@@ -5,11 +5,13 @@ import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, QuestionCircle, Telephone } from 'react-bootstrap-icons';
 import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 
-const QuoteToBusiness = () => {
+const QuoteToBusiness = ({ data }) => {
     const [isEdit, setIsEdit] = useState(false);
-    const [name, setName] = useState('');
-    const [contact_person, setContactPerson] = useState("");
-    const [address, setAddress] = useState("");
+    const [name, setName] = useState(data.name || "");
+    const [phone, setPhone] = useState(data.phone || "");
+    const [email, setEmail] = useState(data.email || "");
+    const [contact_person, setContactPerson] = useState(data.contact_persons || []);
+    const [address, setAddress] = useState(data.address || []);
     const [errors, setErrors] = useState({
         name: false,
     });
@@ -23,7 +25,6 @@ const QuoteToBusiness = () => {
                     <Row>
                         <Col sm={6}>
                             <MUIFormControl className="mb-3 mui-select-custom" fullWidth>
-                                <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Task Title</Form.Label>
                                 <Select
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -37,7 +38,6 @@ const QuoteToBusiness = () => {
                         </Col>
                         <Col sm={6}>
                             <MUIFormControl className="mb-3 mui-select-custom" fullWidth>
-                                <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Task Title</Form.Label>
                                 <Select
                                     value={contact_person}
                                     onChange={(e) => setContactPerson(e.target.value)}
@@ -72,17 +72,17 @@ const QuoteToBusiness = () => {
                                     <Form.Control
                                         required
                                         type="text"
-                                        placeholder="Enter ABN"
-                                        value={'+61-8-8533-5602'}
+                                        placeholder="Enter phone"
+                                        value={phone}
                                         className='border-0 p-0'
                                         style={{ color: '#475467', fontWeight: 600, fontSize: '16px', boxShadow: 'none', outline: 'none' }}
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) => setPhone(e.target.value)}
                                     />
                                     <InputGroup.Text className='border-0 bg-white'>
                                         <Telephone color='#1AB2FF' />
                                     </InputGroup.Text>
                                 </InputGroup>
-                                {errors.taskTitle && <Form.Text className="text-danger">Task title is required</Form.Text>}
+                                {errors.taskTitle && <Form.Text className="text-danger">Phone number is required</Form.Text>}
                             </Form.Group>
                         </Col>
                         <Col sm={6}>
@@ -91,18 +91,17 @@ const QuoteToBusiness = () => {
                                 <Form.Control
                                     required
                                     type="text"
-                                    placeholder="Enter ABN"
-                                    value={'company@email.com'}
+                                    placeholder="Enter email"
+                                    value={email}
                                     className='border-0 p-0'
                                     style={{ color: '#475467', fontWeight: 600, fontSize: '16px', boxShadow: 'none', outline: 'none' }}
-                                    onChange={(e) => setName(e.target.value)}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                                 {errors.taskTitle && <Form.Text className="text-danger">Email is required</Form.Text>}
                             </Form.Group>
                         </Col>
                         <Col sm={6}>
                             <MUIFormControl className="mb-3 mui-select-custom" fullWidth>
-                                <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Task Title</Form.Label>
                                 <Select
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}
@@ -121,14 +120,14 @@ const QuoteToBusiness = () => {
                     </Row>
                 )
                     : (
-                        <>
+                        <Row>
+
                             <Col>
                                 <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Company</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>The Creative Business</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>ABN: 78 167 098 704</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>+61 299660414</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '8px' }}>Unit 5 84 Reserve Rd. Artarmon NSW 2064</p>
-                                <button onClick={() => setIsEdit(!isEdit)} className='btn p-0' style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Edit info</button>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.name || "-"}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>ABN: {data?.abn || "-"}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.phone || "-"}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '8px' }}>{data?.address || "-"}</p>
                             </Col>
                             <Col>
                                 <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Main Contact</p>
@@ -137,7 +136,10 @@ const QuoteToBusiness = () => {
                                 <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>+61458987490</p>
                                 <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>personal@email.com</p>
                             </Col>
-                        </>)
+                            <Col sm={12}>
+                                <button onClick={() => setIsEdit(!isEdit)} className='btn p-0' style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Edit info</button>
+                            </Col>
+                        </Row>)
             }
         </>
     )

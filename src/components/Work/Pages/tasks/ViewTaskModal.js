@@ -9,13 +9,11 @@ import { ArrowRight, CheckCircleFill ,X} from "react-bootstrap-icons";
 import taskbinImage from '../../../../assets/images/icon/taskbinImage.png';
 import taskEditIcon from '../../../../assets/images/icon/taskEditIcon.svg';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import CustomSelect from './CustomSelect';
-import TaskDatePicker from './TaskDatePIcker';
 import { format, parseISO } from 'date-fns';
 
 const ViewTaskModal = ({ taskId }) => {

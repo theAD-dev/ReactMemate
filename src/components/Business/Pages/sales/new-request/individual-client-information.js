@@ -10,6 +10,8 @@ import { PhoneInput } from 'react-international-phone';
 import countryList from 'react-select-country-list';
 import Select from 'react-select';
 import { ClientContext } from './client-provider';
+import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
+import { useMutation } from '@tanstack/react-query';
 
 // Validation schema
 const schema = yup
@@ -23,9 +25,9 @@ const schema = yup
         }),
         country: yup.string().required("Country is required"),
         address: yup.object({
-            city: yup.string().required("City is required"),
+            city: yup.number().typeError("City must be a number").required("City is required"),
             address: yup.string().required("Address is required"),
-            state: yup.string().required("State is required"),
+            state: yup.number().typeError("State must be a number").required("State is required"),
             postcode: yup.string().required("Postcode is required")
         })
     })
@@ -34,7 +36,6 @@ const schema = yup
 const IndividualClientInformation = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { login } = useContext(ClientContext);
     const countryOptions = useMemo(() => countryList().getData(), []);
     const [defaultValues, setDefaultValues] = useState({
         firstname: '',
@@ -49,7 +50,6 @@ const IndividualClientInformation = () => {
             postcode: ""
         }
     });
-
     const {
         control,
         register,
@@ -86,14 +86,29 @@ const IndividualClientInformation = () => {
         }
     }, [id, setValue]);
 
+    const mutation = useMutation({
+        mutationFn: (data) => createNewIndividualClient(data),
+        onSuccess: (response) => {
+            console.log('response: ', response);
+            if (response.client)
+            navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${response.client}`);
+            else {
+              alert("Client could not be created. Try again later.");
+            }
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+            alert(error.message);
+        }
+    });
+
     const onSubmit = (data) => {
         if (id) {
             console.log('Updating record:', data);
         } else {
             console.log('Creating new record:', data);
+            mutation.mutate(data);
         }
-        login(data);
-        navigate('/sales/newquote/selectyourclient/client-information/scope-of-work');
     };
 
     return (
@@ -241,13 +256,33 @@ const IndividualClientInformation = () => {
                                     <Col sm={6}>
                                         <div className="formgroup mb-2 mt-3">
                                             <label>State</label>
-                                            <div className={`inputInfo ${errors.address?.state ? 'error-border' : ''}`}>
-                                                <input
+                                            {/* <div className={`inputInfo ${errors.address?.state ? 'error-border' : ''}`}> */}
+                                            {/* <input
                                                     {...register("address.state")}
                                                     placeholder='Enter state'
-                                                />
-                                                {errors.address?.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                                            </div>
+                                                /> */}
+                                            <Controller
+                                                name="address.state"
+                                                control={control}
+                                                render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        className={`custom-select-country ${errors.country ? 'error-border' : ''}`}
+                                                        options={[
+                                                            { value: '2', label: 'NSW' },
+                                                            { value: '3', label: 'QLD' },
+                                                            { value: '4', label: 'SA' },
+                                                            { value: '5', label: 'TAS' },
+                                                            { value: '6', label: 'VIC' },
+                                                            { value: '7', label: 'WA' }
+                                                        ]}
+                                                        onChange={(selectedOption) => field.onChange(selectedOption?.value)}
+                                                        value={countryOptions.find(option => option.value === field.value)}
+                                                    />
+                                                )}
+                                            />
+                                            {/* {errors.address?.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                                            </div> */}
                                             {errors.address?.state && <p className="error-message">{errors.address.state.message}</p>}
                                         </div>
                                     </Col>
@@ -276,8 +311,8 @@ const IndividualClientInformation = () => {
                                 </button>
                             </Link>
 
-                            <button type="submit" className="submit-button">
-                                Next Step
+                            <button type="submit" disabled={mutation.isPending} className="submit-button">
+                                {mutation.isPending ? 'Loading...' : 'Next Step'}
                             </button>
                         </div>
                     </div>

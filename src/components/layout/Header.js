@@ -6,7 +6,6 @@ import { fetchProfile } from "../../APIs/ProfileApi";
 import { useLocation, NavLink, Outlet, Routes, Route } from "react-router-dom";
 import "./header.css";
 import Logo from "../../assets/images/logo.svg";
-import AvatarImg from "../../assets/images/img/Avatar.png";
 import ClientsIcon from "../../assets/images/icon/profile-2user.svg";
 import SuppliersIcon from "../../assets/images/icon/suppliersIcon.svg";
 import SalesIcon from "../../assets/images/icon/SalesIcon.svg";
@@ -84,6 +83,7 @@ import IndividualClientInformation from "../Business/Pages/sales/new-request/ind
 import BusinessClientInformation from "../Business/Pages/sales/new-request/business-client-information";
 import ScopeOfWorkComponent from "../Business/Pages/sales/new-request/scope-of-work";
 import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
+import { Placeholder } from "react-bootstrap";
 
 
 
@@ -98,6 +98,7 @@ const Header = ({ onClick }) => {
       try {
         const data = await fetchProfile();
         const parsedData = JSON.parse(data);
+        console.log('parsedData: ', parsedData);
         setProfileData(parsedData);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -131,67 +132,64 @@ const Header = ({ onClick }) => {
             <div className="headerTop business">
               <Container fluid>
                 <Row>
-                  {profileData && (
-                    <>
-                      <Col className="d-flex align-items-center">
-                        <div className="company_logo colMinWidth">
-                          {profileData.organization.logo ? (
-                            <img
-                              src={profileData.organization.logo}
-                              alt="Company Logo"
-                            />
-                          ) : (
-                            <img src={AvatarImg} alt="DummyImg" />
-                          )}
-                          {/* <span>{profileData.organization.name}</span> */}
-                        </div>
-                        <div className="SelectOptionHead">
-                          <SelectOption locations={profileData.organization.locations} profileUserName={profileData.organization.name} />
-                        </div>
-                      </Col>
-                      <Col>
-                        <nav className="colMinWidth">
-                          <div className="menu-item">
-                            <ul>
-                              <li>
-                                <NavLink
-                                  to=""
-                                  className={`managementMain ${activeLink === "" ? "menuActive" : ""
-                                    }`}
-                                  onClick={selectBussniess}
-                                >
-                                  Business
-                                </NavLink>
-                              </li>
-                              <li>
-                                <a href="/">
-                                  <img src={Logo} alt="Logo" />
-                                </a>
-                              </li>
-                              <li>
-                                <NavLink
-                                  to="/dashboard"
-                                  className={({ isActive }) =>
-                                    isActive ? "menuActive" : "link" + ""
-                                  }
-                                  onClick={changeMenu}
-                                >
-                                  Work
-                                </NavLink>
-                              </li>
-                            </ul>
-                          </div>
-                        </nav>
-                      </Col>
-                      <Col>
-                        <ProfileInfo
-                          username={profileData.full_name}
-                          userType={profileData.type}
-                          aliasName={profileData.alias_name}
+                  <Col className="d-flex align-items-center">
+                    <div className="company_logo colMinWidth">
+                      {profileData && profileData?.organization?.logo ? (
+                        <img
+                          src={profileData.organization.logo}
+                          alt="Company Logo"
                         />
-                      </Col>
-                    </>
-                  )}
+                      ) : (
+                        <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                          <Placeholder bg="secondary" style={{ height: '30px', width: '40px' }} size='lg' />
+                        </Placeholder>
+                      )}
+                    </div>
+                    <div className="SelectOptionHead">
+                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
+                    </div>
+                  </Col>
+                  <Col>
+                    <nav className="colMinWidth">
+                      <div className="menu-item">
+                        <ul>
+                          <li>
+                            <NavLink
+                              to=""
+                              className={`managementMain ${activeLink === "" ? "menuActive" : ""
+                                }`}
+                              onClick={selectBussniess}
+                            >
+                              Business
+                            </NavLink>
+                          </li>
+                          <li>
+                            <a href="/">
+                              <img src={Logo} alt="Logo" />
+                            </a>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/dashboard"
+                              className={({ isActive }) =>
+                                isActive ? "menuActive" : "link" + ""
+                              }
+                              onClick={changeMenu}
+                            >
+                              Work
+                            </NavLink>
+                          </li>
+                        </ul>
+                      </div>
+                    </nav>
+                  </Col>
+                  <Col>
+                    <ProfileInfo
+                      username={profileData?.full_name || ""}
+                      userType={profileData?.type || ""}
+                      aliasName={profileData?.alias_name || ""}
+                    />
+                  </Col>
                 </Row>
               </Container>
             </div>
@@ -306,66 +304,64 @@ const Header = ({ onClick }) => {
             <div className="headerTop work">
               <Container fluid className="">
                 <Row>
-                  {profileData && (
-                    <>
-                      <Col className="d-flex align-items-center">
-                        <div className="company_logo colMinWidth">
-                          {profileData.organization.logo ? (
-                            <img
-                              src={profileData.organization.logo}
-                              alt="Company Logo"
-                            />
-                          ) : (
-                            <img src={AvatarImg} alt="DummyImg" />
-                          )}
-                          <span>{profileData.organization.name}</span>
-                        </div>
-                        <div className="SelectOptionHead">
-                          <SelectOption />
-                        </div>
-                      </Col>
-                      <Col>
-                        <nav className="colMinWidth">
-                          <div className="menu-item">
-                            <ul>
-                              <li>
-                                <NavLink
-                                  to=""
-                                  className={`managementMain ${activeLink === "" ? "menuActive1" : ""
-                                    }`}
-                                  onClick={selectBussniess}
-                                >
-                                  Business
-                                </NavLink>
-                              </li>
-                              <li>
-                                <a href="/">
-                                  <img src={Logo} alt="Logo" />
-                                </a>
-                              </li>
-                              <li>
-                                <NavLink
-                                  to="/dashboard"
-                                  className={`managementMain1 menuActive ${activeLink === "" ? "menuActive" : ""
-                                    }`}
-                                  onClick={selectBussniess}
-                                >
-                                  Work
-                                </NavLink>
-                              </li>
-                            </ul>
-                          </div>
-                        </nav>
-                      </Col>
-                      <Col>
-                        <ProfileInfo
-                          username={profileData.full_name}
-                          userType={profileData.type}
-                          aliasName={profileData.alias_name}
+                  <Col className="d-flex align-items-center">
+                    <div className="company_logo colMinWidth">
+                      {profileData?.organization?.logo ? (
+                        <img
+                          src={profileData.organization.logo}
+                          alt="Company Logo"
                         />
-                      </Col>
-                    </>
-                  )}
+                      ) : (
+                        <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                          <Placeholder bg="secondary" style={{ height: '30px', width: '40px' }} size='lg' />
+                        </Placeholder>
+                      )}
+                      <span>{profileData?.organization?.name || ""}</span>
+                    </div>
+                    <div className="SelectOptionHead">
+                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
+                    </div>
+                  </Col>
+                  <Col>
+                    <nav className="colMinWidth">
+                      <div className="menu-item">
+                        <ul>
+                          <li>
+                            <NavLink
+                              to=""
+                              className={`managementMain ${activeLink === "" ? "menuActive1" : ""
+                                }`}
+                              onClick={selectBussniess}
+                            >
+                              Business
+                            </NavLink>
+                          </li>
+                          <li>
+                            <a href="/">
+                              <img src={Logo} alt="Logo" />
+                            </a>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/dashboard"
+                              className={`managementMain1 menuActive ${activeLink === "" ? "menuActive" : ""
+                                }`}
+                              onClick={selectBussniess}
+                            >
+                              Work
+                            </NavLink>
+                          </li>
+                        </ul>
+                      </div>
+                    </nav>
+                  </Col>
+                  <Col>
+                    <ProfileInfo
+                      username={profileData?.full_name || ""}
+                      userType={profileData?.type || ""}
+                      aliasName={profileData?.alias_name || ""}
+                    />
+                  </Col>
                 </Row>
               </Container>
             </div>
@@ -560,7 +556,7 @@ const Header = ({ onClick }) => {
           </Route>
 
 
-          
+
 
           <Route
             path="/sales/newquote/client-information/step2/business-details/"
@@ -708,25 +704,6 @@ const Header = ({ onClick }) => {
             path="/people"
             element={<People />}
           />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         </Routes>
         <Outlet />

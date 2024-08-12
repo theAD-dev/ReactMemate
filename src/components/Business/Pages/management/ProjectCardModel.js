@@ -15,7 +15,6 @@ import ExpenseIcon from "../../../../assets/images/icon/ExpenseIcon.svg";
 import CreatePoIcon from "../../../../assets/images/icon/createPoIcon.svg";
 import Briefcase from "../../../../assets/images/icon/briefcase.svg";
 import GoogleReview from "../../../../assets/images/icon/googleReviewIcon.svg";
-import FolderFileIcon from "../../../../assets/images/icon/folderFileIcon.svg";
 import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
 import ProjectCardFilter from './components/ProjectCardFilter';
@@ -34,7 +33,7 @@ const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
   const handleShow = () => {
     setViewShow(true);
 
-  };
+    };
 
 
 
