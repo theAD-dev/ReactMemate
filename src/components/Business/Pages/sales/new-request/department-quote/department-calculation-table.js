@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
-import { Checkbox } from '@mui/material';
 
 import { calcDepartment } from '../../../../../../APIs/CalApi';
 import { calcReferenceId } from '../../../../../../APIs/CalApi';
@@ -259,9 +258,7 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
     const [mergeItems, setMergeItems] = useState({});
-    console.log('mergeItems: ', mergeItems);
     const [selectItem, setSelectItem] = useState({});
-    console.log('selectItem: ', selectItem);
     const [mapMergeItemWithNo, setMapMergeItemWithNo] = useState({});
     const { data: departments } = useQuery({
         queryKey: ['calcIndexes'],
@@ -439,8 +436,6 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
                 })
             })
         }
-
-        console.log('map: ', map);
         setMapMergeItemWithNo(map);
     }, [mergeItems]);
 

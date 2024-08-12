@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import DepartmentCalculationTable from './department-calculation-table';
 import { Col, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
@@ -9,6 +9,10 @@ import { components } from 'react-select';
 import Select1 from 'react-select';
 import QuoteToBusiness from './quote-to-business';
 import QuoteToClient from './quote-to-client';
+import { ClientContext } from '../client-provider';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getClientById } from '../../../../../../APIs/ClientsApi';
 
 const CustomOption = (props) => {
   return (
@@ -24,12 +28,28 @@ const CustomOption = (props) => {
 };
 
 const DepartmentQuote = React.memo(({ totals, setTotals }) => {
+  const { id } = useParams();
+  let quoteFormData = {};
+    try {
+        const storedData = window.sessionStorage.getItem(`formData-${id}`);
+        if (storedData) {
+            quoteFormData = JSON.parse(storedData);
+        }
+    } catch (error) {
+        console.error('Failed to parse form data from sessionStorage', error);
+    }
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('')
   const [notes, setNotes] = useState("");
   const [xero_tax, setXero_tax] = useState('ex');
   const [purchase_order, set_purchase_order] = useState("");
-  const isBusiness = true;
+  const { isLoading, data, isError, refetch } = useQuery({
+    queryKey: ['id', id],
+    queryFn: () => getClientById(id),
+    enabled: !!id,
+    retry: 1,
+  });
+  console.log('data: ', data);
 
   return (
     <React.Fragment>
@@ -37,19 +57,19 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
         <Row>
           <Col md={8} style={{ borderRight: '1px solid #F2F4F7' }}>
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Reference  <InfoCircle color="#667085" size={16} /></h3>
-            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>Website Redesign and Development</p>
+            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{quoteFormData?.reference || ""}</p>
 
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Description</h3>
-            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>This quote outlines the comprehensive services we will provide for the redesign and development of Paul Stein's website. Our goal is to create a modern, user-friendly, and responsive website that aligns with Acme Corp's brand values and business objectives.
-            </p>
+            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{quoteFormData?.requirements || ""}</p>
           </Col>
           <Col md={4}>
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Quote To  <InfoCircle color="#667085" size={16} /></h3>
             <Row>
-              {isBusiness ?
-                <QuoteToBusiness />
-                :
-                <QuoteToClient />
+              {
+                data?.is_business ?
+                  <QuoteToBusiness data={data} />
+                  :
+                  <QuoteToClient data={data} />
               }
             </Row>
           </Col>
@@ -178,10 +198,6 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
                         </Select>
                       </FormControl>
                     </Form.Group>
-                    {/* <div className="formgroupboxs mb-3">
-                    <label style={{ color: '#475467', fontSize: '14px' }}>Amounts are</label>
-
-                  </div> */}
                   </Col>
                 </Row>
               </Col>
