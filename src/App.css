@@ -21,7 +21,10 @@
 
  
 }
-
+.noDataAvilable {
+    width: 100%;
+    text-align: center;
+}
 .styleGrey01{
     color: #667085;
 }

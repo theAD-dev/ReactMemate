@@ -171,8 +171,8 @@ function loadData(responses) {
           </li>
         </ul>
         <div class="project-content">
-          <span class="small project-content-name">${data?.client?.name}</span>
-          <h2 class="project-content-name">${data.reference}</h2>
+          <span class="small project-content-name" unique-id="${data.unique_id}">${data?.client?.name}</span>
+          <h2 class="project-content-name" unique-id="${data.unique_id}">${data.reference}</h2>
           ${formattedTitle}
         </div>
       </div>`,
