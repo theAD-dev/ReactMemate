@@ -1,5 +1,5 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-expressions */
+ 
+ 
 let dp;
 let DP;
 let expandRow;
@@ -10,7 +10,7 @@ function adjustColor(color, amount) {
   if (!color) return;
   let usePound = false;
 
-  if (color[0] == "#") {
+  if (color[0] === "#") {
     color = color.slice(1);
     usePound = true;
   }
@@ -260,7 +260,7 @@ ${statusIMG}
   });
 
   dp.update({ resources, events });
-  dp.onResourceExpand = function(args) {
+  dp.onResourceExpand = function (args) {
     expandRow = args.resource.id;
     console.log('expandRow: ', expandRow);
   }
@@ -343,7 +343,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     console.log('args: ', args.div.className.includes("task-item"));
     if (args.div.className.includes("task-item") && taskId) {
       viewTaskDetails(taskId);
-    } else if(args.div.className.includes("job-item") && taskId) {
+    } else if (args.div.className.includes("job-item") && taskId) {
       console.log('job-item: ', taskId);
       viewTaskDetails(taskId, true);
     }
@@ -357,6 +357,13 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
       args.cell.backColor = "#F9FAFB"; // Highlight weekends
     }
   };
+
+
+  // dp.onBeforeTimeHeaderRender = (args) => {
+  //   console.log('args.header: ', args.header);
+  //   if (args.header.level === 1) 
+  //     args.header.html = args.header.start.getDayOfWeek() + 1;
+  // }
 
   app.init();
 }

@@ -124,7 +124,7 @@ const NewTaskModal = () => {
      <Modal show={show} aria-labelledby="contained-modal-title-vcenter"
       centered className='SalesContact newtaskaddModal formgroupboxs '  animation={false}>
         <Modal.Header className='mb-0 pb-0 border-0' >
-          <div className='modelHeader d-flex justify-content-between align-items-start'>
+          <div className='modelHeader d-flex justify-content-between align-items-start w-100'>
             <span>
               <img src={NewTaskAdd} alt="NewTaskAdd" />
               New Task

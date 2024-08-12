@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from 'react-bootstrap/Button';
-import {X,Filter,Person,Check,CalendarWeek, Search,Download,PlusLg} from "react-bootstrap-icons";
+import {X,Filter,Person,Check,CalendarWeek, Search,Download} from "react-bootstrap-icons";
 import SearchFilter from './SearchFilter';
 import User01 from "../../../../assets/images/icon/user-01.png";
 import Tab from 'react-bootstrap/Tab';
@@ -17,11 +17,6 @@ const TableTopBar = ({rows,onRowsFilterChange, ClientsData, selectedRowCount,sel
   const [buttonClicked, setButtonClicked] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedRange, setSelectedRange] = useState([]);
-
-  const formattedAmount = totalAmount.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
 
   useEffect(() => {
     if (ClientsData) {

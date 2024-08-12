@@ -56,7 +56,7 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
         </Row>
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
-        <DepartmentCalculationTable totals={totals} setTotals={setTotals} xero_tax={xero_tax} isDiscountActive={isDiscountDisplayed} />
+        <DepartmentCalculationTable totals={totals} setTotals={setTotals} xero_tax={xero_tax} isDiscountActive={true} />
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3 text-start note-textarea" controlId="exampleForm.ControlTextarea1">

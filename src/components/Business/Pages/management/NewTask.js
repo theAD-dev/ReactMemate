@@ -1,10 +1,3 @@
-
-
-
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { X, CurrencyDollar } from "react-bootstrap-icons";
-import { Table } from 'react-bootstrap';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -20,88 +13,87 @@ import { useMutation } from '@tanstack/react-query';
 import { fetchTasksNew } from '../../../../APIs/TasksApi';
 
 const NewTask = ({ project, reInitilize }) => {
-  const [viewShow, setViewShow] = useState(false);
+    const [viewShow, setViewShow] = useState(false);
+    const [taskTitle, setTaskTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [user, setUser] = useState(null);
+    const [date, setDate] = useState(null);
+    const [errors, setErrors] = useState({
+        taskTitle: false,
+        description: false,
+        user: false,
+        date: false
+    });
 
-  const [taskTitle, setTaskTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [user, setUser] = useState(null);
-  const [date, setDate] = useState(null);
-  const [errors, setErrors] = useState({
-      taskTitle: false,
-      description: false,
-      user: false,
-      date: false
-  });
+    const reset = () => {
+        setTaskTitle("");
+        setDescription("");
+        setUser(null);
+        setDate(null);
+        setErrors({
+            taskTitle: false,
+            description: false,
+            user: false,
+            date: false
+        })
+    }
+    const mutation = useMutation({
+        mutationFn: (data) => fetchTasksNew(data),
+        onSuccess: () => {
 
-  const reset = () => {
-      setTaskTitle("");
-      setDescription("");
-      setUser(null);
-      setDate(null);
-      setErrors({
-          taskTitle: false,
-          description: false,
-          user: false,
-          date: false
-      })
-  }
-  const mutation = useMutation({
-      mutationFn: (data) => fetchTasksNew(data),
-      onSuccess: () => {
-         
-          reset();
-          reInitilize();
-      },
-      onError: (error) => {
-          console.error('Error creating task:', error);
-      }
-  });
+            reset();
+            reInitilize();
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        }
+    });
 
-  const handleSubmit = () => {
-      const newErrors = {
-          taskTitle: !taskTitle,
-          description: !description,
-          user: !user,
-          date: !date
-      };
-      setErrors(newErrors);
+    const handleSubmit = () => {
+        const newErrors = {
+            taskTitle: !taskTitle,
+            description: !description,
+            user: !user,
+            date: !date
+        };
+        setErrors(newErrors);
 
-      if (!newErrors.taskTitle && !newErrors.description && !newErrors.user && !newErrors.date) {
-          mutation.mutate({
-              title: taskTitle,
-              description: description,
-              project: project.value,
-              user: user,
-              from_date: date.startDate,
-              to_date: date.endDate,
-          })
-          console.log('Form submitted with:', { taskTitle, description, user, date });
-      }
-  };
+        if (!newErrors.taskTitle && !newErrors.description && !newErrors.user && !newErrors.date) {
+            mutation.mutate({
+                title: taskTitle,
+                description: description,
+                project: project.value,
+                user: user,
+                from_date: date.startDate,
+                to_date: date.endDate,
+            })
+            console.log('Form submitted with:', { taskTitle, description, user, date });
+        }
+    };
 
- 
-  const handleClose = () => {
-    setViewShow(false);
-  };
-  const handleShow = () => {
-    setViewShow(true);
 
-  };
+    const handleClose = () => {
+        setViewShow(false);
+    };
+    const handleShow = () => {
+        setViewShow(true);
 
-  return (
-    <>
-      {/* View modal trigger */}
-      <div className="linkByttonStyle" onClick={handleShow}>
-      New Task
-      </div>
+    };
 
-  
-  <Modal   show={viewShow}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        className=""
-        onHide={handleClose}
-        animation={false}>
+    return (
+        <>
+            {/* View modal trigger */}
+            <div className="linkByttonStyle" onClick={handleShow}>
+                New Task
+            </div>
+
+
+            <Modal show={viewShow}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                className=""
+                onHide={handleClose}
+                animation={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         <img src={newTask} alt='task-details' style={{ width: '48px', height: '48px' }} />
@@ -167,8 +159,8 @@ const NewTask = ({ project, reInitilize }) => {
                     <Button type='button' className='save-button' onClick={handleSubmit}>{mutation.isPending ? 'Loading...' : 'Create Task'}</Button>
                 </Modal.Footer>
             </Modal>
-    </>
-  );
+        </>
+    );
 };
 
 export default NewTask;
