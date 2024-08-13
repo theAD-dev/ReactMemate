@@ -63,7 +63,6 @@ const ProjectStatus = () => {
             fetchData();
         }
     });
-    console.log('deleteMutation: ', deleteMutation);
 
     const createMutation = useMutation({
         mutationFn: (data) => createProjectStatus(data),
@@ -77,7 +76,7 @@ const ProjectStatus = () => {
     });
 
     const addOption = () => {
-        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1, color: '#FFB258' }]);
+        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1, color: '#FFB258', title: "" }]);
     };
 
     const updateOptionColor = (id, color) => {
