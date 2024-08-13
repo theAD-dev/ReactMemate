@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Menu, MenuItem, MenuButton, MenuGroup } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import Sidebar from '../Sidebar';
-import { Button, Placeholder, Table } from 'react-bootstrap';
+import { Button, Spinner, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
 import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
 import { Link } from 'react-router-dom';
@@ -28,7 +28,7 @@ const ProjectStatus = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
-    
+
     const fetchData = async () => {
         try {
             setIsCreating(true);
@@ -63,6 +63,7 @@ const ProjectStatus = () => {
             fetchData();
         }
     });
+    console.log('deleteMutation: ', deleteMutation);
 
     const createMutation = useMutation({
         mutationFn: (data) => createProjectStatus(data),
@@ -84,7 +85,7 @@ const ProjectStatus = () => {
     };
 
     const updateOptionTitle = (id, title) => {
-        setOptions(options.map(option => option.id === id ? { ...option, title } : option));
+        setOptions(options.map(option => option.id === id ? { ...option, title, isChanged: true } : option));
     };
 
     const saveOption = (id, isNew = false) => {
@@ -100,8 +101,12 @@ const ProjectStatus = () => {
     };
 
     const removeOption = (id) => {
-        let updatedOptions = options.filter(option => option.id !== id);
-        if (updatedOptions) deleteMutation.mutate(id);
+        let updatedOptions = options.filter(option => option.id === id);
+        console.log('updatedOptions: ', updatedOptions);
+        if (updatedOptions && updatedOptions.length && updatedOptions[0].isNew) {
+            setOptions(options.filter(option => option.id !== id));
+        }
+        else if(updatedOptions && updatedOptions.length) deleteMutation.mutate(id);
     };
 
     useEffect(() => {
@@ -126,9 +131,18 @@ const ProjectStatus = () => {
                         <div className='content_wrapper'>
                             <div className="listwrapper orgColorStatus">
                                 <h4>Custom Order Status</h4>
+                                {
+                                    isCreating && (
+                                        <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', }} className="shadow-lg">
+                                            <Spinner animation="border" role="status">
+                                                <span className="visually-hidden">Loading...</span>
+                                            </Spinner>
+                                        </div>
+                                    )
+                                }
                                 <Table>
                                     <tbody>
-                                        {!isCreating && options.map((option, index) => (
+                                        {options.map((option, index) => (
                                             <tr key={`option-${option.id}-${index}`}>
                                                 <td>Status</td>
                                                 <td>
@@ -144,9 +158,9 @@ const ProjectStatus = () => {
                                                             className='mainSelectMenu'
                                                             menuButton={
                                                                 <MenuButton className="colorSelectBut">
-                                                         <div className="butcolorIn" style={{ background: option.color }}>
-                                                    {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
-                                                    </div>
+                                                                    <div className="butcolorIn" style={{ background: option.color }}>
+                                                                        {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
+                                                                    </div>
                                                                     <ChevronDown size={20} color='#98A2B3' />
                                                                 </MenuButton>
                                                             }
@@ -169,52 +183,24 @@ const ProjectStatus = () => {
                                                     </div>
                                                 </td>
                                                 <td className="butactionOrg">
-                                                    <p><Button className="save" onClick={() => saveOption(option.id, option.isNew)}>{(updateMutation.isPending && updateMutation?.variables?.id === option.id) || (createMutation.isPending && createMutation?.variables?.id === option.id) ? "Loading..." : "Save"}</Button></p>
-                                                    <p><Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables?.id === option.id ? "Loading..." : "Remove"}</Button></p>
+                                                    {(option.isNew || option.isChanged) &&
+                                                        <p>
+                                                            <Button className="save" onClick={() => saveOption(option.id, option.isNew)}>
+                                                                {
+                                                                    (updateMutation.isPending && updateMutation?.variables?.id === option.id)
+                                                                        ||
+                                                                        (createMutation.isPending && createMutation?.variables?.id === option.id)
+                                                                        ?
+                                                                        "Loading..."
+                                                                        : "Save"
+                                                                }
+                                                            </Button>
+                                                        </p>
+                                                    }
+                                                    <p><Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}</Button></p>
                                                 </td>
                                             </tr>
                                         ))}
-                                        {
-                                            isCreating && (
-                                                <>
-                                                <tr>
-                                                    <td>
-                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
-                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                                                        </Placeholder>
-                                                    </td>
-                                                    <td>
-                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
-                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                                                        </Placeholder>
-                                                    </td>
-                                                    <td>
-                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
-                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                                                        </Placeholder>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
-                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                                                        </Placeholder>
-                                                    </td>
-                                                    <td>
-                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
-                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                                                        </Placeholder>
-                                                    </td>
-                                                    <td>
-                                                        <Placeholder as="p" animation="wave" className="mb-4 mx-1">
-                                                            <Placeholder xs={12} bg="secondary" style={{ height: '30px' }} />
-                                                        </Placeholder>
-                                                    </td>
-                                                </tr>
-
-                                                </>
-                                            )
-                                        }
                                         <tr>
                                             <td id='addmoreOption' colSpan={3}>
                                                 <Button onClick={addOption}>
