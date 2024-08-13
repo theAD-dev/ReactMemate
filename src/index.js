@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import '../src/App.css'
+import './global.scss'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 

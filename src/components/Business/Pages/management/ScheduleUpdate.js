@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import DateRangePicker from '../../../../Work/Pages/tasks/DateRangePicker';
-import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
-// import { fetchTasksNew } from '../../../../APIs/TasksApi';
-import { Button } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import DateRangePicker from '../../../Work/Pages/tasks/DateRangePicker';
+import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
+import { useMutation } from '@tanstack/react-query';
+import { updateProjectScheduleById } from '../../../../APIs/management-api';
+
 const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };
     const start = new Date(startDate).toLocaleDateString('en-US', options);
@@ -17,26 +17,33 @@ const DateRangeComponent = ({ startDate, endDate }) => (
     </div>
 );
 
-const ScheduleUpdate = ({ setDateRange, dateRange ,scheduleData  }) => {
-    console.log({ setDateRange, dateRange, scheduleData });
-    console.log('dateRange: ', dateRange);
+const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
+    const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const selectDateRef = useRef(null);
-
     const togglePicker = () => setIsPickerVisible(prev => !prev);
-
+    const updateMutation = useMutation({
+        mutationFn: (data) => updateProjectScheduleById(projectId, data),
+        onSuccess: async () => {},
+        onError: (error) => {
+            setDateRange({ startDate: null, endDate: null })
+            console.error('Error creating task:', error);
+        }
+    });
     const handleDataApply = (data) => {
+        updateMutation.mutate({ booking_start: data.startDate, booking_end: data.endDate })
         setDateRange(data);
-        scheduleData(data); // Call scheduleData with the updated date range
         setIsPickerVisible(false);
-     
     };
-
     const handleClickOutside = (event) => {
         if (selectDateRef.current && !selectDateRef.current.contains(event.target)) {
             setIsPickerVisible(false);
         }
     };
+
+    useEffect(() => {
+        if(startDate && endDate) setDateRange({ startDate: new Date(1000 * +startDate), endDate: new Date(1000 * +endDate) })
+    }, [startDate, endDate])
 
     useEffect(() => {
         if (isPickerVisible) {
@@ -53,11 +60,16 @@ const ScheduleUpdate = ({ setDateRange, dateRange ,scheduleData  }) => {
     return (
         <div className='select-date' style={{ position: 'relative' }} ref={selectDateRef}>
             <div onClick={togglePicker} style={{ cursor: 'pointer' }}>
-                {dateRange?.startDate && dateRange?.endDate ? (
-                    <DateRangeComponent startDate={dateRange.startDate} endDate={dateRange.endDate} />
+                {dateRange?.startDate && dateRange?.endDate ? (<>
+                    {updateMutation.isPending ? (
+                        <div class="dot-flashing"></div>
+                    ) : (
+                        <DateRangeComponent startDate={dateRange.startDate} endDate={dateRange.endDate} />
+                    )}
+                </>
                 ) : (
                     <span className={`  ${isPickerVisible ? 'active' : ''}`}>
-                       Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" /> 
+                        Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" />
                     </span>
                 )}
             </div>
@@ -69,16 +81,5 @@ const ScheduleUpdate = ({ setDateRange, dateRange ,scheduleData  }) => {
         </div>
     );
 };
-
-ScheduleUpdate.propTypes = {
-    setDateRange: PropTypes.func.isRequired,
-    dateRange: PropTypes.shape({
-        startDate: PropTypes.string,
-        endDate: PropTypes.string
-    }).isRequired,
-    scheduleData: PropTypes.func.isRequired
-};
-
-
 
 export default ScheduleUpdate;

@@ -31,42 +31,13 @@ function adjustColor(color, amount) {
 
 function loadData(responses) {
   const events = [];
-  const colorMapping = {
-    "#1AB2FF": { font: "#0A4766", background: "#BAE8FF" },
-    "#2970FF": { font: "#0040C1", background: "#D1E0FF" },
-    "#4E5BA6": { font: "#293056", background: "#EAECF5" },
-    "#FFB258": { font: "#6D471A", background: "#FFE8CD" },
-    "#66C61C": { font: "#326212", background: "#E3FBCC" },
-    "#15B79E": { font: "#125D56", background: "#CCFBEF" },
-    "#7A5AF8": { font: "#4A1FB8", background: "#EBE9FE" },
-    "#D444F1": { font: "#821890", background: "#FBE8FF" },
-    "#F63D68": { font: "#A11043", background: "#FFE4E8" },
-    "#FFD700": { font: "#997100", background: "#FFF8D1" },
-    "#6C6C1C": { font: "#444403", background: "#E1E1B8" },
-    "#FF007F": { font: "#6F0A3C", background: "#FFCCE5" },
-  };
-
   const resources = responses?.map((data) => {
-    let color = data?.status?.color?.toUpperCase();
-    let background = data?.status?.background;
-    let font = data?.status?.font;
+    let color = data?.custom_status?.color;
+    let background = data?.custom_status?.background;
+    let font = data?.custom_status?.font;
 
-    var originalColor = font;
-    var borderColor = color;
-    var backgroundColor = background;
-
-    if (!background || !font) {
-      if (colorMapping[color]) {
-        backgroundColor = colorMapping[color]["background"]
-        originalColor = colorMapping[color]["font"]
-      } else {
-        backgroundColor = adjustColor(color, 120);
-        originalColor = adjustColor(color, 0);
-      }
-    }
-
-    const formattedTitle = data?.status?.title
-      ? `<em style='color:${font || originalColor}; background:${background || backgroundColor}; border: 1px solid ${color || borderColor}'>${data.status.title}</em>`
+    const status = data?.custom_status?.title
+      ? `<em style='color:${font}; background:${background}; border: 1px solid ${color};'>${data.custom_status.title}</em>`
       : "";
 
     let jobsStatus = "not-started";
@@ -80,11 +51,11 @@ function loadData(responses) {
     events.push({
       start: new Date(1000 * +data.booking_start),
       end: new Date(1000 * +data.booking_end),
-      id: DP.guid(),
+      id: data.unique_id,
       cssClass: 'job-item',
       resource: data.unique_id,
-      backColor: background || backgroundColor,
-      borderColor: color || borderColor,
+      backColor: background,
+      borderColor: color,
       text: `<ul class="eventStyleCal">
         <li>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +91,7 @@ function loadData(responses) {
             </defs>
           </svg>
           &nbsp;
-          <strong style="color: ${font || originalColor}">${data.reference}</strong>
+          <strong style="color: ${font}; font-weight: 400">${data.reference}</strong>
         </li>
       </ul>`,
     });
@@ -128,7 +99,7 @@ function loadData(responses) {
     return {
       id: data.unique_id,
       expanded: expandRow === data.unique_id,
-      name: `<div class="resourceList rowResourceEvent" style="--main-color: ${originalColor};">
+      name: `<div class="resourceList rowResourceEvent" style="--main-color: ${color};">
         <ul class="resourceMan">
           <li>${data.number}</li>
           <li>
@@ -170,10 +141,10 @@ function loadData(responses) {
         }</span>
           </li>
         </ul>
-        <div class="project-content">
+        <div class="project-content" unique-id="${data.unique_id}">
           <span class="small project-content-name" unique-id="${data.unique_id}">${data?.client?.name}</span>
           <h2 class="project-content-name" unique-id="${data.unique_id}">${data.reference}</h2>
-          ${formattedTitle}
+          ${status}
         </div>
       </div>`,
       children: [...data.tasks, { title: 'create-task', id: data.number }].map((task, index) => {
@@ -182,7 +153,7 @@ function loadData(responses) {
         if (task.title === 'create-task') {
           return {
             id: task.id,
-            name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${originalColor}; height: ${data.tasks?.length ? '85px' : '65px'}">
+            name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${color}; height: ${data.tasks?.length ? '85px' : '65px'}">
               <button class="create-task-button" project-id="${data.id}" number="${data?.number}" reference="${data?.reference}" style="margin-bottom: ${data.tasks?.length ? '16px' : '6px'}">Create Task
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#106B99"/>
@@ -220,7 +191,7 @@ function loadData(responses) {
 
         return {
           id: task.id,
-          name: `<div task-id="${task.id}" class="task-list rowResourceEvent" style="--main-color: ${originalColor}" task-id="${task.id}">
+          name: `<div task-id="${task.id}" class="task-list rowResourceEvent" style="--main-color: ${color}" task-id="${task.id}">
             <div class="flex">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_5999_560822)">
@@ -248,8 +219,8 @@ function loadData(responses) {
               </div> 
             </div>
             <div class="completion-status ${statusIMG === 'completed' ? 'completed-class' : 'incomplete-class'}">
-${statusIMG}
-</div>
+              ${statusIMG}
+            </div>
           </div>
           `,
           minHeight: 40,

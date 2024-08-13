@@ -80,7 +80,7 @@ const ProjectStatus = () => {
     });
 
     const addOption = () => {
-        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1,value: '#FFB258', color: '#FFB258', title: "" }]);
+        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1, value: '#FFB258', color: '#FFB258', title: "" }]);
     };
 
     const updateOptionColor = (id, color) => {
@@ -95,7 +95,6 @@ const ProjectStatus = () => {
         const optionToSave = options.find(option => option.id === id);
         if (isNew) {
             console.log('new options to create...', optionToSave);
-            //if (optionToSave.id) delete optionToSave.id;
             createMutation.mutate(optionToSave);
         } else {
             console.log('options to update...', optionToSave);

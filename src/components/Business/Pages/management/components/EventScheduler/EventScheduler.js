@@ -16,9 +16,11 @@ function EventScheduler() {
   const [isReinitilize, setIsReinitilize] = useState(false);
 
   const [taskId, setTaskId] = useState(null);
+  const [projectId, setProjectId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
   function viewTaskDetails(id, isjob=false) {
     if(isjob) {
+      setProjectId(id);
       setViewProjectModel(true);
     } else {
       setTaskId(id);
@@ -43,6 +45,9 @@ function EventScheduler() {
           console.log('task-list: ....', taskId);
           if (taskId) viewTaskDetails(taskId);
         } else if (e.target.closest(".project-content")) {
+          const projectId = e.target.closest('.project-content').getAttribute('unique-id');
+          console.log('project: ....', projectId);
+          setProjectId(projectId);
           setViewProjectModel(true);
         }
       }
@@ -160,7 +165,7 @@ function EventScheduler() {
         <h1 className="title">Management</h1>
       </div>
       <div className="filters">
-        <EventFilters />
+        {/* <EventFilters /> */}
       </div>
     </div>
 
@@ -173,7 +178,8 @@ function EventScheduler() {
     <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize} />
     <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize} />
 
-    <ProjectCardModel management={management} viewShow={viewProjectModel} project={projectDetails} reInitilize={reInitilize} setViewShow={setViewProjectModel} />
+    <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} reInitilize={reInitilize}  />
+    
     {
       isReinitilize && <div style={{ position: 'absolute', top: '50%', left: '50%', width: '30px', height: '40px' }}>
         <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
