@@ -7,19 +7,22 @@ import { PlusLg, ChevronDown } from "react-bootstrap-icons";
 import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
+import zIndex from "@mui/material/styles/zIndex";
 
 const colorOptions = [
-    { value: "#1AB2FF", color: "#1AB2FF", text: "Blue" },
-    { value: "#2970FF", color: "#2970FF", text: "Dark Blue" },
-    { value: "#4E5BA6", color: "#4E5BA6", text: "Deep Blue" },
-    { value: "#FFB258", color: "#FFB258", text: "Light Purple" },
-    { value: "#66C61C", color: "#66C61C", text: "Green" },
-    { value: "#15B79E", color: "#15B79E", text: "Light Green" },
-    { value: "#7A5AF8", color: "#7A5AF8", text: "Magenta" },
-    { value: "#F63D68", color: "#F63D68", text: "Pink" },
-    { value: "#FFD700", color: "#FFD700", text: "Soft Pink" },
-    { value: "#6C6C1C", color: "#6C6C1C", text: "Orange" },
-    { value: "#FF007F", color: "#FF007F", text: "Yellow" },
+    { value: "#1AB2FF", bg:"#BAE8FF", border:"#1AB2FF", color: "#0A4766", text: "Blue" },
+    { value: "#4E5BA6", bg:"#EAECF5", border:"#4E5BA6", color: "#293056", text: "Deep Blue" },
+    { value: "#2970FF", bg:"#D1E0FF", border:"#2970FF", color: "#0040C1", text: "Dark Blue" },
+    { value: "#FFB258", bg:"#FFE8CD", border:"#FFB258", color: "#6D471A", text: "Orange" },
+    { value: "#15B79E", bg:"#CCFBEF", border:"#15B79E", color: "#125D56", text: "Green" },
+    { value: "#66C61C", bg:"#E3FBCC", border:"#66C61C", color: "#326212", text: "Light Green" },
+    { value: "#7A5AF8", bg:"#EBE9FE", border:"#7A5AF8", color: "#4A1FB8", text: "Light Purple" },
+    { value: "#D444F1", bg:"#FBE8FF", border:"#D444F1", color: "#821890", text: "Magenta" },
+    { value: "#F63D68", bg:"#FFE4E8", border:"#F63D68", color: "#A11043", text: "Pink" },
+    { value: "#FF007F", bg:"#FFCCE5", border:"#FF007F", color: "#6F0A3C", text: "Soft Pink" },
+    { value: "#FFD700", bg:"#FFF8D1", border:"#FFD700", color: "#997100", text: "Yellow" },
+    { value: "#6C6C1C", bg:"#E1E1B8", border:"#6C6C1C", color: "#444403", text: "Dark Yellow" }
+   
 ];
 
 
@@ -28,6 +31,7 @@ const ProjectStatus = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
+    console.log('options>>>>>>>>>>>>>>: ', options);
 
     const fetchData = async () => {
         try {
@@ -76,7 +80,7 @@ const ProjectStatus = () => {
     });
 
     const addOption = () => {
-        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1, color: '#FFB258', title: "" }]);
+        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1,value: '#FFB258', color: '#FFB258', title: "" }]);
     };
 
     const updateOptionColor = (id, color) => {
@@ -112,6 +116,11 @@ const ProjectStatus = () => {
         fetchData();
     }, []);
 
+
+
+
+
+
     return (
         <div className='settings-wrap'>
             <div className="settings-wrapper">
@@ -129,7 +138,10 @@ const ProjectStatus = () => {
                     <div className="content_wrap_main">
                         <div className='content_wrapper'>
                             <div className="listwrapper orgColorStatus">
-                                <h4>Custom Order Status</h4>
+                               <div className="top">
+                               <h4>Custom Order Status</h4>
+                               <p>The status name can be up to 20 characters long.</p>
+                               </div>
                                 {
                                     isCreating && (
                                         <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', }} className="shadow-lg">
@@ -143,7 +155,7 @@ const ProjectStatus = () => {
                                     <tbody>
                                         {options.map((option, index) => (
                                             <tr key={`option-${option.id}-${index}`}>
-                                                <td>Status</td>
+                                              
                                                 <td>
                                                     <div className='statuswrapper'>
                                                         <div className='statusTitle'>
@@ -153,25 +165,34 @@ const ProjectStatus = () => {
                                                                 onChange={(e) => updateOptionTitle(option.id, e.target.value)}
                                                             />
                                                         </div>
+                                               
                                                         <Menu
                                                             className='mainSelectMenu'
                                                             menuButton={
                                                                 <MenuButton className="colorSelectBut">
-                                                                    <div className="butcolorIn" style={{ background: option.color }}>
-                                                                        {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
-                                                                    </div>
-                                                                    <ChevronDown size={20} color='#98A2B3' />
-                                                                </MenuButton>
+                                                                <div
+                                                                    className="butcolorIn"
+                                                                    style={{
+                                                                        borderColor: option.color,
+                                                                        background: colorOptions.find(opt => opt.value === option.color)?.bg || 'transparent',
+                                                                        color: option.color,
+                                                                    }}
+                                                                >
+                                                                    {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
+                                                                </div>
+                                                                <ChevronDown size={20} color='#98A2B3' />
+                                                            </MenuButton>
+                                                            
                                                             }
                                                             overflow={"auto"}
-                                                            position={"anchor"}
-                                                        >
+                                                            position={"anchor"}>
                                                             <MenuGroup takeOverflow style={{ maxHeight: '230px', overflow: 'auto', boxShadow: ' 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
-                                                                {colorOptions.map(({ value, color, text }, index) => (
+                                                                {colorOptions.map(({ value,bg,border, color, text }, index) => (
+                                                                   
                                                                     <MenuItem onClick={() => updateOptionColor(option.id, value)} key={`${index}-${value}`} value={value} style={{ padding: '8px 10px 8px 8px' }}>
                                                                         <div className="d-flex" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
-                                                                            <div className="h-100" style={{ width: '4px', background: `${color}` }}></div>
-                                                                            <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${value}` }}>
+                                                                            <div className="h-100" style={{ width: '4px', background: `${border}` }}></div>
+                                                                            <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${bg}` }}>
                                                                                 <span style={{ color: `${color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{text}</span>
                                                                             </div>
                                                                         </div>
@@ -183,7 +204,7 @@ const ProjectStatus = () => {
                                                 </td>
                                                 <td className="butactionOrg">
                                                     {(option.isNew || option.isChanged) &&
-                                                        <p>
+                                                       
                                                             <Button className="save" onClick={() => saveOption(option.id, option.isNew)}>
                                                                 {
                                                                     (updateMutation.isPending && updateMutation?.variables?.id === option.id)
@@ -194,16 +215,16 @@ const ProjectStatus = () => {
                                                                         : "Save"
                                                                 }
                                                             </Button>
-                                                        </p>
+                                                     
                                                     }
-                                                    <p><Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}</Button></p>
+                                                   <Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}</Button>
                                                 </td>
                                             </tr>
                                         ))}
                                         <tr>
                                             <td id='addmoreOption' colSpan={3}>
                                                 <Button onClick={addOption}>
-                                                    Add an Option <PlusLg size={20} color='#000000' />
+                                                    Add an Option  &nbsp;<PlusLg size={20} color='#000000' />
                                                 </Button>
                                             </td>
                                         </tr>

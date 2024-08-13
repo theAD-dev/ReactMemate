@@ -1301,12 +1301,18 @@ button.closeSubscription {
 border: 1px solid var(--Border, #D0D5DD);
 background: #FFF;
 }
+.listwrapper.orgColorStatus table tr td {
+    position: relative !important;
+    z-index: auto;
+}
 .butcolorIn {
     width: 132px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 4px;
+    border-left: 4px solid;
 }
 td.butactionOrg p {
     margin: 7px;
@@ -1448,18 +1454,29 @@ td.butactionOrg p {
     line-height: 20px;
     margin-left: 9px;
 }
+.orgColorStatus .top p {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+.orgColorStatus .top {
+    margin-bottom: 31px;
+}
 .statuswrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
-.butactionOrg p button.save, .butactionOrg p button.save:hover {
+.butactionOrg button.save, .butactionOrg button.save:hover {
     width: 85px !important;
     border: 1px solid #A3E0FF !important;
     background: var(--Primary-50, #EBF8FF) !important;
     color: var(--Primary-700, #106B99) !important;
 }
-.butactionOrg p button.remove, .butactionOrg p button.remove:hover {
+.butactionOrg button.remove, .butactionOrg button.remove:hover {
     width: 85px !important;
     border: 1px solid #FDA29B !important;
     background: #FFF !important;
@@ -1537,3 +1554,25 @@ td.butactionOrg p {
   }
   
  */
+ .statuswrapper .szh-menu__group::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    padding: 5px;
+  }
+  .statuswrapper .szh-menu__group::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 0px #fff; 
+    border-radius: 10px;
+  }
+  .statuswrapper .szh-menu__group::-webkit-scrollbar-thumb {
+    background: #EAECF0; 
+    border-radius: 10px;
+  }
+  .statuswrapper .szh-menu__group::-webkit-scrollbar-thumb:hover {
+    background: #d9d9da; 
+  }
+  .listwrapper .statuswrapper ul li {
+    border: 0;
+}
+.listwrapper .statuswrapper li.szh-menu__item:hover{
+ background: transparent;
+}

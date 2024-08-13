@@ -46,6 +46,7 @@ const fetchAPI = async (endpoint, options = {}) => {
 };
 
 export const createProjectStatus = async (data) => {
+  console.log('data: ', data);
   if(data.id) delete data.id;
   if(data.isNew) delete data.isNew;
   

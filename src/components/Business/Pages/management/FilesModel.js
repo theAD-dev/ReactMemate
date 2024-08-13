@@ -33,7 +33,7 @@ const FilesModel = () => {
   return (
     <>
       {/* View modal trigger */}
-      <Button className="linkByttonStyle" onClick={handleShow}>
+      <Button className=" filebut fileActive" onClick={handleShow}>
         Files <img src={FolderFileIcon} alt="FolderFileIcon" />
       </Button>
 

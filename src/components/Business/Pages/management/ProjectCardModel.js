@@ -23,6 +23,7 @@ import ScheduleUpdate from './components/ScheduleUpdate';
 import { ProjectCardApi,cardScheduleUpdateApi } from "../../../../APIs/management-api";
 
 const ProjectCardModel = ({viewShow, setViewShow, project, reInitilize  }) => {
+  console.log('project: ', project);
 
     const [cardData , setCardData] = useState()
     const [scheduleData , setScheduleData] = useState()
@@ -135,16 +136,7 @@ const formatTimestamp = (timestamp) => {
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
           <div className="modelHeader">
           <ul className='d-flex justify-content-between align-items-center '>
-            <li><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438'/></strong><span className='cardId'>{cardData?.number}</span></li>
-            <li>
-            <label>
-      <select name="selectedStatus">          
-        <option value="">Status</option>
-        <option value="">WN</option>
-        <option value="">LOST</option>
-      </select>
-    </label>
-            </li>
+            <li><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438'/></strong><span className='cardId'>{cardData?.number}&nbsp; </span> </li>
             <li className='refrencesTag'>
                                 Reference: 
                                  {isEditingReference ? (
@@ -164,9 +156,20 @@ const formatTimestamp = (timestamp) => {
                             </li>
           </ul>
           </div>
-          <button className='CustonCloseModal' onClick={handleClose}>
+          <div className='selectedStatusWrap'>
+         
+            <label>
+      <select name="selectedStatus">          
+        <option value="">Orange Orange Orange 22</option>
+        <option value="">Orange Orange Orange 21</option>
+        <option value="">Orange Orange Orange 23</option>
+      </select>
+    </label>
+      <button className='CustonCloseModal' onClick={handleClose}>
         <X size={24} color='#667085'/>
         </button>
+          </div>
+        
         </Modal.Header>
         <Modal.Body className='p-0'>
             <div className="ContactModel">
@@ -205,17 +208,17 @@ const formatTimestamp = (timestamp) => {
                         </thead>
                         <tbody>
                     {cardData?.jobs?.length ? (
-                      cardData.jobs.map(({ id, number, status, total }) => (
+                      cardData.jobs.map(({ id, number,reference, status, total }) => (
                             <tr>
                                 <td>{number.substring(4)}</td>
-                                <td>Front End Developm...</td>
+                                <td>{reference}</td>
                                 <td> <Github size={24} color='#101828'/></td>
                                 <td>${total}</td>
-                                <td>   
+                                <td className={status}>  
                                     {status === "Accepted" ? (
-                                    <span className={status ? "Accepted" : "Confirmed"}>Finish</span>
+                                    <span className={status ? "Accepted" : "Confirmed"}>Paid</span>
                                       ) : (
-                                        <span className={status ? "Accepted" : "Confirmed"}>Not Finish</span>
+                                        <span className={status ? "Accepted" : "Confirmed"}>Not Paid</span>
                                       )}
                                  </td>
                             </tr>
@@ -234,7 +237,9 @@ const formatTimestamp = (timestamp) => {
                 <Col className='projectHistoryCol'>
                  <Row>
                     <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
-                    <AddNote /> <NewTask project={project} reInitilize={reInitilize} /> <SendSMS /><ComposeEmail /></Col>
+                    <AddNote />
+                    
+                     <NewTask project={project} reInitilize={reInitilize} /> <SendSMS /><ComposeEmail /></Col>
                     <Col className='d-flex justify-content-center align-items-center filter'  >
                     {/* <span><Filter size={20} color='#344054'/></span> */}
                     <ProjectCardFilter />
@@ -284,21 +289,18 @@ const formatTimestamp = (timestamp) => {
                 </Col>
                 </Row>
                 <Row className='projectCardButWrap'>
-                    <Col><Button>
+                    <Col><Button className='schedule schActive'>
                     <ScheduleUpdate
             setDateRange={setDateRange}
             dateRange={dateRange}
-            scheduleData={handleDateRangeChange}
-        />
+            scheduleData={handleDateRangeChange}/>
                     </Button>
-                   
-                   <Button>Expense <img src={ExpenseIcon} alt="Expense" /></Button>
-                    <Button>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>
-                    <Button>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
-                    <Button>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
-               
+                   <Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
+                    <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>
+                    <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
+                    <Button className='googleBut googleActive'>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
                    <FilesModel />
-                    <Button>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button></Col>
+                    <Button className='calenBut calenActive'>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button></Col>
                 </Row>
                 <Row className='projectCardCalculation'>
                   <Col className='proBuget projectColBg'>
@@ -328,7 +330,6 @@ const formatTimestamp = (timestamp) => {
                   <Col className='proProfit projectColBg'>
                  <span>Operational Profit <InfoCircle size={16} color='#1D2939'/></span><strong>${cardData?.profit}</strong>
                   </Col>
-                  
                 </Row>
                 <Row className='projectCardactionBut'>
                     <Col className='actionLeftSide'>
@@ -337,7 +338,7 @@ const formatTimestamp = (timestamp) => {
                     <Button className='sendBackAction'><Reply size={20} color='#344054'/> Send Back to Sales</Button>
                     </Col>
                     <Col className='actionRightSide'>
-                    <Button className='InvoiceAction'>Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>
+                    <Button className='InvoiceAction InvoiceActive'>Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>
                     <Button className='ProgressAction'>Progress Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>
                     <Button className='CompleteActionBut'>Complete & Archive</Button>
                     </Col>
