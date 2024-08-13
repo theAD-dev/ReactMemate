@@ -84,7 +84,7 @@ const ProjectStatus = () => {
     };
 
     const updateOptionColor = (id, color) => {
-        setOptions(options.map(option => option.id === id ? { ...option, color } : option));
+        setOptions(options.map(option => option.id === id ? { ...option, color, isChanged: true } : option));
     };
 
     const updateOptionTitle = (id, title) => {
