@@ -70,8 +70,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
       }
     }
 
-    if (projectId) projectCardData(projectId);
-  }, [projectId]);
+    if (projectId && viewShow) projectCardData(projectId);
+  }, [projectId, viewShow]);
 
 
   return (
