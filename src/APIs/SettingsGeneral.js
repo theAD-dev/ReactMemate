@@ -49,8 +49,10 @@ export const createProjectStatus = async (data) => {
   console.log('data: ', data);
   if(data.id) delete data.id;
   if(data.isNew) delete data.isNew;
+  if(data.isChanged) delete data.isChanged;
+  if(data.value) delete data.value;
   
-  const endpoint = `/settings/project-statuses/new`;
+  const endpoint = `/settings/project-statuses/new/`;
   const options = {
     method: 'POST',
     body: data

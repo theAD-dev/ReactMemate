@@ -22,7 +22,6 @@ const colorOptions = [
     { value: "#FF007F", bg:"#FFCCE5", border:"#FF007F", color: "#6F0A3C", text: "Soft Pink" },
     { value: "#FFD700", bg:"#FFF8D1", border:"#FFD700", color: "#997100", text: "Yellow" },
     { value: "#6C6C1C", bg:"#E1E1B8", border:"#6C6C1C", color: "#444403", text: "Dark Yellow" }
-   
 ];
 
 
@@ -80,11 +79,11 @@ const ProjectStatus = () => {
     });
 
     const addOption = () => {
-        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1,value: '#FFB258', color: '#FFB258', title: "" }]);
+        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1, value: '#FFB258', color: '#FFB258', title: "" }]);
     };
 
     const updateOptionColor = (id, color) => {
-        setOptions(options.map(option => option.id === id ? { ...option, color } : option));
+        setOptions(options.map(option => option.id === id ? { ...option, color, isChanged: true } : option));
     };
 
     const updateOptionTitle = (id, title) => {
@@ -95,7 +94,6 @@ const ProjectStatus = () => {
         const optionToSave = options.find(option => option.id === id);
         if (isNew) {
             console.log('new options to create...', optionToSave);
-            //if (optionToSave.id) delete optionToSave.id;
             createMutation.mutate(optionToSave);
         } else {
             console.log('options to update...', optionToSave);

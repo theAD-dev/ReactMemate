@@ -66,6 +66,7 @@
     "react-verification-input": "^4.1.1",
     "sass": "^1.77.8",
     "styled-components": "^6.1.2",
+    "three-dots": "^0.3.2",
     "use-debounce": "^10.0.2",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"

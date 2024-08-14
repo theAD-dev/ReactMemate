@@ -93,7 +93,7 @@ const AddNote = () => {
                 </div>
               </Col>
             </Row>
-            <Row>
+            {/* <Row>
               <Col>
                 <div className="formgroup mb-2 mt-3">
                   <label>App Logo</label>
@@ -126,17 +126,20 @@ const AddNote = () => {
 
                 </div>
               </Col>
-            </Row>
-            <div className="popoverbottom  mt-0 pt-4">
-              <Button variant="outline-danger">
-                Cancel
-              </Button>
-              <Button variant="primary save" >
-                Save
-              </Button>
-            </div>
+            </Row> */}
+
           </div>
         </Modal.Body>
+        <Modal.Footer className='pt-0'>
+          <div className="popoverbottom w-100  border-0 mt-0 pt-0">
+            <Button variant="outline-danger">
+              Cancel
+            </Button>
+            <Button variant="primary save" >
+              Save
+            </Button>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
