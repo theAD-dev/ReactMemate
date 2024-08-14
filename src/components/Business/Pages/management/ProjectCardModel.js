@@ -74,6 +74,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   }, [projectId, viewShow]);
 
 
+
+  const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
+  const handleDateRangeChange = (range) => {
+    // Handle the date range update
+    console.log('New date range:', range);
+};
   return (
     <>
       <Modal

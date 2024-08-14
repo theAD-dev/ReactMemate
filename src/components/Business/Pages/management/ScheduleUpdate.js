@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import DateRangePicker from '../../../Work/Pages/tasks/DateRangePicker';
 import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
 import { useMutation } from '@tanstack/react-query';
+import PropTypes from 'prop-types';
 import { updateProjectScheduleById } from '../../../../APIs/management-api';
 
 const formatDateRange = (startDate, endDate) => {
@@ -17,7 +18,7 @@ const DateRangeComponent = ({ startDate, endDate }) => (
     </div>
 );
 
-const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
+const ScheduleUpdate = ({ projectId, startDate, endDate ,scheduleData}) => {
     const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const selectDateRef = useRef(null);
@@ -33,7 +34,9 @@ const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
     const handleDataApply = (data) => {
         updateMutation.mutate({ booking_start: data.startDate, booking_end: data.endDate })
         setDateRange(data);
+        scheduleData(data); // Call scheduleData with the updated date range
         setIsPickerVisible(false);
+     
     };
     const handleClickOutside = (event) => {
         if (selectDateRef.current && !selectDateRef.current.contains(event.target)) {
@@ -81,5 +84,16 @@ const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
         </div>
     );
 };
+
+ScheduleUpdate.propTypes = {
+    setDateRange: PropTypes.func.isRequired,
+    dateRange: PropTypes.shape({
+        startDate: PropTypes.string,
+        endDate: PropTypes.string
+    }).isRequired,
+    scheduleData: PropTypes.func.isRequired
+};
+
+
 
 export default ScheduleUpdate;
