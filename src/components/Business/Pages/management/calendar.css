@@ -268,7 +268,7 @@ ul.resourceMan li span.not-done {
 
 .scheduler_default_event.job-item {
   margin-top: 40px !important;
-  height: 48px !important;
+  height: 40px !important;
 }
 
 .scheduler_default_event_inner {
@@ -352,7 +352,7 @@ ul.eventStyleCal li:first-child span {
 }
 
 ul.eventStyleCal li:first-child {
-  max-width: 85%;
+  max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -364,7 +364,15 @@ ul.eventStyleCal li:first-child {
 .scheduler_default_event.job-item .scheduler_default_event_float_inner::after {
   top: 10px !important;
 }
-
+ul.eventStyleCal li {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
 ul.eventStyleCal li:nth-child(2) {
   color: var(--Primary-800, #0a4766);
   font-family: Inter;
@@ -420,7 +428,7 @@ ul.eventStyleCal {
   padding: 0;
   display: inherit;
   align-items: center;
-  background: #FCFCFD;
+  background: #fcfcfd;
 }
 
 .scheduler_default_rowheader .scheduler_default_resourcedivider {
@@ -434,16 +442,14 @@ ul.eventStyleCal {
 .scheduler_default_tree_image_expand {
   right: 8px;
 }
-
 .scheduler_default_event_inner {
-  padding: 12px 19px !important;
+  padding: 9px 19px 9px 0 !important;
   border-radius: 10px !important;
   box-shadow: 0px 3px 5px 0px rgba(16, 24, 40, 0.1),
     0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
   border: 0 !important;
   display: block !important;
 }
-
 .scheduler_default_rowheader {
   text-align: left;
 }
@@ -612,18 +618,18 @@ strong.dollorIcon {
   letter-spacing: -0.27px;
 }
 .projectCardModel .selectedStatusWrap label select {
-background: transparent;
-border: 0;
+  background: transparent;
+  border: 0;
 }
 .projectCardModel .selectedStatusWrap label {
   border-radius: 4px;
   border: 1px solid var(--Error-100, #fee4e2);
-  background: var(--Error-50, #FFE8CD);
+  background: var(--Error-50, #ffe8cd);
   mix-blend-mode: multiply;
   padding: 4px 7px;
   text-align: center;
   margin: 0 14px;
-  color: var(--Orange-800, #6D471A);
+  color: var(--Orange-800, #6d471a);
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -631,7 +637,7 @@ border: 0;
   line-height: 22px;
   letter-spacing: 0.14px;
   position: relative;
-  border-left: 4px solid #FFB258;
+  border-left: 4px solid #ffb258;
 }
 
 .projectCardModel .refrencesTag {
@@ -725,7 +731,8 @@ border: 0;
   letter-spacing: 0.12px;
   height: 40px;
 }
-.currentJobsTable table tbody td:first-child, .currentJobsTable table thead th:first-child {
+.currentJobsTable table tbody td:first-child,
+.currentJobsTable table thead th:first-child {
   width: 159px;
   text-align: left;
 }
@@ -916,19 +923,19 @@ border: 0;
 }
 
 .currentJobsTable td.Accepted span {
-  border: 1px solid var(--Success-200, #A9EFC5);
-  background: var(--Success-50, #ECFDF3);
+  border: 1px solid var(--Success-200, #a9efc5);
+  background: var(--Success-50, #ecfdf3);
   color: #067647;
 }
 .currentJobsTable td.Confirmed span {
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-50, #FEF3F2);
-  color: #B42318;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
+  color: #b42318;
 }
 .currentJobsTable td.Assign span {
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-50, #FEF3F2);
-  color: #B42318;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
+  color: #b42318;
 }
 .projectCardButWrap.row {
   margin: 0;
@@ -1182,7 +1189,7 @@ border: 0;
   background: #fff;
 }
 .taskModelProject .modal-header {
-  border-bottom: 1px solid #EAECF0 !important;
+  border-bottom: 1px solid #eaecf0 !important;
   justify-content: space-between;
 }
 .taskModelProject .modal-header span img {
@@ -1190,8 +1197,8 @@ border: 0;
 }
 .taskModelProject .inputInfo {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Border, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
   padding: 8px 14px;
 }
 .taskModelProject .inputInfo textarea {
@@ -1205,7 +1212,7 @@ border: 0;
   min-height: 140px;
   border: 0;
 }
-.taskModelProject  .upload-btn-wrapper {
+.taskModelProject .upload-btn-wrapper {
   display: block;
   width: 100% !important;
 }
@@ -1213,7 +1220,7 @@ border: 0;
   width: 100%;
 }
 .taskModelProject .upload-btn-wrapper .textbtm p span {
-  color: var(--Primary-700, #106B99);
+  color: var(--Primary-700, #106b99);
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -1226,8 +1233,9 @@ border: 0;
   align-items: center;
   padding: 16px 0 0 !important;
 }
-.taskModelProject .popoverbottom .btn-outline-danger,.taskModelProject .popoverbottom .btn-outline-danger:hover {
-  color: var(--Error-700, #B42318);
+.taskModelProject .popoverbottom .btn-outline-danger,
+.taskModelProject .popoverbottom .btn-outline-danger:hover {
+  color: var(--Error-700, #b42318);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1238,11 +1246,12 @@ border: 0;
   text-align: left;
   background: transparent;
 }
-.taskModelProject .popoverbottom .save ,.taskModelProject .popoverbottom .save:hover{
+.taskModelProject .popoverbottom .save,
+.taskModelProject .popoverbottom .save:hover {
   border-radius: 4px;
-  border: 1px solid var(--Primary-600, #158ECC);
-  background: var(--Primary-600, #158ECC);
-  color: #FFF;
+  border: 1px solid var(--Primary-600, #158ecc);
+  background: var(--Primary-600, #158ecc);
+  color: #fff;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1251,8 +1260,8 @@ border: 0;
 }
 .sendSMSPhone .inputInfo span {
   border-radius: 6px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
   display: flex;
   padding: 2px 4px 2px 5px;
   justify-content: center;
@@ -1279,10 +1288,10 @@ border: 0;
   width: 100%;
   display: block;
 }
-.formgroupSelectTag .inputInfo  span {
+.formgroupSelectTag .inputInfo span {
   border-radius: 6px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
   padding: 2px 4px 2px 5px;
   color: var(--Gray-700, #344054);
   text-align: center;
@@ -1292,7 +1301,7 @@ border: 0;
   font-weight: 500;
   line-height: 20px;
 }
-.formgroupSelectTag  .basic-multi-select {
+.formgroupSelectTag .basic-multi-select {
   width: 100%;
 }
 .formgroupSelectTag .inputInfo {
@@ -1309,10 +1318,12 @@ border: 0;
   width: 263px;
   z-index: 1000;
   right: 0;
-  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px) var(--radius-xs, 4px);
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px)
+    var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
 }
 .projectCardFilterDropdown .dropdown-menuF ul {
   padding: 0;
@@ -1341,10 +1352,10 @@ border: 0;
 }
 .projectCardFilterDropdown .dropdown-buttonsF .apply {
   border-radius: 4px;
-  border: 1px solid var(--Primary-600, #158ECC);
-  background: var(--Primary-600, #158ECC);
+  border: 1px solid var(--Primary-600, #158ecc);
+  background: var(--Primary-600, #158ecc);
   padding: 8px 14px;
-  color: #FFF;
+  color: #fff;
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -1357,10 +1368,10 @@ border: 0;
 }
 .projectCardFilterDropdown .dropdown-buttonsF .cancel {
   border-radius: 4px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: #FFF;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
   padding: 8px 14px;
-  color: var(--Gray-800, #1D2939);
+  color: var(--Gray-800, #1d2939);
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -1374,7 +1385,7 @@ border: 0;
 }
 .projectCardFilterDropdown .dropdown-menuF li.active {
   border-radius: var(--radius-sm, 6px);
-  background: var(--Gray-50, #F9FAFB);
+  background: var(--Gray-50, #f9fafb);
   padding: 10px 10px 10px var(--spacing-md, 8px);
 }
 .projectCardFilterDropdown .dropdown-menuF li input {
@@ -1413,7 +1424,7 @@ border: 0;
 }
 .taskModelProjectFiles .dragItem {
   border-radius: var(--radius-sm, 6px);
-  background: var(--Gray-100, #F2F4F7);
+  background: var(--Gray-100, #f2f4f7);
   padding: 13px;
   display: flex;
   align-items: center;
@@ -1421,8 +1432,8 @@ border: 0;
 }
 .CustonCloseModalBottom .but {
   border-radius: 4px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
   padding: 10px 18px;
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -1433,12 +1444,13 @@ border: 0;
 }
 
 .CustonCloseModalBottom {
-  border-top: 1px solid var(--Gray-200, #EAECF0);
+  border-top: 1px solid var(--Gray-200, #eaecf0);
   padding: var(--spacing-xl, 16px) var(--spacing-none, 0px);
   text-align: center;
 }
 
-.scheduler_default_divider, .scheduler_default_splitter {
+.scheduler_default_divider,
+.scheduler_default_splitter {
   height: calc(100vh - 170px) !important;
 }
 
@@ -1451,7 +1463,7 @@ border: 0;
 }
 .refrencesTag span {
   border-radius: 300px;
-  background: var(--Primary-25, #F2FAFF);
+  background: var(--Primary-25, #f2faff);
   width: 28px;
   height: 28px;
   display: flex;
@@ -1472,8 +1484,8 @@ border: 0;
 }
 .projectCardactionBut .actionRightSide button.InvoiceAction:hover {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #D7F2EE;
-  background: #FFF;
+  border: 1px solid #d7f2ee;
+  background: #fff;
 }
 /* .projectCardactionBut .actionRightSide button.InvoiceAction.InvoiceActive {
   border-radius: var(--radius-xs, 4px);
@@ -1483,8 +1495,8 @@ border: 0;
 } */
 .projectCardButWrap button.expense:hover {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #FCBED9;
-  background: #FFF;
+  border: 1px solid #fcbed9;
+  background: #fff;
   color: var(--Gray-700, #344054);
 }
 /* .projectCardButWrap button.expActive {
@@ -1495,8 +1507,8 @@ border: 0;
 } */
 .projectCardButWrap button.createJob:hover {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #FFB800;
-  background: #FFF;
+  border: 1px solid #ffb800;
+  background: #fff;
   color: var(--Gray-700, #344054);
 }
 /* .projectCardButWrap button.jobActive {
@@ -1507,8 +1519,8 @@ color: #FFC501;
 } */
 .projectCardButWrap button.googleBut:hover {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #D9E8FF;
-  background: #FFF;
+  border: 1px solid #d9e8ff;
+  background: #fff;
   color: var(--Gray-700, #344054);
 }
 /* .projectCardButWrap button.googleActive {
@@ -1519,20 +1531,20 @@ color: #4285F4;
 } */
 .projectCardButWrap button.schedule:hover {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #6DA7BD;
-  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid #6da7bd;
+  background: rgba(255, 255, 255, 0.1);
   color: var(--Gray-700, #344054);
 }
-/* .projectCardButWrap button.schActive {
+.projectCardButWrap .dateSelectdTaskBar {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #6DA7BD;
+  border: 1px solid #6da7bd;
   background: rgba(109, 167, 189, 0.05);
-color: #6DA7BD;
-} */
+  color: #6da7bd;
+}
 .projectCardButWrap button.calenBut:hover {
   border-radius: var(--radius-xs, 4px);
-border: 1px solid #4285F4;
-background: #FFF;
+  border: 1px solid #4285f4;
+  background: #fff;
   color: var(--Gray-700, #344054);
 }
 /* .projectCardButWrap button.calenActive {
@@ -1543,8 +1555,8 @@ color: #4285F4;
 } */
 .projectCardButWrap button.createPo:hover {
   border-radius: var(--radius-xs, 4px);
-border: 1px solid #4285F4;
-background: #FFF;
+  border: 1px solid #4285f4;
+  background: #fff;
   color: var(--Gray-700, #344054);
 }
 /* .projectCardButWrap button.poActive {
@@ -1556,10 +1568,10 @@ color: #4285F4;
 
 .projectCardButWrap button.filebut {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
   padding: 10px 18px;
-  background: #FFF;
+  background: #fff;
   color: var(--Gray-700, #344054);
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -1570,8 +1582,8 @@ color: #4285F4;
 }
 .projectCardButWrap button.filebut:hover {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #4285F4;
-  background: #FFF;
+  border: 1px solid #4285f4;
+  background: #fff;
   color: var(--Gray-700, #344054);
 }
 /* .projectCardButWrap button.fileActive {
@@ -1581,3 +1593,35 @@ border: 1px solid #D9E8FF;
 background: #F0F5FF;
 color: #4285F4;
 } */
+
+.projectCardModel .szh-menu {
+  width: 204px;
+  height: 238px;
+  overflow-y: auto;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 8px #f2f4f7;
+  border-radius: 10px;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar-thumb {
+  background: #76d1ff;
+  border-radius: 10px;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar-thumb:hover {
+  background: #76d1ff;
+}
+.selectButStatus span.outArrow {
+  display: none;
+}
+.selectButStatus .statusFlex {
+  justify-content: space-between;
+  padding-right: 8px;
+}
+.selectButStatus li.szh-menu__item:hover {
+  background: transparent;
+}

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import DateRangePicker from '../../../Work/Pages/tasks/DateRangePicker';
 import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
 import { useMutation } from '@tanstack/react-query';
-import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
 import { updateProjectScheduleById } from '../../../../APIs/management-api';
 
 const formatDateRange = (startDate, endDate) => {
@@ -13,12 +13,11 @@ const formatDateRange = (startDate, endDate) => {
 };
 
 const DateRangeComponent = ({ startDate, endDate }) => (
-    <div className='dateSelectdTaskBar'>
-        {formatDateRange(startDate, endDate)}
-    </div>
+         <Button className='dateSelectdTaskBar schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
+        {formatDateRange(startDate, endDate)} <img src={OrdersIcon} alt="OrdersIcon" /></Button>
 );
 
-const ScheduleUpdate = ({ projectId, startDate, endDate ,scheduleData}) => {
+const ScheduleUpdate = ({ projectId, startDate, endDate, scheduleData}) => {
     const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const selectDateRef = useRef(null);
@@ -71,9 +70,9 @@ const ScheduleUpdate = ({ projectId, startDate, endDate ,scheduleData}) => {
                     )}
                 </>
                 ) : (
-                    <span className={`  ${isPickerVisible ? 'active' : ''}`}>
+                    <Button className={`schedule schActive  ${isPickerVisible ? 'active' : ''}`}>
                         Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" />
-                    </span>
+                    </Button>
                 )}
             </div>
             {isPickerVisible && (
@@ -85,14 +84,6 @@ const ScheduleUpdate = ({ projectId, startDate, endDate ,scheduleData}) => {
     );
 };
 
-ScheduleUpdate.propTypes = {
-    setDateRange: PropTypes.func.isRequired,
-    dateRange: PropTypes.shape({
-        startDate: PropTypes.string,
-        endDate: PropTypes.string
-    }).isRequired,
-    scheduleData: PropTypes.func.isRequired
-};
 
 
 

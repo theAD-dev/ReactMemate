@@ -46,10 +46,10 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
         <Menu
             menuButton={
                 <MenuButton style={{
-                    width: '150px',
+                    width: '204px',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-end',
                     padding: '8px 0px',
                     cursor: 'pointer',
                     background: 'transparent',
@@ -59,29 +59,45 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
                 }}>
                     {
                         selectedOption && selectedOption.title ? (
-                            <div className="d-flex justify-content-center" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
+                            <div className="d-flex justify-content-center" style={{ width: '204px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
                                 <>{
                                     updateMutation.isPending ? (<div class="dot-flashing"></div>) : (
                                         <>
                                             <div className="h-100" style={{ width: '4px', background: `${colorMapping[selectedOption?.color].border}` }}></div>
-                                            <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[selectedOption?.color].bg}` }}>
+                                            <div className="h-100 statusFlex d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[selectedOption?.color].bg}` }}>
                                                 <span style={{ color: `${colorMapping[selectedOption?.color].color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{selectedOption?.title}</span>
+                                                <span className='inArrow'><ChevronDown color="#98A2B3" size={15} /></span>
                                             </div>
+                                            
                                         </>
                                     )
                                 }
                                 </>
                             </div>
-                        ) : (<div>{"Select..."}</div>)
+                        ) : (   <div className="d-flex justify-content-center" style={{ width: '204px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
+                            <>{
+                             
+                                    <>
+                                        <div className="h-100" style={{ width: '4px', background: `#1D2939` }}></div>
+                                        <div className="h-100 statusFlex d-flex align-items-center" style={{ width: '100%', background: `#F2F4F7` }}>
+                                            <span style={{ color: `#1D2939`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>No Status</span>
+                                            <span className='inArrow'><ChevronDown color="#98A2B3" size={15} /></span>
+                                        </div>
+                                        
+                                    </>
+                                
+                            }
+                            </>
+                        </div>)
                     }
-                    <span><ChevronDown color="#98A2B3" size={15} /></span>
+                    <span className='outArrow'><ChevronDown color="#98A2B3" size={15} /></span>
                 </MenuButton>}
             overflow={"auto"}
             position={"anchor"}
         >
             {statusOptions?.map((status, i) => (
                 <MenuItem style={{ textAlign: 'left' }} onClick={() => handleSubMenuClick(status)} key={status.id}>
-                    <div className="d-flex" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
+                    <div className="d-flex" style={{ width: '163px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
                         <div className="h-100" style={{ width: '4px', background: `${colorMapping[status?.color].border}` }}></div>
                         <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[status?.color].bg}` }}>
                             <span style={{ color: `${colorMapping[status?.color].color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{status?.title}</span>

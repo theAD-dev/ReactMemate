@@ -73,13 +73,20 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     if (projectId && viewShow) projectCardData(projectId);
   }, [projectId, viewShow]);
 
-
-
   const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
   const handleDateRangeChange = (range) => {
     // Handle the date range update
     console.log('New date range:', range);
 };
+
+//Real Cost Calculation
+const cs = parseFloat(cardData?.cost_of_sale) || 0;
+const le = parseFloat(cardData?.labor_expenses) || 0;
+const oe = parseFloat(cardData?.operating_expense) || 0;
+const RealCost = cs + le + oe;
+const formattedRealCost = RealCost.toFixed(2);
+
+
   return (
     <>
       <Modal
@@ -114,7 +121,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </ul>
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
+            <div className='selectButStatus'>
             <SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status}/>
+            </div>
             <button className='CustonCloseModal' onClick={handleClose}>
               <X size={24} color='#667085' />
             </button>
@@ -177,7 +186,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               <Col className='projectHistoryCol'>
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
-                    <AddNote />
+                    <AddNote projectId={projectId}/>
                     <NewTask project={project} reInitilize={reInitilize} />
                     <SendSMS />
                     <ComposeEmail />
@@ -192,6 +201,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <div className='projectHistoryScroll'>
                       {cardData?.history?.length ? (
                         cardData.history.map(({ id, type, text, title, created, manager }) => (
+                         
                           <div className='projectHistorygroup' key={id}>
                             <ul>
                               <li>
@@ -212,8 +222,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                 )}
                               </li>
                               <li><strong>{title}</strong></li>
-                              <li><FilePdf size={16} color='#F04438' /></li>
-                              <li><Link45deg size={16} color='#3366CC' /></li>
+                              {/* <li><FilePdf size={16} color='#F04438' /></li>
+                              <li><Link45deg size={16} color='#3366CC' /></li> */}
                             </ul>
                             <h6>{text}</h6>
                             <p>{formatTimestamp(created)} by {manager}</p>
@@ -229,9 +239,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </Row>
             <Row className='projectCardButWrap'>
               <Col>
-                <Button className='schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
-                  <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
-                </Button>
+                <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
                 <Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                 <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>
                 <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
@@ -244,13 +252,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               <Col className='proBuget projectColBg'>
                 <div>
                   <h5>Budget</h5>
-                  <p>$8,199.14</p>
+                  <p>${cardData?.budget}</p>
                 </div>
               </Col>
               <Col className='proRealCost projectColBg'>
                 <div>
                   <h5>Real Cost</h5>
-                  <p>${cardData?.operating_expense}</p>
+                  <p>${formattedRealCost}</p>
                 </div>
               </Col>
               <Col className='proCostSale projectColBg'>
@@ -266,7 +274,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </div>
               </Col>
               <Col className='proProfit projectColBg'>
-                <span>Operational Profit <InfoCircle size={16} color='#1D2939' /></span><strong>${cardData?.profit}</strong>
+                <span>Operational Profit <InfoCircle size={16} color='#1D2939' /></span><strong>${cardData?.operating_expense}</strong>
               </Col>
             </Row>
             <Row className='projectCardactionBut'>
