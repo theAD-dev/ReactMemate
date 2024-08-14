@@ -22,8 +22,9 @@ import ProjectCardFilter from './ProjectCardFilter';
 import FilesModel from './FilesModel';
 import ScheduleUpdate from './ScheduleUpdate';
 import { ProjectCardApi, cardScheduleUpdateApi } from "../../../../APIs/management-api";
+import SelectStatus from './select-status';
 
-const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, reInitilize }) => {
+const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   const [cardData, setCardData] = useState(null);
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedReference, setEditedReference] = useState('');
@@ -106,14 +107,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, reInitili
               </li>
             </ul>
           </div>
-          <div className='selectedStatusWrap'>
-            <label>
-              <select name="selectedStatus">
-                <option value="">Orange Orange Orange 22</option>
-                <option value="">Orange Orange Orange 21</option>
-                <option value="">Orange Orange Orange 23</option>
-              </select>
-            </label>
+          <div className='d-flex align-items-center' style={{ gap: '15px' }}>
+            <SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status}/>
             <button className='CustonCloseModal' onClick={handleClose}>
               <X size={24} color='#667085' />
             </button>
@@ -229,7 +224,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, reInitili
             <Row className='projectCardButWrap'>
               <Col>
                 <Button className='schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
-                  <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end}/>
+                  <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
                 </Button>
                 <Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                 <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>

@@ -56,6 +56,16 @@ export const updateProjectScheduleById = async (id, data) => {
     return fetchAPI(url.toString(), options);
 }
 
+export const updateProjectStatusById = async (id, data) => {
+    const endpoint = `/project-card/custom-status/${id}/`;
+    const options = {
+        method: 'PUT',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
     const accessToken = sessionStorage.getItem("access_token");

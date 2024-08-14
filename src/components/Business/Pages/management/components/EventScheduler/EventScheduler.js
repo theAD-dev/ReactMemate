@@ -5,7 +5,7 @@ import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
 import ProjectCardModel from "../../ProjectCardModel";
-import EventFilters from "./event-filters";
+import { ProjectStatusesList } from "../../../../../../APIs/SettingsGeneral";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
@@ -14,12 +14,12 @@ function EventScheduler() {
   const [view, setView] = useState(false);
   const [viewProjectModel, setViewProjectModel] = useState(false);
   const [isReinitilize, setIsReinitilize] = useState(false);
-
+  const [statusOptions, setStatusOptions] = useState([]);
   const [taskId, setTaskId] = useState(null);
   const [projectId, setProjectId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
-  function viewTaskDetails(id, isjob=false) {
-    if(isjob) {
+  function viewTaskDetails(id, isjob = false) {
+    if (isjob) {
       setProjectId(id);
       setViewProjectModel(true);
     } else {
@@ -28,6 +28,18 @@ function EventScheduler() {
     }
   }
 
+  const fetchData = async () => {
+    try {
+      const data = await ProjectStatusesList();
+      setStatusOptions([...data]);
+    } catch (error) {
+      console.error("Error fetching project status data:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // This useEffect for open create model
   useEffect(() => {
@@ -161,7 +173,7 @@ function EventScheduler() {
         </div>
         <input type="text" placeholder="Search" onChange={handleSearch} className="border search-resource" style={{ borderRadius: '4px', border: '1px solid #D0D5DD', paddingLeft: '36px', fontSize: '16px', height: '36px' }} />
       </div>
-      <div className="featureName" style={{ position: 'absolute', left: '45%', top: '-5px'}}>
+      <div className="featureName" style={{ position: 'absolute', left: '45%', top: '-5px' }}>
         <h1 className="title">Management</h1>
       </div>
       <div className="filters">
@@ -178,8 +190,8 @@ function EventScheduler() {
     <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize} />
     <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize} />
 
-    <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} reInitilize={reInitilize}  />
-    
+    <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} statusOptions={statusOptions} reInitilize={reInitilize} />
+
     {
       isReinitilize && <div style={{ position: 'absolute', top: '50%', left: '50%', width: '30px', height: '40px' }}>
         <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>

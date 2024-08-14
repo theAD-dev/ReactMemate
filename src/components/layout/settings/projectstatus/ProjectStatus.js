@@ -22,7 +22,6 @@ const colorOptions = [
     { value: "#FF007F", bg:"#FFCCE5", border:"#FF007F", color: "#6F0A3C", text: "Soft Pink" },
     { value: "#FFD700", bg:"#FFF8D1", border:"#FFD700", color: "#997100", text: "Yellow" },
     { value: "#6C6C1C", bg:"#E1E1B8", border:"#6C6C1C", color: "#444403", text: "Dark Yellow" }
-   
 ];
 
 
