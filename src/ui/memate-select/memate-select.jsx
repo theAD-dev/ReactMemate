@@ -4,7 +4,7 @@ import Select from "react-select";
 import { defaultTheme } from "react-select";
 import { ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import classNames from "classnames";
-import styles from "./MemateSelect.module.scss";
+import styles from "./memate-select.module.scss";
 
 const { colors } = defaultTheme;
 const setCSSVariables = () => {
@@ -30,6 +30,7 @@ const selectStyles = {
       ? colors.primary
       : provided.backgroundColor,
     color: state.isSelected ? "white" : provided.color,
+    cursor: "pointer"
   }),
 };
 

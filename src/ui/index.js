@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import MemateSelect from "./MemateSelect/MemateSelect";
+import MemateSelect from "./memate-select/memate-select";
 
 const Components = () => {
   const handleSelectChange = (value) => {

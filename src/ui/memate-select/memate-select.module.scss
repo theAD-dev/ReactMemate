@@ -3,14 +3,15 @@
 }
 
 .button {
-  background-color: white;
-  border: 1px solid #ddd;
-  padding: 4px 12px;
   height: 44px;
-  font-weight: 400;
   display: flex;
-  justify-content: space-between;
+  font-weight: 400;
+  padding: 4px 12px;
+  border-radius: 4px;
   align-items: center;
+  border: 1px solid #ddd;
+  background-color: white;
+  justify-content: space-between;
 }
 
 .error {
@@ -26,29 +27,28 @@
 }
 
 .select {
-  position: absolute;
   width: 100%;
   border: none;
+  position: absolute;
 }
 
 .menu {
-  background-color: white;
+  z-index: 2;
+  margin-top: 8px;
   border-radius: 4px;
+  position: absolute;
+  background-color: white;
   box-shadow: 0 0 0 1px hsla(218, 50%, 10%, 0.1),
     0 4px 11px hsla(218, 50%, 10%, 0.1);
-  margin-top: 8px;
-  position: absolute;
-  z-index: 2;
-  width: 100%;
 }
 
 .blanket {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   top: 0;
+  left: 0;
   right: 0;
+  bottom: 0;
   z-index: 1;
+  position: fixed;
 }
 
 .dropdown {
@@ -56,7 +56,7 @@
 }
 
 .dropdownIndicator {
-  color: var(--neutral20);
-  height: 28px;
   width: 32px;
+  height: 28px;
+  color: var(--neutral20);
 }
