@@ -18,7 +18,20 @@
 .salesTableWrap .table-responsive::-webkit-scrollbar-thumb:hover {
   background: #eaecf0;
 }
-
+.tableTopBarSales .styleT3 span.styleT2 {
+  border-radius: 16px;
+  border: 1px solid var(--Primary-200, #A3E0FF);
+  background: var(--Primary-50, #EBF8FF);
+  mix-blend-mode: multiply;
+  color: var(--Primary-500, #1AB2FF);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+}
 .salesTableWrap button.btn.btn-ContactAdd {
   display: flex;
   align-items: center;

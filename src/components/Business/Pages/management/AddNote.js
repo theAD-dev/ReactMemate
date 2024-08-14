@@ -1,28 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { X, CloudArrowUp } from "react-bootstrap-icons";
 import AddNoteModeIcon from "../../../../assets/images/icon/addNoteModeIcon.svg";
+import { cardAddNoteApi } from "../../../../APIs/management-api"; // API for fetching
 
-const AddNote = () => {
+
+const AddNote = ({ projectId }) => {
   const [viewShow, setViewShow] = useState(false);
   const [updateDis, setUpdateDis] = useState('');
   const [errors, setErrors] = useState({});
   const [image, setImage] = useState(null);
+  const [addNoteCard, setAddNoteCard] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleClose = () => {
     setViewShow(false);
   };
+
   const handleShow = () => {
     setViewShow(true);
-
   };
-  // Handle change in form inputs
+
+  useEffect(() => {
+    const fetchProjectCardData = async () => {
+      try {
+        const data = await cardAddNoteApi(projectId);
+        setAddNoteCard(data);
+      } catch (error) {
+        console.error('Error fetching project card data:', error);
+      }
+    };
+
+    if (projectId && viewShow) {
+      fetchProjectCardData();
+    }
+  }, [projectId, viewShow]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('value: ', value);
-    console.log('name: ', name);
+    setUpdateDis(value);
   };
 
   const handleImageUpload = (e) => {
@@ -35,22 +55,42 @@ const AddNote = () => {
       reader.readAsDataURL(file);
     }
   };
-  // Function to handle image deletion
+
   const handleImageDelete = () => {
     setImage(null);
   };
-  // Function to handle updating image
+
   const handleImageUpdate = (e) => {
     handleImageUpload(e);
   };
+
+  const handleSave = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const noteData = {
+        description: updateDis,
+        image, // Attach image if needed
+      };
+
+      await cardAddNoteApi(projectId, noteData);
+      // Optionally, you can show a success message or update state here
+
+      handleClose(); // Close the modal after successful save
+    } catch (err) {
+      setError('Error saving note. Please try again.');
+      console.error('Error updating note:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
-      {/* View modal trigger */}
       <div className="linkByttonStyle" onClick={handleShow}>
         Add Note
       </div>
 
-      {/* View modal */}
       <Modal
         show={viewShow}
         aria-labelledby="contained-modal-title-vcenter"
@@ -73,26 +113,23 @@ const AddNote = () => {
         <Modal.Body>
           <div className="ContactModel">
             <Row>
-
               <Col>
                 <div className="formgroup mb-2 mt-2">
                   <label>Note </label>
                   <div className={`inputInfo ${errors.description ? 'error-border' : ''}`}>
                     <textarea
                       type="text"
-                      name="Enter a message here..."
+                      name="description"
                       value={updateDis}
                       placeholder='Enter a message here...'
-                      onChange={(e) => {
-                        setUpdateDis(e.target.value);
-                        handleChange(e);
-                      }}
+                      onChange={handleChange}
                     />
                     {errors.description && <p className="error-message">{errors.description}</p>}
                   </div>
                 </div>
               </Col>
             </Row>
+            {/* Optional image upload section */}
             {/* <Row>
               <Col>
                 <div className="formgroup mb-2 mt-3">
@@ -105,7 +142,7 @@ const AddNote = () => {
                       <div className="textbtm">
                         <p>
                           <span>Click to upload</span> or drag and drop
-                          <br></br>
+                          <br />
                           SVG, PNG, JPG or GIF (max. 800x400px)
                         </p>
                       </div>
@@ -123,20 +160,18 @@ const AddNote = () => {
                       </div>
                     )}
                   </div>
-
                 </div>
               </Col>
             </Row> */}
-
           </div>
         </Modal.Body>
         <Modal.Footer className='pt-0'>
-          <div className="popoverbottom w-100  border-0 mt-0 pt-0">
-            <Button variant="outline-danger">
+          <div className="popoverbottom w-100 border-0 mt-0 pt-0">
+            <Button variant="outline-danger" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="primary save" >
-              Save
+            <Button variant="primary" onClick={handleSave} disabled={loading}>
+              {loading ? 'Saving...' : 'Save'}
             </Button>
           </div>
         </Modal.Footer>

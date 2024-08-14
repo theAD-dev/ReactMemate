@@ -247,7 +247,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
   dp = new DP.Scheduler(elementId, {
     days: 365,
     scale: "Day",
-    separators: [{ color: "#48C1FF", width: 5 }],
+    separators: [{ color: "#48C1FF", width: 4 }],
     treeImage: "img/nochildren.png",
     rowMinHeight: 130,
     eventEndSpec: "Date",
@@ -301,7 +301,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
         fontColor: "#ffffff",
         horizontalAlignment: "center",
         style:
-          "border-top-left-radius: 4px; border-bottom-left-radius: 4px; background-color: #0000007f; color: #ffffff; padding: 4px;height: 41px;",
+          "border-top-left-radius: 4px; border-bottom-left-radius: 4px; background-color: #0000007f; color: #ffffff; padding: 2px;height: 36px;",
       },
     ];
 

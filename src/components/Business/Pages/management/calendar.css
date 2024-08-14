@@ -268,7 +268,7 @@ ul.resourceMan li span.not-done {
 
 .scheduler_default_event.job-item {
   margin-top: 40px !important;
-  height: 48px !important;
+  height: 40px !important;
 }
 
 .scheduler_default_event_inner {
@@ -352,7 +352,7 @@ ul.eventStyleCal li:first-child span {
 }
 
 ul.eventStyleCal li:first-child {
-  max-width: 85%;
+  max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -364,7 +364,15 @@ ul.eventStyleCal li:first-child {
 .scheduler_default_event.job-item .scheduler_default_event_float_inner::after {
   top: 10px !important;
 }
-
+ul.eventStyleCal li {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
 ul.eventStyleCal li:nth-child(2) {
   color: var(--Primary-800, #0a4766);
   font-family: Inter;
@@ -434,16 +442,14 @@ ul.eventStyleCal {
 .scheduler_default_tree_image_expand {
   right: 8px;
 }
-
 .scheduler_default_event_inner {
-  padding: 12px 19px !important;
+  padding: 9px 19px 9px 0 !important;
   border-radius: 10px !important;
   box-shadow: 0px 3px 5px 0px rgba(16, 24, 40, 0.1),
-    0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
+0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
   border: 0 !important;
   display: block !important;
 }
-
 .scheduler_default_rowheader {
   text-align: left;
 }
@@ -1523,12 +1529,12 @@ color: #4285F4;
   background: rgba(255, 255, 255, 0.10);
   color: var(--Gray-700, #344054);
 }
-/* .projectCardButWrap button.schActive {
+ .projectCardButWrap .dateSelectdTaskBar {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid #6DA7BD;
   background: rgba(109, 167, 189, 0.05);
 color: #6DA7BD;
-} */
+} 
 .projectCardButWrap button.calenBut:hover {
   border-radius: var(--radius-xs, 4px);
 border: 1px solid #4285F4;
@@ -1581,3 +1587,36 @@ border: 1px solid #D9E8FF;
 background: #F0F5FF;
 color: #4285F4;
 } */
+
+
+.projectCardModel .szh-menu {
+  width: 204px;
+  height: 238px;
+  overflow-y: auto;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 8px #f2f4f7;
+  border-radius: 10px;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar-thumb {
+  background: #76d1ff;
+  border-radius: 10px;
+}
+.projectCardModel .szh-menu::-webkit-scrollbar-thumb:hover {
+  background: #76d1ff;
+}
+.selectButStatus span.outArrow {
+  display: none;
+}
+.selectButStatus .statusFlex {
+  justify-content: space-between;
+  padding-right: 8px;
+}
+.selectButStatus li.szh-menu__item:hover {
+  background: transparent;
+}

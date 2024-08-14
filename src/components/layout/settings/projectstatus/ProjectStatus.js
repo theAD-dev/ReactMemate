@@ -30,8 +30,8 @@ const ProjectStatus = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
-    console.log('options>>>>>>>>>>>>>>: ', options);
-
+    const [error, setError] = useState('');
+    const [charCount, setCharCount] = useState(0);
     const fetchData = async () => {
         try {
             setIsCreating(true);
@@ -87,7 +87,13 @@ const ProjectStatus = () => {
     };
 
     const updateOptionTitle = (id, title) => {
-        setOptions(options.map(option => option.id === id ? { ...option, title, isChanged: true } : option));
+        setCharCount(title.length);
+        if (title.length <= 20) {
+            setError('');
+            setOptions(options.map(option => option.id === id ? { ...option, title, isChanged: true } : option));
+        } else {
+            setError(`The status name can be up to 20 characters long.`);
+        }
     };
 
     const saveOption = (id, isNew = false) => {
@@ -138,7 +144,12 @@ const ProjectStatus = () => {
                             <div className="listwrapper orgColorStatus">
                                <div className="top">
                                <h4>Custom Order Status</h4>
-                               <p>The status name can be up to 20 characters long.</p>
+                               {/* <p>The status name can be up to 20 characters long.</p> */}
+                               {error ? (
+                                <p style={{ color: 'red' }}>{error}</p>
+                            ) : (
+                                <p>The status name can be up to {charCount}/20 characters long.</p>
+                            )}
                                </div>
                                 {
                                     isCreating && (
@@ -156,14 +167,16 @@ const ProjectStatus = () => {
                                               
                                                 <td>
                                                     <div className='statuswrapper'>
-                                                        <div className='statusTitle'>
-                                                            <input
-                                                                type="text"
-                                                                value={option.title}
-                                                                onChange={(e) => updateOptionTitle(option.id, e.target.value)}
-                                                            />
-                                                        </div>
-                                               
+                                                  
+                                                    <div className='statusTitle'>
+                                                        <input
+                                                            type="text"
+                                                            value={option.title}
+                                                            onChange={(e) => updateOptionTitle(option.id, e.target.value)}
+                                                        />
+                                                 
+                                                    </div>
+                                                    
                                                         <Menu
                                                             className='mainSelectMenu'
                                                             menuButton={
