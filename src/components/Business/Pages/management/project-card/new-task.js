@@ -4,13 +4,13 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, QuestionCircle } from 'react-bootstrap-icons';
-import SelectUser from './components/task/select-user';
-import SelectDate from './components/task/select-date';
-import newTask from '../../../../assets/images/new-task.svg';
+import SelectUser from '../task/select-user';
+import SelectDate from '../task/select-date';
+import newTask from '../../../../../assets/images/new-task.svg';
 
-import './components/task/task.css';
+import '../task/task.css';
 import { useMutation } from '@tanstack/react-query';
-import { fetchTasksNew } from '../../../../APIs/TasksApi';
+import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 
 const NewTask = ({ project, reInitilize }) => {
     const [viewShow, setViewShow] = useState(false);

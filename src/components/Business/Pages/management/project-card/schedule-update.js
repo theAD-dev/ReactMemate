@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import DateRangePicker from '../../../Work/Pages/tasks/DateRangePicker';
-import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
+import DateRangePicker from '../../../../Work/Pages/tasks/DateRangePicker';
+import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import { useMutation } from '@tanstack/react-query';
 import Button from 'react-bootstrap/Button';
-import { updateProjectScheduleById } from '../../../../APIs/management-api';
+import { updateProjectScheduleById } from '../../../../../APIs/management-api';
 
 const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };
@@ -83,8 +83,5 @@ const ScheduleUpdate = ({ projectId, startDate, endDate, scheduleData}) => {
         </div>
     );
 };
-
-
-
 
 export default ScheduleUpdate;

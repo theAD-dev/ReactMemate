@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { initDaypilot, reInitilizeData } from "./utils";
-import { getManagement } from "../../../../../../APIs/management-api";
+import { getManagement } from "../../../../../APIs/management-api";
 import { Spinner } from "react-bootstrap";
 import ViewTask from "../task/view-task";
 import CreateTask from "../task/create-task";
-import ProjectCardModel from "../../ProjectCardModel";
-import { ProjectStatusesList } from "../../../../../../APIs/SettingsGeneral";
+import ProjectCardModel from "../project-card/project-card-model";
+import { ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {

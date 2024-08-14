@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Placeholder from 'react-bootstrap/Placeholder';
-import placeholderUser from '../../../../../../assets/images/Avatar.svg';
-import taskdetails from '../../../../../../assets/images/task-details.svg';
+import placeholderUser from '../../../../../assets/images/Avatar.svg';
+import taskdetails from '../../../../../assets/images/task-details.svg';
 import './task.css';
 import { ArrowRight } from 'react-bootstrap-icons';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { fetchTasksRead, TaskCompleteJob } from '../../../../../../APIs/TasksApi';
+import { fetchTasksRead, TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import EditTask from './edit-task';
 
 const TaskLoadingView = () => {

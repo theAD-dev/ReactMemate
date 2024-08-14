@@ -3,7 +3,7 @@ import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import { ChevronDown } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
-import { updateProjectStatusById } from '../../../../APIs/management-api';
+import { updateProjectStatusById } from '../../../../../APIs/management-api';
 
 const colorMapping = {
     "#1AB2FF": { bg: "#BAE8FF", border: "#1AB2FF", color: "#0A4766", text: "Blue" },

@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { X, CloudArrowUp } from "react-bootstrap-icons";
-import AddNoteModeIcon from "../../../../assets/images/icon/addNoteModeIcon.svg";
+import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
 
 const AddNote = () => {
   const [viewShow, setViewShow] = useState(false);

@@ -7,21 +7,21 @@ import {
   X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink
 } from "react-bootstrap-icons";
 import { Table } from 'react-bootstrap';
-import AddNote from './AddNote';
-import NewTask from './NewTask';
-import SendSMS from './SendSMS';
-import ComposeEmail from './ComposeEmail';
-import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
-import ExpenseIcon from "../../../../assets/images/icon/ExpenseIcon.svg";
-import CreatePoIcon from "../../../../assets/images/icon/createPoIcon.svg";
-import Briefcase from "../../../../assets/images/icon/briefcase.svg";
-import GoogleReview from "../../../../assets/images/icon/googleReviewIcon.svg";
-import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
-import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
-import ProjectCardFilter from './ProjectCardFilter';
-import FilesModel from './FilesModel';
-import ScheduleUpdate from './ScheduleUpdate';
-import { ProjectCardApi, cardScheduleUpdateApi } from "../../../../APIs/management-api";
+import AddNote from './add-note';
+import NewTask from './new-task';
+import SendSMS from './send-sms';
+import ComposeEmail from './compose-email';
+import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
+import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
+import CreatePoIcon from "../../../../../assets/images/icon/createPoIcon.svg";
+import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
+import GoogleReview from "../../../../../assets/images/icon/googleReviewIcon.svg";
+import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
+import InvoicesIcon from "../../../../../assets/images/icon/InvoicesIcon.svg";
+import ProjectCardFilter from './project-card-filter';
+import FilesModel from './files-model';
+import ScheduleUpdate from './schedule-update';
+import { ProjectCardApi, cardScheduleUpdateApi } from "../../../../../APIs/management-api";
 import SelectStatus from './select-status';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {

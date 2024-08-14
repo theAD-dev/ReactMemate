@@ -5,12 +5,12 @@ import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
 
 import './task.css';
-import taskEditIcon from '../../../../../../assets/images/icon/taskEditIcon.svg';
+import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import { ChevronDown, QuestionCircle } from 'react-bootstrap-icons';
 import SelectUser from './select-user';
 import SelectDate from './select-date';
 import { useMutation } from '@tanstack/react-query';
-import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../../APIs/TasksApi';
+import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../APIs/TasksApi';
 
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";

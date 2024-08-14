@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { X,FileEarmarkPersonFill,ThreeDotsVertical
 } from "react-bootstrap-icons";
-import FolderFileIcon from "../../../../assets/images/icon/folderFileIcon.svg";
+import FolderFileIcon from "../../../../../assets/images/icon/folderFileIcon.svg";
 import { Button } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 

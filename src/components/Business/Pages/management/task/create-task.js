@@ -6,11 +6,11 @@ import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, QuestionCircle } from 'react-bootstrap-icons';
 import SelectUser from './select-user';
 import SelectDate from './select-date';
-import newTask from '../../../../../../assets/images/new-task.svg';
+import newTask from '../../../../../assets/images/new-task.svg';
 
 import './task.css';
 import { useMutation } from '@tanstack/react-query';
-import { fetchTasksNew } from '../../../../../../APIs/TasksApi';
+import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 
 const CreateTask = ({ show, setShow, project, reInitilize }) => {
     const [taskTitle, setTaskTitle] = useState('');

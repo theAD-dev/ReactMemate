@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Person } from 'react-bootstrap-icons';
 import { Spinner } from 'react-bootstrap';
-import { fetchTasksUsers } from '../../../../../../APIs/TasksApi';
+import { fetchTasksUsers } from '../../../../../APIs/TasksApi';
 import { useQuery } from '@tanstack/react-query';
 
 const CustomOption = ({ image, text, isSelected }) => (

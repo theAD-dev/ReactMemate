@@ -3,13 +3,13 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { X } from "react-bootstrap-icons";
-import composeEmailIcon from "../../../../assets/images/icon/composeEmailIcon.svg";
+import composeEmailIcon from "../../../../../assets/images/icon/composeEmailIcon.svg";
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuItem from '@mui/material/MenuItem';
 import Select1 from 'react-select';
-import CustomOption from './CustomOption';
+import CustomOption from './custom-option';
 import DraftWysiwyg from './DraftWysiwyg';
 
 
