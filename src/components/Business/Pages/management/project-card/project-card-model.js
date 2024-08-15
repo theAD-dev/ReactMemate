@@ -390,7 +390,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <h3>Project History</h3>
                     {
                       isFetching ? (
-                        <>
+                        <React.Fragment key={'history-key-1'}>
                           <Placeholder as="p" animation="wave" className="mb-0 mt-1">
                             <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
                           </Placeholder>
@@ -421,7 +421,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                           <Placeholder as="p" animation="wave" className="mb-0 mt-1">
                             <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
                           </Placeholder>
-                        </>
+                        </React.Fragment>
                       ) : (
                         <div className='projectHistoryScroll'>
                           {cardData?.history?.length ? (

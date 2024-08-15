@@ -31,6 +31,7 @@ function loadData(responses) {
       resource: data.unique_id,
       backColor: background,
       borderColor: color,
+      tag: { number: data.number, reference: data.reference, value: data.id },
       text: `<ul class="eventStyleCal">
         <li>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +117,7 @@ function loadData(responses) {
         }</span>
           </li>
         </ul>
-        <div class="project-content" unique-id="${data.unique_id}">
+        <div class="project-content" unique-id="${data.unique_id}" project-id="${data.id}" number="${data?.number}" reference="${data?.reference}">
           <span class="small project-content-name" unique-id="${data.unique_id}">${data?.client?.name}</span>
           <h2 class="project-content-name" unique-id="${data.unique_id}">${data.reference}</h2>
           ${status}
@@ -285,9 +286,11 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
   dp.onEventClicked = function (args) {
     const taskId = args.e.id();
     if (args.div.className.includes("task-item") && taskId) {
-      viewTaskDetails(taskId);
+      viewTaskDetails(taskId, false);
     } else if (args.div.className.includes("job-item") && taskId) {
-      viewTaskDetails(taskId, true);
+      const projectDetails = args.e.tag();
+      console.log('projectDetails: ', projectDetails);
+      viewTaskDetails(taskId, true, projectDetails);
     }
   };
 

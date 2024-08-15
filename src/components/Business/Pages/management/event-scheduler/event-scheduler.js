@@ -18,9 +18,10 @@ function EventScheduler() {
   const [taskId, setTaskId] = useState(null);
   const [projectId, setProjectId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
-  function viewTaskDetails(id, isjob = false) {
+  function viewTaskDetails(id, isjob = false, projectDetails) {
     if (isjob) {
       setProjectId(id);
+      setProjectDetails(projectDetails);
       setViewProjectModel(true);
     } else {
       setTaskId(id);
@@ -57,9 +58,14 @@ function EventScheduler() {
           console.log('task-list: ....', taskId);
           if (taskId) viewTaskDetails(taskId);
         } else if (e.target.closest(".project-content")) {
-          const projectId = e.target.closest('.project-content').getAttribute('unique-id');
-          console.log('project: ....', projectId);
-          setProjectId(projectId);
+          const uniqueId = e.target.closest('.project-content').getAttribute('unique-id');
+          const number = e.target.closest('.project-content').getAttribute('number');
+          const reference = e.target.closest('.project-content').getAttribute('reference');
+          const projectId = e.target.closest('.project-content').getAttribute('project-id');
+          
+          console.log('uniqueId: ....', uniqueId);
+          setProjectId(uniqueId);
+          setProjectDetails({ number, reference, value: projectId });
           setViewProjectModel(true);
         }
       }
