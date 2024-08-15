@@ -6,7 +6,7 @@ import Col from 'react-bootstrap/Col';
 import {
   X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink
 } from "react-bootstrap-icons";
-import { Table } from 'react-bootstrap';
+import { Placeholder, Table } from 'react-bootstrap';
 import AddNote from './add-note';
 import NewTask from './new-task';
 import SendSMS from './send-sms';
@@ -27,7 +27,7 @@ import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const [cardData, setCardData] = useState(null);
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedReference, setEditedReference] = useState('');
@@ -55,11 +55,14 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   };
 
   const projectCardData = async (uniqueId) => {
+    setIsFetching(true);
     try {
       const data = await ProjectCardApi(uniqueId);
       setCardData(data);
     } catch (error) {
       console.error('Error fetching project card data:', error);
+    } finally {
+      setIsFetching(false);
     }
   }
 
@@ -121,13 +124,23 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
           <div className="modelHeader">
             <ul className='d-flex justify-content-between align-items-center '>
-              <li className='me-2'>
+              <li className='me-1 d-flex align-items-center'>
                 <strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438' /></strong>
-                <span className='cardId'>{cardData?.number}&nbsp; </span>
+                {
+                  isFetching ? (
+                    <Placeholder as="span" animation="wave" className="ms-2 me-2">
+                      <Placeholder xs={12} bg="secondary" size='md' style={{ width: '120px' }} />
+                    </Placeholder>
+                  ) : <span className='cardId'>{cardData?.number} &nbsp;</span>
+                }
               </li>
-              <li className='refrencesTag'>
+              <li className='refrencesTag mt-1'>
                 Reference:&nbsp;
-                {isEditingReference ? (
+                {isFetching ? (
+                  <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                    <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '120px', height: '20px' }} />
+                  </Placeholder>
+                ) : isEditingReference ? (
                   <input
                     type="text"
                     value={editedReference}
@@ -153,7 +166,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
             <div className='selectButStatus'>
-              <SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status} />
+              {
+                isFetching ? (
+                  <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                    <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '120px', height: '20px' }} />
+                  </Placeholder>
+                ) : (<SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status} />)
+              }
             </div>
             <button className='CustonCloseModal' onClick={handleClose}>
               <X size={24} color='#667085' />
@@ -166,15 +185,33 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               <Col className='orderDiscription'>
                 <strong>Order Description</strong>
                 <div className='customScrollBar'>
-                  <ul>
-                    {cardData?.calculator_descriptions?.length ? (
-                      cardData.calculator_descriptions.map(({ description }, index) => (
-                        <li key={index}>- {description}</li>
-                      ))
+                  {
+                    isFetching ? (<>
+                      <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                        <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                      </Placeholder>
+                      <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                        <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                      </Placeholder>
+                      <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                        <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                      </Placeholder>
+                      <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                        <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                      </Placeholder>
+                    </>
                     ) : (
-                      <li>No Description available</li>
-                    )}
-                  </ul>
+                      <ul>
+                        {cardData?.calculator_descriptions?.length ? (
+                          cardData.calculator_descriptions.map(({ description }, index) => (
+                            <li key={index}>- {description}</li>
+                          ))
+                        ) : (
+                          <li>No Description available</li>
+                        )}
+                      </ul>
+                    )
+                  }
                 </div>
                 <div className='currentJobsTable'>
                   <h5>Current Jobs / Expense for this order</h5>
@@ -189,37 +226,149 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       </tr>
                     </thead>
                     <tbody>
-                      {expenseJobsMapping?.length ? (
-                        expenseJobsMapping.map((data, index) => (
-                          <tr key={data.number || `je-${index}`}>
-                            <td>{data?.number || "-"}</td>
-                            <td>
-                              {data?.type === 'job'
-                                ? data?.reference || "-"
-                                : data?.invoice_reference || "-"}
-                            </td>
-                            <td>
-                              {
-                                data?.type === 'job'
-                                  ? <Github size={24} color='#101828' />
-                                  : (<img src={data?.supplier?.photo || placeholderUser} alt='supplier' style={{ width: '24px', height: '24px', borderRadius: '50%', }} />)
-                              }
-                            </td>
-                            <td>${data?.total || "-"}</td>
-                            <td className='status'>
-                              {data?.type === 'job'
-                                ? <span>{data?.status || "-"}</span>
-                                : <span className={data?.paid ? 'paid' : 'unpaid'}>
-                                  {data?.paid ? 'Paid' : 'Not Paid'}
-                                </span>}
-                            </td>
+                      {
+                        isFetching ? (
+                          <>
+                            <tr>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                              <td>
+                                <Placeholder as="p" animation="wave" className="mb-0">
+                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
+                                </Placeholder>
+                              </td>
+                            </tr>
+                          </>
+                        ) : expenseJobsMapping?.length ? (
+                          expenseJobsMapping.map((data, index) => (
+                            <tr key={data.number || `je-${index}`}>
+                              <td>{data?.number || "-"}</td>
+                              <td>
+                                {data?.type === 'job'
+                                  ? data?.reference || "-"
+                                  : data?.invoice_reference || "-"}
+                              </td>
+                              <td>
+                                {
+                                  data?.type === 'job'
+                                    ? <Github size={24} color='#101828' />
+                                    : (<img src={data?.supplier?.photo || placeholderUser} alt='supplier' style={{ width: '24px', height: '24px', borderRadius: '50%', }} />)
+                                }
+                              </td>
+                              <td>${data?.total || "-"}</td>
+                              <td className='status'>
+                                {data?.type === 'job'
+                                  ? <span>{data?.status || "-"}</span>
+                                  : <span className={data?.paid ? 'paid' : 'unpaid'}>
+                                    {data?.paid ? 'Paid' : 'Not Paid'}
+                                  </span>}
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan={5} className='noDataAvilable'> No history available</td>
                           </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan={5} className='noDataAvilable'> No history available</td>
-                        </tr>
-                      )}
+                        )}
                     </tbody>
                   </Table>
                 </div>
@@ -239,45 +388,89 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Row className='projectHistoryWrap'>
                   <Col className='p-0' >
                     <h3>Project History</h3>
-                    <div className='projectHistoryScroll'>
-                      {cardData?.history?.length ? (
-                        cardData.history.map(({ id, type, text, title, created, manager }) => (
-                          <div className='projectHistorygroup' key={id}>
-                            <ul>
-                              <li>
-                                {type === "quote" ? (
-                                  <FileEarmark size={16} color='#1AB2FF' />
-                                ) : type === "order" ? (
-                                  <Check2Circle size={16} color='#1AB2FF' />
-                                ) : type === "note" ? (
-                                  <CardChecklist size={16} color='#1AB2FF' />
-                                ) : type === "tag" ? (
-                                  <ListCheck size={16} color='#1AB2FF' />
-                                ) : type === "invoice" ? (
-                                  <FileText size={16} color='#1AB2FF' />
-                                ) : type === "billing" ? (
-                                  <PhoneVibrate size={16} color='#1AB2FF' />
-                                ) : (
-                                  ''
-                                )}
-                              </li>
-                              <li><strong>{title}</strong></li>
-                            </ul>
-                            <h6>{text}</h6>
-                            <p>{formatTimestamp(created)} by {manager}</p>
-                          </div>
-                        ))
+                    {
+                      isFetching ? (
+                        <>
+                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
+                          </Placeholder>
+                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
+                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
+                          </Placeholder>
+                        </>
                       ) : (
-                        <p>No history available</p>
-                      )}
-                    </div>
+                        <div className='projectHistoryScroll'>
+                          {cardData?.history?.length ? (
+                            cardData.history.map(({ id, type, text, title, created, manager }) => (
+                              <div className='projectHistorygroup' key={id}>
+                                <ul>
+                                  <li>
+                                    {type === "quote" ? (
+                                      <FileEarmark size={16} color='#1AB2FF' />
+                                    ) : type === "order" ? (
+                                      <Check2Circle size={16} color='#1AB2FF' />
+                                    ) : type === "note" ? (
+                                      <CardChecklist size={16} color='#1AB2FF' />
+                                    ) : type === "tag" ? (
+                                      <ListCheck size={16} color='#1AB2FF' />
+                                    ) : type === "invoice" ? (
+                                      <FileText size={16} color='#1AB2FF' />
+                                    ) : type === "billing" ? (
+                                      <PhoneVibrate size={16} color='#1AB2FF' />
+                                    ) : (
+                                      ''
+                                    )}
+                                  </li>
+                                  <li><strong>{title}</strong></li>
+                                </ul>
+                                <h6>{text}</h6>
+                                <p>{formatTimestamp(created)} by {manager}</p>
+                              </div>
+                            ))
+                          ) : (
+                            <p>No history available</p>
+                          )}
+                        </div>
+                      )
+                    }
+
                   </Col>
                 </Row>
               </Col>
             </Row>
             <Row className='projectCardButWrap'>
               <Col>
-                <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
+                {
+                  isFetching ? (
+                    <Placeholder as="div" animation="wave" className="">
+                      <Placeholder xs={12} bg="secondary" className="rounded" size='md' style={{ width: '190px', height: '45px' }} />
+                    </Placeholder>
+                  ) : <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
+                }
                 <Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                 <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>
                 <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>

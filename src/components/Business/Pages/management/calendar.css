@@ -521,6 +521,8 @@ strong.dollorIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  top: -3px;
 }
 .projectCardModel .cardId {
   margin-left: 16px;
