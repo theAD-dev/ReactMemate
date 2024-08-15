@@ -100,8 +100,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   };
 
   useEffect(() => {
-    let histories = cardData?.history?.filter((history) => filteredHistoryOptions.includes(history.type))
-    setFilteredHistory(histories || []);
+    if (filteredHistoryOptions?.length) {
+      let histories = cardData?.history?.filter((history) => filteredHistoryOptions.includes(history.type))
+      setFilteredHistory(histories || []);
+    } else {
+      setFilteredHistory(cardData?.history);
+    }
   }, [filteredHistoryOptions, cardData?.history]);
 
   useEffect(() => {
