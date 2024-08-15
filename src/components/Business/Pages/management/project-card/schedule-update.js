@@ -12,19 +12,24 @@ const formatDateRange = (startDate, endDate) => {
     return `${start} - ${end}`;
 };
 
-const DateRangeComponent = ({ startDate, endDate }) => (
-         <Button className='dateSelectdTaskBar schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
-        {formatDateRange(startDate, endDate)} <img src={OrdersIcon} alt="OrdersIcon" /></Button>
+const DateRangeComponent = ({ startDate, endDate, isPending }) => (
+    <Button className='dateSelectdTaskBar schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
+        {
+            isPending
+                ? <div class="dot-flashing"></div>
+                : <>{formatDateRange(startDate, endDate)} <img src={OrdersIcon} alt="OrdersIcon" /></>
+        }
+    </Button>
 );
 
-const ScheduleUpdate = ({ projectId, startDate, endDate, scheduleData}) => {
+const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
     const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const selectDateRef = useRef(null);
     const togglePicker = () => setIsPickerVisible(prev => !prev);
     const updateMutation = useMutation({
         mutationFn: (data) => updateProjectScheduleById(projectId, data),
-        onSuccess: async () => {},
+        onSuccess: async () => { },
         onError: (error) => {
             setDateRange({ startDate: null, endDate: null })
             console.error('Error creating task:', error);
@@ -33,9 +38,7 @@ const ScheduleUpdate = ({ projectId, startDate, endDate, scheduleData}) => {
     const handleDataApply = (data) => {
         updateMutation.mutate({ booking_start: data.startDate, booking_end: data.endDate })
         setDateRange(data);
-        scheduleData(data); // Call scheduleData with the updated date range
         setIsPickerVisible(false);
-     
     };
     const handleClickOutside = (event) => {
         if (selectDateRef.current && !selectDateRef.current.contains(event.target)) {
@@ -44,7 +47,7 @@ const ScheduleUpdate = ({ projectId, startDate, endDate, scheduleData}) => {
     };
 
     useEffect(() => {
-        if(startDate && endDate) setDateRange({ startDate: new Date(1000 * +startDate), endDate: new Date(1000 * +endDate) })
+        if (startDate && endDate) setDateRange({ startDate: new Date(1000 * +startDate), endDate: new Date(1000 * +endDate) })
     }, [startDate, endDate])
 
     useEffect(() => {
@@ -62,13 +65,8 @@ const ScheduleUpdate = ({ projectId, startDate, endDate, scheduleData}) => {
     return (
         <div className='select-date' style={{ position: 'relative' }} ref={selectDateRef}>
             <div onClick={togglePicker} style={{ cursor: 'pointer' }}>
-                {dateRange?.startDate && dateRange?.endDate ? (<>
-                    {updateMutation.isPending ? (
-                        <div class="dot-flashing"></div>
-                    ) : (
-                        <DateRangeComponent startDate={dateRange.startDate} endDate={dateRange.endDate} />
-                    )}
-                </>
+                {dateRange?.startDate && dateRange?.endDate ? (
+                    <DateRangeComponent isPending={updateMutation.isPending} startDate={dateRange.startDate} endDate={dateRange.endDate} />
                 ) : (
                     <Button className={`schedule schActive  ${isPickerVisible ? 'active' : ''}`}>
                         Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" />
