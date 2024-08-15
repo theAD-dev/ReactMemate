@@ -32,6 +32,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedReference, setEditedReference] = useState('');
   const [expenseJobsMapping, setExpenseJobsMapping] = useState([]);
+  const [filteredHistory, setFilteredHistory] = useState([]);
+  const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
 
   //Real Cost Calculation
   const cs = parseFloat(cardData?.cost_of_sale) || 0;
@@ -98,12 +100,18 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   };
 
   useEffect(() => {
+    let histories = cardData?.history?.filter((history) => filteredHistoryOptions.includes(history.type))
+    setFilteredHistory(histories || []);
+  }, [filteredHistoryOptions, cardData?.history]);
+
+  useEffect(() => {
     if (cardData) {
       let expensesWithType = cardData?.expenses.map(item => ({ ...item, type: 'expense' }));
       let jobsWithType = cardData?.jobs.map(item => ({ ...item, type: 'job' }));
       let mix = [...expensesWithType, ...jobsWithType];
       let sortedMix = mix.sort((a, b) => parseInt(b.created) - parseInt(a.created));
       setExpenseJobsMapping(sortedMix);
+      setFilteredHistory(cardData?.history || []);
     }
   }, [cardData]);
 
@@ -382,7 +390,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <ComposeEmail />
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
-                    <ProjectCardFilter />
+                    <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
                   </Col>
                 </Row>
                 <Row className='projectHistoryWrap'>
@@ -424,8 +432,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                         </React.Fragment>
                       ) : (
                         <div className='projectHistoryScroll'>
-                          {cardData?.history?.length ? (
-                            cardData.history.map(({ id, type, text, title, created, manager }) => (
+                          {filteredHistory?.length ? (
+                            filteredHistory.map(({ id, type, text, title, created, manager }) => (
                               <div className='projectHistorygroup' key={id}>
                                 <ul>
                                   <li>

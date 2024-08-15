@@ -4,37 +4,39 @@ import { Filter, FileText, FileEarmarkText, Bezier2, CardChecklist, Envelope, Ph
 const OPTIONS = [
   { icon: <FileText size={16} color='#1AB2FF' />, label: 'Invoice', value: 'invoice' },
   { icon: <FileEarmarkText size={16} color='#1AB2FF' />, label: 'Quote', value: 'quote' },
-  { icon: <Bezier2 size={16} color='#1AB2FF' />, label: 'System', value: '' },
+  { icon: <Bezier2 size={16} color='#1AB2FF' />, label: 'System', value: 'system' },
   { icon: <CardChecklist size={16} color='#1AB2FF' />, label: 'Notes', value: 'note' },
-  { icon: <Envelope size={16} color='#1AB2FF' />, label: 'Email', value: ''},
-  { icon: <PhoneVibrate size={16} color='#1AB2FF' />, label: 'SMS', value: '' },
-  { icon: <ListCheck size={16} color='#1AB2FF' />, label: 'Tasks', value: ''},
-  { icon: <Check2Circle size={16} color='#1AB2FF' />, label: 'Job Created', value: ''},
-  { icon: <FolderSymlink size={16} color='#1AB2FF' />, label: 'Expense Linked', value: ''}
+  { icon: <Envelope size={16} color='#1AB2FF' />, label: 'Email', value: 'email' },
+  { icon: <PhoneVibrate size={16} color='#1AB2FF' />, label: 'SMS', value: 'sms' },
+  { icon: <ListCheck size={16} color='#1AB2FF' />, label: 'Tasks', value: 'task' },
+  { icon: <Check2Circle size={16} color='#1AB2FF' />, label: 'Job Created', value: 'job' },
+  { icon: <FolderSymlink size={16} color='#1AB2FF' />, label: 'Expense Linked', value: 'order' }
 ];
 
-const ProjectCardFilter = () => {
+const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
   const [tempSelectedOptions, setTempSelectedOptions] = useState([]);
   console.log('tempSelectedOptions: ', tempSelectedOptions);
 
   const toggleDropdown = () => setIsOpen(prev => !prev);
 
-  const handleCheckboxChange = (label) => {
+  const handleCheckboxChange = (value) => {
     setTempSelectedOptions(prev =>
-      prev.includes(label)
-        ? prev.filter(opt => opt !== label)
-        : [...prev, label]
+      prev.includes(value)
+        ? prev.filter(opt => opt !== value)
+        : [...prev, value]
     );
   };
 
   const handleApply = () => {
-    setSelectedOptions(tempSelectedOptions);
+    setFilteredHistoryOptions(tempSelectedOptions);
     setIsOpen(false);
   };
 
-  const handleSelectAll = () => setTempSelectedOptions(OPTIONS.map(option => option.label));
+  const handleSelectAll = () => {
+    if (tempSelectedOptions?.length > 0) setTempSelectedOptions([])
+    else setTempSelectedOptions(OPTIONS.map(option => option.value));
+  }
 
   const handleClearSelection = () => setTempSelectedOptions([]);
 
@@ -46,21 +48,35 @@ const ProjectCardFilter = () => {
 
       {isOpen && (
         <div className="dropdown-menuF">
-          <button className='all' onClick={handleSelectAll}>All</button>
+          <button className='all p-0 w-100 text-left d-flex justify-content-between align-items-center' onClick={handleSelectAll}>
+            <span className='border-0'>All</span>
+            {
+              OPTIONS.length === tempSelectedOptions?.length && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M16.6666 5L7.49992 14.1667L3.33325 10" stroke="#1AB2FF" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            }
+          </button>
           <ul>
-            {OPTIONS.map(({ icon, label }) => (
+            {OPTIONS.map(({ icon, label, value }) => (
               <li
                 key={label}
                 className={tempSelectedOptions.includes(label) ? 'active' : ''}
-                onClick={() => handleCheckboxChange(label)}
+                onClick={() => handleCheckboxChange(value)}
               >
-                <label>
+                <label for={label} className='w-100 d-flex justify-content-between align-items-center'>
                   <input
+                    id={label}
                     type="checkbox"
-                    checked={tempSelectedOptions.includes(label)}
+                    checked={tempSelectedOptions.includes(value)}
                     readOnly
+                    style={{ cursor: 'pointer', height: '40px' }}
                   />
-                  {icon} {label}
+                  <span className='border-0'>{icon} {label}</span>
+                  {
+                    tempSelectedOptions.includes(value) && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16.6666 5L7.49992 14.1667L3.33325 10" stroke="#1AB2FF" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  }
                 </label>
               </li>
             ))}
