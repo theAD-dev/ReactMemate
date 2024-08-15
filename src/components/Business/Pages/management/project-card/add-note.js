@@ -1,48 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { X, CloudArrowUp } from "react-bootstrap-icons";
+import { X } from "react-bootstrap-icons";
 import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
+import { updateProjectSalesoteById } from '../../../../../APIs/management-api';
+import { useMutation } from '@tanstack/react-query';
 
-const AddNote = () => {
+const AddNote = ({ projectId, projectCardData }) => {
   const [viewShow, setViewShow] = useState(false);
   const [updateDis, setUpdateDis] = useState('');
   const [errors, setErrors] = useState({});
-  const [image, setImage] = useState(null);
-  const handleClose = () => {
-    setViewShow(false);
-  };
-  const handleShow = () => {
-    setViewShow(true);
-
-  };
-  // Handle change in form inputs
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    console.log('value: ', value);
-    console.log('name: ', name);
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+  const handleClose = () => setViewShow(false);
+  const handleShow = () => setViewShow(true);
+  const mutation = useMutation({
+    mutationFn: (data) => updateProjectSalesoteById(projectId, data),
+    onSuccess: () => {
+      handleClose();
+      projectCardData(projectId);
+    },
+    onError: (error) => {
+      console.error('Error creating task:', error);
     }
+  });
+
+  const handleChange = () => {
+    if (!updateDis) return setErrors((errs) => ({ ...errs, description: "Note is required" }));
+    else setErrors((errs) => ({ ...errs, description: "" }));
+    mutation.mutate({ sales_note: updateDis });
   };
-  // Function to handle image deletion
-  const handleImageDelete = () => {
-    setImage(null);
-  };
-  // Function to handle updating image
-  const handleImageUpdate = (e) => {
-    handleImageUpload(e);
-  };
+
+  useEffect(() => {
+    if (!viewShow) {
+      setUpdateDis('');
+      setErrors({});
+    }
+  }, [viewShow])
+
   return (
     <>
       {/* View modal trigger */}
@@ -73,7 +68,6 @@ const AddNote = () => {
         <Modal.Body>
           <div className="ContactModel">
             <Row>
-
               <Col>
                 <div className="formgroup mb-2 mt-2">
                   <label>Note </label>
@@ -85,11 +79,10 @@ const AddNote = () => {
                       placeholder='Enter a message here...'
                       onChange={(e) => {
                         setUpdateDis(e.target.value);
-                        handleChange(e);
                       }}
                     />
-                    {errors.description && <p className="error-message">{errors.description}</p>}
                   </div>
+                  {errors.description && <p className="error-message">{errors.description}</p>}
                 </div>
               </Col>
             </Row>
@@ -132,11 +125,11 @@ const AddNote = () => {
         </Modal.Body>
         <Modal.Footer className='pt-0'>
           <div className="popoverbottom w-100  border-0 mt-0 pt-0">
-            <Button variant="outline-danger">
+            <Button variant="outline-danger" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="primary save" >
-              Save
+            <Button variant="primary save" onClick={handleChange}>
+              {mutation.isPending ? "Loading..." : "Save"}
             </Button>
           </div>
         </Modal.Footer>

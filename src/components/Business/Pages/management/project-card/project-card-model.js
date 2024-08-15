@@ -18,35 +18,68 @@ import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import GoogleReview from "../../../../../assets/images/icon/googleReviewIcon.svg";
 import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../../assets/images/icon/InvoicesIcon.svg";
+import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import ProjectCardFilter from './project-card-filter';
 import FilesModel from './files-model';
 import ScheduleUpdate from './schedule-update';
-import { ProjectCardApi, cardScheduleUpdateApi } from "../../../../../APIs/management-api";
+import { ProjectCardApi, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import SelectStatus from './select-status';
+import { useMutation } from '@tanstack/react-query';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   const [cardData, setCardData] = useState(null);
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedReference, setEditedReference] = useState('');
+  const [expenseJobsMapping, setExpenseJobsMapping] = useState([]);
+
+  //Real Cost Calculation
+  const cs = parseFloat(cardData?.cost_of_sale) || 0;
+  const le = parseFloat(cardData?.labor_expenses) || 0;
+  const oe = parseFloat(cardData?.operating_expense) || 0;
+  const RealCost = cs + le + oe;
+  const formattedRealCost = RealCost.toFixed(2);
 
   const handleClose = () => {
     setViewShow(false);
     reInitilize();
   };
+
   const handleEditReference = () => {
     setIsEditingReference(true);
     setEditedReference(cardData?.reference || '');
   };
+
   const handleReferenceChange = (e) => {
     setEditedReference(e.target.value);
   };
+
+  const projectCardData = async (uniqueId) => {
+    try {
+      const data = await ProjectCardApi(uniqueId);
+      setCardData(data);
+    } catch (error) {
+      console.error('Error fetching project card data:', error);
+    }
+  }
+
+  const referencemutation = useMutation({
+    mutationFn: (data) => updateProjectReferenceById(projectId, data),
+    onSuccess: () => {
+      setCardData(prevData => ({
+        ...prevData,
+        reference: editedReference
+      }));
+    },
+    onError: (error) => {
+      console.error('Error creating task:', error);
+    }
+  });
+
   const handleSaveReference = () => {
-    setCardData(prevData => ({
-      ...prevData,
-      reference: editedReference
-    }));
     setIsEditingReference(false);
+    referencemutation.mutate({ reference: editedReference })
   };
+
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp * 1000);
     const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
@@ -61,31 +94,18 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   };
 
   useEffect(() => {
-    const projectCardData = async (uniqueId) => {
-      try {
-        const data = await ProjectCardApi(uniqueId);
-        setCardData(data);
-      } catch (error) {
-        console.error('Error fetching project card data:', error);
-      }
+    if (cardData) {
+      let expensesWithType = cardData?.expenses.map(item => ({ ...item, type: 'expense' }));
+      let jobsWithType = cardData?.jobs.map(item => ({ ...item, type: 'job' }));
+      let mix = [...expensesWithType, ...jobsWithType];
+      let sortedMix = mix.sort((a, b) => parseInt(b.created) - parseInt(a.created));
+      setExpenseJobsMapping(sortedMix);
     }
+  }, [cardData]);
 
+  useEffect(() => {
     if (projectId && viewShow) projectCardData(projectId);
   }, [projectId, viewShow]);
-
-  const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
-  const handleDateRangeChange = (range) => {
-    // Handle the date range update
-    console.log('New date range:', range);
-};
-
-//Real Cost Calculation
-const cs = parseFloat(cardData?.cost_of_sale) || 0;
-const le = parseFloat(cardData?.labor_expenses) || 0;
-const oe = parseFloat(cardData?.operating_expense) || 0;
-const RealCost = cs + le + oe;
-const formattedRealCost = RealCost.toFixed(2);
-
 
   return (
     <>
@@ -100,9 +120,9 @@ const formattedRealCost = RealCost.toFixed(2);
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
           <div className="modelHeader">
             <ul className='d-flex justify-content-between align-items-center '>
-              <li><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438' /></strong><span className='cardId'>{cardData?.number}&nbsp; </span> </li>
+              <li className='me-2'><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438' /></strong><span className='cardId'>{cardData?.number}&nbsp; </span> </li>
               <li className='refrencesTag'>
-                Reference:
+                Reference:&nbsp;
                 {isEditingReference ? (
                   <input
                     type="text"
@@ -110,11 +130,18 @@ const formattedRealCost = RealCost.toFixed(2);
                     onChange={handleReferenceChange}
                     onBlur={handleSaveReference}
                     autoFocus
+                    className='border rounded'
                   />
                 ) : (
                   <>
-                    <strong> {cardData?.reference}</strong>
-                    <span> <PencilSquare size={16} color='#106B99' onClick={handleEditReference} style={{ cursor: 'pointer' }} /></span>
+                    {
+                      referencemutation.isPending
+                        ? <div class="dot-flashing ms-5 mt-1"></div>
+                        : <>
+                          <small style={{ color: '#1D2939', fontSize: '16px' }}> {cardData?.reference}</small>
+                          <span> <PencilSquare size={16} color='#106B99' onClick={handleEditReference} style={{ cursor: 'pointer' }} /></span>
+                        </>
+                    }
                   </>
                 )}
               </li>
@@ -122,7 +149,7 @@ const formattedRealCost = RealCost.toFixed(2);
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
             <div className='selectButStatus'>
-            <SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status}/>
+              <SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status} />
             </div>
             <button className='CustonCloseModal' onClick={handleClose}>
               <X size={24} color='#667085' />
@@ -158,19 +185,29 @@ const formattedRealCost = RealCost.toFixed(2);
                       </tr>
                     </thead>
                     <tbody>
-                      {cardData?.jobs?.length ? (
-                        cardData.jobs.map(({ id, number, reference, status, total }) => (
-                          <tr>
-                            <td>{number.substring(4)}</td>
-                            <td>{reference}</td>
-                            <td> <Github size={24} color='#101828' /></td>
-                            <td>${total}</td>
-                            <td className={status}>
-                              {status === "Accepted" ? (
-                                <span className={status ? "Accepted" : "Confirmed"}>Paid</span>
-                              ) : (
-                                <span className={status ? "Accepted" : "Confirmed"}>Not Paid</span>
-                              )}
+                      {expenseJobsMapping?.length ? (
+                        expenseJobsMapping.map((data, index) => (
+                          <tr key={data.number || `je-${index}`}>
+                            <td>{data?.number || "-"}</td>
+                            <td>
+                              {data?.type === 'job'
+                                ? data?.reference || "-"
+                                : data?.invoice_reference || "-"}
+                            </td>
+                            <td>
+                              {
+                                data?.type === 'job'
+                                  ? <Github size={24} color='#101828' />
+                                  : (<img src={data?.supplier?.photo || placeholderUser} alt='supplier' style={{ width: '24px', height: '24px', borderRadius: '50%', }} />)
+                              }
+                            </td>
+                            <td>${data?.total || "-"}</td>
+                            <td className='status'>
+                              {data?.type === 'job'
+                                ? <span>{data?.status || "-"}</span>
+                                : <span className={data?.paid ? 'paid' : 'unpaid'}>
+                                  {data?.paid ? 'Paid' : 'Not Paid'}
+                                </span>}
                             </td>
                           </tr>
                         ))
@@ -186,7 +223,7 @@ const formattedRealCost = RealCost.toFixed(2);
               <Col className='projectHistoryCol'>
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
-                    <AddNote projectId={projectId}/>
+                    <AddNote projectId={projectId} projectCardData={projectCardData}/>
                     <NewTask project={project} reInitilize={reInitilize} />
                     <SendSMS />
                     <ComposeEmail />
@@ -201,7 +238,6 @@ const formattedRealCost = RealCost.toFixed(2);
                     <div className='projectHistoryScroll'>
                       {cardData?.history?.length ? (
                         cardData.history.map(({ id, type, text, title, created, manager }) => (
-                         
                           <div className='projectHistorygroup' key={id}>
                             <ul>
                               <li>
@@ -222,8 +258,6 @@ const formattedRealCost = RealCost.toFixed(2);
                                 )}
                               </li>
                               <li><strong>{title}</strong></li>
-                              {/* <li><FilePdf size={16} color='#F04438' /></li>
-                              <li><Link45deg size={16} color='#3366CC' /></li> */}
                             </ul>
                             <h6>{text}</h6>
                             <p>{formatTimestamp(created)} by {manager}</p>

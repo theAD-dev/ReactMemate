@@ -1,88 +1,3 @@
-/* div#nav ,p#newtest{
-    display: none;
-}
-
-.tabAcc ul {
-    display: flex;
-    align-items: center;
-}
-.headWrap h3 {
-    color: var(--Gray-500, #667085);
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: -0.08px;
-}
-.headWrap h2 {
-    color: var(--Gray-600, #475467);
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 22px;
-    letter-spacing: 0.175px;
-}
-.headWrap span {
-    border-radius: 16px;
-    border: 1px solid var(--Warning-200, #FEDF89);
-    background: var(--Warning-50, #FFFAEB);
-    mix-blend-mode: multiply;
-    padding: 2px 8px;
-    color: var(--Warning-700, #B54708);
-    text-align: center;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 18px;
-}
-.tabAcc ul li span {
-    border-radius: 16px;
-    border: 1px solid var(--Warning-200, #FEDF89);
-    background: var(--Warning-25, #FFFCF5);
-    mix-blend-mode: multiply;
-    padding: 2px 8px;
-    color: var(--Warning-500, #F79009);
-    text-align: center;
-    font-family: Inter;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 18px;
-}
-.tabAcc ul li {
-    margin-right: 7px;
-}
-.calStyleBox01 .accordion-button {
-    align-items: flex-start;
-}
-.calStyleBox01 .accordion-button::after {
-    top: 5px !important;
-    position: relative;
-}
-.month_default_event_inner {
-    position: absolute;
-    inset: 0px 1px;
-    overflow: hidden;
-    padding: 8px 2px 8px 40px !important;
-    color: rgb(51, 51, 51);
-    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(238, 238, 238));
-    border: 0px solid rgb(153, 153, 153) !important;
-    border-radius: 4px !important;
-    box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
-font-family: Inter !important;
-font-size: 14px !important;
-font-style: normal;
-font-weight: 400 !important;
-line-height: 22px !important;
-letter-spacing: 0.14px !important;
-}
-.month_default_event {
-    min-height: 40px;
-} */
-
 #calender .scheduler_default_rowheader_scroll,
 .scheduler_default_scrollable {
   height: calc(100vh - 234px) !important;
@@ -922,20 +837,20 @@ strong.dollorIcon {
   white-space: nowrap;
 }
 
-.currentJobsTable td.Accepted span {
+.currentJobsTable td.status span.paid {
   border: 1px solid var(--Success-200, #a9efc5);
   background: var(--Success-50, #ecfdf3);
   color: #067647;
 }
-.currentJobsTable td.Confirmed span {
+.currentJobsTable td.status span.unpaid {
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
   color: #b42318;
 }
-.currentJobsTable td.Assign span {
-  border: 1px solid var(--Error-200, #fecdca);
-  background: var(--Error-50, #fef3f2);
-  color: #b42318;
+.currentJobsTable td.status span {
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #000;
 }
 .projectCardButWrap.row {
   margin: 0;

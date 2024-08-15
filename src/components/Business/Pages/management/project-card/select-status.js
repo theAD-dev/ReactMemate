@@ -68,27 +68,27 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
                                                 <span style={{ color: `${colorMapping[selectedOption?.color].color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{selectedOption?.title}</span>
                                                 <span className='inArrow'><ChevronDown color="#98A2B3" size={15} /></span>
                                             </div>
-                                            
+
                                         </>
                                     )
                                 }
                                 </>
                             </div>
-                        ) : (   <div className="d-flex justify-content-center" style={{ width: '204px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
-                            <>{
-                             
-                                    <>
-                                        <div className="h-100" style={{ width: '4px', background: `#1D2939` }}></div>
-                                        <div className="h-100 statusFlex d-flex align-items-center" style={{ width: '100%', background: `#F2F4F7` }}>
-                                            <span style={{ color: `#1D2939`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>No Status</span>
-                                            <span className='inArrow'><ChevronDown color="#98A2B3" size={15} /></span>
-                                        </div>
-                                        
-                                    </>
-                                
-                            }
-                            </>
-                        </div>)
+                        ) : (
+                            <div className="d-flex justify-content-center" style={{ width: '204px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
+                                <>
+                                    {
+                                        <>
+                                            <div className="h-100" style={{ width: '4px', background: `#1D2939` }}></div>
+                                            <div className="h-100 statusFlex d-flex align-items-center" style={{ width: '100%', background: `#F2F4F7` }}>
+                                                <span style={{ color: `#1D2939`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>No Status</span>
+                                                <span className='inArrow'><ChevronDown color="#98A2B3" size={15} /></span>
+                                            </div>
+                                        </>
+                                    }
+                                </>
+                            </div>
+                        )
                     }
                     <span className='outArrow'><ChevronDown color="#98A2B3" size={15} /></span>
                 </MenuButton>}

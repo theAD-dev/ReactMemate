@@ -4,29 +4,6 @@ let expandRow;
 var userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 console.log('userTimeZone: ', userTimeZone);
 
-function adjustColor(color, amount) {
-  if (!color) return;
-  let usePound = false;
-
-  if (color[0] === "#") {
-    color = color.slice(1);
-    usePound = true;
-  }
-
-  let num = parseInt(color, 16);
-
-  let r = (num >> 16) + amount;
-  let g = ((num >> 8) & 0x00ff) + amount;
-  let b = (num & 0x0000ff) + amount;
-
-  return (
-    (usePound ? "#" : "") +
-    (r > 255 ? 255 : r < 0 ? 0 : r).toString(16).padStart(2, "0") +
-    (g > 255 ? 255 : g < 0 ? 0 : g).toString(16).padStart(2, "0") +
-    (b > 255 ? 255 : b < 0 ? 0 : b).toString(16).padStart(2, "0")
-  );
-}
-
 function loadData(responses) {
   const events = [];
   const resources = responses?.map((data) => {
@@ -36,7 +13,7 @@ function loadData(responses) {
 
     const status = data?.custom_status?.title
       ? `<em style='color:${font}; background:${background}; border: 1px solid ${color};'>${data.custom_status.title}</em>`
-      : "";
+      : `<em style='color: #344054; background: #F2F4F7; border: 1px solid rgba(0, 0, 0, 0.498);' class="pb-1">No status</em>`;
 
     let jobsStatus = "not-started";
     if (data.jobs_count === 0 && data.jobs_count === 0)
@@ -231,12 +208,11 @@ function loadData(responses) {
   dp.update({ resources, events });
   dp.onResourceExpand = function (args) {
     expandRow = args.resource.id;
-    console.log('expandRow: ', expandRow);
   }
 }
 
 function startDaypilot(elementId, responses, viewTaskDetails) {
-  console.log("response: ", responses);
+  console.log("resource response: ", responses);
   const isDaypilotLoaded = typeof window !== undefined && Boolean(window.DayPilot);
   if (!isDaypilotLoaded) return;
 
@@ -308,12 +284,9 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
 
   dp.onEventClicked = function (args) {
     const taskId = args.e.id();
-    console.log('taskId: ', taskId);
-    console.log('args: ', args.div.className.includes("task-item"));
     if (args.div.className.includes("task-item") && taskId) {
       viewTaskDetails(taskId);
     } else if (args.div.className.includes("job-item") && taskId) {
-      console.log('job-item: ', taskId);
       viewTaskDetails(taskId, true);
     }
   };
@@ -337,8 +310,6 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
   app.init();
 }
 
-
-
 export function reInitilizeData(responses) {
   try {
     loadData(responses);
@@ -349,7 +320,6 @@ export function reInitilizeData(responses) {
 }
 
 export function initDaypilot(elementId, response, viewTaskDetails) {
-  console.log('elementId: ', elementId);
   try {
     startDaypilot(elementId, response, viewTaskDetails);
   } catch (error) {
