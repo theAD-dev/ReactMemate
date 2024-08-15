@@ -27,6 +27,7 @@ import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
+  const [isFetching, setIsFetching] = useState(false);
   const [cardData, setCardData] = useState(null);
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedReference, setEditedReference] = useState('');
@@ -120,7 +121,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
           <div className="modelHeader">
             <ul className='d-flex justify-content-between align-items-center '>
-              <li className='me-2'><strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438' /></strong><span className='cardId'>{cardData?.number}&nbsp; </span> </li>
+              <li className='me-2'>
+                <strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438' /></strong>
+                <span className='cardId'>{cardData?.number}&nbsp; </span>
+              </li>
               <li className='refrencesTag'>
                 Reference:&nbsp;
                 {isEditingReference ? (
@@ -223,7 +227,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               <Col className='projectHistoryCol'>
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
-                    <AddNote projectId={projectId} projectCardData={projectCardData}/>
+                    <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} />
                     <SendSMS />
                     <ComposeEmail />
