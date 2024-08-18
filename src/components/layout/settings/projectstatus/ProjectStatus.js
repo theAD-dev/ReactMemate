@@ -7,21 +7,21 @@ import { PlusLg, ChevronDown } from "react-bootstrap-icons";
 import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
-import zIndex from "@mui/material/styles/zIndex";
+import { toast } from 'sonner';
 
 const colorOptions = [
-    { value: "#1AB2FF", bg:"#BAE8FF", border:"#1AB2FF", color: "#0A4766", text: "Blue" },
-    { value: "#4E5BA6", bg:"#EAECF5", border:"#4E5BA6", color: "#293056", text: "Deep Blue" },
-    { value: "#2970FF", bg:"#D1E0FF", border:"#2970FF", color: "#0040C1", text: "Dark Blue" },
-    { value: "#FFB258", bg:"#FFE8CD", border:"#FFB258", color: "#6D471A", text: "Orange" },
-    { value: "#15B79E", bg:"#CCFBEF", border:"#15B79E", color: "#125D56", text: "Green" },
-    { value: "#66C61C", bg:"#E3FBCC", border:"#66C61C", color: "#326212", text: "Light Green" },
-    { value: "#7A5AF8", bg:"#EBE9FE", border:"#7A5AF8", color: "#4A1FB8", text: "Light Purple" },
-    { value: "#D444F1", bg:"#FBE8FF", border:"#D444F1", color: "#821890", text: "Magenta" },
-    { value: "#F63D68", bg:"#FFE4E8", border:"#F63D68", color: "#A11043", text: "Pink" },
-    { value: "#FF007F", bg:"#FFCCE5", border:"#FF007F", color: "#6F0A3C", text: "Soft Pink" },
-    { value: "#FFD700", bg:"#FFF8D1", border:"#FFD700", color: "#997100", text: "Yellow" },
-    { value: "#6C6C1C", bg:"#E1E1B8", border:"#6C6C1C", color: "#444403", text: "Dark Yellow" }
+    { value: "#1AB2FF", bg: "#BAE8FF", border: "#1AB2FF", color: "#0A4766", text: "Blue" },
+    { value: "#4E5BA6", bg: "#EAECF5", border: "#4E5BA6", color: "#293056", text: "Deep Blue" },
+    { value: "#2970FF", bg: "#D1E0FF", border: "#2970FF", color: "#0040C1", text: "Dark Blue" },
+    { value: "#FFB258", bg: "#FFE8CD", border: "#FFB258", color: "#6D471A", text: "Orange" },
+    { value: "#15B79E", bg: "#CCFBEF", border: "#15B79E", color: "#125D56", text: "Green" },
+    { value: "#66C61C", bg: "#E3FBCC", border: "#66C61C", color: "#326212", text: "Light Green" },
+    { value: "#7A5AF8", bg: "#EBE9FE", border: "#7A5AF8", color: "#4A1FB8", text: "Light Purple" },
+    { value: "#D444F1", bg: "#FBE8FF", border: "#D444F1", color: "#821890", text: "Magenta" },
+    { value: "#F63D68", bg: "#FFE4E8", border: "#F63D68", color: "#A11043", text: "Pink" },
+    { value: "#FF007F", bg: "#FFCCE5", border: "#FF007F", color: "#6F0A3C", text: "Soft Pink" },
+    { value: "#FFD700", bg: "#FFF8D1", border: "#FFD700", color: "#997100", text: "Yellow" },
+    { value: "#6C6C1C", bg: "#E1E1B8", border: "#6C6C1C", color: "#444403", text: "Dark Yellow" }
 ];
 
 
@@ -30,8 +30,6 @@ const ProjectStatus = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
-    const [error, setError] = useState('');
-    const [charCount, setCharCount] = useState(0);
     const fetchData = async () => {
         try {
             setIsCreating(true);
@@ -48,10 +46,12 @@ const ProjectStatus = () => {
     const updateMutation = useMutation({
         mutationFn: (data) => updateProjectStatusById(data.id, data),
         onSuccess: async () => {
+            toast.success('The project status has been successfully updated.');
             await fetchData();
         },
         onError: (error) => {
             console.error('Error creating task:', error);
+            toast.error('Failed to update the project status. Please try again.');
             fetchData();
         }
     });
@@ -59,10 +59,12 @@ const ProjectStatus = () => {
     const deleteMutation = useMutation({
         mutationFn: (id) => deleteProjectStatusById(id),
         onSuccess: () => {
+            toast.success('The project status has been successfully deleted.');
             fetchData();
         },
         onError: (error) => {
             console.error('Error creating task:', error);
+            toast.error('Failed to delete the project status. Please try again.');
             fetchData();
         }
     });
@@ -70,10 +72,12 @@ const ProjectStatus = () => {
     const createMutation = useMutation({
         mutationFn: (data) => createProjectStatus(data),
         onSuccess: () => {
+            toast.success('The project status has been successfully created.');
             fetchData();
         },
         onError: (error) => {
             console.error('Error creating task:', error);
+            toast.error('Failed to create the project status. Please try again.');
             fetchData();
         }
     });
@@ -87,12 +91,8 @@ const ProjectStatus = () => {
     };
 
     const updateOptionTitle = (id, title) => {
-        setCharCount(title.length);
         if (title.length <= 20) {
-            setError('');
             setOptions(options.map(option => option.id === id ? { ...option, title, isChanged: true } : option));
-        } else {
-            setError(`The status name can be up to 20 characters long.`);
         }
     };
 
@@ -113,7 +113,7 @@ const ProjectStatus = () => {
         if (updatedOptions && updatedOptions.length && updatedOptions[0].isNew) {
             setOptions(options.filter(option => option.id !== id));
         }
-        else if(updatedOptions && updatedOptions.length) deleteMutation.mutate(id);
+        else if (updatedOptions && updatedOptions.length) deleteMutation.mutate(id);
     };
 
     useEffect(() => {
@@ -142,18 +142,12 @@ const ProjectStatus = () => {
                     <div className="content_wrap_main">
                         <div className='content_wrapper'>
                             <div className="listwrapper orgColorStatus">
-                               <div className="top">
-                               <h4>Custom Order Status</h4>
-                               {/* <p>The status name can be up to 20 characters long.</p> */}
-                               {error ? (
-                                <p style={{ color: 'red' }}>{error}</p>
-                            ) : (
-                                <p>The status name can be up to {charCount}/20 characters long.</p>
-                            )}
-                               </div>
+                                <div className="top">
+                                    <h4>Custom Order Status</h4>  
+                                </div>
                                 {
                                     isCreating && (
-                                        <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', }} className="shadow-lg">
+                                        <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
                                             <Spinner animation="border" role="status">
                                                 <span className="visually-hidden">Loading...</span>
                                             </Spinner>
@@ -164,42 +158,39 @@ const ProjectStatus = () => {
                                     <tbody>
                                         {options.map((option, index) => (
                                             <tr key={`option-${option.id}-${index}`}>
-                                              
                                                 <td>
                                                     <div className='statuswrapper'>
-                                                  
-                                                    <div className='statusTitle'>
-                                                        <input
-                                                            type="text"
-                                                            value={option.title}
-                                                            onChange={(e) => updateOptionTitle(option.id, e.target.value)}
-                                                        />
-                                                 
-                                                    </div>
-                                                    
+                                                        <div className='statusTitle'>
+                                                            <input
+                                                                type="text"
+                                                                value={option.title}
+                                                                onChange={(e) => updateOptionTitle(option.id, e.target.value)}
+                                                            />
+                                                        </div>
+
                                                         <Menu
                                                             className='mainSelectMenu'
                                                             menuButton={
                                                                 <MenuButton className="colorSelectBut">
-                                                                <div
-                                                                    className="butcolorIn"
-                                                                    style={{
-                                                                        borderColor: option.color,
-                                                                        background: colorOptions.find(opt => opt.value === option.color)?.bg || 'transparent',
-                                                                        color: option.color,
-                                                                    }}
-                                                                >
-                                                                    {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
-                                                                </div>
-                                                                <ChevronDown size={20} color='#98A2B3' />
-                                                            </MenuButton>
-                                                            
+                                                                    <div
+                                                                        className="butcolorIn"
+                                                                        style={{
+                                                                            borderColor: option.color,
+                                                                            background: colorOptions.find(opt => opt.value === option.color)?.bg || 'transparent',
+                                                                            color: option.color,
+                                                                        }}
+                                                                    >
+                                                                        {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
+                                                                    </div>
+                                                                    <ChevronDown size={20} color='#98A2B3' />
+                                                                </MenuButton>
+
                                                             }
                                                             overflow={"auto"}
                                                             position={"anchor"}>
                                                             <MenuGroup takeOverflow style={{ maxHeight: '230px', overflow: 'auto', boxShadow: ' 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
-                                                                {colorOptions.map(({ value,bg,border, color, text }, index) => (
-                                                                   
+                                                                {colorOptions.map(({ value, bg, border, color, text }, index) => (
+
                                                                     <MenuItem onClick={() => updateOptionColor(option.id, value)} key={`${index}-${value}`} value={value} style={{ padding: '8px 10px 8px 8px' }}>
                                                                         <div className="d-flex" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
                                                                             <div className="h-100" style={{ width: '4px', background: `${border}` }}></div>
@@ -212,23 +203,32 @@ const ProjectStatus = () => {
                                                             </MenuGroup>
                                                         </Menu>
                                                     </div>
+                                                    {
+                                                       (option.isNew || option.isChanged) && <>
+                                                        {
+                                                            option?.title?.length >= 20
+                                                            ? <p className="mb-2 mt-2 text-danger">The status name can be up to 20 characters long.</p>
+                                                            : <p className="mb-2 mt-2">The status name can be up to {option?.title?.length || 0}/20 characters long.</p>
+                                                        }
+                                                       </> 
+                                                    }
                                                 </td>
                                                 <td className="butactionOrg">
                                                     {(option.isNew || option.isChanged) &&
-                                                       
-                                                            <Button className="save" onClick={() => saveOption(option.id, option.isNew)}>
-                                                                {
-                                                                    (updateMutation.isPending && updateMutation?.variables?.id === option.id)
-                                                                        ||
-                                                                        (createMutation.isPending && createMutation?.variables?.id === option.id)
-                                                                        ?
-                                                                        "Loading..."
-                                                                        : "Save"
-                                                                }
-                                                            </Button>
-                                                     
+
+                                                        <Button className="save" onClick={() => saveOption(option.id, option.isNew)}>
+                                                            {
+                                                                (updateMutation.isPending && updateMutation?.variables?.id === option.id)
+                                                                    ||
+                                                                    (createMutation.isPending && createMutation?.variables?.id === option.id)
+                                                                    ?
+                                                                    "Loading..."
+                                                                    : "Save"
+                                                            }
+                                                        </Button>
+
                                                     }
-                                                   <Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}</Button>
+                                                    <Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}</Button>
                                                 </td>
                                             </tr>
                                         ))}

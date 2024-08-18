@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useState, forwardRef } from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import { defaultTheme } from "react-select";
@@ -34,13 +34,14 @@ const selectStyles = {
   }),
 };
 
-const MemateSelect = ({ options, onChange, hasError }) => {
+const MemateSelect = forwardRef(({ options, onChange, value, hasError }, ref) => {
+  console.log('value: ', value);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(null);
 
-  useEffect(() => {
-    onChange(selectedValue?.value);
-  }, [selectedValue]);
+  const handleSelectChange = (selectedOption) => {
+    onChange(selectedOption?.value);
+    setIsOpen(false);
+  };
 
   return (
     <Dropdown
@@ -54,9 +55,12 @@ const MemateSelect = ({ options, onChange, hasError }) => {
             { [styles.error]: hasError }
           )}
           onClick={() => setIsOpen((prev) => !prev)}
+          ref={ref}
         >
-          {selectedValue ? (
-            <span className={styles.selectedValue}>{selectedValue.label}</span>
+          {value ? (
+            <span className={styles.selectedValue}>
+              {options.find(option => option.value === value)?.label || "Select option"}
+            </span>
           ) : (
             <span className={styles.placeholder}>Select option</span>
           )}
@@ -76,20 +80,17 @@ const MemateSelect = ({ options, onChange, hasError }) => {
         hideSelectedOptions={false}
         isClearable={false}
         menuIsOpen
-        onChange={(newValue) => {
-          setSelectedValue(newValue);
-          setIsOpen(false);
-        }}
+        onChange={handleSelectChange}
         className={classNames("border", styles.select)}
         styles={selectStyles}
         options={options}
         placeholder="Search..."
         tabSelectsValue={false}
-        value={selectedValue}
+        value={value}
       />
     </Dropdown>
   );
-};
+});
 
 MemateSelect.propTypes = {
   options: PropTypes.array.isRequired,

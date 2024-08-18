@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { X } from "react-bootstrap-icons";
 import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
-import { updateProjectSalesoteById } from '../../../../../APIs/management-api';
+import { createProjectNoteById } from '../../../../../APIs/management-api';
 import { useMutation } from '@tanstack/react-query';
 
 const AddNote = ({ projectId, projectCardData }) => {
@@ -15,7 +15,7 @@ const AddNote = ({ projectId, projectCardData }) => {
   const handleClose = () => setViewShow(false);
   const handleShow = () => setViewShow(true);
   const mutation = useMutation({
-    mutationFn: (data) => updateProjectSalesoteById(projectId, data),
+    mutationFn: (data) => createProjectNoteById(projectId, data),
     onSuccess: () => {
       handleClose();
       projectCardData(projectId);
@@ -28,7 +28,7 @@ const AddNote = ({ projectId, projectCardData }) => {
   const handleChange = () => {
     if (!updateDis) return setErrors((errs) => ({ ...errs, description: "Note is required" }));
     else setErrors((errs) => ({ ...errs, description: "" }));
-    mutation.mutate({ sales_note: updateDis });
+    mutation.mutate({ text: updateDis });
   };
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toaster } from 'sonner'
 import { BrowserRouter } from "react-router-dom";
 import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +21,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
+        <Toaster expand={true} richColors closeButton position="top-right"/>
         <App />
       </QueryClientProvider>
     </BrowserRouter>

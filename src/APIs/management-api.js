@@ -76,10 +76,10 @@ export const updateProjectReferenceById = async (id, data) => {
     return fetchAPI(url.toString(), options);
 }
 
-export const updateProjectSalesoteById = async (id, data) => {
-    const endpoint = `/project-card/sales-note/${id}/`;
+export const createProjectNoteById = async (id, data) => {
+    const endpoint = `/project-card/note/${id}/`;
     const options = {
-        method: 'PUT',
+        method: 'POST',
         body: data
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
