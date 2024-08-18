@@ -155,7 +155,7 @@ const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
           style={{ whiteSpace: "nowrap", textAlign: "left" }}
         >
           <em><i>{params.row.aliasTask}</i></em><span>{params.value}</span>
-        
+
         </div>
       ),
     },
@@ -208,8 +208,8 @@ const TasksTables = forwardRef(({ TasksData, fetchData, isFetching }, ref) => {
         <div className="styleProject d-flex">
           <div className="leftIcon"> <FileText size={16} color="#475467" /></div>
           <div className="textWrap">
-            <p>{params.value.reference}</p>
-            <span>{params.value.number}</span>
+            <p>{params?.value?.reference}</p>
+            <span>{params?.value?.number}</span>
           </div>
         </div>
       ),
