@@ -4,6 +4,10 @@ let expandRow;
 var userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 console.log('userTimeZone: ', userTimeZone);
 
+function parseTimestamp(timestampStr) {
+  return new Date(new Date(timestampStr).getTime() - (new Date(timestampStr).getTimezoneOffset() * 60 * 1000));
+};
+
 function loadData(responses) {
   const events = [];
   const resources = responses?.map((data) => {
@@ -24,8 +28,8 @@ function loadData(responses) {
 
     // add job-event
     events.push({
-      start: new Date(1000 * +data.booking_start),
-      end: new Date(1000 * +data.booking_end),
+      start: parseTimestamp(1000 * +data.booking_start),
+      end: parseTimestamp(1000 * +data.booking_end),
       id: data.unique_id,
       cssClass: 'job-item',
       resource: data.unique_id,
@@ -144,8 +148,8 @@ function loadData(responses) {
 
         // add task event
         events.push({
-          start: new Date(1000 * +task.from_date),
-          end: new Date(1000 * +task.to_date),
+          start: parseTimestamp(1000 * +task.from_date),
+          end: parseTimestamp(1000 * +task.to_date),
           id: task.id,
           cssClass: "childEvent task-item",
           resource: task.id,
