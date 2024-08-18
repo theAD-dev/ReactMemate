@@ -62,7 +62,7 @@ function EventScheduler() {
           const number = e.target.closest('.project-content').getAttribute('number');
           const reference = e.target.closest('.project-content').getAttribute('reference');
           const projectId = e.target.closest('.project-content').getAttribute('project-id');
-          
+
           console.log('uniqueId: ....', uniqueId);
           setProjectId(uniqueId);
           setProjectDetails({ number, reference, value: projectId });
@@ -188,9 +188,11 @@ function EventScheduler() {
     </div>
 
     <div id={CALENDAR_ID}>
-      <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
+      <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
     </div>
 
     <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize} />
@@ -199,8 +201,8 @@ function EventScheduler() {
     <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} statusOptions={statusOptions} reInitilize={reInitilize} />
 
     {
-      isReinitilize && <div style={{ position: 'absolute', top: '50%', left: '50%', width: '30px', height: '40px' }}>
-        <Spinner animation="border" role="status" style={{ marginTop: '30px' }}>
+      isReinitilize && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+        <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
         </Spinner>
       </div>
