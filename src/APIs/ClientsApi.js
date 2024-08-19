@@ -36,7 +36,6 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 };
 
-
 export const createNewIndividualClient = async (data) => {
   const endpoint = '/clients/individual/new/';
   const options = {
@@ -58,7 +57,7 @@ export const createNewBusinessClient = async (data) => {
 }
 
 export const getClientById = async (id) => {
-  const endpoint = `/clients/${id}`;
+  const endpoint = `/clients/${id}/`;
   const options = {
     method: 'GET',
   };
@@ -66,7 +65,50 @@ export const getClientById = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const getClientCategories = async () => {
+  const endpoint = `/references/clients/categories/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
+export const getClientIndustries = async () => {
+  const endpoint = `/references/clients/industries/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const getCountries = async () => {
+  const endpoint = `/references/countries/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const getStates = async (country) => {
+  const endpoint = `/references/states/${country}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const getCities = async (state) => {
+  const endpoint = `/references/cities/${state}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
 export const fetchClients = async (limit, offset) => {
   const myHeaders = new Headers();
