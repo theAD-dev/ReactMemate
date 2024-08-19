@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Building, ChevronDown, ChevronLeft, Envelope, InfoSquare, Person, Upload } from 'react-bootstrap-icons';
 import { NavLink, useParams, useNavigate, Link } from 'react-router-dom';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
@@ -6,14 +6,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Col, Row, Button } from 'react-bootstrap';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
-import countryList from 'react-select-country-list';
 import Select from 'react-select';
-import { FormControl, Select as MuiSelect, SelectChangeEvent } from '@mui/material';
+import { FormControl, Select as MuiSelect } from '@mui/material';
 import { PhoneInput } from 'react-international-phone';
 import { MenuItem } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
-import { useMutation } from '@tanstack/react-query';
-import { createNewBusinessClient } from '../../../../../APIs/ClientsApi';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createNewBusinessClient, getCities, getClientCategories, getClientIndustries, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 
 
 const schema = yup.object({
@@ -29,6 +28,7 @@ const schema = yup.object({
 
   addresses: yup.array().of(
     yup.object({
+      country: yup.string().required('Country is required'),
       address: yup.string().required('Address is required'),
       city: yup.number().typeError("City must be a number").required("City is required"),
       state: yup.number().typeError("State must be a number").required("State is required"),
@@ -57,10 +57,17 @@ const schema = yup.object({
 const BusinessClientInformation = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [files, setFiles] = useState({});
-  const countryOptions = useMemo(() => countryList().getData(), []);
+  const [file, setFile] = useState({});
+  const [countryId, setCountryId] = useState('');
+  const [stateId, setStateId] = useState('');
+  const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
+  const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
+  const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
+  const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
+  const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
+
   const [defaultValues, setDefaultValues] = useState({
-    phone: { country: '', number: '+61' },
+    phone: { country: '', number: '' },
     contact_persons: [{}],
     addresses: [{}],
   });
@@ -209,12 +216,7 @@ const BusinessClientInformation = () => {
                             style={{ color: '#667085' }}
                           >
                             <MenuItem value="">Select category</MenuItem>
-                            <MenuItem value="37" data-value="0.00">Regular - 0.00%</MenuItem>
-                            <MenuItem value="38" data-value="2.50">Bronze - 2.50%</MenuItem>
-                            <MenuItem value="39" data-value="5.00">Silver - 5.00%</MenuItem>
-                            <MenuItem value="40" data-value="7.50">Gold - 7.50%</MenuItem>
-                            <MenuItem value="41" data-value="10.00">Platinum - 10.00%</MenuItem>
-                            <MenuItem value="42" data-value="12.50">Diamond - 12.50%</MenuItem>
+                            {categoriesQuery && categoriesQuery.data && categoriesQuery.data?.map((category) => <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>)}
                           </MuiSelect>
                         </FormControl>
                         {errors.category && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" style={{ position: 'relative', right: '26px' }} />}
@@ -243,6 +245,7 @@ const BusinessClientInformation = () => {
                           control={control}
                           render={({ field }) => (
                             <PhoneInput
+                              defaultCountry='au'
                               country={field.value?.country}
                               value={field.value?.number}
                               onChange={(phone) => field.onChange(phone)}
@@ -287,26 +290,79 @@ const BusinessClientInformation = () => {
                       <h2 style={{ marginBottom: '16px', marginTop: "16px" }}>{index === 0 ? "Main Company Address" : "Secondary Company Address"}</h2>
 
                       <Row className='text-left'>
-                        {/* <Col sm={6}>
+                        <Col sm={6}>
                           <div className="formgroup mb-3 mt-0">
                             <label>Country</label>
                             <Controller
-                              name="country"
+                              name={`addresses.${index}.country`}
                               control={control}
+                              defaultValue={""}
                               render={({ field }) => (
                                 <Select
                                   {...field}
-                                  className={`custom-select-country ${errors.country ? 'error-border' : ''}`}
-                                  options={countryOptions}
-                                  onChange={(selectedOption) => field.onChange(selectedOption?.value)}
-                                  value={countryOptions.find(option => option.value === field.value)}
+                                  placeholder="Select country"
+                                  className={`custom-select-country ${errors.addresses?.[index]?.country ? 'error-border' : ''}`}
+                                  options={(countriesQuery && countriesQuery?.data?.map((country) => ({ value: country.id, label: country.name }))) || []}
+                                  onChange={(selectedOption) => {
+                                    field.onChange(selectedOption?.value);
+                                    setCountryId(selectedOption?.value);
+                                  }}
+                                  value={countriesQuery?.data?.find(option => option.value === field.value)}
                                 />
                               )}
                             />
                             {errors.addresses?.[index]?.country && <p className="error-message">{errors.addresses?.[index].country.message}</p>}
                           </div>
                         </Col>
-                        <Col sm={6}></Col> */}
+                        <Col sm={6}></Col>
+
+                        <Col sm={6}>
+                          <div className="formgroup mb-3 mt-0">
+                            <label>State</label>
+                            <Controller
+                              name={`addresses.${index}.state`}
+                              control={control}
+                              defaultValue={""}
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  placeholder="Select state"
+                                  className={`custom-select-country ${errors.addresses?.[index]?.state ? 'error-border' : ''}`}
+                                  options={(statesQuery && statesQuery?.data?.map((state) => ({ value: state.id, label: state.name }))) || []}
+                                  onChange={(selectedOption) => {
+                                    field.onChange(selectedOption?.value);
+                                    setStateId(selectedOption?.value);
+                                    setValue(`addresses.${index}.city`, null); // Clear city value when state changes
+                                  }}
+                                  value={statesQuery?.data?.find(option => option.value === field.value)}
+                                />
+                              )}
+                            />
+                            {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses[index].state.message}</p>}
+                          </div>
+                        </Col>
+
+                        <Col sm={6}>
+                          <div className="formgroup mb-3 mt-0">
+                            <label>City/Suburb</label>
+                            <Controller
+                              name={`addresses.${index}.city`}
+                              control={control}
+                              defaultValue={""}
+                              render={({ field }) => (
+                                <Select
+                                  {...field}
+                                  placeholder="Select city"
+                                  className={`custom-select-country ${errors.addresses?.[index]?.state ? 'error-border' : ''}`}
+                                  options={(citiesQuery && citiesQuery?.data?.map((city) => ({ value: city.id, label: city.name }))) || []}
+                                  onChange={(selectedOption) => field.onChange(selectedOption?.value)}
+                                  value={(citiesQuery?.data?.find(option => option.value === field.value))}
+                                />
+                              )}
+                            />
+                            {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses[index].city.message}</p>}
+                          </div>
+                        </Col>
 
                         <Col sm={6}>
                           <div className="formgroup mb-3 mt-0">
@@ -319,46 +375,6 @@ const BusinessClientInformation = () => {
                           </div>
                         </Col>
 
-
-                        <Col sm={6}>
-                          <div className="formgroup mb-3 mt-0">
-                            <label>City/Suburb</label>
-                            <div className={`inputInfo ${errors.addresses?.[index]?.city ? 'error-border' : ''}`}>
-                              <input {...register(`addresses.${index}.city`)} placeholder="City" />
-                              {errors.addresses?.[index]?.city && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses[index].city.message}</p>}
-                          </div>
-                        </Col>
-
-                        <Col sm={6}>
-                          <div className="formgroup mb-3 mt-0">
-                            <label>State</label>
-                            <input {...register(`addresses.${index}.state`)} placeholder="State" />
-                            <Controller
-                              name={`addresses.${index}.state`}
-                              control={control}
-                              render={({ field }) => (
-                                <Select
-                                  {...field}
-                                  placeholder="Select state"
-                                  className={`custom-select-country ${errors.addresses?.[index]?.state ? 'error-border' : ''}`}
-                                  options={[
-                                    { value: '2', label: 'NSW' },
-                                    { value: '3', label: 'QLD' },
-                                    { value: '4', label: 'SA' },
-                                    { value: '5', label: 'TAS' },
-                                    { value: '6', label: 'VIC' },
-                                    { value: '7', label: 'WA' }
-                                  ]}
-                                  onChange={(selectedOption) => field.onChange(selectedOption?.value)}
-                                  value={countryOptions.find(option => option.value === field.value)}
-                                />
-                              )}
-                            />
-                            {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses[index].state.message}</p>}
-                          </div>
-                        </Col>
                         <Col sm={6}>
                           <div className="formgroup mb-3 mt-0">
                             <label>Postcode</label>
@@ -475,7 +491,6 @@ const BusinessClientInformation = () => {
                   ))}
                 </div>
 
-
                 <Row className='text-left' style={{ paddingTop: '24px' }}>
                   <Col sm={6}>
                     <div className="formgroup mb-3 mt-0">
@@ -491,38 +506,7 @@ const BusinessClientInformation = () => {
                             style={{ color: '#667085' }}
                           >
                             <MenuItem value="">Select Industry</MenuItem>
-                            <MenuItem value="193">Agriculture</MenuItem>
-                            <MenuItem value="194">Apparel</MenuItem>
-                            <MenuItem value="195">Automotive</MenuItem>
-                            <MenuItem value="196">Banking</MenuItem>
-                            <MenuItem value="197">Biotechnology</MenuItem>
-                            <MenuItem value="198">Chemicals</MenuItem>
-                            <MenuItem value="199">Communications</MenuItem>
-                            <MenuItem value="200">Construction</MenuItem>
-                            <MenuItem value="201">Education</MenuItem>
-                            <MenuItem value="202">Electronics</MenuItem>
-                            <MenuItem value="203">Energy</MenuItem>
-                            <MenuItem value="204">Engineering</MenuItem>
-                            <MenuItem value="205">Entertainment</MenuItem>
-                            <MenuItem value="206">Environmental</MenuItem>
-                            <MenuItem value="207">Finance</MenuItem>
-                            <MenuItem value="208">Food &amp; Beverage</MenuItem>
-                            <MenuItem value="209">Government</MenuItem>
-                            <MenuItem value="210">Healthcare</MenuItem>
-                            <MenuItem value="211">Hospitality</MenuItem>
-                            <MenuItem value="212">Insurance</MenuItem>
-                            <MenuItem value="213">Machinery</MenuItem>
-                            <MenuItem value="214">Manufacturing</MenuItem>
-                            <MenuItem value="215">Media</MenuItem>
-                            <MenuItem value="216">Non For Profit</MenuItem>
-                            <MenuItem value="217">Other</MenuItem>
-                            <MenuItem value="218">Recreation</MenuItem>
-                            <MenuItem value="219">Retail</MenuItem>
-                            <MenuItem value="220">Shipping</MenuItem>
-                            <MenuItem value="221">Software</MenuItem>
-                            <MenuItem value="222">Technology</MenuItem>
-                            <MenuItem value="223">Telecommunications</MenuItem>
-                            <MenuItem value="224">Utilities</MenuItem>
+                            {industriesQuery?.data?.map((industry)=> <MenuItem key={industry.id} value={industry.id}>{industry.name}</MenuItem>) || []}
                           </MuiSelect>
                         </FormControl>
                         <input {...register("industry")} placeholder='Industry' />

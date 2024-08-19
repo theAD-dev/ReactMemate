@@ -302,3 +302,4 @@ const formattedRealCost = RealCost.toFixed(2);
 };
 
 export default ProjectCardModel;
+

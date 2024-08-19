@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CardList, ChevronLeft, Envelope, InfoSquare, Person } from 'react-bootstrap-icons';
 import { Link, NavLink, useParams, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
@@ -7,11 +7,10 @@ import * as yup from 'yup';
 import { Col, Row } from 'react-bootstrap';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { PhoneInput } from 'react-international-phone';
-import countryList from 'react-select-country-list';
 import Select from 'react-select';
-import { ClientContext } from './client-provider';
-import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
-import { useMutation } from '@tanstack/react-query';
+import { createNewIndividualClient, getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 // Validation schema
 const schema = yup
@@ -36,13 +35,18 @@ const schema = yup
 const IndividualClientInformation = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const countryOptions = useMemo(() => countryList().getData(), []);
+    const [countryId, setCountryId] = useState('');
+    const [stateId, setStateId] = useState('');
+    const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
+    const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
+    const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
+
     const [defaultValues, setDefaultValues] = useState({
         firstname: '',
         lastname: '',
         email: '',
         phone: { country: '', number: '' },
-        country: 'AU',
+        country: '',
         address: {
             city: "",
             address: "",
@@ -91,9 +95,9 @@ const IndividualClientInformation = () => {
         onSuccess: (response) => {
             console.log('response: ', response);
             if (response.client)
-            navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${response.client}`);
+                navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${response.client}`);
             else {
-              alert("Client could not be created. Try again later.");
+                alert("Client could not be created. Try again later.");
             }
         },
         onError: (error) => {
@@ -209,13 +213,17 @@ const IndividualClientInformation = () => {
                                             <Controller
                                                 name="country"
                                                 control={control}
+                                                defaultValue={""}
                                                 render={({ field }) => (
                                                     <Select
                                                         {...field}
                                                         className={`custom-select-country ${errors.country ? 'error-border' : ''}`}
-                                                        options={countryOptions}
-                                                        onChange={(selectedOption) => field.onChange(selectedOption?.value)}
-                                                        value={countryOptions.find(option => option.value === field.value)}
+                                                        options={(countriesQuery && countriesQuery?.data?.map((country) => ({ value: country.id, label: country.name }))) || []}
+                                                        onChange={(selectedOption) => {
+                                                            field.onChange(selectedOption?.value);
+                                                            setCountryId(selectedOption?.value);
+                                                        }}
+                                                        value={countriesQuery?.data?.find(option => option.value === field.value)}
                                                     />
                                                 )}
                                             />
@@ -224,6 +232,50 @@ const IndividualClientInformation = () => {
                                     </Col>
 
                                     <Col sm={6}></Col>
+
+                                    <Col sm={6}>
+                                        <div className="formgroup mb-2 mt-3">
+                                            <label>State</label>
+                                            <Controller
+                                                name="address.state"
+                                                control={control}
+                                                render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        className={`custom-select-country ${errors?.address?.state ? 'error-border' : ''}`}
+                                                        options={(statesQuery && statesQuery?.data?.map((state) => ({ value: state.id, label: state.name }))) || []}
+                                                        onChange={(selectedOption) => {
+                                                            field.onChange(selectedOption?.value);
+                                                            setStateId(selectedOption?.value);
+                                                            setValue(`address.city`, null); // Clear city value when state changes
+                                                        }}
+                                                        value={statesQuery?.data?.find(option => option.value === field.value)}
+                                                    />
+                                                )}
+                                            />
+                                            {errors.address?.state && <p className="error-message">{errors.address.state.message}</p>}
+                                        </div>
+                                    </Col>
+
+                                    <Col sm={6}>
+                                        <div className="formgroup mb-2 mt-3">
+                                            <label>City/Suburb</label>
+                                            <Controller
+                                                name="address.city"
+                                                control={control}
+                                                render={({ field }) => (
+                                                    <Select
+                                                        {...field}
+                                                        className={`custom-select-country ${errors?.address?.city ? 'error-border' : ''}`}
+                                                        options={(citiesQuery && citiesQuery?.data?.map((city) => ({ value: city.id, label: city.name }))) || []}
+                                                        onChange={(selectedOption) => field.onChange(selectedOption?.value)}
+                                                        value={citiesQuery?.data?.find(option => option.value === field.value)}
+                                                    />
+                                                )}
+                                            />
+                                            {errors.address?.city && <p className="error-message">{errors.address.city.message}</p>}
+                                        </div>
+                                    </Col>
 
                                     <Col sm={6}>
                                         <div className="formgroup mb-2 mt-3">
@@ -236,54 +288,6 @@ const IndividualClientInformation = () => {
                                                 {errors.address?.address && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                                             </div>
                                             {errors.address?.address && <p className="error-message">{errors.address.address.message}</p>}
-                                        </div>
-                                    </Col>
-
-                                    <Col sm={6}>
-                                        <div className="formgroup mb-2 mt-3">
-                                            <label>City/Suburb</label>
-                                            <div className={`inputInfo ${errors.address?.city ? 'error-border' : ''}`}>
-                                                <input
-                                                    {...register("address.city")}
-                                                    placeholder='Enter city'
-                                                />
-                                                {errors.address?.city && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                                            </div>
-                                            {errors.address?.city && <p className="error-message">{errors.address.city.message}</p>}
-                                        </div>
-                                    </Col>
-
-                                    <Col sm={6}>
-                                        <div className="formgroup mb-2 mt-3">
-                                            <label>State</label>
-                                            {/* <div className={`inputInfo ${errors.address?.state ? 'error-border' : ''}`}> */}
-                                            {/* <input
-                                                    {...register("address.state")}
-                                                    placeholder='Enter state'
-                                                /> */}
-                                            <Controller
-                                                name="address.state"
-                                                control={control}
-                                                render={({ field }) => (
-                                                    <Select
-                                                        {...field}
-                                                        className={`custom-select-country ${errors.country ? 'error-border' : ''}`}
-                                                        options={[
-                                                            { value: '2', label: 'NSW' },
-                                                            { value: '3', label: 'QLD' },
-                                                            { value: '4', label: 'SA' },
-                                                            { value: '5', label: 'TAS' },
-                                                            { value: '6', label: 'VIC' },
-                                                            { value: '7', label: 'WA' }
-                                                        ]}
-                                                        onChange={(selectedOption) => field.onChange(selectedOption?.value)}
-                                                        value={countryOptions.find(option => option.value === field.value)}
-                                                    />
-                                                )}
-                                            />
-                                            {/* {errors.address?.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                                            </div> */}
-                                            {errors.address?.state && <p className="error-message">{errors.address.state.message}</p>}
                                         </div>
                                     </Col>
 
