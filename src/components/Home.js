@@ -182,8 +182,8 @@ const Home = () => {
                               <span>4</span>
                              </div>
                             <div className='boxItem'>
-                                <h2>Link Your Email</h2>
-                                <p>Connect your email to manage communications.</p>
+                                <h2>Your First Project</h2>
+                                <p>Start your first project and begin tracking progress.</p>
                             </div> 
                         </label>
                         <div className='boxItemBut'>

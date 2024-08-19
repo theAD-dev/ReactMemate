@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import Sidebar from "../Sidebar";
+import ThemeImages from '../../../../assets/imgconstant';
+import styles from '../memate-select.module.scss';
+
 import {
-  BuildingCheck,
-  Buildings,
-  HddNetwork,
   AppIndicator,
   GeoAlt,
 } from "react-bootstrap-icons";
@@ -57,7 +57,8 @@ const Subscription = () => {
                       <div className="progressSubsstart actibeSubscription">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                            <BuildingCheck color="#72EDF2" size={20} />
+                          <img src={ThemeImages.buildingCheck} alt="buildingCheck"/>
+                         
                           </div>
                           <div className="progressSubsIn">
                             <h4>Business Subscription </h4>
@@ -68,7 +69,7 @@ const Subscription = () => {
                                   style={{ width: "100%" }}
                                 ></div>
                               </div>
-                              <span>ON</span>
+                              <span className={styles.textGradient}>ON</span>
                             </div>
                           </div>
                         </div>
@@ -77,7 +78,8 @@ const Subscription = () => {
                       <div className="progressSubsstart marginTopSpance ">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                            <Buildings color="#FFD3A5" size={20} />
+                          <img src={ThemeImages.buildingssubs} alt="buildingssubs"/>
+                        
                           </div>
                           <div className="progressSubsIn">
                             <h4>Company Users </h4>
@@ -104,7 +106,8 @@ const Subscription = () => {
                       <div className="progressSubsstart ">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                            <HddNetwork color="#84FAB0" size={20} />
+                          <img src={ThemeImages.hddNetwork} alt="hddNetwork"/>
+                          
                           </div>
                           <div className="progressSubsIn">
                             <h4>Work Subscription</h4>
@@ -130,7 +133,8 @@ const Subscription = () => {
                       <div className="progressSubsstart ">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                            <AppIndicator color="#4A879A" size={20} />
+                          <img src={ThemeImages.appIndicator} alt="appIndicator"/>
+                          
                           </div>
                           <div className="progressSubsIn">
                             <h4>Mobile App Users</h4>
@@ -156,7 +160,7 @@ const Subscription = () => {
                       <div className="progressSubsstart ">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                            <GeoAlt color="#9B23EA" size={20} />
+                          <img src={ThemeImages.geoAlt} alt="geoAlt"/>
                           </div>
                           <div className="progressSubsIn">
                             <h4>Locations</h4>

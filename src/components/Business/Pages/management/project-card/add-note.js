@@ -1,103 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { useMutation } from 'react-query';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { X, CloudArrowUp } from "react-bootstrap-icons";
+import { X } from "react-bootstrap-icons";
 import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
-import { cardAddNoteApi } from "../../../../../APIs/management-api"; // API for fetching
+import { createProjectNoteById } from '../../../../../APIs/management-api';
+import { useMutation } from '@tanstack/react-query';
 
-const AddNote = ({ projectId }) => {
+const AddNote = ({ projectId, projectCardData }) => {
   const [viewShow, setViewShow] = useState(false);
   const [updateDis, setUpdateDis] = useState('');
   const [errors, setErrors] = useState({});
-  const [image, setImage] = useState(null);
-  const [addNoteCard, setAddNoteCard] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const handleClose = () => setViewShow(false);
+  const handleShow = () => setViewShow(true);
+  const mutation = useMutation({
+    mutationFn: (data) => createProjectNoteById(projectId, data),
+    onSuccess: () => {
+      handleClose();
+      projectCardData(projectId);
+    },
+    onError: (error) => {
+      console.error('Error creating task:', error);
+    }
+  });
 
-  const handleClose = () => {
-    setViewShow(false);
-  };
-
-  const handleShow = () => {
-    setViewShow(true);
+  const handleChange = () => {
+    if (!updateDis) return setErrors((errs) => ({ ...errs, description: "Note is required" }));
+    else setErrors((errs) => ({ ...errs, description: "" }));
+    mutation.mutate({ text: updateDis });
   };
 
   useEffect(() => {
-    const fetchProjectCardData = async () => {
-      try {
-        const data = await cardAddNoteApi(projectId);
-        setAddNoteCard(data);
-      } catch (error) {
-        console.error('Error fetching project card data:', error);
-      }
-    };
-
-    if (projectId && viewShow) {
-      fetchProjectCardData();
+    if (!viewShow) {
+      setUpdateDis('');
+      setErrors({});
     }
-  }, [projectId, viewShow]);
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setUpdateDis(value);
-
-    if (!value) {
-      setErrors((errs) => ({ ...errs, description: "Note is required" }));
-    } else {
-      setErrors((errs) => ({ ...errs, description: "" }));
-    }
-  };
-
-  const mutation = useMutation(
-    async (noteData) => {
-      return cardAddNoteApi(projectId, noteData);
-    },
-    {
-      onSuccess: () => {
-        handleClose();
-        // Optionally, show a success message or update state
-      },
-      onError: (err) => {
-        setError('Error saving note. Please try again.');
-        console.error('Error updating note:', err);
-      },
-      onSettled: () => {
-        setLoading(false);
-      },
-    }
-  );
-
-  const handleSave = async () => {
-    setLoading(true);
-    setError(null);
-    const noteData = {
-      description: updateDis,
-      image, // Attach image if needed
-    };
-
-    mutation.mutate(noteData);
-  };
+  }, [viewShow])
 
   return (
     <>
+      {/* View modal trigger */}
       <div className="linkByttonStyle" onClick={handleShow}>
         Add Note
       </div>
 
+      {/* View modal */}
       <Modal
         show={viewShow}
         aria-labelledby="contained-modal-title-vcenter"
@@ -126,17 +74,18 @@ const AddNote = ({ projectId }) => {
                   <div className={`inputInfo ${errors.description ? 'error-border' : ''}`}>
                     <textarea
                       type="text"
-                      name="description"
+                      name="Enter a message here..."
                       value={updateDis}
                       placeholder='Enter a message here...'
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        setUpdateDis(e.target.value);
+                      }}
                     />
                   </div>
                   {errors.description && <p className="error-message">{errors.description}</p>}
                 </div>
               </Col>
             </Row>
-            {/* Optional image upload section */}
             {/* <Row>
               <Col>
                 <div className="formgroup mb-2 mt-3">
@@ -149,7 +98,7 @@ const AddNote = ({ projectId }) => {
                       <div className="textbtm">
                         <p>
                           <span>Click to upload</span> or drag and drop
-                          <br />
+                          <br></br>
                           SVG, PNG, JPG or GIF (max. 800x400px)
                         </p>
                       </div>
@@ -167,18 +116,20 @@ const AddNote = ({ projectId }) => {
                       </div>
                     )}
                   </div>
+
                 </div>
               </Col>
             </Row> */}
+
           </div>
         </Modal.Body>
         <Modal.Footer className='pt-0'>
-          <div className="popoverbottom w-100 border-0 mt-0 pt-0">
+          <div className="popoverbottom w-100  border-0 mt-0 pt-0">
             <Button variant="outline-danger" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleSave} disabled={loading}>
-              {loading ? 'Saving...' : 'Save'}
+            <Button variant="primary save" onClick={handleChange}>
+              {mutation.isPending ? "Loading..." : "Save"}
             </Button>
           </div>
         </Modal.Footer>
