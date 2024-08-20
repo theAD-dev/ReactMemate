@@ -1,5 +1,5 @@
 #calender .scheduler_default_rowheader_scroll,
-.scheduler_default_scrollable {
+#calender .scheduler_default_scrollable {
   height: calc(100vh - 234px) !important;
 }
 
@@ -1371,7 +1371,7 @@ strong.dollorIcon {
   height: calc(100vh - 170px) !important;
 }
 
-.scheduler_default_rowheader {
+#calender .scheduler_default_rowheader {
   background: transparent !important;
 }
 
