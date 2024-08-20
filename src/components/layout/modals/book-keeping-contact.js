@@ -11,7 +11,7 @@ import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-squa
 import LenderPanel from "../../../assets/images/img/lender-panel01.png";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import "./styleModel.css";
+import "./style-model.css";
 import { NavLink } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';

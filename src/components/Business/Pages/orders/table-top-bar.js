@@ -5,28 +5,33 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from 'react-bootstrap/Button';
 import {X,Filter,Person,Check,CalendarWeek, Search,Download} from "react-bootstrap-icons";
-import SearchFilter from './SearchFilter';
+import SearchFilter from './search-filter';
 import User01 from "../../../../assets/images/icon/user-01.png";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import DateRangePicker from "./DateRangePicker";
+import DateRangePicker from "./date-range-picker";
 
-const TableTopBar = ({rows,onRowsFilterChange, ClientsData, selectedRowCount,selectClass,selectedRow }) => {
+const TableTopBar = ({rows,onRowsFilterChange, OrdersData, selectedRowCount,selectClass,selectedRow }) => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedRange, setSelectedRange] = useState([]);
 
+  const formattedAmount = totalAmount.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   useEffect(() => {
-    if (ClientsData) {
-      const calculatedTotalAmount = ClientsData.reduce(
+    if (OrdersData) {
+      const calculatedTotalAmount = OrdersData.reduce(
         (total, sale) => total + sale.amount,
         0
       );
       setTotalAmount(calculatedTotalAmount);
     }
-  }, [ClientsData]);
+  }, [OrdersData]);
 
 
   const handleDataApply = (data) => {
@@ -51,7 +56,7 @@ const TableTopBar = ({rows,onRowsFilterChange, ClientsData, selectedRowCount,sel
   }, [selectedRange])
   
   
-  const fullNames = [...new Set(ClientsData.map(item => item.category))];
+  const fullNames = [...new Set(OrdersData.map(item => item.client.name))];
 
   
   const fullCategoryJson = JSON.stringify(fullNames, null, 2);
@@ -91,13 +96,13 @@ const TableTopBar = ({rows,onRowsFilterChange, ClientsData, selectedRowCount,sel
   const groupSelectedItems = () => {
     const isEmpty = Array.isArray(selectedRange) && selectedRange.length === 0;
     const groupedItems = {
-      'Category': [],
+      'Name': [],
       'DateRange': isEmpty ? [] : [selectedRange],
     };
 
     selectedItems.forEach((item) => {
       if (fullCategoryArray.includes(item)) {
-        groupedItems['Category'].push(item);
+        groupedItems['Name'].push(item);
       } else if (selectedRange.includes(item)) {
         groupedItems['DateRange'].push(item);
       }
@@ -197,25 +202,20 @@ const filteredCategory = fullCategoryArray.filter((itemName) =>
     <div className="centerTabSales">
       <ul>
         <li>
-          <NavLink to="/">Clients</NavLink>
-        </li>
-        <li>
-          <NavLink to="/new" className="tabActive">
-            New
-          </NavLink>
+          <NavLink to="">Orders</NavLink>
         </li>
       </ul>
     </div>
   </Col>
   <Col style={{ textAlign: "right" }}>
-    {ClientsData && ClientsData.length > 0 ? (
+    {OrdersData && OrdersData.length > 0 ? (
       <p className="flexEndStyle styleT3" >
-        Total <span className="styleT2">{ClientsData.length} Clients</span>{" "}
+        Total <span className="styleT2">{OrdersData.length} Orders</span>{" "}
         
       </p>
     ) : (
       <p className="flexEndStyle styleT3">
-        Total <span className="styleT2">0 Clients</span>
+        Total <span className="styleT2">0 Orders</span>
       </p>
     )}
   </Col>
@@ -239,25 +239,20 @@ const filteredCategory = fullCategoryArray.filter((itemName) =>
             <div className="centerTabSales">
               <ul>
                 <li>
-                  <NavLink to="/">Clients</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/new" className="tabActive">
-                    New 
-                  </NavLink>
+                  <NavLink to="">Orders</NavLink>
                 </li>
               </ul>
             </div>
           </Col>
           <Col style={{ textAlign: "right" }}>
-            {ClientsData && ClientsData.length > 0 ? (
+            {OrdersData && OrdersData.length > 0 ? (
               <p className="flexEndStyle styleT3">
-                Total <span className="styleT2">{ClientsData.length} Clients</span>{" "}
+                Total <span className="styleT2">{OrdersData.length} Orders</span>{" "}
               
               </p>
             ) : (
               <p className="flexEndStyle styleT3">
-                Total <span className="styleT2">0 Clients</span> 
+                Total <span className="styleT2">0 Orders</span> 
               </p>
             )}
           </Col>
@@ -277,7 +272,7 @@ const filteredCategory = fullCategoryArray.filter((itemName) =>
          </ul>
         </Tab>
       
-        <Tab eventKey="Category" title={<><Person color="#667085" size={16} /> Category</>}>
+        <Tab eventKey="Name" title={<><Person color="#667085" size={16} /> Name</>}>
           <ul>
           <div className='filterSearch filterSearchTab'>
           <span className='mr-3'>

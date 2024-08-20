@@ -7,7 +7,7 @@ import { PlusCircle,PlusLg,ExclamationOctagon } from "react-bootstrap-icons";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import NewQuoteImg from "../../../../../assets/images/img/newQuote.png";
-import "./newQupte.css";
+import "./new-qupte.css";
 import { useNavigate } from 'react-router-dom';
 
 const NewQuoteModel = () => {

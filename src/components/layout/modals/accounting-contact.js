@@ -4,18 +4,20 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 // import { MessageChatCircle } from "react-bootstrap-icons";
-import ClipboardCircle from "../../../assets/images/icon/clipboard-ch.png";
-import CalendarweekCircle from "../../../assets/images/icon/calendar-week.png";
-import PersonIconCircle from "../../../assets/images/icon/personIcon.png";
-import LenderPanel from "../../../assets/images/img/lender-panel02.png";
+import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.png";
+import ZapCircle from "../../../assets/images/icon/zap.png";
+import ClockHistoryCircle from "../../../assets/images/icon/clock-history-icon.png";
+import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
+import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-square.png";
+import LenderPanel from "../../../assets/images/img/lender-panel03.png";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import "./styleModel.css";
+import "./style-model.css";
 import { NavLink } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const InsuranceContact = ({ onAdd }) => {
+const AccountingContact = ({ onAdd }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -58,7 +60,7 @@ const InsuranceContact = ({ onAdd }) => {
               <Row className="justify-content-md-center align-items-md-center">
         <Col sm={6}>
           <div className='leftFormWrap'>
-          <h3>Contact our Insurance team</h3>
+          <h3>Contact our Accountants team</h3>
           <Row>
           <Col sm={6}>
                     <div className="formgroup mb-2 mt-3">
@@ -169,19 +171,19 @@ const InsuranceContact = ({ onAdd }) => {
           </div>
         </Col>
         <Col sm={6} className='rightText'>
-          <h2>Secure your business insurance today. </h2>
-          <p> We offer comprehensive quotes tailored to your industry and specific business needs.</p>
+          <h2>Get the Best Australian Accountant. </h2>
+          <p>We provide only the finest accountants who will look after your company's tax submissions and ATO communications on a personalized and consistent basis.</p>
           <ul>
-            <li><img src={ClipboardCircle} alt="Clipboard2Circle"/><span><h5>Instant Quotes</h5>Receive the best quotes with just one click.</span></li>
-            <li><img src={CalendarweekCircle} alt="CalendarweekCircle" /><span><h5>Renewal Reminders</h5>Get timely reminders for insurance renewals.</span></li>
-            <li><img src={PersonIconCircle} alt="PersonIconCircle" /><span><h5>Single Point of Contact</h5>Simplify your management with one dedicated contact.</span></li>
+            <li><img src={ClockHistoryCircle} alt="ClockHistoryCircle"/><span><h5>Security and Compliance</h5> Ensure adherence to all regulatory requirements.</span></li>
+            <li><img src={LockZapCircle} alt="LockZapCircle" /><span><h5>Individualized Approach </h5>Tailored services to meet your unique needs.</span></li>
+            <li><img src={ZapCircle} alt="ZapCircle" /><span><h5>Transparent and Timely Communication</h5>Keep informed with clear and prompt updates.</span></li>
           </ul>
           <div className='bgShade mt-4 mb-4'>
-            <p>“Thank you, guys! Having one point of contact really helps us manage everything in one place.”</p>
-            <strong>Francis Malabanan</strong>
-            <span>Art One</span>
+            <p>“Thank you for providing the best accountant. This definitely removes any uncertainty and doubt when communicating with the taxation office”</p>
+            <strong>Richard Karsay</strong>
+            <span>Director - Precision Flooring</span>
           </div>
-          <div className='centerimgTag'><img src={LenderPanel} alt="LenderPanel" /></div>
+          <div className='centerimgTag'> <img src={LenderPanel} alt="LenderPanel" /></div>
         </Col>
       </Row>
      
@@ -194,4 +196,4 @@ const InsuranceContact = ({ onAdd }) => {
   )
 }
 
-export default InsuranceContact;
+export default AccountingContact;

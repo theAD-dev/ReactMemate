@@ -6,18 +6,16 @@ import Modal from '@mui/material/Modal';
 // import { MessageChatCircle } from "react-bootstrap-icons";
 import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.png";
 import ZapCircle from "../../../assets/images/icon/zap.png";
-import ClockHistoryCircle from "../../../assets/images/icon/clock-history-icon.png";
-import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
 import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-square.png";
-import LenderPanel from "../../../assets/images/img/lender-panel03.png";
+import LenderPanel from "../../../assets/images/img/lender-panel 1.png";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import "./styleModel.css";
+import "./style-model.css";
 import { NavLink } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const AccountingContact = ({ onAdd }) => {
+const ModalSalesContactFinance = ({ onAdd }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -60,7 +58,7 @@ const AccountingContact = ({ onAdd }) => {
               <Row className="justify-content-md-center align-items-md-center">
         <Col sm={6}>
           <div className='leftFormWrap'>
-          <h3>Contact our Accountants team</h3>
+          <h3>Contact our Finance team</h3>
           <Row>
           <Col sm={6}>
                     <div className="formgroup mb-2 mt-3">
@@ -171,19 +169,24 @@ const AccountingContact = ({ onAdd }) => {
           </div>
         </Col>
         <Col sm={6} className='rightText'>
-          <h2>Get the Best Australian Accountant. </h2>
-          <p>We provide only the finest accountants who will look after your company's tax submissions and ATO communications on a personalized and consistent basis.</p>
+          <h2>Empowering Your Business Growth with Tailored Finance Solutions. </h2>
+          <p>From asset financing to commercial loans, auto debt refinancing, and equipment finance.</p>
           <ul>
-            <li><img src={ClockHistoryCircle} alt="ClockHistoryCircle"/><span><h5>Security and Compliance</h5> Ensure adherence to all regulatory requirements.</span></li>
-            <li><img src={LockZapCircle} alt="LockZapCircle" /><span><h5>Individualized Approach </h5>Tailored services to meet your unique needs.</span></li>
-            <li><img src={ZapCircle} alt="ZapCircle" /><span><h5>Transparent and Timely Communication</h5>Keep informed with clear and prompt updates.</span></li>
+            <li><img src={MessageChatCircle} alt="MessageChatCircle"/><span>We provide you with a personal manager who will offer a comprehensive individual 
+            solution and act as your personal finance broker.</span></li>
+            <li><img src={ZapCircle} alt="ZapCircle" /><span>We are also able to restructure loans, refinance, and provide you with a wide range of financial 
+            lending options, from major banks to private 
+              lenders and hedge funds across Australia.</span></li>
+            <li><img src={ChartBreakoutSquare} alt="ChartBreakoutSquare" /><span>We are proud to work with Australian businesses and have already helped thousands 
+            of Australian businesses save, expand, and restructure.</span></li>
           </ul>
           <div className='bgShade mt-4 mb-4'>
-            <p>“Thank you for providing the best accountant. This definitely removes any uncertainty and doubt when communicating with the taxation office”</p>
-            <strong>Richard Karsay</strong>
-            <span>Director - Precision Flooring</span>
+            <p>Working with MeMate Fiancn was a game-changer for our business. Their personalised approach and expert guidance helped us navigate complex 
+              financial challenges with ease. Thanks to their support"</p>
+            <strong>Daniel Vinkl </strong>
+            <span>CEO Visual Advertising Solutions</span>
           </div>
-          <div className='centerimgTag'> <img src={LenderPanel} alt="LenderPanel" /></div>
+          <div className='centerimgTag'><img src={LenderPanel} alt="LenderPanel" /></div>
         </Col>
       </Row>
      
@@ -196,4 +199,4 @@ const AccountingContact = ({ onAdd }) => {
   )
 }
 
-export default AccountingContact;
+export default ModalSalesContactFinance;

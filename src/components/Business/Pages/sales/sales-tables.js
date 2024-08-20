@@ -9,19 +9,19 @@ import {
 } from "react-bootstrap-icons";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import Progress from "./Progress";
-import ContactSales from "./ContactSales";
-import SalesNote from "./SalesNote";
+import Progress from "./progress";
+import ContactSales from "./contact-sales";
+import SalesNote from "./sales-note";
 import NodataImg from "../../../../assets/images/img/NodataImg.png";
 import nodataBg from "../../../../assets/images/nodataBg.png";
 import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 import Button from "react-bootstrap/Button";
-import QuoteLost from "./QuoteLost";
-import QuoteWon from "./QuoteWon";
-import ActionsDots from "./ActionsDots";
+import QuoteLost from "./quote-lost";
+import QuoteWon from "./quote-won";
+import ActionsDots from "./actions-dots";
 
 import { Table } from "react-bootstrap";
-import TableTopBar from "./TableTopBar";
+import TableTopBar from "./table-top-bar";
 import { Resizable } from 'react-resizable';
 
 const SalesTables = ({ profileData, salesData, fetchData }) => {

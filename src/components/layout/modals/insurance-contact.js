@@ -4,18 +4,18 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 // import { MessageChatCircle } from "react-bootstrap-icons";
-import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.png";
-import ZapCircle from "../../../assets/images/icon/zap.png";
-import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-square.png";
-import LenderPanel from "../../../assets/images/img/lender-panel 1.png";
+import ClipboardCircle from "../../../assets/images/icon/clipboard-ch.png";
+import CalendarweekCircle from "../../../assets/images/icon/calendar-week.png";
+import PersonIconCircle from "../../../assets/images/icon/personIcon.png";
+import LenderPanel from "../../../assets/images/img/lender-panel02.png";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import "./styleModel.css";
+import "./style-model.css";
 import { NavLink } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-const ModalSalesContactFinance = ({ onAdd }) => {
+const InsuranceContact = ({ onAdd }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -58,7 +58,7 @@ const ModalSalesContactFinance = ({ onAdd }) => {
               <Row className="justify-content-md-center align-items-md-center">
         <Col sm={6}>
           <div className='leftFormWrap'>
-          <h3>Contact our Finance team</h3>
+          <h3>Contact our Insurance team</h3>
           <Row>
           <Col sm={6}>
                     <div className="formgroup mb-2 mt-3">
@@ -169,22 +169,17 @@ const ModalSalesContactFinance = ({ onAdd }) => {
           </div>
         </Col>
         <Col sm={6} className='rightText'>
-          <h2>Empowering Your Business Growth with Tailored Finance Solutions. </h2>
-          <p>From asset financing to commercial loans, auto debt refinancing, and equipment finance.</p>
+          <h2>Secure your business insurance today. </h2>
+          <p> We offer comprehensive quotes tailored to your industry and specific business needs.</p>
           <ul>
-            <li><img src={MessageChatCircle} alt="MessageChatCircle"/><span>We provide you with a personal manager who will offer a comprehensive individual 
-            solution and act as your personal finance broker.</span></li>
-            <li><img src={ZapCircle} alt="ZapCircle" /><span>We are also able to restructure loans, refinance, and provide you with a wide range of financial 
-            lending options, from major banks to private 
-              lenders and hedge funds across Australia.</span></li>
-            <li><img src={ChartBreakoutSquare} alt="ChartBreakoutSquare" /><span>We are proud to work with Australian businesses and have already helped thousands 
-            of Australian businesses save, expand, and restructure.</span></li>
+            <li><img src={ClipboardCircle} alt="Clipboard2Circle"/><span><h5>Instant Quotes</h5>Receive the best quotes with just one click.</span></li>
+            <li><img src={CalendarweekCircle} alt="CalendarweekCircle" /><span><h5>Renewal Reminders</h5>Get timely reminders for insurance renewals.</span></li>
+            <li><img src={PersonIconCircle} alt="PersonIconCircle" /><span><h5>Single Point of Contact</h5>Simplify your management with one dedicated contact.</span></li>
           </ul>
           <div className='bgShade mt-4 mb-4'>
-            <p>Working with MeMate Fiancn was a game-changer for our business. Their personalised approach and expert guidance helped us navigate complex 
-              financial challenges with ease. Thanks to their support"</p>
-            <strong>Daniel Vinkl </strong>
-            <span>CEO Visual Advertising Solutions</span>
+            <p>“Thank you, guys! Having one point of contact really helps us manage everything in one place.”</p>
+            <strong>Francis Malabanan</strong>
+            <span>Art One</span>
           </div>
           <div className='centerimgTag'><img src={LenderPanel} alt="LenderPanel" /></div>
         </Col>
@@ -199,4 +194,4 @@ const ModalSalesContactFinance = ({ onAdd }) => {
   )
 }
 
-export default ModalSalesContactFinance;
+export default InsuranceContact;

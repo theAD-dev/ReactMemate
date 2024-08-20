@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import DepartmentCalculationTable from './department-calculation-table';
 import { Col, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import CustomRadioButton from '../../newquote/CustomRadioButton';
+import CustomRadioButton from '../../newquote/custom-radio-button';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { ChevronDown, InfoCircle } from 'react-bootstrap-icons';
 import { components } from 'react-select';

@@ -15,9 +15,9 @@ import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 
 
 import { Table } from "react-bootstrap";
-import TableTopBar from "./TableTopBar";
+import TableTopBar from "./table-top-bar";
 import { Resizable } from 'react-resizable';
-import StatusPopup from "./StatusPopup";
+import StatusPopup from "./status-popup";
 
 
 

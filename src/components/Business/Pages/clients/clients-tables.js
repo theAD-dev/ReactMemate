@@ -5,10 +5,10 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import defaultIcon from "../../../../assets/images/icon/default.png";
 import {
   Check,
-  ChevronLeft,ArrowDown,ArrowUp,GeoAlt ,Building,Person,Globe
+  ChevronLeft,X,ArrowDown,ArrowUp,GeoAlt ,Building,Person,Globe
 } from "react-bootstrap-icons";
 
-
+import styles from "./memate-select.module.scss";
 
 import NodataImg from "../../../../assets/images/img/NodataImg.png";
 import nodataBg from "../../../../assets/images/nodataBg.png";
@@ -16,8 +16,9 @@ import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 
 
 import { Table } from "react-bootstrap";
-import TableTopBar from "./TableTopBar";
+import TableTopBar from "./table-top-bar";
 import { Resizable } from 'react-resizable';
+import ClientView from "./client-view";
 
 
   const ClientsTables = forwardRef(({ ClientsData, fetchData, isFetching }, ref) => {
@@ -564,14 +565,11 @@ import { Resizable } from 'react-resizable';
       </Table>
         {/* Sidebar */}
         {selectedRow && (
-       <Offcanvas show={show} placement="end" onHide={handleClose}>
-       <Offcanvas.Header closeButton>
-         <Offcanvas.Title><strong>{selectedRow}.</strong> Client Edit Data Head</Offcanvas.Title>
-       </Offcanvas.Header>
-       <Offcanvas.Body>
-        
+       <Offcanvas show={show} placement="end" className={styles.border} style={{ width: '607px' }}>
+       <Offcanvas.Body className={styles.p0}>
+           <ClientView id={selectedRow} close={handleClose} />
        </Offcanvas.Body>
-     </Offcanvas>
+   </Offcanvas>
      
       )}
     </div>

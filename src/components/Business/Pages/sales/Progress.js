@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ChevronDown } from "react-bootstrap-icons";
-import CircleProgressBar from "./CircleProgressBar";
+import CircleProgressBar from "./circle-progress-bar";
 import { fetchSaleslead } from "../../../../APIs/SalesApi";
 
 const Option = ({ percentage, label, gradient, onSelect, isActive }) => {

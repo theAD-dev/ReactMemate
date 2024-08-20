@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./salesStyle.css";
-import SalesTables from "./SalesTables";
+import "./sales-style.css";
+import SalesTables from "./sales-tables";
 import { fetchSales } from "../../../../APIs/SalesApi";
 
 const Sales = ({profileData}) => {

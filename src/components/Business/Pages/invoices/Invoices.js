@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fetchInvoices } from "../../../../APIs/InvoicesApi";
-import InvoicesTables from "./InvoicesTables";
-import "./InvoicesTables.css"
+import InvoicesTables from "./invoices-tables";
+import "./invoices-tables.css"
 const Clients = () => {
   const [InvoicesData, setInvoicesData] = useState([]);
   const [hasMore, setHasMore] = useState(true);

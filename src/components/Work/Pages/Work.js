@@ -1,5 +1,5 @@
 import React from 'react'
-import Profile from '../../layout/Login/Profile'
+import Profile from '../../layout/Login/profile'
 
 
 export const Work = () => {

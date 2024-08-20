@@ -19,14 +19,14 @@ import {
   PlusLg,
   CheckCircle,
 } from "react-bootstrap-icons";
-import SearchFilter from "./SearchFilter";
+import SearchFilter from "./search-filter";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import DateRangePicker from "./DateRangePicker";
+import DateRangePicker from "./date-range-picker";
 import { fetchMultipleData } from "../../../../APIs/SalesApi";
 import { fetchMultipleLost } from "../../../../APIs/SalesApi";
 import ConfettiComponent from "../../../layout/ConfettiComponent";
-import NewQuoteModel from "./newquote/NewQuoteModel";
+import NewQuoteModel from "./newquote/new-quote-model";
 
 
 const TableTopBar = ({

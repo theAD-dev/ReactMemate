@@ -1,37 +1,26 @@
 import React, { useEffect, useState, forwardRef } from "react";
-
-import { Link } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
   Check,
-  ChevronLeft, ArrowDown, ArrowUp, Building, Person, ThreeDotsVertical, Coin, FilePdf, InfoCircle,
-  Link45deg, Plus
+  ChevronLeft, ArrowDown, ArrowUp, Envelope, Person, Globe
 } from "react-bootstrap-icons";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import NodataImg from "../../../../assets/images/img/NodataImg.png";
-import stripe from "../../../../assets/images/icon/stripe.png";
 import nodataBg from "../../../../assets/images/nodataBg.png";
 import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 import { Table } from "react-bootstrap";
-import TableTopBar from "./TableTopBar";
+import TableTopBar from "./table-top-bar";
 import { Resizable } from 'react-resizable';
 
 
-const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref) => {
+const SuppliersTables = forwardRef(({ ClientsData, fetchData, isFetching }, ref) => {
   const [sortField, setSortField] = useState("Quote");
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRow, setSelectedRow] = useState(null);
-  const InvoicesResults = Array.isArray(InvoicesData) ? InvoicesData : InvoicesData.results;
-  // Formate Date
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    const day = date.getDate();
-    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-      month: "short",
-    }).format(date);
-    const year = date.getFullYear();
-    return `${day} ${monthAbbreviation} ${year}`;
-  };
+
+  const ClientsResults = Array.isArray(ClientsData) ? ClientsData : ClientsData.results;
 
   const toggleSort = (field) => {
     setSortField(field);
@@ -40,7 +29,7 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
     );
   };
 
-  const sortedInvoicesData = [...InvoicesResults].sort((a, b) => {
+  const sortedClientsData = [...ClientsResults].sort((a, b) => {
     const aValue = a[sortField];
     const bValue = b[sortField];
 
@@ -70,7 +59,7 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
 
   const [selectedRows, setSelectedRows] = useState([]);
   const handleSelectAllCheckboxChange = () => {
-    const allRowIds = InvoicesResults.map((sale) => sale.id);
+    const allRowIds = ClientsResults.map((sale) => sale.id);
     if (selectedRows.length === allRowIds.length) {
       setSelectedRows([]);
     } else {
@@ -83,9 +72,10 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
   const [columns, setColumns] = useState([
     {
       field: "Quote",
+      width: 139,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Quote")}>
-          <span>Invoice ID</span>
+          <span>Supplier ID	</span>
           {sortField === "Quote" && (
             <span>
               {sortDirection === "asc" ? (
@@ -95,53 +85,25 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
               )}
             </span>
           )}
-
         </div>
       ),
-      width: 170,
+
       renderCell: (params) => (
-        <div className="invoiceidFlex">
-          <div className={`styleColor1 ${params.row.paid}`}>
-            <span className="greenborderStyle dotosCircle">{params.value.substring(6)}</span>
-            <p>{formatDate(params.row.created)}</p>
-
-          </div>
-          <Button className="linkByttonStyle" variant="link">Open</Button></div>
-      ),
-    },
-
-
-    {
-      field: "Invoice",
-      sortable: false,
-      headerName: "Invoice",
-      width: 109,
-      renderCell: (params) => (
-        <div>
-          <ul className="disPlayInline disPlayInlineCenteri"
-            style={{ whiteSpace: "nowrap" }}
-          >
-            <li>
-              <Link to={params.row.invoiceURL}>
-                <FilePdf color="#FF0000" size={16} />
-              </Link>
-            </li>
-            <li>
-              <Link to={params.row.uniqueURL}>
-                <Link45deg color="#3366CC" size={16} />
-              </Link>
-            </li>
-          </ul>
+        <div
+          className="styleColor1 supTdFlex"
+          style={{ whiteSpace: "normal", textAlign: "left" }}>
+          <strong>{params.value} </strong>
+          <Button className="linkByttonStyle" variant="link">Open</Button>
         </div>
       ),
     },
-    {
-      field: "client",
 
+    {
+      field: "Supplier",
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("client")}>
-          <span>Client</span>
-          {sortField === "client" && (
+        <div className="styleColor1" onClick={() => toggleSort("Client")}>
+          <span>Supplier</span>
+          {sortField === "Client" && (
             <span>
               {sortDirection === "asc" ? (
                 <ArrowUp size={16} color="#475467" />
@@ -154,17 +116,21 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
       ),
 
       renderCell: (params) => (
-        <div className="userImgStyle1">
+        <div className="userImgStyle">
           <div className="innerFlex styleColor2 d-flex justify-content-between">
-            <div className="leftStyle spaceBorder d-flex align-items-center isbusinessIcon">
-              {params.row.hasPhoto ? (
+            <div className="leftStyle d-flex align-items-center isbusinessIcon">
+              {/* {params.row.photo ? (
                 <img
                   src={params.row.photo}
                   alt={params.row.photo}
                   style={{ marginRight: "5px" }}
+                  onError={(e) => {
+                    e.target.src = defaultIcon;
+                    e.target.alt = "Image Not Found";
+                  }}
                 />
               ) : (
-                params.row.is_business ? (
+                params.row.isbusiness ? (
                   <div className="iconBuilding">
                     <Building size={13.71} color="#667085" />
                   </div>
@@ -173,6 +139,18 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
                     <Person size={24} color="#667085" />
                   </div>
                 )
+              )}
+              <span>{params.value}</span> */}
+              {params.row.has_photo ? (
+                <img
+                  src={params.row.photo}
+                  alt={params.row.photo}
+                  style={{ marginRight: "5px" }}
+                />
+              ) : (
+                <div className="iconPerson">
+                  <Person size={24} color="#667085" />
+                </div>
               )}
 
               <span>{params.value}</span>
@@ -183,49 +161,70 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
       ),
 
     },
-
-
     {
-      field: "paid",
+      field: "services",
       sortable: false,
-      headerName: "Date Due",
-      width: 350,
+      headerName: "Supplied Services",
+
+      renderCell: (params) => (
+        <div
+          className="mainStyle SuppServices"
+          style={{ textAlign: "left" }}
+        >
+          {params.value}
+
+        </div>
+      ),
+    },
+    {
+      field: "Email",
+      sortable: false,
+      headerName: "Email",
+      width: 68,
       renderCell: (params) => {
+
         return (
-          <div
-            className="mainStyle invoiceDue"
-            style={{ whiteSpace: "nowrap", textAlign: "left" }}
-          >
-            <ul>
-              {params.row.paid ? (
-                <>
-                  <li className="invoicepaid dotosCircleRight">Paid</li>
-                </>
+          <div>
+            <div className="circleImgStyle">
+              {["top-start"].map((placement) => (
+                <OverlayTrigger
+                  key={placement}
+                  placement={placement}
+                  overlay={
+                    <Tooltip id={`tooltip-${placement}`}>
+                      <div className="tooltipBox">{params.value}</div>
+                    </Tooltip>
+                  }
+                >
+                  <span variant="light" className="">
+                    {params.value ? (
+                      <>
+                        <Envelope size={20} color="#98A2B3" />
 
-              ) : (
-                params.row.overdue ? (
-                  <><li className="OverdueStyle dotosCircleRight">Overdue {params.row.overdue} days</li></>
-                ) : null
-              )}
+                      </>
+                    ) : (
+                      <div className="iconPerson">
 
-              <li>09 Dec 2029</li>
-              <li> <Button className="linkByttonStyle" variant="link">Resend</Button></li>
-            </ul>
+                      </div>
+                    )}
 
+                  </span>
+                </OverlayTrigger>
+              ))}
+            </div>
           </div>
+
         );
-
-
       },
     },
 
     {
-      field: "status",
+      field: "Address",
       sortable: false,
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("status")}>
-          <span>Payment Status</span>
-          {sortField === "status" && (
+        <div className="styleColor1" onClick={() => toggleSort("Status")}>
+          <span>Address</span>
+          {sortField === "Status" && (
             <span>
               {sortDirection === "asc" ? (
                 <ArrowUp size={16} color="#475467" />
@@ -236,153 +235,124 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
           )}
         </div>
       ),
-      width: 119,
       renderCell: (params) => (
-        <div className="leftStyle statusifwn d-flex align-items-center paymentStyle">
-          {params.row.statusPaid === "paid" ? (
-            <div className="">
-              <img src={stripe} alt="stripe" />
-            </div>
-          ) : params.row.statusPaid === "not_paid" ? (
-            <div className="iconBuilding">
-              <Coin size={13.71} color="#667085" />
-            </div>
-          ) : (
-            <div className="iconBuilding">
-              <Building size={13.71} color="#667085" />
-            </div>
-          )}
 
-        </div>
+        params.value ? (
+          <div
+            className="address"
+            style={{ textAlign: "left" }}
+          >
+            {params.value}
+          </div>
+        ) : (
+          <span></span>
+        )
       ),
     },
     {
-      field: "amount",
+      field: "Statename",
       sortable: false,
-      headerName: "Amount + GST",
-      width: 133,
+      headerName: "State",
+      width: 60,
       renderCell: (params) => (
-        <div className="amountGst">
-          ${params.value}
-        </div>
+
+        params.value ? (
+          <div
+            className="Statestyle"
+            style={{ whiteSpace: "nowrap", textAlign: "left" }}
+          >
+            {/* {params.value} */}
+            {params.row.Statealias}
+          </div>
+        ) : (
+          <>
+            {/* {params.row.Statealias} */}
+          </>
+
+        )
       ),
     },
 
     {
-      field: "tobePaid",
+      field: "PostCode",
       sortable: false,
-      headerName: "To be paid",
-      width: 120,
+      headerName: "Post Code",
+      width: 100,
       renderCell: (params) => (
         <div
-          className="tobePaid1"
+          className="PostCodestyle"
+          style={{ whiteSpace: "nowrap", minWidth: "88px", textAlign: "left" }}
+        >
+          {params.value}
+        </div>
+      ),
+    },
+
+    {
+      field: "TotalSpent",
+      sortable: false,
+      headerName: "Total Spent",
+      width: 114,
+      renderCell: (params) => (
+        <div className="styleColor1 TotalSpent"
           style={{ whiteSpace: "nowrap", textAlign: "left" }}
         >
           ${params.value}
         </div>
       ),
     },
-
     {
-      field: "deposit",
+      field: "Website",
       sortable: false,
-      headerName: "Deposit/Payment",
-      width: 148,
+      headerName: "Website",
+      width: 75,
       renderCell: (params) => (
-
-        <div
-          className="totalpayEx"
-          style={{ whiteSpace: "nowrap", textAlign: "center" }}
-        >
-          $ {params.value}<span className="lineVerticle"><Plus size={17} color="#079455" /></span>
-        </div>
+        params.value !== "NA" ? (
+          <div
+            className="styleGrey01 WebsiteGlobe"
+            style={{ whiteSpace: "nowrap", textAlign: "center" }}
+          >
+            <a href={"http://" + params.value} target="_blank">
+              <Globe size={20} color="#98A2B3" />
+            </a>
+          </div>
+        ) : (
+          <>
+            <a href="#">
+              <Globe size={20} color="#98A2B3" />
+            </a>
+          </>
+        )
       ),
     },
-    {
-      field: "order_frequency",
-      sortable: false,
-      headerName: "Info",
-      width: 68,
-      renderCell: (params) => (
-        <div
-          className=""
-          style={{ whiteSpace: "normal", textAlign: "center" }}
-        >
-          <InfoCircle size={24} color="#98A2B3" />
-
-        </div>
-      ),
-    },
-    {
-      field: "country",
-      sortable: false,
-      headerName: "Xero/Myob",
-      width: 91,
-      renderCell: (params) => (
-        <div
-          className="styleGrey01"
-          style={{ whiteSpace: "normal", textAlign: "center", textTransform: "uppercase" }}
-        >
-
-        </div>
-      ),
-    },
-
-
-
-
-    {
-      field: "Actions",
-      sortable: false,
-      headerName: "Actions",
-      width: 72,
-      renderCell: (params) => (
-        <div
-          className="styleGrey01"
-          style={{ whiteSpace: "normal", textAlign: "left" }}
-        >
-          <ThreeDotsVertical size={24} color="#667085" />
-
-        </div>
-      ),
-    },
-
 
   ]);
 
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    const rows = InvoicesResults.map((invoice) => {
+    const rows = ClientsResults.map((client) => {
 
 
       return {
-        isSelected: selectedRows.includes(invoice.id),
-        id: invoice.id,
-        Quote: invoice.number,
-        created: invoice.created,
-        invoiceURL: invoice.invoice_url,
-        uniqueURL: invoice.unique_url,
-        client: invoice.client.name,
-        photo: invoice.client.photo,
-        isbusiness: invoice.client.is_business,
-        hasPhoto: invoice.client.has_photo,
-        overdue: invoice.overdue,
-        paid: invoice.paid,
-        dueDate: invoice.due_date,
-        toBePaid: invoice.to_be_paid,
-        status: invoice.status,
-        amount: invoice.amount,
-        tobePaid: invoice.to_be_paid,
-        deposit: invoice.deposit,
-        statusPaid: invoice.payment_status,
-
-
-
+        isSelected: selectedRows.includes(client.id),
+        id: client.id,
+        Quote: client.number,
+        Supplier: client.name != null ? client.name : "",
+        services: client.services,
+        Email: client.email,
+        Address: client.address,
+        Statealias: client.state != null ? client.state.postal != null ? client.state.postal : "" : "",
+        Statename: client.state != null ? client.state.name != null ? client.state.name : "" : "",
+        photo: client.photo,
+        has_photo: client.has_photo,
+        PostCode: client.postcode,
+        TotalSpent: client.total_spent,
+        Website: client.website,
       };
     });
 
     setRows(rows)
-  }, [InvoicesResults, selectedRows])
+  }, [ClientsResults, selectedRows])
 
 
   const onResize = (index) => (event, { size }) => {
@@ -412,27 +382,24 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
 
   const handleRowsFilterChange = (filteredRows) => {
 
-    const rows = filteredRows.map((invoice) => {
+    const rows = filteredRows.map((client) => {
+
       return {
-        isSelected: selectedRows.includes(invoice.id),
-        id: invoice.id,
-        Quote: invoice.number,
-        created: invoice.created,
-        invoiceURL: invoice.invoice_url,
-        uniqueURL: invoice.unique_url,
-        client: invoice.client.name,
-        photo: invoice.client.photo,
-        isbusiness: invoice.client.is_business,
-        hasPhoto: invoice.client.has_photo,
-        overdue: invoice.overdue,
-        paid: invoice.paid,
-        dueDate: invoice.due_date,
-        toBePaid: invoice.to_be_paid,
-        status: invoice.status,
-        amount: invoice.amount,
-        tobePaid: invoice.to_be_paid,
-        deposit: invoice.deposit,
-        statusPaid: invoice.payment_status,
+        isSelected: selectedRows.includes(client.id),
+        id: client.id,
+        Quote: client.number,
+        Supplier: client.name != null ? client.name : "",
+        services: client.services,
+        Email: client.email,
+        photo: client.photo,
+        has_photo: client.has_photo,
+        Address: client.address,
+        Statealias: client.state != null ? client.state.postal != null ? client.state.postal : "" : "",
+        Statename: client.state != null ? client.state.name != null ? client.state.name : "" : "",
+        PostCode: client.postcode,
+        TotalSpent: client.total_spent,
+        Website: client.website,
+
 
       };
     });
@@ -441,13 +408,9 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
     setRowsFilter(rows);
   };
 
-
-  // intersection observer
-
-
   return (
-    <div className="invoiceTableWrap">
-      <TableTopBar InvoicesData={InvoicesResults} rowsfilter={rowsfilter} onRowsFilterChange={handleRowsFilterChange} rows={sortedInvoicesData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
+    <div className="supplierTableWrap">
+      <TableTopBar ClientsData={ClientsResults} rowsfilter={rowsfilter} onRowsFilterChange={handleRowsFilterChange} rows={sortedClientsData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
 
 
       <Table responsive>
@@ -457,7 +420,7 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
               <label className="customCheckBox">
                 <input
                   type="checkbox"
-                  checked={selectedRows.length === InvoicesResults.length}
+                  checked={selectedRows.length === ClientsResults.length}
                   onChange={handleSelectAllCheckboxChange}
                 />
                 <span className="checkmark">
@@ -483,10 +446,8 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
         <tbody>
           {rows && rows.length &&
             rows.map((row) => (
-              <tr
-                data-clientuniqueid={row.clientUniqueId}
-                key={row.id}
-                className={`${row.isSelected ? "selected-row" : ""} ${row.paid}`}
+              <tr data-clientuniqueid={row.clientUniqueId}
+                key={row.id} className={row.isSelected ? "selected-row" : ""}
               >
                 <td>
                   <label className="customCheckBox">
@@ -553,7 +514,6 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
             </tr>
           )}
         </tbody>
-
       </Table>
       {/* Sidebar */}
       {selectedRow && (
@@ -569,9 +529,9 @@ const InvoicesTables = forwardRef(({ InvoicesData, fetchData, isFetching }, ref)
       )}
     </div>
   );
-});
+})
 
 
 
 
-export default InvoicesTables
+export default SuppliersTables

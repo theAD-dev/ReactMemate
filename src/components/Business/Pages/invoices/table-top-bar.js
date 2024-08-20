@@ -5,11 +5,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from 'react-bootstrap/Button';
 import {X,Filter,People,Check,CalendarWeek,CurrencyDollar, Search, XCircle,Download,CheckCircle} from "react-bootstrap-icons";
-import SearchFilter from './SearchFilter';
+import SearchFilter from './search-filter';
 import User01 from "../../../../assets/images/icon/user-01.png";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import DateRangePicker from "./DateRangePicker";
+import DateRangePicker from "./date-range-picker";
 
 const TableTopBar = ({rows,onRowsFilterChange, InvoicesData, selectedRowCount,selectClass,selectedRow }) => {
   const [totalAmount, setTotalAmount] = useState(0);
