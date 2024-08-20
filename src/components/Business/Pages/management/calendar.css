@@ -490,7 +490,7 @@ ul.eventStyleCal {
   position: relative;
 }
 
-.scheduler_default_tree_image_collapse::after {
+#calender .scheduler_default_tree_image_collapse::after {
   position: absolute;
   top: -300px;
   right: 29px;
