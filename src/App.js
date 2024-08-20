@@ -1,7 +1,7 @@
 import React from 'react';
 import { AuthProvider } from './components/Auth';
 import { Routes, Route } from 'react-router-dom';
-import Login from './components/layout/Login/login';
+import Login from './components/layout/Login/login-page';
 import ForgotPassword from './components/layout/Login/forgot-password';
 import CheckMail from './components/layout/Login/check-mail';
 import PasswordReset from './components/layout/Login/password-reset';

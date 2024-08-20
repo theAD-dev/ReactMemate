@@ -22,7 +22,7 @@ import statusUp from "../../assets/images/icon/status-up.svg";
 import Profile3user from "../../assets/images/icon/profile-3user.svg";
 import { Work } from "../Work/Pages/Work";
 import ProfileInfo from "./ProfileInfo";
-import Sales from "../Business/Pages/sales/sales";
+import Sales from "../Business/Pages/sales/sales-page";
 import Management from "../Business/Pages/management/management-page";
 import SelectOption from "./SelectOption";
 import Profile from "./Login/profile";
