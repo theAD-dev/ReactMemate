@@ -1,0 +1,310 @@
+.clientTableWrap .days_in_company,.jobsdone {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  padding: 2px 6px;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: inline-block;
+}
+.clientTableWrap .jobsdone {
+  border-radius: 16px;
+  padding: 2px 8px;
+}
+.clientTableWrap table tbody tr:hover .WebsiteGlobe svg ,.clientTableWrap .selected-row .WebsiteGlobe svg{
+  fill: #1AB2FF;
+}
+.clientTableWrap div#controlled-tab-example-tabpane-FullName ul .scrollItemsBox {
+  overflow-y: auto;
+  height: 285px;
+}
+.clientTableWrap .total_turnover {
+  color: var(--Gray-500, #667085);
+  text-align: right;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.clientTableWrap .mainStyle.category {
+  color: var(--Gray-400, #98A2B3);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.clientTableWrap .selected-row .mainStyle.category {
+ color: #344054;
+}
+.clientTableWrap table thead tr th:nth-child(3) {
+  position: sticky;
+  left: 136px;
+  z-index: 5;
+  border-right: 1px solid var(--color10) !important;
+}
+.clientTableWrap .tableTopBar .styleT3 .styleT2 {
+  border-radius: 16px;
+  border: 1px solid var(--Primary-200, #A3E0FF);
+  background: var(--Primary-50, #EBF8FF);
+  mix-blend-mode: multiply;
+  color: var(--Primary-500, #1AB2FF);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+}
+.clientTableWrap .styleborderbox {
+  border-radius: 16px;
+  border: 1px solid var(--Primary-200, #A3E0FF);
+  background: var(--Primary-25, #F2FAFF);
+  color: var(--Primary-500, #1AB2FF);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 15px;
+  display: inline-block;
+  min-width: 66px;
+  text-align: center !important;
+  margin: 0 auto;
+  padding: 2px;
+  float: left;
+}
+.clientTableWrap .darkborderbox {
+  border-radius: 16px;
+  border: 1px solid var(--Success-200, #ABEFC6);
+  background: var(--Success-50, #ECFDF3);
+  mix-blend-mode: multiply;
+  color: var(--Success-700, #067647);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: inline-block;
+  padding: 2px 8px;
+}
+.clientTableWrap .isbusinessIcon .iconBuilding {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+  border-radius: 0;
+  border: 0px solid #10182826;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  padding: 2px;
+}
+.clientTableWrap .isbusinessIcon .iconPerson {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+  border-radius: 0;
+  border: 0px solid #10182826;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  padding: 2px;
+}
+.clientTableWrap .textLeft span {
+  text-align: left;
+}
+.clientTableWrap .styleColor2 {
+  color: var(--colorG4);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: .14px;
+  line-height: 22px;
+}
+.clientTableWrap .leftStyle span {
+  padding-right: 10px;
+  display: inline-block;
+  min-width: 125px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.clientTableWrap .styleColor1 p {
+  color: var(--colorG6);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  margin: 0;
+  text-wrap: nowrap;
+}
+.clientTableWrap .styleColor1 strong {
+  color: #667085;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  text-wrap: nowrap;
+}
+.clientTableWrap .innerFlex {
+  align-items: center;
+  display: flex;
+  text-align: left;
+}
+.clientTableWrap .styleColor2 {
+  color: var(--colorG1);
+}
+.clientTableWrap .spaceBorder .icon,.clientTableWrap .spaceBorder img {
+  border: .75px solid #e0e0e0;
+  border-radius: 100%;
+  float: left;
+  height: 32px;
+  object-fit: cover;
+  padding: 2px;
+  width: 32px;
+}
+
+
+.clientTableWrap img.truePhotoStyle {
+  border-radius: 4px;
+}
+.clientTableWrap img.falsePhotoStyle {
+  border-radius: 100px;
+}
+
+.clientTableWrap .userImgStyle img {
+  border: 0px solid #d7d7d7;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  float: left;
+  padding: 2px;
+}
+.clientTableWrap table tbody tr td:nth-child(2) {
+  padding-left: 7px !important;
+}
+.clientTableWrap table thead tr th:first-child, .clientTableWrap table tbody tr td:first-child {
+  position: sticky;
+  left: 0;
+  width: 40px;
+  z-index: 8;
+  border-right: 0;
+  text-align: left;
+  padding: 0px 6px 0 22px !important;
+}
+.clientTableWrap table thead tr th:nth-child(2) {
+  position: sticky;
+  left: 40px;
+  z-index: 8;
+  border-right: 0px solid var(--color10) !important;
+  padding-left: 7px !important;
+}
+.clientTableWrap .styleColor1 {
+  text-align: left;
+}
+.clientTableWrap .clientTdFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.clientAddress span {
+  padding-right: 10px;
+}
+.offcanvas-backdrop.show {
+  opacity: 0;
+}
+
+
+
+
+@media only screen and (max-width: 1600px) and (min-width: 1280px)  {
+  .clientTableWrap .mainStyleMin {
+    width: 221px;
+  }
+  .clientTableWrap table thead tr th:nth-child(3) {
+    position: sticky;
+    left: 131px;
+    z-index: 5;
+    border-right: 0px solid var(--color10) !important;
+}
+  .clientTableWrap .table-responsive {
+    overflow-x: auto;
+}
+.clientTableWrap .select-menu {
+  position: relative;
+  width: 200px;
+}
+ .clientTableWrap table thead tr th:nth-child(2), .clientTableWrap table tbody tr td:nth-child(2) 
+{
+    position: sticky;
+    left: 42px;
+   
+    z-index: 8;
+    border-right: 0px solid var(--color10) !important;
+    padding-left: 0px !important;
+}
+.clientTableWrap table tbody tr td:nth-child(2):before
+{
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+}
+.clientTableWrap table thead tr th:nth-child(2):before
+{
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    z-index: 0;
+} 
+
+.clientTableWrap table thead tr th:nth-child(3) {
+left: 406px;
+}
+.clientTableWrap table thead tr th:nth-child(3), .clientTableWrap table tbody tr td:nth-child(3) {
+  position: sticky;
+  left: 170px;
+  border-left: 0  !important;
+  border-right: 0px solid var(--color10) !important;
+  z-index: 8;
+}
+.clientTableWrap tr td {
+  white-space: nowrap !important;
+}
+.clientTableWrap table tbody tr td:nth-child(3)::after,.clientTableWrap table thead tr th:nth-child(3)::after {
+  position: absolute;
+  background: var(--color10);
+  content: "";
+  right: 0;
+  width: 1px;
+  height: 100%;
+  top: 0;
+  box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10);
+  z-index: 0;
+} 
+.clientTableWrap table thead tr th:nth-child(2) {
+  left: 42px;
+}
+}

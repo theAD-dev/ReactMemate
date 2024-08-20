@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fetchClients } from "../../../../APIs/SuppliersApi";
-import SuppliersTables from "./SuppliersTables";
-import "./suppliersTables.css"
+import SuppliersTables from "./suppliers-tables";
+import "./suppliers-tables.css"
 
 const Suppliers = () => {
   const [ClientsData, setClientsData] = useState([]);

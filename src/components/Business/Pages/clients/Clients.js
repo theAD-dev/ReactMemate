@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fetchClients } from "../../../../APIs/ClientsApi";
-import ClientsTables from "./ClientsTables";
-import "./clientsTables.css"
+import ClientsTables from "./clients-tables";
+import "./clients-tables.css"
 const Clients = () => {
   const [ClientsData, setClientsData] = useState([]);
   const [hasMore, setHasMore] = useState(true);

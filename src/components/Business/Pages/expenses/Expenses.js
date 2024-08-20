@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fetchExpenses } from "../../../../APIs/ExpensesApi";
-import ExpensesTables from "./ExpensesTables";
-import "./expensesTables.css"
+import ExpensesTables from "./expenses-tables";
+import "./expenses-tables.css"
 const Expenses = () => {
   const [expensesData, setExpensesData] = useState([]);
   const [hasMore, setHasMore] = useState(true);

@@ -1,10 +1,10 @@
 import React from 'react';
 import { AuthProvider } from './components/Auth';
 import { Routes, Route } from 'react-router-dom';
-import Login from './components/layout/Login/Login';
-import ForgotPassword from './components/layout/Login/ForgotPassword';
-import CheckMail from './components/layout/Login/CheckMail';
-import PasswordReset from './components/layout/Login/PasswordReset';
+import Login from './components/layout/Login/login-page';
+import ForgotPassword from './components/layout/Login/forgot-password';
+import CheckMail from './components/layout/Login/check-mail';
+import PasswordReset from './components/layout/Login/password-reset';
 import SignUp from './components/layout/requestdemo/SignUp';
 import SelectCountry from './components/layout/requestdemo/SelectCountry';
 import CompanyName from './components/layout/requestdemo/CompanyName';
@@ -16,7 +16,7 @@ import Companyname from './components/layout/onboarding/Companyname';
 import Regionalsettings from './components/layout/onboarding/Regionalsettings';
 import Discovermemate from './components/layout/onboarding/Discovermemate';
 import ResendEmail from './components/layout/onboarding/ResendEmail';
-import ChangePassword from './components/layout/Login/ChangePassword';
+import ChangePassword from './components/layout/Login/change-password';
 import Demo from './components/layout/settings/Demo';
 import Components from '../src/ui/memate-select';
 

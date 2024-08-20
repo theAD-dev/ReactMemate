@@ -19,10 +19,10 @@ import { Link } from 'react-router-dom';
 
 
 import CountUp from 'react-countup';
-import ModalSalesContactFinance from './layout/modals/ModalSalesContactFinance';
-import BookkeepingContact from './layout/modals/BookkeepingContact';
-import InsuranceContact from './layout/modals/InsuranceContact';
-import AccountingContact from './layout/modals/AccountingContact';
+import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
+import BookkeepingContact from './layout/modals/book-keeping-contact';
+import InsuranceContact from './layout/modals/insurance-contact';
+import AccountingContact from './layout/modals/accounting-contact';
 const Home = () => {
     const [selectedOption, setSelectedOption] = useState('');
     const [profileData, setProfileData] = useState(null);

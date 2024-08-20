@@ -18,7 +18,7 @@ import {
   ListUl,
 } from "react-bootstrap-icons";
 import { fetchProfile } from "../../../APIs/ProfileApi";
-import LogoutButton from "../Login/LogoutButton";
+import LogoutButton from "../Login/logout-button";
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const [profileData, setProfileData] = useState(null);
 

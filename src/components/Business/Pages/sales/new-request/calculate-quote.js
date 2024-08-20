@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ChevronLeft, PlusSlashMinus } from 'react-bootstrap-icons'
 import { NavLink, useNavigate } from 'react-router-dom'
-import CustomRadioButton from '../newquote/CustomRadioButton';
+import CustomRadioButton from '../newquote/custom-radio-button';
 import DepartmentQuote from './department-quote';
 
 const CalculateQuote = () => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fetchOrders } from "../../../../APIs/OrdersApi";
-import OrdersTables from "./OrdersTables";
-import "./ordersTable.css"
+import OrdersTables from "./orders-tables";
+import "./orders-table.css"
 const Orders = () => {
   const [OrdersData, setOrdersData] = useState([]);
   const [hasMore, setHasMore] = useState(true);
