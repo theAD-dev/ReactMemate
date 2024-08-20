@@ -112,7 +112,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
 
       renderCell: (params) => (
         <div className="styleColor1">
-          <strong>{params.value.substring(4)}</strong>
+          <strong>{params.value}</strong>
           <p>{formatDate(params.row.created)}</p>
         </div>
       ),

@@ -402,43 +402,32 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <h3>Project History</h3>
                     {
                       isFetching ? (
-                        <React.Fragment key={'history-key-1'}>
-                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-3 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '200px', height: '15px' }} />
-                          </Placeholder>
-                          <Placeholder as="p" animation="wave" className="mb-0 mt-1">
-                            <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '90%', height: '10px' }} />
-                          </Placeholder>
-                        </React.Fragment>
+                        <>
+                          {Array.from({ length: 10 }, (_, index) => (
+                            <Placeholder
+                              key={`history-key-${index + 1}`}
+                              as="p"
+                              animation="wave"
+                              className={index % 2 === 0 ? "mb-0 mt-1" : "mb-3 mt-1"}
+                            >
+                              <Placeholder
+                                xs={12}
+                                bg="secondary"
+                                className="rounded-0"
+                                size='sm'
+                                style={{
+                                  width: index % 2 === 0 ? '200px' : '90%',
+                                  height: index % 2 === 0 ? '15px' : '10px'
+                                }}
+                              />
+                            </Placeholder>
+                          ))}
+                        </>
                       ) : (
                         <div className='projectHistoryScroll'>
                           {filteredHistory?.length ? (
-                            filteredHistory.map(({ id, type, text, title, created, manager }) => (
-                              <div className='projectHistorygroup' key={id}>
+                            filteredHistory.map(({ id, type, text, title, created, manager }, index) => (
+                              <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>
                                     {type === "quote" ? (

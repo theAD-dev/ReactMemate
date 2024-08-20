@@ -18,7 +18,7 @@ import Discovermemate from './components/layout/onboarding/Discovermemate';
 import ResendEmail from './components/layout/onboarding/ResendEmail';
 import ChangePassword from './components/layout/Login/ChangePassword';
 import Demo from './components/layout/settings/Demo';
-import Components from './ui';
+import Components from '../src/ui/memate-select';
 
 function App() {
   return (

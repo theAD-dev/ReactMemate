@@ -79,7 +79,7 @@ function EventScheduler() {
   useEffect(() => {
     const daypilotScript = document.createElement("script");
     daypilotScript.src =
-      "https://my.memate.com.au/static/js/daypilot-all.min.js";
+      "/daypilot-all.min.js";
     daypilotScript.id = "daypilot-script-ele";
 
     const handleError = () => {

@@ -1,8 +1,6 @@
 let dp;
 let DP;
 let expandRow;
-var userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-console.log('userTimeZone: ', userTimeZone);
 
 function parseTimestamp(timestampStr) {
   return new Date(new Date(timestampStr).getTime() - (new Date(timestampStr).getTimezoneOffset() * 60 * 1000));
@@ -254,18 +252,6 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
   };
 
   dp.init();
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-  const formattedDate = `${year}-${month}-${day}`;
-  dp.scrollTo(formattedDate);
-
-  const app = {
-    init() {
-      loadData(responses);
-    },
-  };
 
   dp.onBeforeEventRender = function (args) {
     args.data.areas = [
@@ -307,20 +293,12 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     }
   };
 
-
-  // dp.onBeforeTimeHeaderRender = (args) => {
-  //   console.log('args.header: ', args.header);
-  //   if (args.header.level === 1) 
-  //     args.header.html = args.header.start.getDayOfWeek() + 1;
-  // }
-
-  app.init();
+  loadData(responses);
 }
 
 export function reInitilizeData(responses) {
   try {
     loadData(responses);
-    // if(expandRow) dp.rows.find(expandRow).expand();
   } catch (error) {
     console.log(error);
   }

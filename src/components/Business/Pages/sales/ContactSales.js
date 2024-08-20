@@ -2,6 +2,13 @@ import React from 'react';
 import { Envelope, Telephone, Calendar,X } from "react-bootstrap-icons";
 import { Button, ButtonToolbar, OverlayTrigger, Popover } from 'react-bootstrap';
 import ContactAdd from "./ContactAdd";
+import phonecallgra from "../../../../assets/images/icon/phonecallgra.svg";
+import mailgradi from "../../../../assets/images/icon/mailgradi.svg";
+import calendargradi from "../../../../assets/images/icon/calendargradi.svg";
+import styles from './memate-select.module.scss';
+
+
+
  // Format Date
  const formatDate = (timestamp) => {
   const date = new Date(timestamp * 1000);
@@ -53,17 +60,18 @@ const ContactSales = ({saleUniqueId,type,refreshData}) => {
                       title=""
                     >
                       <div className="contactInfo">
-                      <div className='contactInfoflex'>
+                      <div className={`contactInfoflex ${styles.padding_24}`}>
                       
                         <div className="iconStyle">
                           {item.type === 'Phone' && (
-                            <Telephone color="#667085" size={24} />
+                            // <Telephone color="#fff" size={24} />
+                            <img src={phonecallgra} alt="phonecallgra" />
                           )}
                           {item.type === 'Email' && (
-                            <Envelope color="#667085" size={24} />
+                          <img src={mailgradi} alt="mailgradi" />
                           )}
                           {item.type === 'Meeting' && (
-                            <Calendar color="#667085" size={24} />
+                           <img src={calendargradi} alt="calendargradi" />
                           )}
                         </div>
                         <Button
@@ -72,8 +80,14 @@ const ContactSales = ({saleUniqueId,type,refreshData}) => {
                           <X color="#667085" size={24} />
                         </Button>
                       </div>
+                      <div className={styles.paddingLR_24}>
                         <p className="contactdate">{formatDate(item.date)}</p>
                         <p>{item.note}</p>
+                        </div>
+                        <div className={styles.footerwrap}>
+                          <Button onClick={handlePopoverClose} className={styles.cancelbut}>Cancel</Button>
+                          <Button className={styles.editbut}>Edit</Button>
+                        </div>
                       </div>
                     </Popover>
                   }

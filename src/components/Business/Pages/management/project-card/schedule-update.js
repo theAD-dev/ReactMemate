@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import DateRangePicker from '../../../../Work/Pages/tasks/DateRangePicker';
 import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import { useMutation } from '@tanstack/react-query';
+import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { updateProjectScheduleById } from '../../../../../APIs/management-api';
 
@@ -12,14 +13,9 @@ const formatDateRange = (startDate, endDate) => {
     return `${start} - ${end}`;
 };
 
-const DateRangeComponent = ({ startDate, endDate, isPending }) => (
-    <Button className='dateSelectdTaskBar schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
-        {
-            isPending
-                ? <div class="dot-flashing"></div>
-                : <>{formatDateRange(startDate, endDate)} <img src={OrdersIcon} alt="OrdersIcon" /></>
-        }
-    </Button>
+const DateRangeComponent = ({ startDate, endDate }) => (
+         <Button className='dateSelectdTaskBar schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
+        {formatDateRange(startDate, endDate)} <img src={OrdersIcon} alt="OrdersIcon" /></Button>
 );
 
 const ScheduleUpdate = ({ projectId, startDate, endDate }) => {

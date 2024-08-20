@@ -155,6 +155,32 @@ export const cardScheduleUpdateApi = async (uniqueId) => {
     }
 }
 
+export const cardAddNoteApi = async (projectId) => {
+    const myHeaders = new Headers();
+    const accessToken = sessionStorage.getItem("access_token");
+    myHeaders.append("Authorization", `Bearer ${accessToken}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/project-card/sales-note/${projectId}/`, requestOptions);
+        console.log('response: ', response);
+        const result = await response.text();
+        console.log('result: ', result);
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw error; // Rethrow the error if needed
+    }
+}
+
+
+
 
 
 

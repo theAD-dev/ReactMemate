@@ -1,6 +1,8 @@
+import JobSchedulerCalendarModule from "../features/job-scheduler-calendar"
+
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <JobSchedulerCalendarModule />
   )
 }
 export default Dashboard

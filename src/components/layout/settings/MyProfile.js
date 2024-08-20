@@ -95,22 +95,7 @@ const MyProfile = () => {
                           />
                           
                         )}
-                        {!isEditing ? (
-                           <Link to="#" onClick={() => setIsEditing(true)}>
-                           Edit
-                           <PencilSquare color="#667085" size={20} />
-                         </Link>
-
-                        ) : (
-                          <div className="updateButtonGeneral1">
-                          <button className="cancel" onClick={handleCancel}>
-                            Cancel
-                          </button>
-                          <button className="save" onClick={handleUpdate}>
-                            Save
-                          </button>
-                        </div>
-                      )}
+                    
 
                       </li>
                       <li>
@@ -192,7 +177,7 @@ const MyProfile = () => {
                         {!isEditing ? (
                           <strong className="flexStyleProfile">
                             1300882582 &nbsp;
-                            <Telephone color="#9E77ED" size={20} />
+                            <Telephone color="#1AB2FF" size={20} />
                           </strong>
                         ) : (
                           <input
