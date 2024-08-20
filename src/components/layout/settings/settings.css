@@ -548,13 +548,13 @@ button.cancel {
 .progressSubsIcon {
     border-radius: var(--radius-full, 9999px);
     background: linear-gradient(135deg, rgba(114, 237, 242, 0.15) 0%, rgba(81, 81, 229, 0.15) 100%);
-    padding: 10px;
-    display: inline;
+    display: flex;
     width: 40px;
     height: 40px;
     margin-right: 13px;
+    align-items: center;
+    justify-content: center;
 }
-
 .subscription-page .listwrapper li {
     display: block;
 }

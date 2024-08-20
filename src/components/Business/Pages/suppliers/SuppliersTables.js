@@ -92,7 +92,7 @@ const SuppliersTables = forwardRef(({ ClientsData, fetchData, isFetching }, ref)
         <div
           className="styleColor1 supTdFlex"
           style={{ whiteSpace: "normal", textAlign: "left" }}>
-          <strong>{params.value.substring(4)} </strong>
+          <strong>{params.value} </strong>
           <Button className="linkByttonStyle" variant="link">Open</Button>
         </div>
       ),

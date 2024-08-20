@@ -372,7 +372,7 @@ const TableTopBar = ({
 
   return (
     <>
-      <div className={`${selectClass} flexbetween paddingLR tableTopBar`}>
+      <div className={`${selectClass} flexbetween paddingLR tableTopBar tableTopBarSales`}>
         {selectedRow.length === 0 ? (
           <Container fluid>
             <Row style={{ display: "flex", alignItems: "center" }}>
@@ -435,7 +435,7 @@ const TableTopBar = ({
                     
                     Sales</span>{" "}
                     <strong className="styleT1">
-                    {formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
+                    ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
                         <>{formattedFAmount}</>
                       ) : (
                         <>{formattedAmount}</>
@@ -525,7 +525,7 @@ const TableTopBar = ({
                     
                     Sales</span>{" "}
                     <strong className="styleT1">
-                    {formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
+                    ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
                         <>{formattedFAmount}</>
                       ) : (
                         <>{formattedAmount}</>

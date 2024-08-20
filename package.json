@@ -100,7 +100,6 @@
   },
   "devDependencies": {
     "@types/react-swipeable-views": "^0.13.5",
-    "file-loader": "^6.2.0",
     "globals": "^15.9.0",
     "loader-utils": "3.2.1",
     "react-router-dom": "^6.22.1",

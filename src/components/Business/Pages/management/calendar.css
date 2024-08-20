@@ -361,7 +361,7 @@ ul.eventStyleCal {
   padding: 9px 19px 9px 0 !important;
   border-radius: 10px !important;
   box-shadow: 0px 3px 5px 0px rgba(16, 24, 40, 0.1),
-    0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
+0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
   border: 0 !important;
   display: block !important;
 }
@@ -1452,12 +1452,12 @@ color: #4285F4;
   background: rgba(255, 255, 255, 0.1);
   color: var(--Gray-700, #344054);
 }
-.projectCardButWrap .dateSelectdTaskBar {
+ .projectCardButWrap .dateSelectdTaskBar {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid #6da7bd;
   background: rgba(109, 167, 189, 0.05);
-  color: #6da7bd;
-}
+color: #6DA7BD;
+} 
 .projectCardButWrap button.calenBut:hover {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid #4285f4;

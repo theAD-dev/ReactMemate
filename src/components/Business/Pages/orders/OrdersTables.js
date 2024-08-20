@@ -101,8 +101,8 @@ import { Resizable } from 'react-resizable';
       renderCell: (params) => (
         <div className="styleColor1 clientTdFlex">
         <div>
-        <strong>{params.value.substring(6)} </strong>
-        <p>{params.row.created}</p>
+        <strong>{params.value} </strong>
+        <p>{formatDate(params.row.created)}</p>
         </div>
         <Button className="linkByttonStyle" variant="link">Open</Button>
       </div>
