@@ -573,6 +573,7 @@ const BusinessClientInformation = () => {
 
 
 function FileUpload(props) {
+  const [show, setShow] = useState(true);
   const [files, setFiles] = useState([]);
   const {
     getRootProps,
@@ -633,7 +634,7 @@ function FileUpload(props) {
           )
         }
       </div>
-      <FileUploader show={true} />
+      <FileUploader show={show} setShow={setShow} />
     </section>
   );
 }
