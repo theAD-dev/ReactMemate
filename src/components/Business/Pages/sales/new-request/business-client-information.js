@@ -13,6 +13,7 @@ import { MenuItem } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createNewBusinessClient, getCities, getClientCategories, getClientIndustries, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 
 const schema = yup.object({
@@ -572,6 +573,7 @@ const BusinessClientInformation = () => {
 
 
 function FileUpload(props) {
+  const [show, setShow] = useState(true);
   const [files, setFiles] = useState([]);
   const {
     getRootProps,
@@ -632,6 +634,7 @@ function FileUpload(props) {
           )
         }
       </div>
+      <FileUploader show={show} setShow={setShow} />
     </section>
   );
 }
