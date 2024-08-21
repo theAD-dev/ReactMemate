@@ -6,7 +6,7 @@ import Cropper from 'react-easy-crop';
 import styles from './file-uploader.module.scss';
 import { ArrowClockwise, CloudUpload } from 'react-bootstrap-icons';
 
-const FileUploader = ({ show, setShow, additionalDesign }) => {
+const FileUploader = ({ show, setShow, setPhoto, additionalDesign }) => {
     const [files, setFiles] = useState([]);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -30,8 +30,14 @@ const FileUploader = ({ show, setShow, additionalDesign }) => {
         img.src = files[0].preview;
         await new Promise((resolve) => (img.onload = resolve));
 
+        // Set canvas dimensions to the cropped area's dimensions
         canvas.width = croppedAreaPixels.width;
         canvas.height = croppedAreaPixels.height;
+
+        // Translate canvas to center to rotate around the center
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate((rotation * Math.PI) / 180);
+        ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
         ctx.drawImage(
             img,
@@ -47,13 +53,13 @@ const FileUploader = ({ show, setShow, additionalDesign }) => {
 
         const base64Image = canvas.toDataURL('image/jpeg');
         return base64Image;
-    }, [files, croppedAreaPixels]);
+    }, [files, croppedAreaPixels, rotation]);
 
     const generateCroppedImages = async () => {
         const croppedImage = await getCroppedImg();
         if (croppedImage) {
             setCroppedImages({
-                img2: croppedImage, // You can resize these images using CSS for previewBoxImg2, etc.
+                img2: croppedImage,
                 img3: croppedImage,
                 img4: croppedImage,
                 img5: croppedImage,
@@ -84,12 +90,21 @@ const FileUploader = ({ show, setShow, additionalDesign }) => {
         e.stopPropagation();
         setFiles([]);
         setCroppedImages({});
+        setPhoto({});
+        setShow(false);
     };
 
     const rotateImage = () => {
         setRotation((prevRotation) => (prevRotation + 90) % 360);
     };
-    
+
+    const handleImage = async () => {
+        const croppedImageBase64 = await getCroppedImg();
+        const croppedImageBlob = base64ToBlob(croppedImageBase64, 'image/jpeg');
+        setPhoto({ croppedImageBase64, croppedImageBlob });
+        setShow(false);
+    }
+
     return (
         <Modal show={show} centered onHide={handleClose} onShow={generateCroppedImages}>
             <Modal.Header closeButton>
@@ -110,7 +125,8 @@ const FileUploader = ({ show, setShow, additionalDesign }) => {
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
                                 onCropComplete={onCropComplete}
-                                aspect={1}
+                                aspect={1} // or remove this if you want a flexible aspect ratio
+                                restrictPosition={false} // Allow full movement within the bounds
                                 style={{
                                     containerStyle: {
                                         width: '100%',
@@ -124,7 +140,7 @@ const FileUploader = ({ show, setShow, additionalDesign }) => {
                                     mediaStyle: {
                                         width: '100%',
                                         height: '100%',
-                                        objectFit: 'cover',
+                                        objectFit: 'contain',
                                     },
                                 }}
                             />
@@ -182,10 +198,21 @@ const FileUploader = ({ show, setShow, additionalDesign }) => {
             </Modal.Body>
             <Modal.Footer className='d-flex justify-content-end'>
                 <Button className='outline-button' onClick={remove}>Cancel</Button>
-                <Button className='solid-button' onClick={generateCroppedImages}>Save Photo</Button>
+                <Button className='solid-button' onClick={handleImage}>Save Photo</Button>
             </Modal.Footer>
         </Modal>
-    )
+    );
+};
+
+// Utility function to convert base64 to Blob
+function base64ToBlob(base64, mime) {
+    const byteString = atob(base64.split(',')[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mime });
 }
 
 export default FileUploader;

@@ -4,13 +4,13 @@ import { NavLink, useParams, useNavigate, Link } from 'react-router-dom';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { nanoid } from 'nanoid';
 import { Col, Row, Button } from 'react-bootstrap';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import Select from 'react-select';
 import { FormControl, Select as MuiSelect } from '@mui/material';
 import { PhoneInput } from 'react-international-phone';
 import { MenuItem } from '@mui/material';
-import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createNewBusinessClient, getCities, getClientCategories, getClientIndustries, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
@@ -34,6 +34,7 @@ const schema = yup.object({
       city: yup.number().typeError("City must be a number").required("City is required"),
       state: yup.number().typeError("State must be a number").required("State is required"),
       postcode: yup.string().required('Postcode is required'),
+      is_main: yup.boolean().default(false).required('Main address selection is required'),
     })
   ).required(),
 
@@ -47,6 +48,7 @@ const schema = yup.object({
       }),
       email: yup.string().email('Invalid email').required('Email is required'),
       position: yup.string().required('Position is required'),
+      is_main: yup.boolean().default(false).required('Main contact selection is required'),
     })
   ).required(),
 
@@ -58,7 +60,7 @@ const schema = yup.object({
 const BusinessClientInformation = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [file, setFile] = useState({});
+  const [photo, setPhoto] = useState({});
   const [countryId, setCountryId] = useState('');
   const [stateId, setStateId] = useState('');
   const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
@@ -152,11 +154,18 @@ const BusinessClientInformation = () => {
   });
 
   const onSubmit = (data) => {
+    const formData = new FormData();
     if (id) {
       console.log('Updating record:', data);
     } else {
       console.log('Creating new record:', data);
-      mutation.mutate(data);
+      for (const key in data) formData.append(key, data[key]);
+      if (photo?.croppedImageBlob) {
+        console.log('photo?.croppedImageBlob: ', photo?.croppedImageBlob);
+        const photoHintId = nanoid(6);
+        formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
+      }
+      mutation.mutate(formData);
     }
   };
 
@@ -289,6 +298,7 @@ const BusinessClientInformation = () => {
                   {addressFields.map((item, index,) => (
                     <div key={item.id} className="address">
                       <h2 style={{ marginBottom: '16px', marginTop: "16px" }}>{index === 0 ? "Main Company Address" : "Secondary Company Address"}</h2>
+                      <input type="hidden" {...register(`addresses.${index}.is_main`)} value={index === 0} />
 
                       <Row className='text-left'>
                         <Col sm={6}>
@@ -410,6 +420,8 @@ const BusinessClientInformation = () => {
                   {contactFields.map((item, index) => (
                     <div key={item.id} className="contact-person">
                       <h2 style={{ marginBottom: '16px', marginTop: '16px' }}>{index === 0 ? "Contact Person" : "Other Contact Person"}</h2>
+                      <input type="hidden" {...register(`contact_persons.${index}.is_main`)} value={index === 0} />
+
                       <Row className='text-left'>
                         <Col sm={6}>
                           <div className="formgroup mb-3 mt-0">
@@ -507,7 +519,7 @@ const BusinessClientInformation = () => {
                             style={{ color: '#667085' }}
                           >
                             <MenuItem value="">Select Industry</MenuItem>
-                            {industriesQuery?.data?.map((industry)=> <MenuItem key={industry.id} value={industry.id}>{industry.name}</MenuItem>) || []}
+                            {industriesQuery?.data?.map((industry) => <MenuItem key={industry.id} value={industry.id}>{industry.name}</MenuItem>) || []}
                           </MuiSelect>
                         </FormControl>
                         <input {...register("industry")} placeholder='Industry' />
@@ -546,7 +558,7 @@ const BusinessClientInformation = () => {
                   </Col>
 
                   <Col sm={6}>
-                    <FileUpload />
+                    <FileUpload photo={photo} setPhoto={setPhoto} />
                   </Col>
                 </Row>
 
@@ -572,69 +584,32 @@ const BusinessClientInformation = () => {
 };
 
 
-function FileUpload(props) {
-  const [show, setShow] = useState(true);
-  const [files, setFiles] = useState([]);
-  const {
-    getRootProps,
-    getInputProps
-  } = useDropzone({
-    maxFiles: 1,
-    accept: {
-      'image/*': []
-    },
-    onDrop: acceptedFiles => {
-      setFiles(acceptedFiles.map(file => Object.assign(file, {
-        preview: URL.createObjectURL(file)
-      })));
-    }
-  });
-
-  const remove = (e) => {
-    e.stopPropagation();
-    setFiles([]);
-  }
-
-  const thumbs = files?.map(file => (
-    <div key={file.name} className='text-center'>
-      <img
-        alt='uploaded-file'
-        src={file.preview}
-        style={{ width: '64px', height: '64px', marginBottom: '12px' }}
-        onLoad={() => { URL.revokeObjectURL(file.preview) }}
-      />
-      <div className='d-flex' style={{ gap: '12px' }}>
-        <button style={{ background: '#fff', border: 'none', color: '#1AB2FF', fontWeight: '500', fontSize: '14px' }}>Update</button>
-        <button type='button' onClick={remove} style={{ background: '#fff', border: 'none', color: '#B42318', fontWeight: '500', fontSize: '14px' }}>Delete</button>
-      </div>
-    </div>
-  ));
-  console.log('thumbs: ', thumbs);
-
-  useEffect(() => {
-    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
-    return () => files.forEach(file => URL.revokeObjectURL(file.preview));
-  }, []);
+function FileUpload({ photo, setPhoto }) {
+  const [show, setShow] = useState(false);
 
   return (
     <section className="container mb-3" style={{ marginTop: '24px', padding: '0px' }}>
       <label className='mb-2' style={{ color: '#475467', fontSize: '14px', fontWeight: '500' }}>App Logo</label>
-      <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
-        <input {...getInputProps()} />
+      <div className='d-flex justify-content-center align-items-center flex-column' style={{ width: '100%', minHeight: '126px', padding: '16px', background: '#fff', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
         {
-          thumbs && thumbs.length ? thumbs : (
-            <>
-
-              <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
-                <Upload />
-              </button>
-              <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-              <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
-            </>
+          photo?.croppedImageBase64 ? (
+            <div className='text-center'>
+              <img
+                alt='uploaded-file'
+                src={photo?.croppedImageBase64}
+                style={{ width: '64px', height: '64px', marginBottom: '12px' }}
+              />
+            </div>
+          ) : (
+            <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
+              <Upload />
+            </button>
           )
         }
+        <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShow(true)}>Click to upload</span></p>
+        <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
       </div>
-      <FileUploader show={show} setShow={setShow} />
+      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
     </section>
   );
 }
