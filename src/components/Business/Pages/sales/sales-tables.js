@@ -186,7 +186,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       width: 118,
       renderCell: (params) => (
         <div className={`statusInfo ${params.value}`}>
-          <Link to="/">{params.value}</Link>
+          <Link to="/" style={{ pointerEvents: 'none' }}>{params.value}</Link>
         </div>
       ),
     },
@@ -202,12 +202,12 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
               <PlusSlashMinus color="#FDB022" size={16} />
             </li>
             <li>
-              <Link to={params.row.CalculationPDF}>
+              <Link to={params.row.CalculationPDF} target="_blank" rel="noopener noreferrer">
                 <FilePdf color="#FF0000" size={16} />
               </Link>
             </li>
             <li>
-              <Link to={params.row.CalculationURL}>
+              <Link to={params.row.CalculationURL} target="_blank" rel="noopener noreferrer">
                 <Link45deg color="#3366CC" size={16} />
               </Link>
             </li>
@@ -311,6 +311,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
               LostQuote={params.row.LostQuote}
               saleUniqueId={params.row.saleUniqueId}
               saleId={params.row.id}
+              status={params.row.status}
               onRemoveRow={removeRow}
               fetchData1={setRows}
               salesData={salesDataState}
@@ -322,6 +323,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
               wonQuote={params.row.wonQuote}
               saleUniqueId={params.row.saleUniqueId}
               saleId={params.row.id}
+              status={params.row.status}
               onRemoveRow={removeRow}
               fetchData1={setRows}
               salesData={salesDataState}
@@ -369,8 +371,8 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       progressName: sale.lead.name,
       progressPercentage: sale.lead.percentage,
       saleUniqueId: sale.unique_id,
-      wonQuote: sale.number,
-      LostQuote: sale.number,
+      wonQuote: (sale.number,sale.status),
+      LostQuote: (sale.number,sale.status),
       amountData: sale.amount,
       Actions: "Actions",
     }));
@@ -435,8 +437,8 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       progressName: sale.lead.name,
       progressPercentage: sale.lead.percentage,
       saleUniqueId: sale.unique_id,
-      wonQuote: sale.number,
-      LostQuote: sale.number,
+      wonQuote: (sale.number,sale.status),
+      LostQuote: (sale.number,sale.status),
       amountData: sale.amount,
       Actions: "Actions",
     }));

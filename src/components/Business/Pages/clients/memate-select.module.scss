@@ -341,3 +341,59 @@
     }
  
 }
+
+
+.addNewButton{
+    .deleteBut {
+        border-radius: var(--radius-xs, 4px);
+        border: 1px solid var(--Error-200, #FECDCA);
+        background: var(--Error-50, #FEF3F2);
+        padding: var(--spacing-md, 8px) 14px;
+        color: #B42318;
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        margin-right: 12px;
+        &:hover{
+            border-radius: var(--radius-xs, 4px);
+        border: 1px solid var(--Error-200, #FECDCA);
+        background: var(--Error-50, #FEF3F2);
+        padding: var(--spacing-md, 8px) 14px;
+        color: #B42318;
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        margin-right: 12px;
+        }
+    }
+    .addNewBut{
+            border-radius: var(--radius-xs, 4px);
+            border: 1px solid var(--Primary-200, #A3E0FF);
+            background: var(--Primary-50, #EBF8FF);
+            padding: var(--spacing-md, 8px) 14px;
+            color: var(--Primary-700, #106B99);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px;
+            &:hover{
+                border-radius: var(--radius-xs, 4px);
+            border: 1px solid var(--Primary-200, #A3E0FF);
+            background: var(--Primary-50, #EBF8FF);
+            padding: var(--spacing-md, 8px) 14px;
+            color: var(--Primary-700, #106B99);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px;
+            }
+        
+    }
+
+}

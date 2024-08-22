@@ -14,6 +14,9 @@ import ConfettiComponent from '../../../layout/ConfettiComponent';
 
 
 const QuoteWon = ( {salesData,saleUniqueId,wonQuote,quoteType,onRemoveRow} ) => {  
+  console.log('wonQuote: ', wonQuote);
+  
+
 
   const [open, setOpen] = React.useState(false);
   const [confetti, setConfetti] = useState(false); 
@@ -67,10 +70,14 @@ const QuoteWon = ( {salesData,saleUniqueId,wonQuote,quoteType,onRemoveRow} ) => 
 
   return (
     <>
-   <Button onClick={handleOpen} className={`message quoteWon ${message.type}`}>
-    <CheckCircle color="#079455" size={16} />
-   </Button>
   
+    <Button 
+  onClick={handleOpen} 
+  className={`message quoteWon ${message.type} ${wonQuote === 'Draft'}`}
+ >
+  <CheckCircle color="#079455" size={16} />
+</Button>
+
     <Modal
       open={open}
       onClose={handleClose}
