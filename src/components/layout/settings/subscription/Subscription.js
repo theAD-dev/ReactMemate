@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import Sidebar from "../Sidebar";
 import ThemeImages from '../../../../assets/imgconstant';
-import styles from '../memate-select.module.scss';
+import styles from '../settings.module.scss';
 
 import {
   AppIndicator,

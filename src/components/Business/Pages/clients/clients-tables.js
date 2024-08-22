@@ -8,7 +8,7 @@ import {
   ChevronLeft,X,ArrowDown,ArrowUp,GeoAlt ,Building,Person,Globe
 } from "react-bootstrap-icons";
 
-import styles from "./memate-select.module.scss";
+import styles from "./client.module.scss";
 
 import NodataImg from "../../../../assets/images/img/NodataImg.png";
 import nodataBg from "../../../../assets/images/nodataBg.png";
@@ -347,7 +347,7 @@ import ClientView from "./client-view";
         className="styleGrey01 WebsiteGlobe"
         style={{ whiteSpace: "normal", textAlign: "center" }}
       >
-          <a href={params.value} target="_blank">
+          <a href={params.value} target="_blank" rel="noreferrer">
             <Globe size={20} color="#98A2B3" />
           </a>
        

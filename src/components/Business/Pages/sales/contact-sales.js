@@ -5,7 +5,7 @@ import ContactAdd from "./contact-add";
 import phonecallgra from "../../../../assets/images/icon/phonecallgra.svg";
 import mailgradi from "../../../../assets/images/icon/mailgradi.svg";
 import calendargradi from "../../../../assets/images/icon/calendargradi.svg";
-import styles from './memate-select.module.scss';
+import styles from './sales.module.scss';
 
 
 

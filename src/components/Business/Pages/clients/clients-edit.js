@@ -3,7 +3,7 @@ import { X, ChevronDown ,Telephone,Upload,PlusLg} from "react-bootstrap-icons";
 import defaultIcon from "../../../../assets/images/icon/default.png";
 import { Button, Col, Row, Placeholder, Form } from "react-bootstrap";
 import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
-import styles from "./memate-select.module.scss";
+import styles from "./client.module.scss";
 import { InputGroup } from 'react-bootstrap';
 import { PhoneInput } from 'react-international-phone';
 import FileUploader from '../../../../ui/file-uploader/file-uploader';
