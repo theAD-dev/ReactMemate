@@ -611,7 +611,7 @@ const BusinessClientInformation = () => {
             </div>
 
             <div className='individual bottomBox'>
-              <Link to={id ? "/sales/newquote/selectyourclient/existing-clients" : "/sales/newquote/selectyourclient/new-clients"}>
+              <Link to={"/sales"}>
                 <Button type="button" className="cancel-button">
                   Cancel
                 </Button>

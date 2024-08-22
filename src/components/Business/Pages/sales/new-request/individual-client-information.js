@@ -282,7 +282,7 @@ const IndividualClientInformation = () => {
                             </div>
                         </div>
                         <div className='individual bottomBox'>
-                            <Link to={id ? "/sales/newquote/selectyourclient/existing-clients" : "/sales/newquote/selectyourclient/new-clients"}>
+                            <Link to={"/sales"}>
                                 <button type="button" className="cancel-button">
                                     Cancel
                                 </button>

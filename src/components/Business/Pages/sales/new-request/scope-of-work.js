@@ -30,7 +30,7 @@ const ScopeOfWorkComponent = () => {
     const { id } = useParams();
     let quoteFormData = {};
     try {
-        const storedData = window.sessionStorage.getItem(`formData-${id}`);
+        const storedData = window.sessionStorage.getItem(`new-request`);
         if (storedData) {
             quoteFormData = JSON.parse(storedData);
         }
@@ -49,13 +49,14 @@ const ScopeOfWorkComponent = () => {
 
     const onSubmit = (data) => {
         const formObject = {
+            id: id,
             reference: data.reference,
             requirements: data.requirements,
             files: files.map(file => file.file)
         };
         console.log('formObject: ', formObject);
-        window.sessionStorage.setItem(`formData-${id}`, JSON.stringify(formObject));
-        navigate(`/sales/quote-calculation/client/${id}`);
+        window.sessionStorage.setItem(`new-request`, JSON.stringify(formObject));
+        navigate(`/sales/quote-calculation/client`);
     };
 
     const handleFileChange = (e) => {
@@ -76,8 +77,8 @@ const ScopeOfWorkComponent = () => {
             <div className="newQuotePage existingClients borderSkyColor">
                 <div style={{ height: 'calc(100vh - 249px)' }}>
                     <div className="newQuoteBack">
-                        <NavLink to={""}>
-                            <button onClick={() => { navigate(-1) }}>
+                        <NavLink to={"/sales/newquote/selectyourclient"}>
+                            <button>
                                 <ChevronLeft color="#000000" size={20} /> &nbsp;&nbsp;Go Back
                             </button>
                         </NavLink>
@@ -148,7 +149,7 @@ const ScopeOfWorkComponent = () => {
                             </div>
                         </div>
                         <div className='individual bottomBox justify-content-between'>
-                            <Link to={""} onClick={() => { navigate(-1) }}>
+                            <Link to={"/sales"}>
                                 <button type="button" className="cancel-button border-0 text-danger">
                                     Cancel
                                 </button>
