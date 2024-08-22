@@ -75,7 +75,7 @@ useEffect(() => {
   
   return (
     <>
-   <Button onClick={handleOpen} className={`quoteLost message ${message.type}`}>
+   <Button onClick={handleOpen} className={`quoteLost message ${message.type} ${LostQuote === 'Draft'}`}>
     <XCircle color="#D92D20" size={16} />
    </Button>
     <Modal
@@ -109,7 +109,7 @@ useEffect(() => {
           edge="end"
           color="inherit"
           onClick={handleClose} 
-          aria-label="close"
+          aria-label="close" 
         >
           <CloseIcon color="#667085" size={24} />
         </IconButton>
