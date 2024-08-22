@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import Cropper from 'react-easy-crop';
 import styles from './file-uploader.module.scss';
 import { ArrowClockwise, CloudUpload } from 'react-bootstrap-icons';
+import { base64ToBlob } from './utils';
 
 const FileUploader = ({ show, setShow, setPhoto, additionalDesign }) => {
     const [files, setFiles] = useState([]);
@@ -203,16 +204,5 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign }) => {
         </Modal>
     );
 };
-
-// Utility function to convert base64 to Blob
-function base64ToBlob(base64, mime) {
-    const byteString = atob(base64.split(',')[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: mime });
-}
 
 export default FileUploader;
