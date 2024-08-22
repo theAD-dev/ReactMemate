@@ -1,7 +1,8 @@
 @use "three-dots";
 
 .solid-button,
-.solid-button:hover {
+.solid-button:hover,
+.solid-button:focus {
   gap: 8px;
   display: flex;
   padding: 10px 18px;
@@ -9,39 +10,41 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--Primary-600, #158ecc);
-  background: var(--Primary-600, #158ecc);
+  background: var(--Primary-600, #158ecc) !important;
 }
 
 .outline-button,
-.outline-button:hover {
+.outline-button:hover,
+.outline-button:focus {
   gap: 8px;
   display: flex;
   font-size: 16px;
   font-weight: 600;
   padding: 10px 18px;
   border-radius: 4px;
-  background: #fff;
   align-items: center;
   justify-content: center;
-  color: var(--Gray-700, #344054);
-  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff !important;
+  color: var(--Gray-700, #344054) !important;
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
 }
 
 .text-button,
-.text-button:hover {
+.text-button:hover,
+.text-button:focus {
   gap: 8px;
   display: flex;
   font-size: 14px;
   font-weight: 600;
   padding: 10px 18px;
   border-radius: 4px;
-  background: #fff;
   align-items: center;
   justify-content: center;
-  color: var(--Primary-600, #158ECC);
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  background: #fff !important;
+  color: var(--Primary-600, #158ECC) !important;
 }
 
 .custom-range::-webkit-slider-thumb {

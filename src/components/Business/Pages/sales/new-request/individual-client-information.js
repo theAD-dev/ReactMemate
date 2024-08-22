@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CardList, ChevronLeft, Envelope, InfoSquare, Person } from 'react-bootstrap-icons';
+import { CardList, ChevronLeft, Envelope, InfoSquare, Person, Upload } from 'react-bootstrap-icons';
 import { Link, NavLink, useParams, useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,6 +11,8 @@ import Select from 'react-select';
 import { createNewIndividualClient, getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+import { nanoid } from 'nanoid';
 
 // Validation schema
 const schema = yup
@@ -37,6 +39,7 @@ const IndividualClientInformation = () => {
     const navigate = useNavigate();
     const [countryId, setCountryId] = useState('');
     const [stateId, setStateId] = useState('');
+    const [photo, setPhoto] = useState({});
     const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
     const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
     const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
@@ -107,11 +110,17 @@ const IndividualClientInformation = () => {
     });
 
     const onSubmit = (data) => {
+        const formData = new FormData();
         if (id) {
             console.log('Updating record:', data);
         } else {
-            console.log('Creating new record:', data);
-            mutation.mutate(data);
+            for (const key in data) formData.append(key, data[key]);
+            if (photo?.croppedImageBlob) {
+                console.log('photo?.croppedImageBlob: ', photo?.croppedImageBlob);
+                const photoHintId = nanoid(6);
+                formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
+            }
+            mutation.mutate(formData);
         }
     };
 
@@ -304,6 +313,10 @@ const IndividualClientInformation = () => {
                                             {errors.address?.postcode && <p className="error-message">{errors.address.postcode.message}</p>}
                                         </div>
                                     </Col>
+
+                                    <Col sm={6}>
+                                        <FileUpload photo={photo} setPhoto={setPhoto} />
+                                    </Col>
                                 </Row>
 
                             </div>
@@ -325,5 +338,35 @@ const IndividualClientInformation = () => {
         </form>
     );
 };
+
+function FileUpload({ photo, setPhoto }) {
+    const [show, setShow] = useState(false);
+
+    return (
+        <section className="container mb-3" style={{ marginTop: '24px', padding: '0px' }}>
+            <label className='mb-2' style={{ color: '#475467', fontSize: '14px', fontWeight: '500' }}>Client Photo</label>
+            <div className='d-flex justify-content-center align-items-center flex-column' style={{ width: '100%', minHeight: '126px', padding: '16px', background: '#fff', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
+                {
+                    photo?.croppedImageBase64 ? (
+                        <div className='text-center'>
+                            <img
+                                alt='uploaded-file'
+                                src={photo?.croppedImageBase64}
+                                style={{ width: '64px', height: '64px', marginBottom: '12px' }}
+                            />
+                        </div>
+                    ) : (
+                        <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
+                            <Upload />
+                        </button>
+                    )
+                }
+                <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShow(true)}>Click to upload</span></p>
+                <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
+            </div>
+            <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
+        </section>
+    );
+}
 
 export default IndividualClientInformation;

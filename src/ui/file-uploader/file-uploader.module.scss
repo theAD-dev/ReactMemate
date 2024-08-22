@@ -22,39 +22,50 @@
   .previewBoxImg1 {
     width: 128px;
     height: 128px;
-    overflow: hidden;
-    position: relative;
-    border-radius: var(--radius-xs, 4px);
-    border: 0.75px solid var(--Gray-900, #ccc);
   }
 
   .previewBoxImg2 {
     width: 64px;
     height: 64px;
-    border-radius: var(--radius-xs, 4px);
-    border: 0.75px solid var(--Gray-900, #ccc);
   }
 
   .previewBoxImg3 {
     width: 56px;
     height: 56px;
-    border-radius: var(--radius-xs, 4px);
-    border: 0.75px solid var(--Gray-900, #ccc);
   }
 
   .previewBoxImg4 {
     width: 32px;
     height: 32px;
-    border-radius: var(--radius-xs, 4px);
-    border: 0.75px solid var(--Gray-900, #ccc);
   }
 
   .previewBoxImg5 {
     width: 24px;
     height: 24px;
+  }
+
+  .previewBoxImg1, 
+  .previewBoxImg2, 
+  .previewBoxImg3, 
+  .previewBoxImg4, 
+  .previewBoxImg5 {
+    position: relative;
+    overflow: hidden;
     border-radius: var(--radius-xs, 4px);
     border: 0.75px solid var(--Gray-900, #ccc);
   }
+
+  .previewBoxImg2 img, .previewBoxImg3 img, .previewBoxImg4 img, .previewBoxImg5 img {
+    top: 50%;
+    left: 50%;
+    margin: auto;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }  
 }
 
 .previewActions {
