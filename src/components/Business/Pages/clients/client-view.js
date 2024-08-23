@@ -10,7 +10,7 @@ import {
 import defaultIcon from "../../../../assets/images/icon/default.png";
 import Gmap from "../../../../assets/images/google_maps_ico.png";
 import { Button } from "react-bootstrap";
-import styles from "./memate-select.module.scss";
+import styles from "./client.module.scss";
 import { Col, Row } from "react-bootstrap";
 import { Placeholder } from "react-bootstrap";
 import ClientEdit from "./clients-edit";

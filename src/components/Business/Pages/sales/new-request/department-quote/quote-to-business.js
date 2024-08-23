@@ -1,22 +1,27 @@
 import React, { useState } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Placeholder, Row } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
-import { ChevronDown, QuestionCircle, Telephone } from 'react-bootstrap-icons';
+import { ChevronDown, Telephone } from 'react-bootstrap-icons';
 import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 
-const QuoteToBusiness = ({ data }) => {
+const QuoteToBusiness = ({ isLoading, data }) => {
+    console.log('data: ', data);
     const [isEdit, setIsEdit] = useState(false);
     const [name, setName] = useState(data.name || "");
     const [phone, setPhone] = useState(data.phone || "");
     const [email, setEmail] = useState(data.email || "");
-    const [contact_person, setContactPerson] = useState(data.contact_persons || []);
-    const [address, setAddress] = useState(data.address || []);
+    const [contactPersons, setContactPersons] = useState(data.contact_persons || []);
+    const [addresses, setAddresses] = useState(data.addresses || []);
+
+    const [address, setAddress] = useState("");
+    const [contactPerson, setContactPerson] = useState("");
+
+    const mainAddress = addresses.find(address => address.is_main) || (addresses?.length ? addresses[0] : {});
+    const mainContact = contactPersons.find(contact => contact.is_main) || (contactPersons?.length ? contactPersons[0] : {});
     const [errors, setErrors] = useState({
         name: false,
     });
-
-
 
     return (
         <>
@@ -39,13 +44,17 @@ const QuoteToBusiness = ({ data }) => {
                         <Col sm={6}>
                             <MUIFormControl className="mb-3 mui-select-custom" fullWidth>
                                 <Select
-                                    value={contact_person}
+                                    value={contactPerson}
                                     onChange={(e) => setContactPerson(e.target.value)}
                                     displayEmpty
                                     IconComponent={ChevronDown}
                                     style={{ color: '#101828' }}
                                 >
-                                    <MenuItem value="">Paul Stein</MenuItem>
+                                    {
+                                        contactPersons?.map((contactPerson, index) =>
+                                            <MenuItem value={index}>{`${contactPerson?.firstname || "-"} ${contactPerson?.lastname || "-"}`}</MenuItem>
+                                        )
+                                    }
                                 </Select>
                             </MUIFormControl>
                         </Col>
@@ -109,7 +118,11 @@ const QuoteToBusiness = ({ data }) => {
                                     IconComponent={ChevronDown}
                                     style={{ color: '#101828' }}
                                 >
-                                    <MenuItem value="">Client Address</MenuItem>
+                                    {
+                                        addresses?.map((address, index) =>
+                                            <MenuItem value={index}>{address?.address}</MenuItem>
+                                        )
+                                    }
                                 </Select>
                             </MUIFormControl>
                         </Col>
@@ -121,20 +134,43 @@ const QuoteToBusiness = ({ data }) => {
                 )
                     : (
                         <Row>
-
                             <Col>
-                                <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Company</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.name || "-"}</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>ABN: {data?.abn || "-"}</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.phone || "-"}</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '8px' }}>{data?.address || "-"}</p>
+                                {
+                                    isLoading ? (
+                                        <>
+                                            <Placeholder as="p" animation="wave" className="mb-1 mt-0">
+                                                <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                                            </Placeholder>
+                                            <Placeholder as="p" animation="wave" className="mb-1 mt-0">
+                                                <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                                            </Placeholder>
+                                            <Placeholder as="p" animation="wave" className="mb-1 mt-0">
+                                                <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                                            </Placeholder>
+                                            <Placeholder as="p" animation="wave" className="mb-1 mt-0">
+                                                <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                                            </Placeholder>
+                                            <Placeholder as="p" animation="wave" className="mb-1 mt-0">
+                                                <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '12px' }} />
+                                            </Placeholder>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Company</p>
+                                            <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.name || "-"}</p>
+                                            <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>ABN: {data?.abn || "-"}</p>
+                                            <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{data?.phone || "-"}</p>
+                                            <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '8px' }}>{mainAddress?.address || "-"}</p>
+                                        </>
+                                    )
+                                }
                             </Col>
                             <Col>
                                 <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Main Contact</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>Paul Stein / Manager</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>Manager</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>+61458987490</p>
-                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>personal@email.com</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{`${mainContact?.firstname || "-"} ${mainContact?.lastname || "-"}`}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{`${mainContact?.position || "-"}`}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{`${mainContact?.phone || "-"}`}</p>
+                                <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{`${mainContact?.email || "-"}`}</p>
                             </Col>
                             <Col sm={12}>
                                 <button onClick={() => setIsEdit(!isEdit)} className='btn p-0' style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Edit info</button>

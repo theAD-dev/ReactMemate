@@ -8,14 +8,12 @@ export const fetchAPI = async (endpoint, options = {}) => {
     const { method = 'GET', headers = {}, body } = options;
     const accessToken = sessionStorage.getItem("access_token");
     const isFormData = body instanceof FormData;
-    console.log('isFormData: ', isFormData);
 
     const defaultHeaders = {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
         ...headers
     };
-    console.log('defaultHeaders: ', defaultHeaders);
 
     const requestOptions = {
         method,

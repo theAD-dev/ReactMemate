@@ -14,6 +14,7 @@ import { MenuItem } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createNewBusinessClient, getCities, getClientCategories, getClientIndustries, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+import { toast } from 'sonner';
 
 
 const schema = yup.object({
@@ -153,19 +154,63 @@ const BusinessClientInformation = () => {
     }
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const formData = new FormData();
     if (id) {
       console.log('Updating record:', data);
     } else {
-      console.log('Creating new record:', data);
-      for (const key in data) formData.append(key, data[key]);
+      formData.append("name", data.name);
+      formData.append("abn", data.abn);
+      formData.append("phone", data.phone);
+      formData.append("email", data.email);
+      formData.append("website", data.website);
+      formData.append("payment_terms", data.payment_terms);
+      formData.append("category", data.category);
+      formData.append("industry", data.industry);
+
+      data.addresses.forEach((address, index) => {
+        formData.append(`addresses[${index}]address`, address.address);
+        formData.append(`addresses[${index}]city`, address.city);
+        formData.append(`addresses[${index}]postcode`, address.postcode);
+        formData.append(`addresses[${index}]is_main`, address.is_main);
+        formData.append(`addresses[${index}]title`, address.title);
+      });
+
+      data.contact_persons.forEach((person, index) => {
+        formData.append(`contact_persons[${index}]firstname`, person.firstname);
+        formData.append(`contact_persons[${index}]lastname`, person.lastname);
+        formData.append(`contact_persons[${index}]email`, person.email);
+        formData.append(`contact_persons[${index}]phone`, person.phone);
+        formData.append(`contact_persons[${index}]position`, person.position);
+        formData.append(`contact_persons[${index}]is_main`, person.is_main);
+      });
+
       if (photo?.croppedImageBlob) {
-        console.log('photo?.croppedImageBlob: ', photo?.croppedImageBlob);
         const photoHintId = nanoid(6);
         formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
       }
-      mutation.mutate(formData);
+
+      try {
+        const accessToken = sessionStorage.getItem("access_token");
+        const response = await fetch('https://dev.memate.com.au/api/v1/clients/business/new/', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: formData,
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${result?.client}`);
+        } else {
+          console.error('Failed to upload:', response.statusText);
+          toast.error(`Failed to create new client. Please try again.`);
+        }
+      } catch (error) {
+        console.error('Error uploading:', error);
+        toast.error('Failed to create new client. Please try again.');
+      }
     }
   };
 
@@ -566,7 +611,7 @@ const BusinessClientInformation = () => {
             </div>
 
             <div className='individual bottomBox'>
-              <Link to={id ? "/sales/newquote/selectyourclient/existing-clients" : "/sales/newquote/selectyourclient/new-clients"}>
+              <Link to={"/sales"}>
                 <Button type="button" className="cancel-button">
                   Cancel
                 </Button>

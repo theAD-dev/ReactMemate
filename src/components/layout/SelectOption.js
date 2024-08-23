@@ -13,7 +13,6 @@ const SelectOption = ({ currentLocation, locations, profileUserName }) => {
   }
   useEffect(() => {
     const data = locations.find((location) => location.id === currentLocation);
-    console.log('data: ', data);
     setSelectedLocation(data);
   }, [locations, currentLocation]);
 

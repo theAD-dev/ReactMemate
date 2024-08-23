@@ -28,28 +28,28 @@ const CustomOption = (props) => {
 };
 
 const DepartmentQuote = React.memo(({ totals, setTotals }) => {
-  const { id } = useParams();
+  let id;
   let quoteFormData = {};
-    try {
-        const storedData = window.sessionStorage.getItem(`formData-${id}`);
-        if (storedData) {
-            quoteFormData = JSON.parse(storedData);
-        }
-    } catch (error) {
-        console.error('Failed to parse form data from sessionStorage', error);
+  try {
+    const storedData = window.sessionStorage.getItem(`new-request`);
+    if (storedData) {
+      quoteFormData = JSON.parse(storedData);
+      id = quoteFormData.id;
     }
+  } catch (error) {
+    console.error('Failed to parse form data from sessionStorage', error);
+  }
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('')
   const [notes, setNotes] = useState("");
   const [xero_tax, setXero_tax] = useState('ex');
   const [purchase_order, set_purchase_order] = useState("");
-  const { isLoading, data, isError, refetch } = useQuery({
+  const clientQuery = useQuery({
     queryKey: ['id', id],
     queryFn: () => getClientById(id),
     enabled: !!id,
     retry: 1,
   });
-  console.log('data: ', data);
 
   return (
     <React.Fragment>
@@ -66,10 +66,10 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Quote To  <InfoCircle color="#667085" size={16} /></h3>
             <Row>
               {
-                data?.is_business ?
-                  <QuoteToBusiness data={data} />
+                clientQuery?.data?.is_business ?
+                  <QuoteToBusiness isLoading={clientQuery?.isLoading} data={clientQuery?.data} />
                   :
-                  <QuoteToClient data={data} />
+                  <QuoteToClient isLoading={clientQuery?.isLoading} data={clientQuery?.data} />
               }
             </Row>
           </Col>
@@ -121,7 +121,6 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
                               }
                             },
                             multiValue: (styles, { data }) => {
-                              console.log('data: ', data);
                               return {
                                 ...styles,
                                 backgroundColor: '#fff',

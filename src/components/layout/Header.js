@@ -73,7 +73,6 @@ import Dashboard from "../Work/Pages/Dashboard";
 import Tasks from "../Work/Pages/tasks/Tasks";
 import News from "../Work/Pages/News";
 import Approval from "../Work/Pages/Approval";
-import Jobs from "../Work/Pages/Jobs";
 import People from "../Work/Pages/People";
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import Item2 from "./settings/projectstatus/Item2";
@@ -84,6 +83,7 @@ import BusinessClientInformation from "../Business/Pages/sales/new-request/busin
 import ScopeOfWorkComponent from "../Business/Pages/sales/new-request/scope-of-work";
 import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
 import { Placeholder } from "react-bootstrap";
+import JobsPage from "../Work/Pages/jobs";
 
 
 
@@ -98,7 +98,6 @@ const Header = ({ onClick }) => {
       try {
         const data = await fetchProfile();
         const parsedData = JSON.parse(data);
-        console.log('parsedData: ', parsedData);
         setProfileData(parsedData);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -698,7 +697,7 @@ const Header = ({ onClick }) => {
           />
           <Route
             path="/jobs"
-            element={<Jobs />}
+            element={<JobsPage />}
           />
           <Route
             path="/people"

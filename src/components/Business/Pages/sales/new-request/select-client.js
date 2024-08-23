@@ -7,11 +7,13 @@ import {
 } from "react-bootstrap-icons";
 import { NavLink } from "react-router-dom";
 
-
-
-
-
 const SelectClientType = () => {
+  try {
+    const storedData = window.sessionStorage.getItem(`new-request`);
+    if (storedData) window.sessionStorage.removeItem('new-request');
+} catch (error) {
+    console.error('Failed to parse form data from sessionStorage', error);
+}
   return (
     <div className="newQuotePage existingClients">
       <div className="dFlex">
