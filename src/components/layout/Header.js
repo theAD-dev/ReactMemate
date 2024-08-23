@@ -84,6 +84,9 @@ import ScopeOfWorkComponent from "../Business/Pages/sales/new-request/scope-of-w
 import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
 import { Placeholder } from "react-bootstrap";
 import JobsPage from "../Work/Pages/jobs";
+import ClientsBusinessDetails from "../Business/Pages/clients/clients-business-details";
+import ClientsIndividualDetails from "../Business/Pages/clients/clients-individual-details";
+import ClientNew from "../Business/Pages/clients/create-new-client";
 
 
 
@@ -703,6 +706,22 @@ const Header = ({ onClick }) => {
             path="/people"
             element={<People />}
           />
+          <Route
+            path="/clients-business-details/:id"
+            element={ <ClientsBusinessDetails />}
+          />
+          <Route
+            path="/clients-individual-details/:id"
+            element={ <ClientsIndividualDetails />}
+          />
+          <Route
+            path="/clients-new-create"
+            element={ <ClientNew />}
+          />
+          
+
+
+
 
         </Routes>
         <Outlet />

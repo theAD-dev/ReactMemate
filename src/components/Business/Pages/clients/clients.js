@@ -29,7 +29,7 @@ const Clients = () => {
   async function fetchMoreItems() {
     setIsFetching(true); // Set isFetching to true when starting to fetch data
     try {
-      const limit = 50; // Specify the limit
+      const limit = 180 // Specify the limit
       const offset = page * limit; // Calculate the offset based on the current page
       const response = await fetchClients(limit, offset); // Pass limit and offset to fetchClients
       const data = await response.results;

@@ -136,6 +136,14 @@
         background: var(--Gray-50, #F9FAFB);
         padding: var(--spacing-3xl, 24px) var(--spacing-xl, 16px);
         position: relative;
+        .paragraphColor {
+            color: var(--Gray-600, #475467);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 20px;
+        }
         .flexBoxWrap{
             display: flex;
             align-items: center;
@@ -396,4 +404,9 @@
         
     }
 
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button
+,.react-international-phone-input-container .react-international-phone-input {
+    height: 47px;
 }
