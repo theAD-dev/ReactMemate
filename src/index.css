@@ -35,6 +35,9 @@ ul {
 .mr {
   margin-right: 12px;
 }
+table.p-datatable-table {
+  border-collapse: separate !important;
+}
 table thead tr th {
   font-size: 12px;
   font-style: normal;
@@ -46,7 +49,7 @@ table thead tr th {
   vertical-align: middle;
   color: #475467 !important;
 }
-table tbody tr td {
+table:not(.p-datatable-table) tbody tr td {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -58,6 +61,11 @@ table tbody tr td {
 table tbody tr:nth-child(odd) td {
   background: #F9FAFB;
 }
+
+table tbody tr:nth-child(even) td {
+  background: #FFFFFF;
+}
+
 table tbody tr:hover td {
   background: #EBF8FF;
 }

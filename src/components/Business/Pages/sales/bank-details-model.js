@@ -6,11 +6,11 @@ import Modal from '@mui/material/Modal';
 import { PlusCircle,PlusLg,ExclamationOctagon } from "react-bootstrap-icons";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import NewQuoteImg from "../../../../../assets/images/img/newQuote.png";
-import "./new-qupte.css";
+import NewQuoteImg from "../../../../assets/images/img/newQuote.png";
+import "./new-request/new-request.css";
 import { useNavigate } from 'react-router-dom';
 
-const NewQuoteModel = () => {
+const BankDetailsModel = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -71,4 +71,4 @@ const NewQuoteModel = () => {
   )
 }
 
-export default NewQuoteModel;
+export default BankDetailsModel;

@@ -16,6 +16,7 @@ const schema = yup
     .required();
 
 const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, setMapMergeItemWithNo }) => {
+    console.log('selectItems: ', selectItems);
     const romanNo = romanize((Object.keys(mergeItems)?.length || 0) + 1);
     const [show, setShow] = useState(false);
     const [defaultValues, setDefaultValues] = useState({

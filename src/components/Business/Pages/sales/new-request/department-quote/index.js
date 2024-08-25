@@ -1,18 +1,16 @@
-import React, { useContext, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DepartmentCalculationTable from './department-calculation-table';
 import { Col, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import CustomRadioButton from '../../newquote/custom-radio-button';
+import CustomRadioButton from '../ui/custom-radio-button';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { ChevronDown, InfoCircle } from 'react-bootstrap-icons';
 import { components } from 'react-select';
 import Select1 from 'react-select';
 import QuoteToBusiness from './quote-to-business';
 import QuoteToClient from './quote-to-client';
-import { ClientContext } from '../client-provider';
-import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getClientById } from '../../../../../../APIs/ClientsApi';
+import { getClientById, getProjectManager } from '../../../../../../APIs/ClientsApi';
 
 const CustomOption = (props) => {
   return (
@@ -27,29 +25,32 @@ const CustomOption = (props) => {
   );
 };
 
-const DepartmentQuote = React.memo(({ totals, setTotals }) => {
-  let id;
-  let quoteFormData = {};
-  try {
-    const storedData = window.sessionStorage.getItem(`new-request`);
-    if (storedData) {
-      quoteFormData = JSON.parse(storedData);
-      id = quoteFormData.id;
-    }
-  } catch (error) {
-    console.error('Failed to parse form data from sessionStorage', error);
-  }
+const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExistCalculation }) => {
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('')
-  const [notes, setNotes] = useState("");
-  const [xero_tax, setXero_tax] = useState('ex');
-  const [purchase_order, set_purchase_order] = useState("");
+
+  const [contactPersonsOptions, setContactPersonsOptions] = useState("");
+  const [selected_contact_persons, set_selected_contact_persons] = useState([]);
+  const projectManagerQuery = useQuery({ queryKey: ['project-manager'], queryFn: getProjectManager });
   const clientQuery = useQuery({
-    queryKey: ['id', id],
-    queryFn: () => getClientById(id),
-    enabled: !!id,
+    queryKey: ['id', id || payload.client],
+    queryFn: () => getClientById(id || payload.client),
+    enabled: !!id || !!payload.client,
     retry: 1,
   });
+
+  useEffect(() => {
+    if (projectManagerQuery?.data) {
+      const options = projectManagerQuery?.data?.map((user) => ({ value: user.id, label: user.name, image: user.photo || 'https://dev.memate.com.au/media/no_org.png' }))
+      setContactPersonsOptions(options);
+    }
+
+    if (payload.contact_person) {
+      let value = projectManagerQuery?.data?.find((option) => option.id === payload.contact_person);
+      if(value)
+      set_selected_contact_persons({ value: value.id, label: value.name, image: value.photo || 'https://dev.memate.com.au/media/no_org.png' });
+    }
+  }, [projectManagerQuery?.data, payload]);
 
   return (
     <React.Fragment>
@@ -57,10 +58,10 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
         <Row>
           <Col md={8} style={{ borderRight: '1px solid #F2F4F7' }}>
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Reference  <InfoCircle color="#667085" size={16} /></h3>
-            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{quoteFormData?.reference || ""}</p>
+            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.reference}</p>
 
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Description</h3>
-            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{quoteFormData?.requirements || ""}</p>
+            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.description}</p>
           </Col>
           <Col md={4}>
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Quote To  <InfoCircle color="#667085" size={16} /></h3>
@@ -76,7 +77,7 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
         </Row>
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
-        <DepartmentCalculationTable totals={totals} setTotals={setTotals} xero_tax={xero_tax} isDiscountActive={true} />
+        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} isDiscountActive={true} preExistCalculation={preExistCalculation} />
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3 text-start note-textarea" controlId="exampleForm.ControlTextarea1">
@@ -85,8 +86,8 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
                 as="textarea"
                 rows={3}
                 placeholder='Enter a description...'
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                value={payload.note || ""}
+                onChange={(e) => setPayload((data) => ({ ...data, note: e.target.value }))}
                 required
                 className='textarea'
                 style={{ height: '229px', padding: '12px 14px', resize: 'none' }}
@@ -99,14 +100,20 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
                 <Row>
                   <Col sm={12} className='text-start'>
                     <div className='formgroupboxs mb-3 mt-1'>
-                      <label style={{ color: '#475467', fontSize: '14px', display: 'block', marginBottom: '6px' }}>Project Manager</label>
-                      <div className={`inputInfo px-0`} style={{ height: '46px' }}>
+                      <label style={{ color: '#475467', fontSize: '14px', display: 'block', marginBottom: '6px' }}>Project Manager <sup className="text-danger">*</sup></label>
+                      <div className={`inputInfo px-0`} style={{ minHeight: '46px', height: 'fit-content', padding: '0px 14px' }}>
                         <Select1
                           placeholder="Select Manager"
                           className="basic-multi-select w-100 border-0"
                           closeMenuOnSelect={false}
                           components={{ Option: CustomOption }}
-                          defaultValue={""}
+                          value={selected_contact_persons}
+                          onChange={(selected) => {
+                            if (selected.length > 1)
+                              set_selected_contact_persons([selected[selected.length - 1]])
+                            else
+                              set_selected_contact_persons(selected);
+                          }}
                           isMulti
                           styles={{
                             control: (styles) => ({
@@ -116,7 +123,8 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
                               return {
                                 ...styles,
                                 ':hover': {
-                                  backgroundColor: '#fff'
+                                  backgroundColor: '#fff',
+                                  cursor: 'pointer'
                                 },
                               }
                             },
@@ -145,18 +153,7 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
                               };
                             },
                           }}
-                          options={[
-                            {
-                              value: '1',
-                              label: 'Olivia',
-                              image: 'https://dev.memate.com.au/media/no_org.png'
-                            },
-                            {
-                              value: '2',
-                              label: 'Olivia',
-                              image: 'https://dev.memate.com.au/media/no_org.png'
-                            }
-                          ]}
+                          options={contactPersonsOptions}
                         />
                       </div>
                     </div>
@@ -170,23 +167,21 @@ const DepartmentQuote = React.memo(({ totals, setTotals }) => {
                           required
                           type="text"
                           placeholder="Purchase Order #"
-                          value={purchase_order}
+                          value={payload.purchase_order}
                           style={{ color: '#101828' }}
                           className='w-100 m-0 border-0 no-border-outline'
-                          onChange={(e) => set_purchase_order(e.target.value)}
+                          onChange={(e) => setPayload((data) => ({ ...data, purchase_order: e.target.value }))}
                         />
                       </div>
                     </div>
                   </Col>
                   <Col sm={12} className='text-start'>
                     <Form.Group className="mb-3 mui-select-custom">
-                      <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Task Title</Form.Label>
+                      <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Amounts are</Form.Label>
                       <FormControl sx={{ m: 0, minWidth: `100%`, color: '#101828' }}>
                         <Select
-                          value={xero_tax}
-                          onChange={(e) => {
-                            setXero_tax(e.target.value);
-                          }}
+                          value={payload?.xero_tax}
+                          onChange={(e) => setPayload((data) => ({ ...data, xero_tax: e.target.value }))}
                           displayEmpty
                           inputProps={{ 'aria-label': 'Without label' }}
                           IconComponent={ChevronDown}
