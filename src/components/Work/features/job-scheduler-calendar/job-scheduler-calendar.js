@@ -17,6 +17,7 @@ function loadData() {
       </div>`,
       backColor: '#F9FAFB',
       minHeight: 56,
+      expanded: true
     },
     {
       id: 2,
@@ -29,6 +30,7 @@ function loadData() {
       </div>`,
       backColor: '#FFFFFF',
       minHeight: 56,
+      expanded: true,
       children: [
         {
           id: 1.1,
