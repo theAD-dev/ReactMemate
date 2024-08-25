@@ -623,7 +623,7 @@ const ClientView = ({ id, close }) => {
                      : (
                        <>
 
-<div className={styles.mainHead}>
+         <div className={styles.mainHead}>
             <div className="d-flex align-items-center">
               <div className={styles.clientImgOpacity}>
                 {isFetching ? (
@@ -650,7 +650,7 @@ const ClientView = ({ id, close }) => {
                 )}
               </div>
               <strong>{clientView?.name}</strong>
-              <Button
+              <Button className={styles.CustomEdit}
                 onClick={() => setIsEdit(!isEdit)}
                 disabled={isFetching}
               >

@@ -197,10 +197,10 @@ const filteredCategory = fullCategoryArray.filter((itemName) =>
     <div className="centerTabSales">
       <ul>
         <li>
-          <NavLink to="/">Clients</NavLink>
+          <NavLink to="/clients-new-create">Clients</NavLink>
         </li>
         <li>
-          <NavLink to="/new" className="tabActive">
+          <NavLink to="/clients-new-create" className="tabActive">
             New
           </NavLink>
         </li>
@@ -239,10 +239,10 @@ const filteredCategory = fullCategoryArray.filter((itemName) =>
             <div className="centerTabSales">
               <ul>
                 <li>
-                  <NavLink to="/">Clients</NavLink>
+                  <NavLink to="/clients-new-create">Clients</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/new" className="tabActive">
+                  <NavLink to="/clients-new-create" className="tabActive">
                     New 
                   </NavLink>
                 </li>

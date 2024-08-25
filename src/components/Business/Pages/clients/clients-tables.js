@@ -60,7 +60,7 @@ import ClientView from "./client-view";
 
  
 
-    const handleClose = () => setShow(false);
+   
 
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -98,9 +98,16 @@ import ClientView from "./client-view";
         <div className="styleColor1 clientTdFlex">
           <div>
           <strong>{params.value.substring(4)} </strong>
-        
           </div>
-          <Button className="linkByttonStyle" variant="link">Open</Button>
+          {params.row.isbusiness ? (
+          <a href={`/clients-business-details/${params.row.id}`} rel="noreferrer">
+            <Button className="linkByttonStyle" variant="link">Open</Button>
+          </a>
+        ) : (
+          <a href={`/clients-individual-details/${params.row.id}`} rel="noreferrer">
+            <Button className="linkByttonStyle" variant="link">Open</Button>
+          </a>
+        )}
         </div>
       ),
     },
@@ -563,15 +570,7 @@ import ClientView from "./client-view";
           )}
         </tbody>
       </Table>
-        {/* Sidebar */}
-        {selectedRow && (
-       <Offcanvas show={show} placement="end" className={styles.border} style={{ width: '607px' }}>
-       <Offcanvas.Body className={styles.p0}>
-           <ClientView id={selectedRow} close={handleClose} />
-       </Offcanvas.Body>
-   </Offcanvas>
-     
-      )}
+ 
     </div>
   );
 })
