@@ -44,13 +44,15 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
       const options = projectManagerQuery?.data?.map((user) => ({ value: user.id, label: user.name, image: user.photo || 'https://dev.memate.com.au/media/no_org.png' }))
       setContactPersonsOptions(options);
     }
+  }, [projectManagerQuery?.data]);
 
-    if (payload.contact_person) {
+  useEffect(() => {
+    if (payload.contact_person && projectManagerQuery?.data) {
       let value = projectManagerQuery?.data?.find((option) => option.id === payload.contact_person);
-      if(value)
-      set_selected_contact_persons({ value: value.id, label: value.name, image: value.photo || 'https://dev.memate.com.au/media/no_org.png' });
+      if (value)
+        set_selected_contact_persons({ value: value.id, label: value.name, image: value.photo || 'https://dev.memate.com.au/media/no_org.png' });
     }
-  }, [projectManagerQuery?.data, payload]);
+  }, [payload])
 
   return (
     <React.Fragment>
@@ -109,10 +111,15 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
                           components={{ Option: CustomOption }}
                           value={selected_contact_persons}
                           onChange={(selected) => {
-                            if (selected.length > 1)
+                            if (selected.length > 1) {
                               set_selected_contact_persons([selected[selected.length - 1]])
-                            else
-                              set_selected_contact_persons(selected);
+                              let obj = [selected[selected.length - 1]];
+                              setPayload((others) => ({ ...others, contact_person: obj[0].value }))
+                            }
+                            else {
+                              set_selected_contact_persons(selected)
+                              setPayload((others) => ({ ...others, contact_person: selected[0].value }))
+                            }
                           }}
                           isMulti
                           styles={{

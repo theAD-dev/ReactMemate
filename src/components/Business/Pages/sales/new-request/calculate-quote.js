@@ -67,6 +67,7 @@ const CalculateQuote = () => {
 
     const createNewRequest = () => {
         if (unique_id) return;
+        console.log('payload: ', payload);
 
         if (!payload.client) return toast.error('Client is required');
         if (!payload.contact_person) return toast.error('Project manager is required');

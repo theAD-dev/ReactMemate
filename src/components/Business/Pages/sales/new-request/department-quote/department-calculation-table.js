@@ -114,7 +114,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                 const { label, total, calculator } = values.reduce((acc, value, index) => {
                     if (index === 0) acc.label = value.label;
                     acc.total += parseFloat(value.total || 0.00);
-                    acc.calculator = value.calculator
+                    acc.calculator = value?.id
                     return acc;
                 }, { label: '', total: 0, calculator: null });
 
@@ -491,7 +491,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
         if (unique_id) {
             fetchMergeItems(unique_id);
         }
-    }, [unique_id])
+    }, [])
 
     useEffect(() => {
         let map = {};
