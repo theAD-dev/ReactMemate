@@ -5,9 +5,7 @@ import { CalendarWeek, CurrencyDollar, Filter, People } from 'react-bootstrap-ic
 import JobsTable from './jobs-table';
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { MegaMenu } from 'primereact/megamenu';
 import { TieredMenu } from 'primereact/tieredmenu';
-import { Calendar } from 'primereact/calendar';
 import { ListBox } from 'primereact/listbox';
 
 const JobsPage = () => {

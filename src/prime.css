@@ -1,5 +1,6 @@
 /* Override prime */
-.status .p-chip-text {
+.status .p-chip-text,
+.type .p-chip-text {
   margin: 0px;
 }
 
@@ -72,4 +73,8 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 
 .custom-modal .p-dialog-footer {
   padding: 24px;
+}
+
+.yellow-rating.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
+ color: #FFCB45;
 }
