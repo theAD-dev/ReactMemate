@@ -227,10 +227,20 @@
 }
 .offcanvas-backdrop.show {
   opacity: 0;
+  display: none;
 }
 
 
+.tabBoxGrid:last-child {
+  margin-left: 6px;
 
+  
+}
+
+.tabBoxGrid:first-child {
+  margin-right: 6px;
+ 
+}
 
 @media only screen and (max-width: 1600px) and (min-width: 1280px)  {
   .clientTableWrap .mainStyleMin {

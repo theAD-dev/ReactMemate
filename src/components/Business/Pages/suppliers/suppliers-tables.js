@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef } from "react";
 import Button from 'react-bootstrap/Button';
-import Offcanvas from 'react-bootstrap/Offcanvas';
+
 import {
   Check,
   ChevronLeft, ArrowDown, ArrowUp, Envelope, Person, Globe
@@ -93,7 +93,13 @@ const SuppliersTables = forwardRef(({ ClientsData, fetchData, isFetching }, ref)
           className="styleColor1 supTdFlex"
           style={{ whiteSpace: "normal", textAlign: "left" }}>
           <strong>{params.value} </strong>
-          <Button className="linkByttonStyle" variant="link">Open</Button>
+      
+          <a href={`/suppliers-details/${params.row.id}`} rel="noreferrer">
+            <Button className="linkByttonStyle" variant="link">Open</Button>
+          </a>
+     
+        
+     
         </div>
       ),
     },
@@ -515,18 +521,7 @@ const SuppliersTables = forwardRef(({ ClientsData, fetchData, isFetching }, ref)
           )}
         </tbody>
       </Table>
-      {/* Sidebar */}
-      {selectedRow && (
-        <Offcanvas show={show} placement="end" onHide={handleClose}>
-          <Offcanvas.Header closeButton>
-            <Offcanvas.Title><strong>{selectedRow}.</strong> Client Edit Data Head</Offcanvas.Title>
-          </Offcanvas.Header>
-          <Offcanvas.Body>
-
-          </Offcanvas.Body>
-        </Offcanvas>
-
-      )}
+  
     </div>
   );
 })

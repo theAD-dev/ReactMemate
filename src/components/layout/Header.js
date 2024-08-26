@@ -83,6 +83,9 @@ import ClientsBusinessDetails from "../Business/Pages/clients/clients-business-d
 import ClientsIndividualDetails from "../Business/Pages/clients/clients-individual-details";
 import ClientNew from "../Business/Pages/clients/create-new-client";
 import PeoplePage from "../Work/Pages/people";
+import SuppliersDetails from "../Business/Pages/suppliers/suppliers-details";
+import SuppliersNewCreate from "../Business/Pages/suppliers/suppliers-new-create";
+
 
 
 
@@ -687,11 +690,15 @@ const Header = ({ onClick }) => {
             path="/clients-new-create"
             element={ <ClientNew />}
           />
-          
-
-
-
-
+          <Route
+            path="/suppliers-details/:id"
+            element={ <SuppliersDetails />}
+          />
+          <Route
+            path="/suppliers-new"
+            element={ <SuppliersNewCreate />}
+          />
+        
         </Routes>
         <Outlet />
       </div>

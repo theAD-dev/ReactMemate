@@ -201,10 +201,10 @@ const TableTopBar = ({ rows, onRowsFilterChange, ClientsData, selectedRowCount, 
                 <div className="centerTabSales">
                   <ul>
                     <li>
-                      <NavLink to="/sales">Suppliers</NavLink>
+                      <NavLink to="/suppliers-new">Suppliers</NavLink>
                     </li>
                     <li>
-                      <NavLink to="/new" className="tabActive">
+                      <NavLink to="/suppliers-new" className="tabActive">
                         New
                       </NavLink>
                     </li>
@@ -243,10 +243,10 @@ const TableTopBar = ({ rows, onRowsFilterChange, ClientsData, selectedRowCount, 
                 <div className="centerTabSales">
                   <ul>
                     <li>
-                      <NavLink to="/sales">Suppliers</NavLink>
+                      <NavLink to="/suppliers-new">Suppliers</NavLink>
                     </li>
                     <li>
-                      <NavLink to="/new" className="tabActive">
+                      <NavLink to="/suppliers-new" className="tabActive">
                         New
                       </NavLink>
                     </li>
