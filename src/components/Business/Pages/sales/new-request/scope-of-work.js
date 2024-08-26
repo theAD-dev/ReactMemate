@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { CardList, ChevronLeft, InfoSquare, Person, FileText, FileImage, FileCode, FilePdf, FileWord, CloudUpload, Upload, Trash } from 'react-bootstrap-icons';
+import React, { useState } from 'react';
+import { CardList, ChevronLeft, InfoSquare, Person, FileText, FileImage, FileCode, FilePdf, FileWord, Upload, Trash } from 'react-bootstrap-icons';
 import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,7 +7,6 @@ import * as yup from 'yup';
 import { Col, Row } from 'react-bootstrap';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { v4 as uuidv4 } from 'uuid';
-import { ClientContext } from './client-provider';
 
 const schema = yup
     .object({
@@ -56,7 +55,7 @@ const ScopeOfWorkComponent = () => {
         };
         console.log('formObject: ', formObject);
         window.sessionStorage.setItem(`new-request`, JSON.stringify(formObject));
-        navigate(`/sales/quote-calculation/client`);
+        navigate(`/sales/quote-calculation`);
     };
 
     const handleFileChange = (e) => {

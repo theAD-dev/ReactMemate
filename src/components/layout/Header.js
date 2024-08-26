@@ -44,11 +44,7 @@ import Users from "../layout/settings/users/Users";
 import MobileApp from "../layout/settings/users/MobileApp";
 import ExistingClients from "../Business/Pages/sales/new-request/existing-clients";
 import SelectClientType from "../Business/Pages/sales/new-request/select-client";
-import BusinessDetails from "../Business/Pages/sales/newquote/business-details";
-import ScopeofWork from "../Business/Pages/sales/newquote/scopeof-work";
-import IndividualClient from "../Business/Pages/sales/newquote/individual-client";
 import Locations from "./settings/Locations";
-import Calculation from "../Business/Pages/sales/newquote/calculation";
 import Departments from "../layout/settings/calculators/Departments";
 import Subindex from "../layout/settings/calculators/Subindex";
 import JobTemplates from "./settings/templates/JobTemplates";
@@ -508,24 +504,19 @@ const Header = ({ onClick }) => {
             element={<MobileApp />}
           />
 
-
-
-
-
-          <Route
-            path="/sales/newquote/selectyourclient"
-            element={<SelectClientType />}
-          />
-          <Route
-            path="/sales/newquote/selectyourclient/existing-clients"
-            element={<ExistingClients />}
-          />
-          <Route
-            path="/sales/newquote/selectyourclient/new-clients"
-            element={<NewClient />}
-          />
-
           <Route path="/sales" element={<ClientLayout />}>
+            <Route
+              path="newquote/selectyourclient"
+              element={<SelectClientType />}
+            />
+            <Route
+              path="newquote/selectyourclient/existing-clients"
+              element={<ExistingClients />}
+            />
+            <Route
+              path="newquote/selectyourclient/new-clients"
+              element={<NewClient />}
+            />
             <Route
               path="newquote/selectyourclient/business-client"
               element={<BusinessClientInformation />}
@@ -551,42 +542,20 @@ const Header = ({ onClick }) => {
               element={<ScopeOfWorkComponent />}
             />
             <Route
-              path="quote-calculation/client"
+              path="quote-calculation"
               element={<CalculateQuote />}
             />
             <Route
-              path="quote-calculation/client/:id"
+              path="quote-calculation/:unique_id"
               element={<CalculateQuote />}
             />
           </Route>
 
 
-
-
-          <Route
-            path="/sales/newquote/client-information/step2/business-details/"
-            element={<BusinessDetails />}
-          />
-          <Route
-            path="/sales/newquote/client-information/step2/individual-client"
-            element={<IndividualClient />}
-          />
-          <Route
-            path="/sales/newquote/client-information/step3/scope-of-work/:id?"
-            element={<ScopeofWork />}
-          />
           <Route
             path="/sales/settings/locations"
             element={<Locations />}
           />
-          <Route
-            path="/sales/newquote/calculation"
-            element={<Calculation />}
-          />
-
-
-
-
           <Route
             path="/settings/calculators/departments"
             element={<Departments />}

@@ -6,7 +6,7 @@ import { ChevronDown, Telephone } from 'react-bootstrap-icons';
 import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 
 const QuoteToClient = ({ isLoading, data }) => {
-    console.log('data: ', data);
+    // console.log('data: ', data);
     const [isEdit, setIsEdit] = useState(false);
     const [name, setName] = useState(data?.name || "");
     const [phone, setPhone] = useState(data?.phone || "");

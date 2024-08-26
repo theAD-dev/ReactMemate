@@ -26,7 +26,7 @@ import DateRangePicker from "./date-range-picker";
 import { fetchMultipleData } from "../../../../APIs/SalesApi";
 import { fetchMultipleLost } from "../../../../APIs/SalesApi";
 import ConfettiComponent from "../../../layout/ConfettiComponent";
-import NewQuoteModel from "./newquote/new-quote-model";
+import BankDetailsModel from "./bank-details-model";
 
 
 const TableTopBar = ({
@@ -415,7 +415,7 @@ const TableTopBar = ({
                           New <PlusLg color="#fff" size={16} />
                         </NavLink>
                       ) : (
-                        <NewQuoteModel />
+                        <BankDetailsModel />
                       )}
                     </li>
                   </ul>
@@ -506,7 +506,7 @@ const TableTopBar = ({
                       <NavLink to="/sales">Sales</NavLink>
                     </li>
                     <li>
-                      <NewQuoteModel />
+                      <BankDetailsModel />
                     </li>
                   </ul>
                 </div>
