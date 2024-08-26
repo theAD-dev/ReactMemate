@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import styles from './client.module.scss';
+import styles from "./suppliers.module.scss";
 import { Button, Table, Container, Row, Col } from 'react-bootstrap';
-import { X,Pen,PlusCircle, Search, ChevronLeft } from 'react-bootstrap-icons';
+import { X, Search, ChevronLeft } from 'react-bootstrap-icons';
 import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 import NodataImg from "../../../../assets/images/img/NodataImg.png";
 import nodataBg from "../../../../assets/images/nodataBg.png";
 import { clientEditApi } from "../../../../APIs/ClientsApi";
-import NewClientTabbing from './new-client-tabbing';
+import SuppliersView from './suppliers-view';
 
-
-function ClientNew() {
+function SuppliersDetails() {
   const [show, setShow] = useState(true); // Set to true for default open
   const navigate = useNavigate();
   const [isFetching, setIsFetching] = useState(true);
@@ -41,7 +40,7 @@ function ClientNew() {
   const handleClose = () => {
     setShow(false);
     setSelectedRow(null);
-    navigate('/clients'); 
+    navigate('/suppliers'); 
   };
 
   const handleRowClick = (rowId) => {
@@ -285,38 +284,15 @@ function ClientNew() {
         </Table>
       </div>
 
-      <Offcanvas show={show} onHide={handleClose} placement="end" className={styles.border} style={{ width: '607px' }}>
-        <Offcanvas.Body className={styles.p0}>
-          <div className={styles.mainHead}>
-            <div className="d-flex align-items-center">
-             <div className={styles.circledesignstyle}>
-             <div className={styles.out}>
-            
-               <PlusCircle size={24} color="#17B26A" />
-           
-             </div>
-             </div>
-
-              <strong>Create New Client</strong>
-      
-            </div>
-            <button className={styles.CustomCloseModal} onClick={handleClose}>
-              <X size={24} color="#667085" />
-            </button>
-          </div>
-       
-        
-           <NewClientTabbing />
-                
-                
-
-
-
-
-        </Offcanvas.Body>
-      </Offcanvas>
+      {selectedRow && (
+        <Offcanvas show={show} placement="end" className={styles.border} style={{ width: '607px' }}>
+          <Offcanvas.Body className={styles.p0}>
+            <SuppliersView id={selectedRow} close={handleClose} />
+          </Offcanvas.Body>
+        </Offcanvas>
+      )}
     </div>
   );
 }
 
-export default ClientNew;
+export default SuppliersDetails;

@@ -10,12 +10,12 @@ import {
 import defaultIcon from "../../../../assets/images/icon/default.png";
 import Gmap from "../../../../assets/images/google_maps_ico.png";
 import { Button } from "react-bootstrap";
-import styles from "./client.module.scss";
+import styles from "./suppliers.module.scss";
 import { Col, Row } from "react-bootstrap";
 import { Placeholder } from "react-bootstrap";
-import ClientEdit from "./clients-edit";
+import SuppliersEdit from "./suppliers-edit";
 
-const ClientView = ({ id, close }) => {
+const SuppliersView = ({ id, close }) => {
     const [clientView, setClientView] = useState();
     const [isFetching, setIsFetching] = useState(true);
     const [isEdit, setIsEdit] = useState(false);
@@ -46,14 +46,14 @@ const ClientView = ({ id, close }) => {
          {isEdit ? (
                     <>
 
-                 <ClientEdit isFetching={isFetching} clientView={clientView } close={close} errors={errors} isEdit={isEdit}/>
+                 <SuppliersEdit isFetching={isFetching} clientView={clientView } close={close} errors={errors} isEdit={isEdit}/>
                     </>
                      )
                      : (
                        <>
            <div className={styles.mainHead}>
             <div className="d-flex align-items-center">
-              <div className={styles.clientImgOpacity}>
+              <div className={styles.suppliersImgOpacity}>
                 {isFetching ? (
                   <Placeholder as="span" animation="wave" className="ms-2 me-2">
                     <Placeholder
@@ -293,7 +293,6 @@ const ClientView = ({ id, close }) => {
             </div>
             {/* Grey Box */}
             {/* Grey Box */}
-            
             <div className={`${styles.displayFlexGrid} ${styles.marginBottom}`}>
               <strong>Contact Person</strong>
             </div>
@@ -399,9 +398,7 @@ const ClientView = ({ id, close }) => {
                   </Col>
                 </Row>
               </div>;
-            })
-            
-            }
+            })}
             {/* Grey Box */}
             {/* Grey Box */}
 
@@ -606,8 +603,8 @@ const ClientView = ({ id, close }) => {
             </div>
             {/* Grey Box */}
           </div>
-          <div className={styles.FooterClientView}>
-            <Button className={styles.deleteClient}>Delete Client</Button>
+          <div className={styles.FooterSuppliersView}>
+            <Button className={styles.deleteSuppliers}>Delete Client</Button>
           </div>
                        </>
                      )
@@ -620,7 +617,7 @@ const ClientView = ({ id, close }) => {
         <>
          {isEdit ? (
                      <>
-<ClientEdit isFetching={isFetching} close={close} errors={errors} isEdit={isEdit}/>
+<SuppliersEdit isFetching={isFetching} close={close} errors={errors} isEdit={isEdit}/>
                      </>
                      )
                      : (
@@ -1110,8 +1107,8 @@ const ClientView = ({ id, close }) => {
             </div>
             {/* Grey Box */}
           </div>
-          <div className={styles.FooterClientView}>
-            <Button className={styles.deleteClient}>Delete Client</Button>
+          <div className={styles.FooterSuppliersView}>
+            <Button className={styles.deleteSuppliers}>Delete Client</Button>
           </div>
                        </>
                      )
@@ -1123,4 +1120,4 @@ const ClientView = ({ id, close }) => {
   );
 };
 
-export default ClientView;
+export default SuppliersView;

@@ -7,7 +7,7 @@
     position: sticky;
     top: 0;
     background: #fff;
-    .clientImgOpacity{
+    .suppliersImgOpacity{
         border-radius: var(--radius-xs, 4px);
         border: 0.75px solid var(--Gray-900, #10182821);
         width: 56px;
@@ -239,7 +239,7 @@
     }
 }
 
-.FooterClientView {
+.FooterSuppliersView {
     border-top: 1px solid var(--Gray-200, #EAECF0);
     background: #FFF;
     margin-top: 6px;
@@ -247,7 +247,7 @@
     position: fixed;
     bottom: 0;
     width: 607px;
-    .deleteClient{
+    .deleteSuppliers{
         border-radius: var(--radius-xs, 4px);
         border: 1px solid var(--Error-600, #D92D20);
         background: var(--Error-600, #D92D20);
@@ -299,7 +299,7 @@
         }
 
     }
-    .saveClient{
+    .savesupplier{
         padding: var(--spacing-md, 8px) 14px;
         border-radius: var(--radius-xs, 4px);
         border: 1px solid var(--Primary-600, #158ECC);
@@ -326,7 +326,7 @@
     }
 }
 
-.editClientValue{
+.editsuppliersValue{
     input {
         border-radius: var(--radius-xs, 4px);
         border: 1px solid var(--Border, #D0D5DD);
@@ -543,78 +543,3 @@
     border-radius: 100% !important;
     margin-right: 12px;
 }
-
-
-.clientTableBodyWrap{
-    td {
-        height: 56px;
-    }
-    .id {
-        color: var(--Gray-500, #667085);
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 22px;
-        letter-spacing: 0.14px;
-    }
-    .refrencess{
-        color: var(--Gray-700, #344054);
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 22px;
-        letter-spacing: 0.14px;
-            }
-            .status{
-                border-radius: 16px;
-                border: 1px solid var(--Warning-200, #FEDF89);
-                background: var(--Warning-50, #FFFAEB);
-                mix-blend-mode: multiply;
-                padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
-                color: var(--Warning-700, #B54708);
-                text-align: center;
-                font-family: Inter;
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 500;
-                line-height: 15px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .total{
-                color: var(--Gray-500, #667085);
-                text-align: right;
-                font-family: Inter;
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 22px; 
-                letter-spacing: 0.14px;
-            }
-            .oProfit span{
-                border-radius: var(--radius-xs, 4px);
-                border: 1px solid var(--Warning-300, #FEC84B);
-                background: var(--Warning-100, #FEF0C7);
-                padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
-                color: var(--Warning-800, #93370D);
-                text-align: center;
-                font-family: Inter;
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 500;
-                line-height: 18px; 
-
-            }
-
-}
-.clientTableBodyWrap {
-    .tbody tr td:first-child {
-    
-        border-right: 1px solid #ccc !important;
-      
-    }
-  }
-  
