@@ -1,12 +1,44 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ChevronLeft, PlusSlashMinus } from 'react-bootstrap-icons'
-import { NavLink, useNavigate } from 'react-router-dom'
-import CustomRadioButton from '../newquote/custom-radio-button';
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import CustomRadioButton from './ui/custom-radio-button';
 import DepartmentQuote from './department-quote';
+import { toast } from 'sonner';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createNewCalculationQuoteRequest, getQuoteByUniqueId } from '../../../../../APIs/CalApi';
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
+    const { unique_id } = useParams();
+
+    let id;
+    let quoteFormData = {};
+    try {
+        const storedData = window.sessionStorage.getItem(`new-request`);
+        if (storedData) {
+            quoteFormData = JSON.parse(storedData);
+            id = quoteFormData.id;
+        }
+    } catch (error) {
+        console.error('Failed to parse form data from sessionStorage', error);
+    }
     const [quoteType, setQuoteType] = useState('Standard');
+    const [payload, setPayload] = useState({
+        client: +id || "",
+        contact_person: "",
+        reference: quoteFormData?.reference || "",
+        description: quoteFormData?.requirements || "",
+        purchase_order: "",
+        expense: "",
+        xero_tax: "ex",
+        note: "",
+        recurring: {
+            frequency: "1",
+            occurrences: 10,
+            start_date: new Date()
+        },
+        calculations: []
+    });
     const [totals, setTotals] = useState({
         budget: 0,
         operationalProfit: 0,
@@ -15,6 +47,49 @@ const CalculateQuote = () => {
         total: 0,
     });
 
+    const newRequestMutation = useMutation({
+        mutationFn: (data) => createNewCalculationQuoteRequest(data),
+        onSuccess: (response) => {
+            console.log('response: ', response);
+            if (response) {
+                window.sessionStorage.setItem('newRequestId', response);
+                navigate(`/sales/quote-calculation/${response}`);
+                toast.success("Calculation quote created successfully.");
+            } else {
+                toast.error(`Failed to create new calculation quote. Please try again.`);
+            }
+        },
+        onError: (error) => {
+            console.error('Error creating new calculation quote:', error);
+            toast.error(`Failed to create new calculation quote. Please try again.`);
+        }
+    });
+
+    const createNewRequest = () => {
+        if (unique_id) return;
+        console.log('payload: ', payload);
+
+        if (!payload.client) return toast.error('Client is required');
+        if (!payload.contact_person) return toast.error('Project manager is required');
+        if (!payload.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
+        if (!payload.xero_tax) return toast.error('Tax details is required');
+        if (!payload.expense) return toast.error('Expense is required');
+        newRequestMutation.mutate(payload);
+    }
+
+    const newRequestQuery = useQuery({
+        queryKey: ['unique_id', unique_id],
+        queryFn: () => getQuoteByUniqueId(unique_id),
+        enabled: !!unique_id,
+        retry: 1,
+    });
+
+    useEffect(()=> {
+      if(newRequestQuery?.data) {
+        console.log('read quote:', newRequestQuery?.data);
+        setPayload(newRequestQuery?.data);
+      }
+    }, [newRequestQuery?.data])
 
     return (
         <div className='newQuotePage'>
@@ -58,7 +133,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', padding: '16px 32px' }}>
-                <DepartmentQuote totals={totals} setTotals={setTotals} />
+                <DepartmentQuote id={id} payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} preExistCalculation={newRequestQuery?.data?.calculations || {}}/>
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #EAECF0', boxShadow: '0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)' }}>
@@ -104,7 +179,7 @@ const CalculateQuote = () => {
                         <button type="button" className="button-custom text-button">
                             Save Draft
                         </button>
-                        <button type="button" className="button-custom submit-button-light">
+                        <button type="button" onClick={createNewRequest} className="button-custom submit-button-light">
                             Save
                         </button>
                         <button type="button" className="submit-button">

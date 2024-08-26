@@ -6,6 +6,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
+import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
 
 // Validation schema
 const schema = yup
@@ -16,6 +20,8 @@ const schema = yup
     .required();
 
 const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, setMapMergeItemWithNo }) => {
+    const { unique_id } = useParams();
+    console.log('selectItems: ', selectItems);
     const romanNo = romanize((Object.keys(mergeItems)?.length || 0) + 1);
     const [show, setShow] = useState(false);
     const [defaultValues, setDefaultValues] = useState({
@@ -26,9 +32,29 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
         resolver: yupResolver(schema), defaultValues
     });
 
+    const mutation = useMutation({
+        mutationFn: (data) => createNewMergeQuote(data),
+        onSuccess: (response) => {
+            toast.success(`New merge items created successfully.`);
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+            toast.error(`Failed to create new merge items. Please try again.`);
+        }
+    });
+
     // Submit handler
     const onSubmit = (data) => {
-        console.log('data: ', data);
+        const payload = {
+            ...data,
+            unique_id,
+            calculations: Object.values(selectItems).reduce((acc, value, index) => {
+                acc.push({ calculator: value.calculator });
+                return acc;
+            }, [])
+        }
+        mutation.mutate(payload);
+
         let key = Object.keys(selectItems)?.join("-")
 
         const total = Object.values(selectItems)
@@ -145,20 +171,20 @@ export const EditMergeItems = ({ id, setMergeItems, romanNo, items, title, descr
     const { register, reset, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema), defaultValues: { title, description }
     });
-    
+
     useEffect(() => {
         reset({ title, description });
     }, [title, description, reset]);
 
     const onSubmit = (data) => {
         console.log('data: ', data);
-        setMergeItems((oldMergeItems)=> {
+        setMergeItems((oldMergeItems) => {
             const updatedItems = { ...oldMergeItems };
             updatedItems[id] = {
                 ...updatedItems[id],
                 title: data.title, description: data.description,
             }
-         return updatedItems;
+            return updatedItems;
         })
         setShow(false);
         reset();
@@ -166,7 +192,7 @@ export const EditMergeItems = ({ id, setMergeItems, romanNo, items, title, descr
     const handleClose = () => setShow(false);
     return (
         <>
-            <button onClick={()=> setShow(true)} className='btn text-button p-0'>Edit</button>
+            <button onClick={() => setShow(true)} className='btn text-button p-0'>Edit</button>
             <Modal
                 show={show}
                 centered

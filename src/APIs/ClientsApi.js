@@ -75,6 +75,15 @@ export const getCities = async (state) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const getProjectManager = async () => {
+  const endpoint = `/references/all-users/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const clientEditApi = async (id) => {
   const endpoint = `/clients/${id}/`;
   const options = {

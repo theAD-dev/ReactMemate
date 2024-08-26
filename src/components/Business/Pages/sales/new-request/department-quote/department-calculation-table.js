@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
 
-import { calcDepartment } from '../../../../../../APIs/CalApi';
-import { calcReferenceId } from '../../../../../../APIs/CalApi';
+import { getCalculationByReferenceId, getDepartments, getMergeItemsByUniqueId, getQuoteByUniqueId } from '../../../../../../APIs/CalApi';
 import SelectComponent from './select-component';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import './select-component.css';
 import MergeItems, { EditMergeItems } from './merge-items';
 import ViewMergeItems from './view-merge-items';
+import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, isDiscountActive }) => {
     return (
@@ -105,19 +106,21 @@ const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
     )
 }
 
-const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, setSelectItem, mapMergeItemWithNo, checkedItems=[] }) => {
+const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
     const handleChange = (event, key, values) => {
+        console.log('values: ', values);
         setSelectItem((oldItems) => {
             if (event.target.checked) {
-                const { label, total } = values.reduce((acc, value, index) => {
+                const { label, total, calculator } = values.reduce((acc, value, index) => {
                     if (index === 0) acc.label = value.label;
                     acc.total += parseFloat(value.total || 0.00);
+                    acc.calculator = value?.id
                     return acc;
-                }, { label: '', total: 0 });
+                }, { label: '', total: 0, calculator: null });
 
                 return {
                     ...oldItems,
-                    [key]: { label, total }
+                    [key]: { label, total, calculator }
                 };
             } else {
                 const updatedItems = { ...oldItems };
@@ -143,7 +146,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                             ...provided.draggableProps.style,
                                             cursor: 'default',
                                         }}
-                                        className={`${checkedItems.includes(key) ? 'selected' : ''}`}
+                                        className={`calculation-tr ${checkedItems.includes(key) ? 'selected' : ''}`}
                                     >
                                         <td {...provided.dragHandleProps} style={{ width: '24px' }}>
                                             {
@@ -168,7 +171,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                                         )
                                                         }
 
-                                                        {id + 1}
+                                                        <span>{id + 1}</span>
                                                     </div>
                                                 )
                                             }
@@ -176,21 +179,21 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                         <td style={{ width: '192px' }}>
                                             {
                                                 index === 0 && (
-                                                    <div className='disabledSelectBox'><div title={value.label} className='disabledSelectBoxLabel' style={{ color: '#101828' }}>{value.label}</div> <ChevronDown color="#98A2B3" size={15} /></div>
+                                                    <div className='disabledSelectBox'><div title={value.label} className='disabledSelectBoxLabel' style={{ color: '#101828', fontSize: '14px' }}>{value.label}</div> <ChevronDown color="#98A2B3" size={15} /></div>
                                                 )
                                             }
                                         </td>
                                         <td style={{ width: '100%' }}>
-                                            <textarea rows={1} style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} value={value.description}
+                                            <textarea rows={1} style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box', fontSize: '14px' }} value={value.description}
                                                 onChange={(e) => updateData(key, value.id, 'description', e.target.value)}
                                             ></textarea>
                                         </td>
                                         <td style={{ width: '128px' }}>
                                             <div className='d-flex align-items-center'>
-                                                <span>$</span>
+                                                <span style={{ fontSize: '14px' }}>$</span>
                                                 <input
                                                     type="text"
-                                                    style={{ padding: '4px', width: '100px', background: 'transparent' }}
+                                                    style={{ padding: '4px', width: '100px', background: 'transparent', fontSize: '14px' }}
                                                     value={`${value.cost || '0.00'}`}
                                                     onChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
                                                 />
@@ -200,11 +203,11 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
-                                                    style={{ padding: '4px', width: '60px', background: 'transparent' }}
+                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
                                                     value={`${value.quantity || '0.00'}`}
                                                     onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
                                                 />
-                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
+                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
                                                     <option value="Cost">1/Q</option>
                                                     <option value="Hourly">1/H</option>
                                                 </select>
@@ -214,11 +217,11 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                             <div className='d-flex align-items-center'>
                                                 <input
                                                     type="text"
-                                                    style={{ padding: '4px', width: '60px', background: 'transparent' }}
+                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
                                                     value={`${value.profit_type_value || '0.00'}`}
                                                     onChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
                                                 />
-                                                <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
+                                                <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
                                                     <option value={"MRG"}>MRG %</option>
                                                     <option value={"AMT"}>Amt $</option>
                                                     <option value={"MRK"}>MRK %</option>
@@ -230,15 +233,15 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                                 <div className='d-flex align-items-center'>
                                                     <input
                                                         type="text"
-                                                        style={{ width: '30px', padding: '4px', background: 'transparent' }}
+                                                        style={{ width: '30px', padding: '4px', background: 'transparent', fontSize: '14px' }}
                                                         value={`${value.discount || 0}`}
                                                         onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
                                                     />
-                                                    <span>%</span>
+                                                    <span style={{ fontSize: '14px' }}>%</span>
                                                 </div>
                                             </td>
                                         }
-                                        <td style={{ width: '118px', textAlign: 'left' }}>$ {value.total || 0.00}</td>
+                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.total || 0.00}</td>
                                         <td style={{ width: '32px' }}>
                                             <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id)} />
                                         </td>
@@ -253,21 +256,23 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
     );
 }
 
-const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_tax }) => {
+const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, xero_tax, preExistCalculation }) => {
+    const { unique_id } = useParams();
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
     const [mergeItems, setMergeItems] = useState({});
+    console.log('mergeItems: ', mergeItems);
     const [selectItem, setSelectItem] = useState({});
     const [mapMergeItemWithNo, setMapMergeItemWithNo] = useState({});
     const { data: departments } = useQuery({
-        queryKey: ['calcIndexes'],
-        queryFn: calcDepartment,
+        queryKey: ['departments'],
+        queryFn: getDepartments,
         enabled: true,
     });
     const { isLoading: isLoadingSubItem, data } = useQuery({
         queryKey: ['calcReferenceId', subItem],
-        queryFn: () => calcReferenceId(subItem),
+        queryFn: () => getCalculationByReferenceId(subItem),
         enabled: !!subItem,
         retry: 1,
     });
@@ -359,17 +364,23 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
     };
 
     useEffect(() => {
-        if (data) {
+        if (data && data.length) {
             if (data.length) {
                 data.forEach((item) => {
                     item.label = subItemLabel;
+                    item.calculator = item.id;
+                    item.index = subItem;
                 })
             } else {
-                data.push({ label: subItemLabel });
+                data.push({
+                    label: subItemLabel,
+                    calculator: data.id,
+                    index: subItem,
+                });
             }
 
             let filteredData = data.filter((item, index, self) =>
-                index === self.findIndex((t) => t.id === item.id)
+                index === self.findIndex((t) => t.id === item.id) // remove duplicates
             );
 
             if (subItem && !rows[subItem]) {
@@ -379,12 +390,17 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
                 }));
             }
         }
+
+        if (data?.length === 0) {
+            console.log('data.length: ', data.length);
+            toast.error(`No calculation found inside ${subItemLabel}`)
+        }
     }, [data]);
 
     const calculateSummary = (taxType) => {
         let budget = 0;
         let subtotal = 0;
-    
+
         Object.values(rows)?.forEach(departmentRows => {
             departmentRows?.forEach(item => {
                 let rate = parseFloat(item.cost) || 0;
@@ -394,10 +410,10 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
                 subtotal += parseFloat(item.total || 0);
             });
         });
-    
+
         let tax = 0;
         let total = 0;
-    
+
         if (taxType === 'ex') {
             tax = subtotal * 0.10;
             total = subtotal + tax;
@@ -409,23 +425,73 @@ const DepartmentCalculationTable = ({ totals, setTotals, isDiscountActive, xero_
             tax = 0;
             total = subtotal;
         }
-    
+
         const operationalProfit = subtotal - budget;
-    
+
         return {
             budget: budget.toFixed(2),
             operationalProfit: operationalProfit.toFixed(2),
             subtotal: subtotal.toFixed(2),
             tax: tax.toFixed(2),
-            total: total.toFixed(2)
+            total: total.toFixed(2),
         };
     }
-    
 
     useEffect(() => {
         const summary = calculateSummary(xero_tax);
         setTotals(summary);
+
+        const calculations = Object.values(rows)?.flat().map((item, index) => {
+            const { id, ...rest } = item; // Remove 'id' using destructuring
+            return {
+                ...rest,
+                order: index // Add 'order' key with index value
+            };
+        });
+        setPayload((others) => ({ ...others, expense: summary.total || "", calculations }));
     }, [rows, xero_tax]);
+
+    useEffect(() => {
+        if (preExistCalculation?.length && departments?.length) {
+            console.log('preExistCalculation: ', preExistCalculation);
+            const subindexMap = {};
+            departments?.forEach(item => {
+                item.subindexes.forEach(subindex => {
+                    subindexMap[subindex.id] = subindex.name;
+                });
+            });
+
+            const reformattedData = preExistCalculation?.reduce((acc, item) => {
+                const key = `_${item.index}_`;
+                if (!acc[key]) acc[key] = [];
+                item.label = subindexMap[item.index];
+                const { order, index, ...rest } = item;
+                acc[key].push(rest);
+
+                return acc;
+            }, {});
+
+            console.log('preExistCalculation reformatted data: ', reformattedData);
+            setRows(reformattedData);
+        }
+    }, [preExistCalculation, departments])
+
+    const [mergeCalculationItems, setMergeCalculationItems] = useState([]);
+    const fetchMergeItems = async (id) => {
+        try {
+            const mergeItemsRes = await getMergeItemsByUniqueId(id);
+            console.log('mergeItemsRes: ', mergeItemsRes);
+            setMergeCalculationItems(mergeItemsRes);
+        } catch (error) {
+            console.log('error: ', error);
+        }
+    }
+
+    useEffect(() => {
+        if (unique_id) {
+            fetchMergeItems(unique_id);
+        }
+    }, [])
 
     useEffect(() => {
         let map = {};

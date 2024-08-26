@@ -1,0 +1,69 @@
+.custom-radio-button {
+    display: flex;
+    position: relative;
+    padding-left: 27px;
+    margin-bottom: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 20px;
+}
+  .custom-radio-button input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .custom-radio-button__checkmark {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    border-radius: var(--radius-lg, 10px);
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.radio-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.custom-radio-button input:checked ~ .custom-radio-button__checkmark {
+  border-radius: var(--radius-lg, 10px);
+  border: 1px solid var(--Gray-300, #1AB2FF);
+  background: var(--Base-White, #EBF8FF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+  
+  .custom-radio-button__checkmark:after {
+    content: "";
+    /* position: absolute; */
+    display: none;
+  }
+  
+  .custom-radio-button input:checked ~ .custom-radio-button__checkmark:after {
+    display: block;
+  }
+  
+  .custom-radio-button__checkmark:after {
+    top: 4.6px;
+    left: 4.6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1AB2FF;
+}

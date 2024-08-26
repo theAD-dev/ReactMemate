@@ -1,50 +1,58 @@
-
-
+import { fetchAPI } from "./base-api";
 const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
-export const calcDepartment = async () => {
-  const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json");
-
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow"
+export const getDepartments = async () => {
+  const endpoint = `/references/calc-indexes/`;
+  const options = {
+    method: 'GET',
   };
-  
-  try {
-    const response = await fetch(`${API_BASE_URL}/references/calc-indexes/`, requestOptions);
-    const result = await response.json();
-    return result; // Return the result if needed
-  } catch (error) {
-    console.error(error);
-    throw error; // Rethrow the error if needed
-  }
-};
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
-export const calcReferenceId = async (subItem) => {
-  console.log('subItem: ', subItem);
-  const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json");
-
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow"
+export const getCalculationByReferenceId = async (id) => {
+  const endpoint = `/references/calculators/${id}/`;
+  const options = {
+    method: 'GET',
   };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
+export const getQuoteByUniqueId = async (unique_id) => {
+  const endpoint = `/quote/${unique_id}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/references/calculators/${subItem}/`, requestOptions);
-    const result = await response.json();
-    return result || [];
-  } catch (error) {
-    console.error(error);
-    throw error; // Rethrow the error if needed
-  }
+export const createNewCalculationQuoteRequest = async (data) => {
+  const endpoint = '/sales/new-request/';
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
-};
+export const createNewMergeQuote = async (data) => {
+  const endpoint = '/quote/merges/new/';
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const getMergeItemsByUniqueId = async (unique_id) => {
+  const endpoint = `/quote/merges/${unique_id}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

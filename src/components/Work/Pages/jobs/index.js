@@ -1,18 +1,75 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import style from './jobs.module.scss';
 import { Button } from 'react-bootstrap';
-import { Filter } from 'react-bootstrap-icons';
+import { CalendarWeek, CurrencyDollar, Filter, People } from 'react-bootstrap-icons';
 import JobsTable from './jobs-table';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import { MegaMenu } from 'primereact/megamenu';
+import { TieredMenu } from 'primereact/tieredmenu';
+import { Calendar } from 'primereact/calendar';
 
 const JobsPage = () => {
+    const menu = useRef(null);
     const handleSearch = (e) => { }
+    const [dates, setDates] = useState(null);
+    const itemRenderer = (item, options) => {
+        if (item.root) {
+            return (
+                <div className='px-3 py-2 d-flex align-items-center' style={{ gap: '10px', cursor: 'pointer' }}>
+                    {item.icon}
+                    <span className="ml-2">{item.label}</span>
+                </div>
+            );
+        } else if (item.label === 'date') {
+            return (
+                <div className=''>
+                   
+                </div>
+            )
+        }
+    }
+    const items = [
+        {
+            label: 'Dates',
+            root: true,
+            icon: <CalendarWeek />,
+            template: itemRenderer,
+            items: [
+                {
+                    label: 'date',
+                    template: itemRenderer,
+                }
+            ]
+        },
+        {
+            label: 'Client',
+            root: true,
+            icon: <People />,
+            template: itemRenderer,
+            items: [
+                {
+                    label: 'date',
+                }
+            ]
+        },
+        {
+            label: 'Status',
+            root: true,
+            icon: <CurrencyDollar />,
+            template: itemRenderer,
+        }
+    ];
     return (
-        <div className='jobs-page'>
+        <PrimeReactProvider className='jobs-page'>
             <div className="topbar" style={{ padding: '4px 46px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
-                    <button className={`${style.filterBox}`}>
-                        <Filter/>
-                    </button>
+                    <div className='filtered-box'>
+                        <TieredMenu model={items} popup ref={menu} breakpoint="767px" />
+                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter /></button>
+                    </div>
+
+
                     <div className="searchBox" style={{ position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '5px', left: '8px' }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -33,7 +90,7 @@ const JobsPage = () => {
                 </div>
             </div>
             <JobsTable />
-        </div>
+        </PrimeReactProvider>
     )
 }
 

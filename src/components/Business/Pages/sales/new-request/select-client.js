@@ -11,16 +11,16 @@ const SelectClientType = () => {
   try {
     const storedData = window.sessionStorage.getItem(`new-request`);
     if (storedData) window.sessionStorage.removeItem('new-request');
-} catch (error) {
+  } catch (error) {
     console.error('Failed to parse form data from sessionStorage', error);
-}
+  }
   return (
     <div className="newQuotePage existingClients">
       <div className="dFlex">
         <div className="newQuoteBack">
-        <button><NavLink to="/sales">
+          <button><NavLink to="/sales">
             <ChevronLeft color="#000000" size={20} /> Go Back{" "}
-        </NavLink></button>
+          </NavLink></button>
         </div>
         <div className="newQuoteContent">
           <h3> Select Client Type </h3>
