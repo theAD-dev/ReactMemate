@@ -87,3 +87,48 @@
   margin-right: 10px;
   background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
 }
+
+.inProgress {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--Warning-700, #b54708);
+  border-radius: 16px;
+  border: 1px solid var(--Warning-200, #fedf89);
+  background: var(--Warning-50, #fffaeb);
+  // mix-blend-mode: multiply;
+}
+
+.defaultStatus {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #344054;
+  border-radius: 16px;
+  border: 1px solid #EAECF0;
+  background: #F9FAFB;
+}
+
+.finished {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #6941C6;
+  border-radius: 16px;
+  border: 1px solid #E9D7FE;
+  background: #F9FAFB;
+}
+
+.assign {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--Error-700, #B42318);
+  border-radius: 16px;
+  border: 1px solid var(--Error-200, #FECDCA);
+  background: var(--Error-50, #FEF3F2);
+}
