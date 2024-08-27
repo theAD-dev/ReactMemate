@@ -1,0 +1,86 @@
+/* Override prime */
+.status .p-chip-text,
+.type .p-chip-text,
+.custom .p-chip-text {
+  margin: 0px;
+}
+
+.shadowRight {
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px -6px 0px 0px);
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  color: #475467;
+  width: 12px;
+}
+
+table.p-datatable-table {
+  border-collapse: separate !important;
+}
+
+.p-checkbox .p-checkbox-box .p-checkbox-icon {
+  color: #158ecc;
+}
+
+.p-checkbox.p-highlight .p-checkbox-box {
+  border: 1px solid #1ab2ff;
+  background: #ebf8ff;
+}
+
+.primary-text-button {
+  color: #158ecc;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0px;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.show-on-hover .show-on-hover-element,
+table.p-datatable-table .show-on-hover .p-checkbox {
+  visibility: hidden;
+}
+
+.show-on-hover:hover .show-on-hover-element,
+table.p-datatable-table .show-on-hover:hover .p-checkbox {
+  visibility: visible;
+}
+
+table.p-datatable-table tr:hover .show-on-hover-element,
+table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
+  visibility: visible;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight .show-on-hover .p-checkbox {
+  visibility: visible;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight td {
+  background-color: #ebf8ff !important;
+}
+
+.custom-modal .p-dialog-header-icons {
+  margin-top: 8px;
+}
+
+.custom-modal .p-dialog-header {
+  padding: 16px 24px 12px 24px;
+}
+
+.custom-modal .p-dialog-content {
+  padding: 24px 16px;
+  border-top: 1px solid #dedede;
+  border-bottom: 1px solid #dedede;
+  background: var(--Gray-50, #f9fafb);
+}
+
+.custom-modal .p-dialog-footer {
+  padding: 24px;
+}
+
+.yellow-rating.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
+ color: #FFCB45;
+}

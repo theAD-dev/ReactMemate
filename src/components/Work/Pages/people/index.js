@@ -1,72 +1,21 @@
-import React, { useRef, useState } from 'react';
-import style from './people.module.scss';
-import { Button } from 'react-bootstrap';
-import { CalendarWeek, CurrencyDollar, Filter, People } from 'react-bootstrap-icons';
-import PeopleTable from './people-table';
+import React from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { MegaMenu } from 'primereact/megamenu';
-import { TieredMenu } from 'primereact/tieredmenu';
-import { Calendar } from 'primereact/calendar';
+
+import { Filter } from 'react-bootstrap-icons';
+import { Button } from 'react-bootstrap';
+import PeoplesTable from './peoples-table';
+
+import style from './people.module.scss';
 
 const PeoplePage = () => {
-    const menu = useRef(null);
     const handleSearch = (e) => { }
-    const [dates, setDates] = useState(null);
-    const itemRenderer = (item, options) => {
-        if (item.root) {
-            return (
-                <div className='px-3 py-2 d-flex align-items-center' style={{ gap: '10px', cursor: 'pointer' }}>
-                    {item.icon}
-                    <span className="ml-2">{item.label}</span>
-                </div>
-            );
-        } else if (item.label === 'date') {
-            return (
-                <div className=''>
-                   
-                </div>
-            )
-        }
-    }
-    const items = [
-        {
-            label: 'Dates',
-            root: true,
-            icon: <CalendarWeek />,
-            template: itemRenderer,
-            items: [
-                {
-                    label: 'date',
-                    template: itemRenderer,
-                }
-            ]
-        },
-        {
-            label: 'Client',
-            root: true,
-            icon: <People />,
-            template: itemRenderer,
-            items: [
-                {
-                    label: 'date',
-                }
-            ]
-        },
-        {
-            label: 'Status',
-            root: true,
-            icon: <CurrencyDollar />,
-            template: itemRenderer,
-        }
-    ];
     return (
-        <PrimeReactProvider className='jobs-page'>
+        <PrimeReactProvider className='peoples-page'>
             <div className="topbar" style={{ padding: '4px 46px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>
-                        <TieredMenu model={items} popup ref={menu} breakpoint="767px" />
-                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter /></button>
+                        <button className={`${style.filterBox}`}><Filter /></button>
                     </div>
 
 
@@ -85,11 +34,11 @@ const PeoplePage = () => {
                     <Button className={`${style.newButton}`}>New</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <h1 className={`${style.total} mb-0`}>Total</h1>
-                    <div className={`${style.totalCount}`}>30 Jobs</div>
+                    <div className={`${style.totalActive}`}>Active: 130</div>
+                    <div className={`${style.totalInActive}`}>In Active: 93</div>
                 </div>
             </div>
-            <PeopleTable />
+            <PeoplesTable/>
         </PrimeReactProvider>
     )
 }

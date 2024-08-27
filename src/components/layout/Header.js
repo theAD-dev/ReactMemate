@@ -69,7 +69,6 @@ import Dashboard from "../Work/Pages/Dashboard";
 import Tasks from "../Work/Pages/tasks/Tasks";
 import News from "../Work/Pages/News";
 import Approval from "../Work/Pages/Approval";
-
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import Item2 from "./settings/projectstatus/Item2";
 import NewClient from "../Business/Pages/sales/new-request/new-client";
@@ -93,7 +92,6 @@ import SuppliersNewCreate from "../Business/Pages/suppliers/suppliers-new-create
 const Header = ({ onClick }) => {
   const location = useLocation();
   const [profileData, setProfileData] = useState(null);
-  const [activeLink, setActiveLink] = useState(null);
   const [menuswitch, SetMenuSwitch] = useState(true);
 
   useEffect(() => {
@@ -111,20 +109,14 @@ const Header = ({ onClick }) => {
   }, []);
 
   useEffect(() => {
-    // Set active link based on the current location
-    if (location.pathname.startsWith("")) {
-      setActiveLink("");
-    } else if (location.pathname.startsWith("/suppliers")) {
-      setActiveLink("/suppliers");
+    console.log('location.pathname: ', location.pathname);
+    if (location.pathname.startsWith("/work")) {
+      SetMenuSwitch(false);
+    } else {
+      SetMenuSwitch(true);
     }
   }, [location.pathname]);
 
-  const changeMenu = () => {
-    SetMenuSwitch(false);
-  }
-  const selectBussniess = () => {
-    SetMenuSwitch(true);
-  }
   return (
     <>
 
@@ -157,10 +149,8 @@ const Header = ({ onClick }) => {
                         <ul>
                           <li>
                             <NavLink
-                              to=""
-                              className={`managementMain ${activeLink === "" ? "menuActive" : ""
-                                }`}
-                              onClick={selectBussniess}
+                              to="/"
+                              className={`managementMain menuActive`}
                             >
                               Business
                             </NavLink>
@@ -172,11 +162,8 @@ const Header = ({ onClick }) => {
                           </li>
                           <li>
                             <NavLink
-                              to="/dashboard"
-                              className={({ isActive }) =>
-                                isActive ? "menuActive" : "link" + ""
-                              }
-                              onClick={changeMenu}
+                              to="/work/dashboard"
+                              className={"managementMain1"}
                             >
                               Work
                             </NavLink>
@@ -330,10 +317,8 @@ const Header = ({ onClick }) => {
                         <ul>
                           <li>
                             <NavLink
-                              to=""
-                              className={`managementMain ${activeLink === "" ? "menuActive1" : ""
-                                }`}
-                              onClick={selectBussniess}
+                              to="/"
+                              className={`managementMain`}
                             >
                               Business
                             </NavLink>
@@ -345,10 +330,8 @@ const Header = ({ onClick }) => {
                           </li>
                           <li>
                             <NavLink
-                              to="/dashboard"
-                              className={`managementMain1 menuActive ${activeLink === "" ? "menuActive" : ""
-                                }`}
-                              onClick={selectBussniess}
+                              to="/work/dashboard"
+                              className={`managementMain1 menuActive`}
                             >
                               Work
                             </NavLink>
@@ -373,7 +356,7 @@ const Header = ({ onClick }) => {
                   <ul className="left">
                     <li>
                       <NavLink
-                        to="/people"
+                        to="/work/people"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " people"
                         }
@@ -384,7 +367,7 @@ const Header = ({ onClick }) => {
                     </li>
                     <li>
                       <NavLink
-                        to="/jobs"
+                        to="/work/jobs"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " jobs"
                         }
@@ -399,7 +382,7 @@ const Header = ({ onClick }) => {
                   <ul className="middle">
                     <li>
                       <NavLink
-                        to="/dashboard"
+                        to="/work/dashboard"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " dashboard"
                         }
@@ -410,7 +393,7 @@ const Header = ({ onClick }) => {
                     </li>
                     <li>
                       <NavLink
-                        to="/approval"
+                        to="/work/approval"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " approval"
                         }
@@ -425,7 +408,7 @@ const Header = ({ onClick }) => {
                   <ul className="right">
                     <li>
                       <NavLink
-                        to="/tasks"
+                        to="/work/tasks"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " tasks"
                         }
@@ -437,7 +420,7 @@ const Header = ({ onClick }) => {
                     </li>
                     <li>
                       <NavLink
-                        to="/news"
+                        to="/work/news"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " news"
                         }
@@ -655,30 +638,39 @@ const Header = ({ onClick }) => {
             element={<DemoTable />}
           />
 
+
+
+
           <Route
-            path="/dashboard"
+            path="/work/dashboard"
             element={<Dashboard />}
           />
           <Route
-            path="/tasks"
+            path="/work/tasks"
             element={<Tasks />}
           />
           <Route
-            path="/news"
+            path="/work/news"
             element={<News />}
           />
           <Route
-            path="/approval"
+            path="/work/approval"
             element={<Approval />}
           />
           <Route
-            path="/jobs"
+            path="/work/jobs"
             element={<JobsPage />}
           />
           <Route
-            path="/people"
+            path="/work/people"
             element={<PeoplePage />}
           />
+
+
+
+
+
+
           <Route
             path="/clients-business-details/:id"
             element={ <ClientsBusinessDetails />}
