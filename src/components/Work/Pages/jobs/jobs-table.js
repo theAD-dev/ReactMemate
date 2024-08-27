@@ -91,8 +91,8 @@ const JobsTable = () => {
 
   return (
     <>
-      <DataTable value={jobs} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight="1000px" className="border" selection={selectedJobs} onSelectionChange={(e) => setSelectedJobs(e.value)}>
-        <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }}></Column>
+      <DataTable value={jobs} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight="600px" className="border" selection={selectedJobs} onSelectionChange={(e) => setSelectedJobs(e.value)}>
+        <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
         <Column field="jobId" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
         <Column field="paymentType" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
         <Column field="time" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>

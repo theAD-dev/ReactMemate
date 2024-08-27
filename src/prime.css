@@ -1,6 +1,7 @@
 /* Override prime */
 .status .p-chip-text,
-.type .p-chip-text {
+.type .p-chip-text,
+.custom .p-chip-text {
   margin: 0px;
 }
 

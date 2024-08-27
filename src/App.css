@@ -74,7 +74,7 @@ table thead tr th,table tbody tr td{
     height: calc(100vh - 164px);
     padding-bottom: 2px;
 }
-table thead tr th:first-child, table tbody tr td:first-child {
+table:not(.p-datatable-table) thead tr th:first-child, table:not(.p-datatable-table) tbody tr td:first-child {
     position: sticky;
     left: 0;
     width: 40px;

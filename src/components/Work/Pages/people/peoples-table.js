@@ -6,6 +6,8 @@ import style from './people.module.scss';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { Rating } from 'primereact/rating';
+import { Envelope, Telephone } from 'react-bootstrap-icons';
+import { Badge } from 'primereact/badge';
 
 export const CustomerService = {
     getData() {
@@ -213,24 +215,47 @@ const PeoplesTable = () => {
                 return <Chip className={`type ${style.defaultType}`} label={type} />;
         }
     }
+
+    const lastJobBody = (rowData) => {
+        return <Chip className={`custom ${style.defaultLastJob}`} label={rowData.lastJob} />
+    }
+
     const ratingBody = (rowData) => {
-        return <Rating value={rowData.rating} className='yellow-rating' readOnly cancel={false} />
+        return <Rating value={rowData.rating} className='yellow-rating' style={{ position: 'static' }} readOnly cancel={false} />
+    }
+
+    const daysBody = (rowData) => {
+        return <Chip className={`custom ${style.defaultDays}`} label={rowData.days} />
+    }
+
+    const hourlyBody = (rowData) => {
+        return `$ ${rowData.hourly}`
+    }
+
+    const statusBody = (rowData) => {
+        if (rowData.status === 'Active')
+            return <div className={`${style.status} ${style.active}`}>
+                <Badge severity="success"></Badge> {rowData.status}
+            </div>
+        return <div className={`${style.status} ${style.inactive}`}>
+            {rowData.status} <Badge severity="danger"></Badge> 
+        </div>
     }
     return (
         <>
-            <DataTable value={peoples} scrollable lazy selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight="200px" className="border" selection={selectedPeoples} onSelectionChange={(e) => setSelectedPeoples(e.value)}>
-                <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }}></Column>
-                <Column field="name" header="Name" body={nameBody} style={{ minWidth: '765px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
+            <DataTable value={peoples} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight="600px" className="border" selection={selectedPeoples} onSelectionChange={(e) => setSelectedPeoples(e.value)}>
+                <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
+                <Column field="name" header="Name" body={nameBody} style={{ minWidth: '700px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
                 <Column field="type" header="Type" body={typeBody} style={{ minWidth: '107px' }} sortable></Column>
-                <Column field="lastJob" header="Last Job" style={{ minWidth: '118px' }} sortable></Column>
+                <Column field="lastJob" header="Last Job" body={lastJobBody} style={{ minWidth: '118px' }} sortable></Column>
                 <Column field="group" header="Group" style={{ minWidth: '87px' }} sortable></Column>
                 <Column field="rating" header="Rating" body={ratingBody} style={{ minWidth: '149px' }} sortable></Column>
-                <Column field="days" header="Days in company" style={{ minWidth: '150px' }} sortable></Column>
-                <Column field="hourly" header="Hourly rate" style={{ minWidth: '113px' }} sortable></Column>
-                <Column field="complete" header="Jobs complete	" style={{ minWidth: '131px' }} sortable></Column>
-                <Column field="id" header="Email" style={{ minWidth: '73px' }} sortable></Column>
-                <Column field="id" header="Phone" style={{ minWidth: '73px' }} sortable></Column>
-                <Column field="status" header="Status" style={{ minWidth: '135px' }} sortable></Column>
+                <Column field="days" header="Days in company" body={daysBody} style={{ minWidth: '150px' }} className='text-center' sortable></Column>
+                <Column field="hourly" header="Hourly rate" body={hourlyBody} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column>
+                <Column field="complete" header="Jobs complete	" style={{ minWidth: '131px', textAlign: 'right' }} sortable></Column>
+                <Column header="Email" body={<Envelope color='#98A2B3' size={20} />} style={{ minWidth: '73px', textAlign: 'center' }} sortable></Column>
+                <Column header="Phone" body={<Telephone color='#98A2B3' size={20} />} style={{ minWidth: '73px', textAlign: 'center' }} sortable></Column>
+                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '135px' }} sortable></Column>
             </DataTable>
         </>
     )
