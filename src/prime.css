@@ -4,6 +4,11 @@
   margin: 0px;
 }
 
+.shadowRight {
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px -6px 0px 0px);
+}
+
 .p-datatable .p-sortable-column .p-sortable-column-icon {
   color: #475467;
   width: 12px;

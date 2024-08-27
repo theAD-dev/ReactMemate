@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
@@ -133,18 +133,65 @@ export const CustomerService = {
             // Add more dummy data as needed...
         ];
     },
-    getCustomersLarge() {
-        return Promise.resolve(this.getData().slice(0, 200));
+    getCustomersSmall() {
+        return Promise.resolve(this.getData().slice(0, 2));
     },
+    getCustomersLarge() {
+        return Promise.resolve(this.getData().slice(0, 25));
+    },
+    getCustomersPaginated(page, rowsPerPage) {
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = page * rowsPerPage;
+        return Promise.resolve(this.getData().slice(startIndex, endIndex));
+    }
 };
 
 
 const PeoplesTable = () => {
+    const observerRef = useRef(null);
+
     const [peoples, setPeoples] = useState([]);
+    console.log('peoples: ', peoples.length);
     const [selectedPeoples, setSelectedPeoples] = useState(null);
+    const [page, setPage] = useState(1);
+    const [hasMoreData, setHasMoreData] = useState(true);
+    const rowsPerPage = 2; // Number of rows to fetch per page
+
     useEffect(() => {
-        CustomerService.getCustomersLarge().then((data) => setPeoples(data));
-    }, []);
+        const loadData = async () => {
+            const data = await CustomerService.getCustomersPaginated(page, rowsPerPage);
+            console.log('data: ', data.length);
+            if (data.length > 0) {
+                setPeoples(prevPeoples => [...prevPeoples, ...data]);
+            } else {
+                setHasMoreData(false);
+            }
+        };
+
+        loadData();
+    }, [page]);
+
+    useEffect(() => {
+        if (peoples.length > 0 && hasMoreData) {
+            observerRef.current = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    console.log('Fetching more data...');
+                    setPage(prevPage => prevPage + 1); // Increment the page number
+                }
+            });
+
+            const lastRow = document.querySelector('.p-datatable-tbody tr:last-child');
+            if (lastRow) {
+                observerRef.current.observe(lastRow);
+            }
+        }
+
+        return () => {
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+            }
+        };
+    }, [peoples, hasMoreData]);
 
     const nameBody = (rowdata) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
@@ -171,9 +218,9 @@ const PeoplesTable = () => {
     }
     return (
         <>
-            <DataTable value={peoples} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight="1000px" className="border" selection={selectedPeoples} onSelectionChange={(e) => setSelectedPeoples(e.value)}>
+            <DataTable value={peoples} scrollable lazy selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight="200px" className="border" selection={selectedPeoples} onSelectionChange={(e) => setSelectedPeoples(e.value)}>
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }}></Column>
-                <Column field="name" header="Name" body={nameBody} style={{ minWidth: '765px' }} frozen sortable></Column>
+                <Column field="name" header="Name" body={nameBody} style={{ minWidth: '765px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
                 <Column field="type" header="Type" body={typeBody} style={{ minWidth: '107px' }} sortable></Column>
                 <Column field="lastJob" header="Last Job" style={{ minWidth: '118px' }} sortable></Column>
                 <Column field="group" header="Group" style={{ minWidth: '87px' }} sortable></Column>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import style from './jobs-table.module.scss';
+import style from './jobs.module.scss';
 import { CustomerService } from './data';
 import { Person, Repeat } from 'react-bootstrap-icons';
 import { Chip } from 'primereact/chip';
