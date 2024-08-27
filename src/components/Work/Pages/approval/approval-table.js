@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { Link, Link45deg, Person, Repeat } from 'react-bootstrap-icons';
 
 import style from './approval.module.scss';
+import { Tag } from 'primereact/tag';
 
 export const CustomerService = {
     getData() {
@@ -188,6 +189,9 @@ const ApprovalTable = () => {
         return <div className='d-flex align-items-center' style={{ gap: '10px' }}>{rowData.linkTo} <Link45deg color='#3366CC' /> </div>
     }
 
+    const totalBody = (rowData) => {
+        return <Tag value={rowData.total} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>
+    }
 
     const header = (
         <div className="flex align-items-center justify-content-end" style={{ }}>
@@ -214,7 +218,7 @@ const ApprovalTable = () => {
             <Column field="total" header="Total" style={{ minWidth: '105px' }} sortable></Column>
             <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
 
-            <Column field="total" header="Total" style={{ minWidth: '105px' }} sortable></Column>
+            <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
             <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
 
         </DataTable>

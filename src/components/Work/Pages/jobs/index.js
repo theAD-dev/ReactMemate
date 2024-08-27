@@ -7,6 +7,7 @@ import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { TieredMenu } from 'primereact/tieredmenu';
 import { ListBox } from 'primereact/listbox';
+import JobChat from '../../features/job-chat';
 
 const JobsPage = () => {
     const menu = useRef(null);
@@ -132,6 +133,7 @@ const JobsPage = () => {
                 </div>
             </div>
             <JobsTable />
+            <JobChat/>
         </PrimeReactProvider>
     )
 }
