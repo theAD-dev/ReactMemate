@@ -26,8 +26,8 @@ const ApprovalPage = () => {
                     </div>
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '45%', top: '6px' }}>
-                    <h1 className="title p-0 mt-1" style={{ marginRight: '16px' }}>Approval</h1>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '48%', top: '6px' }}>
+                    <h1 className="title p-0 mt-1">Approval</h1>
                 </div>
 
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>

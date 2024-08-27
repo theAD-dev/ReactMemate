@@ -123,7 +123,7 @@ const JobsPage = () => {
                     </div>
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '45%', top: '6px' }}>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Jobs</h1>
                     <Button className={`${style.newButton}`}>New</Button>
                 </div>
