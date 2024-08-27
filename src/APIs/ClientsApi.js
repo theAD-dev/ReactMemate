@@ -30,6 +30,7 @@ export const getClientById = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
+
 export const getClientCategories = async () => {
   const endpoint = `/references/clients/categories/`;
   const options = {
@@ -57,6 +58,8 @@ export const getCountries = async () => {
   return fetchAPI(url.toString(), options);
 }
 
+
+
 export const getStates = async (country) => {
   const endpoint = `/references/states/${country}/`;
   const options = {
@@ -75,6 +78,10 @@ export const getCities = async (state) => {
   return fetchAPI(url.toString(), options);
 }
 
+
+
+
+
 export const getProjectManager = async () => {
   const endpoint = `/references/all-users/`;
   const options = {
@@ -84,6 +91,7 @@ export const getProjectManager = async () => {
   return fetchAPI(url.toString(), options);
 }
 
+
 export const clientEditApi = async (id) => {
   const endpoint = `/clients/${id}/`;
   const options = {
@@ -92,11 +100,6 @@ export const clientEditApi = async (id) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
-
-
-
-
-
 
 
 

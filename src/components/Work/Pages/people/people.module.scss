@@ -1,0 +1,53 @@
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 36px;
+}
+
+.newButton,
+.newButton:hover,
+.newButton:focus {
+  gap: 8px;
+  display: flex;
+  padding: 4px 14px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--Orange-600, #d59346);
+  background: var(--Orange-600, #d59346);
+}
+
+.total {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.08px;
+}
+
+.totalCount {
+  color: #ffc301;
+  text-align: center;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  align-items: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  border-radius: 16px;
+  border: 1px solid #fff0c1;
+  background: #fffaeb;
+  mix-blend-mode: multiply;
+}

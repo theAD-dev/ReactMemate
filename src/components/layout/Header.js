@@ -69,7 +69,7 @@ import Dashboard from "../Work/Pages/Dashboard";
 import Tasks from "../Work/Pages/tasks/Tasks";
 import News from "../Work/Pages/News";
 import Approval from "../Work/Pages/Approval";
-import People from "../Work/Pages/People";
+
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import Item2 from "./settings/projectstatus/Item2";
 import NewClient from "../Business/Pages/sales/new-request/new-client";
@@ -80,6 +80,7 @@ import ScopeOfWorkComponent from "../Business/Pages/sales/new-request/scope-of-w
 import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
 import { Placeholder } from "react-bootstrap";
 import JobsPage from "../Work/Pages/jobs";
+import PeoplePage from "../Work/Pages/people";
 import ClientsBusinessDetails from "../Business/Pages/clients/clients-business-details";
 import ClientsIndividualDetails from "../Business/Pages/clients/clients-individual-details";
 import ClientNew from "../Business/Pages/clients/create-new-client";
@@ -676,7 +677,7 @@ const Header = ({ onClick }) => {
           />
           <Route
             path="/people"
-            element={<People />}
+            element={<PeoplePage />}
           />
           <Route
             path="/clients-business-details/:id"
