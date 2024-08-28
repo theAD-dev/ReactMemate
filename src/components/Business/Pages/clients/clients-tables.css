@@ -211,7 +211,7 @@
   position: sticky;
   left: 40px;
   z-index: 8;
-  border-right: 0px solid var(--color10) !important;
+  border-right: 1px solid var(--color10) !important;
   padding-left: 7px !important;
 }
 .clientTableWrap .styleColor1 {
@@ -236,7 +236,9 @@
 
   
 }
-
+.clientTableWrap table tbody tr td {
+  height: 56px;
+}
 .tabBoxGrid:first-child {
   margin-right: 6px;
  

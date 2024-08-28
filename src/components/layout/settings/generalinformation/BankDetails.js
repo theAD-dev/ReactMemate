@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Sidebar from ".././Sidebar";
+import styles from "./general.module.scss";
 import { PencilSquare } from "react-bootstrap-icons";
 import {
   SettingsBankInformation,
@@ -73,7 +74,9 @@ const BankDetails = () => {
               }`}
             >
               <div className="content_wrapper">
-                <div className="listwrapper">
+             
+                <div className= {`listwrapper ${styles.listwrapp}`}>
+                  
                   <div className="topHeadStyle">
                     <div className="">
                       <h2>Bank Details </h2>

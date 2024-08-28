@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import styles from "./general.module.scss";
 import Select from "react-select";
 import { PencilSquare } from "react-bootstrap-icons";
 import Sidebar from ".././Sidebar";
@@ -172,7 +173,7 @@ const RegionLanguage = () => {
             className={`content_wrap_main ${isEditing ? "isEditingwrap" : ""}`}
           >
             <div className="content_wrapper">
-              <div className="listwrapper">
+            <div className= {`listwrapper ${styles.listwrapp}`}>
                 <div className="topHeadStyle">
                   <div className="">
                     <h2>Region & Language</h2>
