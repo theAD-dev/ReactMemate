@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
+import styles from "./setting.profile.module.scss";
 import { PencilSquare, Telephone, Person } from "react-bootstrap-icons";
 import {
   SettingsGeneralInformation,
@@ -55,7 +56,7 @@ const MyProfile = () => {
               }`}
             >
               <div className="content_wrapper">
-                <div className="listwrapper">
+              <div className= {`listwrapper ${styles.listwrapp}`}>
                   <div className="topHeadStyle">
                     <div className="">
                       <h2>My Profile</h2>

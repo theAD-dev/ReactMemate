@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import Sidebar from "../Sidebar";
+import styles from "./subscription.module.scss";
 import ThemeImages from '../../../../assets/imgconstant';
-import styles from '../settings.module.scss';
+
 
 import {
   AppIndicator,
@@ -41,7 +42,7 @@ const Subscription = () => {
             </div>
             <div className={`content_wrap_main`}>
               <div className="content_wrapper">
-                <div className="listwrapper">
+              <div className= {`listwrapper ${styles.listsubscription}`}>
                   <div className="topHeadStyle">
                     <div className="">
                       <h2>Subscription</h2>
