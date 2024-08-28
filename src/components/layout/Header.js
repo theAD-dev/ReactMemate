@@ -68,7 +68,6 @@ import DemoTable from "../Business/Pages/management/project-card/DemoTable";
 import Dashboard from "../Work/Pages/Dashboard";
 import Tasks from "../Work/Pages/tasks/Tasks";
 import News from "../Work/Pages/News";
-import Approval from "../Work/Pages/Approval";
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import Item2 from "./settings/projectstatus/Item2";
 import NewClient from "../Business/Pages/sales/new-request/new-client";
@@ -85,6 +84,7 @@ import ClientsIndividualDetails from "../Business/Pages/clients/clients-individu
 import ClientNew from "../Business/Pages/clients/create-new-client";
 import SuppliersDetails from "../Business/Pages/suppliers/suppliers-details";
 import SuppliersNewCreate from "../Business/Pages/suppliers/suppliers-new-create";
+import ApprovalPage from "../Work/Pages/approval";
 
 
 
@@ -655,7 +655,7 @@ const Header = ({ onClick }) => {
           />
           <Route
             path="/work/approval"
-            element={<Approval />}
+            element={<ApprovalPage />}
           />
           <Route
             path="/work/jobs"

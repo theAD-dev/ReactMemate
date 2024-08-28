@@ -1,11 +1,10 @@
 import React from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-
 import { Filter } from 'react-bootstrap-icons';
 import { Button } from 'react-bootstrap';
-import PeoplesTable from './peoples-table';
 
+import PeoplesTable from './peoples-table';
 import style from './people.module.scss';
 
 const PeoplePage = () => {
@@ -29,7 +28,7 @@ const PeoplePage = () => {
                     </div>
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '45%', top: '6px' }}>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>People</h1>
                     <Button className={`${style.newButton}`}>New</Button>
                 </div>

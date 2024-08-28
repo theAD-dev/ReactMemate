@@ -48,7 +48,7 @@ const JobSchedulerCalendarModule = () => {
                     </div>
                     <input type="text" placeholder="Search" onChange={() => { }} className="border search-resource" style={{ borderRadius: '4px', border: '1px solid #D0D5DD', paddingLeft: '36px', fontSize: '16px', height: '36px' }} />
                 </div>
-                <div className="featureName" style={{ position: 'absolute', left: '45%', top: '-5px' }}>
+                <div className="featureName" style={{ position: 'absolute', left: '47%', top: '-5px' }}>
                     <h1 className="title">Dashboard</h1>
                 </div>
                 <div className="filters">
