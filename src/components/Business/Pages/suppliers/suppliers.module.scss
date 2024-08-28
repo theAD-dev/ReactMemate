@@ -1,3 +1,51 @@
+.SuppServices {
+        span {
+            border-radius: var(--radius-xs, 4px);
+            border: 1px solid var(--Gray-300, #D0D5DD);
+            background: var(--Base-White, #FFF);
+            padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+            color: var(--Gray-700, #344054);
+            text-align: center;
+            font-family: Inter;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 18px;
+    }
+}
+
+
+
+.servicesTags{
+    ul {
+        margin-bottom: 26px;
+        li {
+            border-radius: var(--radius-sm, 6px);
+            border: 1px solid var(--Gray-300, #D0D5DD);
+            background: var(--Base-White, #FFF);
+            display: inline-block;
+            margin-right: 7px;
+            padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px) var(--spacing-xxs, 2px) 5px;
+            color: var(--Gray-700, #344054);
+            text-align: center;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px;
+        } 
+    }
+    p{
+        color: var(--Gray-600, #475467);
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px; 
+        letter-spacing: 0.14px;
+    }
+}
+
 .mainHead {
     display: flex;
     align-items: center;
@@ -7,6 +55,7 @@
     position: sticky;
     top: 0;
     background: #fff;
+   
     .suppliersImgOpacity{
         border-radius: var(--radius-xs, 4px);
         border: 0.75px solid var(--Gray-900, #10182821);

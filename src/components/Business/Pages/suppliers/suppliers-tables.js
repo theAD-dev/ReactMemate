@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef } from "react";
 import Button from 'react-bootstrap/Button';
-
+import styles from "./suppliers.module.scss";
 import {
   Check,
   ChevronLeft, ArrowDown, ArrowUp, Envelope, Person, Globe
@@ -173,11 +173,11 @@ const SuppliersTables = forwardRef(({ ClientsData, fetchData, isFetching }, ref)
       headerName: "Supplied Services",
 
       renderCell: (params) => (
-        <div
-          className="mainStyle SuppServices"
+       
+          <div className={`mainStyle ${styles.SuppServices}`}
           style={{ textAlign: "left" }}
         >
-          {params.value}
+          <span>{params.value}</span>
 
         </div>
       ),

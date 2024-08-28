@@ -78,10 +78,10 @@ import ScopeOfWorkComponent from "../Business/Pages/sales/new-request/scope-of-w
 import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
 import { Placeholder } from "react-bootstrap";
 import JobsPage from "../Work/Pages/jobs";
+import PeoplePage from "../Work/Pages/people";
 import ClientsBusinessDetails from "../Business/Pages/clients/clients-business-details";
 import ClientsIndividualDetails from "../Business/Pages/clients/clients-individual-details";
 import ClientNew from "../Business/Pages/clients/create-new-client";
-import PeoplePage from "../Work/Pages/people";
 import SuppliersDetails from "../Business/Pages/suppliers/suppliers-details";
 import SuppliersNewCreate from "../Business/Pages/suppliers/suppliers-new-create";
 import ApprovalPage from "../Work/Pages/approval";
