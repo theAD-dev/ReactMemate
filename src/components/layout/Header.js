@@ -79,6 +79,7 @@ import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote"
 import { Placeholder } from "react-bootstrap";
 import JobsPage from "../Work/Pages/jobs";
 import PeoplePage from "../Work/Pages/people";
+import ClientPage from "../Business/Pages/clients"
 import ClientsBusinessDetails from "../Business/Pages/clients/clients-business-details";
 import ClientsIndividualDetails from "../Business/Pages/clients/clients-individual-details";
 import ClientNew from "../Business/Pages/clients/create-new-client";
@@ -119,7 +120,6 @@ const Header = ({ onClick }) => {
 
   return (
     <>
-
       <div className="headerNav1">
         {menuswitch ?
           <>
@@ -442,7 +442,7 @@ const Header = ({ onClick }) => {
         <Routes>
           <Route path="*" element={<Home />} />
           <Route path="/work" element={<Work />} />
-          <Route path="/clients" element={<Clients />} />
+          <Route path="/clients" element={<ClientPage />} />
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/management" element={<Management />} />
           <Route path="/orders" element={<Orders />} />

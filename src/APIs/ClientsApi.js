@@ -30,7 +30,6 @@ export const getClientById = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
-
 export const getClientCategories = async () => {
   const endpoint = `/references/clients/categories/`;
   const options = {
@@ -58,8 +57,6 @@ export const getCountries = async () => {
   return fetchAPI(url.toString(), options);
 }
 
-
-
 export const getStates = async (country) => {
   const endpoint = `/references/states/${country}/`;
   const options = {
@@ -78,10 +75,6 @@ export const getCities = async (state) => {
   return fetchAPI(url.toString(), options);
 }
 
-
-
-
-
 export const getProjectManager = async () => {
   const endpoint = `/references/all-users/`;
   const options = {
@@ -90,7 +83,6 @@ export const getProjectManager = async () => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
-
 
 export const clientEditApi = async (id) => {
   const endpoint = `/clients/${id}/`;
@@ -101,6 +93,19 @@ export const clientEditApi = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const getListOfClients = async (page, limit) => {
+  const offset = (page - 1) * limit;
+  const endpoint = `/clients/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  // url.searchParams.append("ordering", "name")
+
+  return fetchAPI(url.toString(), options);
+}
 
 
 export const fetchClients = async (limit, offset) => {
