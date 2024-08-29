@@ -465,7 +465,7 @@ const Header = ({ onClick }) => {
           />
           <Route
             path="/settings/generalinformation/profile"
-            element={<MyProfile />}
+            element={<MyProfile profileData={profileData}/>}
           />
           <Route
             path="/settings/generalinformation/subscription"

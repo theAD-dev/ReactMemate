@@ -257,7 +257,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
             {profileData && (
               <p>
                 <strong>{profileData.full_name}</strong>
-                <span>olivia@memate.com</span>
+                <span>{profileData.email}</span>
               </p>
             )}
             </div>

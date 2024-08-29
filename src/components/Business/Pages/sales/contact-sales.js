@@ -1,5 +1,5 @@
 import React from 'react';
-import { Envelope, Telephone, Calendar,X } from "react-bootstrap-icons";
+import { Envelope, Telephone, Calendar, X } from "react-bootstrap-icons";
 import { Button, ButtonToolbar, OverlayTrigger, Popover } from 'react-bootstrap';
 import ContactAdd from "./contact-add";
 import phonecallgra from "../../../../assets/images/icon/phonecallgra.svg";
@@ -7,10 +7,8 @@ import mailgradi from "../../../../assets/images/icon/mailgradi.svg";
 import calendargradi from "../../../../assets/images/icon/calendargradi.svg";
 import styles from './sales.module.scss';
 
-
-
- // Format Date
- const formatDate = (timestamp) => {
+// Format Date
+const formatDate = (timestamp) => {
   const date = new Date(timestamp * 1000);
   const day = date.getDate();
   const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
@@ -19,23 +17,21 @@ import styles from './sales.module.scss';
   const year = date.getFullYear();
   return `${day} ${monthAbbreviation} ${year}`;
 };
-const ContactSales = ({saleUniqueId,type,refreshData}) => {
+
+const ContactSales = ({ saleUniqueId, type, refreshData }) => {
   const [popoverVisible, setPopoverVisible] = React.useState(null);
 
   const handlePopoverClick = (index) => {
-    var btnsSecondary = document.querySelectorAll('.ClosePopover');
+    const btnsSecondary = document.querySelectorAll('.ClosePopover');
     if (btnsSecondary.length > 0) {
-      btnsSecondary.forEach(function(btn) {
-        btn.click();
-      });
+      btnsSecondary.forEach(btn => btn.click());
     }
-
     setPopoverVisible(popoverVisible === index ? null : index);
   };
 
-  const contactRefresh = () =>{
-    refreshData()
-  }
+  const contactRefresh = () => {
+    refreshData();
+  };
 
   const handlePopoverClose = () => {
     setPopoverVisible(null);
@@ -43,7 +39,7 @@ const ContactSales = ({saleUniqueId,type,refreshData}) => {
 
   return (
     <>
-      <div className="innerTableStyle ">
+      <div className="innerTableStyle">
         <ul>
           {type.map((item, index) => (
             <li key={index}>
@@ -56,33 +52,34 @@ const ContactSales = ({saleUniqueId,type,refreshData}) => {
                   onHide={handlePopoverClose}
                   overlay={
                     <Popover
-                      id={`popover-trigger-click-root-close-${index}`} className='salesTableWrap'
+                      id={`popover-trigger-click-root-close-${index}`}
+                      className='salesTableWrap'
                       title=""
                     >
                       <div className="contactInfo">
-                      <div className={`contactInfoflex ${styles.padding_24}`}>
-                      
-                        <div className="iconStyle">
-                          {item.type === 'Phone' && (
-                            // <Telephone color="#fff" size={24} />
-                            <img src={phonecallgra} alt="phonecallgra" />
-                          )}
-                          {item.type === 'Email' && (
-                          <img src={mailgradi} alt="mailgradi" />
-                          )}
-                          {item.type === 'Meeting' && (
-                           <img src={calendargradi} alt="calendargradi" />
-                          )}
+                        <div className={`contactInfoflex ${styles.padding_24}`}>
+                          <div className="iconStyle">
+                            {item.type === 'Phone' && (
+                              <img src={phonecallgra} alt="phonecallgra" />
+                            )}
+                            {item.type === 'Email' && (
+                              <img src={mailgradi} alt="mailgradi" />
+                            )}
+                            {item.type === 'Meeting' && (
+                              <img src={calendargradi} alt="calendargradi" />
+                            )}
+                          </div>
+                          <Button
+                            variant="link"
+                            className='ClosePopover'
+                            onClick={handlePopoverClose}
+                          >
+                            <X color="#667085" size={24} />
+                          </Button>
                         </div>
-                        <Button
-                          variant="link" className='ClosePopover'
-                          onClick={handlePopoverClose}>
-                          <X color="#667085" size={24} />
-                        </Button>
-                      </div>
-                      <div className={styles.paddingLR_24}>
-                        <p className="contactdate">{formatDate(item.date)}</p>
-                        <p>{item.note}</p>
+                        <div className={styles.paddingLR_24}>
+                          <p className="contactdate">{formatDate(item.date)}</p>
+                          <p>{item.note}</p>
                         </div>
                         <div className={styles.footerwrap}>
                           <Button onClick={handlePopoverClose} className={styles.cancelbut}>Cancel</Button>
@@ -113,18 +110,16 @@ const ContactSales = ({saleUniqueId,type,refreshData}) => {
               </ButtonToolbar>
             </li>
           ))}
-          {Array.from({ length: Math.max(3 - type.length, 0) }).map(
-            (_, index) => (
-              <li key={type.length + index}>
-                <span className="contactButList">
-                  <div className="contactButListIn1">
-                    <div className="contactButListIn2">
-                      <ContactAdd saleUniqueIdold={saleUniqueId} contactRefresh={contactRefresh}/>
-                    </div>
+          {type.length < 3 && (
+            <li>
+              <span className="contactButList">
+                <div className="contactButListIn1">
+                  <div className="contactButListIn2">
+                    <ContactAdd saleUniqueIdold={saleUniqueId} contactRefresh={contactRefresh} />
                   </div>
-                </span>
-              </li>
-            )
+                </div>
+              </span>
+            </li>
           )}
         </ul>
       </div>
@@ -132,4 +127,4 @@ const ContactSales = ({saleUniqueId,type,refreshData}) => {
   );
 };
 
-export default ContactSales
+export default ContactSales;

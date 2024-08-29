@@ -201,12 +201,12 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
             <li className="disable">
               <PlusSlashMinus color="#FDB022" size={16} />
             </li>
-            <li>
+            <li className="disable">
               <Link to={params.row.CalculationPDF} target="_blank" rel="noopener noreferrer">
                 <FilePdf color="#FF0000" size={16} />
               </Link>
             </li>
-            <li>
+            <li className="disable">
               <Link to={params.row.CalculationURL} target="_blank" rel="noopener noreferrer">
                 <Link45deg color="#3366CC" size={16} />
               </Link>

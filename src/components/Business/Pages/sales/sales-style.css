@@ -2687,6 +2687,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 .styleActionBtn .message.true {
   pointer-events: none;
+  opacity: 0;
 }
 .salesTableWrap table tbody tr td:nth-child(2) {
   padding-left: 0 !important;

@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import Sidebar from '.././Sidebar';
 import styles from "./general.module.scss";
-import { PencilSquare,Telephone,Building,Link45deg } from "react-bootstrap-icons";
+import { PencilSquare,Telephone,Building,Link45deg,Upload } from "react-bootstrap-icons";
 import { SettingsGeneralInformation ,updateGeneralInformation} from "../../../../APIs/SettingsGeneral";
 import AvatarImg from "../../../../assets/images/img/Avatar.png";
-
+import FileUploader from '../../../../ui/file-uploader/file-uploader';
 
 const GeneralInformation = () => {
     const [activeTab, setActiveTab] = useState('generalinformation');
@@ -13,7 +13,7 @@ const GeneralInformation = () => {
     const [isEditingGroup, setIsEditingGroup] = useState(false);
     const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingEmail, setIsEditingEmail] = useState(false);
-
+    const [photo, setPhoto] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -242,31 +242,7 @@ const GeneralInformation = () => {
             
              )}
                                 </li>
-                                <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                                <div className={styles.editinfo}>
-                                    <span>Company Abbreviation</span>
-                                    {!isEditingGroup ? (
-                                        <strong>{generalData.abbreviation}</strong>
-                                    ) : (
-                                        <input
-                                            type="text"
-                                            value={generalData.abbreviation}
-                                            onChange={(e) => setGeneralData({ ...generalData, abbreviation: e.target.value })}
-                                        />
-                                    )}
-                                    </div>
-                                    {!isEditingGroup ? (
-                    <>
-                    </>
-                ) : (
-             
-                <div className={styles.editpara}>
-                <p>Provide your legal company address for outgoing documentation.</p>
-                
-            </div> 
-            
-             )}
-                                </li>
+                            
                                 <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
                                 <div className={styles.editinfo}>
                                     <span>Street Address</span>
@@ -356,18 +332,8 @@ const GeneralInformation = () => {
                                     ) : (
                                      
                                     <div class="upload-btn-wrapper">
-                                    <button class="btnup">
-                                        <div className='iconBulding'>
-                                    <Building color="#667085" size={32} /></div>
-                                    <div className='textbtm'>
-                                        <p><span>Click to upload</span> or drag and drop<br></br>
-                                        SVG, PNG, JPG or GIF (max. 800x400px)</p>
-                                    </div>
-                                    </button>
-                                    <input
-                                     type="file"
-                                     onChange={(e) => setGeneralData({ ...generalData, company_logo: e.target.files[0] })}                                      
-                                       />
+                                        <FileUpload photo={photo} setPhoto={setPhoto} />
+                                   
                                     </div>
                                       )}
                                       </div>
@@ -413,4 +379,35 @@ const GeneralInformation = () => {
     );
 }
 
+
+
+function FileUpload({ photo, setPhoto }) {
+    const [show, setShow] = useState(false);
+  
+    return (
+      <section className="container mb-3" style={{ marginTop: '24px', padding: '0px' }}>
+        {/* <label className='mb-2' style={{ color: '#475467', fontSize: '14px', fontWeight: '500' }}>App Logo</label> */}
+        <div className='d-flex justify-content-center align-items-center flex-column' style={{ width: '100%', minHeight: '126px', padding: '16px', background: '#fff', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
+          {
+            photo?.croppedImageBase64 ? (
+              <div className='text-center'>
+                <img
+                  alt='uploaded-file'
+                  src={photo?.croppedImageBase64}
+                  style={{ width: '64px', height: '64px', marginBottom: '12px' }}
+                />
+              </div>
+            ) : (
+              <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
+                <Upload />
+              </button>
+            )
+          }
+          <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShow(true)}>Click to upload</span></p>
+          <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
+        </div>
+        <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
+      </section>
+    );
+  }
 export default GeneralInformation;

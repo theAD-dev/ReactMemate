@@ -9,7 +9,7 @@ import {
 } from "../../../APIs/SettingsGeneral";
 import AvatarImg from "../../../assets/images/img/Avatar.png";
 
-const MyProfile = () => {
+const MyProfile = (profileData) => {
   const [activeTab, setActiveTab] = useState("profile");
   const [generalData, setGeneralData] = useState();
   const [isEditing, setIsEditing] = useState(false);
@@ -82,7 +82,7 @@ const MyProfile = () => {
                       <li>
                         <span>First Name</span>
                         {!isEditing ? (
-                          <strong>John</strong>
+                          <strong>{profileData?.profileData?.full_name}</strong>
                         ) : (
                           <input
                             type="text"
@@ -99,11 +99,14 @@ const MyProfile = () => {
                     
 
                       </li>
-                      <li>
-                        <span>Last Name</span>
+                   
+                       
                         {!isEditing ? (
-                          <strong>Smith</strong>
+                            <>
+                            </>
                         ) : (
+                          <li>
+                             <span>Last Name</span>
                           <input
                             type="text"
                             value="Smith"
@@ -114,15 +117,16 @@ const MyProfile = () => {
                               })
                             }
                           />
+                          </li>
                         )}
-                      </li>
+                     
                       <li>
                         <span>User picture</span>
                         {!isEditing ? (
                           <strong>
-                            {generalData.company_logo ? (
+                            {generalData.photo ? (
                               <img
-                                src={generalData.company_logo}
+                                src={generalData.photo}
                                 width={76}
                                 alt="Company Logo"
                               />
@@ -159,7 +163,7 @@ const MyProfile = () => {
                       <li>
                         <span>Email</span>
                         {!isEditing ? (
-                          <strong>email@example.com</strong>
+                          <strong>{profileData?.profileData?.email}</strong>
                         ) : (
                           <input
                             type="text"
@@ -196,7 +200,7 @@ const MyProfile = () => {
                       <li>
                         <span>Position</span>
                         {!isEditing ? (
-                          <strong>Manager</strong>
+                          <strong>{profileData?.profileData?.type}</strong>
                         ) : (
                           <input
                             type="text"
