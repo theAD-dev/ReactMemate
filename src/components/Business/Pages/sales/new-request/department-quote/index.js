@@ -39,6 +39,20 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
     retry: 1,
   });
 
+  useEffect(()=> {
+    if(clientQuery.data?.contact_persons?.length) {
+      let person = clientQuery.data?.contact_persons[0];
+      console.log('person: ', person);
+      let find = clientQuery.data?.contact_persons.find((contact)=> contact.is_main === true);
+      console.log('find: ', find);
+      if (find) {
+        setPayload((others) => ({ ...others, contact_person: find.id }));
+      }else {
+        setPayload((others) => ({ ...others, contact_person: person.id }));
+      }
+    }
+  }, [clientQuery.data])
+
   useEffect(() => {
     if (projectManagerQuery?.data) {
       const options = projectManagerQuery?.data?.map((user) => ({ value: user.id, label: user.name, image: user.photo || 'https://dev.memate.com.au/media/no_org.png' }))
@@ -47,11 +61,11 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
   }, [projectManagerQuery?.data]);
 
   useEffect(() => {
-    if (payload.contact_person && projectManagerQuery?.data) {
-      let value = projectManagerQuery?.data?.find((option) => option.id === payload.contact_person);
-      if (value)
-        set_selected_contact_persons({ value: value.id, label: value.name, image: value.photo || 'https://dev.memate.com.au/media/no_org.png' });
-    }
+    // if (payload.managers?.length && projectManagerQuery?.data) {
+    //   let value = projectManagerQuery?.data?.find((option) => option.id === payload.contact_person);
+    //   if (value)
+    //     set_selected_contact_persons({ value: value.id, label: value.name, image: value.photo || 'https://dev.memate.com.au/media/no_org.png' });
+    // }
   }, [payload])
 
   return (
@@ -111,15 +125,15 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
                           components={{ Option: CustomOption }}
                           value={selected_contact_persons}
                           onChange={(selected) => {
-                            if (selected.length > 1) {
-                              set_selected_contact_persons([selected[selected.length - 1]])
-                              let obj = [selected[selected.length - 1]];
-                              setPayload((others) => ({ ...others, contact_person: obj[0].value }))
-                            }
-                            else {
-                              set_selected_contact_persons(selected)
-                              setPayload((others) => ({ ...others, contact_person: selected[0].value }))
-                            }
+                            set_selected_contact_persons(selected)
+                            let managers = [];
+                            selected?.map((obj) => {
+                              console.log('obj: ', obj);
+                              managers.push({ manager: obj.value });
+                              return obj;
+                            })
+
+                            setPayload((others) => ({ ...others, managers: managers }));
                           }}
                           isMulti
                           styles={{

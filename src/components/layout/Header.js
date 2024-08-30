@@ -26,7 +26,6 @@ import Sales from "../Business/Pages/sales/sales-page";
 import Management from "../Business/Pages/management/management-page";
 import SelectOption from "./SelectOption";
 import Profile from "./Login/profile";
-import Clients from "../Business/Pages/clients/clients";
 import Invoices from "../Business/Pages/invoices/invoices";
 import Expenses from "../Business/Pages/expenses/expenses";
 import Home from "../Home";
@@ -80,12 +79,10 @@ import { Placeholder } from "react-bootstrap";
 import JobsPage from "../Work/Pages/jobs";
 import PeoplePage from "../Work/Pages/people";
 import ClientPage from "../Business/Pages/clients"
-import ClientsBusinessDetails from "../Business/Pages/clients/clients-business-details";
-import ClientsIndividualDetails from "../Business/Pages/clients/clients-individual-details";
-import ClientNew from "../Business/Pages/clients/create-new-client";
 import SuppliersDetails from "../Business/Pages/suppliers/suppliers-details";
 import SuppliersNewCreate from "../Business/Pages/suppliers/suppliers-new-create";
 import ApprovalPage from "../Work/Pages/approval";
+import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
 
 
 
@@ -441,8 +438,13 @@ const Header = ({ onClick }) => {
       <div className="main-wrapper">
         <Routes>
           <Route path="*" element={<Home />} />
-          <Route path="/work" element={<Work />} />
           <Route path="/clients" element={<ClientPage />} />
+          <Route path="/clients/:id/order-history" element={<ClientOrderHistory />} />
+
+
+
+
+          <Route path="/work" element={<Work />} />
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/management" element={<Management />} />
           <Route path="/orders" element={<Orders />} />
@@ -667,31 +669,15 @@ const Header = ({ onClick }) => {
           />
 
 
-
-
-
-
-          <Route
-            path="/clients-business-details/:id"
-            element={ <ClientsBusinessDetails />}
-          />
-          <Route
-            path="/clients-individual-details/:id"
-            element={ <ClientsIndividualDetails />}
-          />
-          <Route
-            path="/clients-new-create"
-            element={ <ClientNew />}
-          />
           <Route
             path="/suppliers-details/:id"
-            element={ <SuppliersDetails />}
+            element={<SuppliersDetails />}
           />
           <Route
             path="/suppliers-new"
-            element={ <SuppliersNewCreate />}
+            element={<SuppliersNewCreate />}
           />
-        
+
         </Routes>
         <Outlet />
       </div>
