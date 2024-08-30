@@ -99,7 +99,7 @@ export const SettingsGeneralInformation = async () => {
 
   try {
     const response = await fetch(`${API_BASE_URL}/settings/organization/general/`, requestOptions);
-    const result = await response.text();
+    const result = await response.json();
     return result;
   } catch (error) {
     console.error('Profile fetch error:', error);
@@ -107,14 +107,14 @@ export const SettingsGeneralInformation = async () => {
   }
 };
 
-export const updateGeneralInformation = async (generalData) => {
+export const updateGeneralInformation = async (data) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const formData = new FormData();
-  Object.keys(generalData).forEach((key) => {
-    formData.append(key, generalData[key]);
+  Object.keys(data).forEach((key) => {
+    formData.append(key, data[key]);
   });
 
   const requestOptions = {
@@ -127,7 +127,7 @@ export const updateGeneralInformation = async (generalData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/settings/organization/general/`, requestOptions);
     const result = await response.text();
-    console.log('result: ', result);
+    console.log('result>>>>>>>>>>: ', result);
     return result;
   } catch (error) {
     console.error('Profile fetch error:', error);

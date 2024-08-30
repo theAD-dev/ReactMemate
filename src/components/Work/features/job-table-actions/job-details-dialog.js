@@ -4,13 +4,15 @@ import { Dialog } from 'primereact/dialog';
 import style from './job-dialog.module.scss';
 import { Chip } from "primereact/chip";
 import JobConfirmation from "./job-confirmation-dialog";
+import {InfoCircle} from "react-bootstrap-icons";
 
 export default function JobDetails({ visible, setVisible, JobDetails}) {
     const [confirmation, setConfirmation] = useState(false);
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
-            <img src="/static/media/task-details.6c24fdfe452b19f485da192519e9cbe3.svg" alt="task-details" style={{ width: '48px', height: '48px' }} />
+            {/* <img src="/static/media/task-details.6c24fdfe452b19f485da192519e9cbe3.svg" alt="task-details" style={{ width: '48px', height: '48px' }} /> */}
+            <b className={style.iconJobstyle}><InfoCircle size={24} color="#106B99" /></b>
             <span className={`white-space-nowrap ${style.headerTitle}`}>Job Details</span>
         </div>
     );

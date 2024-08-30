@@ -105,7 +105,7 @@ const JobsPage = () => {
     ];
     return (
         <PrimeReactProvider className='jobs-page'>
-            <div className="topbar" style={{ padding: '4px 46px', position: 'relative', height: '48px' }}>
+            <div className="topbar" style={{ padding: '4px 25px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>
                         <TieredMenu model={items} popup ref={menu} breakpoint="767px" />
