@@ -6,17 +6,18 @@ import { Tag } from 'primereact/tag';
 import { Skeleton } from 'primereact/skeleton';
 
 import style from './clients.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getListOfClients } from '../../../../APIs/ClientsApi';
 import { Button } from 'primereact/button';
 
 const ClientTable = ({ selectedClients, setSelectedClients }) => {
+    const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
-    const limit = 100;
+    const limit = 25;
 
     useEffect(() => {
         const loadData = async () => {
@@ -53,7 +54,7 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
     const clientIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span>{rowData.number}</span>
-            <Button label="Open" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+            <Button label="Open" onClick={() => navigate(`/clients/${rowData.id}/order-history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
     const nameBody = (rowData) => {
@@ -112,7 +113,7 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
     return (
         <DataTable value={clients} scrollable selectionMode={'checkbox'} removableSort
             columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-            scrollHeight={"calc(100vh - 176px)"} className="border" selection={selectedClients}
+            scrollHeight={"calc(100vh - 182px)"} className="border" selection={selectedClients}
             onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
             emptyMessage="No clients found."

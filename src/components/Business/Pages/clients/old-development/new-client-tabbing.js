@@ -8,7 +8,7 @@ import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 
 import { InputGroup } from 'react-bootstrap';
 import { PhoneInput } from 'react-international-phone';
-import FileUploader from '../../../../ui/file-uploader/file-uploader';
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 const Tab = ({ tabName,icon, activeTab, onClick }) => (
   <div className='tabBoxGrid'

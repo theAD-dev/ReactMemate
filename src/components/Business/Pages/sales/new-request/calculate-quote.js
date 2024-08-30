@@ -26,6 +26,7 @@ const CalculateQuote = () => {
     const [payload, setPayload] = useState({
         client: +id || "",
         contact_person: "",
+        managers: [],
         reference: quoteFormData?.reference || "",
         description: quoteFormData?.requirements || "",
         purchase_order: "",
@@ -65,12 +66,14 @@ const CalculateQuote = () => {
         }
     });
 
-    const createNewRequest = () => {
+    const createNewRequest = (action) => {
         if (unique_id) return;
+        payload.action = action;
         console.log('payload: ', payload);
 
         if (!payload.client) return toast.error('Client is required');
-        if (!payload.contact_person) return toast.error('Project manager is required');
+        if (!payload.contact_person) return toast.error('Contact person is required');
+        if (!payload.managers || !payload.managers?.length) return toast.error('Project manager is required');
         if (!payload.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
         if (!payload.xero_tax) return toast.error('Tax details is required');
         if (!payload.expense) return toast.error('Expense is required');
@@ -176,13 +179,13 @@ const CalculateQuote = () => {
                         </button>
                     </div>
                     <div className='d-flex align-items-center' style={{ gap: '8px' }}>
-                        <button type="button" className="button-custom text-button">
+                        <button type="button" onClick={() => createNewRequest('draft')} className="button-custom text-button">
                             Save Draft
                         </button>
-                        <button type="button" onClick={createNewRequest} className="button-custom submit-button-light">
+                        <button type="button" onClick={() => createNewRequest('save')} className="button-custom submit-button-light">
                             Save
                         </button>
-                        <button type="button" className="submit-button">
+                        <button type="button" onClick={() => createNewRequest('send')} className="submit-button">
                             Save and Send
                         </button>
                     </div>

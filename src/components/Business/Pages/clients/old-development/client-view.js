@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { clientEditApi } from "../../../../APIs/ClientsApi";
+import { clientEditApi } from "../../../../../APIs/ClientsApi";
 import {
   X,
   Pen,

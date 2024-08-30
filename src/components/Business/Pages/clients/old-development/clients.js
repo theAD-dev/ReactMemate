@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fetchClients } from "../../../../APIs/ClientsApi";
+import { fetchClients } from "../../../../../APIs/ClientsApi";
 import ClientsTables from "./clients-tables";
 import "./clients-tables.css"
 const Clients = () => {
