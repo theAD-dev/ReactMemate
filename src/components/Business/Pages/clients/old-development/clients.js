@@ -1,9 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-<<<<<<< Updated upstream:src/components/Business/Pages/clients/old-development/clients.js
 import { fetchClients } from "../../../../../APIs/ClientsApi";
-=======
-import { fetchClients } from "../../../../APIs/ClientsApi";
->>>>>>> Stashed changes:src/components/Business/Pages/clients/Clients.js
 import ClientsTables from "./clients-tables";
 import "./clients-tables.css"
 const Clients = () => {
