@@ -11,9 +11,9 @@ const ClientOrderHistoryTable = ({ clientOrders, isPending }) => {
       emptyMessage="No orders found."
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-      <Column field="number" header="Project ID" style={{ minWidth: '100px' }} frozen sortable></Column>
+      <Column field="number" header="Project ID" frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
       <Column field="reference" header="Reference" style={{ minWidth: '154px' }}></Column>
-      <Column field="status" header="Status" style={{ minWidth: '113px' }} sortable></Column>
+      <Column field="status" header="Status" sortable style={{ minWidth: '113px' }}></Column>
       <Column header="Invoice" style={{ minWidth: '114px' }}></Column>
       <Column header="Quote" style={{ minWidth: '160px' }}></Column>
       <Column header="History" style={{ minWidth: '70px' }}></Column>

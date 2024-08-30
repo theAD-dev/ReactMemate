@@ -51,7 +51,7 @@ const ClientOrderHistory = () => {
                 </div>
                 <ClientOrderHistoryTable clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
             </div>
-            <Sidebar visible={true} position="right" onHide={() => setVisible(false)} modal={false} style={{ width: '559px' }}
+            <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
                     clientDetails?.data?.is_business
                         ? <BusinessClientView client={clientDetails?.data || {}} closeIconRef={closeIconRef} hide={hide} />
