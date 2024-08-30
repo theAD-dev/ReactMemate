@@ -2,17 +2,20 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import styles from "./setting.profile.module.scss";
-import { PencilSquare, Telephone, Person } from "react-bootstrap-icons";
+import { PencilSquare, Telephone, Person,Upload } from "react-bootstrap-icons";
 import {
   SettingsGeneralInformation,
   updateGeneralInformation,
 } from "../../../APIs/SettingsGeneral";
 import AvatarImg from "../../../assets/images/img/Avatar.png";
+import FileUploader from '../../../ui/file-uploader/file-uploader';
+
 
 const MyProfile = (profileData) => {
   const [activeTab, setActiveTab] = useState("profile");
   const [generalData, setGeneralData] = useState();
   const [isEditing, setIsEditing] = useState(false);
+  const [photo, setPhoto] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,7 +89,7 @@ const MyProfile = (profileData) => {
                         ) : (
                           <input
                             type="text"
-                            value="John"
+                            value={profileData?.profileData?.full_name}
                             onChange={(e) =>
                               setGeneralData({
                                 ...generalData,
@@ -136,7 +139,7 @@ const MyProfile = (profileData) => {
                           </strong>
                         ) : (
                           <div class="upload-btn-wrapper">
-                            <button class="btnup">
+                            {/* <button class="btnup">
                               <div className="iconPerson">
                                 <Person color="#667085" size={32} />
                               </div>
@@ -149,14 +152,15 @@ const MyProfile = (profileData) => {
                               </div>
                             </button>
                             <input
-                              type="file"
+                              type={profileData?.profileData?.company_logo}
                               onChange={(e) =>
                                 setGeneralData({
                                   ...generalData,
                                   company_logo: e.target.files[0],
                                 })
                               }
-                            />
+                            /> */}
+                            <FileUpload photo={photo} setPhoto={setPhoto} />
                           </div>
                         )}
                       </li>
@@ -167,7 +171,7 @@ const MyProfile = (profileData) => {
                         ) : (
                           <input
                             type="text"
-                            value="email@example.com"
+                            value={profileData?.profileData?.email}
                             onChange={(e) =>
                               setGeneralData({
                                 ...generalData,
@@ -178,16 +182,17 @@ const MyProfile = (profileData) => {
                         )}
                       </li>
                       <li>
+                    
                         <span>Phone Number</span>
                         {!isEditing ? (
                           <strong className="flexStyleProfile">
-                            1300882582 &nbsp;
+                            {profileData?.profileData?.phone} &nbsp;
                             <Telephone color="#1AB2FF" size={20} />
                           </strong>
                         ) : (
                           <input
                             type="text"
-                            value="Phone Number"
+                            value={profileData?.profileData?.phone}
                             onChange={(e) =>
                               setGeneralData({
                                 ...generalData,
@@ -204,7 +209,7 @@ const MyProfile = (profileData) => {
                         ) : (
                           <input
                             type="text"
-                            value="Manager"
+                            value={profileData?.profileData?.type}
                             onChange={(e) =>
                               setGeneralData({
                                 ...generalData,
@@ -236,4 +241,34 @@ const MyProfile = (profileData) => {
   );
 };
 
+
+function FileUpload({ photo, setPhoto }) {
+  const [show, setShow] = useState(false);
+
+  return (
+    <section className="container mb-3" style={{ marginTop: '24px', padding: '0px' }}>
+      {/* <label className='mb-2' style={{ color: '#475467', fontSize: '14px', fontWeight: '500' }}>App Logo</label> */}
+      <div className='d-flex justify-content-center align-items-center flex-column' style={{ width: '100%', minHeight: '126px', padding: '16px', background: '#fff', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
+        {
+          photo?.croppedImageBase64 ? (
+            <div className='text-center'>
+              <img
+                alt='uploaded-file'
+                src={photo?.croppedImageBase64}
+                style={{ width: '64px', height: '64px', marginBottom: '12px' }}
+              />
+            </div>
+          ) : (
+            <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
+              <Upload />
+            </button>
+          )
+        }
+        <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShow(true)}>Click to upload</span></p>
+        <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
+      </div>
+      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
+    </section>
+  );
+}
 export default MyProfile;

@@ -12,7 +12,7 @@
 
 .p-datatable .p-sortable-column .p-sortable-column-icon {
   color: #475467;
-  width: 12px;
+  width: 10px;
 }
 
 .p-datatable.p-datatable-lg .p-datatable-header {
@@ -101,4 +101,16 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 
 .p-component-overlay {
   background-color: transparent;
+}
+
+.p-datatable-tbody tr td {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  padding: 15px 17px;
+  border-bottom: 1px solid var(--Gray-200,#eaecf0);
 }
