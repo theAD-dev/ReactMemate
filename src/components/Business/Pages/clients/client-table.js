@@ -53,7 +53,7 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
 
     const clientIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-            <span>{rowData.number}</span>
+            <span>{rowData.number?.split('-')?.[1] }</span>
             <Button label="Open" onClick={() => navigate(`/clients/${rowData.id}/order-history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
@@ -116,7 +116,7 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
             scrollHeight={"calc(100vh - 182px)"} className="border" selection={selectedClients}
             onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
-            emptyMessage="No clients found."
+            emptyMessage={<>no data</>}
         >
             <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="number" header="Client ID" body={clientIDBody} style={{ minWidth: '100px' }} frozen sortable></Column>
