@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Building, GeoAlt, Globe, Person } from 'react-bootstrap-icons';
@@ -9,21 +9,21 @@ import style from './clients.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { getListOfClients } from '../../../../APIs/ClientsApi';
 import { Button } from 'primereact/button';
+import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
-const ClientTable = ({ selectedClients, setSelectedClients }) => {
+const ClientTable = forwardRef(({ selectedClients, setSelectedClients }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
-    const limit = 25;
+    const limit = 100;
 
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
             const data = await getListOfClients(page, limit);
-            console.log('data: ', data);
             if (data?.results?.length > 0) setCients(prev => {
                 const existingClientIds = new Set(prev.map(client => client.id));
                 const newClients = data.results.filter(client => !existingClientIds.has(client.id));
@@ -42,7 +42,7 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
                 if (entries[0].isIntersecting) setPage(prevPage => prevPage + 1);
             });
 
-            const lastRow = document.querySelector('.p-datatable-tbody tr:last-child');
+            const lastRow = document.querySelector('.p-datatable-tbody tr:not(.p-datatable-emptymessage):last-child');
             if (lastRow) observerRef.current.observe(lastRow);
         }
 
@@ -96,7 +96,7 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span style={{ color: '#98A2B3', fontSize: '14px' }}>{address?.address || defaultAddress || "-"}</span>
             {(address?.address || defaultAddress) &&
-                <Link className={`${style.location} show-on-hover-element`}>
+                <Link to={`http://maps.google.com/?q=${address?.address || defaultAddress}`} target='_blank' className={`${style.location} show-on-hover-element`}>
                     <GeoAlt />
                 </Link>
             }
@@ -110,13 +110,14 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
     // const onSort = (event) => {
     //     console.log('event: ', event);
     // };
+
     return (
-        <DataTable value={clients} scrollable selectionMode={'checkbox'} removableSort
+        <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'} removableSort
             columnResizeMode="expand" resizableColumns showGridlines size={'large'}
             scrollHeight={"calc(100vh - 182px)"} className="border" selection={selectedClients}
             onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
-            emptyMessage={<>no data</>}
+            emptyMessage={NoDataFoundTemplate}
         >
             <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="number" header="Client ID" body={clientIDBody} style={{ minWidth: '100px' }} frozen sortable></Column>
@@ -134,6 +135,6 @@ const ClientTable = ({ selectedClients, setSelectedClients }) => {
             <Column field="website" header="Website" body={websiteBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
         </DataTable>
     )
-}
+})
 
 export default ClientTable

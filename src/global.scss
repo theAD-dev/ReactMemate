@@ -102,3 +102,21 @@
 .font-16 {
   font-size: 16px;
 }
+
+.phoneInput .react-international-phone-country-selector-button {
+  height: 46px;
+  padding: 10px;
+}
+
+.phoneInput .react-international-phone-input {
+  width: 100%;
+  color: var(--Gray-900, #101828) !important;
+  font-family: Inter !important;
+  font-size: 16px !important;
+  height: 46px !important;
+}
+
+.dropdown-height-fixed .p-dropdown-label.p-inputtext {
+  top: -2px;
+  position: relative;
+}

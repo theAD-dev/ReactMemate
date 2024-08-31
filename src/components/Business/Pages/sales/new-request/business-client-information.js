@@ -199,7 +199,7 @@ const BusinessClientInformation = () => {
           },
           body: formData,
         });
-  
+
         if (response.ok) {
           const result = await response.json();
           navigate(`/sales/newquote/selectyourclient/client-information/scope-of-work/${result?.client}`);

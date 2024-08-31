@@ -1,6 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import clsx from 'clsx';
+
+import style from './client-order-history.module.scss';
+import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
 const ClientOrderHistoryTable = ({ clientOrders, isPending }) => {
   return (
@@ -8,7 +12,7 @@ const ClientOrderHistoryTable = ({ clientOrders, isPending }) => {
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
       scrollHeight={"calc(100vh - 182px)"} className="border"
       loading={isPending}
-      emptyMessage="No orders found."
+      emptyMessage={NoDataFoundTemplate}
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
       <Column field="number" header="Project ID" frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>

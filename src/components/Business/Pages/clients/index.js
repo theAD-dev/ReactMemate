@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Download, Filter } from 'react-bootstrap-icons';
@@ -6,9 +6,35 @@ import { Button } from 'react-bootstrap';
 
 import style from './clients.module.scss';
 import ClientTable from './client-table';
+import { useQuery } from '@tanstack/react-query';
+import { getCities, getClientCategories, getClientIndustries, getCountries, getStates } from '../../../../APIs/ClientsApi';
+import NewClientCreate from '../../features/new-client-create/new-client-create';
 
 const ClientPage = () => {
+    const dt = useRef(null);
+    const [visible, setVisible] = useState(true);
+    
     const [selectedClients, setSelectedClients] = useState(null);
+    const [countryId, setCountryId] = useState('');
+    const [stateId, setStateId] = useState('');
+    const [statesOptions, setStateOptions] = useState({});
+    const [citiesOptions, setCitiesOptions] = useState({});
+
+    const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
+    const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
+    const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
+    const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
+    const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
+
+
+
+    const exportCSV = (selectionOnly) => {
+        if (dt.current) {
+            dt.current.exportCSV({ selectionOnly });
+        } else {
+            console.error('DataTable ref is null');
+        }
+    };
     const handleSearch = (e) => { }
     return (
         <PrimeReactProvider className='peoples-page'>
@@ -19,7 +45,7 @@ const ClientPage = () => {
                             <>
                                 <h6 className={style.selectedCount}>Selected: {selectedClients?.length}</h6>
                                 <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Download /></button>
+                                    <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
                                 </div>
                             </>
                         )
@@ -44,14 +70,15 @@ const ClientPage = () => {
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Clients</h1>
-                    <Button className={`${style.newButton}`}>New</Button>
+                    <Button onClick={() => setVisible(true) } className={`${style.newButton}`}>New</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>30 Jobs</div>
                 </div>
             </div>
-            <ClientTable selectedClients={selectedClients} setSelectedClients={setSelectedClients} />
+            <ClientTable ref={dt} selectedClients={selectedClients} setSelectedClients={setSelectedClients} />
+            <NewClientCreate visible={visible} setVisible={setVisible} />
         </PrimeReactProvider>
     )
 }

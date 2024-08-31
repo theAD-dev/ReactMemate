@@ -23,4 +23,9 @@
   font-weight: 600;
   line-height: 24px; /* 133.333% */
   letter-spacing: -0.18px;
+  white-space: nowrap;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+

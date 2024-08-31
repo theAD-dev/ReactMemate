@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { ArrowUpRight, Building, Star, StarFill, Trash, X } from 'react-bootstrap-icons';
-import { Button, Col, Row } from 'react-bootstrap';
-import BusinessClientEdit from '../business-client-edit/business-client-edit'
+import clsx from 'clsx';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Button, Col, Row } from 'react-bootstrap';
+import { Building, StarFill, Trash, X } from 'react-bootstrap-icons';
+import BusinessClientEdit from '../business-client-edit/business-client-edit'
 
 import style from './business-client.module.scss';
 import mapicon from '../../../../assets/images/google_maps_ico.png'
-import clsx from 'clsx';
 
 const BusinessClientView = ({ client, closeIconRef, hide }) => {
   console.log('client: ', client);
@@ -17,9 +17,9 @@ const BusinessClientView = ({ client, closeIconRef, hide }) => {
       <div className="d-flex flex-column">
         <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '24px' }}>
           <div className="d-flex align-items-center gap-2">
-            <div className='d-flex align-items-center justify-content-center' style={{ borderRadius: "var(--radius-xs, 4px)", border: '1px solid #dedede', width: '56px', height: '56px' }}>
+            <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
               {
-                client.photo ? <img src={client.photo} alt='client-photo' /> : <Building color='#667085' />
+                client.photo ? <img src={client.photo} alt='client-photo' /> : <Building color='#667085' size={26} />
               }
             </div>
             <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{client.name}</span>
@@ -94,12 +94,12 @@ const ViewSection = ({ client }) => {
               onClick={(e) => {
                 e.preventDefault();
                 window.location.href = `mailto:${client?.email}`;
-              }} className=''
+              }}
             >
               <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
                 <div className='ellipsis-width' title={client?.email}>{client?.email || "-"}&nbsp;</div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             </Link>
@@ -110,7 +110,7 @@ const ViewSection = ({ client }) => {
               <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
                 <div className='ellipsis-width' title={client?.website}>{client?.website || "-"}&nbsp;</div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             </Link>
@@ -127,7 +127,7 @@ const ViewSection = ({ client }) => {
       <h5 className={clsx(style.boxLabel)}>Contact Person</h5>
       {
         client?.contact_persons?.map((contact) => (
-          <div className={clsx(style.box)}>
+          <div key={contact.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
               <div className={clsx(style.iconBox)}>
                 <StarFill color={contact.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
@@ -149,13 +149,13 @@ const ViewSection = ({ client }) => {
                   <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
                     <div className='ellipsis-width' title={contact?.email}>{contact?.email || "-"}&nbsp;</div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-                      <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                 </Link>
               </Col>
             </Row>
-  
+
             <Row>
               <Col sm={6}>
                 <label className={clsx(style.label)}>Position</label>
@@ -185,7 +185,7 @@ const ViewSection = ({ client }) => {
       <h5 className={clsx(style.boxLabel)}>Locations</h5>
       {
         client?.addresses?.map((address) => (
-          <div className={clsx(style.box)}>
+          <div key={address.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
               <div className={clsx(style.iconBox)}>
                 <StarFill color={address.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
@@ -198,28 +198,28 @@ const ViewSection = ({ client }) => {
             <Row>
               <Col>
                 <label className={clsx(style.label)}>Country</label>
-                <h4 className={clsx(style.text)}>{`${address.country}`}</h4>
+                <h4 className={clsx(style.text)}>{`${address.country || "-"}`}</h4>
               </Col>
             </Row>
 
             <Row>
               <Col sm={6}>
                 <label className={clsx(style.label)}>State</label>
-                <h4 className={clsx(style.text)}>{`${address.state}`}</h4>
+                <h4 className={clsx(style.text)}>{`${address.state || "-"}`}</h4>
               </Col>
               <Col sm={6}>
                 <label className={clsx(style.label)}>City</label>
-                <h4 className={clsx(style.text)}>{`${address.city}`}</h4>
+                <h4 className={clsx(style.text)}>{`${address.city || "-"}`}</h4>
               </Col>
             </Row>
             <Row>
               <Col sm={6}>
                 <label className={clsx(style.label)}>Street Address</label>
-                <h4 className={clsx(style.text, 'mb-0')}>{`${address.address}`}</h4>
+                <h4 className={clsx(style.text, 'mb-0')}>{`${address.address || "-"}`}</h4>
               </Col>
               <Col sm={6}>
                 <label className={clsx(style.label)}>Postcode</label>
-                <h4 className={clsx(style.text, 'mb-0')}>{`${address.postcode}`}</h4>
+                <h4 className={clsx(style.text, 'mb-0')}>{`${address.postcode || "-"}`}</h4>
               </Col>
             </Row>
           </div>
@@ -227,8 +227,8 @@ const ViewSection = ({ client }) => {
       }
 
       <h5 className={clsx(style.boxLabel)}>Client Description</h5>
-      <div className={clsx(style.box)}>
-        {client.description}
+      <div className={clsx(style.box, 'mb-0')}>
+        {client.description || "-"}
       </div>
     </>
   )

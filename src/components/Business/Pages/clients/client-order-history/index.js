@@ -12,6 +12,7 @@ import ClientOrderHistoryTable from './client-order-history-table';
 import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
 import IndivisualClientView from '../../../features/indivisual-client-view/indivisual-client-view';
 import BusinessClientView from '../../../features/business-client-view/business-client-view';
+import SidebarClientLoading from '../../../features/sidebar-client-loading/sidebar-client-loading';
 
 const ClientOrderHistory = () => {
     const { id } = useParams();
@@ -43,7 +44,7 @@ const ClientOrderHistory = () => {
                     </div>
 
                     <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%' }}>
-                        <h1 onClick={() => { setVisible(true) }} className={`${style.clientName} m-0 p-0 cursor-pointer`}>{clientDetails?.data?.name || ""}</h1>
+                        <h1 onClick={() => { setVisible(true) }} className={`${style.clientName} m-0 p-0 cursor-pointer`} title={clientDetails?.data?.name}>{clientDetails?.data?.name || ""}</h1>
                     </div>
                     <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                         <Button label="Download" onClick={() => { }} className='primary-text-button' text />
@@ -57,7 +58,7 @@ const ClientOrderHistory = () => {
                         ? <BusinessClientView client={clientDetails?.data || {}} closeIconRef={closeIconRef} hide={hide} />
                         : clientDetails?.data?.is_business === false
                             ? <IndivisualClientView client={clientDetails?.data || {}} closeIconRef={closeIconRef} hide={hide} />
-                            : "Loading ..."
+                            : <SidebarClientLoading />
                 )}
             ></Sidebar>
         </PrimeReactProvider>

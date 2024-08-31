@@ -76,6 +76,10 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   background-color: #ebf8ff !important;
 }
 
+.p-datatable tr.p-datatable-emptymessage:hover td {
+  background-color: #fff;
+}
+
 .custom-modal .p-dialog-header-icons {
   margin-top: 8px;
 }
