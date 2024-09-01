@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { nanoid } from 'nanoid';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Sidebar } from 'primereact/sidebar';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from 'react-bootstrap-icons';
@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 
 const NewClientCreate = ({ visible, setVisible }) => {
     const formRef = useRef(null);
+    const [isPending, setIsPending] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [tab, setTab] = useState('1');
     const [businessDefaultValues, setBusinessDefaultValues] = useState({
@@ -30,7 +31,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
         formData.append("phone", data.phone);
         formData.append("description", data.description);
 
-        formData.append("address.id", data.address.id);
+        formData.append("address.country", data.address.country);
         formData.append("address.title", data.address.title);
         formData.append("address.city", data.address.city);
         formData.append("address.address", data.address.address);
@@ -44,6 +45,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
         }
 
         try {
+            setIsPending(true);
             const accessToken = sessionStorage.getItem("access_token");
             const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/individual/new/`, {
                 method: 'POST',
@@ -55,17 +57,81 @@ const NewClientCreate = ({ visible, setVisible }) => {
             if (response.ok) {
                 console.log('response: ', response);
                 toast.success(`New client created successfully`);
+                setVisible(false);
             } else {
                 toast.error('Failed to create new client. Please try again.');
             }
         } catch (err) {
             toast.error(`Failed to create new client. Please try again.`);
+        } finally {
+            setIsPending(false);
+        }
+    }
+
+    const businessFormSubmit = async (data) => {
+        console.log('data: ', data);
+        const formData = new FormData();
+
+        formData.append("name", data.name);
+        formData.append("abn", data.abn);
+        formData.append("phone", data.phone);
+        formData.append("email", data.email);
+        formData.append("website", data.website);
+        formData.append("payment_terms", data.payment_terms);
+        formData.append("category", data.category);
+        formData.append("industry", data.industry);
+
+        data.addresses.forEach((address, index) => {
+            formData.append(`addresses[${index}]address`, address.address);
+            formData.append(`addresses[${index}]city`, address.city);
+            formData.append(`addresses[${index}]postcode`, address.postcode);
+            formData.append(`addresses[${index}]is_main`, address.is_main);
+            formData.append(`addresses[${index}]title`, address.title);
+        });
+
+        data.contact_persons.forEach((person, index) => {
+            formData.append(`contact_persons[${index}]firstname`, person.firstname);
+            formData.append(`contact_persons[${index}]lastname`, person.lastname);
+            formData.append(`contact_persons[${index}]email`, person.email);
+            formData.append(`contact_persons[${index}]phone`, person.phone);
+            formData.append(`contact_persons[${index}]position`, person.position);
+            formData.append(`contact_persons[${index}]is_main`, person.is_main);
+        });
+
+        if (photo?.croppedImageBlob) {
+            const photoHintId = nanoid(6);
+            formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
+        }
+
+        try {
+            setIsPending(true);
+            const accessToken = sessionStorage.getItem("access_token");
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/business/new/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: formData,
+            });
+            if (response.ok) {
+                console.log('response: ', response);
+                toast.success(`New client created successfully`);
+                setVisible(false);
+            } else {
+                toast.error('Failed to create new client. Please try again.');
+            }
+        } catch (err) {
+            toast.error(`Failed to create new client. Please try again.`);
+        } finally {
+            setIsPending(false);
         }
     }
 
     const handleSubmit = async (data) => {
         if (data && tab === "2") {
             indivisualFormSubmit(data);
+        } else {
+            businessFormSubmit(data);
         }
     };
 
@@ -74,6 +140,10 @@ const NewClientCreate = ({ visible, setVisible }) => {
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
     };
+
+    useEffect(()=> {
+        if(!visible) setPhoto(null);
+    }, [visible])
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
@@ -120,7 +190,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={handleExternalSubmit} className='solid-button'>Save Client Details</Button>
+                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '179px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
                     </div>
                 </div>
             )}

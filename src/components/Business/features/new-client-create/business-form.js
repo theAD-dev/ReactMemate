@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Col, Row, Button } from 'react-bootstrap';
 import { useQuery } from '@tanstack/react-query';
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { PhoneInput } from 'react-international-phone';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,15 +23,13 @@ const schema = yup.object({
   name: yup.string().required('Company name is required'),
   industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
   abn: yup.string().required('ABN is required'),
-  phone: yup.string({
-    country: yup.string().required("Country is required"),
-    number: yup.string().required("Phone number is required")
-  }),
+  phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
   website: yup.string().url('Invalid URL').required('URL is required'),
 
   addresses: yup.array().of(
     yup.object({
+      title: yup.string().required('Location name is required'),
       country: yup.string().required('Country is required'),
       address: yup.string().required('Address is required'),
       city: yup.number().typeError("City must be a number").required("City is required"),
@@ -47,10 +45,7 @@ const schema = yup.object({
       firstname: yup.string().required('First name is required'),
       lastname: yup.string().required('Last name is required'),
       email: yup.string().email('Invalid email').required('Email is required'),
-      phone: yup.string({
-        country: yup.string().required("Country is required"),
-        number: yup.string().required("Phone number is required")
-      }),
+      phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
       is_main: yup.boolean().default(false).required('Main contact selection is required'),
     })
   ).required(),
@@ -67,11 +62,18 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
   const [countryId, setCountryId] = useState('');
   const [stateId, setStateId] = useState('');
+  const [citiesOptions, setCitiesOptions] = useState({});
   const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
   const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
   const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
-  const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
+  useEffect(() => {
+    if (citiesQuery?.data) {
+      setCitiesOptions((others) => ({ ...others, [stateId]: citiesQuery?.data }));
+    }
+  }, [citiesQuery?.data, stateId])
+
+  const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues
   });
@@ -84,7 +86,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
         <Col sm={12}>
           <div className={clsx(styles.fileUploadBox)}>
             <div className={clsx(styles.uploadedImgBox)}>
-              {photo ? <img src={photo?.croppedImageBase64} alt='img' /> : <Building size={32} color='#667085' />}
+              {photo ? <img src={photo?.croppedImageBase64 || photo} alt='img' /> : <Building size={32} color='#667085' />}
             </div>
             <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)} onClick={() => setShow(true)}>Click to upload</span> or drag and drop</p>
             <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
@@ -181,11 +183,10 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
               render={({ field }) => (
                 <PhoneInput
                   defaultCountry='au'
-                  country={field.value?.country}
-                  value={field.value?.number}
+                  value={typeof field.value === 'string' ? field.value : ''}
                   className='phoneInput'
                   containerClass={styles.countrySelector}
-                  onChange={(phone) => field.onChange(phone)}
+                  onChange={field.onChange}
                 />
               )}
             />
@@ -311,8 +312,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       render={({ field }) => (
                         <PhoneInput
                           defaultCountry='au'
-                          country={field.value?.contact_persons?.[index]?.country}
-                          value={field.value?.contact_persons?.[index]?.number}
+                          value={field.value || ""}
                           className='phoneInput'
                           containerClass={styles.countrySelector}
                           onChange={(phone) => field.onChange(phone)}
@@ -324,9 +324,9 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                 </Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
-                  {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => removeContact(index)}>Delete Contact</Button>}
-                  {index === contactFields.length - 1 &&  <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendContact({})}>Add New <Plus size={24} color="#106b99" /></Button>}
-                </Col>
+                {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => removeContact(index)}>Delete</Button>}
+                {index === contactFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendContact({})}>Add New <Plus size={24} color="#106b99" /></Button>}
+              </Col>
             </div>
           ))
         }
@@ -334,7 +334,143 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
       <h2 className={clsx(styles.headingInputs, 'mt-4')}>Locations</h2>
       <Row>
-        
+        {
+          addressFields.map((item, index) => (
+            <div key={item.id}>
+              <input type="hidden" {...register(`addresses.${index}.is_main`)} value={index === 0} />
+              <Row className={clsx(styles.bgGreay)}>
+                <Col sm={6}>
+                  <div className="d-flex flex-column gap-1 mb-4">
+                    <label className={clsx(styles.lable)}>Location Name</label>
+                    <IconField>
+                      <InputIcon>{errors.addresses?.[index]?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                      <InputText {...register(`addresses.${index}.title`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.title })} placeholder='Enter location name' />
+                    </IconField>
+                    {errors.addresses?.[index]?.title && <p className="error-message">{errors.addresses?.[index]?.title?.message}</p>}
+                  </div>
+                </Col>
+
+                <Col sm={6}>
+                  <div className="d-flex flex-column gap-1 mb-4">
+                    <label className={clsx(styles.lable)}>Country</label>
+                    <Controller
+                      name={`addresses.${index}.country`}
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <Dropdown
+                          {...field}
+                          options={(countriesQuery && countriesQuery.data?.map((country) => ({
+                            value: country.id,
+                            label: country.name
+                          }))) || []}
+                          onChange={(e) => {
+                            field.onChange(e.value);
+                            setCountryId(e.value);
+                          }}
+                          className={clsx(styles.dropdownSelect, 'dropdown-height-fixed')}
+                          style={{ height: '46px' }}
+                          value={field.value}
+                          loading={countriesQuery?.isFetching}
+                          placeholder="Select a country"
+                        />
+                      )}
+                    />
+                    {errors.addresses?.[index]?.country && <p className="error-message">{errors.addresses?.[index]?.country?.message}</p>}
+                  </div>
+                </Col>
+
+                <Col sm={6}>
+                  <div className="d-flex flex-column gap-1 mb-4">
+                    <label className={clsx(styles.lable)}>State</label>
+                    <Controller
+                      name={`addresses.${index}.state`}
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <Dropdown
+                          {...field}
+                          options={(statesQuery && statesQuery.data?.map((state) => ({
+                            value: state.id,
+                            label: state.name
+                          }))) || []}
+                          onChange={(e) => {
+                            field.onChange(e.value);
+                            setStateId(e.value);
+                          }}
+                          className={clsx(styles.dropdownSelect, 'dropdown-height-fixed')}
+                          style={{ height: '46px' }}
+                          value={field.value}
+                          loading={statesQuery?.isFetching}
+                          placeholder={"Select a state"}
+                        />
+                      )}
+                    />
+                    {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses?.[index]?.state?.message}</p>}
+                  </div>
+                </Col>
+
+                <Col sm={6}>
+                  <div className="d-flex flex-column gap-1 mb-4">
+                    <label className={clsx(styles.lable)}>City/Suburb</label>
+                    <Controller
+                      name={`addresses.${index}.city`}
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => {
+                        const stateIndexId = watch(`addresses.${index}.state`);
+                        return (
+                          <Dropdown
+                            {...field}
+                            options={(citiesOptions[stateIndexId]?.map((city) => ({
+                              value: city.id,
+                              label: city.name
+                            }))) || []}
+                            onChange={(e) => {
+                              field.onChange(e.value);
+                            }}
+                            className={clsx(styles.dropdownSelect, 'dropdown-height-fixed')}
+                            style={{ height: '46px' }}
+                            value={field.value}
+                            loading={stateIndexId === stateId && citiesQuery?.isFetching}
+                            placeholder={"Select a city"}
+                          />
+                        )
+                      }}
+                    />
+                    {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses?.[index]?.city?.message}</p>}
+                  </div>
+                </Col>
+
+                <Col sm={6}>
+                  <div className="d-flex flex-column gap-1">
+                    <label className={clsx(styles.lable)}>Street Address</label>
+                    <IconField>
+                      <InputIcon>{errors.addresses?.[index]?.address && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                      <InputText {...register(`addresses.${index}.address`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.address })} placeholder='Enter street address' />
+                    </IconField>
+                    {errors.addresses?.[index]?.address && <p className="error-message">{errors.addresses?.[index]?.address?.message}</p>}
+                  </div>
+                </Col>
+
+                <Col sm={6}>
+                  <div className="d-flex flex-column gap-1">
+                    <label className={clsx(styles.lable)}>Postcode</label>
+                    <IconField>
+                      <InputIcon>{errors.addresses?.[index]?.postcode && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                      <InputText {...register(`addresses.${index}.postcode`)} keyfilter="int" className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.postcode })} placeholder='Enter postcode' />
+                    </IconField>
+                    {errors.addresses?.[index]?.postcode && <p className="error-message">{errors.addresses?.[index]?.postcode?.message}</p>}
+                  </div>
+                </Col>
+              </Row>
+              <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
+                {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => removeAddress(index)}>Delete</Button>}
+                {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({})}>Add New <Plus size={24} color="#106b99" /></Button>}
+              </Col>
+            </div>
+          ))
+        }
       </Row>
 
       <h2 className={clsx(styles.headingInputs)}>Client Description</h2>

@@ -1,57 +1,84 @@
-import React, { useEffect, useState } from 'react';
-import { Building, ChevronDown, ChevronLeft, Envelope, InfoSquare, Person, Upload } from 'react-bootstrap-icons';
-import { NavLink, useParams, useNavigate, Link } from 'react-router-dom';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { nanoid } from 'nanoid';
-import { Col, Row, Button } from 'react-bootstrap';
+import React, { forwardRef, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import BusinessForm from '../new-client-create/business-form';
 
-const schema = yup.object({
-  name: yup.string().required('Company name is required'),
-  category: yup.number().typeError("Enter a valid category").required('Category is required'),
-  abn: yup.string().required('ABN is required'),
-  phone: yup.string({
-    country: yup.string().required("Country is required"),
-    number: yup.string().required("Phone number is required")
-  }),
-  email: yup.string().email('Invalid email').required('Email is required'),
-  website: yup.string().url('Invalid URL').required('URL is required'),
 
-  addresses: yup.array().of(
-    yup.object({
-      country: yup.string().required('Country is required'),
-      address: yup.string().required('Address is required'),
-      city: yup.number().typeError("City must be a number").required("City is required"),
-      state: yup.number().typeError("State must be a number").required("State is required"),
-      postcode: yup.string().required('Postcode is required'),
-      is_main: yup.boolean().default(false).required('Main address selection is required'),
-    })
-  ).required(),
+const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit }, ref) => {
+  console.log('BusinessClientEdit: ', client);
+  const [photo, setPhoto] = useState(client?.photo || null);
+  if (client?.addresses?.length === 0) client.addresses.push({});
+  
+  const [defaultValues, setDefaultValues] = useState(client)
 
-  contact_persons: yup.array().of(
-    yup.object({
-      firstname: yup.string().required('First name is required'),
-      lastname: yup.string().required('Last name is required'),
-      phone: yup.string({
-        country: yup.string().required("Country is required"),
-        number: yup.string().required("Phone number is required")
-      }),
-      email: yup.string().email('Invalid email').required('Email is required'),
-      position: yup.string().required('Position is required'),
-      is_main: yup.boolean().default(false).required('Main contact selection is required'),
-    })
-  ).required(),
+  const businessFormSubmit = async (data) => {
+    console.log('data: ', data);
+    const formData = new FormData();
 
-  industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
-  payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
+    formData.append("name", data.name);
+    formData.append("abn", data.abn);
+    formData.append("phone", data.phone);
+    formData.append("email", data.email);
+    formData.append("website", data.website);
+    formData.append("payment_terms", data.payment_terms);
+    formData.append("category", data.category);
+    formData.append("industry", data.industry);
 
-}).required();
+    data.addresses.forEach((address, index) => {
+      formData.append(`addresses[${index}]address`, address.address);
+      formData.append(`addresses[${index}]city`, address.city);
+      formData.append(`addresses[${index}]postcode`, address.postcode);
+      formData.append(`addresses[${index}]is_main`, address.is_main);
+      formData.append(`addresses[${index}]title`, address.title);
+    });
 
-const BusinessClientEdit = () => {
+    data.contact_persons.forEach((person, index) => {
+      formData.append(`contact_persons[${index}]firstname`, person.firstname);
+      formData.append(`contact_persons[${index}]lastname`, person.lastname);
+      formData.append(`contact_persons[${index}]email`, person.email);
+      formData.append(`contact_persons[${index}]phone`, person.phone);
+      formData.append(`contact_persons[${index}]position`, person.position);
+      formData.append(`contact_persons[${index}]is_main`, person.is_main);
+    });
+
+    if (photo?.croppedImageBlob) {
+      const photoHintId = nanoid(6);
+      formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
+    }
+
+    try {
+      setIsPending(true);
+      const accessToken = sessionStorage.getItem("access_token");
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/update/business/${client.id}/`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: formData,
+      });
+      if (response.ok) {
+        refetch();
+        console.log('response: ', response);
+        toast.success(`Client updated successfully`);
+      } else {
+        toast.error('Failed to update client. Please try again.');
+      }
+    } catch (err) {
+      toast.error(`Failed to update client. Please try again.`);
+    } finally {
+    }
+  }
+
+  const handleSubmit = async (data) => {
+    if (client.id) {
+      businessFormSubmit(data);
+    } else {
+      toast.error('Client id not found');
+    }
+  };
   return (
-    <div>BusinessClientEdit</div>
+    <BusinessForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues}/>
   )
-}
+})
 
 export default BusinessClientEdit

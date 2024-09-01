@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import clsx from 'clsx';
 import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
 import { Button, Col, Row } from 'react-bootstrap';
@@ -8,9 +8,16 @@ import style from './indivisual-client-view.module.scss';
 import mapicon from '../../../../assets/images/google_maps_ico.png'
 import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
 
-const IndivisualClientView = ({ client, closeIconRef, hide }) => {
-  console.log('indivisiul client: ', client);
+const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
+  const formRef = useRef(null);
+  const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+
+  const handleExternalSubmit = () => {
+    if (formRef.current) {
+      formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+  };
 
   return (
     <div className='view-details-sidebar'>
@@ -19,7 +26,7 @@ const IndivisualClientView = ({ client, closeIconRef, hide }) => {
           <div className="d-flex align-items-center gap-2">
             <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
               {
-                client.photo ? <img src={client.photo} alt='client-photo' /> : <Person color='#667085' size={26}/>
+                client.photo ? <img src={client.photo} alt='client-photo' /> : <Person color='#667085' size={26} />
               }
             </div>
             <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{client.name}</span>
@@ -37,7 +44,7 @@ const IndivisualClientView = ({ client, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
           </div>
           {
-            isEdit ? <IndivisualClientEdit />
+            isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} />
               : <ViewSection client={client} />
           }
         </div>
@@ -49,7 +56,7 @@ const IndivisualClientView = ({ client, closeIconRef, hide }) => {
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
               <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
-              <Button type='button' className='solid-button'>Save Client Details</Button>
+              <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '179px' }}>{ isPending ? "Loading..." : "Save Client Details" }</Button>
             </div>
               : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
           }
@@ -65,10 +72,10 @@ const ViewSection = ({ client }) => {
       <div className={clsx(style.box)}>
         <label className={clsx(style.label)}>Customer Category</label>
         <h4 className={clsx(style.text)}>{client?.category || "-"}</h4>
-        
+
 
         <Row>
-        <Col sm={6}>
+          <Col sm={6}>
             <label className={clsx(style.label)}>Email</label>
             <Link to='#'
               onClick={(e) => {
@@ -122,7 +129,7 @@ const ViewSection = ({ client }) => {
                 </Link>
               </Col>
             </Row>
-  
+
             <Row>
               <Col sm={6}>
                 <label className={clsx(style.label)}>Position</label>

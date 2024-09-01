@@ -6,27 +6,12 @@ import { Button } from 'react-bootstrap';
 
 import style from './clients.module.scss';
 import ClientTable from './client-table';
-import { useQuery } from '@tanstack/react-query';
-import { getCities, getClientCategories, getClientIndustries, getCountries, getStates } from '../../../../APIs/ClientsApi';
 import NewClientCreate from '../../features/new-client-create/new-client-create';
 
 const ClientPage = () => {
     const dt = useRef(null);
-    const [visible, setVisible] = useState(true);
-    
+    const [visible, setVisible] = useState(false);
     const [selectedClients, setSelectedClients] = useState(null);
-    const [countryId, setCountryId] = useState('');
-    const [stateId, setStateId] = useState('');
-    const [statesOptions, setStateOptions] = useState({});
-    const [citiesOptions, setCitiesOptions] = useState({});
-
-    const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
-    const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
-    const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
-    const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
-    const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
-
-
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {

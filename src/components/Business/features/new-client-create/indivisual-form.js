@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Col, Row } from 'react-bootstrap';
 import { useQuery } from '@tanstack/react-query';
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { PhoneInput } from 'react-international-phone';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,12 +24,9 @@ const schema = yup
         firstname: yup.string().required("First name is required"),
         lastname: yup.string().required("Last name is required"),
         email: yup.string().email("Invalid email address").required("Email is required"),
-        phone: yup.string({
-            country: yup.string().required("Country is required"),
-            number: yup.string().required("Phone number is required")
-        }),
+        phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
         address: yup.object({
-            id: yup.string().required("Country is required"),
+            country: yup.string().required("Country is required"),
             title: yup.string().required("Location name is required"),
             city: yup.number().typeError("City must be a number").required("City is required"),
             address: yup.string().required("Address is required"),
@@ -41,6 +38,7 @@ const schema = yup
     .required();
 
 const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
+    console.log('defaultValues: ', defaultValues);
     const [show, setShow] = useState(false);
 
     const [countryId, setCountryId] = useState('');
@@ -54,13 +52,17 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
         defaultValues
     });
 
+    useEffect(()=> {
+        if (defaultValues?.address?.country === 1) setCountryId(1); 
+        if (defaultValues?.address?.state) setStateId(defaultValues?.address?.state);
+    }, [defaultValues?.address]);
     return (
         <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
             <Row className={clsx(styles.bgGreay, 'pt-0')}>
                 <Col sm={12}>
                     <div className={clsx(styles.fileUploadBox)}>
                         <div className={clsx(styles.uploadedImgBox)}>
-                            {photo ? <img src={photo?.croppedImageBase64} alt='img' /> : <Person size={32} color='#667085' />}
+                            {photo ? <img src={photo?.croppedImageBase64 || photo} alt='img' /> : <Person size={32} color='#667085' />}
                         </div>
                         <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)} onClick={() => setShow(true)}>Click to upload</span> or drag and drop</p>
                         <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
@@ -110,11 +112,10 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                             render={({ field }) => (
                                 <PhoneInput
                                     defaultCountry='au'
-                                    country={field.value?.country}
-                                    value={field.value?.number}
+                                    value={field.value}
                                     className='phoneInput'
                                     containerClass={styles.countrySelector}
-                                    onChange={(phone) => field.onChange(phone)}
+                                    onChange={field.onChange}
                                 />
                             )}
                         />
@@ -130,7 +131,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                         <label className={clsx(styles.lable)}>Location Name</label>
                         <IconField>
                             <InputIcon>{errors.address?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                            <InputText {...register("address.title")} className={clsx(styles.inputText, { [styles.error]: errors.address?.title })} placeholder='example@email.com' />
+                            <InputText {...register("address.title")} className={clsx(styles.inputText, { [styles.error]: errors.address?.title })} placeholder='Enter location name' />
                         </IconField>
                         {errors.address?.title && <p className="error-message">{errors.address?.title?.message}</p>}
                     </div>
@@ -140,7 +141,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                     <div className="d-flex flex-column gap-1 mb-4">
                         <label className={clsx(styles.lable)}>Country</label>
                         <Controller
-                            name="address.id"
+                            name="address.country"
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
@@ -162,7 +163,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                 />
                             )}
                         />
-                        {errors.address?.id && <p className="error-message">{errors.address?.id?.message}</p>}
+                        {errors.address?.country && <p className="error-message">{errors.address?.country?.message}</p>}
                     </div>
                 </Col>
 
@@ -224,6 +225,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                         {errors.address?.city && <p className="error-message">{errors.address?.city?.message}</p>}
                     </div>
                 </Col>
+
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1">
                         <label className={clsx(styles.lable)}>Street Address</label>
@@ -234,6 +236,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                         {errors.address?.address && <p className="error-message">{errors.address?.address?.message}</p>}
                     </div>
                 </Col>
+                
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1">
                         <label className={clsx(styles.lable)}>Postcode</label>

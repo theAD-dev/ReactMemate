@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Building, StarFill, Trash, X } from 'react-bootstrap-icons';
@@ -7,10 +7,22 @@ import BusinessClientEdit from '../business-client-edit/business-client-edit'
 
 import style from './business-client.module.scss';
 import mapicon from '../../../../assets/images/google_maps_ico.png'
+import { useQuery } from '@tanstack/react-query';
+import { getClientCategories, getClientIndustries } from '../../../../APIs/ClientsApi';
 
-const BusinessClientView = ({ client, closeIconRef, hide }) => {
-  console.log('client: ', client);
+const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
+  const formRef = useRef(null);
+  const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+
+  const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
+  const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
+
+  const handleExternalSubmit = () => {
+    if (formRef.current) {
+      formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+  };
 
   return (
     <div className='view-details-sidebar'>
@@ -37,8 +49,8 @@ const BusinessClientView = ({ client, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
           </div>
           {
-            isEdit ? <BusinessClientEdit />
-              : <ViewSection client={client} />
+            isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} />
+              : <ViewSection client={client} industries={industriesQuery?.data} categories={categoriesQuery?.data} />
           }
         </div>
 
@@ -49,7 +61,7 @@ const BusinessClientView = ({ client, closeIconRef, hide }) => {
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
               <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
-              <Button type='button' className='solid-button'>Save Client Details</Button>
+              <Button type='button' onClick={handleExternalSubmit} className='solid-button'>Save Client Details</Button>
             </div>
               : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
           }
@@ -59,12 +71,22 @@ const BusinessClientView = ({ client, closeIconRef, hide }) => {
   )
 }
 
-const ViewSection = ({ client }) => {
+const ViewSection = ({ client, industries, categories }) => {
+  const payments = [
+    { value: 1, label: "COD" },
+    { value: 0, label: "Prepaid" },
+    { value: 7, label: "Week" },
+    { value: 14, label: "Two weeks" },
+    { value: 30, label: "One month" },
+  ]
+  let clientCategory = categories?.find((category) => category.id === client?.category)
+  let clientIndustry = industries?.find((industry) => industry.id === client?.industry)
+  let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
   return (
     <>
       <div className={clsx(style.box)}>
         <label className={clsx(style.label)}>Customer Category</label>
-        <h4 className={clsx(style.text)}>{client?.category || "-"}</h4>
+        <h4 className={clsx(style.text)}>{clientCategory?.name || "-"}</h4>
         <Row>
           <Col sm={6}>
             <label className={clsx(style.label)}>ABN</label>
@@ -72,7 +94,7 @@ const ViewSection = ({ client }) => {
           </Col>
           <Col sm={6}>
             <label className={clsx(style.label)}>Industry</label>
-            <h4 className={clsx(style.text)}>{client?.industry || "-"}</h4>
+            <h4 className={clsx(style.text)}>{clientIndustry?.name || "-"}</h4>
           </Col>
         </Row>
 
@@ -121,7 +143,7 @@ const ViewSection = ({ client }) => {
       <h5 className={clsx(style.boxLabel)}>Payment Terms</h5>
       <div className={clsx(style.box)}>
         <label className={clsx(style.label)}>Payment Terms</label>
-        <h4 className={clsx(style.text, 'mb-0')}>{client?.payment_terms || "-"}</h4>
+        <h4 className={clsx(style.text, 'mb-0')}>{clientPayment?.label || "-"}</h4>
       </div>
 
       <h5 className={clsx(style.boxLabel)}>Contact Person</h5>

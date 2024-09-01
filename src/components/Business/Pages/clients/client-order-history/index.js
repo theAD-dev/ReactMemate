@@ -52,12 +52,12 @@ const ClientOrderHistory = () => {
                 </div>
                 <ClientOrderHistoryTable clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
             </div>
-            <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} style={{ width: '559px' }}
+            <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
                     clientDetails?.data?.is_business
-                        ? <BusinessClientView client={clientDetails?.data || {}} closeIconRef={closeIconRef} hide={hide} />
+                        ? <BusinessClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} />
                         : clientDetails?.data?.is_business === false
-                            ? <IndivisualClientView client={clientDetails?.data || {}} closeIconRef={closeIconRef} hide={hide} />
+                            ? <IndivisualClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} />
                             : <SidebarClientLoading />
                 )}
             ></Sidebar>
