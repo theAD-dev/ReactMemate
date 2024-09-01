@@ -10,6 +10,7 @@ import NewClientCreate from '../../features/new-client-create/new-client-create'
 
 const ClientPage = () => {
     const dt = useRef(null);
+    const [totalClients, setTotalClients] = useState(0);
     const [visible, setVisible] = useState(false);
     const [selectedClients, setSelectedClients] = useState(null);
 
@@ -59,10 +60,10 @@ const ClientPage = () => {
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
-                    <div className={`${style.totalCount}`}>30 Jobs</div>
+                    <div className={`${style.totalCount}`}>{totalClients} Clients</div>
                 </div>
             </div>
-            <ClientTable ref={dt} selectedClients={selectedClients} setSelectedClients={setSelectedClients} />
+            <ClientTable ref={dt} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} />
             <NewClientCreate visible={visible} setVisible={setVisible} />
         </PrimeReactProvider>
     )

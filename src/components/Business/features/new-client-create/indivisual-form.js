@@ -38,7 +38,6 @@ const schema = yup
     .required();
 
 const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
-    console.log('defaultValues: ', defaultValues);
     const [show, setShow] = useState(false);
 
     const [countryId, setCountryId] = useState('');

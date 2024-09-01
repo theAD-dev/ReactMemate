@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { ChevronLeft } from 'react-bootstrap-icons';
@@ -15,6 +15,7 @@ import BusinessClientView from '../../../features/business-client-view/business-
 import SidebarClientLoading from '../../../features/sidebar-client-loading/sidebar-client-loading';
 
 const ClientOrderHistory = () => {
+    const dt = useRef(null);
     const { id } = useParams();
     const [visible, setVisible] = useState(true);
 
@@ -22,7 +23,13 @@ const ClientOrderHistory = () => {
     const clientOrders = useQuery({ queryKey: ['client-order'], queryFn: () => clientOrderHistory(id), enabled: !!id, retry: 1 });
 
     const handleSearch = (e) => { }
-
+    const exportCSV = (selectionOnly) => {
+        if (dt.current) {
+            dt.current.exportCSV({ selectionOnly });
+        } else {
+            console.error('DataTable ref is null');
+        }
+    };
     return (
         <PrimeReactProvider className='client-order-history-page'>
             <div className='client-order-history' style={{ width: visible ? 'calc(100% - 559px)' : '100%' }}>
@@ -47,10 +54,10 @@ const ClientOrderHistory = () => {
                         <h1 onClick={() => { setVisible(true) }} className={`${style.clientName} m-0 p-0 cursor-pointer`} title={clientDetails?.data?.name}>{clientDetails?.data?.name || ""}</h1>
                     </div>
                     <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                        <Button label="Download" onClick={() => { }} className='primary-text-button' text />
+                        <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
                     </div>
                 </div>
-                <ClientOrderHistoryTable clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
+                <ClientOrderHistoryTable ref={dt} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
