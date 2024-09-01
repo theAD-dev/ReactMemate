@@ -8,8 +8,9 @@ import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from
 import styles from './new-client-create.module.scss';
 import IndivisualForm from './indivisual-form';
 import BusinessForm from './business-form';
-import { createNewIndividualClient } from '../../../../APIs/ClientsApi';
+import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
 import { toast } from 'sonner';
+import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
 const NewClientCreate = ({ visible, setVisible }) => {
     const formRef = useRef(null);
@@ -23,49 +24,27 @@ const NewClientCreate = ({ visible, setVisible }) => {
     });
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);
-        const formData = new FormData();
 
-        formData.append("firstname", data.firstname);
-        formData.append("lastname", data.lastname);
-        formData.append("email", data.email);
-        formData.append("phone", data.phone);
-        formData.append("description", data.description);
+        const formData = createFormData(data, photo);
+        const onSuccess = (response) => {
+            console.log('response: ', response);
+            toast.success(`New client created successfully`);
+            setVisible(false);
+        };
 
-        formData.append("address.country", data.address.country);
-        formData.append("address.title", data.address.title);
-        formData.append("address.city", data.address.city);
-        formData.append("address.address", data.address.address);
-        formData.append("address.state", data.address.state);
-        formData.append("address.postcode", data.address.postcode);
+        const onError = () => {
+            toast.error('Failed to create new client. Please try again.');
+        };
 
-        if (photo?.croppedImageBlob) {
-            console.log('photo?.croppedImageBlob: ', photo?.croppedImageBlob);
-            const photoHintId = nanoid(6);
-            formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
-        }
-
-        try {
-            setIsPending(true);
-            const accessToken = sessionStorage.getItem("access_token");
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/individual/new/`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                },
-                body: formData,
-            });
-            if (response.ok) {
-                console.log('response: ', response);
-                toast.success(`New client created successfully`);
-                setVisible(false);
-            } else {
-                toast.error('Failed to create new client. Please try again.');
-            }
-        } catch (err) {
-            toast.error(`Failed to create new client. Please try again.`);
-        } finally {
-            setIsPending(false);
-        }
+        setIsPending(true);
+        await handleApiRequest(
+            `${process.env.REACT_APP_BACKEND_API_URL}/clients/individual/new/`,
+            'POST',
+            formData,
+            onSuccess,
+            onError
+        );
+        setIsPending(false);
     }
 
     const businessFormSubmit = async (data) => {
@@ -141,8 +120,8 @@ const NewClientCreate = ({ visible, setVisible }) => {
         }
     };
 
-    useEffect(()=> {
-        if(!visible) setPhoto(null);
+    useEffect(() => {
+        if (!visible) setPhoto(null);
     }, [visible])
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}

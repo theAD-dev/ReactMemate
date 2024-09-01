@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap';
 
 import style from './clients.module.scss';
 import ClientTable from './client-table';
-import NewClientCreate from '../../features/new-client-create/new-client-create';
+import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
 
 const ClientPage = () => {
     const dt = useRef(null);

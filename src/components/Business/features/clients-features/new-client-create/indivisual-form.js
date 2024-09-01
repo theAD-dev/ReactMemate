@@ -14,9 +14,9 @@ import { Dropdown } from 'primereact/dropdown';
 
 import styles from './new-client-create.module.scss';
 import { Exclamation, Person } from 'react-bootstrap-icons';
-import FileUploader from '../../../../ui/file-uploader/file-uploader';
-import { getCities, getCountries, getStates } from '../../../../APIs/ClientsApi';
-import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 
 
 const schema = yup

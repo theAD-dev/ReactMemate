@@ -1,22 +1,17 @@
+import React, { useRef, useState } from 'react'
 import clsx from 'clsx';
-import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Building, StarFill, Trash, X } from 'react-bootstrap-icons';
-import BusinessClientEdit from '../business-client-edit/business-client-edit'
+import { Link } from 'react-router-dom';
 
-import style from './business-client.module.scss';
-import mapicon from '../../../../assets/images/google_maps_ico.png'
-import { useQuery } from '@tanstack/react-query';
-import { getClientCategories, getClientIndustries } from '../../../../APIs/ClientsApi';
+import style from './indivisual-client-view.module.scss';
+import mapicon from '../../../../../assets/images/google_maps_ico.png'
+import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
 
-const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
+const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
   const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-
-  const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
-  const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
 
   const handleExternalSubmit = () => {
     if (formRef.current) {
@@ -31,7 +26,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           <div className="d-flex align-items-center gap-2">
             <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
               {
-                client.photo ? <img src={client.photo} alt='client-photo' /> : <Building color='#667085' size={26} />
+                client.photo ? <img src={client.photo} alt='client-photo' /> : <Person color='#667085' size={26} />
               }
             </div>
             <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{client.name}</span>
@@ -49,8 +44,8 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
           </div>
           {
-            isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} />
-              : <ViewSection client={client} industries={industriesQuery?.data} categories={categoriesQuery?.data} />
+            isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} />
+              : <ViewSection client={client} />
           }
         </div>
 
@@ -61,7 +56,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
               <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
-              <Button type='button' onClick={handleExternalSubmit} className='solid-button'>Save Client Details</Button>
+              <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '179px' }}>{ isPending ? "Loading..." : "Save Client Details" }</Button>
             </div>
               : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
           }
@@ -71,43 +66,13 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   )
 }
 
-const ViewSection = ({ client, industries, categories }) => {
-  const payments = [
-    { value: 1, label: "COD" },
-    { value: 0, label: "Prepaid" },
-    { value: 7, label: "Week" },
-    { value: 14, label: "Two weeks" },
-    { value: 30, label: "One month" },
-  ]
-  let clientCategory = categories?.find((category) => category.id === client?.category)
-  let clientIndustry = industries?.find((industry) => industry.id === client?.industry)
-  let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
+const ViewSection = ({ client }) => {
   return (
     <>
       <div className={clsx(style.box)}>
         <label className={clsx(style.label)}>Customer Category</label>
-        <h4 className={clsx(style.text)}>{clientCategory?.name || "-"}</h4>
-        <Row>
-          <Col sm={6}>
-            <label className={clsx(style.label)}>ABN</label>
-            <h4 className={clsx(style.text)}>{client?.abn || "-"}</h4>
-          </Col>
-          <Col sm={6}>
-            <label className={clsx(style.label)}>Industry</label>
-            <h4 className={clsx(style.text)}>{clientIndustry?.name || "-"}</h4>
-          </Col>
-        </Row>
+        <h4 className={clsx(style.text)}>{client?.category || "-"}</h4>
 
-        <Row>
-          <Col sm={6}>
-            <label className={clsx(style.label)}>Customer Type</label>
-            <h4 className={clsx(style.text)}>{client?.is_business ? "Business" : "Indivisual"}</h4>
-          </Col>
-          <Col sm={6}>
-            <label className={clsx(style.label)}>Phone</label>
-            <h4 className={clsx(style.text)}>{client?.phone || "-"}</h4>
-          </Col>
-        </Row>
 
         <Row>
           <Col sm={6}>
@@ -127,23 +92,10 @@ const ViewSection = ({ client, industries, categories }) => {
             </Link>
           </Col>
           <Col sm={6}>
-            <label className={clsx(style.label)}>Website</label>
-            <Link to={client?.website || "#"} target='_blank'>
-              <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
-                <div className='ellipsis-width' title={client?.website}>{client?.website || "-"}&nbsp;</div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-            </Link>
+            <label className={clsx(style.label)}>Phone</label>
+            <h4 className={clsx(style.text)}>{client?.phone || "-"}</h4>
           </Col>
         </Row>
-      </div>
-
-      <h5 className={clsx(style.boxLabel)}>Payment Terms</h5>
-      <div className={clsx(style.box)}>
-        <label className={clsx(style.label)}>Payment Terms</label>
-        <h4 className={clsx(style.text, 'mb-0')}>{clientPayment?.label || "-"}</h4>
       </div>
 
       <h5 className={clsx(style.boxLabel)}>Contact Person</h5>
@@ -256,4 +208,4 @@ const ViewSection = ({ client, industries, categories }) => {
   )
 }
 
-export default BusinessClientView
+export default IndivisualClientView

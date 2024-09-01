@@ -14,9 +14,9 @@ import { Dropdown } from 'primereact/dropdown';
 
 import styles from './new-client-create.module.scss';
 import { Exclamation, Person, Building, Plus } from 'react-bootstrap-icons';
-import FileUploader from '../../../../ui/file-uploader/file-uploader';
-import { getCities, getCountries, getStates, getClientCategories, getClientIndustries } from '../../../../APIs/ClientsApi';
-import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+import { getCities, getCountries, getStates, getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 
 const schema = yup.object({
   category: yup.number().typeError("Enter a valid category").required('Category is required'),

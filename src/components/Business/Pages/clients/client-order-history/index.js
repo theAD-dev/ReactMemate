@@ -10,9 +10,9 @@ import { Sidebar } from 'primereact/sidebar';
 import style from './client-order-history.module.scss';
 import ClientOrderHistoryTable from './client-order-history-table';
 import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
-import IndivisualClientView from '../../../features/indivisual-client-view/indivisual-client-view';
-import BusinessClientView from '../../../features/business-client-view/business-client-view';
-import SidebarClientLoading from '../../../features/sidebar-client-loading/sidebar-client-loading';
+import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
+import BusinessClientView from '../../../features/clients-features/business-client-view/business-client-view';
+import SidebarClientLoading from '../../../features/clients-features/sidebar-client-loading/sidebar-client-loading';
 
 const ClientOrderHistory = () => {
     const dt = useRef(null);
