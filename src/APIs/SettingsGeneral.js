@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid";
+
 const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
 /**
@@ -107,7 +109,7 @@ export const SettingsGeneralInformation = async () => {
   }
 };
 
-export const updateGeneralInformation = async (data) => {
+export const updateGeneralInformation = async (data, photo) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
@@ -116,6 +118,11 @@ export const updateGeneralInformation = async (data) => {
   Object.keys(data).forEach((key) => {
     formData.append(key, data[key]);
   });
+
+  if (photo?.croppedImageBlob) {
+    const photoHintId = nanoid(6);
+    formData.append('company_logo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
+  }
 
   const requestOptions = {
     method: 'PUT',
