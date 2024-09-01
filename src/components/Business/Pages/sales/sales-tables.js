@@ -199,7 +199,9 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
         <div>
           <ul className="disPlayInline disPlayInlineCenter">
             <li className="disable">
-              <PlusSlashMinus color="#FDB022" size={16} />
+              <Link to={`/sales/quote-calculation/${params.row.unique_id}`}>
+                <PlusSlashMinus color="#FDB022" size={16} />
+              </Link>
             </li>
             <li className="disable">
               <Link to={params.row.CalculationPDF} target="_blank" rel="noopener noreferrer">
@@ -353,6 +355,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
 
     const rows = salesData.map((sale) => ({
       isSelected: selectedRows.includes(sale.id),
+      unique_id: sale.unique_id,
       id: sale.id,
       Quote: sale.number,
       created: sale.created,
@@ -371,8 +374,8 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       progressName: sale.lead.name,
       progressPercentage: sale.lead.percentage,
       saleUniqueId: sale.unique_id,
-      wonQuote: (sale.number,sale.status),
-      LostQuote: (sale.number,sale.status),
+      wonQuote: (sale.number, sale.status),
+      LostQuote: (sale.number, sale.status),
       amountData: sale.amount,
       Actions: "Actions",
     }));
@@ -437,8 +440,8 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       progressName: sale.lead.name,
       progressPercentage: sale.lead.percentage,
       saleUniqueId: sale.unique_id,
-      wonQuote: (sale.number,sale.status),
-      LostQuote: (sale.number,sale.status),
+      wonQuote: (sale.number, sale.status),
+      LostQuote: (sale.number, sale.status),
       amountData: sale.amount,
       Actions: "Actions",
     }));
