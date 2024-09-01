@@ -6,7 +6,7 @@ import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 import styles from "./suppliers.module.scss";
 import { InputGroup } from 'react-bootstrap';
 import { PhoneInput } from 'react-international-phone';
-import FileUploader from '../../../../ui/file-uploader/file-uploader';
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 const SuppliersEdit = ({ suppView, isFetching, close, errors, isEdit, countryCode = "US" }) => {
   const [photo, setPhoto] = useState({});

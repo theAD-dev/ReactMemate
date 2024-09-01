@@ -476,23 +476,6 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
         }
     }, [preExistCalculation, departments])
 
-    const [mergeCalculationItems, setMergeCalculationItems] = useState([]);
-    const fetchMergeItems = async (id) => {
-        try {
-            const mergeItemsRes = await getMergeItemsByUniqueId(id);
-            console.log('mergeItemsRes: ', mergeItemsRes);
-            setMergeCalculationItems(mergeItemsRes);
-        } catch (error) {
-            console.log('error: ', error);
-        }
-    }
-
-    useEffect(() => {
-        if (unique_id) {
-            fetchMergeItems(unique_id);
-        }
-    }, [])
-
     useEffect(() => {
         let map = {};
         if (Object.keys(mergeItems)?.length) {

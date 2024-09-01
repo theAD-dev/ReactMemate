@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { supplierstReadApi } from "../../../../APIs/SuppliersApi";
+import { supplierstReadApi } from "../../../../../APIs/SuppliersApi";
 import {
   X,
   Pen,

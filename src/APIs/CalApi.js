@@ -20,7 +20,7 @@ export const getCalculationByReferenceId = async (id) => {
 }
 
 export const getQuoteByUniqueId = async (unique_id) => {
-  const endpoint = `/quote/${unique_id}/`;
+  const endpoint = `/projects/${unique_id}/`;
   const options = {
     method: 'GET',
   };

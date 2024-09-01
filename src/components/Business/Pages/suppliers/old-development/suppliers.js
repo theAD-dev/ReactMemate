@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fetchClients } from "../../../../APIs/SuppliersApi";
+import { fetchClients } from "../../../../../APIs/SuppliersApi";
 import SuppliersTables from "./suppliers-tables";
 import "./suppliers-tables.css"
 

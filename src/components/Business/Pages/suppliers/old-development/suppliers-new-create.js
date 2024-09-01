@@ -8,10 +8,10 @@ import { MenuItem, Select, FormControl as MUIFormControl } from '@mui/material';
 import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 import NodataImg from "../../../../assets/images/img/NodataImg.png";
 import nodataBg from "../../../../assets/images/nodataBg.png";
-import { clientEditApi } from "../../../../APIs/ClientsApi";
+import { clientEditApi } from "../../../../../APIs/ClientsApi";
 
 import { PhoneInput } from 'react-international-phone';
-import FileUploader from '../../../../ui/file-uploader/file-uploader';
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 function SuppliersNewCreate({countryCode,close}) {
   const [show, setShow] = useState(true); // Set to true for default open
