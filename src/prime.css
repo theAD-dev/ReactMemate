@@ -60,15 +60,18 @@ table.p-datatable-table .show-on-hover:hover .p-checkbox {
 table.p-datatable-table tr:hover .show-on-hover-element,
 table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   visibility: visible;
-  fill: #1AB2FF;
+  fill: #1ab2ff;
 }
 
 .p-datatable .p-datatable-tbody > tr.p-highlight .show-on-hover .p-checkbox {
   visibility: visible;
 }
 
-.p-datatable .p-datatable-tbody > tr.p-highlight .show-on-hover-element:not(.not-show-checked) {
-  fill: #1AB2FF;
+.p-datatable
+  .p-datatable-tbody
+  > tr.p-highlight
+  .show-on-hover-element:not(.not-show-checked) {
+  fill: #1ab2ff;
   visibility: visible;
 }
 
@@ -100,7 +103,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 }
 
 .yellow-rating.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
- color: #FFCB45;
+  color: #ffcb45;
 }
 
 .p-component-overlay {
@@ -116,5 +119,23 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   line-height: 22px;
   letter-spacing: 0.14px;
   padding: 15px 17px;
-  border-bottom: 1px solid var(--Gray-200,#eaecf0);
+  border-bottom: 1px solid var(--Gray-200, #eaecf0);
+}
+
+.p-confirm-popup button {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 4px;
+}
+
+.p-confirm-popup-content {
+  font-family: Inter;
+}
+
+.p-confirm-popup-footer {
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
 }

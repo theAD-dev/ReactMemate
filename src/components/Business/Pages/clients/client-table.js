@@ -18,7 +18,7 @@ const ClientTable = forwardRef(({ setTotalClients, selectedClients, setSelectedC
     const [page, setPage] = useState(1);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
-    const limit = 100;
+    const limit = 25;
 
     useEffect(() => {
         const loadData = async () => {

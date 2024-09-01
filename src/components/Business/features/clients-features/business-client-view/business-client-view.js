@@ -9,6 +9,7 @@ import style from './business-client.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import { useQuery } from '@tanstack/react-query';
 import { getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
+import DeleteClient from '../delete-client';
 
 const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
@@ -55,9 +56,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
         </div>
 
         <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
-          <Button type='button' className='outline-button'>
-            <Trash color='#344054' size={20} />
-          </Button>
+          <DeleteClient id={client?.id} />
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
               <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>

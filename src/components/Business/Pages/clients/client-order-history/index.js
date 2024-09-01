@@ -4,7 +4,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { Button } from 'primereact/button';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Sidebar } from 'primereact/sidebar';
 
 import style from './client-order-history.module.scss';
@@ -13,8 +13,10 @@ import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsAp
 import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
 import BusinessClientView from '../../../features/clients-features/business-client-view/business-client-view';
 import SidebarClientLoading from '../../../features/clients-features/sidebar-client-loading/sidebar-client-loading';
+import { toast } from 'sonner';
 
 const ClientOrderHistory = () => {
+    const navigate = useNavigate();
     const dt = useRef(null);
     const { id } = useParams();
     const [visible, setVisible] = useState(true);
@@ -30,6 +32,11 @@ const ClientOrderHistory = () => {
             console.error('DataTable ref is null');
         }
     };
+
+    if(clientDetails?.error?.message === "Not found") {
+        toast.error('Client not found');
+        navigate('/clients');
+    }
     return (
         <PrimeReactProvider className='client-order-history-page'>
             <div className='client-order-history' style={{ width: visible ? 'calc(100% - 559px)' : '100%' }}>
