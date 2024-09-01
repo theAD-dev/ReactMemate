@@ -25,48 +25,42 @@ const CustomOption = (props) => {
   );
 };
 
-const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExistCalculation }) => {
+const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, preExistCalculation, preExistMerges }) => {
+  console.log('payload: ', payload);
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
-  const [paymentCollection, setPaymentCollection] = useState('')
+  const [paymentCollection, setPaymentCollection] = useState('');
+  const [selectedManagers, setSelectedManagers] = useState([]);
 
-  const [contactPersonsOptions, setContactPersonsOptions] = useState("");
-  const [selected_contact_persons, set_selected_contact_persons] = useState([]);
   const projectManagerQuery = useQuery({ queryKey: ['project-manager'], queryFn: getProjectManager });
   const clientQuery = useQuery({
-    queryKey: ['id', id || payload.client],
-    queryFn: () => getClientById(id || payload.client),
-    enabled: !!id || !!payload.client,
+    queryKey: ['id', payload.client],
+    queryFn: () => getClientById(payload.client),
+    enabled: !!payload.client,
     retry: 1,
   });
 
-  useEffect(()=> {
-    if(clientQuery.data?.contact_persons?.length) {
+  useEffect(() => {
+    if (clientQuery.data?.contact_persons?.length) {
       let person = clientQuery.data?.contact_persons[0];
-      console.log('person: ', person);
-      let find = clientQuery.data?.contact_persons.find((contact)=> contact.is_main === true);
-      console.log('find: ', find);
+      let find = clientQuery.data?.contact_persons.find((contact) => contact.is_main === true);
       if (find) {
         setPayload((others) => ({ ...others, contact_person: find.id }));
-      }else {
+      } else {
         setPayload((others) => ({ ...others, contact_person: person.id }));
       }
     }
   }, [clientQuery.data])
 
   useEffect(() => {
-    if (projectManagerQuery?.data) {
-      const options = projectManagerQuery?.data?.map((user) => ({ value: user.id, label: user.name, image: user.photo || 'https://dev.memate.com.au/media/no_org.png' }))
-      setContactPersonsOptions(options);
+    if (payload.managers) {
+      const initialManagers = payload.managers.map(manager => ({
+        value: manager.manager,
+        label: projectManagerQuery?.data?.find(user => user.id === manager.manager)?.name || 'Unknown',
+        image: projectManagerQuery?.data?.find(user => user.id === manager.manager)?.photo || 'https://dev.memate.com.au/media/no_org.png'
+      }));
+      setSelectedManagers(initialManagers);
     }
-  }, [projectManagerQuery?.data]);
-
-  useEffect(() => {
-    // if (payload.managers?.length && projectManagerQuery?.data) {
-    //   let value = projectManagerQuery?.data?.find((option) => option.id === payload.contact_person);
-    //   if (value)
-    //     set_selected_contact_persons({ value: value.id, label: value.name, image: value.photo || 'https://dev.memate.com.au/media/no_org.png' });
-    // }
-  }, [payload])
+  }, [payload.managers, projectManagerQuery.data]);
 
   return (
     <React.Fragment>
@@ -93,7 +87,9 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
         </Row>
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
-        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} isDiscountActive={true} preExistCalculation={preExistCalculation} />
+
+        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} isDiscountActive={true} preExistCalculation={preExistCalculation} preExistMerges={preExistMerges} />
+
         <Row>
           <Col md={6}>
             <Form.Group className="mb-3 text-start note-textarea" controlId="exampleForm.ControlTextarea1">
@@ -123,17 +119,11 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
                           className="basic-multi-select w-100 border-0"
                           closeMenuOnSelect={false}
                           components={{ Option: CustomOption }}
-                          value={selected_contact_persons}
+                          value={selectedManagers}
                           onChange={(selected) => {
-                            set_selected_contact_persons(selected)
-                            let managers = [];
-                            selected?.map((obj) => {
-                              console.log('obj: ', obj);
-                              managers.push({ manager: obj.value });
-                              return obj;
-                            })
-
-                            setPayload((others) => ({ ...others, managers: managers }));
+                            const managers = selected ? selected.map((obj) => ({ manager: obj.value })) : [];
+                            setSelectedManagers(selected);
+                            setPayload((others) => ({ ...others, managers }));
                           }}
                           isMulti
                           styles={{
@@ -174,7 +164,11 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
                               };
                             },
                           }}
-                          options={contactPersonsOptions}
+                          options={projectManagerQuery?.data?.map((user) => ({
+                            value: user.id,
+                            label: user.name,
+                            image: user.photo || 'https://dev.memate.com.au/media/no_org.png',
+                          }))}
                         />
                       </div>
                     </div>
@@ -188,7 +182,7 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
                           required
                           type="text"
                           placeholder="Purchase Order #"
-                          value={payload.purchase_order}
+                          value={payload?.purchase_order || ""}
                           style={{ color: '#101828' }}
                           className='w-100 m-0 border-0 no-border-outline'
                           onChange={(e) => setPayload((data) => ({ ...data, purchase_order: e.target.value }))}
@@ -201,13 +195,13 @@ const DepartmentQuote = React.memo(({ id, payload, setPayload, setTotals, preExi
                       <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Amounts are</Form.Label>
                       <FormControl sx={{ m: 0, minWidth: `100%`, color: '#101828' }}>
                         <Select
-                          value={payload?.xero_tax}
+                          value={payload?.xero_tax || ""}
                           onChange={(e) => setPayload((data) => ({ ...data, xero_tax: e.target.value }))}
                           displayEmpty
                           inputProps={{ 'aria-label': 'Without label' }}
                           IconComponent={ChevronDown}
                         >
-                          <MenuItem value="ex">Tax exclusive</MenuItem>
+                          <MenuItem value={"ex"}>Tax exclusive</MenuItem>
                           <MenuItem value={"in"}>Tax Inclusive</MenuItem>
                           <MenuItem value={"no"}>No tax</MenuItem>
                         </Select>
