@@ -98,10 +98,10 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             sortOrder={sort?.sortOrder}
             onSort={onSort}
         >
-            <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-            <Column field="number" header="Supplier ID" className='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
+            <Column selectionMode="multiple" headerClassName='border-end-0 ps-4' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
+            <Column field="number" header="Supplier ID" headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
             <Column field="name" header="Supplier A→Z" headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '254px' }} frozen sortable></Column>
-            <Column field="services" header="Supplier Services" style={{ minWidth: '600px' }}></Column>
+            <Column field="services" header="Supplier Services" style={{ minWidth: '469px' }}></Column>
             <Column field="email" header="Email" style={{ minWidth: '68px' }}></Column>
             <Column header="Address" style={{ minWidth: '313px' }}></Column>
             <Column header="State" style={{ minWidth: '60px' }}></Column>
