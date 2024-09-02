@@ -48,7 +48,7 @@ function GeneralInformation() {
   
 
   const mutation = useMutation({
-    mutationFn: (data) => updateGeneralInformation(data, photo),
+    mutationFn: (data) => updateGeneralInformation(data),
    
     
     onSuccess: () => {
@@ -59,7 +59,7 @@ function GeneralInformation() {
   });
 
   const onSubmit = (data) => {
-    mutation.mutate({ ...data });
+    mutation.mutate({ ...data, company_logo: photo });
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -391,9 +391,9 @@ function GeneralInformation() {
         </div>
 
 
-
+{/* 
         {mutation.isError && <div>Error updating data</div>}
-        {mutation.isSuccess && <div>Data updated successfully</div>}
+        {mutation.isSuccess && <div>Data updated successfully</div>} */}
     
     </form>
   );

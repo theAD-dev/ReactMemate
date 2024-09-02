@@ -117,12 +117,12 @@ const ClientTable = forwardRef(({ setTotalClients, selectedClients, setSelectedC
         <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'} removableSort
             columnResizeMode="expand" resizableColumns showGridlines size={'large'}
             scrollHeight={"calc(100vh - 182px)"} className="border" selection={selectedClients}
-            onSelectionChange={(e) => setSelectedClients(e.value)}
+            onSelectionChange={(e) => setSelectedClients(e.value)} 
             loading={loading}
             emptyMessage={NoDataFoundTemplate}
         >
-            <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-            <Column field="number" header="Client ID" body={clientIDBody} style={{ minWidth: '100px' }} frozen sortable></Column>
+            <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
+            <Column field="number" header="Client ID" body={clientIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
             <Column field="name" header="Client A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen></Column>
             <Column field="category" header="Category" style={{ minWidth: '94px' }}></Column>
             <Column field="days_in_company" header="Days in company" body={daysBody} style={{ minWidth: '56px' }} className='text-center'></Column>

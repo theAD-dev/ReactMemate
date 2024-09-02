@@ -253,7 +253,10 @@ tr.selected-row td {
     border-top: 1px solid var(--colorG2);
     border-bottom: 1px solid var(--colorG2);
 }
-
+.main-wrapper .topbar {
+    border-bottom: 0;
+    border-top: 0;
+}
 span.lightColorStyle {
     opacity: .56;
 }

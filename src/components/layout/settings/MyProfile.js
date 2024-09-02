@@ -1,51 +1,81 @@
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchProfile, updateProfile } from "../../../APIs/ProfileApi";
+import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import styles from "./setting.profile.module.scss";
-import { PencilSquare, Telephone, Person,Upload } from "react-bootstrap-icons";
 import {
-  SettingsGeneralInformation,
-  updateGeneralInformation,
-} from "../../../APIs/SettingsGeneral";
+  PencilSquare,
+  Telephone,
+  Building,
+  Link45deg,
+  Upload,
+} from "react-bootstrap-icons";
 import AvatarImg from "../../../assets/images/img/Avatar.png";
-import FileUploader from '../../../ui/file-uploader/file-uploader';
+import FileUploader from "../../../ui/file-uploader/file-uploader";
 
+const schema = yup.object().shape({
+  full_name: yup.string().required("Full Name is required"),
+  email: yup
+    .string()
+    .email("Invalid email")
+    .required("Main Company Email is required"),
+  phone: yup.string(),
+  photo: yup.mixed().nullable(),
+});
 
-const MyProfile = (profileData) => {
+function MyProfile() {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("profile");
-  const [generalData, setGeneralData] = useState();
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingGroup, setIsEditingGroup] = useState(false);
   const [photo, setPhoto] = useState({});
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await SettingsGeneralInformation();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["profile"],
+    queryFn: fetchProfile,
+    onSuccess: (data) => {
+      reset(data);
+    },
+    onError: (error) => {
+      console.error("Error fetching data:", error);
+    },
+  });
 
-        setGeneralData(JSON.parse(data));
-      } catch (error) {
-        console.error("Error fetching general information:", error);
-      }
-    };
+  console.log("data: ", data);
+  const mutation = useMutation({
+    mutationFn: (data) => updateProfile(data, photo),
 
-    fetchData();
-  }, []);
+    onSuccess: () => {
+      setIsEditingGroup(false);
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
 
-  const handleUpdate = async () => {
-    try {
-      await updateGeneralInformation(generalData);
-      setIsEditing(false); // Exit editing mode after successful update
-    } catch (error) {
-      console.error("Error updating general information:", error);
-    }
+  const onSubmit = (data) => {
+    mutation.mutate({ ...data });
   };
 
-  const handleCancel = () => {
-    setIsEditing(false); // Set isEditing to false when Cancel button is clicked
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching data</div>;
+
+  const handleEditGroup = () => {
+    setIsEditingGroup(true);
   };
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="settings-wrap">
         <div className="settings-wrapper">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -55,15 +85,15 @@ const MyProfile = (profileData) => {
             </div>
             <div
               className={`content_wrap_main ${
-                isEditing ? "isEditingwrap" : ""
+                isEditingGroup ? "isEditingwrap" : ""
               }`}
             >
               <div className="content_wrapper">
-              <div className= {`listwrapper ${styles.listwrapp}`}>
+                <div className="listwrapper">
                   <div className="topHeadStyle">
                     <div className="">
                       <h2>My Profile</h2>
-                      {!isEditing ? (
+                      {!isEditingGroup ? (
                         <></>
                       ) : (
                         <p>
@@ -73,63 +103,110 @@ const MyProfile = (profileData) => {
                         </p>
                       )}
                     </div>
-                    {!isEditing && (
-                      <Link to="#" onClick={() => setIsEditing(true)}>
+                    {!isEditingGroup && (
+                      <Link to="#" onClick={handleEditGroup}>
                         Edit
-                        <PencilSquare color="#667085" size={20} />
+                        <PencilSquare color="#344054" size={20} />
                       </Link>
                     )}
                   </div>
-                  {generalData && (
-                    <ul>
-                      <li>
+                  <ul>
+                    <li
+                      className={`${
+                        isEditingGroup
+                          ? `${styles.editBorderWrap}`
+                          : `${styles.viewBorderWrap}`
+                      }`}
+                    >
+                      <div className={styles.editinfo}>
                         <span>First Name</span>
-                        {!isEditing ? (
-                          <strong>{profileData?.profileData?.full_name}</strong>
+                        {!isEditingGroup ? (
+                          <strong>{data.full_name} </strong>
                         ) : (
-                          <input
-                            type="text"
-                            value={profileData?.profileData?.full_name}
-                            onChange={(e) =>
-                              setGeneralData({
-                                ...generalData,
-                                legal_name: e.target.value,
-                              })
-                            }
-                          />
-                          
+                          <>
+                            <div
+                              className={`inputInfo ${
+                                errors.full_name ? "error-border" : ""
+                              }`}
+                            >
+                              <input
+                                {...register("full_name")}
+                                placeholder="Enter company legal name"
+                                defaultValue={data.full_name}
+                              />
+                              {errors.full_name && (
+                                <img
+                                  className="ExclamationCircle"
+                                  src={exclamationCircle}
+                                  alt="Exclamation Circle"
+                                />
+                              )}
+                            </div>
+                            {errors.full_name && (
+                              <p className="error-message">
+                                {errors.full_name.message}
+                              </p>
+                            )}
+                          </>
                         )}
-                    
-
-                      </li>
-                   
-                       
-                        {!isEditing ? (
-                            <>
-                            </>
+                      </div>
+                      {!isEditingGroup ? <></> : <></>}
+                    </li>
+                    <li
+                      className={`${
+                        isEditingGroup
+                          ? `${styles.editBorderWrap}`
+                          : `${styles.viewBorderWrap}`
+                      }`}
+                    >
+                      <div className={styles.editinfo}>
+                        <span>Last Name</span>
+                        {!isEditingGroup ? (
+                          <strong>{data.alias_name} </strong>
                         ) : (
-                          <li>
-                             <span>Last Name</span>
-                          <input
-                            type="text"
-                            value="Smith"
-                            onChange={(e) =>
-                              setGeneralData({
-                                ...generalData,
-                                trading_name: e.target.value,
-                              })
-                            }
-                          />
-                          </li>
+                          <>
+                            <div
+                              className={`inputInfo ${
+                                errors.alias_name ? "error-border" : ""
+                              }`}
+                            >
+                              <input
+                                {...register("alias_name")}
+                                placeholder="Enter Last name name"
+                                defaultValue={data.alias_name}
+                              />
+                              {errors.alias_name && (
+                                <img
+                                  className="ExclamationCircle"
+                                  src={exclamationCircle}
+                                  alt="Exclamation Circle"
+                                />
+                              )}
+                            </div>
+                            {errors.alias_name && (
+                              <p className="error-message">
+                                {errors.alias_name.message}
+                              </p>
+                            )}
+                          </>
                         )}
-                     
-                      <li>
+                      </div>
+                      {!isEditingGroup ? <></> : <></>}
+                    </li>
+                    <li
+                      className={`${
+                        isEditingGroup
+                          ? `${styles.editBorderWrap}`
+                          : `${styles.viewBorderWrap}`
+                      }`}
+                    >
+                      <div className={styles.editinfo}>
                         <span>User picture</span>
-                        {!isEditing ? (
+                        {!isEditingGroup ? (
                           <strong>
-                            {generalData.photo ? (
+                            {data.photo ? (
                               <img
-                                src={generalData.photo}
+                                src={data.photo}
                                 width={76}
                                 alt="Company Logo"
                               />
@@ -139,133 +216,257 @@ const MyProfile = (profileData) => {
                           </strong>
                         ) : (
                           <div class="upload-btn-wrapper">
-                            {/* <button class="btnup">
-                              <div className="iconPerson">
-                                <Person color="#667085" size={32} />
-                              </div>
-                              <div className="textbtm">
-                                <p>
-                                  <span>Click to upload</span> or drag and drop
-                                  <br></br>
-                                  SVG, PNG, JPG or GIF (max. 800x400px)
-                                </p>
-                              </div>
-                            </button>
-                            <input
-                              type={profileData?.profileData?.company_logo}
-                              onChange={(e) =>
-                                setGeneralData({
-                                  ...generalData,
-                                  company_logo: e.target.files[0],
-                                })
-                              }
-                            /> */}
                             <FileUpload photo={photo} setPhoto={setPhoto} />
                           </div>
                         )}
-                      </li>
-                      <li>
+                      </div>
+
+                      {!isEditingGroup ? (
+                        <></>
+                      ) : (
+                        <div className={styles.editpara}>
+                          <div className="logo">
+                            <h5>Company logo</h5>
+                            <p>
+                              Upload the logo for your unique quotes and
+                              invoices.
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </li>
+
+                    <li
+                      className={`${
+                        isEditingGroup
+                          ? `${styles.editBorderWrap}`
+                          : `${styles.viewBorderWrap}`
+                      }`}
+                    >
+                      <div className={styles.editinfo}>
                         <span>Email</span>
-                        {!isEditing ? (
-                          <strong>{profileData?.profileData?.email}</strong>
-                        ) : (
-                          <input
-                            type="text"
-                            value={profileData?.profileData?.email}
-                            onChange={(e) =>
-                              setGeneralData({
-                                ...generalData,
-                                abn: e.target.value,
-                              })
-                            }
-                          />
-                        )}
-                      </li>
-                      <li>
-                    
-                        <span>Phone Number</span>
-                        {!isEditing ? (
-                          <strong className="flexStyleProfile">
-                            {profileData?.profileData?.phone} &nbsp;
-                            <Telephone color="#1AB2FF" size={20} />
+                        {!isEditingGroup ? (
+                          <strong>
+                            {data.email} <Link45deg color="#158ECC" size={20} />
                           </strong>
                         ) : (
-                          <input
-                            type="text"
-                            value={profileData?.profileData?.phone}
-                            onChange={(e) =>
-                              setGeneralData({
-                                ...generalData,
-                                abn: e.target.value,
-                              })
-                            }
-                          />
+                          <>
+                            <div
+                              className={`inputInfo ${
+                                errors.email ? "error-border" : ""
+                              }`}
+                            >
+                              <input
+                                {...register("email")}
+                                placeholder="Enter Email"
+                                defaultValue={data.email}
+                              />
+                              {errors.email && (
+                                <img
+                                  className="ExclamationCircle"
+                                  src={exclamationCircle}
+                                  alt="Exclamation Circle"
+                                />
+                              )}
+                            </div>
+                            {errors.email && (
+                              <p className="error-message">
+                                {errors.email.message}
+                              </p>
+                            )}
+                          </>
                         )}
-                      </li>
-                      <li>
-                        <span>Position</span>
-                        {!isEditing ? (
-                          <strong>{profileData?.profileData?.type}</strong>
+                      </div>
+                      {!isEditingGroup ? (
+                        <></>
+                      ) : (
+                        <div className={styles.editpara}>
+                          <p>
+                            Insert emails which will be used to send all your
+                            automatic outgoing emails and notifications.
+                          </p>
+                        </div>
+                      )}
+                    </li>
+                    <li
+                      className={`${
+                        isEditingGroup
+                          ? `${styles.editBorderWrap}`
+                          : `${styles.viewBorderWrap}`
+                      }`}
+                    >
+                      <div className={styles.editinfo}>
+                        <span>Phone Number</span>
+                        {!isEditingGroup ? (
+                          <strong>
+                            {data.phone} <Telephone color="#158ECC" size={20} />
+                          </strong>
                         ) : (
-                          <input
-                            type="text"
-                            value={profileData?.profileData?.type}
-                            onChange={(e) =>
-                              setGeneralData({
-                                ...generalData,
-                                abn: e.target.value,
-                              })
-                            }
-                          />
+                          <>
+                            <div
+                              className={`inputInfo ${
+                                errors.phone ? "error-border" : ""
+                              }`}
+                            >
+                              <input
+                                {...register("phone")}
+                                placeholder="Enter Phone Number"
+                                defaultValue={data.phone}
+                              />
+                              {errors.phone && (
+                                <img
+                                  className="ExclamationCircle"
+                                  src={exclamationCircle}
+                                  alt="Exclamation Circle"
+                                />
+                              )}
+                            </div>
+                            {errors.phone && (
+                              <p className="error-message">
+                                {errors.phone.message}
+                              </p>
+                            )}
+                          </>
                         )}
-                      </li>
-                    </ul>
-                  )}
+                      </div>
+                      {!isEditingGroup ? (
+                        <></>
+                      ) : (
+                        <div className={styles.editpara}>
+                          <></>
+                        </div>
+                      )}
+                    </li>
+                    <li
+                      className={`${
+                        isEditingGroup
+                          ? `${styles.editBorderWrap}`
+                          : `${styles.viewBorderWrap}`
+                      }`}
+                    >
+                      <div className={styles.editinfo}>
+                        <span>Position</span>
+                        {!isEditingGroup ? (
+                          <strong>{data.type}</strong>
+                        ) : (
+                          <>
+                            <div
+                              className={`inputInfo ${
+                                errors.type ? "error-border" : ""
+                              }`}
+                            >
+                              <input
+                                {...register("type")}
+                                placeholder="Enter Position"
+                                defaultValue={data.type}
+                              />
+                              {errors.type && (
+                                <img
+                                  className="ExclamationCircle"
+                                  src={exclamationCircle}
+                                  alt="Exclamation Circle"
+                                />
+                              )}
+                            </div>
+                            {errors.type && (
+                              <p className="error-message">
+                                {errors.type.message}
+                              </p>
+                            )}
+                          </>
+                        )}
+                      </div>
+                      {!isEditingGroup ? (
+                        <></>
+                      ) : (
+                        <div className={styles.editpara}>
+                          <p></p>
+                        </div>
+                      )}
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-            {isEditing && (
+            {isEditingGroup && (
               <div className="updateButtonGeneral">
-                <button className="cancel" onClick={handleCancel}>
-                  Cancel
-                </button>
-                <button className="save" onClick={handleUpdate}>
-                  Save
+                <button className="cancel">Cancel</button>
+                <button
+                  type="submit"
+                  className="save mr-3"
+                  disabled={mutation.isLoading}
+                >
+                  {mutation.isLoading ? "Updating..." : "Update"}
                 </button>
               </div>
             )}
           </div>
         </div>
       </div>
-    </>
-  );
-};
 
+      {/* {mutation.isError && <div>Error updating data</div>}
+      {mutation.isSuccess && <div>Data updated successfully</div>} */}
+    </form>
+  );
+}
 
 function FileUpload({ photo, setPhoto }) {
   const [show, setShow] = useState(false);
 
   return (
-    <section className="container mb-3" style={{ marginTop: '24px', padding: '0px' }}>
+    <section
+      className="container mb-3"
+      style={{ marginTop: "24px", padding: "0px" }}
+    >
       {/* <label className='mb-2' style={{ color: '#475467', fontSize: '14px', fontWeight: '500' }}>App Logo</label> */}
-      <div className='d-flex justify-content-center align-items-center flex-column' style={{ width: '100%', minHeight: '126px', padding: '16px', background: '#fff', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
-        {
-          photo?.croppedImageBase64 ? (
-            <div className='text-center'>
-              <img
-                alt='uploaded-file'
-                src={photo?.croppedImageBase64}
-                style={{ width: '64px', height: '64px', marginBottom: '12px' }}
-              />
-            </div>
-          ) : (
-            <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
-              <Upload />
-            </button>
-          )
-        }
-        <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShow(true)}>Click to upload</span></p>
-        <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
+      <div
+        className="d-flex justify-content-center align-items-center flex-column"
+        style={{
+          width: "100%",
+          minHeight: "126px",
+          padding: "16px",
+          background: "#fff",
+          borderRadius: "4px",
+          border: "1px solid #D0D5DD",
+        }}
+      >
+        {photo?.croppedImageBase64 ? (
+          <div className="text-center">
+            <img
+              alt="uploaded-file"
+              src={photo?.croppedImageBase64}
+              style={{ width: "64px", height: "64px", marginBottom: "12px" }}
+            />
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShow(true)}
+            className="d-flex justify-content-center align-items-center"
+            style={{
+              width: "40px",
+              height: "40px",
+              padding: "10px",
+              border: "1px solid #EAECF0",
+              background: "#fff",
+              borderRadius: "4px",
+              marginBottom: "16px",
+            }}
+          >
+            <Upload />
+          </button>
+        )}
+        <p className="mb-0" style={{ color: "#475467", fontSize: "14px" }}>
+          <span
+            style={{ color: "#1AB2FF", fontWeight: "600", cursor: "pointer" }}
+            onClick={() => setShow(true)}
+          >
+            Click to upload
+          </span>
+        </p>
+        <span style={{ color: "#475467", fontSize: "12px" }}>
+          SVG, PNG, JPG or GIF (max. 800x400px)
+        </span>
       </div>
       <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
     </section>

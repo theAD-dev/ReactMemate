@@ -18,7 +18,7 @@ const ProfileInfo = ({ username, userType, aliasName }) => {
             <QuestionCircle color="#667085" size={20} />
           </li>
         </ul>
-        <div className="mr">
+        <div className="mr ">
           <Link className="avatar-info" to="/settings/generalinformation">
             {username ? username : (
               <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', }}>
@@ -27,7 +27,7 @@ const ProfileInfo = ({ username, userType, aliasName }) => {
             )}
             <span>
               {userType ? userType : (
-                <Placeholder as="p" animation="wave" style={{ marginBottom: '9px' }}>
+                <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
                   <Placeholder bg="secondary" size='sm' style={{ width: '70px' }} />
                 </Placeholder>
               )}

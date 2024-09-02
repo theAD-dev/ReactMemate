@@ -138,7 +138,7 @@ const Header = ({ onClick }) => {
                       <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
                     </div>
                   </Col>
-                  <Col>
+                  <Col className="d-flex align-items-center">
                     <nav className="colMinWidth">
                       <div className="menu-item">
                         <ul>
@@ -167,7 +167,7 @@ const Header = ({ onClick }) => {
                       </div>
                     </nav>
                   </Col>
-                  <Col>
+                  <Col className="d-flex align-items-center justify-content-end">
                     <ProfileInfo
                       username={profileData?.full_name || ""}
                       userType={profileData?.type || ""}
@@ -306,7 +306,7 @@ const Header = ({ onClick }) => {
                       <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
                     </div>
                   </Col>
-                  <Col>
+                  <Col className="d-flex align-items-center">
                     <nav className="colMinWidth">
                       <div className="menu-item">
                         <ul>
@@ -335,7 +335,7 @@ const Header = ({ onClick }) => {
                       </div>
                     </nav>
                   </Col>
-                  <Col>
+                  <Col className="d-flex align-items-center justify-content-end">
                     <ProfileInfo
                       username={profileData?.full_name || ""}
                       userType={profileData?.type || ""}

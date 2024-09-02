@@ -22,7 +22,7 @@
 
 .menu-item ul li a,
 .headerNav ul li a {
-    border-bottom: 2px solid var(--color2);
+    /* border-bottom: 2px solid var(--color2); */
     padding: 9px 15px;
     color: var(--colorG1);
     text-align: center;

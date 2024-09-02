@@ -37,7 +37,7 @@ table.p-datatable-table {
 }
 
 .primary-text-button {
-  color: #158ecc;
+  color: #1AB2FF;
   font-size: 14px;
   font-weight: 600;
   padding: 0px;
@@ -118,7 +118,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   font-weight: 400;
   line-height: 22px;
   letter-spacing: 0.14px;
-  padding: 15px 17px;
+  padding: 9.5px 17px;
   border-bottom: 1px solid var(--Gray-200, #eaecf0);
 }
 
@@ -138,4 +138,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   display: flex;
   align-items: center;
   justify-content: end;
+}
+.paddingLeftHide {
+  padding-left: 0 !important;
 }
