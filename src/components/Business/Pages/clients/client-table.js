@@ -10,13 +10,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getListOfClients } from '../../../../APIs/ClientsApi';
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+import { Spinner } from 'react-bootstrap';
 
 const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState({sortField: null, sortOrder: null});
+    const [sort, setSort] = useState({ sortField: null, sortOrder: null });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
@@ -30,7 +31,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             setLoading(true);
             let order = "";
             if (sort?.sortOrder === 1) order = `${sort.sortField}`;
-            else if(sort?.sortOrder === -1) order = `-${sort.sortField}`;
+            else if (sort?.sortOrder === -1) order = `-${sort.sortField}`;
 
             const data = await getListOfClients(page, limit, searchValue, order);
             setTotalClients(() => (data?.count || 0))
@@ -122,6 +123,14 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
         return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-"
     }
 
+    const loadingIconTemplate = () => {
+        return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    }
+
     const onSort = (event) => {
         console.log('event: ', event);
         const { sortField, sortOrder } = event;
@@ -132,9 +141,10 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     return (
         <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'} removableSort
             columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-            scrollHeight={"calc(100vh - 182px)"} className="border" selection={selectedClients}
-            onSelectionChange={(e) => setSelectedClients(e.value)} 
+            scrollHeight={"calc(100vh - 178px)"} className="border" selection={selectedClients}
+            onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
+            loadingIcon={loadingIconTemplate}
             emptyMessage={NoDataFoundTemplate}
             sortField={sort?.sortField}
             sortOrder={sort?.sortOrder}
