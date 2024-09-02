@@ -6,54 +6,40 @@ import DepartmentQuote from './department-quote';
 import { toast } from 'sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createNewCalculationQuoteRequest, getQuoteByUniqueId } from '../../../../../APIs/CalApi';
+import { Spinner } from 'react-bootstrap';
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
-    const { unique_id } = useParams();
-
-    let id;
-    let quoteFormData = {};
-    try {
-        const storedData = window.sessionStorage.getItem(`new-request`);
-        if (storedData) {
-            quoteFormData = JSON.parse(storedData);
-            id = quoteFormData.id;
-        }
-    } catch (error) {
-        console.error('Failed to parse form data from sessionStorage', error);
-    }
     const [quoteType, setQuoteType] = useState('Standard');
-    const [payload, setPayload] = useState({
-        client: +id || "",
-        contact_person: "",
-        managers: [],
-        reference: quoteFormData?.reference || "",
-        description: quoteFormData?.requirements || "",
-        purchase_order: "",
-        expense: "",
-        xero_tax: "ex",
-        note: "",
-        recurring: {
-            frequency: "1",
-            occurrences: 10,
-            start_date: new Date()
-        },
-        calculations: []
+    const [payload, setPayload] = useState({});
+    const [totals, setTotals] = useState({ budget: 0, operationalProfit: 0, subtotal: 0, tax: 0, total: 0 });
+    const { unique_id } = useParams();
+    const newRequestQuery = useQuery({
+        queryKey: ['unique_id', unique_id],
+        queryFn: () => getQuoteByUniqueId(unique_id),
+        enabled: !!unique_id,
+        retry: 1,
     });
-    const [totals, setTotals] = useState({
-        budget: 0,
-        operationalProfit: 0,
-        subtotal: 0,
-        tax: 0,
-        total: 0,
-    });
+
+    useEffect(() => {
+        if (!unique_id) {
+            const storedSessionData = JSON.parse(window.sessionStorage.getItem(`new-request`) || "{}");
+            setPayload((others) => ({
+                ...others,
+                xero_tax: "ex",
+                client: storedSessionData?.id || "",
+                reference: storedSessionData?.reference || "",
+                description: storedSessionData?.requirements || ""
+            }))
+        } else {
+            setPayload((others) => ({ ...others, ...newRequestQuery?.data }))
+        }
+    }, [unique_id, newRequestQuery?.data])
 
     const newRequestMutation = useMutation({
         mutationFn: (data) => createNewCalculationQuoteRequest(data),
         onSuccess: (response) => {
-            console.log('response: ', response);
             if (response) {
-                window.sessionStorage.setItem('newRequestId', response);
                 navigate(`/sales/quote-calculation/${response}`);
                 toast.success("Calculation quote created successfully.");
             } else {
@@ -67,32 +53,20 @@ const CalculateQuote = () => {
     });
 
     const createNewRequest = (action) => {
-        if (unique_id) return;
         payload.action = action;
+        payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
         console.log('payload: ', payload);
 
-        if (!payload.client) return toast.error('Client is required');
-        if (!payload.contact_person) return toast.error('Contact person is required');
-        if (!payload.managers || !payload.managers?.length) return toast.error('Project manager is required');
-        if (!payload.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
-        if (!payload.xero_tax) return toast.error('Tax details is required');
-        if (!payload.expense) return toast.error('Expense is required');
+        if (!payload?.client) return toast.error('Client is required');
+        if (!payload?.contact_person) return toast.error('Contact person is required');
+        if (!payload?.managers || !payload.managers?.length) return toast.error('Project manager is required');
+        if (!payload?.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
+        if (!payload?.xero_tax) return toast.error('Tax details is required');
+        if (!payload?.expense) return toast.error('Expense is required');
+
+        if (unique_id) return toast.error('API is under construction...');
         newRequestMutation.mutate(payload);
     }
-
-    const newRequestQuery = useQuery({
-        queryKey: ['unique_id', unique_id],
-        queryFn: () => getQuoteByUniqueId(unique_id),
-        enabled: !!unique_id,
-        retry: 1,
-    });
-
-    useEffect(()=> {
-      if(newRequestQuery?.data) {
-        console.log('read quote:', newRequestQuery?.data);
-        setPayload(newRequestQuery?.data);
-      }
-    }, [newRequestQuery?.data])
 
     return (
         <div className='newQuotePage'>
@@ -136,7 +110,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', padding: '16px 32px' }}>
-                <DepartmentQuote id={id} payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} preExistCalculation={newRequestQuery?.data?.calculations || {}}/>
+                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || {}} />
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #EAECF0', boxShadow: '0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)' }}>
@@ -191,6 +165,13 @@ const CalculateQuote = () => {
                     </div>
                 </div>
             </div>
+            {
+                newRequestMutation.isPending && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </div>
+            }
         </div>
     )
 }

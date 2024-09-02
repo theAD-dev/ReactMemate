@@ -29,7 +29,6 @@ import Profile from "./Login/profile";
 import Invoices from "../Business/Pages/invoices/invoices";
 import Expenses from "../Business/Pages/expenses/expenses";
 import Home from "../Home";
-import Suppliers from "../Business/Pages/suppliers/suppliers";
 import Orders from "../Business/Pages/orders/orders";
 import Statistics from "../Business/Pages/statistics";
 import GeneralInformation from "../layout/settings/generalinformation/GeneralInformation";
@@ -79,10 +78,9 @@ import { Placeholder } from "react-bootstrap";
 import JobsPage from "../Work/Pages/jobs";
 import PeoplePage from "../Work/Pages/people";
 import ClientPage from "../Business/Pages/clients"
-import SuppliersDetails from "../Business/Pages/suppliers/suppliers-details";
-import SuppliersNewCreate from "../Business/Pages/suppliers/suppliers-new-create";
 import ApprovalPage from "../Work/Pages/approval";
 import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
+import SupplierPage from "../Business/Pages/suppliers";
 
 
 
@@ -441,6 +439,7 @@ const Header = ({ onClick }) => {
           <Route path="/clients" element={<ClientPage />} />
           <Route path="/clients/:id/order-history" element={<ClientOrderHistory />} />
 
+          <Route path="/suppliers" element={<SupplierPage />} />
 
 
 
@@ -452,7 +451,6 @@ const Header = ({ onClick }) => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/expenses" element={<Expenses />} />
-          <Route path="/suppliers" element={<Suppliers />} />
           <Route
             path="/settings/generalinformation"
             element={<GeneralInformation />}
@@ -666,16 +664,6 @@ const Header = ({ onClick }) => {
           <Route
             path="/work/people"
             element={<PeoplePage />}
-          />
-
-
-          <Route
-            path="/suppliers-details/:id"
-            element={<SuppliersDetails />}
-          />
-          <Route
-            path="/suppliers-new"
-            element={<SuppliersNewCreate />}
           />
 
         </Routes>

@@ -1,0 +1,335 @@
+.supplierTableWrap .days_in_company,.jobsdone {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  padding: 2px 6px;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: inline-block;
+}
+.supplierTableWrap .jobsdone {
+  border-radius: 16px;
+  padding: 2px 8px;
+}
+.supplierTableWrap table tbody tr:hover .WebsiteGlobe svg ,.supplierTableWrap .selected-row .WebsiteGlobe svg{
+  fill: #1AB2FF;
+}
+.supplierTableWrap div#controlled-tab-example-tabpane-FullName ul .scrollItemsBox {
+  overflow-y: auto;
+  height: 285px;
+}
+.supplierTableWrap .total_turnover {
+  color: var(--Gray-500, #667085);
+  text-align: right;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.supplierTableWrap .mainStyle.category {
+  color: var(--Gray-400, #98A2B3);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.supplierTableWrap .selected-row .mainStyle.category {
+ color: #344054;
+}
+.supplierTableWrap  table thead tr th:nth-child(3) {
+  position: sticky;
+  left: 181px;
+  z-index: 5;
+  border-right: 1px solid var(--color10) !important;
+}
+/* .clientTableWrap table thead tr th:nth-child(4), table tbody tr td:nth-child(4) {
+  position: sticky;
+  left: 341px;
+  border-left: 0  !important;
+  border-right: 0px solid var(--color10) !important;
+  z-index: 8;
+} */
+.supplierTableWrap .styleborderbox {
+  border-radius: 16px;
+  border: 1px solid var(--Primary-200, #E9D7FE);
+  background: var(--Primary-25, #FCFAFF);
+  color: var(--Primary-500, #1AB2FF);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: inline-block;
+  min-width: 60px;
+  text-align: center !important;
+  margin: 0 auto;
+}
+.supplierTableWrap .darkborderbox {
+  border-radius: 16px;
+  border: 1px solid var(--Success-200, #ABEFC6);
+  background: var(--Success-50, #ECFDF3);
+  mix-blend-mode: multiply;
+  color: var(--Success-700, #067647);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: inline-block;
+  padding: 2px 8px;
+}
+.supplierTableWrap .isbusinessIcon .iconBuilding {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+  border: 0px solid #10182826;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  padding: 2px;
+  border-radius: 0;
+}
+.supplierTableWrap .isbusinessIcon .iconPerson {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+  border: 0px solid #10182826;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 7px;
+  padding: 2px;
+  border-radius: 0;
+}
+.supplierTableWrap .textLeft span {
+  text-align: left;
+}
+.supplierTableWrap  .styleColor2 {
+  color: var(--colorG4);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: .14px;
+  line-height: 22px;
+}
+.supplierTableWrap  .innerFlex {
+  align-items: center;
+  display: flex;
+  text-align: left;
+}
+.supplierTableWrap  .styleColor2 {
+  color: var(--colorG1);
+}
+.supplierTableWrap .spaceBorder .icon,.supplierTableWrap .spaceBorder img {
+  border: .75px solid #e0e0e0;
+  border-radius: 100%;
+  float: left;
+  height: 32px;
+  object-fit: cover;
+  padding: 2px;
+  width: 32px;
+}
+
+
+.supplierTableWrap img.truePhotoStyle {
+  border-radius: 4px;
+}
+.supplierTableWrap img.falsePhotoStyle {
+  border-radius: 100px;
+}
+
+.supplierTableWrap .userImgStyle img {
+  border: 0px solid #d7d7d7;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  float: left;
+  padding: 2px;
+}
+.supplierTableWrap .supTdFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.supplierTableWrap .styleColor1 strong {
+  color: #667085;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  text-wrap: nowrap;
+}
+.supplierTableWrap .leftStyle span {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.supplierTableWrap .SuppServices {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+}
+.supplierTableWrap .address {
+  min-width: 313px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.supplierTableWrap .mainStyle.emailStyle,.supplierTableWrap .address {
+  color: var(--Gray-400, #98A2B3);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  text-align: left;
+}
+.supplierTableWrap .Statestyle,.supplierTableWrap .PostCodestyle {
+  color: var(--Gray-400, #98A2B3);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.supplierTableWrap .TotalSpent {
+  border-radius: 16px;
+  border: 1px solid var(--Gray-200, #EAECF0);
+  background: var(--Gray-50, #F9FAFB);
+  padding: 2px 8px;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: inline-block;
+}
+.supplierTableWrap table tbody tr td {
+  padding: 11.5px 15px !important;
+}
+.supplierTableWrap table tbody tr td:nth-child(2) {
+  padding-left: 7px !important;
+}
+.supplierTableWrap table thead tr th:first-child, .supplierTableWrap table tbody tr td:first-child {
+  position: sticky;
+  left: 0;
+  width: 40px;
+  z-index: 8;
+  border-right: 0;
+  text-align: left;
+  padding: 0px 6px 0 23px !important;
+}
+.supplierTableWrap table thead tr th:nth-child(2) {
+  position: sticky;
+  left: 40px;
+  z-index: 8;
+  border-right: 1px solid var(--color10) !important;
+  padding-left: 7px !important;
+}
+
+
+
+
+@media only screen and (max-width: 1600px) and (min-width: 1280px)  {
+  .supplierTableWrap .mainStyleMin {
+    width: 221px;
+  }
+  .supplierTableWrap table thead tr th:nth-child(3) {
+    position: sticky;
+    left: 131px;
+    z-index: 5;
+    border-right: 0px solid var(--color10) !important;
+}
+  .supplierTableWrap .table-responsive {
+    overflow-x: auto;
+}
+.supplierTableWrap .select-menu {
+  position: relative;
+  width: 200px;
+}
+ .supplierTableWrap table thead tr th:nth-child(2), .supplierTableWrap table tbody tr td:nth-child(2) 
+{
+    position: sticky;
+    left: 42px;
+   
+    z-index: 8;
+    border-right: 0px solid var(--color10) !important;
+    padding-left: 0px !important;
+}
+.supplierTableWrap table tbody tr td:nth-child(2):before
+{
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+}
+.supplierTableWrap table thead tr th:nth-child(2):before
+{
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    z-index: 0;
+} 
+
+.supplierTableWrap table thead tr th:nth-child(3) {
+left: 406px;
+}
+.supplierTableWrap table thead tr th:nth-child(3), .supplierTableWrap table tbody tr td:nth-child(3) {
+  position: sticky;
+  left: 141px;
+  border-left: 0  !important;
+  border-right: 0px solid var(--color10) !important;
+  z-index: 8;
+}
+.supplierTableWrap tr td {
+  white-space: nowrap !important;
+}
+.supplierTableWrap table tbody tr td:nth-child(3)::after,.supplierTableWrap table thead tr th:nth-child(3)::after {
+  position: absolute;
+  background: var(--color10);
+  content: "";
+  right: 0;
+  width: 1px;
+  height: 100%;
+  top: 0;
+  box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10);
+  z-index: 0;
+} 
+.supplierTableWrap table thead tr th:nth-child(2) {
+  left: 42px;
+}
+.supplierTableWrap .SuppServices ,.supplierTableWrap .address{
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+}

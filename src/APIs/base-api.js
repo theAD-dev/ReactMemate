@@ -26,9 +26,16 @@ export const fetchAPI = async (endpoint, options = {}) => {
         const url = new URL(`${endpoint}`);
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
+            if (response.status === 404) throw new Error('Not found');
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return await response.json();
+        const contentType = response.headers.get('Content-Type');
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json();
+        } else {
+            const text = await response.text();
+            return { message: 'Non-JSON response', body: text };
+        }
     } catch (error) {
         console.error('Fetch API error:', error);
         throw error;

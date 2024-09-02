@@ -116,6 +116,15 @@ export const clientOrderHistory = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const deleteClient = async (id) => {
+  const endpoint = `/clients/delete/${id}/`;
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const fetchClients = async (limit, offset) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");

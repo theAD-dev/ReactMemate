@@ -48,7 +48,7 @@ function GeneralInformation() {
   
 
   const mutation = useMutation({
-    mutationFn: (data) => updateGeneralInformation(data),
+    mutationFn: (data) => updateGeneralInformation(data, photo),
    
     
     onSuccess: () => {
@@ -59,7 +59,7 @@ function GeneralInformation() {
   });
 
   const onSubmit = (data) => {
-    mutation.mutate({ ...data, company_logo: photo });
+    mutation.mutate({ ...data });
   };
 
   if (isLoading) return <div>Loading...</div>;

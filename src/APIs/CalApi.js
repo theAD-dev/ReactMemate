@@ -20,7 +20,7 @@ export const getCalculationByReferenceId = async (id) => {
 }
 
 export const getQuoteByUniqueId = async (unique_id) => {
-  const endpoint = `/quote/${unique_id}/`;
+  const endpoint = `/projects/${unique_id}/`;
   const options = {
     method: 'GET',
   };
@@ -39,7 +39,7 @@ export const createNewCalculationQuoteRequest = async (data) => {
 }
 
 export const createNewMergeQuote = async (data) => {
-  const endpoint = '/quote/merges/new/';
+  const endpoint = '/projects/merges/new/';
   const options = {
     method: 'POST',
     body: data
@@ -49,7 +49,7 @@ export const createNewMergeQuote = async (data) => {
 }
 
 export const getMergeItemsByUniqueId = async (unique_id) => {
-  const endpoint = `/quote/merges/${unique_id}/`;
+  const endpoint = `/projects/merges/${unique_id}/`;
   const options = {
     method: 'GET',
   };

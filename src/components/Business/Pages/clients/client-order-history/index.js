@@ -1,19 +1,23 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { Button } from 'primereact/button';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Sidebar } from 'primereact/sidebar';
 
 import style from './client-order-history.module.scss';
 import ClientOrderHistoryTable from './client-order-history-table';
 import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
-import IndivisualClientView from '../../../features/indivisual-client-view/indivisual-client-view';
-import BusinessClientView from '../../../features/business-client-view/business-client-view';
+import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
+import BusinessClientView from '../../../features/clients-features/business-client-view/business-client-view';
+import SidebarClientLoading from '../../../features/clients-features/sidebar-client-loading/sidebar-client-loading';
+import { toast } from 'sonner';
 
 const ClientOrderHistory = () => {
+    const navigate = useNavigate();
+    const dt = useRef(null);
     const { id } = useParams();
     const [visible, setVisible] = useState(true);
 
@@ -21,7 +25,18 @@ const ClientOrderHistory = () => {
     const clientOrders = useQuery({ queryKey: ['client-order'], queryFn: () => clientOrderHistory(id), enabled: !!id, retry: 1 });
 
     const handleSearch = (e) => { }
+    const exportCSV = (selectionOnly) => {
+        if (dt.current) {
+            dt.current.exportCSV({ selectionOnly });
+        } else {
+            console.error('DataTable ref is null');
+        }
+    };
 
+    if(clientDetails?.error?.message === "Not found") {
+        toast.error('Client not found');
+        navigate('/clients');
+    }
     return (
         <PrimeReactProvider className='client-order-history-page'>
             <div className='client-order-history' style={{ width: visible ? 'calc(100% - 559px)' : '100%' }}>
@@ -43,21 +58,21 @@ const ClientOrderHistory = () => {
                     </div>
 
                     <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%' }}>
-                        <h1 onClick={() => { setVisible(true) }} className={`${style.clientName} m-0 p-0 cursor-pointer`}>{clientDetails?.data?.name || ""}</h1>
+                        <h1 onClick={() => { setVisible(true) }} className={`${style.clientName} m-0 p-0 cursor-pointer`} title={clientDetails?.data?.name}>{clientDetails?.data?.name || ""}</h1>
                     </div>
                     <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                        <Button label="Download" onClick={() => { }} className='primary-text-button' text />
+                        <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
                     </div>
                 </div>
-                <ClientOrderHistoryTable clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
+                <ClientOrderHistoryTable ref={dt} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
             </div>
-            <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} style={{ width: '559px' }}
+            <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
                     clientDetails?.data?.is_business
-                        ? <BusinessClientView client={clientDetails?.data || {}} closeIconRef={closeIconRef} hide={hide} />
+                        ? <BusinessClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} />
                         : clientDetails?.data?.is_business === false
-                            ? <IndivisualClientView client={clientDetails?.data || {}} closeIconRef={closeIconRef} hide={hide} />
-                            : "Loading ..."
+                            ? <IndivisualClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} />
+                            : <SidebarClientLoading />
                 )}
             ></Sidebar>
         </PrimeReactProvider>

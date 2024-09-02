@@ -256,7 +256,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
     );
 }
 
-const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, xero_tax, preExistCalculation }) => {
+const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, xero_tax, preExistCalculation, preExistMerges }) => {
     const { unique_id } = useParams();
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
@@ -476,23 +476,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
         }
     }, [preExistCalculation, departments])
 
-    const [mergeCalculationItems, setMergeCalculationItems] = useState([]);
-    const fetchMergeItems = async (id) => {
-        try {
-            const mergeItemsRes = await getMergeItemsByUniqueId(id);
-            console.log('mergeItemsRes: ', mergeItemsRes);
-            setMergeCalculationItems(mergeItemsRes);
-        } catch (error) {
-            console.log('error: ', error);
-        }
-    }
 
-    useEffect(() => {
-        if (unique_id) {
-            fetchMergeItems(unique_id);
-        }
-    }, [])
 
+    
     useEffect(() => {
         let map = {};
         if (Object.keys(mergeItems)?.length) {

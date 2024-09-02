@@ -107,7 +107,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign }) => {
     }
 
     return (
-        <Modal show={show} centered onHide={handleClose} onShow={generateCroppedImages}>
+        <Modal style={{ zIndex: 1111 }} show={show} centered onHide={handleClose} onShow={generateCroppedImages}>
             <Modal.Header closeButton>
                 <Modal.Title>
                     <span className={`${styles.title}`}>Edit Photo</span>

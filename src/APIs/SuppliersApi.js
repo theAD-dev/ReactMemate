@@ -1,17 +1,23 @@
-
-
-
-
-
-
-
-
-
-
 import { fetchAPI } from "./base-api";
-  const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
+const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
-export const fetchClients = async (limit, offset) => {
+export const getListOfSuppliers = async (page, limit, order) => {
+  const offset = (page - 1) * limit;
+  const endpoint = `/suppliers/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  if (order) url.searchParams.append("ordering", order)
+
+  return fetchAPI(url.toString(), options);
+}
+
+
+
+export const fetchSuppliers = async (limit, offset) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
