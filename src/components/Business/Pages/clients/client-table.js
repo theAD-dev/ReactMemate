@@ -11,7 +11,7 @@ import { getListOfClients } from '../../../../APIs/ClientsApi';
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
-const ClientTable = forwardRef(({ setTotalClients, selectedClients, setSelectedClients }, ref) => {
+const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
@@ -21,22 +21,30 @@ const ClientTable = forwardRef(({ setTotalClients, selectedClients, setSelectedC
     const limit = 25;
 
     useEffect(() => {
+        setPage(1);  // Reset to page 1 whenever searchValue changes
+    }, [searchValue]);
+
+    useEffect(() => {
         const loadData = async () => {
             setLoading(true);
-            const data = await getListOfClients(page, limit);
-            if(data.count) setTotalClients(() => data.count)
-        
-            if (data?.results?.length > 0) setCients(prev => {
-                const existingClientIds = new Set(prev.map(client => client.id));
-                const newClients = data.results.filter(client => !existingClientIds.has(client.id));
-                return [...prev, ...newClients];
-            });
-            else setHasMoreData(false);
+            const data = await getListOfClients(page, limit, searchValue);
+            setTotalClients(() => (data?.count || 0))
+            if (page === 1) setCients(data.results);
+            else {
+                if (data?.results?.length > 0)
+                    setCients(prev => {
+                        const existingClientIds = new Set(prev.map(client => client.id));
+                        const newClients = data.results.filter(client => !existingClientIds.has(client.id));
+                        return [...prev, ...newClients];
+                    });
+            }
+            setHasMoreData(data.count !== clients.length)
             setLoading(false);
         };
 
         loadData();
-    }, [page]);
+        
+    }, [page, searchValue]);
 
     useEffect(() => {
         if (clients.length > 0 && hasMoreData) {
@@ -55,7 +63,7 @@ const ClientTable = forwardRef(({ setTotalClients, selectedClients, setSelectedC
 
     const clientIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-            <span>{rowData.number?.split('-')?.[1] }</span>
+            <span>{rowData.number?.split('-')?.[1]}</span>
             <Button label="Open" onClick={() => navigate(`/clients/${rowData.id}/order-history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }

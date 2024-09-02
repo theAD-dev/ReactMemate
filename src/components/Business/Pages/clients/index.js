@@ -3,6 +3,7 @@ import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Download, Filter } from 'react-bootstrap-icons';
 import { Button } from 'react-bootstrap';
+import { useDebounce } from 'primereact/hooks';
 
 import style from './clients.module.scss';
 import ClientTable from './client-table';
@@ -13,6 +14,7 @@ const ClientPage = () => {
     const [totalClients, setTotalClients] = useState(0);
     const [visible, setVisible] = useState(false);
     const [selectedClients, setSelectedClients] = useState(null);
+    const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -21,7 +23,7 @@ const ClientPage = () => {
             console.error('DataTable ref is null');
         }
     };
-    const handleSearch = (e) => { }
+
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${selectedClients?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
@@ -63,7 +65,7 @@ const ClientPage = () => {
                     <div className={`${style.totalCount}`}>{totalClients} Clients</div>
                 </div>
             </div>
-            <ClientTable ref={dt} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} />
+            <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} />
             <NewClientCreate visible={visible} setVisible={setVisible} />
         </PrimeReactProvider>
     )
