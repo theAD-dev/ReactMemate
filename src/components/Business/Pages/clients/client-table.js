@@ -141,7 +141,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     return (
         <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'} removableSort
             columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-            scrollHeight={"calc(100vh - 178px)"} className="border" selection={selectedClients}
+            scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedClients}
             onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
             loadingIcon={loadingIconTemplate}
