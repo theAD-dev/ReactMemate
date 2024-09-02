@@ -16,6 +16,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
+    const [sort, setSort] = useState({sortField: null, sortOrder: null});
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
@@ -27,7 +28,11 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
-            const data = await getListOfClients(page, limit, searchValue);
+            let order = "";
+            if (sort?.sortOrder === 1) order = `${sort.sortField}`;
+            else if(sort?.sortOrder === -1) order = `-${sort.sortField}`;
+
+            const data = await getListOfClients(page, limit, searchValue, order);
             setTotalClients(() => (data?.count || 0))
             if (page === 1) setCients(data.results);
             else {
@@ -43,8 +48,8 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
         };
 
         loadData();
-        
-    }, [page, searchValue]);
+
+    }, [page, searchValue, sort]);
 
     useEffect(() => {
         if (clients.length > 0 && hasMoreData) {
@@ -117,9 +122,12 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
         return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-"
     }
 
-    // const onSort = (event) => {
-    //     console.log('event: ', event);
-    // };
+    const onSort = (event) => {
+        console.log('event: ', event);
+        const { sortField, sortOrder } = event;
+        setPage(1);  // Reset to page 1 whenever searchValue changes
+        setSort({ sortField, sortOrder })
+    };
 
     return (
         <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'} removableSort
@@ -128,10 +136,13 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
             emptyMessage={NoDataFoundTemplate}
+            sortField={sort?.sortField}
+            sortOrder={sort?.sortOrder}
+            onSort={onSort}
         >
             <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="number" header="Client ID" body={clientIDBody} style={{ minWidth: '100px' }} frozen sortable></Column>
-            <Column field="name" header="Client A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen></Column>
+            <Column field="name" header="Client A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} sortable frozen></Column>
             <Column field="category" header="Category" style={{ minWidth: '94px' }}></Column>
             <Column field="days_in_company" header="Days in company" body={daysBody} style={{ minWidth: '56px' }} className='text-center'></Column>
             <Column field='jobsdone' header="Jobs" body={JobBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
