@@ -70,7 +70,7 @@ const ViewSection = ({ client }) => {
     <>
       <div className={clsx(style.box)}>
         <label className={clsx(style.label)}>Customer Category</label>
-        <h4 className={clsx(style.text)}>{client?.category || "-"}</h4>
+        <h4 className={clsx(style.text)}>{client?.category == 43 || client?.category == 1 ? "Regular" : "-"}</h4>
 
 
         <Row>

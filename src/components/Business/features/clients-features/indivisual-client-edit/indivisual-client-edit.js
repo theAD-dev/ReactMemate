@@ -14,12 +14,12 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     phone: client?.phone,
     description: client?.description,
     address: {
-      title: client.addresses?.[0].title || "",
-      country: client.addresses?.[0].country_code === "AU" ? 1 : "",
-      state: 8 || client.addresses?.[0].state || "",
-      city: client.addresses?.[0].city || "",
-      address: client.addresses?.[0].address || "",
-      postcode: client.addresses?.[0].postcode || ""
+      title: client.addresses?.[0]?.title || "",
+      country: client.addresses?.[0]?.country_code === "AU" ? 1 : "",
+      state: 8 || client.addresses?.[0]?.state || "",
+      city: client.addresses?.[0]?.city || "",
+      address: client.addresses?.[0]?.address || "",
+      postcode: client.addresses?.[0]?.postcode || ""
     }
   });
 
