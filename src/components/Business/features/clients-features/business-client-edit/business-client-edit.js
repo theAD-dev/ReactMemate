@@ -5,7 +5,6 @@ import BusinessForm from '../new-client-create/business-form';
 
 
 const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit }, ref) => {
-  console.log('BusinessClientEdit: ', client);
   const [photo, setPhoto] = useState(client?.photo || null);
   if (client?.addresses?.length === 0) client.addresses.push({});
   
@@ -77,7 +76,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     }
   };
   return (
-    <BusinessForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues}/>
+    <BusinessForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues} />
   )
 })
 

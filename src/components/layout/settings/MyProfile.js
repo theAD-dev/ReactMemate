@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -11,7 +11,6 @@ import styles from "./setting.profile.module.scss";
 import {
   PencilSquare,
   Telephone,
-  Building,
   Link45deg,
   Upload,
 } from "react-bootstrap-icons";

@@ -37,7 +37,7 @@ table.p-datatable-table {
 }
 
 .primary-text-button {
-  color: #1AB2FF;
+  color: #1ab2ff;
   font-size: 14px;
   font-weight: 600;
   padding: 0px;
@@ -139,6 +139,41 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   align-items: center;
   justify-content: end;
 }
+
 .paddingLeftHide {
   padding-left: 0 !important;
+}
+
+.custom-chipsInput .p-chips-multiple-container {
+  width: 100%;
+  padding: 5px 14px;
+  box-shadow: none !important;
+  outline: none !important;
+  border-radius: 4px;
+  border: 1px solid var(--Border, #d0d5dd) !important;
+}
+
+.custom-chipsInput .p-chips-multiple-container .p-chips-token {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px)
+    var(--spacing-xxs, 2px) 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
+
+.custom-chipsInput.p-chips .p-chips-multiple-container .p-chips-token .p-chips-token-icon {
+  fill: #98A2B3;
+  size: 12px;
+  width: 12px;
 }

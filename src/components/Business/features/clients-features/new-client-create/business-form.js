@@ -261,7 +261,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>Position</label>
                     <IconField>
-                      <InputIcon style={{ top: '80%' }}>{errors.contact_persons?.[index]?.position && <img src={exclamationCircle} />}</InputIcon>
+                      <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.position && <img src={exclamationCircle} />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.position`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.position })} style={{ resize: 'none' }} placeholder='Manager' />
                     </IconField>
                     {errors.contact_persons?.[index]?.position && <p className="error-message">{errors.contact_persons?.[index]?.position?.message}</p>}
@@ -274,7 +274,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>First Name</label>
                     <IconField>
-                      <InputIcon style={{ top: '80%' }}>{errors.contact_persons?.[index]?.firstname && <img src={exclamationCircle} />}</InputIcon>
+                      <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.firstname && <img src={exclamationCircle} />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.firstname`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.firstname })} style={{ resize: 'none' }} placeholder='Jhon' />
                     </IconField>
                     {errors.contact_persons?.[index]?.firstname && <p className="error-message">{errors.contact_persons?.[index]?.firstname?.message}</p>}
@@ -285,7 +285,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>Last Name</label>
                     <IconField>
-                      <InputIcon style={{ top: '80%' }}>{errors.contact_persons?.[index]?.lastname && <img src={exclamationCircle} />}</InputIcon>
+                      <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.lastname && <img src={exclamationCircle} />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.lastname`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.lastname })} style={{ resize: 'none' }} placeholder='Doe' />
                     </IconField>
                     {errors.contact_persons?.[index]?.lastname && <p className="error-message">{errors.contact_persons?.[index]?.lastname?.message}</p>}
@@ -296,7 +296,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   <div className="d-flex flex-column gap-1 mb-2">
                     <label className={clsx(styles.lable)}>Email</label>
                     <IconField>
-                      <InputIcon style={{ top: '80%' }}>{errors.contact_persons?.[index]?.email && <img src={exclamationCircle} />}</InputIcon>
+                      <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.email && <img src={exclamationCircle} />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.email`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.email })} style={{ resize: 'none' }} placeholder='golden@harvest.com' />
                     </IconField>
                     {errors.contact_persons?.[index]?.email && <p className="error-message">{errors.contact_persons?.[index]?.email?.message}</p>}
@@ -479,7 +479,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
           <div className="d-flex flex-column gap-1">
             <label className={clsx(styles.lable)}>Description</label>
             <IconField>
-              <InputIcon style={{ top: '80%' }}>{errors.description && <img src={exclamationCircle} />}</InputIcon>
+              <InputIcon style={{ top: '75%' }}>{errors.description && <img src={exclamationCircle} />}</InputIcon>
               <InputTextarea {...register("description")} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.description })} style={{ resize: 'none' }} placeholder='Enter a description...' />
             </IconField>
             {errors.description && <p className="error-message">{errors.description.message}</p>}
