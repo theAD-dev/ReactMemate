@@ -81,6 +81,7 @@ import ClientPage from "../Business/Pages/clients"
 import ApprovalPage from "../Work/Pages/approval";
 import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
 import SupplierPage from "../Business/Pages/suppliers";
+import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
 
 
 
@@ -94,8 +95,7 @@ const Header = ({ onClick }) => {
     const fetchData = async () => {
       try {
         const data = await fetchProfile();
-        const parsedData = JSON.parse(data);
-        setProfileData(parsedData);
+        setProfileData(data);
       } catch (error) {
         console.error("Error fetching profile:", error);
       }
@@ -440,6 +440,8 @@ const Header = ({ onClick }) => {
           <Route path="/clients/:id/order-history" element={<ClientOrderHistory />} />
 
           <Route path="/suppliers" element={<SupplierPage />} />
+          <Route path="/suppliers/:id/history" element={<SupplierHistoryPage />} />
+
 
 
 

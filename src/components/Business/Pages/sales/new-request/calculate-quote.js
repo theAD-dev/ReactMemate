@@ -27,6 +27,7 @@ const CalculateQuote = () => {
             setPayload((others) => ({
                 ...others,
                 xero_tax: "ex",
+                managers: [{ manager: 20 }],
                 client: storedSessionData?.id || "",
                 reference: storedSessionData?.reference || "",
                 description: storedSessionData?.requirements || ""

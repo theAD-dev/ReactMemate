@@ -1,7 +1,7 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
-export const getListOfSuppliers = async (page, limit, order) => {
+export const getListOfSuppliers = async (page, limit, name="", order) => {
   const offset = (page - 1) * limit;
   const endpoint = `/suppliers/`;
   const options = {
@@ -10,12 +10,35 @@ export const getListOfSuppliers = async (page, limit, order) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   url.searchParams.append("limit", limit);
   url.searchParams.append("offset", offset);
-  if (order) url.searchParams.append("ordering", order)
+  if (name) url.searchParams.append("name", name);
+  if (order) url.searchParams.append("ordering", order);
 
   return fetchAPI(url.toString(), options);
 }
 
+export const getListOfExpenses = async (page, limit, name="", order) => {
+  const offset = (page - 1) * limit;
+  const endpoint = `/expenses/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  if (name) url.searchParams.append("name", name);
+  if (order) url.searchParams.append("ordering", order);
 
+  return fetchAPI(url.toString(), options);
+}
+
+export const getSupplierById = async (id) => {
+  const endpoint = `/suppliers/${id}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
 export const fetchSuppliers = async (limit, offset) => {
   const myHeaders = new Headers();

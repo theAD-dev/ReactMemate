@@ -80,3 +80,29 @@
   margin: 0px;
   color: var(--Primary-500, #1ab2ff);
 }
+
+.nameBgBox {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid #dedede;
+}
+
+.serviceTag {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+
+  /* Text xs/Medium */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+  align-items: center;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
