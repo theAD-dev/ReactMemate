@@ -7,6 +7,7 @@ import { useDebounce } from 'primereact/hooks';
 
 import style from './suppliers.module.scss';
 import { SupplierTable } from './supplier-table';
+import SupplierCreate from '../../features/supliers-features/supplier-create';
 
 const SupplierPage = () => {
     const dt = useRef(null);
@@ -65,6 +66,7 @@ const SupplierPage = () => {
                 </div>
             </div>
             <SupplierTable ref={dt} searchValue={debouncedValue} setTotalSuppliers={setTotalSuppliers} selectedSuppliers={selectedSuppliers} setSelectedSuppliers={setSelectedSuppliers} />
+            <SupplierCreate visible={visible} setVisible={setVisible} />
         </PrimeReactProvider>
     )
 }
