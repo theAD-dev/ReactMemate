@@ -138,7 +138,7 @@ const Header = ({ onClick }) => {
                       <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
                     </div>
                   </Col>
-                  <Col className="d-flex align-items-center">
+                  <Col className="d-flex align-items-center justify-content-center">
                     <nav className="colMinWidth">
                       <div className="menu-item">
                         <ul>

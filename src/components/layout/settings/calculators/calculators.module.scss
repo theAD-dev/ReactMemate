@@ -1,0 +1,37 @@
+.topHeadBorder {
+    border-bottom: 1px solid #EAECF0;
+    margin-bottom: 24px;
+}
+
+.accorHeadbox{
+    a{
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid #EAECF0;
+    background: #FFF;
+    padding: var(--spacing-xl, 16px);
+    }
+    .accorHeadStyle{
+        color: var(--Gray-700, #344054);
+        font-family: Inter;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 28px;
+    }
+    .innerBoxStyle{
+        a{
+        background: var(--Gray-50, #F9FAFB);
+        padding: var(--spacing-xl, 16px);
+        border: 0;
+        color: var(--Gray-700, #344054);
+        font-family: Inter;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 24px; 
+        letter-spacing: -0.18px;
+        }
+
+    }
+
+}

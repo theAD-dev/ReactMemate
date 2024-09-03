@@ -90,7 +90,6 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
   };
 
   const selectedRowsCount = selectedRows.length;
-
   const [columns, setColumns] = useState([
     {
       field: "Quote",
@@ -111,16 +110,19 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       ),
 
       renderCell: (params) => (
-        <div className="styleColor1">
-          <strong>{params.value}</strong>
+         <div className="innerFlex styleColor2 d-flex justify-content-between">
+         <div className="styleColor1">
+         <strong>{params.value}</strong>
           <p>{formatDate(params.row.created)}</p>
-        </div>
+         </div>
+         <Link to={`/sales/quote-calculation/${params.row.unique_id}`}><Button className="linkByttonStyle" variant="link">Open</Button></Link>
+       </div>
       ),
     },
 
     {
       field: "Client",
-      width: 400,
+      width: 200,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Client")}>
           <span>Client</span>
@@ -147,7 +149,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
               />
               <span>{params.value}</span>
             </div>
-            <Button className="linkByttonStyle" variant="link">Open</Button>
+       
           </div>
         </div>
       ),
@@ -162,7 +164,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
           className="mainStyle mainStyleMin"
           style={{ whiteSpace: "normal", textAlign: "left" }}
         >
-          Proj-{params.row.id} | {params.value}
+          {params.value}
         </div>
       ),
     },
@@ -198,17 +200,17 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       renderCell: (params) => (
         <div>
           <ul className="disPlayInline disPlayInlineCenter">
-            <li className="disable">
-              <Link to={`/sales/quote-calculation/${params.row.unique_id}`}>
+            <li className="">
+              <Link to="">
                 <PlusSlashMinus color="#FDB022" size={16} />
               </Link>
             </li>
-            <li className="disable">
+            <li className={`${params.row.Status}`}>
               <Link to={params.row.CalculationPDF} target="_blank" rel="noopener noreferrer">
                 <FilePdf color="#FF0000" size={16} />
               </Link>
             </li>
-            <li className="disable">
+            <li className={`${params.row.Status}`}>
               <Link to={params.row.CalculationURL} target="_blank" rel="noopener noreferrer">
                 <Link45deg color="#3366CC" size={16} />
               </Link>

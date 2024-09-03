@@ -121,20 +121,20 @@ function MyProfile() {
                       <div className={styles.editinfo}>
                         <span>First Name</span>
                         {!isEditingGroup ? (
-                          <strong>{data.full_name} </strong>
+                          <strong>{data.first_name} </strong>
                         ) : (
                           <>
                             <div
                               className={`inputInfo ${
-                                errors.full_name ? "error-border" : ""
+                                errors.first_name ? "error-border" : ""
                               }`}
                             >
                               <input
-                                {...register("full_name")}
-                                placeholder="Enter company legal name"
-                                defaultValue={data.full_name}
+                                {...register("first_name")}
+                                placeholder="Enter First Name"
+                                defaultValue={data.first_name}
                               />
-                              {errors.full_name && (
+                              {errors.first_name && (
                                 <img
                                   className="ExclamationCircle"
                                   src={exclamationCircle}
@@ -142,9 +142,9 @@ function MyProfile() {
                                 />
                               )}
                             </div>
-                            {errors.full_name && (
+                            {errors.first_name && (
                               <p className="error-message">
-                                {errors.full_name.message}
+                                {errors.first_name.message}
                               </p>
                             )}
                           </>
@@ -162,20 +162,20 @@ function MyProfile() {
                       <div className={styles.editinfo}>
                         <span>Last Name</span>
                         {!isEditingGroup ? (
-                          <strong>{data.alias_name} </strong>
+                          <strong>{data.last_name} </strong>
                         ) : (
                           <>
                             <div
                               className={`inputInfo ${
-                                errors.alias_name ? "error-border" : ""
+                                errors.last_name ? "error-border" : ""
                               }`}
                             >
                               <input
-                                {...register("alias_name")}
+                                {...register("last_name")}
                                 placeholder="Enter Last name name"
-                                defaultValue={data.alias_name}
+                                defaultValue={data.last_name}
                               />
-                              {errors.alias_name && (
+                              {errors.last_name && (
                                 <img
                                   className="ExclamationCircle"
                                   src={exclamationCircle}
@@ -183,9 +183,9 @@ function MyProfile() {
                                 />
                               )}
                             </div>
-                            {errors.alias_name && (
+                            {errors.last_name && (
                               <p className="error-message">
-                                {errors.alias_name.message}
+                                {errors.last_name.message}
                               </p>
                             )}
                           </>
