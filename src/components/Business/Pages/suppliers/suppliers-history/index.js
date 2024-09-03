@@ -12,17 +12,18 @@ import { useDebounce } from 'primereact/hooks';
 import style from './supplier-history.module.scss';
 import SupplierHistoryTable from './supplier-history-table';
 import { getSupplierById } from '../../../../../APIs/SuppliersApi';
+import SupplierView from '../../../features/supliers-features/supplier-view';
+import SupplierLoadingSidebar from '../../../features/supliers-features/supplier-loading-sidebar';
 
 const SupplierHistoryPage = () => {
   const navigate = useNavigate();
   const dt = useRef(null);
   const { id } = useParams();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
   const supplierDetails = useQuery({ queryKey: ['client-read'], queryFn: () => getSupplierById(id), enabled: !!id, retry: 1 });
 
-  const handleSearch = (e) => { }
   const exportCSV = (selectionOnly) => {
     if (dt.current) {
       dt.current.exportCSV({ selectionOnly });
@@ -64,6 +65,17 @@ const SupplierHistoryPage = () => {
         </div>
         <SupplierHistoryTable ref={dt} />
       </div>
+      <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
+        content={({ closeIconRef, hide }) => (
+          <>
+            {
+              supplierDetails?.isLoading
+                ? <SupplierLoadingSidebar closeIconRef={closeIconRef} hide={hide} />
+                : <SupplierView data={supplierDetails?.data} closeIconRef={closeIconRef} hide={hide} />
+            }
+          </>
+        )}
+      ></Sidebar>
     </PrimeReactProvider>
   )
 }

@@ -23,7 +23,6 @@ const SupplierPage = () => {
         }
     };
 
-    const handleSearch = (e) => { }
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${selectedSuppliers?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
