@@ -3,22 +3,67 @@
     margin-bottom: 24px;
 }
 
+    .p-highlight{
+        border-bottom: 0 !important;
+    }
+
+
 .accorHeadbox{
+    border-radius: var(--radius-xs, 4px);
+border: 1px solid #EAECF0;
+background: #FFF;
+.iconSpace{
+    margin: 0 8px;
+}
+    .creaeDepartment{
+        color: #475467;
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        background: none;
+        border: 0;
+        padding: 0;
+        &:hover{
+            color: #475467;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px;
+            background: none;
+            border: 0;
+            padding: 0;
+        }
+    }
+    
     a{
     border-radius: var(--radius-xs, 4px);
     border: 1px solid #EAECF0;
     background: #FFF;
     padding: var(--spacing-xl, 16px);
+    border: 0;
     }
     .accorHeadStyle{
+        color: var(--Primary-700, #106B99);
+        font-family: Inter;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 28px; 
+    }
+    .accorInHeadStyle{
         color: var(--Gray-700, #344054);
         font-family: Inter;
         font-size: 18px;
         font-style: normal;
-        font-weight: 500;
-        line-height: 28px;
+        font-weight: 600;
+        line-height: 24px; 
+        letter-spacing: -0.18px;
     }
     .innerBoxStyle{
+        border: 0;
         a{
         background: var(--Gray-50, #F9FAFB);
         padding: var(--spacing-xl, 16px);
@@ -33,5 +78,60 @@
         }
 
     }
+    .contentStyle{
+        border: 0px solid #e5e7eb;
+        font-family: Inter;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.08px;
+        h6{
+            color: var(--Gray-500, #667085);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 22px; 
+            letter-spacing: 0.14px;
+        }
+    }
+}
 
+
+.modelStyleBoxstatus {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+    padding: 0px;
+}
+.iconborderStyle{
+    border-radius: 28px;
+    border: 8px solid var(--Success-50, #ECFDF3);
+    background: var(--Success-100, #DCFAE6);
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    margin-right: 9px;
+}
+.stepBoxStylePayment {
+    background: var(--Gray-25, #FCFCFD);
+    padding: 16px;
+    .inputInfo {
+        border-radius: var(--radius-xs, 4px);
+        border: 1px solid var(--Border, #D0D5DD);
+        background: #FFF;
+        padding: 8px 14px;
+        color: var(--Gray-900, #101828);
+        font-family: Inter;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: -0.08px;
+    }
 }

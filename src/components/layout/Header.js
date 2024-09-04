@@ -29,7 +29,7 @@ import Profile from "./Login/profile";
 import Invoices from "../Business/Pages/invoices/invoices";
 import Expenses from "../Business/Pages/expenses/expenses";
 import Home from "../Home";
-import Orders from "../Business/Pages/orders/orders";
+
 import Statistics from "../Business/Pages/statistics";
 import GeneralInformation from "../layout/settings/generalinformation/GeneralInformation";
 import BankDetails from "../layout/settings/generalinformation/BankDetails";
@@ -77,6 +77,7 @@ import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote"
 import { Placeholder } from "react-bootstrap";
 import JobsPage from "../Work/Pages/jobs";
 import PeoplePage from "../Work/Pages/people";
+import OrderPage from "../Business/Pages/orders";
 import ClientPage from "../Business/Pages/clients"
 import ApprovalPage from "../Work/Pages/approval";
 import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
@@ -307,7 +308,7 @@ const Header = ({ onClick }) => {
                       <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
                     </div>
                   </Col>
-                  <Col className="d-flex align-items-center">
+                  <Col className="d-flex align-items-center justify-content-center">
                     <nav className="colMinWidth">
                       <div className="menu-item">
                         <ul>
@@ -450,7 +451,7 @@ const Header = ({ onClick }) => {
           <Route path="/work" element={<Work />} />
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/management" element={<Management />} />
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders" element={<OrderPage />} />
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/invoices" element={<Invoices />} />
