@@ -306,7 +306,7 @@ div#popoverStyleChange {
   border: 1px solid #a3e0ff;
   background: #ebf8ff;
 }
-.LmenuList {
+.MuiButtonBase-roo.LmenuList {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
