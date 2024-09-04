@@ -1,0 +1,10 @@
+.mergeButton, .mergeButton:hover, .mergeButton:focus {
+    font-weight: 600;
+    width: fit-content;
+    font-size: 14px !important;
+    color: #475467 !important;
+}
+
+.disabled {
+    cursor: not-allowed !important;
+}

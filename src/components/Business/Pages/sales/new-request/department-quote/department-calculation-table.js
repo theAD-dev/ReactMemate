@@ -7,8 +7,6 @@ import { getCalculationByReferenceId, getDepartments, getMergeItemsByUniqueId, g
 import SelectComponent from './select-component';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import './select-component.css';
-import MergeItems, { EditMergeItems } from './merge-items';
-import ViewMergeItems from './view-merge-items';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import CreateMergeCalculation from '../../../../features/sales-features/merges-calculation/create-merge-calculation';
@@ -486,7 +484,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
                 console.log('findData: ', findData);
                 keyIndexMap[cal.calculator] = alias;
-                return { label: findData?.label, value: findData?.total };
+                return { label: subindexMap[findData?.index], value: findData?.total };
             });
 
             return { ...merge, alias, items };
@@ -531,29 +529,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
             </DragDropContext>
 
             <div className='merge-section' style={{ marginTop: '20px', textAlign: 'left' }}>
-                <CreateMergeCalculation unique_id={unique_id} setMerges={setMerges} />
+                <CreateMergeCalculation unique_id={unique_id} selectItem={selectItem} setMerges={setMerges} />
                 <ListMergeCalculations merges={merges} />
-
-                {/* <MergeItems mergeItems={mergeItems} setMergeItems={setMergeItems} selectItems={selectItem} setSelectItems={setSelectItem} setMapMergeItemWithNo={setMapMergeItemWithNo} />
-                <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "20px 0px" }}></div>
-                {(Object.keys(mergeItems)?.length && <p className='mb-0' style={{ fontSize: '14px', fontWeight: '500', color: '#475467' }}>Merged Items</p>) || ''}
-
-                {
-                    Object.entries(mergeItems)?.map(([key, value]) =>
-                        <div key={key} className='d-flex align-items-center' style={{ margin: '20px 0px' }}>
-                            <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2FAFF', border: '1px solid #A3E0FF', color: '#106B99', fontSize: '10px' }}>
-                                {value.romanNo}
-                            </div>
-                            <div className='my-0 d-flex align-items-center' style={{ color: '#101828', fontSize: '16px', marginLeft: '10px', marginRight: '56px', minWidth: '283px', gap: '10px' }}>
-                                <ViewMergeItems romanNo={value.romanNo} items={value.items} title={value.title} />
-                                <EditMergeItems key={key} id={key} setMergeItems={setMergeItems} romanNo={value.romanNo} items={value.items} title={value.title} description={value.description} />
-                            </div>
-                            <span style={{ color: '#667085', fontSize: '14px', marginRight: '37px' }}>$ &nbsp; {value.total}</span>
-                            <Trash onClick={() => deleteMergeItem(key)} color="#98A2B3" style={{ cursor: 'pointer' }} />
-                        </div>)
-                }
-
-                {(Object.keys(mergeItems || {})?.length && <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "0px 0px 20px 0px" }}></div>) || ""} */}
             </div>
         </div>
     )

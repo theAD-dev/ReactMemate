@@ -2,6 +2,7 @@ import React from 'react'
 import style from './list-merge-calculation.module.scss';
 import clsx from 'clsx';
 import { Trash } from 'react-bootstrap-icons';
+import ViewMerge from '../view-merge-calculation';
 
 const ListMergeCalculations = ({ merges }) => {
     return (
@@ -17,7 +18,7 @@ const ListMergeCalculations = ({ merges }) => {
                             {merge?.alias}
                         </div>
                         <div className='d-flex align-items-center gap-3' style={{ width: '500px' }}>
-                            <button type="button" className="btn p-0 ellipsis-width" style={{ maxWidth: '450px' }}>{merge.title}</button>
+                            <ViewMerge title={merge.title} alias={merge?.alias} items={merge.items} />
                             <button onClick={() => { }} className='btn text-button p-0 mt-1'>Edit</button>
                         </div>
                         <Trash onClick={() => { }} color="#98A2B3" size={16} className='cursor-pointer' />
