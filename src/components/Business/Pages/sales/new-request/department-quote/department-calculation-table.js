@@ -11,6 +11,9 @@ import MergeItems, { EditMergeItems } from './merge-items';
 import ViewMergeItems from './view-merge-items';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import CreateMergeCalculation from '../../../../features/sales-features/merges-calculation/create-merge-calculation';
+import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
+import { romanize } from '../../../../shared/utils/helper';
 
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, isDiscountActive }) => {
     return (
@@ -157,9 +160,9 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                             {
                                                 index === 0 && (
                                                     <div className='d-flex align-items-center justify-content-start'>
-                                                        {mapMergeItemWithNo[key] ? (
+                                                        {mapMergeItemWithNo[value.id] ? (
                                                             <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '10px' }}>
-                                                                {mapMergeItemWithNo[key]}
+                                                                {mapMergeItemWithNo[value.id]}
                                                             </div>
                                                         ) : (
                                                             <label className="customCheckBox checkbox" style={{ marginRight: '10px' }}>
@@ -261,10 +264,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
-    const [mergeItems, setMergeItems] = useState({});
-    console.log('mergeItems: ', mergeItems);
+
+    const [merges, setMerges] = useState([]);
     const [selectItem, setSelectItem] = useState({});
     const [mapMergeItemWithNo, setMapMergeItemWithNo] = useState({});
+
     const { data: departments } = useQuery({
         queryKey: ['departments'],
         queryFn: getDepartments,
@@ -452,60 +456,50 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
     }, [rows, xero_tax]);
 
     useEffect(() => {
-        if (preExistCalculation?.length && departments?.length) {
-            console.log('preExistCalculation: ', preExistCalculation);
-            const subindexMap = {};
-            departments?.forEach(item => {
-                item.subindexes.forEach(subindex => {
-                    subindexMap[subindex.id] = subindex.name;
-                });
+        if (!preExistCalculation?.length || !departments?.length) return;
+
+        console.log('preExistCalculation: ', preExistCalculation);
+
+        // Build a map of subindex id to subindex name
+        const subindexMap = departments.reduce((map, department) => {
+            department.subindexes.forEach(subindex => {
+                map[subindex.id] = subindex.name;
+            });
+            return map;
+        }, {});
+
+        // Reformat preExistCalculation data
+        const reformattedData = preExistCalculation.reduce((acc, { order, index, ...item }) => {
+            const key = `_${index}_`;
+            acc[key] = acc[key] || [];
+            acc[key].push({ ...item, label: subindexMap[index] });
+            return acc;
+        }, {});
+
+        // Create key-index map and reformat preExistMerges data
+        const keyIndexMap = {};
+        const reformattedMerges = preExistMerges.map((merge, index) => {
+            console.log('merge: ', merge);
+            const alias = romanize(index + 1);
+
+            const items = merge.calculators.map(cal => {
+                const findData = preExistCalculation.find(data => data.id === cal.calculator);
+                console.log('findData: ', findData);
+                keyIndexMap[cal.calculator] = alias;
+                return { label: findData?.label, value: findData?.total };
             });
 
-            const reformattedData = preExistCalculation?.reduce((acc, item) => {
-                const key = `_${item.index}_`;
-                if (!acc[key]) acc[key] = [];
-                item.label = subindexMap[item.index];
-                const { order, index, ...rest } = item;
-                acc[key].push(rest);
+            return { ...merge, alias, items };
+        });
 
-                return acc;
-            }, {});
+        console.log('preExistMerges reformatted data: ', reformattedMerges, keyIndexMap);
 
-            console.log('preExistCalculation reformatted data: ', reformattedData);
-            setRows(reformattedData);
-        }
-    }, [preExistCalculation, departments])
+        setRows(reformattedData);
+        setMerges(reformattedMerges);
+        setMapMergeItemWithNo(keyIndexMap);
 
+    }, [preExistCalculation, preExistMerges, departments]);
 
-
-    
-    useEffect(() => {
-        let map = {};
-        if (Object.keys(mergeItems)?.length) {
-            Object.entries(mergeItems)?.map(([key, value]) => {
-                return value?.keys.map(key => {
-                    return map[key] = value.romanNo;
-                })
-            })
-        }
-        setMapMergeItemWithNo(map);
-    }, [mergeItems]);
-
-    const deleteMergeItem = (key) => {
-        setMergeItems((oldItems) => {
-            const updatedItems = { ...oldItems };
-            if (updatedItems[key]) delete updatedItems[key];
-
-            Object.keys(updatedItems).forEach((itemKey, index) => {
-                updatedItems[itemKey] = {
-                    ...updatedItems[itemKey],
-                    romanNo: romanize(index + 1),
-                };
-            });
-
-            return updatedItems;
-        })
-    }
 
     return (
         <div>
@@ -537,7 +531,10 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
             </DragDropContext>
 
             <div className='merge-section' style={{ marginTop: '20px', textAlign: 'left' }}>
-                <MergeItems mergeItems={mergeItems} setMergeItems={setMergeItems} selectItems={selectItem} setSelectItems={setSelectItem} setMapMergeItemWithNo={setMapMergeItemWithNo} />
+                <CreateMergeCalculation unique_id={unique_id} setMerges={setMerges} />
+                <ListMergeCalculations merges={merges} />
+
+                {/* <MergeItems mergeItems={mergeItems} setMergeItems={setMergeItems} selectItems={selectItem} setSelectItems={setSelectItem} setMapMergeItemWithNo={setMapMergeItemWithNo} />
                 <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "20px 0px" }}></div>
                 {(Object.keys(mergeItems)?.length && <p className='mb-0' style={{ fontSize: '14px', fontWeight: '500', color: '#475467' }}>Merged Items</p>) || ''}
 
@@ -556,21 +553,10 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
                         </div>)
                 }
 
-                {(Object.keys(mergeItems || {})?.length && <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "0px 0px 20px 0px" }}></div>) || ""}
+                {(Object.keys(mergeItems || {})?.length && <div className='w-100' style={{ height: '1px', background: "#EAECF0", margin: "0px 0px 20px 0px" }}></div>) || ""} */}
             </div>
         </div>
     )
-}
-
-function romanize(num) {
-    var lookup = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 }, roman = '', i;
-    for (i in lookup) {
-        while (num >= lookup[i]) {
-            roman += i;
-            num -= lookup[i];
-        }
-    }
-    return roman;
 }
 
 export default DepartmentCalculationTable;

@@ -9,7 +9,7 @@ import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-foun
 import { ArrowLeftCircle, FilePdf, Files, FileText, InfoCircle, Link45deg, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 
-const ClientOrderHistoryTable = forwardRef(({ clientOrders, isPending }, ref) => {
+const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
   const statusBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
@@ -60,7 +60,8 @@ const ClientOrderHistoryTable = forwardRef(({ clientOrders, isPending }, ref) =>
   return (
     <DataTable ref={ref} value={clientOrders} scrollable selectionMode={'checkbox'} removableSort
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-      scrollHeight={"calc(100vh - 182px)"} className="border"
+      scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
+      onSelectionChange={(e) => setSelected(e.value)}
       loading={isPending}
       emptyMessage={NoDataFoundTemplate}
     >

@@ -20,6 +20,7 @@ const ClientOrderHistory = () => {
     const dt = useRef(null);
     const { id } = useParams();
     const [visible, setVisible] = useState(true);
+    const [selected, setSelected] = useState(null);
 
     const clientDetails = useQuery({ queryKey: ['client-read'], queryFn: () => getClientById(id), enabled: !!id, retry: 1 });
     const clientOrders = useQuery({ queryKey: ['client-order'], queryFn: () => clientOrderHistory(id), enabled: !!id, retry: 1 });
@@ -64,7 +65,7 @@ const ClientOrderHistory = () => {
                         <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
                     </div>
                 </div>
-                <ClientOrderHistoryTable ref={dt} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
+                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (

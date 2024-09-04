@@ -16,6 +16,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue }, ref) => {
   const observerRef = useRef(null);
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState(null);
   const [sort, setSort] = useState({ sortField: null, sortOrder: null });
   const [hasMoreData, setHasMoreData] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -92,7 +93,8 @@ const SupplierHistoryTable = forwardRef(({ searchValue }, ref) => {
   return (
     <DataTable ref={ref} value={expenses} scrollable selectionMode={'checkbox'} removableSort
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-      scrollHeight={"calc(100vh - 182px)"} className="border"
+      scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
+      onSelectionChange={(e) => setSelected(e.value)}
       loading={loading}
       loadingIcon={loadingIconTemplate}
       emptyMessage={NoDataFoundTemplate}
