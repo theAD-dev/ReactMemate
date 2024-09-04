@@ -529,7 +529,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
             </DragDropContext>
 
             <div className='merge-section' style={{ marginTop: '20px', textAlign: 'left' }}>
-                <CreateMergeCalculation unique_id={unique_id} selectItem={selectItem} setMerges={setMerges} />
+                <CreateMergeCalculation unique_id={unique_id} selectItem={selectItem} merges={merges} setMerges={setMerges} />
                 <ListMergeCalculations merges={merges} />
             </div>
         </div>
