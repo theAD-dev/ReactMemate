@@ -161,7 +161,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
         <Col>
           <div className="d-flex flex-column mb-4 gap-1">
             <label className={clsx(styles.lable)}>Services</label>
-            <Chips value={servicesTag} onChange={(e) => setServiceTag(e.value)} className={clsx('w-100 custom-chipsInput')}  separator="," />
+            <Chips value={servicesTag} allowDuplicate={false} addOnBlur={true} onChange={(e) => setServiceTag(e.value)} className={clsx('w-100 custom-chipsInput')}  separator="," />
           </div>
         </Col>
         <Col sm={12}>
