@@ -109,19 +109,21 @@ const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
 
 const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
     const handleChange = (event, key, values) => {
-        console.log('values: ', values);
         setSelectItem((oldItems) => {
             if (event.target.checked) {
-                const { label, total, calculator } = values.reduce((acc, value, index) => {
-                    if (index === 0) acc.label = value.label;
+                const { label, total, calculator, id } = values.reduce((acc, value, index) => {
+                    if (index === 0) {
+                        acc.label = value.label;
+                        acc.calculator = value?.id;
+                        acc.id = value?.index;
+                    }
                     acc.total += parseFloat(value.total || 0.00);
-                    acc.calculator = value?.id
                     return acc;
-                }, { label: '', total: 0, calculator: null });
+                }, { label: '', total: 0, calculator: null, id: null });
 
                 return {
                     ...oldItems,
-                    [key]: { label, total, calculator }
+                    [key]: { label, total, calculator, id }
                 };
             } else {
                 const updatedItems = { ...oldItems };
@@ -158,18 +160,19 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                             {
                                                 index === 0 && (
                                                     <div className='d-flex align-items-center justify-content-start'>
-                                                        {mapMergeItemWithNo[value.id] ? (
-                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '10px' }}>
-                                                                {mapMergeItemWithNo[value.id]}
-                                                            </div>
-                                                        ) : (
-                                                            <label className="customCheckBox checkbox" style={{ marginRight: '10px' }}>
-                                                                <input type="checkbox" onChange={(e) => handleChange(e, key, values)} />
-                                                                <span className="checkmark" style={{ top: '0px' }}>
-                                                                    <Check color="#1AB2FF" size={20} />
-                                                                </span>
-                                                            </label>
-                                                        )
+                                                        {
+                                                            mapMergeItemWithNo[value.id] ? (
+                                                                <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '10px' }}>
+                                                                    {mapMergeItemWithNo[value.id]}
+                                                                </div>
+                                                            ) : (
+                                                                <label className="customCheckBox checkbox" style={{ marginRight: '10px' }}>
+                                                                    <input type="checkbox" onChange={(e) => handleChange(e, key, values)} />
+                                                                    <span className="checkmark" style={{ top: '0px' }}>
+                                                                        <Check color="#1AB2FF" size={20} />
+                                                                    </span>
+                                                                </label>
+                                                            )
                                                         }
 
                                                         <span>{id + 1}</span>
@@ -257,11 +260,12 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
     );
 }
 
-const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, xero_tax, preExistCalculation, preExistMerges }) => {
+const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, xero_tax, preExistCalculation, preMerges, refetch }) => {
     const { unique_id } = useParams();
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
+    const [preExistMerges, setPreExistMerges] = useState([]);
 
     const [merges, setMerges] = useState([]);
     const [selectItem, setSelectItem] = useState({});
@@ -454,9 +458,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
     }, [rows, xero_tax]);
 
     useEffect(() => {
-        if (!preExistCalculation?.length || !departments?.length) return;
+        if (preMerges && preMerges?.length) setPreExistMerges(preMerges)
+    }, [preMerges])
 
-        console.log('preExistCalculation: ', preExistCalculation);
+    useEffect(() => {
+        if (!preExistCalculation?.length || !departments?.length) return;
 
         // Build a map of subindex id to subindex name
         const subindexMap = departments.reduce((map, department) => {
@@ -477,12 +483,10 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
         // Create key-index map and reformat preExistMerges data
         const keyIndexMap = {};
         const reformattedMerges = preExistMerges.map((merge, index) => {
-            console.log('merge: ', merge);
             const alias = romanize(index + 1);
 
-            const items = merge.calculators.map(cal => {
+            const items = merge?.calculators?.map(cal => {
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
-                console.log('findData: ', findData);
                 keyIndexMap[cal.calculator] = alias;
                 return { label: subindexMap[findData?.index], value: findData?.total };
             });
@@ -490,13 +494,42 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
             return { ...merge, alias, items };
         });
 
-        console.log('preExistMerges reformatted data: ', reformattedMerges, keyIndexMap);
-
         setRows(reformattedData);
         setMerges(reformattedMerges);
         setMapMergeItemWithNo(keyIndexMap);
 
     }, [preExistCalculation, preExistMerges, departments]);
+
+    useEffect(() => {
+        if (preExistMerges?.length !==0 && preExistCalculation?.length === 0 && departments?.length) {
+
+            // Build a map of subindex id to subindex name
+            const subindexMap = departments.reduce((map, department) => {
+                department.subindexes.forEach(subindex => {
+                    map[subindex.id] = subindex.name;
+                });
+                return map;
+            }, {});
+
+            // Create key-index map and reformat preExistMerges data
+            const keyIndexMap = {};
+            const preExistCalculation = Object.values(rows) || [];
+            const reformattedMerges = preExistMerges.map((merge, index) => {
+                const alias = romanize(index + 1);
+
+                const items = merge?.calculators?.map(cal => {
+                    const findData = preExistCalculation.find(data => data?.[0].index === cal.id);
+                    keyIndexMap[cal.calculator] = alias;
+                    return { label: subindexMap[findData?.[0]?.index], value: findData?.[0]?.total };
+                });
+
+                return { ...merge, alias, items };
+            });
+
+            setMerges(reformattedMerges);
+            setMapMergeItemWithNo(keyIndexMap);
+        }
+    }, [preExistMerges]);
 
 
     return (
@@ -529,8 +562,13 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
             </DragDropContext>
 
             <div className='merge-section' style={{ marginTop: '20px', textAlign: 'left' }}>
-                <CreateMergeCalculation unique_id={unique_id} selectItem={selectItem} merges={merges} setMerges={setMerges} />
-                <ListMergeCalculations merges={merges} />
+                <CreateMergeCalculation unique_id={unique_id} selectItem={selectItem}
+                    setSelectItem={setSelectItem} merges={merges} setMerges={setMerges}
+                    setPayload={setPayload} refetch={refetch} setPreExistMerges={setPreExistMerges}
+                />
+                <ListMergeCalculations unique_id={unique_id} merges={merges}
+                    refetch={refetch}
+                />
             </div>
         </div>
     )

@@ -11,12 +11,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { getListOfExpenses } from '../../../../../APIs/SuppliersApi';
 
-const SupplierHistoryTable = forwardRef(({ searchValue }, ref) => {
+const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected }, ref) => {
   const navigate = useNavigate();
   const observerRef = useRef(null);
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState(null);
   const [sort, setSort] = useState({ sortField: null, sortOrder: null });
   const [hasMoreData, setHasMoreData] = useState(true);
   const [loading, setLoading] = useState(false);

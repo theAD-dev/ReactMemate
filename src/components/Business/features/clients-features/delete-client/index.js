@@ -37,7 +37,6 @@ const DeleteClient = ({ id }) => {
             accept,
             reject,
         });
-
     }
     return (
         <>

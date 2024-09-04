@@ -25,7 +25,8 @@ const CustomOption = (props) => {
   );
 };
 
-const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, preExistCalculation, preExistMerges }) => {
+const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges }) => {
+  console.log('payload: ', payload);
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('');
   const [selectedManagers, setSelectedManagers] = useState([]);
@@ -87,7 +88,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, preExistCa
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
 
-        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} isDiscountActive={true} preExistCalculation={preExistCalculation} preExistMerges={preExistMerges} />
+        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} isDiscountActive={true} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} />
 
         <Row>
           <Col md={6}>

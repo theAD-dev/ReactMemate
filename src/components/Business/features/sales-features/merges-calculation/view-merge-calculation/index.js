@@ -5,7 +5,6 @@ import '@szhsin/react-menu/dist/index.css';
 import { CloseButton, ListGroup } from 'react-bootstrap';
 
 const ViewMerge = ({ title, alias, items }) => {
-    console.log('items: ', items);
     const ref = useRef(null);
     const [isOpen, setOpen] = useState(false);
     const anchorProps = useClick(isOpen, setOpen);

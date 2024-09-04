@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { QuestionCircle } from 'react-bootstrap-icons';
-import { Button, InputGroup, ListGroup, Modal, Spinner } from 'react-bootstrap';
+import { Button, InputGroup, ListGroup, Modal } from 'react-bootstrap';
 
 import style from './create-merge-calculation.module.scss';
 import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
@@ -22,7 +22,7 @@ const schema = yup
   })
   .required();
 
-const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, setMerges, setPayload, setPreExistMerges, refetch }) => {
+const EditMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, setMerges, setPayload, setPreExistMerges, refetch }) => {
   const [show, setShow] = useState(false);
   const romanNo = romanize((merges?.length || 0) + 1);
   const [defaultValues, setDefaultValues] = useState({
@@ -37,7 +37,6 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
     mutationFn: (data) => createNewMergeQuote(data),
     onSuccess: (response) => {
       refetch();
-      setSelectItem({});
       handleClose();
       toast.success(`New merge items created successfully.`);
     },
@@ -48,44 +47,34 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
   });
 
   const onSubmit = (data) => {
+    const payload = {
+      ...data,
+      calculations: Object.values(selectItem).reduce((acc, value, index) => {
+        acc.push({ calculator: value.calculator });
+        return acc;
+      }, [])
+    }
+
     if (unique_id) {
-      const payload = {
-        ...data, unique_id,
-        alias: romanNo,
-        calculations: Object.values(selectItem).reduce((acc, value, index) => {
-          acc.push({ calculator: value.calculator });
-          return acc;
-        }, [])
-      }
+      payload.unique_id = unique_id;
       mutation.mutate(payload);
-    } else {
-      const payload = {
-        ...data,
-        alias: romanNo,
-        calculators: Object.values(selectItem).reduce((acc, value, index) => {
-          acc.push({ calculator: value.calculator, id: value.id });
-          return acc;
-        }, [])
-      }
+    }
+    else {
       setPreExistMerges((others) => ([...others, payload]))
       setPayload((others) => ({
         ...others,
         merges: others.merges ? [...others.merges, payload] : [payload]
       }));
-      handleClose();
     }
   }
 
-  const deleteAndCancel = () => {
-    setShow(false);
-    setSelectItem({});
-  }
+  const deleteAndCancel = () => setShow(false);
   const handleClose = () => setShow(false);
   const handleOpen = () => setShow(true);
 
   return (
     <React.Fragment>
-      <Button type='button' disabled={Object.keys(selectItem)?.length < 2} onClick={handleOpen} className={clsx(style.mergeButton, 'text-button', { [style.disabled]: Object.keys(selectItem)?.length < 2 })}>Merge Items</Button>
+      <button onClick={handleOpen} className='btn text-button p-0 mt-1'>Edit</button>
       <Modal
         show={show}
         centered
@@ -154,13 +143,7 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
               <Button type='button' onClick={handleClose} className={clsx(style.cancelButton)}>Cancel</Button>
               <div className='d-flex align-items-center gap-3'>
                 <Button type='button' onClick={deleteAndCancel} className='delete-button'>Delete</Button>
-                <Button type='submit' className='save-button' style={{ minWidth: '67px' }}>
-                  {mutation?.isPending ? (
-                    <Spinner animation="border" role="status" size="sm">
-                      <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                  ) : 'Save'}
-                </Button>
+                <Button type='submit' className='save-button'>Save</Button>
               </div>
             </Modal.Footer>
           </Form>
@@ -170,4 +153,4 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
   )
 }
 
-export default CreateMergeCalculation
+export default EditMergeCalculation
