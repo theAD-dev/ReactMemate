@@ -1,17 +1,15 @@
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
-import { PlusLg } from "react-bootstrap-icons";
+import { PlusLg ,PencilSquare,GripVertical} from "react-bootstrap-icons";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import style from './calculators.module.scss';
 import Box from '@mui/material/Box';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Accordion, AccordionTab } from 'primereact/accordion';
 
 const Departments = () => {
     const [activeTab, setActiveTab] = useState('departments');
@@ -28,11 +26,7 @@ const Departments = () => {
     };
 
     const handleSave = () => {
-      if (dname.trim()) {
-        setDepartments([...departments, dname]);
-        setDname('');
-        setShowModal(false);
-      }
+      
     };
 
     return (
@@ -53,28 +47,85 @@ const Departments = () => {
                 <div className={`content_wrap_main`}>
                 <div className='content_wrapper'>
                     <div className="listwrapper">
-                    <div className="topHeadStyle pb-4">
+                    <div className={`topHeadStyle pb-4 ${style.topHeadBorder}`}>
                         <h2>Departments</h2>
                         <button onClick={() => createIndex()}>Create Index <PlusLg color="#000000" size={20} /></button>
                     </div>
                     <div>
+                    <Accordion>
+                <AccordionTab  className={style.accorHeadbox}
+                header={
+                    <span className="d-flex align-items-center justify-content-between">
+                        <span className={style.accorHeadStyle}>Yacht Management</span>
+                        <div className='RItem'>
+                        <PencilSquare color="#344054" size={20} className="ml-auto" />
+                        <GripVertical color="#98A2B3" size={16} className="ml-auto" />
+                        </div>
+                    </span>
+                }
+                >
+                    <div className="m-0">
+         
+                       <Accordion>
+    <AccordionTab className={style.innerBoxStyle} 
+     header={
+        <span className="d-flex align-items-center justify-content-between">
+            <span className={style.accorHeadStyle}>Advertising - Elite Life Magazine</span>
+            <div className='RItem'>
+          
+            <GripVertical color="#98A2B3" size={16} className="ml-auto" />
+            </div>
+        </span>
+    }
+    >
+        <p className="m-01">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </AccordionTab>
+    <AccordionTab className={style.innerBoxStyle} 
+     header={
+        <span className="d-flex align-items-center justify-content-between">
+            <span className={style.accorHeadStyle}>Creatie Design for A4 Page</span>
+            <div className='RItem'>
+          
+            <GripVertical color="#98A2B3" size={16} className="ml-auto" />
+            </div>
+        </span>
+    }
+    >
+        <p className="m-01">
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+            quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
+            sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+            Consectetur, adipisci velit, sed quia non numquam eius modi.
+        </p>
+    </AccordionTab>
+</Accordion>
+                    </div>
+                </AccordionTab>
+                <AccordionTab header="Real Estate Management">
+                    <div className="m-0">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                        quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
+                        sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+                        Consectetur, adipisci velit, sed quia non numquam eius modi.
+                    </div>
+                </AccordionTab>
+                <AccordionTab header="Yacht Management">
+                    <div className="m-0">
+                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti
+                        quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt
+                        mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+                        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+                    </div>
+                </AccordionTab>
+            </Accordion>
                         {departments.map((department, index) => (
-                            <Accordion key={index}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls={`panel${index}-content`}
-                                    id={`panel${index}-header`}
-                                >
-                                    <Typography>{department}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Typography>
-                                        Content
-                                        <button > Create Sub Department<PlusLg color="#000000" size={20} /></button>
-                                       
-                                    </Typography>
-                                </AccordionDetails>
-                            </Accordion>
+                       <>
+                       </>
                         ))}
                     </div>
                     </div>

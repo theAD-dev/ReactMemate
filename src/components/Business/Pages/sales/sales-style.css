@@ -373,6 +373,12 @@ div#popoverStyleChange {
   border-radius: 6px;
   width: 41px;
 }
+.salesTableWrap .disPlayInlineCenter li.Draft {
+  pointer-events: none;
+}
+.salesTableWrap .disPlayInlineCenter li.Draft a svg {
+  fill: #c3bdbd;
+}
 .salesTableWrap .disPlayInline li:first-child:hover {
   background: #fefaec;
 }
@@ -2703,6 +2709,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   padding: 16px 24px 12px;
   align-items: center;
 }
+
 .SalesContact .modal-content {
   position: relative;
   display: flex;
