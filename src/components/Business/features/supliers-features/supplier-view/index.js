@@ -127,7 +127,7 @@ const ViewSection = ({ data }) => {
         <div className={clsx(style.box)}>
             <div className='d-flex gap-3 align-items-center'>
                 {
-                    services?.length ? (services.map((service, index) => <div className={style.serviceTag}>{service}</div>)) : "-"
+                    services?.length ? (services.map((service, index) => <div key={index} className={style.serviceTag}>{service}</div>)) : "-"
                 }
             </div>
         </div>
