@@ -62,6 +62,7 @@ const ActionsDots = ({ saleUniqueId,refreshData }) => {
   const handleClick = async (event, option) => {
     if (option.label === "Replicate") {
       try {
+        console.log('replicate....')
         const data = await fetchduplicateData(saleUniqueId);
         // setDuplicateData(data);
         refreshData()
@@ -116,7 +117,7 @@ const ActionsDots = ({ saleUniqueId,refreshData }) => {
         }}
       >
         {options.map((option) => (
-          <MenuItem className='LmenuList' key={option.label} onClick={(event) => handleClick(event, option)}>
+          <MenuItem className='LmenuList d-flex justify-content-between' key={option.label} onClick={(event) => handleClick(event, option)}>
             {option.label}
             {option.icon}
           </MenuItem>

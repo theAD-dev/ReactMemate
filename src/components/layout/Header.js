@@ -118,7 +118,7 @@ const Header = ({ onClick }) => {
       <div className="headerNav1">
         {menuswitch ?
           <>
-            <div className="headerTop business">
+            <div className="headerTop business" style={{ whiteSpace: 'nowrap' }}>
               <Container fluid>
                 <Row>
                   <Col className="d-flex align-items-center">
@@ -172,13 +172,14 @@ const Header = ({ onClick }) => {
                       username={profileData?.full_name || ""}
                       userType={profileData?.type || ""}
                       aliasName={profileData?.alias_name || ""}
+                      photo={profileData?.photo || ""}
                     />
                   </Col>
                 </Row>
               </Container>
             </div>
-            <Container fluid className="headerNav">
-              <Row>
+            <Container fluid className="headerNav" style={{ width: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
+              <Row className="flex-nowrap">
                 <Col xs={3} md={3}>
                   <ul className="left">
                     <li>
@@ -436,6 +437,7 @@ const Header = ({ onClick }) => {
       <div className="main-wrapper">
         <Routes>
           <Route path="*" element={<Home />} />
+
           <Route path="/clients" element={<ClientPage />} />
           <Route path="/clients/:id/order-history" element={<ClientOrderHistory />} />
 
@@ -467,7 +469,7 @@ const Header = ({ onClick }) => {
           />
           <Route
             path="/settings/generalinformation/profile"
-            element={<MyProfile profileData={profileData}/>}
+            element={<MyProfile profileData={profileData} />}
           />
           <Route
             path="/settings/generalinformation/subscription"

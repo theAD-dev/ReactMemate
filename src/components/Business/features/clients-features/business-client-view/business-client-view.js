@@ -202,6 +202,8 @@ const ViewSection = ({ client, industries, categories }) => {
           </div>
         ))
       }
+      {client?.contact_persons?.length === 0 && <div className={clsx(style.box)}>-</div>}
+
 
       <h5 className={clsx(style.boxLabel)}>Locations</h5>
       {
@@ -246,6 +248,8 @@ const ViewSection = ({ client, industries, categories }) => {
           </div>
         ))
       }
+      {client?.addresses?.length === 0 && <div className={clsx(style.box)}>-</div>}
+
 
       <h5 className={clsx(style.boxLabel)}>Client Description</h5>
       <div className={clsx(style.box, 'mb-0')}>

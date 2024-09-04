@@ -3,7 +3,7 @@ import { Placeholder } from "react-bootstrap";
 import { QuestionCircle, Search, PlusLg } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 
-const ProfileInfo = ({ username, userType, aliasName }) => {
+const ProfileInfo = ({ username, userType, aliasName, photo }) => {
   return (
     <>
       <div className="avatar-wrap flexEndbox colMinWidth">
@@ -35,7 +35,12 @@ const ProfileInfo = ({ username, userType, aliasName }) => {
           </Link>
         </div>
         <Link to="/settings/generalinformation">
-          <div className="userImageBox">{aliasName} </div>
+          {
+            photo ? <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <img src={photo} id="my-profile-img" alt="profile" />
+            </div>
+              : <div className="userImageBox">{aliasName}</div>
+          }
         </Link>
       </div>
     </>

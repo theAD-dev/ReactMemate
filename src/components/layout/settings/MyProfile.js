@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -11,7 +11,6 @@ import styles from "./setting.profile.module.scss";
 import {
   PencilSquare,
   Telephone,
-  Building,
   Link45deg,
   Upload,
 } from "react-bootstrap-icons";
@@ -84,9 +83,8 @@ function MyProfile() {
               <h1>My Profile </h1>
             </div>
             <div
-              className={`content_wrap_main ${
-                isEditingGroup ? "isEditingwrap" : ""
-              }`}
+              className={`content_wrap_main ${isEditingGroup ? "isEditingwrap" : ""
+                }`}
             >
               <div className="content_wrapper">
                 <div className="listwrapper">
@@ -112,11 +110,10 @@ function MyProfile() {
                   </div>
                   <ul>
                     <li
-                      className={`${
-                        isEditingGroup
+                      className={`${isEditingGroup
                           ? `${styles.editBorderWrap}`
                           : `${styles.viewBorderWrap}`
-                      }`}
+                        }`}
                     >
                       <div className={styles.editinfo}>
                         <span>First Name</span>
@@ -153,11 +150,10 @@ function MyProfile() {
                       {!isEditingGroup ? <></> : <></>}
                     </li>
                     <li
-                      className={`${
-                        isEditingGroup
+                      className={`${isEditingGroup
                           ? `${styles.editBorderWrap}`
                           : `${styles.viewBorderWrap}`
-                      }`}
+                        }`}
                     >
                       <div className={styles.editinfo}>
                         <span>Last Name</span>
@@ -194,22 +190,23 @@ function MyProfile() {
                       {!isEditingGroup ? <></> : <></>}
                     </li>
                     <li
-                      className={`${
-                        isEditingGroup
+                      className={`${isEditingGroup
                           ? `${styles.editBorderWrap}`
                           : `${styles.viewBorderWrap}`
-                      }`}
+                        }`}
                     >
                       <div className={styles.editinfo}>
                         <span>User picture</span>
                         {!isEditingGroup ? (
                           <strong>
                             {data.photo ? (
-                              <img
-                                src={data.photo}
-                                width={76}
-                                alt="Company Logo"
-                              />
+                              <div style={{ width: '64px', height: '64px', borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <img
+                                  src={data.photo}
+                                  width={76}
+                                  alt="Company Logo"
+                                />
+                              </div>
                             ) : (
                               <img src={AvatarImg} alt="DummyImg" />
                             )}
@@ -237,11 +234,10 @@ function MyProfile() {
                     </li>
 
                     <li
-                      className={`${
-                        isEditingGroup
+                      className={`${isEditingGroup
                           ? `${styles.editBorderWrap}`
                           : `${styles.viewBorderWrap}`
-                      }`}
+                        }`}
                     >
                       <div className={styles.editinfo}>
                         <span>Email</span>
@@ -252,9 +248,8 @@ function MyProfile() {
                         ) : (
                           <>
                             <div
-                              className={`inputInfo ${
-                                errors.email ? "error-border" : ""
-                              }`}
+                              className={`inputInfo ${errors.email ? "error-border" : ""
+                                }`}
                             >
                               <input
                                 {...register("email")}
@@ -289,11 +284,10 @@ function MyProfile() {
                       )}
                     </li>
                     <li
-                      className={`${
-                        isEditingGroup
+                      className={`${isEditingGroup
                           ? `${styles.editBorderWrap}`
                           : `${styles.viewBorderWrap}`
-                      }`}
+                        }`}
                     >
                       <div className={styles.editinfo}>
                         <span>Phone Number</span>
@@ -304,9 +298,8 @@ function MyProfile() {
                         ) : (
                           <>
                             <div
-                              className={`inputInfo ${
-                                errors.phone ? "error-border" : ""
-                              }`}
+                              className={`inputInfo ${errors.phone ? "error-border" : ""
+                                }`}
                             >
                               <input
                                 {...register("phone")}
@@ -338,11 +331,10 @@ function MyProfile() {
                       )}
                     </li>
                     <li
-                      className={`${
-                        isEditingGroup
+                      className={`${isEditingGroup
                           ? `${styles.editBorderWrap}`
                           : `${styles.viewBorderWrap}`
-                      }`}
+                        }`}
                     >
                       <div className={styles.editinfo}>
                         <span>Position</span>
@@ -351,9 +343,8 @@ function MyProfile() {
                         ) : (
                           <>
                             <div
-                              className={`inputInfo ${
-                                errors.type ? "error-border" : ""
-                              }`}
+                              className={`inputInfo ${errors.type ? "error-border" : ""
+                                }`}
                             >
                               <input
                                 {...register("type")}
@@ -468,7 +459,7 @@ function FileUpload({ photo, setPhoto }) {
           SVG, PNG, JPG or GIF (max. 800x400px)
         </span>
       </div>
-      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
+      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} shape="round" />
     </section>
   );
 }

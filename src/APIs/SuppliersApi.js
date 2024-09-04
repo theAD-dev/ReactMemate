@@ -40,6 +40,13 @@ export const getSupplierById = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
+
+
+
+
+
+
+
 export const fetchSuppliers = async (limit, offset) => {
   const myHeaders = new Headers();
   const accessToken = sessionStorage.getItem("access_token");
