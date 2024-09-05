@@ -147,7 +147,7 @@
     var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
   align-items: center;
   gap: var(--spacing-xs, 4px);
-  color: #B42318;
+  color: #b42318;
   text-align: center;
   /* Text xs/Medium */
   font-family: Inter;
@@ -156,6 +156,6 @@
   font-weight: 500;
   line-height: 18px; /* 150% */
   border-radius: 16px;
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-50, #FEF3F2);
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
 }
