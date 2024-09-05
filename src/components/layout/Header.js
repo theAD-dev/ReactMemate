@@ -83,6 +83,7 @@ import ApprovalPage from "../Work/Pages/approval";
 import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
 import SupplierPage from "../Business/Pages/suppliers";
 import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
+import EditTemplates from "./settings/templates/edit-template";
 
 
 
@@ -670,6 +671,11 @@ const Header = ({ onClick }) => {
             path="/work/people"
             element={<PeoplePage />}
           />
+          <Route
+            path="/settings/templates/edit-template/"
+            element={<EditTemplates />}
+          />
+          
 
         </Routes>
         <Outlet />

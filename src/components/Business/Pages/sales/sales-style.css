@@ -373,6 +373,12 @@ div#popoverStyleChange {
   border-radius: 6px;
   width: 41px;
 }
+.mainStyleMin {
+  width: 297px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+}
 .salesTableWrap .disPlayInlineCenter li.Draft {
   pointer-events: none;
 }

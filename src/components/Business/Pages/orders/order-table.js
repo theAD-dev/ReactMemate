@@ -153,13 +153,13 @@ const OrdersTable = () => {
 
   const reaclCost = (rowData) => {
     return <div
-      className="RealCostCircleStyle d-flex justify-content-between align-item-center piCircleStyle"
+      className="RealCostCircleStyle d-flex justify-content-between align-items-center piCircleStyle"
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
         <CircularProgressbar
           value="10"
-          text={`$500%`}
+          text={`50%`}
           strokeWidth={11}
           styles={{
             root: {},
@@ -178,7 +178,8 @@ const OrdersTable = () => {
             },
             text: {
               fill: '#667085',
-              fontSize: '30px',
+              fontSize: '40px',
+              
             },
             background: {
               fill: '#ffffff',
@@ -186,9 +187,7 @@ const OrdersTable = () => {
           }}
 
         /></div>
-      <span>$600.00
-
-      </span>
+      <span>$600.00</span>
     </div>
   }
   const labourBody = (rowData) => {

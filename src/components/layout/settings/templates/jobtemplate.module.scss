@@ -1,0 +1,55 @@
+.boxlist {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid #EAECF0;
+    background: #FFF;
+    padding: var(--spacing-xl, 16px);
+    margin-bottom: 8px;
+    cursor: pointer;
+    &:hover {
+        border-radius: var(--radius-xs, 4px);
+        border: 1px solid var(--Primary-200, #A3E0FF);
+        background: var(--Primary-25, #F2FAFF);
+        .ricons{
+        .pencilSquare{
+            opacity: 1;
+        }
+        }
+    }
+    .ricons{
+        .pencilSquare{
+            fill: #1AB2FF;
+            opacity: 0;
+        }
+        
+    }
+    span {
+        color: var(--Gray-700, #344054);
+        font-family: Inter;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 28px;
+    }
+}
+
+.modelStyleBoxstatus {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 12px;
+    background: var(--Base-White, #FFF);
+    box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03), 0px 20px 24px -4px rgba(16, 24, 40, 0.08);
+    padding: 0px;
+}
+
+.templateBoxWrap{
+    border-radius: var(--radius-xs, 4px);
+    background: var(--Gray-50, #F9FAFB);
+    padding: var(--spacing-4xl, 32px) var(--spacing-none, 0px);
+
+
+}

@@ -9,9 +9,30 @@
 
 
 .accorHeadbox{
+    
     border-radius: var(--radius-xs, 4px);
 border: 1px solid #EAECF0;
-background: #FFF;
+background: #fff;
+
+ 
+
+.hoverToShow{
+    opacity: 0;
+}
+.downBoxStyle {
+    border-radius: 22px;
+    background: var(--Gray-100, #F2F4F7);
+    padding: var(--spacing-xs, 4px);
+}
+&:hover{
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Primary-200, #A3E0FF);
+    background: var(--Primary-25, #F2FAFF);
+    .hoverToShow{
+        opacity: 1;
+        fill: #1AB2FF;
+    }
+}
 .iconSpace{
     margin: 0 8px;
 }
@@ -41,17 +62,18 @@ background: #FFF;
     a{
     border-radius: var(--radius-xs, 4px);
     border: 1px solid #EAECF0;
-    background: #FFF;
+    background: transparent;
     padding: var(--spacing-xl, 16px);
     border: 0;
     }
     .accorHeadStyle{
-        color: var(--Primary-700, #106B99);
+        color: var(--Primary-700, #344054);
         font-family: Inter;
         font-size: 18px;
         font-style: normal;
         font-weight: 600;
         line-height: 28px; 
+     
     }
     .accorInHeadStyle{
         color: var(--Gray-700, #344054);
@@ -76,7 +98,147 @@ background: #FFF;
         line-height: 24px; 
         letter-spacing: -0.18px;
         }
+        .calculateBox{
+           border-top: 1px solid #EAECF0;
+           margin-top: 20px;
+            .boxcal{
+                background: var(--Gray-100, #F2F4F7);
+                padding: 19px 56px;
+            }
+            .profit{
+                background: var(--Success-50, #ECFDF3);
+                
+                h6{
+                    color: #085D3A;
+                }
+                strong{
+                    color: var(--Success-800, #085D3A);
+                    font-family: Inter;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 24px; 
+                    letter-spacing: 0.08px;
+                }
+            }
 
+            ul{
+                display: flex;
+                    justify-content: space-between;
+                  
+                    background: #F9FAFB;
+                    
+                li{
+                    display: flex;
+                    justify-content: flex-start;
+                   
+                    h6{
+                        color: var(--Gray-700, #344054);
+                        font-family: Inter;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 22px; 
+                        letter-spacing: 0.14px;
+                        margin-bottom: 4px;
+
+                    }
+                    strong{
+                        color: var(--Gray-800, #1D2939);
+                        font-family: Inter;
+                        font-size: 16px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 24px; 
+                        letter-spacing: -0.08px;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+        .RItem{
+            display: flex;
+            align-items: center;
+        .delete{
+            color: #B42318;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px; /* 142.857% */
+            padding: var(--spacing-md, 8px) 14px;
+            background: transparent;
+            border: 0;
+            display: flex;
+            align-items: center;
+            &:hover{
+                color: #B42318;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px; /* 142.857% */
+            padding: var(--spacing-md, 8px) 14px;
+            background: transparent;
+            border: 0;
+            display: flex;
+            align-items: center;
+            }
+        }
+        .create{
+            color: #106B99;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px; /* 142.857% */
+            padding: var(--spacing-md, 8px) 14px;
+            background: transparent;
+            border: 0;
+            display: flex;
+            align-items: center;
+            &:hover{
+                color: #106B99;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px; /* 142.857% */
+            padding: var(--spacing-md, 8px) 14px;
+            background: transparent;
+            border: 0;
+            display: flex;
+            align-items: center;
+            }
+        }
+        .editBut{
+            color: #1D2939;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px; /* 142.857% */
+            display: flex;
+            align-items: center;
+            border-radius: var(--radius-xs, 4px);
+            border: 1px solid var(--Gray-300, #D0D5DD);
+            background: #FFF;
+            &:hover{
+                color: #106B99;
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px; /* 142.857% */
+            border-radius: var(--radius-xs, 4px);
+            border: 1px solid var(--Gray-300, #D0D5DD);
+            background: #FFF;
+      
+            display: flex;
+            align-items: center;
+            }
+        }
+    }
     }
     .contentStyle{
         border: 0px solid #e5e7eb;
@@ -94,6 +256,39 @@ background: #FFF;
             font-weight: 400;
             line-height: 22px; 
             letter-spacing: 0.14px;
+        }
+        ul{
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            display: flex;
+            align-items: self-start;
+            justify-content: space-between;
+            li{
+                display: block;
+                width: 25%;
+                h5{
+                    color: var(--Gray-500, #667085);
+                    font-family: Inter;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 22px;
+                    letter-spacing: 0.14px;
+                    margin-bottom: 0px;
+                }
+                strong{
+                    padding: 0;
+                    margin: 0;
+                    color: var(--Gray-600, #475467);
+                    font-family: Inter;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 600;
+                    line-height: 24px;
+                    letter-spacing: 0.08px;
+                }
+            }
         }
     }
 }
@@ -135,3 +330,4 @@ background: #FFF;
         letter-spacing: -0.08px;
     }
 }
+
