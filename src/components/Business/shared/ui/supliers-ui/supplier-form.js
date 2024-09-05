@@ -108,14 +108,14 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
     <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
       <Row className={clsx(styles.bgGreay, 'pt-0')}>
         <Col sm={12}>
-          <div className={clsx(styles.fileUploadBox)}>
-            <div className={clsx(styles.uploadedImgBox)}>
+          <div className={clsx(styles.fileUploadBox)} onClick={() => setShow(true)}>
+            <div className={clsx(styles.uploadedImgBox, 'rounded')}>
               {photo ? <img src={photo?.croppedImageBase64 || photo} alt='profile' /> : <Building size={32} color='#667085' />}
             </div>
-            <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)} onClick={() => setShow(true)}>Click to upload</span> or drag and drop</p>
+            <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)}>Click to upload</span> or drag and drop</p>
             <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
-            <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
           </div>
+          <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
         </Col>
 
         <Col sm={6}>
@@ -185,26 +185,26 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
       <h2 className={clsx(styles.headingInputs, 'mt-4')}>Services</h2>
       <Row className={clsx(styles.bgGreay, '')}>
-      <Col>
-        <div className="d-flex flex-column mb-4 gap-1">
-          <label className={clsx(styles.label)}>Services</label>
-          <Controller
-            name="services"
-            control={control}
-            render={({ field }) => (
-              <Chips 
-                value={field.value ? field.value.split(',') : []}  // Convert string to array
-                allowDuplicate={false}
-                addOnBlur={true}
-                onChange={(e) => field.onChange(e.value.join(','))}  // Convert array to comma-separated string
-                className={clsx('w-100 custom-chipsInput')}
-                separator=","
-              />
-            )}
-          />
-          {errors.services && <span className="text-danger">{errors.services.message}</span>}
-        </div>
-      </Col>
+        <Col>
+          <div className="d-flex flex-column mb-4 gap-1">
+            <label className={clsx(styles.label)}>Services</label>
+            <Controller
+              name="services"
+              control={control}
+              render={({ field }) => (
+                <Chips
+                  value={field.value ? field.value.split(',') : []}  // Convert string to array
+                  allowDuplicate={false}
+                  addOnBlur={true}
+                  onChange={(e) => field.onChange(e.value.join(','))}  // Convert array to comma-separated string
+                  className={clsx('w-100 custom-chipsInput')}
+                  separator=","
+                />
+              )}
+            />
+            {errors.services && <span className="text-danger">{errors.services.message}</span>}
+          </div>
+        </Col>
         <Col sm={12}>
           <div className="d-flex flex-column gap-1">
             <label className={clsx(styles.lable)}>Notes</label>
