@@ -48,6 +48,15 @@ export const createNewMergeQuote = async (data) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const deleteMergeQuote = async (id) => {
+  const endpoint = `/projects/merges/${id}/delete/`;
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const getMergeItemsByUniqueId = async (unique_id) => {
   const endpoint = `/projects/merges/${unique_id}/`;
   const options = {

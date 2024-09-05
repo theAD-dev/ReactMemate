@@ -1784,7 +1784,7 @@ ul.client {
   color: #667085 !important;
 }
 
-.button-custom {
+.button-custom, .button-custom:hover, .button-custom:focus  {
   font-family: Inter;
   font-size: 16px;
   font-style: normal;

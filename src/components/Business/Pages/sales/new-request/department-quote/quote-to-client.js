@@ -113,7 +113,7 @@ const QuoteToClient = ({ isLoading, data }) => {
                                 <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{contactPerson.position || "-"}</p>
                                 <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '4px' }}>{phone || "-"}</p>
                                 <p style={{ color: '#1D2939', fontSize: '16px', fontWeight: '400', marginBottom: '8px' }}>{email|| ""}</p>
-                                <button className='btn p-0' onClick={() => setIsEdit(!isEdit)} style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Edit info</button>
+                                {/* <button className='btn p-0' onClick={() => setIsEdit(!isEdit)} style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Edit info</button> */}
                             </>
                         )
                     }
