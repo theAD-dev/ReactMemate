@@ -52,7 +52,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
     });
 
     useEffect(()=> {
-        if (defaultValues?.address?.country === 1) setCountryId(1); 
+        if (defaultValues?.address?.country) setCountryId(defaultValues?.address?.country); 
         if (defaultValues?.address?.state) setStateId(defaultValues?.address?.state);
     }, [defaultValues?.address]);
     return (
@@ -189,6 +189,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={statesQuery?.isFetching}
                                     placeholder={"Select a state"}
+                                    filter
                                 />
                             )}
                         />
@@ -218,6 +219,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={citiesQuery?.isFetching}
                                     placeholder={"Select a city"}
+                                    filter
                                 />
                             )}
                         />

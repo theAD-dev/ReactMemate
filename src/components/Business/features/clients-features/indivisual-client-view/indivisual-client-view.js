@@ -183,7 +183,7 @@ const ViewSection = ({ client }) => {
               </Col>
               <Col sm={6}>
                 <label className={clsx(style.label)}>City</label>
-                <h4 className={clsx(style.text)}>{`${address.city || "-"}`}</h4>
+                <h4 className={clsx(style.text)}>{`${address.city_name || "-"}`}</h4>
               </Col>
             </Row>
             <Row>

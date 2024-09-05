@@ -63,19 +63,16 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   fill: #1ab2ff;
 }
 
-.p-datatable .p-datatable-tbody > tr.p-highlight .show-on-hover .p-checkbox {
+.p-datatable .p-datatable-tbody>tr.p-highlight .show-on-hover .p-checkbox {
   visibility: visible;
 }
 
-.p-datatable
-  .p-datatable-tbody
-  > tr.p-highlight
-  .show-on-hover-element:not(.not-show-checked) {
+.p-datatable .p-datatable-tbody>tr.p-highlight .show-on-hover-element:not(.not-show-checked) {
   fill: #1ab2ff;
   visibility: visible;
 }
 
-.p-datatable .p-datatable-tbody > tr.p-highlight td {
+.p-datatable .p-datatable-tbody>tr.p-highlight td {
   background-color: #ebf8ff !important;
 }
 
@@ -160,10 +157,10 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
   display: flex;
-  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px)
-    var(--spacing-xxs, 2px) 5px;
+  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px) var(--spacing-xxs, 2px) 5px;
   justify-content: center;
   align-items: center;
   gap: 3px;
@@ -176,4 +173,11 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   fill: #98A2B3;
   size: 12px;
   width: 12px;
+}
+
+.p-dropdown-filter.p-inputtext {
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
 }
