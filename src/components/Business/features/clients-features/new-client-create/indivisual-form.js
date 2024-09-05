@@ -58,14 +58,14 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
         <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
             <Row className={clsx(styles.bgGreay, 'pt-0')}>
                 <Col sm={12}>
-                    <div className={clsx(styles.fileUploadBox)}>
+                    <div className={clsx(styles.fileUploadBox, 'cursor-pointer')} onClick={() => setShow(true)}>
                         <div className={clsx(styles.uploadedImgBox)}>
                             {photo ? <img src={photo?.croppedImageBase64 || photo} alt='profile-img' /> : <Person size={32} color='#667085' />}
                         </div>
-                        <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)} onClick={() => setShow(true)}>Click to upload</span> or drag and drop</p>
+                        <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)}>Click to upload</span></p>
                         <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
-                        <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} shape='round'/>
                     </div>
+                    <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} shape='round'/>
                 </Col>
 
                 <Col sm={6}>

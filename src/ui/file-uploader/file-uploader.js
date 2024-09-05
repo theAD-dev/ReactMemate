@@ -92,7 +92,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" 
         e.stopPropagation();
         setFiles([]);
         setCroppedImages({});
-        setPhoto({});
+        setPhoto(null);
         setShow(false);
     };
 
