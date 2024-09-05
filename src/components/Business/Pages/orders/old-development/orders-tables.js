@@ -258,7 +258,7 @@ import { Resizable } from 'react-resizable';
       
       renderCell: (params) => (
         <div className="styleColor1 budgetColor">
-         ${params.value}
+        <span>${params.value.toFixed(2)}</span>
         </div>
       ),
     },
@@ -452,7 +452,7 @@ import { Resizable } from 'react-resizable';
           className="styleGrey01 totalInvoice"
           style={{ whiteSpace: "normal", textAlign: "left", textTransform: "uppercase" }}
         >
-          ${params.value}
+        ${params.value.toFixed(2)}
         </div>
       ),
     },
@@ -466,9 +466,9 @@ import { Resizable } from 'react-resizable';
       renderCell: (params) => (
           <div className={`styleGrey01 exstatus ${params.value}`}>
           {params.value ? (
-            <><span className="dots"></span> ${params.value} </>
+            <><span className="dots"></span> ${params.value.toFixed(2)}</>
           ) : (
-            <>${params.value}<span className="dots"></span></>
+            <> ${params.value.toFixed(2)}<span className="dots"></span></>
           )}
         </div>
       ),

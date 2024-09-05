@@ -28,28 +28,28 @@ const schema = yup.object({
   note: yup.string().required('Note is required'),
 
 
-  addresses: yup.array().of(
-    yup.object({
-      title: yup.string().required('Location name is required'),
-      country: yup.string().required('Country is required'),
-      address: yup.string().required('Address is required'),
-      city: yup.number().typeError("City must be a number").required("City is required"),
-      state: yup.number().typeError("State must be a number").required("State is required"),
-      postcode: yup.string().required('Postcode is required'),
-      is_main: yup.boolean().default(false).required('Main address selection is required'),
-    })
-  ).required(),
+  // addresses: yup.array().of(
+  //   yup.object({
+  //     title: yup.string().required('Location name is required'),
+  //     country: yup.string().required('Country is required'),
+  //     address: yup.string().required('Address is required'),
+  //     city: yup.number().typeError("City must be a number").required("City is required"),
+  //     state: yup.number().typeError("State must be a number").required("State is required"),
+  //     postcode: yup.string().required('Postcode is required'),
+  //     is_main: yup.boolean().default(false).required('Main address selection is required'),
+  //   })
+  // ).required(),
 
-  contact_persons: yup.array().of(
-    yup.object({
-      position: yup.string().required('Position is required'),
-      firstname: yup.string().required('First name is required'),
-      lastname: yup.string().required('Last name is required'),
-      email: yup.string().email('Invalid email').required('Email is required'),
-      phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-      is_main: yup.boolean().default(false).required('Main contact selection is required'),
-    })
-  ).required(),
+  // contact_persons: yup.array().of(
+  //   yup.object({
+  //     position: yup.string().required('Position is required'),
+  //     firstname: yup.string().required('First name is required'),
+  //     lastname: yup.string().required('Last name is required'),
+  //     email: yup.string().email('Invalid email').required('Email is required'),
+  //     phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+  //     is_main: yup.boolean().default(false).required('Main contact selection is required'),
+  //   })
+  // ).required(),
 
 }).required();
 
@@ -190,7 +190,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.firstname && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.firstname`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.firstname })} style={{ resize: 'none' }} placeholder='Jhon' />
                     </IconField>
-                    {errors.contact_persons?.[index]?.firstname && <p className="error-message">{errors.contact_persons?.[index]?.firstname?.message}</p>}
+                    {/* {errors.contact_persons?.[index]?.firstname && <p className="error-message">{errors.contact_persons?.[index]?.firstname?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -201,7 +201,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.lastname && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.lastname`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.lastname })} style={{ resize: 'none' }} placeholder='Doe' />
                     </IconField>
-                    {errors.contact_persons?.[index]?.lastname && <p className="error-message">{errors.contact_persons?.[index]?.lastname?.message}</p>}
+                    {/* {errors.contact_persons?.[index]?.lastname && <p className="error-message">{errors.contact_persons?.[index]?.lastname?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -212,7 +212,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.email && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.email`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.email })} style={{ resize: 'none' }} placeholder='golden@harvest.com' />
                     </IconField>
-                    {errors.contact_persons?.[index]?.email && <p className="error-message">{errors.contact_persons?.[index]?.email?.message}</p>}
+                    {/* {errors.contact_persons?.[index]?.email && <p className="error-message">{errors.contact_persons?.[index]?.email?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -232,7 +232,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                         />
                       )}
                     />
-                    {errors.contact_persons?.[index]?.phone && <p className="error-message">{errors.contact_persons?.[index]?.phone.message}</p>}
+                    {/* {errors.contact_persons?.[index]?.phone && <p className="error-message">{errors.contact_persons?.[index]?.phone.message}</p>} */}
                   </div>
                 </Col>
                 <Col sm={6}>
@@ -242,7 +242,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.position && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.position`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.position })} style={{ resize: 'none' }} placeholder='Manager' />
                     </IconField>
-                    {errors.contact_persons?.[index]?.position && <p className="error-message">{errors.contact_persons?.[index]?.position?.message}</p>}
+                    {/* {errors.contact_persons?.[index]?.position && <p className="error-message">{errors.contact_persons?.[index]?.position?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -271,7 +271,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon>{errors.addresses?.[index]?.title && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.title`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.title })} placeholder='Enter location name' />
                     </IconField>
-                    {errors.addresses?.[index]?.title && <p className="error-message">{errors.addresses?.[index]?.title?.message}</p>}
+                    {/* {errors.addresses?.[index]?.title && <p className="error-message">{errors.addresses?.[index]?.title?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -301,7 +301,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                         />
                       )}
                     />
-                    {errors.addresses?.[index]?.country && <p className="error-message">{errors.addresses?.[index]?.country?.message}</p>}
+                    {/* {errors.addresses?.[index]?.country && <p className="error-message">{errors.addresses?.[index]?.country?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -331,7 +331,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                         />
                       )}
                     />
-                    {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses?.[index]?.state?.message}</p>}
+                    {/* {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses?.[index]?.state?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -363,7 +363,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                         )
                       }}
                     />
-                    {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses?.[index]?.city?.message}</p>}
+                    {/* {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses?.[index]?.city?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -374,7 +374,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon>{errors.addresses?.[index]?.address && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.address`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.address })} placeholder='Enter street address' />
                     </IconField>
-                    {errors.addresses?.[index]?.address && <p className="error-message">{errors.addresses?.[index]?.address?.message}</p>}
+                    {/* {errors.addresses?.[index]?.address && <p className="error-message">{errors.addresses?.[index]?.address?.message}</p>} */}
                   </div>
                 </Col>
 
@@ -385,7 +385,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon>{errors.addresses?.[index]?.postcode && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.postcode`)} keyfilter="int" className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.postcode })} placeholder='Enter postcode' />
                     </IconField>
-                    {errors.addresses?.[index]?.postcode && <p className="error-message">{errors.addresses?.[index]?.postcode?.message}</p>}
+                    {/* {errors.addresses?.[index]?.postcode && <p className="error-message">{errors.addresses?.[index]?.postcode?.message}</p>} */}
                   </div>
                 </Col>
               </Row>

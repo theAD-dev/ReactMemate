@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
-import { PlusLg ,PencilSquare,GripVertical} from "react-bootstrap-icons";
+import { PlusLg ,PencilSquare,GripVertical,ChevronDown,Plus,PlusCircle} from "react-bootstrap-icons";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Typography from '@mui/material/Typography';
@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import style from './calculators.module.scss';
 import Box from '@mui/material/Box';
 import { Accordion, AccordionTab } from 'primereact/accordion';
+
 
 const Departments = () => {
     const [activeTab, setActiveTab] = useState('departments');
@@ -53,13 +54,15 @@ const Departments = () => {
                     </div>
                     <div>
                     <Accordion>
-                <AccordionTab  className={style.accorHeadbox}
-                header={
+                    <AccordionTab className={`${style.accorHeadbox} `}
+                    header={
                     <span className="d-flex align-items-center justify-content-between">
                         <span className={style.accorHeadStyle}>Yacht Management</span>
                         <div className='RItem'>
-                        <PencilSquare color="#344054" size={20} className="ml-auto" />
-                        <GripVertical color="#98A2B3" size={16} className="ml-auto" />
+                        
+                        <PencilSquare color="#344054" size={20} />
+                        <GripVertical color="#98A2B3" size={16} className={style.iconSpace} />
+                        <ChevronDown color="#344054" size={12}/>
                         </div>
                     </span>
                 }
@@ -70,56 +73,35 @@ const Departments = () => {
     <AccordionTab className={style.innerBoxStyle} 
      header={
         <span className="d-flex align-items-center justify-content-between">
-            <span className={style.accorHeadStyle}>Advertising - Elite Life Magazine</span>
+            <span className={style.accorInHeadStyle}>Advertising - Elite Life Magazine</span>
             <div className='RItem'>
           
             <GripVertical color="#98A2B3" size={16} className="ml-auto" />
             </div>
         </span>
-    }
-    >
-        <p className="m-01">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    }>
+        <p className={`m-01 ${style.contentStyle}`}>
+        <h6>Description</h6>
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </p>
     </AccordionTab>
     <AccordionTab className={style.innerBoxStyle} 
      header={
         <span className="d-flex align-items-center justify-content-between">
-            <span className={style.accorHeadStyle}>Creatie Design for A4 Page</span>
+            <span className={style.accorInHeadStyle}>Creatie Design for A4 Page</span>
             <div className='RItem'>
-          
             <GripVertical color="#98A2B3" size={16} className="ml-auto" />
+            
             </div>
         </span>
-    }
-    >
-        <p className="m-01">
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-            quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
-            sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-            Consectetur, adipisci velit, sed quia non numquam eius modi.
+    }>
+         <p className={`m-01 ${style.contentStyle}`}>
+            <h6>Description</h6>
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </p>
     </AccordionTab>
 </Accordion>
-                    </div>
-                </AccordionTab>
-                <AccordionTab header="Real Estate Management">
-                    <div className="m-0">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                        quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
-                        sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-                        Consectetur, adipisci velit, sed quia non numquam eius modi.
-                    </div>
-                </AccordionTab>
-                <AccordionTab header="Yacht Management">
-                    <div className="m-0">
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti
-                        quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt
-                        mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
-                        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+<Button className={style.creaeDepartment}><Plus color="#475467" size={20} />Create Sub Department</Button>
                     </div>
                 </AccordionTab>
             </Accordion>
@@ -140,17 +122,13 @@ const Departments = () => {
                         centered 
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description">
-                        <Box className="modelStyleBoxstatus" sx={{ width: 659 }}>
+                        <Box className={style.modelStyleBoxstatus} sx={{ width: 505 }}>
                             <Typography id="modal-modal-title" className={``} variant="h6" component="h2">
                                 <>
                                     <div className='modelHeader modelHeaderBillig d-flex justify-content-between align-items-start'>
                                         <span className='modelHeadFlex'>
-                                            <div className='iconOutStyle'>
-                                                <div className='iconinStyle'>
-                                                    <div className='iconinnerStyle'>
-                                                        <PlusLg color="#17B26A" size={24} />
-                                                    </div>
-                                                </div>
+                                            <div className={style.iconborderStyle}>
+                                                        <PlusCircle color="#17B26A" size={24} />
                                             </div>
                                             <h2>Create Index</h2>
                                         </span>
@@ -162,7 +140,8 @@ const Departments = () => {
                                             <CloseIcon color="#667085" size={24} />
                                         </IconButton>
                                     </div>
-                                    <div className='stepBoxStyle stepBoxStylePayment'>
+                                  
+                                    <div className={`stepBoxStyle ${style.stepBoxStylePayment}`}>
                                     <div className="formgroup">
                                             <label>Department name</label>
                                             <div className={`inputInfo`}>
@@ -178,7 +157,7 @@ const Departments = () => {
                                     </div>
                                     <div className='footerButton'>
                                         <button className='Cancel' onClick={handleClose}>Cancel</button>
-                                        <Button className='save' onClick={handleSave}>Save</Button>
+                                        <Button className='save' onClick={handleSave}>Save Details</Button>
                                     </div>
                                 </>
                             </Typography>

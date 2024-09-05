@@ -201,7 +201,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
         <div>
           <ul className="disPlayInline disPlayInlineCenter">
             <li className="">
-              <Link to="">
+              <Link to={`/sales/quote-calculation/${params.row.unique_id}`}>
                 <PlusSlashMinus color="#FDB022" size={16} />
               </Link>
             </li>
