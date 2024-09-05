@@ -26,9 +26,12 @@ const schema = yup.object({
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
   website: yup.string().url('Invalid URL').required('URL is required'),
+  payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
 
   addresses: yup.array().of(
     yup.object({
+      id: yup.string(),
+      title: yup.string(),
       country: yup.string().required('Country is required'),
       address: yup.string().required('Address is required'),
       city: yup.number().typeError("City must be a number").required("City is required"),
@@ -40,6 +43,7 @@ const schema = yup.object({
 
   contact_persons: yup.array().of(
     yup.object({
+      id: yup.string(),
       position: yup.string().required('Position is required'),
       firstname: yup.string().required('First name is required'),
       lastname: yup.string().required('Last name is required'),
@@ -49,7 +53,7 @@ const schema = yup.object({
     })
   ).required(),
 
-  payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
+  description: yup.string().required('Description is required'),
 
 }).required();
 

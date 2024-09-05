@@ -50,7 +50,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
           </div>
           {
-            isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} />
+            isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
               : <ViewSection client={client} industries={industriesQuery?.data} categories={categoriesQuery?.data} />
           }
         </div>
@@ -60,7 +60,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
               <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
-              <Button type='button' onClick={handleExternalSubmit} className='solid-button'>Save Client Details</Button>
+              <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ width: '180px' }}>{ isPending ? "Loading..." : "Save Client Details" }</Button>
             </div>
               : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
           }

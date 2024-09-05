@@ -45,7 +45,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
           </div>
           {
-            isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} />
+            isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
               : <ViewSection client={client} />
           }
         </div>

@@ -59,6 +59,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
         formData.append("payment_terms", data.payment_terms);
         formData.append("category", data.category);
         formData.append("industry", data.industry);
+        formData.append("description", data.description);
 
         data.addresses.forEach((address, index) => {
             formData.append(`addresses[${index}]address`, address.address);

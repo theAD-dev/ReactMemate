@@ -26,6 +26,7 @@ const schema = yup
         email: yup.string().email("Invalid email address").required("Email is required"),
         phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
         address: yup.object({
+            id: yup.string(),
             country: yup.string().required("Country is required"),
             city: yup.number().typeError("City must be a number").required("City is required"),
             address: yup.string().required("Address is required"),
