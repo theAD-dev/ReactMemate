@@ -82,7 +82,9 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     }
 
     const servicesBodyTemplate = (rowData) => {
-        let services = rowData?.services?.split(" ") || [];
+        let services = rowData?.services?.includes(",")
+            ? rowData?.services?.split(",")
+            : rowData?.services?.split(" ") || [];
         return <div className='d-flex align-items-center gap-2'>
             {
                 services?.length ? (services.map((service, index) => <div key={`${rowData.id}-service-${index}`} className={style.serviceTag}>{service}</div>)) : "-"
@@ -152,29 +154,29 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     };
 
     return (
-            <DataTable ref={ref} value={suppliers} scrollable selectionMode={'checkbox'} removableSort
-                columnResizeMode="expand" resizableColumns
-                onColumnResizeEnd={onResizeColumn}
-                showGridlines size={'large'}
-                scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedSuppliers}
-                onSelectionChange={(e) => setSelectedSuppliers(e.value)}
-                loading={loading}
-                loadingIcon={loadingIconTemplate}
-                emptyMessage={NoDataFoundTemplate}
-                sortField={sort?.sortField}
-                sortOrder={sort?.sortOrder}
-                onSort={onSort}
-            >
-                <Column selectionMode="multiple" headerClassName='border-end-0 ps-4' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-                <Column field="number" header="Supplier ID" body={supplierIdBodyTemplate} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="name" header="Supplier A→Z" body={nameBodyTemplate} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '254px' }} frozen sortable></Column>
-                <Column field="services" header="Supplier Services" body={servicesBodyTemplate} style={{ minWidth: '469px' }}></Column>
-                <Column field="email" header="Email" body={emailBodyTemplate} style={{ minWidth: '68px' }}></Column>
-                <Column header="Address" body={addressesBody} style={{ minWidth: '313px' }}></Column>
-                <Column header="State" body={addressesStateBodyTemplate} style={{ minWidth: '60px', textAlign: 'center' }}></Column>
-                <Column header="Post Code" body={addressesPostCodeBodyTemplate} style={{ minWidth: '88px', textAlign: 'center' }}></Column>
-                <Column field='total_spent' header="Total Spent" style={{ minWidth: '111px' }} sortable></Column>
-                <Column field="website" header="Website" body={websiteBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
-            </DataTable>
+        <DataTable ref={ref} value={suppliers} scrollable selectionMode={'checkbox'} removableSort
+            columnResizeMode="expand" resizableColumns
+            onColumnResizeEnd={onResizeColumn}
+            showGridlines size={'large'}
+            scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedSuppliers}
+            onSelectionChange={(e) => setSelectedSuppliers(e.value)}
+            loading={loading}
+            loadingIcon={loadingIconTemplate}
+            emptyMessage={NoDataFoundTemplate}
+            sortField={sort?.sortField}
+            sortOrder={sort?.sortOrder}
+            onSort={onSort}
+        >
+            <Column selectionMode="multiple" headerClassName='border-end-0 ps-4' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
+            <Column field="number" header="Supplier ID" body={supplierIdBodyTemplate} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
+            <Column field="name" header="Supplier A→Z" body={nameBodyTemplate} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '254px' }} frozen sortable></Column>
+            <Column field="services" header="Supplier Services" body={servicesBodyTemplate} style={{ minWidth: '469px' }}></Column>
+            <Column field="email" header="Email" body={emailBodyTemplate} style={{ minWidth: '68px' }}></Column>
+            <Column header="Address" body={addressesBody} style={{ minWidth: '313px' }}></Column>
+            <Column header="State" body={addressesStateBodyTemplate} style={{ minWidth: '60px', textAlign: 'center' }}></Column>
+            <Column header="Post Code" body={addressesPostCodeBodyTemplate} style={{ minWidth: '88px', textAlign: 'center' }}></Column>
+            <Column field='total_spent' header="Total Spent" style={{ minWidth: '111px' }} sortable></Column>
+            <Column field="website" header="Website" body={websiteBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
+        </DataTable>
     )
 })

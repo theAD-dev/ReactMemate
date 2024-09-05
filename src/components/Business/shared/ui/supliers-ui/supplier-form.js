@@ -24,38 +24,40 @@ const schema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
   website: yup.string().url('Invalid URL').required('URL is required'),
   abn: yup.string().required('ABN is required'),
+  phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   services: yup.string().required('Services is required'),
   note: yup.string().required('Note is required'),
 
+  addresses: yup.array().of(
+    yup.object({
+      id: yup.string(),
+      title: yup.string(),
+      country: yup.string().required('Country is required'),
+      address: yup.string().required('Address is required'),
+      city: yup.number().typeError("City must be a number").required("City is required"),
+      state: yup.number().typeError("State must be a number").required("State is required"),
+      postcode: yup.string().required('Postcode is required'),
+      is_main: yup.boolean().default(false).required('Main address selection is required'),
+    })
+  ).required(),
 
-  // addresses: yup.array().of(
-  //   yup.object({
-  //     title: yup.string().required('Location name is required'),
-  //     country: yup.string().required('Country is required'),
-  //     address: yup.string().required('Address is required'),
-  //     city: yup.number().typeError("City must be a number").required("City is required"),
-  //     state: yup.number().typeError("State must be a number").required("State is required"),
-  //     postcode: yup.string().required('Postcode is required'),
-  //     is_main: yup.boolean().default(false).required('Main address selection is required'),
-  //   })
-  // ).required(),
-
-  // contact_persons: yup.array().of(
-  //   yup.object({
-  //     position: yup.string().required('Position is required'),
-  //     firstname: yup.string().required('First name is required'),
-  //     lastname: yup.string().required('Last name is required'),
-  //     email: yup.string().email('Invalid email').required('Email is required'),
-  //     phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-  //     is_main: yup.boolean().default(false).required('Main contact selection is required'),
-  //   })
-  // ).required(),
+  contact_persons: yup.array().of(
+    yup.object({
+      position: yup.string().required('Position is required'),
+      firstname: yup.string().required('First name is required'),
+      lastname: yup.string().required('Last name is required'),
+      email: yup.string().email('Invalid email').required('Email is required'),
+      phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+      is_main: yup.boolean().default(false).required('Main contact selection is required'),
+    })
+  ).required(),
 
 }).required();
 
 const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
   const [show, setShow] = useState(false);
   const [servicesTag, setServiceTag] = useState([]);
+  const [addressIndex, setAddressIndex] = useState(0);
 
   const [countryId, setCountryId] = useState('');
   const [stateId, setStateId] = useState('');
@@ -64,11 +66,18 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
   const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
-  useEffect(() => {
-    if (citiesQuery?.data) {
-      setCitiesOptions((others) => ({ ...others, [stateId]: citiesQuery?.data }));
+  const fetchCities = async (id) => {
+    if (!id) return;
+
+    if (!citiesOptions[id]) {
+      const response = await getCities(id);
+      setCitiesOptions((others) => ({ ...others, [id]: response }));
     }
-  }, [citiesQuery?.data, stateId])
+  }
+
+  useEffect(() => {
+    if (stateId) fetchCities(stateId);
+  }, [stateId])
 
   const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -76,6 +85,24 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   });
   const { fields: contactFields, append: appendContact, remove: removeContact } = useFieldArray({ control, name: 'contact_persons' });
   const { fields: addressFields, append: appendAddress, remove: removeAddress } = useFieldArray({ control, name: 'addresses' });
+
+  useEffect(() => {
+    if (defaultValues?.addresses?.length) {
+      if (addressIndex < defaultValues.addresses.length) {
+        const address = defaultValues.addresses[addressIndex];
+        const newCountryId = address.country;
+        const newStateId = address.state;
+
+        if (newCountryId !== countryId) {
+          setCountryId(newCountryId);
+        } else if (newStateId !== stateId) {
+          setStateId(newStateId);
+        } else {
+          setAddressIndex((prevIndex) => prevIndex + 1);
+        }
+      }
+    }
+  }, [defaultValues, addressIndex, countryId, stateId]);
 
   return (
     <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
@@ -158,12 +185,26 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
       <h2 className={clsx(styles.headingInputs, 'mt-4')}>Services</h2>
       <Row className={clsx(styles.bgGreay, '')}>
-        <Col>
-          <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.lable)}>Services</label>
-            <Chips value={servicesTag} allowDuplicate={false} addOnBlur={true} onChange={(e) => setServiceTag(e.value)} className={clsx('w-100 custom-chipsInput')}  separator="," />
-          </div>
-        </Col>
+      <Col>
+        <div className="d-flex flex-column mb-4 gap-1">
+          <label className={clsx(styles.label)}>Services</label>
+          <Controller
+            name="services"
+            control={control}
+            render={({ field }) => (
+              <Chips 
+                value={field.value ? field.value.split(',') : []}  // Convert string to array
+                allowDuplicate={false}
+                addOnBlur={true}
+                onChange={(e) => field.onChange(e.value.join(','))}  // Convert array to comma-separated string
+                className={clsx('w-100 custom-chipsInput')}
+                separator=","
+              />
+            )}
+          />
+          {errors.services && <span className="text-danger">{errors.services.message}</span>}
+        </div>
+      </Col>
         <Col sm={12}>
           <div className="d-flex flex-column gap-1">
             <label className={clsx(styles.lable)}>Notes</label>
@@ -266,12 +307,12 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
               <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                   <div className="d-flex flex-column gap-1 mb-4">
-                    <label className={clsx(styles.lable)}>Location Name</label>
+                    <label className={clsx(styles.lable)}>Location Name (Optional)</label>
                     <IconField>
                       <InputIcon>{errors.addresses?.[index]?.title && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.title`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.title })} placeholder='Enter location name' />
                     </IconField>
-                    {/* {errors.addresses?.[index]?.title && <p className="error-message">{errors.addresses?.[index]?.title?.message}</p>} */}
+                    {errors.addresses?.[index]?.title && <p className="error-message">{errors.addresses?.[index]?.title?.message}</p>}
                   </div>
                 </Col>
 
@@ -301,7 +342,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                         />
                       )}
                     />
-                    {/* {errors.addresses?.[index]?.country && <p className="error-message">{errors.addresses?.[index]?.country?.message}</p>} */}
+                    {errors.addresses?.[index]?.country && <p className="error-message">{errors.addresses?.[index]?.country?.message}</p>}
                   </div>
                 </Col>
 
@@ -328,16 +369,17 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                           value={field.value}
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
+                          filter
                         />
                       )}
                     />
-                    {/* {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses?.[index]?.state?.message}</p>} */}
+                    {errors.addresses?.[index]?.state && <p className="error-message">{errors.addresses?.[index]?.state?.message}</p>}
                   </div>
                 </Col>
 
                 <Col sm={6}>
                   <div className="d-flex flex-column gap-1 mb-4">
-                    <label className={clsx(styles.lable)}>City</label>
+                    <label className={clsx(styles.lable)}>City/Suburb</label>
                     <Controller
                       name={`addresses.${index}.city`}
                       control={control}
@@ -359,11 +401,12 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                             value={field.value}
                             loading={stateIndexId === stateId && citiesQuery?.isFetching}
                             placeholder={"Select a city"}
+                            filter
                           />
                         )
                       }}
                     />
-                    {/* {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses?.[index]?.city?.message}</p>} */}
+                    {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses?.[index]?.city?.message}</p>}
                   </div>
                 </Col>
 
@@ -374,7 +417,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon>{errors.addresses?.[index]?.address && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.address`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.address })} placeholder='Enter street address' />
                     </IconField>
-                    {/* {errors.addresses?.[index]?.address && <p className="error-message">{errors.addresses?.[index]?.address?.message}</p>} */}
+                    {errors.addresses?.[index]?.address && <p className="error-message">{errors.addresses?.[index]?.address?.message}</p>}
                   </div>
                 </Col>
 
@@ -385,7 +428,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                       <InputIcon>{errors.addresses?.[index]?.postcode && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.postcode`)} keyfilter="int" className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.postcode })} placeholder='Enter postcode' />
                     </IconField>
-                    {/* {errors.addresses?.[index]?.postcode && <p className="error-message">{errors.addresses?.[index]?.postcode?.message}</p>} */}
+                    {errors.addresses?.[index]?.postcode && <p className="error-message">{errors.addresses?.[index]?.postcode?.message}</p>}
                   </div>
                 </Col>
               </Row>

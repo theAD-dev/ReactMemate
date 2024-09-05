@@ -9,7 +9,7 @@ import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import DeleteSupplier from '../supplier-delete';
 import SupplierEdit from '../supplier-edit';
 
-const SupplierView = ({ data, closeIconRef, hide }) => {
+const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
     const { id } = useParams();
     const formRef = useRef(null);
     const [isPending, setIsPending] = useState(false);
@@ -46,13 +46,13 @@ const SupplierView = ({ data, closeIconRef, hide }) => {
                         <h6 className={clsx(style.boxLabel2)}>Supplier ID: {id}</h6>
                     </div>
                     {
-                        isEdit ? <SupplierEdit ref={formRef} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} data={data} />
+                        isEdit ? <SupplierEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} setIsEdit={setIsEdit} handleExternalSubmit={handleExternalSubmit} data={data} />
                             : <ViewSection data={data} />
                     }
                 </div>
 
                 <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
-                    <DeleteSupplier />
+                    <DeleteSupplier id={id} />
                     {
                         isEdit ? <div className='d-flex align-items-center gap-3'>
                             <Button type='button' onClick={(e) => setIsEdit(false)} className='outline-button'>Cancel</Button>
@@ -70,7 +70,10 @@ const SupplierView = ({ data, closeIconRef, hide }) => {
 
 const ViewSection = ({ data }) => {
     console.log('view: ', data);
-    let services = data?.services?.split(" ") || [];
+    let services = data?.services?.includes(",")
+        ? data?.services?.split(",")
+        : data?.services?.split(" ") || [];
+
     return <>
         <div className={clsx(style.box)}>
             <Row>
@@ -124,7 +127,7 @@ const ViewSection = ({ data }) => {
 
         <h5 className={clsx(style.boxLabel)}>Services</h5>
         <div className={clsx(style.box)}>
-            <div className='d-flex gap-3 align-items-center'>
+            <div className='d-flex gap-2 align-items-center'>
                 {
                     services?.length ? (services.map((service, index) => <div key={index} className={style.serviceTag}>{service}</div>)) : "-"
                 }
