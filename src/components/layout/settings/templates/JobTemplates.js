@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import style from './jobtemplate.module.scss';
+import style from './job-template.module.scss';
 
 const JobTemplates = () => {
     const [activeTab, setActiveTab] = useState('job-templates');

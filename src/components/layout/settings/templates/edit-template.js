@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
-import style from './jobtemplate.module.scss';
+import style from './job-template.module.scss';
 import BreadCrumbPage from './bread-crumb';
 
 const EditTemplates = () => {
