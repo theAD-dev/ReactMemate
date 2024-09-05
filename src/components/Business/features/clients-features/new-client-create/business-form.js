@@ -114,7 +114,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
             <div className={clsx(styles.uploadedImgBox, 'rounded')}>
               {photo ? <img src={photo?.croppedImageBase64 || photo} alt='img' /> : <Building size={32} color='#667085' />}
             </div>
-            <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)}>Click to upload</span> or drag and drop</p>
+            <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)}>Click to upload</span></p>
             <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
           </div>
           <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
