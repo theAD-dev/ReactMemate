@@ -27,7 +27,6 @@ const schema = yup
         phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
         address: yup.object({
             country: yup.string().required("Country is required"),
-            title: yup.string().required("Location name is required"),
             city: yup.number().typeError("City must be a number").required("City is required"),
             address: yup.string().required("Address is required"),
             state: yup.number().typeError("State must be a number").required("State is required"),
@@ -61,7 +60,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                 <Col sm={12}>
                     <div className={clsx(styles.fileUploadBox)}>
                         <div className={clsx(styles.uploadedImgBox)}>
-                            {photo ? <img src={photo?.croppedImageBase64 || photo} alt='img' /> : <Person size={32} color='#667085' />}
+                            {photo ? <img src={photo?.croppedImageBase64 || photo} alt='profile-img' /> : <Person size={32} color='#667085' />}
                         </div>
                         <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)} onClick={() => setShow(true)}>Click to upload</span> or drag and drop</p>
                         <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
@@ -127,7 +126,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
             <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Location Name</label>
+                        <label className={clsx(styles.lable)}>Location Name (Optional)</label>
                         <IconField>
                             <InputIcon>{errors.address?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("address.title")} className={clsx(styles.inputText, { [styles.error]: errors.address?.title })} placeholder='Enter location name' />

@@ -8,7 +8,16 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
   const [photo, setPhoto] = useState(client?.photo || null);
   if (client?.addresses?.length === 0) client.addresses.push({});
   
-  const [defaultValues, setDefaultValues] = useState(client)
+  const [defaultValues, setDefaultValues] = useState({
+    ...client,
+    addresses: client?.addresses?.map((address) => ({
+      country: address?.country_id || "",
+      state: address?.state_id || "",
+      city: address?.city || "",
+      address: address?.address || "",
+      postcode: address?.postcode || ""
+    }))
+  } || null)
 
   const businessFormSubmit = async (data) => {
     console.log('data: ', data);

@@ -29,7 +29,6 @@ const schema = yup.object({
 
   addresses: yup.array().of(
     yup.object({
-      title: yup.string().required('Location name is required'),
       country: yup.string().required('Country is required'),
       address: yup.string().required('Address is required'),
       city: yup.number().typeError("City must be a number").required("City is required"),
@@ -56,6 +55,7 @@ const schema = yup.object({
 
 const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
   const [show, setShow] = useState(false);
+  const [addressIndex, setAddressIndex] = useState(0);
 
   const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
   const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
@@ -65,13 +65,20 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   const [citiesOptions, setCitiesOptions] = useState({});
   const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
   const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
-  const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
+  const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: async () => getCities(stateId), enabled: !!stateId, keepPreviousData: true });
+
+  const fetchCities = async (id) => {
+    if (!id) return;
+
+    if (!citiesOptions[id]) {
+      const response = await getCities(id);
+      setCitiesOptions((others) => ({ ...others, [id]: response }));
+    }
+  }
 
   useEffect(() => {
-    if (citiesQuery?.data) {
-      setCitiesOptions((others) => ({ ...others, [stateId]: citiesQuery?.data }));
-    }
-  }, [citiesQuery?.data, stateId])
+    if (stateId) fetchCities(stateId);
+  }, [stateId])
 
   const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -79,6 +86,25 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   });
   const { fields: contactFields, append: appendContact, remove: removeContact } = useFieldArray({ control, name: 'contact_persons' });
   const { fields: addressFields, append: appendAddress, remove: removeAddress } = useFieldArray({ control, name: 'addresses' });
+
+
+  useEffect(() => {
+    if (defaultValues?.addresses?.length) {
+      if (addressIndex < defaultValues.addresses.length) {
+        const address = defaultValues.addresses[addressIndex];
+        const newCountryId = address.country;
+        const newStateId = address.state;
+
+        if (newCountryId !== countryId) {
+          setCountryId(newCountryId);
+        } else if (newStateId !== stateId) {
+          setStateId(newStateId);
+        } else {
+          setAddressIndex((prevIndex) => prevIndex + 1);
+        }
+      }
+    }
+  }, [defaultValues, addressIndex, countryId, stateId]);
 
   return (
     <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
@@ -115,6 +141,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   value={field.value}
                   loading={categoriesQuery?.isFetching}
                   placeholder="Select a category"
+                  filter
                 />
               )}
             />
@@ -156,6 +183,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   value={field.value}
                   loading={industriesQuery?.isFetching}
                   placeholder="Select Industry"
+                  filter
                 />
               )}
             />
@@ -341,7 +369,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
               <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                   <div className="d-flex flex-column gap-1 mb-4">
-                    <label className={clsx(styles.lable)}>Location Name</label>
+                    <label className={clsx(styles.lable)}>Location Name (Optional)</label>
                     <IconField>
                       <InputIcon>{errors.addresses?.[index]?.title && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.title`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.title })} placeholder='Enter location name' />
@@ -403,6 +431,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                           value={field.value}
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
+                          filter
                         />
                       )}
                     />
@@ -434,6 +463,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                             value={field.value}
                             loading={stateIndexId === stateId && citiesQuery?.isFetching}
                             placeholder={"Select a city"}
+                            filter
                           />
                         )
                       }}
