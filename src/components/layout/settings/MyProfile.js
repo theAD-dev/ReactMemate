@@ -221,15 +221,7 @@ function MyProfile() {
                       {!isEditingGroup ? (
                         <></>
                       ) : (
-                        <div className={styles.editpara}>
-                          <div className="logo">
-                            <h5>Company logo</h5>
-                            <p>
-                              Upload the logo for your unique quotes and
-                              invoices.
-                            </p>
-                          </div>
-                        </div>
+                       ''
                       )}
                     </li>
 
@@ -275,12 +267,7 @@ function MyProfile() {
                       {!isEditingGroup ? (
                         <></>
                       ) : (
-                        <div className={styles.editpara}>
-                          <p>
-                            Insert emails which will be used to send all your
-                            automatic outgoing emails and notifications.
-                          </p>
-                        </div>
+                        ''
                       )}
                     </li>
                     <li
