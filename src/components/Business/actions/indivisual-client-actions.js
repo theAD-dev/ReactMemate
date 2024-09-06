@@ -18,6 +18,7 @@ export const createFormData = (data, photo) => {
     formData.append("address.address", data.address.address);
     formData.append("address.state", data.address.state);
     formData.append("address.postcode", data.address.postcode);
+    if (data.address.id) formData.append("address.id", data.address.id);
 
     // Append photo if it exists
     if (photo?.croppedImageBlob) {

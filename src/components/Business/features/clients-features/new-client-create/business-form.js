@@ -26,10 +26,12 @@ const schema = yup.object({
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
   website: yup.string().url('Invalid URL').required('URL is required'),
+  payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
 
   addresses: yup.array().of(
     yup.object({
-      title: yup.string().required('Location name is required'),
+      id: yup.string(),
+      title: yup.string(),
       country: yup.string().required('Country is required'),
       address: yup.string().required('Address is required'),
       city: yup.number().typeError("City must be a number").required("City is required"),
@@ -41,6 +43,7 @@ const schema = yup.object({
 
   contact_persons: yup.array().of(
     yup.object({
+      id: yup.string(),
       position: yup.string().required('Position is required'),
       firstname: yup.string().required('First name is required'),
       lastname: yup.string().required('Last name is required'),
@@ -50,12 +53,13 @@ const schema = yup.object({
     })
   ).required(),
 
-  payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
+  description: yup.string().required('Description is required'),
 
 }).required();
 
 const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
   const [show, setShow] = useState(false);
+  const [addressIndex, setAddressIndex] = useState(0);
 
   const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
   const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
@@ -65,13 +69,20 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   const [citiesOptions, setCitiesOptions] = useState({});
   const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
   const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
-  const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
+  const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: async () => getCities(stateId), enabled: !!stateId, keepPreviousData: true });
+
+  const fetchCities = async (id) => {
+    if (!id) return;
+
+    if (!citiesOptions[id]) {
+      const response = await getCities(id);
+      setCitiesOptions((others) => ({ ...others, [id]: response }));
+    }
+  }
 
   useEffect(() => {
-    if (citiesQuery?.data) {
-      setCitiesOptions((others) => ({ ...others, [stateId]: citiesQuery?.data }));
-    }
-  }, [citiesQuery?.data, stateId])
+    if (stateId) fetchCities(stateId);
+  }, [stateId])
 
   const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -80,18 +91,37 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   const { fields: contactFields, append: appendContact, remove: removeContact } = useFieldArray({ control, name: 'contact_persons' });
   const { fields: addressFields, append: appendAddress, remove: removeAddress } = useFieldArray({ control, name: 'addresses' });
 
+
+  useEffect(() => {
+    if (defaultValues?.addresses?.length) {
+      if (addressIndex < defaultValues.addresses.length) {
+        const address = defaultValues.addresses[addressIndex];
+        const newCountryId = address.country;
+        const newStateId = address.state;
+
+        if (newCountryId !== countryId) {
+          setCountryId(newCountryId);
+        } else if (newStateId !== stateId) {
+          setStateId(newStateId);
+        } else {
+          setAddressIndex((prevIndex) => prevIndex + 1);
+        }
+      }
+    }
+  }, [defaultValues, addressIndex, countryId, stateId]);
+
   return (
     <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
       <Row className={clsx(styles.bgGreay, 'pt-0')}>
         <Col sm={12}>
-          <div className={clsx(styles.fileUploadBox)}>
-            <div className={clsx(styles.uploadedImgBox)}>
+          <div className={clsx(styles.fileUploadBox)} onClick={() => setShow(true)}>
+            <div className={clsx(styles.uploadedImgBox, 'rounded')}>
               {photo ? <img src={photo?.croppedImageBase64 || photo} alt='img' /> : <Building size={32} color='#667085' />}
             </div>
-            <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)} onClick={() => setShow(true)}>Click to upload</span> or drag and drop</p>
+            <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)}>Click to upload</span></p>
             <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
-            <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
           </div>
+          <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
         </Col>
 
         <Col sm={6}>
@@ -115,6 +145,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   value={field.value}
                   loading={categoriesQuery?.isFetching}
                   placeholder="Select a category"
+                  filter
                 />
               )}
             />
@@ -156,6 +187,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   value={field.value}
                   loading={industriesQuery?.isFetching}
                   placeholder="Select Industry"
+                  filter
                 />
               )}
             />
@@ -341,7 +373,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
               <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                   <div className="d-flex flex-column gap-1 mb-4">
-                    <label className={clsx(styles.lable)}>Location Name</label>
+                    <label className={clsx(styles.lable)}>Location Name (Optional)</label>
                     <IconField>
                       <InputIcon>{errors.addresses?.[index]?.title && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.title`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.title })} placeholder='Enter location name' />
@@ -403,6 +435,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                           value={field.value}
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
+                          filter
                         />
                       )}
                     />
@@ -434,6 +467,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                             value={field.value}
                             loading={stateIndexId === stateId && citiesQuery?.isFetching}
                             placeholder={"Select a city"}
+                            filter
                           />
                         )
                       }}

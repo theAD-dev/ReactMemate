@@ -52,7 +52,7 @@ const SupplierHistoryPage = () => {
                 </>
               ) : (
                 <>
-                  <Link to={"/clients"} className={`${style.gobackBtn}`}><ChevronLeft size={20} />Back</Link>
+                  <Link to={"/suppliers"} className={`${style.gobackBtn}`}><ChevronLeft size={20} />Back</Link>
                   <div className="searchBox" style={{ position: 'relative' }}>
                     <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -81,7 +81,7 @@ const SupplierHistoryPage = () => {
             {
               supplierDetails?.isLoading
                 ? <SupplierLoadingSidebar closeIconRef={closeIconRef} hide={hide} />
-                : <SupplierView data={supplierDetails?.data} closeIconRef={closeIconRef} hide={hide} />
+                : <SupplierView data={supplierDetails?.data} refetch={supplierDetails.refetch} closeIconRef={closeIconRef} hide={hide} />
             }
           </>
         )}

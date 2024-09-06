@@ -4,9 +4,9 @@ import { toast } from 'sonner';
 import IndivisualForm from '../new-client-create/indivisual-form';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
-const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit }, ref) => {
+const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
   console.log('IndivisualClientEdit: ', client);
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState(client?.photo || null);
   const [defaultValues, setDefaultValues] = useState({
     firstname: client?.name?.split(" ")?.[0] || "",
     lastname: client?.name?.split(" ")?.[1] || "",
@@ -14,9 +14,10 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     phone: client?.phone,
     description: client?.description,
     address: {
+      id: client.addresses?.[0]?.id || "",
       title: client.addresses?.[0]?.title || "",
-      country: client.addresses?.[0]?.country_code === "AU" ? 1 : "",
-      state: 8 || client.addresses?.[0]?.state || "",
+      country: client.addresses?.[0]?.country_id || "",
+      state: client.addresses?.[0]?.state_id || "",
       city: client.addresses?.[0]?.city || "",
       address: client.addresses?.[0]?.address || "",
       postcode: client.addresses?.[0]?.postcode || ""
@@ -28,6 +29,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     const formData = createFormData(data, photo);
     const onSuccess = (response) => {
       refetch();
+      setIsEdit(false);
       console.log('response: ', response);
       toast.success(`Client updated successfully`);
     };
