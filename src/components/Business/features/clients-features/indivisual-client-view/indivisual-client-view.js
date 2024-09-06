@@ -45,7 +45,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
           </div>
           {
-            isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} />
+            isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
               : <ViewSection client={client} />
           }
         </div>
@@ -183,7 +183,7 @@ const ViewSection = ({ client }) => {
               </Col>
               <Col sm={6}>
                 <label className={clsx(style.label)}>City</label>
-                <h4 className={clsx(style.text)}>{`${address.city || "-"}`}</h4>
+                <h4 className={clsx(style.text)}>{`${address.city_name || "-"}`}</h4>
               </Col>
             </Row>
             <Row>

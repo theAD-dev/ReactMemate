@@ -4,11 +4,21 @@ import { toast } from 'sonner';
 import BusinessForm from '../new-client-create/business-form';
 
 
-const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit }, ref) => {
+const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
   const [photo, setPhoto] = useState(client?.photo || null);
   if (client?.addresses?.length === 0) client.addresses.push({});
-  
-  const [defaultValues, setDefaultValues] = useState(client)
+
+  const [defaultValues, setDefaultValues] = useState({
+    ...client,
+    addresses: client?.addresses?.map((address) => ({
+      id: address?.id || "",
+      country: address?.country_id || "",
+      state: address?.state_id || "",
+      city: address?.city || "",
+      address: address?.address || "",
+      postcode: address?.postcode || ""
+    }))
+  } || null)
 
   const businessFormSubmit = async (data) => {
     console.log('data: ', data);
@@ -22,13 +32,15 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     formData.append("payment_terms", data.payment_terms);
     formData.append("category", data.category);
     formData.append("industry", data.industry);
+    formData.append("description", data.description);
 
     data.addresses.forEach((address, index) => {
-      formData.append(`addresses[${index}]address`, address.address);
       formData.append(`addresses[${index}]city`, address.city);
-      formData.append(`addresses[${index}]postcode`, address.postcode);
-      formData.append(`addresses[${index}]is_main`, address.is_main);
       formData.append(`addresses[${index}]title`, address.title);
+      formData.append(`addresses[${index}]address`, address.address);
+      formData.append(`addresses[${index}]is_main`, address.is_main);
+      formData.append(`addresses[${index}]postcode`, address.postcode);
+      if (address?.id) formData.append(`addresses[${index}]id`, address?.id);
     });
 
     data.contact_persons.forEach((person, index) => {
@@ -38,6 +50,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
       formData.append(`contact_persons[${index}]phone`, person.phone);
       formData.append(`contact_persons[${index}]position`, person.position);
       formData.append(`contact_persons[${index}]is_main`, person.is_main);
+      if (person?.id) formData.append(`contact_persons[${index}]id`, person?.id);
     });
 
     if (photo?.croppedImageBlob) {
@@ -57,6 +70,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
       });
       if (response.ok) {
         refetch();
+        setIsEdit(false);
         console.log('response: ', response);
         toast.success(`Client updated successfully`);
       } else {
@@ -65,6 +79,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     } catch (err) {
       toast.error(`Failed to update client. Please try again.`);
     } finally {
+      setIsPending(false);
     }
   }
 

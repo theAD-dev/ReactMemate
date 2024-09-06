@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const DeleteSupplier = ({ id }) => {
   const navigate = useNavigate();
   const deleteMutation = useMutation({
-    mutationFn: (data) => alert('NO API'),
+    mutationFn: (data) => toast.error('DElETE API is under construction...'),
     onSuccess: () => {
       toast.success(`Supplier deleted successfully`);
       navigate('/suppliers');
@@ -27,7 +27,6 @@ const DeleteSupplier = ({ id }) => {
 
   const handleDeleteClient = (event) => {
     if (!id) return toast.error("Id not found");
-    console.log('id: ', id);
     confirmPopup({
       target: event.currentTarget,
       message: 'Do you want to delete this record?',

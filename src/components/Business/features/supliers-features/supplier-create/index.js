@@ -18,9 +18,67 @@ const SupplierCreate = ({ visible, setVisible }) => {
     addresses: [{}],
   });
 
+  const FormSubmit = async (data) => {
+    console.log('data: ', data);
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("website", data.website);
+    formData.append("abn", data.abn);
+    formData.append("phone", data.phone);
+    formData.append("services", data.services);
+    formData.append("note", data.note);
+
+    data.addresses.forEach((address, index) => {
+      formData.append(`addresses[${index}]address`, address.address);
+      formData.append(`addresses[${index}]city`, address.city);
+      formData.append(`addresses[${index}]postcode`, address.postcode);
+      formData.append(`addresses[${index}]is_main`, address.is_main);
+      formData.append(`addresses[${index}]title`, address.title);
+    });
+
+    data.contact_persons.forEach((person, index) => {
+      formData.append(`contact_persons[${index}]firstname`, person.firstname);
+      formData.append(`contact_persons[${index}]lastname`, person.lastname);
+      formData.append(`contact_persons[${index}]email`, person.email);
+      formData.append(`contact_persons[${index}]phone`, person.phone);
+      formData.append(`contact_persons[${index}]position`, person.position);
+      formData.append(`contact_persons[${index}]is_main`, person.is_main);
+    });
+
+    if (photo?.croppedImageBlob) {
+      const photoHintId = nanoid(6);
+      formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
+    }
+
+    try {
+      setIsPending(true);
+      const accessToken = sessionStorage.getItem("access_token");
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/suppliers/new/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: formData,
+      });
+      if (response.ok) {
+        console.log('response: ', response);
+        toast.success(`New supplier created successfully`);
+        setVisible(false);
+      } else {
+        toast.error('Failed to create new supplier. Please try again.');
+      }
+    } catch (err) {
+      toast.error(`Failed to create new supplier. Please try again.`);
+    } finally {
+      setIsPending(false);
+    }
+  }
+
   const handleSubmit = async (data) => {
     console.log('data: ', data);
-
+    FormSubmit(data);
   };
 
   const handleExternalSubmit = () => {
