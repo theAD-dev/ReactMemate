@@ -48,6 +48,27 @@
   background: #fff !important;
   color: var(--Primary-600, #158ecc) !important;
 }
+.danger-outline-button,
+.danger-outline-button:hover,
+.danger-outline-button:focus {
+  gap: 8px;
+  display: flex;
+  padding: 10px 18px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  outline: none !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  border-radius: 4px;
+  border: 1px solid #FDA29B;
+  color: #B42318;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; 
+}
 
 .danger-button {
   font-family: "Inter";

@@ -6,15 +6,14 @@
     .p-highlight{
         border-bottom: 0 !important;
     }
-
-
-.accorHeadbox{
     
+.accorHeadbox{
     border-radius: var(--radius-xs, 4px);
-border: 1px solid #EAECF0;
-background: #fff;
-
- 
+    border: 1px solid #EAECF0;
+    background: #fff;
+.p-icon{
+    display: none;
+}
 
 .hoverToShow{
     opacity: 0;

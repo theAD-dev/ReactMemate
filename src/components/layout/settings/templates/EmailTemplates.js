@@ -1,24 +1,21 @@
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
-import { PlusLg } from "react-bootstrap-icons";
+import { PlusLg ,PencilSquare,GripVertical,ChevronDown,Plus,PlusCircle,Trash} from "react-bootstrap-icons";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import style from './job-template.module.scss';
 
 const EmailTemplates = () => {
     const [activeTab, setActiveTab] = useState('job-templates');
     const [showModal, setShowModal] = useState(false);
     const [dname, setDname] = useState('');
     const [departments, setDepartments] = useState([]);
-
+    const navigate = useNavigate(); // useNavigate hook
     const createIndex = () => {
       setShowModal(true);
     };
@@ -34,6 +31,11 @@ const EmailTemplates = () => {
         setShowModal(false);
       }
     };
+    const editTemplateHandle = () => {
+     
+        navigate("/settings/templates/edit-email/", { state: { departments} });
+      };
+
 
     return (
         <>
@@ -56,27 +58,23 @@ const EmailTemplates = () => {
                 <div className='content_wrapper'>
                     <div className="listwrapper">
                     <div className="topHeadStyle pb-4">
-                        <h2>Email Templates</h2>
+                    <h2>Email Templates</h2>
                         <button onClick={() => createIndex()}>Create New Template <PlusLg color="#000000" size={20} /></button>
                     </div>
                     <div>
+                        <div className='boxwrap'>
+                        <div className={style.boxlist}>
+                        <span>theAd | Management | Thu</span>
+                        <div className={style.ricons}> <PencilSquare onClick={() => editTemplateHandle()} className={style.pencilSquare} color="#344054" size={20} />&nbsp;<GripVertical color="#98A2B3" size={16} className={style.iconSpace} /></div>
+                        </div>
+                       
+                        
+                        </div>
                         {departments.map((department, index) => (
-                            <Accordion key={index}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls={`panel${index}-content`}
-                                    id={`panel${index}-header`}
-                                >
-                                    <Typography>{department}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Typography>
-                                        Content
-                                        <button > Create Sub Department<PlusLg color="#000000" size={20} /></button>
-                                       
-                                    </Typography>
-                                </AccordionDetails>
-                            </Accordion>
+                          <div key={index} className={style.boxlist}>
+                          <span>{department}</span>
+                          <div className={style.ricons}> <PencilSquare onClick={() => editTemplateHandle()} className={style.pencilSquare} color="#344054" size={20} />&nbsp;<GripVertical  color="#98A2B3" size={16} className={style.iconSpace} /></div>
+                        </div>
                         ))}
                     </div>
                     </div>
@@ -91,7 +89,7 @@ const EmailTemplates = () => {
                         centered 
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description">
-                        <Box className="modelStyleBoxstatus" sx={{ width: 659 }}>
+                    <Box className={style.modelStyleBoxstatus} sx={{ width: 505 }}>
                             <Typography id="modal-modal-title" className={``} variant="h6" component="h2">
                                 <>
                                     <div className='modelHeader modelHeaderBillig d-flex justify-content-between align-items-start'>

@@ -28,7 +28,6 @@ const Departments = () => {
                     <span className={style.accorHeadStyle}>Yacht Management</span>
                     <div className='RItem'>
                         <PencilSquare color="#344054" size={20} className={style.hoverToShow} />
-                        <GripVertical color="#98A2B3" size={16} className={style.iconSpace} />
                         <ChevronDown color="#344054" size={20} className={style.downBoxStyle} />
                     </div>
                 </span>
@@ -41,10 +40,9 @@ const Departments = () => {
                         <span className="d-flex align-items-center justify-content-between">
                             <span className={style.accorHeadStyle}><ChevronDown color="#344054" size={20} className={style.downBoxStyle} />Advertising - Elite Life Magazine</span>
                             <div className={style.RItem}>
-                                 <Button className={style.delete}><Trash color="#B42318" size={20}  /> &nbsp;Delete Sub Department</Button>
-                                 <Button className={style.create}><PlusLg color="#106B99" size={20}  /> &nbsp;Create Sub Department</Button>
+                                 <Button className={style.delete}><Trash color="#B42318" size={20}  /> &nbsp;Delete Calculator</Button>
+                                 <Button className={style.create}><PlusLg color="#106B99" size={20}  /> &nbsp;Add Calculator</Button>
                                  <Button className={style.editBut}><PencilSquare color="#1D2939" size={20}  /> &nbsp;Edit</Button>
-                                <GripVertical color="#98A2B3" size={16} className={style.iconSpace} />
                                
                             </div>
                         </span>
@@ -126,11 +124,7 @@ const Departments = () => {
                       header={(
                         <span className="d-flex align-items-center justify-content-between">
                             <span className={style.accorHeadStyle}> <ChevronDown color="#344054" size={20} className={style.downBoxStyle} /> Creatie Design for A4 Page</span>
-                            <div className='RItem'>
-                               
-                                <GripVertical color="#98A2B3" size={16} className={style.iconSpace} />
-                               
-                            </div>
+                           
                         </span>
                     )}
                     >
@@ -296,12 +290,9 @@ const Departments = () => {
                             <div className={`stepBoxStyle ${style.stepBoxStylePayment}`}>
                                 <div className="formgroup">
                                     <label>Department name</label>
-                               
-     
                                         <div className="card flex justify-content-center">
-            <InputText keyfilter="int" placeholder="Department name" name="dname" value={dname}  onChange={(e) => setDname(e.target.value)}/>
-        </div>
-                                    
+                                    <InputText keyfilter="int" placeholder="Department name" name="dname" value={dname}  onChange={(e) => setDname(e.target.value)}/>
+                                </div>
                                 </div>
                             </div>
                             <div className='footerButton'>

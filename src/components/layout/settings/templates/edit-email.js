@@ -14,13 +14,13 @@ import exclamationCircle from "../../../../assets/images/icon/exclamation-circle
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { InputTextarea } from "primereact/inputtextarea"
-import { RadioButton } from "primereact/radiobutton";;
+import { Editor } from "primereact/editor";
 
-const EditTemplates = () => {
+const EditEmail = () => {
     const [activeTab, setActiveTab] = useState('job-templates');
     const location = useLocation();
     const [ingredient, setIngredient] = useState('');
-
+    const [text, setText] = useState('');
     const { departments } = location.state || {};
     const [cardData, setCardData] = useState(null);
     const [isDepartments, setisDepartments] = useState(false);
@@ -99,97 +99,25 @@ const EditTemplates = () => {
                 {errors.name && <p className="error-message">{errors.name.message}</p>}
             </div>
             </Col>
+            <Col sm={12}>
+           <div className="d-flex flex-column gap-1 mb-4">
+                <label className={clsx(style.lable)}>Subject</label>
+                <IconField>
+                <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
+                <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Enter subject' />
+                </IconField>
+                {errors.name && <p className="error-message">{errors.name.message}</p>}
+            </div>
+            </Col>
            
             <Col sm={12}>
                     <div className="d-flex flex-column gap-1">
                         <label className={clsx(style.lable)}>Message </label>
-                        <IconField>
-                            <InputIcon style={{ top: '80%' }}>{errors.description && <img src={exclamationCircle} />}</InputIcon>
-                            <InputTextarea {...register("description")} rows={5} cols={30} className={clsx(style.inputText, { [style.error]: errors.description })} style={{ resize: 'none' }} placeholder='Enter a description...' />
-                        </IconField>
+                        <Editor value={text} onTextChange={(e) => setText(e.htmlValue)} style={{ height: '320px' }} />
                         {errors.description && <p className="error-message">{errors.description.message}</p>}
                     </div>
                 </Col>
-            <Col sm={12}>
-            <div className="card flex justify-content-center">
-            <label className={clsx(style.lable1)}>Time / Money </label>
-            <div className={style.paymentType}>
-    <label className={clsx(style.lable)}>Payment Type</label>
-    <div className={style.paymentmain}>
-        <div className={`flex align-items-center ${style.RadioButton}`}>
-            <input
-                type="radio"
-                id="fix"
-                name="paymentype"
-                value="fix"
-                onChange={(e) => setIngredient(e.target.value)}
-                checked={ingredient === 'fix'}
-                className={style.customRadio}
-            />
-            <label htmlFor="fix" className={style.radioLabel}>Fix</label>
-        </div>
-        <span>or</span>
-        <div className={`flex align-items-center ${style.RadioButton}`}>
-            <input
-                type="radio"
-                id="hours"
-                name="paymentype"
-                value="hours"
-                onChange={(e) => setIngredient(e.target.value)}
-                checked={ingredient === 'hours'}
-                className={style.customRadio}
-            />
-            <label htmlFor="hours" className={style.radioLabel}>Hours</label>
-        </div>
-        <span>or</span>
-        <div className={`flex align-items-center ${style.RadioButton}`}>
-            <input
-                type="radio"
-                id="timetracker"
-                name="paymentype"
-                value="timetracker"
-                onChange={(e) => setIngredient(e.target.value)}
-                checked={ingredient === 'timetracker'}
-                className={style.customRadio}
-            />
-            <label htmlFor="timetracker" className={style.radioLabel}>Time Tracker</label>
-        </div>
-    </div>
-</div>
            
-            <div className={`${style.typeBorder} ${style.paymentType}`}>
-    <label className={clsx(style.lable)}>Time</label>
-    <div className={style.paymentmain}>
-        <div className={`flex align-items-center ${style.RadioButton}`}>
-            <input
-                type="radio"
-                id="shift"
-                name="paymentype"
-                value="shift"
-                onChange={(e) => setIngredient(e.target.value)}
-                checked={ingredient === 'shift'}
-                className={style.customRadio}
-            />
-            <label htmlFor="shift" className={style.radioLabel}>Shift</label>
-        </div>
-        <span>or</span>
-        <div className={`flex align-items-center ${style.RadioButton}`}>
-            <input
-                type="radio"
-                id="timeframe"
-                name="paymentype"
-                value="timeframe"
-                onChange={(e) => setIngredient(e.target.value)}
-                checked={ingredient === 'timeframe'}
-                className={style.customRadio}
-            />
-            <label htmlFor="timeframe" className={style.radioLabel}>Time Frame</label>
-        </div>
-       
-    </div>
-</div>
-        </div>
-                </Col>
                </Row>
 
                
@@ -218,4 +146,4 @@ const EditTemplates = () => {
     );
 }
 
-export default EditTemplates;
+export default EditEmail;

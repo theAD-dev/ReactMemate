@@ -84,6 +84,7 @@ import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
 import SupplierPage from "../Business/Pages/suppliers";
 import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
 import EditTemplates from "./settings/templates/edit-template";
+import EditEmail from "./settings/templates/edit-email";
 
 
 
@@ -675,6 +676,11 @@ const Header = ({ onClick }) => {
             path="/settings/templates/edit-template/"
             element={<EditTemplates />}
           />
+          <Route
+            path="/settings/templates/edit-email/"
+            element={<EditEmail />}
+          />
+          
           
 
         </Routes>
