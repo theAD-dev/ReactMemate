@@ -12,7 +12,7 @@ import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
 
-const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients }, ref) => {
+const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
@@ -24,7 +24,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue]);
+    }, [searchValue, isShowDeleted]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -33,7 +33,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             if (sort?.sortOrder === 1) order = `${sort.sortField}`;
             else if (sort?.sortOrder === -1) order = `-${sort.sortField}`;
 
-            const data = await getListOfClients(page, limit, searchValue, order);
+            const data = await getListOfClients(page, limit, searchValue, order, isShowDeleted);
             setTotalClients(() => (data?.count || 0))
             if (page === 1) setCients(data.results);
             else {
@@ -50,7 +50,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
 
         loadData();
 
-    }, [page, searchValue, sort]);
+    }, [page, searchValue, sort, isShowDeleted]);
 
     useEffect(() => {
         if (clients.length > 0 && hasMoreData) {
@@ -78,7 +78,12 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData.is_business ? "" : "rounded-circle"}`}>
                 {rowData.photo ? <img src={rowData.photo} alt='clientImg' className='w-100' /> : rowData.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
             </div>
+            <div className='d-flex flex-column gap-1'>
             <div className={`${style.ellipsis}`}>{rowData.name}</div>
+            {rowData.deleted ?
+                    <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
+            </div>
+            
         </div>
     }
 
@@ -131,6 +136,8 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
         </div>
     }
 
+    const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
+    
     const onSort = (event) => {
         console.log('event: ', event);
         const { sortField, sortOrder } = event;
@@ -149,6 +156,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             sortField={sort?.sortField}
             sortOrder={sort?.sortOrder}
             onSort={onSort}
+            rowClassName={rowClassName}
         >
             <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="id" header="Client ID" body={clientIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>

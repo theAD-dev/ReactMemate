@@ -11,6 +11,12 @@
   width: 36px;
 }
 
+.menu {
+  width: 229px;
+  padding: 4px 4px;
+  border-radius: 4px;
+}
+
 .newButton,
 .newButton:hover,
 .newButton:focus {
@@ -89,4 +95,8 @@
   font-weight: 600;
   margin: 0px;
   color: var(--Primary-500, #1ab2ff);
+}
+
+.deletedRow td {
+  background-color: #FFFBFA !important;
 }

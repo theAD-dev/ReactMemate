@@ -63,16 +63,19 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   fill: #1ab2ff;
 }
 
-.p-datatable .p-datatable-tbody>tr.p-highlight .show-on-hover .p-checkbox {
+.p-datatable .p-datatable-tbody > tr.p-highlight .show-on-hover .p-checkbox {
   visibility: visible;
 }
 
-.p-datatable .p-datatable-tbody>tr.p-highlight .show-on-hover-element:not(.not-show-checked) {
+.p-datatable
+  .p-datatable-tbody
+  > tr.p-highlight
+  .show-on-hover-element:not(.not-show-checked) {
   fill: #1ab2ff;
   visibility: visible;
 }
 
-.p-datatable .p-datatable-tbody>tr.p-highlight td {
+.p-datatable .p-datatable-tbody > tr.p-highlight td {
   background-color: #ebf8ff !important;
 }
 
@@ -160,7 +163,8 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   line-height: 20px;
   /* 142.857% */
   display: flex;
-  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px) var(--spacing-xxs, 2px) 5px;
+  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px)
+    var(--spacing-xxs, 2px) 5px;
   justify-content: center;
   align-items: center;
   gap: 3px;
@@ -169,8 +173,11 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   background: var(--Base-White, #fff);
 }
 
-.custom-chipsInput.p-chips .p-chips-multiple-container .p-chips-token .p-chips-token-icon {
-  fill: #98A2B3;
+.custom-chipsInput.p-chips
+  .p-chips-multiple-container
+  .p-chips-token
+  .p-chips-token-icon {
+  fill: #98a2b3;
   size: 12px;
   width: 12px;
 }
@@ -180,4 +187,23 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   box-shadow: none !important;
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Border, #d0d5dd);
+}
+
+.p-tieredmenu .p-menuitem-content {
+  background: transparent;
+}
+
+.p-tieredmenu
+  .p-menuitem:not(.p-highlight):not(.p-disabled)
+  > .p-menuitem-content:hover {
+  color: var(--Primary-700, #106b99);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.p-tieredmenu .p-menuitem > .p-menuitem-content .p-menuitem-link {
+  display: flex;
+  padding-left: 10px;
+  align-items: center;
+  gap: var(--spacing-lg, 12px);
 }

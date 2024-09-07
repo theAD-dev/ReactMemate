@@ -67,6 +67,11 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
 }
 
 const ViewSection = ({ client }) => {
+  const getOrderFrequencyPerMonth = (totalOrders, created) => {
+    const monthsActive = (new Date().getFullYear() - new Date(+created * 1000).getFullYear()) * 12 + (new Date().getMonth() - new Date(created * 1000).getMonth());
+    const result = monthsActive > 0 ? (parseFloat(totalOrders) / monthsActive).toFixed(2) : 0;
+    return `${result} p/m`;
+  };
   return (
     <>
       <div className={clsx(style.box)}>
@@ -241,7 +246,7 @@ const ViewSection = ({ client }) => {
               </Col>
               <Col sm={12}>
                 <label className={clsx(style.label)}>Order Frequency:</label>
-                <h4 className={clsx(style.text)}>{formatMoney(0) || "-"}</h4>
+                <h4 className={clsx(style.text)}>{getOrderFrequencyPerMonth(client.total_orders, client.created) || "-"}</h4>
               </Col>
               <Col sm={12}>
                 <label className={clsx(style.label)}>Average order:</label>
