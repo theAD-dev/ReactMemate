@@ -8,6 +8,7 @@ import style from './indivisual-client-view.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
 import DeleteClient from '../delete-client';
+import { dateFormat, formatMoney } from '../../../shared/utils/helper';
 
 const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
@@ -170,7 +171,12 @@ const ViewSection = ({ client }) => {
             </div>
 
             <Row>
-              <Col>
+              <Col sm={12}>
+                <label className={clsx(style.label)}>Location Name</label>
+                <h4 className={clsx(style.text)}>{`${address.title || "-"}`}</h4>
+              </Col>
+
+              <Col sm={12}>
                 <label className={clsx(style.label)}>Country</label>
                 <h4 className={clsx(style.text)}>{`${address.country || "-"}`}</h4>
               </Col>
@@ -202,8 +208,53 @@ const ViewSection = ({ client }) => {
       {client?.addresses?.length === 0 && <div className={clsx(style.box)}>-</div>}
 
       <h5 className={clsx(style.boxLabel)}>Client Description</h5>
-      <div className={clsx(style.box, 'mb-0')}>
+      <div className={clsx(style.box)}>
         {client.description || "-"}
+      </div>
+
+      <h5 className={clsx(style.boxLabel)}>Calculations</h5>
+      <Row>
+        <Col sm={6}>
+          <div className={clsx(style.box)}>
+            <Row>
+              <Col sm={12}>
+                <label className={clsx(style.label)}>Total Turnover:</label>
+                <h4 className={clsx(style.text)}>{formatMoney(+client.total_turnover) || "-"}</h4>
+              </Col>
+              <Col sm={12}>
+                <label className={clsx(style.label)}>Average Weekly Turnover:</label>
+                <h4 className={clsx(style.text)}>{formatMoney(+client.average_weekly) || "-"}</h4>
+              </Col>
+              <Col sm={12}>
+                <label className={clsx(style.label)}>Total orders:</label>
+                <h4 className={clsx(style.text)}>{formatMoney(+client.total_orders) || "-"}</h4>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <div className={clsx(style.box)}>
+            <Row>
+              <Col sm={12}>
+                <label className={clsx(style.label)}>Total requests:</label>
+                <h4 className={clsx(style.text)}>{+client.total_requests || "-"}</h4>
+              </Col>
+              <Col sm={12}>
+                <label className={clsx(style.label)}>Order Frequency:</label>
+                <h4 className={clsx(style.text)}>{formatMoney(0) || "-"}</h4>
+              </Col>
+              <Col sm={12}>
+                <label className={clsx(style.label)}>Average order:</label>
+                <h4 className={clsx(style.text)}>{formatMoney(+client.average_orders) || "-"}</h4>
+              </Col>
+            </Row>
+          </div>
+        </Col>
+      </Row>
+
+      <div className={clsx(style.box, 'mb-0')}>
+        <label className={clsx(style.label)}>Date Entered:</label>
+        <h4 className={clsx(style.text, 'mb-0')}>{dateFormat(client.created, true) || "-"}</h4>
       </div>
     </>
   )

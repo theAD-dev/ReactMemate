@@ -16,15 +16,16 @@ import styles from './new-client-create.module.scss';
 import { Exclamation, Person } from 'react-bootstrap-icons';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
-import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import { getCities, getClientCategories, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 
 
 const schema = yup
     .object({
+        category: yup.number().typeError("Enter a valid category").required('Category is required'),
+        phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
         firstname: yup.string().required("First name is required"),
         lastname: yup.string().required("Last name is required"),
         email: yup.string().email("Invalid email address").required("Email is required"),
-        phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
         address: yup.object({
             id: yup.string(),
             country: yup.string().required("Country is required"),
@@ -46,13 +47,15 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
     const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
     const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
+    const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
+
     const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });
 
-    useEffect(()=> {
-        if (defaultValues?.address?.country) setCountryId(defaultValues?.address?.country); 
+    useEffect(() => {
+        if (defaultValues?.address?.country) setCountryId(defaultValues?.address?.country);
         if (defaultValues?.address?.state) setStateId(defaultValues?.address?.state);
     }, [defaultValues?.address]);
     return (
@@ -66,7 +69,56 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                         <p className={clsx('mb-0', styles.uploadedText1)}><span className={clsx('mb-0', styles.uploadedText2)}>Click to upload</span></p>
                         <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
                     </div>
-                    <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} shape='round'/>
+                    <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} shape='round' />
+                </Col>
+
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mb-4">
+                        <label className={clsx(styles.lable)}>Customer Category</label>
+                        <Controller
+                            name="category"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
+                                        value: category.id,
+                                        label: category.name
+                                    }))) || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    loading={categoriesQuery?.isFetching}
+                                    placeholder="Select a category"
+                                    filter
+                                />
+                            )}
+                        />
+                        {errors.category && <p className="error-message">{errors.category.message}</p>}
+                    </div>
+                </Col>
+
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1">
+                        <label className={clsx(styles.lable)}>Phone number</label>
+                        <Controller
+                            name="phone"
+                            control={control}
+                            render={({ field }) => (
+                                <PhoneInput
+                                    defaultCountry='au'
+                                    value={field.value}
+                                    className='phoneInput'
+                                    containerClass={styles.countrySelector}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
+                        {errors.phone && <p className="error-message">{errors.phone.message}</p>}
+                    </div>
                 </Col>
 
                 <Col sm={6}>
@@ -99,26 +151,6 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                             <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
                         </IconField>
                         {errors.email && <p className="error-message">{errors.email.message}</p>}
-                    </div>
-                </Col>
-
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Phone number</label>
-                        <Controller
-                            name="phone"
-                            control={control}
-                            render={({ field }) => (
-                                <PhoneInput
-                                    defaultCountry='au'
-                                    value={field.value}
-                                    className='phoneInput'
-                                    containerClass={styles.countrySelector}
-                                    onChange={field.onChange}
-                                />
-                            )}
-                        />
-                        {errors.phone && <p className="error-message">{errors.phone.message}</p>}
                     </div>
                 </Col>
             </Row>
@@ -237,7 +269,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                         {errors.address?.address && <p className="error-message">{errors.address?.address?.message}</p>}
                     </div>
                 </Col>
-                
+
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1">
                         <label className={clsx(styles.lable)}>Postcode</label>
