@@ -48,8 +48,8 @@ const ClientPage = () => {
                                         <TieredMenu model={[{
                                             label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
                                                 {
-                                                    isShowDeleted ? (<>Hide Deleted Clients <Eye /></>)
-                                                        : (<>Show Deleted Clients <EyeSlash /></>)
+                                                    isShowDeleted ? (<>Hide Deleted Clients <EyeSlash /></>)
+                                                        : (<>Show Deleted Clients <Eye /></>)
                                                 }
                                             </div>,
                                         }]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
