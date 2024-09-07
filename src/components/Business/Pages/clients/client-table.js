@@ -24,7 +24,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue]);
+    }, [searchValue, isShowDeleted]);
 
     useEffect(() => {
         const loadData = async () => {
