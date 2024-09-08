@@ -11,7 +11,6 @@ export default function JobDetails({ visible, setVisible, JobDetails}) {
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
-            {/* <img src="/static/media/task-details.6c24fdfe452b19f485da192519e9cbe3.svg" alt="task-details" style={{ width: '48px', height: '48px' }} /> */}
             <b className={style.iconJobstyle}><InfoCircle size={24} color="#106B99" /></b>
             <span className={`white-space-nowrap ${style.headerTitle}`}>Job Details</span>
         </div>

@@ -140,6 +140,10 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   justify-content: end;
 }
 
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+  border-radius: 24px !important;
+}
+
 .paddingLeftHide {
   padding-left: 0 !important;
 }
@@ -207,3 +211,66 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   align-items: center;
   gap: var(--spacing-lg, 12px);
 }
+
+/* Accordion customize start */
+
+.p-accordion-tab {
+  border: 1px solid #eaecf0;
+  border-radius: var(--radius-xs, 4px);
+}
+
+.main-accordion-header {
+  position: relative;
+}
+
+.main-accordion-header .expandIcon {
+  right: 10px;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f4f7;
+  border-radius: 22px;
+}
+
+.p-accordion-header.p-highlight .active-header-text {
+  color: #106b99 !important;
+}
+
+.p-accordion-header.p-highlight .editItem,
+.p-accordion-header:hover .editItem {
+  visibility: visible !important;
+}
+
+.main-accordion-header .collapseIcon {
+  right: 10px;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #bae8ff;
+  border-radius: 22px;
+}
+
+.p-accordion-tab .main-accordion-header,
+.p-accordion-tab .main-accordion-header:hover,
+.p-accordion-tab .p-accordion-content,
+.p-accordion-tab .p-accordion-content:hover {
+  border: 1px solid #fff;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.innnerAccordian .p-accordion-content {
+   padding: 0px;
+}
+
+.p-accordion .p-accordion-tab {
+  margin-bottom: 8px;
+}
+
+/* Accordion customize end */

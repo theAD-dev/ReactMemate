@@ -44,7 +44,6 @@ import ExistingClients from "../Business/Pages/sales/new-request/existing-client
 import SelectClientType from "../Business/Pages/sales/new-request/select-client";
 import Locations from "./settings/Locations";
 import Departments from "../layout/settings/calculators/Departments";
-import Subindex from "../layout/settings/calculators/Subindex";
 import JobTemplates from "./settings/templates/JobTemplates";
 import EmailTemplates from "./settings/templates/EmailTemplates";
 import EmailSignatures from "./settings/templates/EmailSignatures";
@@ -552,10 +551,6 @@ const Header = ({ onClick }) => {
           <Route
             path="/settings/calculators/departments"
             element={<Departments />}
-          />
-          <Route
-            path="/settings/calculators/subindex"
-            element={<Subindex />}
           />
           <Route
             path="/settings/templates/job-templates"
