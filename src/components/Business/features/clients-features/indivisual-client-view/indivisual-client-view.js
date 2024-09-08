@@ -9,11 +9,15 @@ import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
 import DeleteClient from '../delete-client';
 import { dateFormat, formatMoney } from '../../../shared/utils/helper';
+import { getClientCategories } from '../../../../../APIs/ClientsApi';
+import { useQuery } from '@tanstack/react-query';
 
 const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
   const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+
+  const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
 
   const handleExternalSubmit = () => {
     if (formRef.current) {
@@ -47,7 +51,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
           </div>
           {
             isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
-              : <ViewSection client={client} />
+              : <ViewSection client={client} categories={categoriesQuery?.data} />
           }
         </div>
 
@@ -66,7 +70,8 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   )
 }
 
-const ViewSection = ({ client }) => {
+const ViewSection = ({ client, categories }) => {
+  let clientCategory = categories?.find((category) => category.id === client?.category)
   const getOrderFrequencyPerMonth = (totalOrders, created) => {
     const monthsActive = (new Date().getFullYear() - new Date(+created * 1000).getFullYear()) * 12 + (new Date().getMonth() - new Date(created * 1000).getMonth());
     const result = monthsActive > 0 ? (parseFloat(totalOrders) / monthsActive).toFixed(2) : 0;
@@ -76,7 +81,7 @@ const ViewSection = ({ client }) => {
     <>
       <div className={clsx(style.box)}>
         <label className={clsx(style.label)}>Customer Category</label>
-        <h4 className={clsx(style.text)}>{client?.category == 43 || client?.category == 1 ? "Regular" : "-"}</h4>
+        <h4 className={clsx(style.text)}>{clientCategory?.name || "-"}</h4>
 
 
         <Row>
