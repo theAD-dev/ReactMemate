@@ -62,7 +62,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, i
                     />
                     <select value={"MRG"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => { }}>
                         <option value={"MRG"}>MRG %</option>
-                        <option value={"AMT"}>Amt $</option>
+                        <option value={"AMN"}>AMT $</option>
                         <option value={"MRK"}>MRK %</option>
                     </select>
                 </div>
@@ -227,7 +227,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                                 />
                                                 <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
                                                     <option value={"MRG"}>MRG %</option>
-                                                    <option value={"AMT"}>Amt $</option>
+                                                    <option value={"AMN"}>AMT $</option>
                                                     <option value={"MRK"}>MRK %</option>
                                                 </select>
                                             </div>

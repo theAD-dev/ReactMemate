@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import style from './calculators.module.scss';
 import clsx from 'clsx';
-import { createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
+import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { useQuery } from '@tanstack/react-query';
 import { Col, Row } from 'react-bootstrap';
 import { formatMoney } from '../../../Business/shared/utils/helper';
@@ -21,6 +21,7 @@ const Departments = () => {
     const [visible2, setVisible2] = useState(false);
     const [activeTab, setActiveTab] = useState('departments');
     const [editSubIndex, setEdiSubIndex] = useState(null);
+    const [createCalculatorId, setCreateCalculatorId] = useState(null);
     const [editDepartment, setEditDepartment] = useState({ id: null, name: null });
     const [subDepartment, setSubDepartment] = useState(null);
     const [activeCalculations, setActiveCalculations] = useState({});
@@ -41,6 +42,12 @@ const Departments = () => {
 
     const editCalculators = (id) => {
         if (id) setEdiSubIndex(id);
+    }
+
+    const handleCreateCalculator = (e, id) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCreateCalculatorId(id);
     }
 
     const editHandleDepartment = (e, data) => {
@@ -104,7 +111,7 @@ const Departments = () => {
                                         <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
                                         <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
                                             <Button className={style.delete} onClick={(e) => { }}><Trash color="#B42318" size={18} className='me-2' />Delete Sub Deparment</Button>
-                                            <Button className={style.create} onClick={(e) => { }}><PlusLg color="#106B99" size={18} className='me-2' />Add Calculator</Button>
+                                            <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id)}><PlusLg color="#106B99" size={18} className='me-2' />Add Calculator</Button>
                                             <Button className={style.editBut} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)}><PencilSquare color="#1D2939" size={18} className='me-2' />Edit</Button>
                                         </div>
                                     </span>
@@ -116,7 +123,13 @@ const Departments = () => {
                                             {
                                                 editSubIndex === subindex.id
                                                     ? <EditCalculators editSubIndex={editSubIndex} calculators={activeCalculations[subindex.id]} />
-                                                    : <ViewCalculators index={subindex.id} refetch={getCalculator} calculators={activeCalculations[subindex.id]} />
+                                                    : <ViewCalculators index={subindex.id}
+                                                        isNewCreate={createCalculatorId === subindex.id}
+                                                        cancelCreateCalculator={setCreateCalculatorId}
+                                                        refetch={getCalculator}
+                                                        calculators={activeCalculations[subindex.id]}
+                                                        name={subindex.name}
+                                                    />
                                             }
                                         </>
                                     ) : <LoadingCalculator />
@@ -379,7 +392,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <div className={clsx(style.bottom)}>
                             <div className='d-flex justify-content-end gap-3 align-items-center h-100'>
                                 <Button onClick={() => setIsEdit(false)} className='outline-button'>Cancel</Button>
-                                <Button onClick={saveCalculator} className='solid-button'>Save Details</Button>
+                                <Button onClick={saveCalculator} className='solid-button'>{isLoading ? "Loading..." : "Save Details"}</Button>
                             </div>
                         </div>
                     </>
@@ -422,7 +435,172 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
     );
 }
 
-const ViewCalculators = ({ calculators = [], index, refetch }) => {
+const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [tempCalculator, setTempCalculator] = useState(null);
+
+    useEffect(() => {
+        if (tempCalculator) {
+            let rate = parseFloat(tempCalculator?.cost) || 0;
+            let quantity = parseFloat(tempCalculator?.quantity) || 0;
+            let subtotal = rate * quantity;
+
+            let margin = parseFloat(tempCalculator?.profit_type_value) || 0;
+            if (tempCalculator?.profit_type === "MRK") {
+                subtotal += (subtotal * margin) / 100;
+            } else if (tempCalculator?.profit_type === "MRG") {
+                subtotal = subtotal / (1 - margin / 100);
+            } else if (tempCalculator?.profit_type === "AMT") {
+                subtotal += margin;
+            }
+
+            let discount = parseFloat(tempCalculator?.discount) || 0;
+            let total = subtotal - (subtotal * discount) / 100;
+
+            if (total !== tempCalculator.total) {
+                setTempCalculator((others) => ({ ...others, total }));
+            }
+        }
+    }, [tempCalculator]);
+
+    const saveCalculator = async () => {
+        console.log('tempCalculator: ', tempCalculator);
+        let payload = {
+            title: name || "",
+            description: tempCalculator?.description,
+            type: tempCalculator?.type === "Cost" ? 0 : 1,
+            cost: tempCalculator?.cost,
+            quantity: tempCalculator?.quantity,
+            profit_type: tempCalculator?.profit_type,
+            profit_type_value: tempCalculator?.profit_type_value,
+            total: tempCalculator?.total
+        }
+        try {
+            setIsLoading(true);
+            await createCalculator(index, payload)
+            toast.success(`Calculator created successfully.`);
+            cancelCreateCalculator(null);
+            refetch(index);
+        } catch (error) {
+            console.log('Error during creating calculator', error);
+            toast.error(`Failed to created calculator. Please try again.`);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <div className={`${style.contentStyle}`}>
+            <h6>Full Description</h6>
+            <InputTextarea autoResize value={tempCalculator?.description}
+                onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
+                className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
+
+            <Row>
+                <Col>
+                    <div className='d-flex gap-2 justify-content-between align-items-center'>
+                        <div className='left'>
+                            <label>Cost</label>
+                            <InputNumber className={clsx(style.inputNumber)} prefix="$" value={parseFloat(tempCalculator?.cost || 0)}
+                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, cost: e.value }))}
+                                maxFractionDigits={2}
+                                minFractionDigits={2}
+                                inputId="minmaxfraction"
+                            />
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', padding: '4px', background: '#EBF8FF' }}>
+                            <X color='#1AB2FF' size={12} />
+                        </div>
+                    </div>
+                </Col>
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='d-flex flex-column'>
+                            <label>Quantity/Hours</label>
+                            <div className='d-flex gap-2 align-items-center'>
+                                <InputNumber className={clsx(style.inputNumber2)}
+                                    inputId="withoutgrouping"
+                                    value={parseInt(tempCalculator?.quantity || 0)}
+                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
+                                />
+                                <select value={tempCalculator?.type}
+                                    style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                    onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
+                                >
+                                    <option value="Cost">1/Q</option>
+                                    <option value="Hourly">1/H</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                            <X color='#1AB2FF' size={12} />
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='d-flex flex-column'>
+                            <label>Markup/Margin</label>
+                            <div className='d-flex gap-1 align-items-center'>
+                                <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
+                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
+                                    maxFractionDigits={2}
+                                    minFractionDigits={2}
+                                    inputId="minmaxfraction"
+                                />
+                                <select value={tempCalculator?.profit_type}
+                                    style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                    onChange={(e) => setTempCalculator((others) => ({ ...others, profit_type: e.target.value }))}
+                                >
+                                    <option value={"MRG"}>MRG %</option>
+                                    <option value={"AMN"}>AMT $</option>
+                                    <option value={"MRK"}>MRK %</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                            <X color='#1AB2FF' size={12} />
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='left'>
+                            <label>Discount</label>
+                            <InputNumber className={clsx(style.inputNumber)} prefix="$"
+                                value={parseFloat(tempCalculator?.discount || 0)}
+                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, discount: e.value }))}
+                                maxFractionDigits={2}
+                                minFractionDigits={2}
+                                inputId="minmaxfraction"
+                            />
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
+                            =
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <label>Sub Total:</label>
+                    <strong className='mt-4'>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
+                </Col>
+            </Row>
+
+            <div className={clsx(style.bottom)}>
+                <div className='d-flex justify-content-end gap-3 align-items-center h-100'>
+                    <Button onClick={() => cancelCreateCalculator(null)} className='outline-button'>Cancel</Button>
+                    <Button onClick={saveCalculator} className='solid-button'>{isLoading ? "Loading..." : "Save Details"}</Button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, cancelCreateCalculator }) => {
     const uniqueCalculators = calculators.filter((item, index, self) =>
         index === self.findIndex((t) => t.id === item.id)
     );
@@ -434,6 +612,10 @@ const ViewCalculators = ({ calculators = [], index, refetch }) => {
                 uniqueCalculators.map(calculator => (
                     <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
                 ))
+            }
+
+            {
+                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} />
             }
 
             <div className={style.calculateBox}>
