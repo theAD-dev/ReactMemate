@@ -28,7 +28,7 @@ const Departments = () => {
 
     const departmentQuery = useQuery({
         queryKey: ['departments'],
-        queryFn: getDepartments,
+        queryFn: () => getDepartments(1),
         enabled: true,
     });
 

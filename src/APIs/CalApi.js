@@ -1,12 +1,14 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
-export const getDepartments = async () => {
+export const getDepartments = async (all) => {
   const endpoint = `/references/calc-indexes/`;
   const options = {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
+  if (all) url.searchParams.append('all', 1);
+  
   return fetchAPI(url.toString(), options);
 }
 
