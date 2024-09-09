@@ -213,7 +213,7 @@ function MyProfile() {
                           </strong>
                         ) : (
                           <div class="upload-btn-wrapper">
-                            <FileUpload photo={photo} setPhoto={setPhoto} />
+                              <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
                           </div>
                         )}
                       </div>
@@ -388,7 +388,8 @@ function MyProfile() {
   );
 }
 
-function FileUpload({ photo, setPhoto }) {
+function FileUpload({ photo, setPhoto,data }) {
+  console.log('photo: ', photo);
   const [show, setShow] = useState(false);
 
   return (
@@ -431,7 +432,30 @@ function FileUpload({ photo, setPhoto }) {
               marginBottom: "16px",
             }}
           >
-            <Upload />
+              {photo || data.photo ? (
+      <div
+        style={{
+          width: '64px',
+          height: '64px',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <img
+          src={photo || data.photo} 
+          width={76}
+          alt="Uploaded Photo"
+        />
+      </div>
+    ) : (
+      <Upload />
+    )}
+
+
+         
           </button>
         )}
         <p className="mb-0" style={{ color: "#475467", fontSize: "14px" }}>

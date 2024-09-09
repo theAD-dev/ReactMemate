@@ -105,7 +105,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     const averagePD = (rowData) => {
         return <Tag value={`$${rowData.average_pd}`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #ABEFC6', background: '#ECFDF3', color: '#067647', fontSize: '12px', fontWeight: 500 }}></Tag>
     }
-
+    
     const projectBody = (rowData) => {
         return <Tag value={rowData.total_requests} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #EAECF0', background: '#F9FAFB', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
     }

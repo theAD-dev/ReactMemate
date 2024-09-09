@@ -154,7 +154,7 @@ const ProjectStatus = () => {
                                {error ? (
                                 <p style={{ color: 'red' }}>{error}</p>
                             ) : (
-                                <p>The status name can be up to {charCount}/20 characters long.</p>
+                                <p>The status name can be up to 20 characters long.</p>
                             )}
                                </div>
                                 {
@@ -179,8 +179,17 @@ const ProjectStatus = () => {
                                                             value={option.title}
                                                             onChange={(e) => updateOptionTitle(option.id, e.target.value)}
                                                         />
-                                                 
+                                                 {
+                                                       (option.isNew || option.isChanged) && <>
+                                                        {
+                                                            option?.title?.length >= 20
+                                                            ? <p className="mb-2 mt-2 text-danger">20</p>
+                                                            : <p className="mb-2 mt-2">{option?.title?.length || 0} </p>
+                                                        }
+                                                       </> 
+                                                    }
                                                     </div>
+                                                    
                                                     
                                                         <Menu
                                                             className='mainSelectMenu'
@@ -217,15 +226,7 @@ const ProjectStatus = () => {
                                                             </MenuGroup>
                                                         </Menu>
                                                     </div>
-                                                    {
-                                                       (option.isNew || option.isChanged) && <>
-                                                        {
-                                                            option?.title?.length >= 20
-                                                            ? <p className="mb-2 mt-2 text-danger">The status name can be up to 20 characters long.</p>
-                                                            : <p className="mb-2 mt-2">The status name can be up to {option?.title?.length || 0}/20 characters long.</p>
-                                                        }
-                                                       </> 
-                                                    }
+                                                   
                                                 </td>
                                                 <td className="butactionOrg">
                                                     {(option.isNew || option.isChanged) &&

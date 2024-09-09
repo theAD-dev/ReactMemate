@@ -103,7 +103,7 @@ const ExistingClients = () => {
             </div>
 
             <div className='mt-4 h-100'>
-              <ul className='client'>
+              <ul className='client customscrollBar'>
                 {itemList && itemList.map((item) => (
                   <li key={item.id}>
                     <Link to={item.is_business ? `/sales/newquote/selectyourclient/client-information/scope-of-work/${item.id}` : `/sales/newquote/selectyourclient/client-information/scope-of-work/${item.id}`}

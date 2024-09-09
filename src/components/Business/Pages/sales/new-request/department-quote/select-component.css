@@ -197,7 +197,8 @@ li.szh-menu__item:hover {
   border: 1px solid #fff;
 }
 
-.note-textarea .textarea, .note-textarea .textarea:focus {
+.note-textarea .textarea,
+.note-textarea .textarea:focus {
   font-size: 16px;
   border-radius: var(--radius-xs, 4px) !important;
   border: 1px solid var(--Gray-300, #d0d5dd) !important;
@@ -207,7 +208,7 @@ li.szh-menu__item:hover {
 }
 
 .form-control::placeholder {
-  color: #98A2B3 !important;
+  color: #98a2b3 !important;
 }
 
 .inputInfo .no-border-outline {
@@ -224,14 +225,15 @@ li.szh-menu__item:hover {
   border: left 0px;
 }
 
-.mui-select-custom .MuiSelect-select, .mui-select-custom .MuiOutlinedInput-notchedOutline {
+.mui-select-custom .MuiSelect-select,
+.mui-select-custom .MuiOutlinedInput-notchedOutline {
   padding: 11px 14px !important;
   color: #101828 !important;
   border: 1px solid #d0d5dd !important;
 }
 
 .mui-select-custom .MuiSelect-icon {
-  color: #98A2B3;
+  color: #98a2b3;
 }
 
 .basic-multi-select > * {
@@ -241,4 +243,36 @@ li.szh-menu__item:hover {
 
 .basic-multi-select span {
   background: transparent !important;
+}
+
+.szh-menu::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  padding: 5px;
+}
+
+.szh-menu::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px #fff;
+  border-radius: 10px;
+}
+
+.szh-menu::-webkit-scrollbar-thumb {
+  background: #eaecf0;
+  border-radius: 10px;
+}
+
+.szh-menu::-webkit-scrollbar-thumb:hover {
+  background: #eaecf0;
+}
+
+ul.szh-menu {
+  width: 221px;
+}
+
+.szh-menu__submenu {
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  text-align: left;
 }
