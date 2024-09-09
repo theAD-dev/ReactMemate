@@ -17,7 +17,8 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState({ sortField: null, sortOrder: null });
+    const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
+    const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
@@ -29,9 +30,10 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
+
             let order = "";
-            if (sort?.sortOrder === 1) order = `${sort.sortField}`;
-            else if (sort?.sortOrder === -1) order = `-${sort.sortField}`;
+            if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
+            else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfClients(page, limit, searchValue, order, isShowDeleted);
             setTotalClients(() => (data?.count || 0))
@@ -44,13 +46,14 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
                         return [...prev, ...newClients];
                     });
             }
+            setSort(tempSort);
             setHasMoreData(data.count !== clients.length)
             setLoading(false);
         };
 
         loadData();
 
-    }, [page, searchValue, sort, isShowDeleted]);
+    }, [page, searchValue, tempSort, isShowDeleted]);
 
     useEffect(() => {
         if (clients.length > 0 && hasMoreData) {
@@ -139,14 +142,14 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
     
     const onSort = (event) => {
-        console.log('event: ', event);
         const { sortField, sortOrder } = event;
+
+        setTempSort({ sortField, sortOrder })
         setPage(1);  // Reset to page 1 whenever searchValue changes
-        setSort({ sortField, sortOrder })
     };
 
     return (
-        <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'} removableSort
+        <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
             columnResizeMode="expand" resizableColumns showGridlines size={'large'}
             scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedClients}
             onSelectionChange={(e) => setSelectedClients(e.value)}
@@ -161,7 +164,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="id" header="Client ID" body={clientIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
             <Column field="name" header="Client A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-            <Column field="category" header="Category" style={{ minWidth: '94px' }}></Column>
+            <Column field="category.name" header="Category" style={{ minWidth: '94px' }}></Column>
             <Column field="days_in_company" header="Days in company" body={daysBody} style={{ minWidth: '56px' }} className='text-center'></Column>
             <Column field='jobsdone' header="Jobs" body={JobBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
             <Column field='total_turnover' header="Total turnover" body={totalTurnoverBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
