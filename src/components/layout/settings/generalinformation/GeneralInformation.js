@@ -348,7 +348,7 @@ function GeneralInformation() {
                                      
                                     <div class="upload-btn-wrapper">
                                       
-                                       <FileUpload photo={photo} setPhoto={setPhoto} />
+                                       <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
                                       
                                    
                                     </div>
@@ -401,7 +401,7 @@ function GeneralInformation() {
 
 
 
-function FileUpload({ photo, setPhoto }) {
+function FileUpload({ photo, setPhoto,data }) {
     const [show, setShow] = useState(false);
   
     return (
@@ -419,7 +419,27 @@ function FileUpload({ photo, setPhoto }) {
               </div>
             ) : (
               <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
-                <Upload />
+                {photo || data.photo ? (
+      <div
+        style={{
+          width: '64px',
+          height: '64px',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <img
+          src={photo || data.photo} 
+          width={76}
+          alt="Uploaded Photo"
+        />
+      </div>
+    ) : (
+      <Upload />
+    )}
               </button>
             )
           }

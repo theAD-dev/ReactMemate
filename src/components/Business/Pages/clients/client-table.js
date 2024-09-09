@@ -86,6 +86,9 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             
         </div>
     }
+    const categoryClient = (rowData) => {
+        return  <span style={{ color: '#98A2B3' }}>{rowData.category?.name}</span>
+    }
 
     const daysBody = (rowData) => {
         return <Tag value={rowData.days_in_company} style={{ height: '22px', minWidth: '26px', borderRadius: '4px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
@@ -102,6 +105,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     const averagePD = (rowData) => {
         return <Tag value={`$${rowData.average_pd}`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #ABEFC6', background: '#ECFDF3', color: '#067647', fontSize: '12px', fontWeight: 500 }}></Tag>
     }
+    
 
     const projectBody = (rowData) => {
         return <Tag value={rowData.total_requests} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #EAECF0', background: '#F9FAFB', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
@@ -161,7 +165,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="id" header="Client ID" body={clientIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
             <Column field="name" header="Client A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-            <Column field="category" header="Category" style={{ minWidth: '94px' }}></Column>
+            <Column field="category" header="Category" body={categoryClient} style={{ minWidth: '94px' }}></Column>
             <Column field="days_in_company" header="Days in company" body={daysBody} style={{ minWidth: '56px' }} className='text-center'></Column>
             <Column field='jobsdone' header="Jobs" body={JobBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
             <Column field='total_turnover' header="Total turnover" body={totalTurnoverBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>

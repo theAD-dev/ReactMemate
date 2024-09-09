@@ -1424,8 +1424,8 @@ td.butactionOrg p {
 .orgColorStatus tbody tr td, .orgColorStatus tbody tr td:hover {
     background: transparent !important;
     border: 0 !important;
-    vertical-align: baseline;
-    padding: 20px 0 !important;
+    vertical-align: middle;
+    /* padding: 20px 0 !important; */
 }
 .orgColorStatus tbody tr td:first-child {
     width: 280px !important;
@@ -1492,6 +1492,13 @@ td.butactionOrg p {
     letter-spacing: -0.08px;
     width: 343px;
     margin-right: 16px;
+    display: flex;
+    align-items: center;
+}
+.statusTitle p.mb-2 {
+    font-size: 12px;
+    padding: 0;
+    margin: 0 !important;
 }
 .statusTitle input{
     width: 100%;

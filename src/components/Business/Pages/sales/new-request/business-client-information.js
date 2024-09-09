@@ -234,7 +234,7 @@ const BusinessClientInformation = () => {
               </ul>
             </div>
 
-            <div className='individual height'>
+            <div className='individual height customscrollBar'>
               <div className="formgroupWrap1">
                 <ul className='mt-4'>
                   <li>

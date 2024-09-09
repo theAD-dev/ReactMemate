@@ -139,7 +139,7 @@ const Header = ({ onClick }) => {
                       )}
                     </div>
                     <div className="SelectOptionHead">
-                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.legal_name || ""} />
+                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.trading_name || ""} />
                     </div>
                   </Col>
                   <Col className="d-flex align-items-center justify-content-center">
