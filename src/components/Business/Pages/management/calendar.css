@@ -1067,6 +1067,14 @@ strong.dollorIcon {
   background: var(--Dark-Base-Base-White, #fff);
 }
 
+.bottom-border.topbar {
+  border-bottom: 1px solid var(--Gray-200, #eaecf0) !important;
+}
+
+#calender {
+  border-top: 0px solid #fff !important;
+}
+
 .featureName .title {
   color: var(--Gray-600, #475467);
   margin-bottom: 0px;

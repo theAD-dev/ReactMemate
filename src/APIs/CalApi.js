@@ -65,3 +65,67 @@ export const getMergeItemsByUniqueId = async (unique_id) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const createDepartment = async (data) => {
+  const endpoint = '/settings/departments/';
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const updateDepartment = async (id, data) => {
+  if (!id) return;
+
+  const endpoint = `/settings/departments/update/${id}/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const createSubDepartment = async (data) => {
+  const endpoint = '/settings/sub-departments/';
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const updateSubDepartment = async (id, data) => {
+  if (!id) return;
+
+  const endpoint = `/settings/sub-departments/update/${id}/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const createCalculator = async (index, data) => {
+  const endpoint = `/references/calculators/${index}/new/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const updateCalculator = async (index, id, data) => {
+  const endpoint = `/references/calculators/${index}/update/${id}/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

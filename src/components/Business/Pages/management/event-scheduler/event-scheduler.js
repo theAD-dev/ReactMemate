@@ -170,7 +170,7 @@ function EventScheduler() {
   }
 
   return <React.Fragment>
-    <div className="topbar" style={{ padding: '0px 20px', position: 'relative' }}>
+    <div className="topbar bottom-border" style={{ padding: '0px 20px', position: 'relative' }}>
       <div className="searchBox" style={{ position: 'relative' }}>
         <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">

@@ -44,7 +44,6 @@ import ExistingClients from "../Business/Pages/sales/new-request/existing-client
 import SelectClientType from "../Business/Pages/sales/new-request/select-client";
 import Locations from "./settings/Locations";
 import Departments from "../layout/settings/calculators/Departments";
-import Subindex from "../layout/settings/calculators/Subindex";
 import JobTemplates from "./settings/templates/JobTemplates";
 import EmailTemplates from "./settings/templates/EmailTemplates";
 import EmailSignatures from "./settings/templates/EmailSignatures";
@@ -127,10 +126,12 @@ const Header = ({ onClick }) => {
                   <Col className="d-flex align-items-center">
                     <div className="company_logo colMinWidth">
                       {profileData && profileData?.organization?.logo ? (
-                        <img
-                          src={profileData.organization.logo}
-                          alt="Company Logo"
-                        />
+                        <div className="d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', overflow: 'hidden', borderRadius: '4px', border: '0.5px solid #F2F4F7' }}>
+                          <img
+                            src={profileData.organization.logo}
+                            alt="Company Logo"
+                          />
+                        </div>
                       ) : (
                         <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
                           <Placeholder bg="secondary" style={{ height: '30px', width: '40px' }} size='lg' />
@@ -138,7 +139,7 @@ const Header = ({ onClick }) => {
                       )}
                     </div>
                     <div className="SelectOptionHead">
-                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
+                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.legal_name || ""} />
                     </div>
                   </Col>
                   <Col className="d-flex align-items-center justify-content-center">
@@ -552,10 +553,6 @@ const Header = ({ onClick }) => {
             element={<Departments />}
           />
           <Route
-            path="/settings/calculators/subindex"
-            element={<Subindex />}
-          />
-          <Route
             path="/settings/templates/job-templates"
             element={<JobTemplates />}
           />
@@ -680,8 +677,8 @@ const Header = ({ onClick }) => {
             path="/settings/templates/edit-email/"
             element={<EditEmail />}
           />
-          
-          
+
+
 
         </Routes>
         <Outlet />

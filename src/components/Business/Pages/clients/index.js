@@ -1,18 +1,22 @@
 import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { Download, Filter } from 'react-bootstrap-icons';
+import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
 import { Button } from 'react-bootstrap';
 import { useDebounce } from 'primereact/hooks';
 
 import style from './clients.module.scss';
 import ClientTable from './client-table';
 import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
+import { TieredMenu } from 'primereact/tieredmenu';
+import clsx from 'clsx';
 
 const ClientPage = () => {
     const dt = useRef(null);
+    const menu = useRef(null);
     const [totalClients, setTotalClients] = useState(0);
     const [visible, setVisible] = useState(false);
+    const [isShowDeleted, setIsShowDeleted] = useState(false);
     const [selectedClients, setSelectedClients] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
@@ -40,7 +44,15 @@ const ClientPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter /></button>
+                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter /></button>
+                                        <TieredMenu model={[{
+                                            label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
+                                                {
+                                                    isShowDeleted ? (<>Hide Deleted Clients <EyeSlash /></>)
+                                                        : (<>Show Deleted Clients <Eye /></>)
+                                                }
+                                            </div>,
+                                        }]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -58,14 +70,14 @@ const ClientPage = () => {
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Clients</h1>
-                    <Button onClick={() => setVisible(true) } className={`${style.newButton}`}>New</Button>
+                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{totalClients} Clients</div>
                 </div>
             </div>
-            <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} />
+            <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} />
             <NewClientCreate visible={visible} setVisible={setVisible} />
         </PrimeReactProvider>
     )

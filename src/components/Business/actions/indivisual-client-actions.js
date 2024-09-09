@@ -5,10 +5,11 @@ export const createFormData = (data, photo) => {
     const formData = new FormData();
 
     // Append user data
+    formData.append("category", data.category);
+    formData.append("phone", data.phone);
     formData.append("firstname", data.firstname);
     formData.append("lastname", data.lastname);
     formData.append("email", data.email);
-    formData.append("phone", data.phone);
     formData.append("description", data.description);
 
     // Append address data

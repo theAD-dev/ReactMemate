@@ -1,233 +1,150 @@
-import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar';
-import { PlusLg ,PencilSquare,GripVertical,ChevronDown,Plus,PlusCircle,Trash} from "react-bootstrap-icons";
-import Modal from 'react-bootstrap/Modal';
+import { PlusLg, PencilSquare, ChevronDown, Plus, Trash, ChevronUp, X, PlusCircle, Pencil } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import style from './calculators.module.scss';
-import { Divider } from 'primereact/divider';
-import { InputText } from "primereact/inputtext";
+import clsx from 'clsx';
+import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
+import { useQuery } from '@tanstack/react-query';
+import { Col, Row } from 'react-bootstrap';
+import { formatMoney } from '../../../Business/shared/utils/helper';
+import { Skeleton } from 'primereact/skeleton';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { InputNumber } from 'primereact/inputnumber';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { toast } from 'sonner';
 
 const Departments = () => {
+    const [visible, setVisible] = useState(false);
+    const [visible2, setVisible2] = useState(false);
     const [activeTab, setActiveTab] = useState('departments');
-    const [showModal, setShowModal] = useState(false);
-    const [dname, setDname] = useState('');
-    const [departments, setDepartments] = useState([]);
-    
+    const [editSubIndex, setEdiSubIndex] = useState(null);
+    const [createCalculatorId, setCreateCalculatorId] = useState(null);
+    const [editDepartment, setEditDepartment] = useState({ id: null, name: null });
+    const [subDepartment, setSubDepartment] = useState(null);
+    const [activeCalculations, setActiveCalculations] = useState({});
 
-    // State with nested tabs for each main tab
-    const [tabs] = useState([
-        {
-            header: (
-                <span className="d-flex align-items-center justify-content-between">
-                    <span className={style.accorHeadStyle}>Yacht Management</span>
-                    <div className='RItem'>
-                        <PencilSquare color="#344054" size={20} className={style.hoverToShow} />
-                        <ChevronDown color="#344054" size={20} className={style.downBoxStyle} />
-                    </div>
-                </span>
-            ),
-            
-            children: (
-                <Accordion>
-                    <AccordionTab className={style.innerBoxStyle} 
-                       header={(
-                        <span className="d-flex align-items-center justify-content-between">
-                            <span className={style.accorHeadStyle}><ChevronDown color="#344054" size={20} className={style.downBoxStyle} />Advertising - Elite Life Magazine</span>
-                            <div className={style.RItem}>
-                                 <Button className={style.delete}><Trash color="#B42318" size={20}  /> &nbsp;Delete Calculator</Button>
-                                 <Button className={style.create}><PlusLg color="#106B99" size={20}  /> &nbsp;Add Calculator</Button>
-                                 <Button className={style.editBut}><PencilSquare color="#1D2939" size={20}  /> &nbsp;Edit</Button>
-                               
-                            </div>
-                        </span>
-                    )}
-                    >
-                        <div className={`m-01 ${style.contentStyle}`}>
-                            <h6>Description</h6>
-                           <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard 
-                            dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p> 
-                           <ul>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                           </ul>
-                            </div>
-                            <Divider />
-                            <div className={`m-01 ${style.contentStyle}`}>
-                            <h6>Description</h6>
-                           <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard 
-                            dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p> 
-                           <ul>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                           </ul>
-                            </div>
-                            <div className={style.calculateBox}>
-                                <ul>
-                                    <li>
-                                        <div className={`${style.profit} ${style.boxcal}`}>
-                                            <h6>Operational Profit</h6>
-                                            <strong>$8,99.14</strong>
-                                        </div>
-                                        <div className={`${style.boxcal}`}>
-                                            <h6>Operational Profit</h6>
-                                            <strong>$8,99.14</strong>
-                                        </div>
-                                    </li>
-                                    <li>
-                                    <div className={`${style.boxcal}`}>
-                                            <h6>Total</h6>
-                                            <strong>$ 28,200.00</strong>
-                                        </div>    
-                                    </li>
-                                </ul>
-                            </div>
-                    </AccordionTab>
-                    <AccordionTab className={style.innerBoxStyle} 
-                      header={(
-                        <span className="d-flex align-items-center justify-content-between">
-                            <span className={style.accorHeadStyle}> <ChevronDown color="#344054" size={20} className={style.downBoxStyle} /> Creatie Design for A4 Page</span>
-                           
-                        </span>
-                    )}
-                    >
-                         <div className={`m-01 ${style.contentStyle}`}>
-                            <h6>Description</h6>
-                           <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard 
-                            dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p> 
-                           <ul>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                           </ul>
-                            </div>
-                            <Divider />
-                            <div className={`m-01 ${style.contentStyle}`}>
-                            <h6>Description</h6>
-                           <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard 
-                            dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p> 
-                           <ul>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                            <li>
-                                <h5>Cost</h5>
-                                <strong>$ 1,540.00</strong>
-                            </li>
-                           </ul>
-                            </div>
-                            <div className={style.calculateBox}>
-                                <ul>
-                                    <li>
-                                        <div className={`${style.profit} ${style.boxcal}`}>
-                                            <h6>Operational Profit</h6>
-                                            <strong>$8,99.14</strong>
-                                        </div>
-                                        <div className={`${style.boxcal}`}>
-                                            <h6>Operational Profit</h6>
-                                            <strong>$8,99.14</strong>
-                                        </div>
-                                    </li>
-                                    <li>
-                                    <div className={`${style.boxcal}`}>
-                                            <h6>Total</h6>
-                                            <strong>$ 28,200.00</strong>
-                                        </div>    
-                                    </li>
-                                </ul>
-                            </div>
-                    </AccordionTab>
-                </Accordion>
-            )
-        },
-    
-    ]);
+    const departmentQuery = useQuery({
+        queryKey: ['departments'],
+        queryFn: getDepartments,
+        enabled: true,
+    });
 
-    // Function to create dynamic tabs including nested tabs
+    const getCalculator = async (subindexId) => {
+        const calculation = await getCalculationByReferenceId(subindexId);
+        setActiveCalculations((prev) => ({
+            ...prev,
+            [subindexId]: calculation, // Store calculation data for the specific subindex
+        }));
+    }
+
+    const editCalculators = (id) => {
+        if (id) setEdiSubIndex(id);
+    }
+
+    const handleCreateCalculator = (e, id) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCreateCalculatorId(id);
+    }
+
+    const editHandleDepartment = (e, data) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setVisible(true);
+        setEditDepartment(data);
+    }
+
+    const createSubDepartment = (parent) => {
+        setSubDepartment({ parent });
+        setVisible2(true);
+    }
+
+    const updateSubDepartment = (e, id, parent, name) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setSubDepartment({ id, parent, name });
+        setVisible2(true);
+    }
+
     const createDynamicTabs = () => {
-        return tabs.map((tab, i) => {
-            return (
-                <AccordionTab className={`${style.accorHeadbox} `} key={tab.header} header={tab.header}>
-                    {tab.children}
-                    <Button className={style.creaeDepartment}><Plus color="#475467" size={20} />Create Sub Department</Button>
-                </AccordionTab>
-            );
-        });
-    };
+        return departmentQuery?.data?.map((department, i) => (
+            <AccordionTab
+                className={clsx(style.accorHeadbox, 'main-accordion-header')}
+                key={department.id}
+                header={
+                    <span className="d-flex align-items-center justify-content-between">
+                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
+                        <div className='editItem' onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
+                            <PencilSquare color="#344054" size={20} style={{ marginRight: '30px' }} />
+                        </div>
+                    </span>
+                }
+            >
+                <Accordion
+                    className='innnerAccordian'
+                    expandIcon={<div className={clsx(style.innerExpandIcon)}>
+                        <ChevronUp size={16} color='#344054' />
+                    </div>}
+                    collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
+                        <ChevronDown size={16} color='#106B99' />
+                    </div>}
+                    onTabOpen={(e) => {
+                        const subindexId = department.subindexes[e.index].id;
+                        getCalculator(subindexId);  // Fetch sub-department on tab open
+                    }}
+                    onTabClose={(e) => {
+                        return false;
+                    }}
+                >
+                    {
+                        department?.subindexes?.map((subindex) => (
+                            <AccordionTab
+                                className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
+                                key={subindex.id}
+                                header={(
+                                    <span className="d-flex align-items-center justify-content-between">
+                                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
+                                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
+                                            <Button className={style.delete} onClick={(e) => { }}><Trash color="#B42318" size={18} className='me-2' />Delete Sub Deparment</Button>
+                                            <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id)}><PlusLg color="#106B99" size={18} className='me-2' />Add Calculator</Button>
+                                            <Button className={style.editBut} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)}><PencilSquare color="#1D2939" size={18} className='me-2' />Edit</Button>
+                                        </div>
+                                    </span>
+                                )}
+                            >
+                                {
+                                    activeCalculations[subindex.id] ? (
+                                        <>
+                                            {
+                                                editSubIndex === subindex.id
+                                                    ? <EditCalculators editSubIndex={editSubIndex} calculators={activeCalculations[subindex.id]} />
+                                                    : <ViewCalculators index={subindex.id}
+                                                        isNewCreate={createCalculatorId === subindex.id}
+                                                        cancelCreateCalculator={setCreateCalculatorId}
+                                                        refetch={getCalculator}
+                                                        calculators={activeCalculations[subindex.id]}
+                                                        name={subindex.name}
+                                                    />
+                                            }
+                                        </>
+                                    ) : <LoadingCalculator />
+                                }
 
-    const createIndex = () => {
-        setShowModal(true);
-    };
-
-    const handleClose = () => {
-        setShowModal(false);
-    };
-
-    const handleSave = () => {
-        // Handle saving logic
+                            </AccordionTab>
+                        ))
+                    }
+                </Accordion>
+                <Button onClick={() => createSubDepartment(department.id)} className={clsx(style.creaeDepartment, 'mt-3')}>
+                    <Plus color="#475467" size={20} className='me-1' style={{ marginBottom: '3px' }} />
+                    Create Sub Department
+                </Button>
+            </AccordionTab>
+        ));
     };
 
     return (
@@ -238,22 +155,25 @@ const Departments = () => {
                     <div className="settings-content setModalelBoots">
                         <div className='headSticky'>
                             <h1>Calculators</h1>
-                            <div className='contentMenuTab'>
-                                <ul>
-                                    <li className='menuActive'><Link to="/settings/calculators/departments">Departments</Link></li>
-                                    <li><Link to="/settings/calculators/subindex">Subindex</Link></li>
-                                </ul>
-                            </div>
                         </div>
                         <div className={`content_wrap_main`}>
                             <div className='content_wrapper'>
                                 <div className="listwrapper">
                                     <div className={`topHeadStyle pb-4 ${style.topHeadBorder}`}>
                                         <h2>Departments</h2>
-                                        <button onClick={() => createIndex()}>Create Index <PlusLg color="#000000" size={20} /></button>
+                                        <button onClick={() => setVisible(true)}>Create Deparment <PlusLg color="#000000" size={20} className='mb-1 ms-1' /></button>
                                     </div>
                                     <div>
-                                        <Accordion>{createDynamicTabs()}</Accordion>
+                                        <Accordion
+                                            expandIcon={<div className='expandIcon'>
+                                                <ChevronUp size={16} color='#344054' />
+                                            </div>}
+                                            collapseIcon={<div className='collapseIcon'>
+                                                <ChevronDown size={16} color='#106B99' />
+                                            </div>}
+                                        >
+                                            {createDynamicTabs()}
+                                        </Accordion>
                                     </div>
                                 </div>
                             </div>
@@ -261,50 +181,748 @@ const Departments = () => {
                     </div>
                 </div>
             </div>
-
-            <Modal
-                show={showModal}
-                onHide={handleClose}
-                centered
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description">
-                <Box className={style.modelStyleBoxstatus} sx={{ width: 505 }}>
-                    <Typography id="modal-modal-title" className={``} variant="h6" component="h2">
-                        <>
-                            <div className='modelHeader modelHeaderBillig d-flex justify-content-between align-items-start'>
-                                <span className='modelHeadFlex'>
-                                    <div className={style.iconborderStyle}>
-                                        <PlusCircle color="#17B26A" size={24} />
-                                    </div>
-                                    <h2>Create Index</h2>
-                                </span>
-                                <IconButton
-                                    edge="end"
-                                    color="inherit"
-                                    onClick={handleClose}
-                                    aria-label="close">
-                                    <CloseIcon color="#667085" size={24} />
-                                </IconButton>
-                            </div>
-
-                            <div className={`stepBoxStyle ${style.stepBoxStylePayment}`}>
-                                <div className="formgroup">
-                                    <label>Department name</label>
-                                        <div className="card flex justify-content-center">
-                                    <InputText keyfilter="int" placeholder="Department name" name="dname" value={dname}  onChange={(e) => setDname(e.target.value)}/>
-                                </div>
-                                </div>
-                            </div>
-                            <div className='footerButton'>
-                                <button className='Cancel' onClick={handleClose}>Cancel</button>
-                                <Button className='save' onClick={handleSave}>Save Details</Button>
-                            </div>
-                        </>
-                    </Typography>
-                </Box>
-            </Modal>
+            <CreateDepartment visible={visible} setVisible={setVisible} refetch={departmentQuery.refetch} editDepartment={editDepartment} setEditDepartment={setEditDepartment} />
+            <CreateSubDepartmentModal visible2={visible2} setVisible2={setVisible2} refetch={departmentQuery.refetch} editSubDepartment={subDepartment} setEditSubDepartment={setSubDepartment} />
         </>
     );
+}
+
+const calculateSummary = (calculators, taxType) => {
+    let budget = 0;
+    let subtotal = 0;
+    calculators?.forEach(item => {
+        let rate = parseFloat(item.cost) || 0;
+        let quantity = parseFloat(item.quantity) || 0;
+        let cost = rate * quantity;
+        budget += parseFloat(cost || 0);
+        subtotal += parseFloat(item.total || 0);
+    });
+
+    let tax = 0;
+    let total = 0;
+
+    if (taxType === 'ex') {
+        tax = subtotal * 0.10;
+        total = subtotal + tax;
+    } else if (taxType === 'in') {
+        total = subtotal;
+        tax = total * 0.10 / 1.10;
+        subtotal = total - tax;
+    } else if (taxType === 'no') {
+        tax = 0;
+        total = subtotal;
+    }
+
+    const operationalProfit = subtotal - budget;
+
+    return {
+        budget: budget.toFixed(2),
+        operationalProfit: operationalProfit.toFixed(2),
+        subtotal: subtotal.toFixed(2),
+        tax: tax.toFixed(2),
+        total: total.toFixed(2),
+    };
+}
+
+const ViewSectionComponent = ({ calculator, index, refetch }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [tempCalculator, setTempCalculator] = useState(null);
+    const [isEdit, setIsEdit] = useState(false);
+
+    const saveCalculator = async () => {
+        console.log('tempCalculator: ', tempCalculator);
+        let payload = {
+            title: tempCalculator?.title,
+            description: tempCalculator?.description,
+            type: tempCalculator?.type === "Cost" ? 0 : 1,
+            cost: tempCalculator?.cost,
+            quantity: tempCalculator?.quantity,
+            profit_type: tempCalculator?.profit_type,
+            profit_type_value: tempCalculator?.profit_type_value,
+            total: tempCalculator?.total
+        }
+        try {
+            setIsLoading(true);
+            await updateCalculator(index, calculator.id, payload)
+            toast.success(`Calculator updated successfully.`);
+            setIsEdit(false);
+            refetch(index);
+        } catch (error) {
+            console.log('Error during updating calculator', error);
+            toast.error(`Failed to update calculator. Please try again.`);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        if (isEdit && tempCalculator !== calculator) {
+            setTempCalculator(calculator);
+        }
+    }, [isEdit, calculator]);
+
+    useEffect(() => {
+        if (isEdit && tempCalculator) {
+            let rate = parseFloat(tempCalculator?.cost) || 0;
+            let quantity = parseFloat(tempCalculator?.quantity) || 0;
+            let subtotal = rate * quantity;
+
+            let margin = parseFloat(tempCalculator?.profit_type_value) || 0;
+            if (tempCalculator?.profit_type === "MRK") {
+                subtotal += (subtotal * margin) / 100;
+            } else if (tempCalculator?.profit_type === "MRG") {
+                subtotal = subtotal / (1 - margin / 100);
+            } else if (tempCalculator?.profit_type === "AMT") {
+                subtotal += margin;
+            }
+
+            let discount = parseFloat(tempCalculator?.discount) || 0;
+            let total = subtotal - (subtotal * discount) / 100;
+
+            if (total !== tempCalculator.total) {
+                setTempCalculator((others) => ({ ...others, total }));
+            }
+        }
+    }, [tempCalculator, isEdit]);
+
+    return (
+        <div className={`${style.contentStyle}`}>
+            {
+                isEdit ? (
+                    <>
+                        <h6>Full Description</h6>
+                        <InputTextarea autoResize value={tempCalculator?.description}
+                            onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
+                            className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
+
+                        <Row>
+                            <Col>
+                                <div className='d-flex gap-2 justify-content-between align-items-center'>
+                                    <div className='left'>
+                                        <label>Cost</label>
+                                        <InputNumber className={clsx(style.inputNumber)} prefix="$" value={parseFloat(tempCalculator?.cost || 0)}
+                                            onValueChange={(e) => setTempCalculator((others) => ({ ...others, cost: e.value }))}
+                                            maxFractionDigits={2}
+                                            minFractionDigits={2}
+                                            inputId="minmaxfraction"
+                                        />
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', padding: '4px', background: '#EBF8FF' }}>
+                                        <X color='#1AB2FF' size={12} />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='d-flex flex-column'>
+                                        <label>Quantity/Hours</label>
+                                        <div className='d-flex gap-2 align-items-center'>
+                                            <InputNumber className={clsx(style.inputNumber2)}
+                                                inputId="withoutgrouping"
+                                                value={parseInt(tempCalculator?.quantity || 0)}
+                                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
+                                            />
+                                            <select value={tempCalculator?.type}
+                                                style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                                onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
+                                            >
+                                                <option value="Cost">1/Q</option>
+                                                <option value="Hourly">1/H</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                                        <X color='#1AB2FF' size={12} />
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='d-flex flex-column'>
+                                        <label>Markup/Margin</label>
+                                        <div className='d-flex gap-1 align-items-center'>
+                                            <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
+                                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
+                                                maxFractionDigits={2}
+                                                minFractionDigits={2}
+                                                inputId="minmaxfraction"
+                                            />
+                                            <select value={tempCalculator?.profit_type}
+                                                style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                                onChange={(e) => setTempCalculator((others) => ({ ...others, profit_type: e.target.value }))}
+                                            >
+                                                <option value={"MRG"}>MRG %</option>
+                                                <option value={"AMN"}>AMT $</option>
+                                                <option value={"MRK"}>MRK %</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                                        <X color='#1AB2FF' size={12} />
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='left'>
+                                        <label>Discount</label>
+                                        <InputNumber className={clsx(style.inputNumber)} prefix="$"
+                                            value={parseFloat(tempCalculator?.discount || 0)}
+                                            onValueChange={(e) => setTempCalculator((others) => ({ ...others, discount: e.value }))}
+                                            maxFractionDigits={2}
+                                            minFractionDigits={2}
+                                            inputId="minmaxfraction"
+                                        />
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
+                                        =
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col>
+                                <label>Sub Total:</label>
+                                <strong className='mt-4'>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
+                            </Col>
+                        </Row>
+
+                        <div className={clsx(style.bottom)}>
+                            <div className='d-flex justify-content-end gap-3 align-items-center h-100'>
+                                <Button onClick={() => setIsEdit(false)} className='outline-button'>Cancel</Button>
+                                <Button onClick={saveCalculator} className='solid-button'>{isLoading ? "Loading..." : "Save Details"}</Button>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className='d-flex justify-content-between align-items-center'>
+                            <h6>Description</h6>
+                            <div className='d-flex gap-2 align-items-center'>
+                                <button onClick={() => setIsEdit(true)} className={clsx(style.editIcon, 'd-flex justify-content-center align-items-center')}>
+                                    <Pencil color='#344054' size={14} />
+                                </button>
+                                <button className={clsx(style.deleteIcon, 'd-flex justify-content-center align-items-center')}>
+                                    <Trash color='#F04438' size={16} />
+                                </button>
+                            </div>
+                        </div>
+                        <p>{calculator?.description || ""}</p>
+                        <Row>
+                            <Col sm={3}>
+                                <label>Cost</label>
+                                <strong>$ {parseFloat((calculator?.cost || 0)).toFixed(2)}</strong>
+                            </Col>
+                            <Col sm={3}>
+                                <label>Margin</label>
+                                <strong>{parseFloat(calculator?.profit_type_value || 0).toFixed(2)}{calculator?.profit_type === "AMN" ? "$" : "%"}</strong>
+                            </Col>
+                            <Col sm={3}>
+                                <label>Budget</label>
+                                <strong>$ {(parseFloat(calculator?.quantity || 0) * parseFloat(calculator?.cost || 0)).toFixed(2)}</strong>
+                            </Col>
+                            <Col sm={3}>
+                                <label>Sub Total:</label>
+                                <strong>$ {parseFloat(calculator.total || 0).toFixed(2)}</strong>
+                            </Col>
+                        </Row>
+                    </>
+                )
+            }
+        </div>
+    );
+}
+
+const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [tempCalculator, setTempCalculator] = useState(null);
+
+    useEffect(() => {
+        if (tempCalculator) {
+            let rate = parseFloat(tempCalculator?.cost) || 0;
+            let quantity = parseFloat(tempCalculator?.quantity) || 0;
+            let subtotal = rate * quantity;
+
+            let margin = parseFloat(tempCalculator?.profit_type_value) || 0;
+            if (tempCalculator?.profit_type === "MRK") {
+                subtotal += (subtotal * margin) / 100;
+            } else if (tempCalculator?.profit_type === "MRG") {
+                subtotal = subtotal / (1 - margin / 100);
+            } else if (tempCalculator?.profit_type === "AMT") {
+                subtotal += margin;
+            }
+
+            let discount = parseFloat(tempCalculator?.discount) || 0;
+            let total = subtotal - (subtotal * discount) / 100;
+
+            if (total !== tempCalculator.total) {
+                setTempCalculator((others) => ({ ...others, total }));
+            }
+        }
+    }, [tempCalculator]);
+
+    const saveCalculator = async () => {
+        console.log('tempCalculator: ', tempCalculator);
+        let payload = {
+            title: name || "",
+            description: tempCalculator?.description,
+            type: tempCalculator?.type === "Cost" ? 0 : 1,
+            cost: tempCalculator?.cost,
+            quantity: tempCalculator?.quantity,
+            profit_type: tempCalculator?.profit_type,
+            profit_type_value: tempCalculator?.profit_type_value,
+            total: tempCalculator?.total
+        }
+        try {
+            setIsLoading(true);
+            await createCalculator(index, payload)
+            toast.success(`Calculator created successfully.`);
+            cancelCreateCalculator(null);
+            refetch(index);
+        } catch (error) {
+            console.log('Error during creating calculator', error);
+            toast.error(`Failed to created calculator. Please try again.`);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    return (
+        <div className={`${style.contentStyle}`}>
+            <h6>Full Description</h6>
+            <InputTextarea autoResize value={tempCalculator?.description}
+                onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
+                className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
+
+            <Row>
+                <Col>
+                    <div className='d-flex gap-2 justify-content-between align-items-center'>
+                        <div className='left'>
+                            <label>Cost</label>
+                            <InputNumber className={clsx(style.inputNumber)} prefix="$" value={parseFloat(tempCalculator?.cost || 0)}
+                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, cost: e.value }))}
+                                maxFractionDigits={2}
+                                minFractionDigits={2}
+                                inputId="minmaxfraction"
+                            />
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', padding: '4px', background: '#EBF8FF' }}>
+                            <X color='#1AB2FF' size={12} />
+                        </div>
+                    </div>
+                </Col>
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='d-flex flex-column'>
+                            <label>Quantity/Hours</label>
+                            <div className='d-flex gap-2 align-items-center'>
+                                <InputNumber className={clsx(style.inputNumber2)}
+                                    inputId="withoutgrouping"
+                                    value={parseInt(tempCalculator?.quantity || 0)}
+                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
+                                />
+                                <select value={tempCalculator?.type}
+                                    style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                    onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
+                                >
+                                    <option value="Cost">1/Q</option>
+                                    <option value="Hourly">1/H</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                            <X color='#1AB2FF' size={12} />
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='d-flex flex-column'>
+                            <label>Markup/Margin</label>
+                            <div className='d-flex gap-1 align-items-center'>
+                                <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
+                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
+                                    maxFractionDigits={2}
+                                    minFractionDigits={2}
+                                    inputId="minmaxfraction"
+                                />
+                                <select value={tempCalculator?.profit_type}
+                                    style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                    onChange={(e) => setTempCalculator((others) => ({ ...others, profit_type: e.target.value }))}
+                                >
+                                    <option value={"MRG"}>MRG %</option>
+                                    <option value={"AMN"}>AMT $</option>
+                                    <option value={"MRK"}>MRK %</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                            <X color='#1AB2FF' size={12} />
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='left'>
+                            <label>Discount</label>
+                            <InputNumber className={clsx(style.inputNumber)} prefix="$"
+                                value={parseFloat(tempCalculator?.discount || 0)}
+                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, discount: e.value }))}
+                                maxFractionDigits={2}
+                                minFractionDigits={2}
+                                inputId="minmaxfraction"
+                            />
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
+                            =
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <label>Sub Total:</label>
+                    <strong className='mt-4'>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
+                </Col>
+            </Row>
+
+            <div className={clsx(style.bottom)}>
+                <div className='d-flex justify-content-end gap-3 align-items-center h-100'>
+                    <Button onClick={() => cancelCreateCalculator(null)} className='outline-button'>Cancel</Button>
+                    <Button onClick={saveCalculator} className='solid-button'>{isLoading ? "Loading..." : "Save Details"}</Button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, cancelCreateCalculator }) => {
+    const uniqueCalculators = calculators.filter((item, index, self) =>
+        index === self.findIndex((t) => t.id === item.id)
+    );
+    const summary = calculateSummary(uniqueCalculators, 'no');
+
+    return (
+        <div>
+            {
+                uniqueCalculators.map(calculator => (
+                    <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
+                ))
+            }
+
+            {
+                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} />
+            }
+
+            <div className={style.calculateBox}>
+                <ul>
+                    <li>
+                        <div className={`${style.profit} ${style.boxcal}`}>
+                            <h6>Operational Profit</h6>
+                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
+                        </div>
+                        <div className={`${style.boxcal}`}>
+                            <h6>Budget</h6>
+                            <strong>{formatMoney(+summary.budget)}</strong>
+                        </div>
+                    </li>
+                    <li>
+                        <div className={`${style.boxcal}`}>
+                            <h6>Total</h6>
+                            <strong>{formatMoney(+summary.total)}</strong>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    )
+}
+
+const EditCalculators = ({ editSubIndex, calculators }) => {
+    const [updatedCalculator, setUpdatedCalculator] = useState(calculators || []);
+    const summary = calculateSummary(calculators, 'no');
+
+    const setValue = (value, id, field) => {
+
+    }
+    return (
+        <div>
+            {
+                updatedCalculator.map(calculator => (
+                    <div key={calculator.id} className={`${style.contentStyle}`}>
+                        <h6>Full Description</h6>
+                        <InputTextarea autoResize value={calculator.description} onChange={(e) => setValue(e.target.value, calculator.id, 'description')} className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
+
+                        <Row>
+                            <Col sm={2}>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='left'>
+                                        <label>Cost</label>
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.cost || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                                        <X color='#1AB2FF' size={12} />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col sm={2}>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='left'>
+                                        <label>Margin</label>
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                                        <X color='#1AB2FF' size={12} />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col sm={2}>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='left'>
+                                        <label>Margin</label>
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                                        <X color='#1AB2FF' size={12} />
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col sm={3}>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='left'>
+                                        <label>Budget</label>
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.quantity || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
+                                        =
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col sm={3}>
+                                <label>Sub Total:</label>
+                                <strong>$ {parseFloat(calculator.total || 0).toFixed(2)}</strong>
+                            </Col>
+                        </Row>
+                    </div>
+                ))
+            }
+            <div className={style.calculateBox}>
+                <ul>
+                    <li>
+                        <div className={`${style.profit} ${style.boxcal}`}>
+                            <h6>Operational Profit</h6>
+                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
+                        </div>
+                        <div className={`${style.boxcal}`}>
+                            <h6>Budget</h6>
+                            <strong>{formatMoney(+summary.budget)}</strong>
+                        </div>
+                    </li>
+                    <li>
+                        <div className={`${style.boxcal}`}>
+                            <h6>Total</h6>
+                            <strong>{formatMoney(+summary.total)}</strong>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    )
+}
+
+const LoadingCalculator = () => {
+    return (
+        <div style={{ padding: '16px 24px 16px 52px' }}>
+            <Skeleton width="10rem" className="mb-2"></Skeleton>
+            <Skeleton className="mb-2"></Skeleton>
+            <Skeleton className="mb-2"></Skeleton>
+            <Skeleton className="mb-2"></Skeleton>
+            <Row>
+                <Col sm={3}>
+                    <Skeleton width="4rem" className="mb-2"></Skeleton>
+                    <Skeleton width="8rem" className="mb-2"></Skeleton>
+                </Col>
+                <Col sm={3}>
+                    <Skeleton width="4rem" className="mb-2"></Skeleton>
+                    <Skeleton width="5rem" className="mb-2"></Skeleton>
+                </Col>
+                <Col sm={3}>
+                    <Skeleton width="4rem" className="mb-2"></Skeleton>
+                    <Skeleton width="8rem" className="mb-2"></Skeleton>
+                </Col>
+            </Row>
+            <Row>
+                <Col sm={2} className='py-3 px-2'>
+                    <Skeleton width="3rem" className="mb-2"></Skeleton>
+                    <Skeleton width="100%" className="mb-2"></Skeleton>
+                </Col>
+                <Col sm={2} className='py-3 px-2'>
+                    <Skeleton width="3rem" className="mb-2"></Skeleton>
+                    <Skeleton width="100%" className="mb-2"></Skeleton>
+                </Col>
+                <Col sm={6}></Col>
+                <Col sm={2} className='py-3'>
+                    <Skeleton width="3rem" className="mb-2"></Skeleton>
+                    <Skeleton width="100%" className="mb-2"></Skeleton>
+                </Col>
+            </Row>
+        </div>
+    )
+}
+
+const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEditDepartment }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [department, setDepartment] = useState("");
+
+    useEffect(() => {
+        if (editDepartment?.name)
+            setDepartment(editDepartment?.name);
+    }, [editDepartment?.name])
+
+    const handleClose = (e) => {
+        setVisible(false);
+        setDepartment("");
+        setEditDepartment({ id: null, name: null });
+    }
+
+    const handleCreateDepartment = async () => {
+        try {
+            if (department) {
+                setIsLoading(true);
+
+                if (editDepartment?.id) {
+                    await updateDepartment(editDepartment?.id, { name: department });
+                    toast.success(`Department updated successfully.`);
+                    setEditDepartment({ id: null, name: null });
+                } else {
+                    await createDepartment({ name: department });
+                    toast.success(`New department created successfully.`);
+                }
+
+                refetch();
+                setVisible(false)
+            }
+        } catch (error) {
+            console.error(`Error ${editDepartment?.id ? 'updating' : 'creating'} department:`, error);
+            toast.error(`Failed to ${editDepartment?.id ? 'update' : 'create'} department. Please try again.`);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const headerElement = (
+        <div className={`${style.modalHeader}`}>
+            <div className="d-flex align-items-center gap-2">
+                <div className={style.circledesignstyle}>
+                    <div className={style.out}>
+                        <PlusCircle size={24} color="#17B26A" className='mb-3' />
+                    </div>
+                </div>
+                <span className={`white-space-nowrap ${style.headerTitle}`}>
+                    {editDepartment?.id ? "Edit Deparment" : "Create Deparment"}
+                </span>
+            </div>
+        </div>
+    );
+
+    const footerContent = (
+        <div className='d-flex justify-content-end gap-2'>
+            <Button className='outline-button' onClick={handleClose}>Cancel</Button>
+            <Button className='solid-button' style={{ width: '132px' }} onClick={handleCreateDepartment} disabled={department?.length < 1}>{isLoading ? "Loading..." : "Save Details"}</Button>
+        </div>
+    );
+
+    return (
+        <>
+            <Dialog visible={visible} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
+                <div className="d-flex flex-column">
+                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Department name</p>
+                    <InputText value={department} keyfilter={"alphanum"} onChange={(e) => setDepartment(e.target.value)} className={style.inputBox} />
+                </div>
+            </Dialog>
+        </>
+    )
+}
+
+const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepartment, setEditSubDepartment }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [subDepartment, setSubDepartment] = useState("");
+    const parent = editSubDepartment?.parent;
+
+    useEffect(() => {
+        if (editSubDepartment?.name)
+            setSubDepartment(editSubDepartment?.name);
+    }, [editSubDepartment?.name])
+
+    const handleClose = (e) => {
+        setVisible2(false);
+        setSubDepartment("");
+        setEditSubDepartment({ id: null, name: null, parent: null });
+    }
+
+    const handleCreateSubDepartment = async () => {
+        try {
+            if (subDepartment) {
+                if (!parent) return toast.error('Parent id not found');
+
+                setIsLoading(true);
+
+                if (editSubDepartment?.id) {
+                    await updateSubDepartment(editSubDepartment?.id, { name: subDepartment, parent });
+                    toast.success(`Sub department updated successfully.`);
+                    setEditSubDepartment({ id: null, name: null, parent: null });
+                } else {
+                    await createSubDepartment({ name: subDepartment, parent });
+                    toast.success(`New sub department created successfully.`);
+                }
+
+                refetch();
+                setVisible2(false)
+            }
+        } catch (error) {
+            console.error(`Error ${editSubDepartment?.id ? 'updating' : 'creating'} sub department:`, error);
+            toast.error(`Failed to ${editSubDepartment?.id ? 'update' : 'create'} sub department. Please try again.`);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const headerElement = (
+        <div className={`${style.modalHeader}`}>
+            <div className="d-flex align-items-center gap-2">
+                <div className={style.circledesignstyle}>
+                    <div className={style.out}>
+                        <PlusCircle size={24} color="#17B26A" className='mb-3' />
+                    </div>
+                </div>
+                <span className={`white-space-nowrap ${style.headerTitle}`}>
+                    {editSubDepartment?.id ? "Edit Sub Deparment" : "Create Sub Deparment"}
+                </span>
+            </div>
+        </div>
+    );
+
+    const footerContent = (
+        <div className='d-flex justify-content-end gap-2'>
+            <Button className='outline-button' onClick={handleClose}>Cancel</Button>
+            <Button className='solid-button' style={{ width: '132px' }} onClick={handleCreateSubDepartment} disabled={subDepartment?.length < 1}>{isLoading ? "Loading..." : "Save Details"}</Button>
+        </div>
+    );
+
+    return (
+        <>
+            <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
+                <div className="d-flex flex-column">
+                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Sub Department name</p>
+                    <InputText value={subDepartment} keyfilter={"alphanum"} onChange={(e) => setSubDepartment(e.target.value)} className={style.inputBox} />
+                </div>
+            </Dialog>
+        </>
+    )
 }
 
 export default Departments;

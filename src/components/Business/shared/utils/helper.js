@@ -31,3 +31,27 @@ export function romanize(num) {
   }
   return roman;
 }
+
+export function formatMoney(number) {
+  return number.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
+
+
+export const dateFormat = (dateInMiliSec, isDotformate) => {
+  if (!dateInMiliSec) return "-";
+
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const date = new Date(1000 * +dateInMiliSec);
+
+  if(isDotformate) {
+    const dotFormattedDate = date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).replace(/\//g, '.');;
+    return dotFormattedDate;
+  }
+
+  const formattedDate = date.toLocaleDateString('en-US', options)?.replace(/,/g, '');
+  return formattedDate;
+}
