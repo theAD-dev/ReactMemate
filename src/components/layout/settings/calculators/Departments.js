@@ -272,7 +272,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                 subtotal += (subtotal * margin) / 100;
             } else if (tempCalculator?.profit_type === "MRG") {
                 subtotal = subtotal / (1 - margin / 100);
-            } else if (tempCalculator?.profit_type === "AMT") {
+            } else if (tempCalculator?.profit_type === "AMN") {
                 subtotal += margin;
             }
 
@@ -450,7 +450,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 subtotal += (subtotal * margin) / 100;
             } else if (tempCalculator?.profit_type === "MRG") {
                 subtotal = subtotal / (1 - margin / 100);
-            } else if (tempCalculator?.profit_type === "AMT") {
+            } else if (tempCalculator?.profit_type === "AMN") {
                 subtotal += margin;
             }
 
