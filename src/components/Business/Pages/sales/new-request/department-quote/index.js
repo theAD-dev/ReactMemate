@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import DepartmentCalculationTable from './department-calculation-table';
-import { Col, Row,Placeholder } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import CustomRadioButton from '../ui/custom-radio-button';
 import { FormControl, MenuItem, Select } from '@mui/material';
-import { ChevronDown, InfoCircle,PencilSquare } from 'react-bootstrap-icons';
+import { ChevronDown, InfoCircle } from 'react-bootstrap-icons';
 import { components } from 'react-select';
 import Select1 from 'react-select';
 import QuoteToBusiness from './quote-to-business';
@@ -30,36 +30,6 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('');
   const [selectedManagers, setSelectedManagers] = useState([]);
-  const [editedReference, setEditedReference] = useState('');
-  const [isEditingReference, setIsEditingReference] = useState(false);
-  const [editedDescription, setEditedDescription] = useState('');
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
-
-
-
-  const handleEditReference = () => {
-    setIsEditingReference(true);
-    setEditedReference(payload.reference || '');
-  };
-  const handleEditDescription = () => {
-    setIsEditingDescription(true);
-    setEditedDescription(payload.description || '');
-  };
-
-  const handleDataChange = (e) => {
-    setEditedReference(e.target.value);
-    setEditedDescription(e.target.value);
-  };
-
-  const handleSaveReference = () => {
-    setIsEditingReference(false);
-    setPayload((prev) => ({ ...prev, reference : editedReference }));
-  };
-  const handleSaveDescription = () => {
-    setIsEditingDescription(false);
-    setPayload((prev) => ({ ...prev, description: editedDescription }));
-  };
-
 
   const projectManagerQuery = useQuery({ queryKey: ['project-manager'], queryFn: getProjectManager });
   const clientQuery = useQuery({
@@ -98,52 +68,10 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
         <Row>
           <Col md={8} style={{ borderRight: '1px solid #F2F4F7' }}>
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Reference  <InfoCircle color="#667085" size={16} /></h3>
-            {clientQuery.isLoading ? (
-              <Placeholder as="p" animation="wave">
-                <Placeholder xs={12} bg="secondary" className="rounded-0" size="sm" style={{ width: '120px', height: '20px' }} />
-              </Placeholder>
-            ) : isEditingReference ? (
-              <p>
-                <input
-                type="text"
-                value={editedReference}
-                onChange={handleDataChange}
-                onBlur={handleSaveReference}
-                autoFocus
-               className="border rounded p-2"
-              />
-              </p>
-            ) : (
-              <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.reference} <PencilSquare size={16} color="#106B99" onClick={handleEditReference} style={{ cursor: 'pointer' }} /></p> 
-
-              </div>
-            )}
- 
+            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.reference}</p>
 
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Description</h3>
-            {clientQuery.isLoading ? (
-              <Placeholder as="p" animation="wave">
-                <Placeholder xs={12} bg="secondary" className="rounded-0" size="sm" style={{ width: '120px', height: '20px' }} />
-              </Placeholder>
-            ) : isEditingDescription ? (
-              <p>
-                <input
-                type="text"
-                value={editedDescription}
-                onChange={handleDataChange}
-                onBlur={handleSaveDescription}
-                autoFocus
-                className="border rounded p-2"
-              />
-              </p>
-            ) : (
-              <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.description} <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} style={{ cursor: 'pointer' }} /></p> 
-
-              </div>
-            )}
-           
+            <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.description}</p>
           </Col>
           <Col md={4}>
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Quote To  <InfoCircle color="#667085" size={16} /></h3>

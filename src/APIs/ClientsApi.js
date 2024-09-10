@@ -104,7 +104,7 @@ export const getListOfClients = async (page, limit, name="", order="", isShowDel
   url.searchParams.append("offset", offset);
   if (name) url.searchParams.append("name", name);
   if (order) url.searchParams.append("ordering", order);
-  if (isShowDeleted) url.searchParams.append('all', 1)
+  if (isShowDeleted) url.searchParams.append('deleted', 1)
 
   return fetchAPI(url.toString(), options);
 }
