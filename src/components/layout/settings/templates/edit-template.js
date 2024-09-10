@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
 import style from './job-template.module.scss';
 import BreadCrumbPage from './bread-crumb';
-import { useLocation } from 'react-router-dom';
+import { useLocation ,useNavigate} from 'react-router-dom';
 import { PencilSquare} from "react-bootstrap-icons";
 import { Button, Col, Row } from 'react-bootstrap';
 import clsx from 'clsx';
@@ -14,7 +14,8 @@ import exclamationCircle from "../../../../assets/images/icon/exclamation-circle
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { InputTextarea } from "primereact/inputtextarea"
-import { RadioButton } from "primereact/radiobutton";;
+
+
 
 const EditTemplates = () => {
     const [activeTab, setActiveTab] = useState('job-templates');
@@ -56,6 +57,11 @@ const EditTemplates = () => {
       };
 
 
+      const navigate = useNavigate(); 
+      const backHandle = () => {   
+        navigate("/settings/templates/job-templates/");
+      };
+
     return (
         <>
         <div className='content_wrap_main'>
@@ -65,7 +71,7 @@ const EditTemplates = () => {
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className='settings-content'>
             <div className={` ${style.templateBoxWrap}`}>
-            <BreadCrumbPage departmentsName={departments || 'No Departments'} /> 
+            <BreadCrumbPage backHandle={backHandle} departmentsName={departments || 'No Departments'} /> 
                
                 <div className={style.templateHeadBorder}>
                 <h1>
@@ -91,10 +97,10 @@ const EditTemplates = () => {
                <Row>
                <Col sm={12}>
            <div className="d-flex flex-column gap-1 mb-4">
-                <label className={clsx(style.lable)}>Title</label>
+                <label className={clsx(style.lable)}>Subject</label>
                 <IconField>
                 <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
-                <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Payment Reminder: Invoice {number}' />
+                <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Type Subject' />
                 </IconField>
                 {errors.name && <p className="error-message">{errors.name.message}</p>}
             </div>

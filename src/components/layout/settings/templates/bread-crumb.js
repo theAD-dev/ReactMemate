@@ -1,47 +1,55 @@
-import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
-import HomeIcon from '@mui/icons-material/Home';
-import { ChevronLeft,HouseDoor} from "react-bootstrap-icons";
-import { Button } from 'react-bootstrap';
-import style from './job-template.module.scss';
+import React from 'react';
+import { BreadCrumb } from 'primereact/breadcrumb';
 
-function handleClick(event) {
-  event.preventDefault();
-  console.info('You clicked a breadcrumb.');
-}
+const BreadCrumbPage = ({ backHandle }) => {
+  const GobackHandle = () => {   
+    backHandle();
+  };
 
-export default function BreadCrumbPage({departmentsName}) {
+  const items = [
+    { 
+      label: 'Go Back',
+      template: () => (
+        <a onClick={GobackHandle} className="text-primary font-semibold cursor-pointer">
+          Go Back
+        </a>
+      )
+    },
+    { label: 'Components' },
+    { label: 'Form' },
+    { 
+      label: 'InputText',
+      template: () => <span className="text-primary font-semibold">InputText</span>
+    }
+  ];
+
+  const home = { icon: 'pi pi-home', url: 'https://primereact.org' };
+
   return (
-    <div className={style.breadCrumbTemp} role="presentation" onClick={handleClick}>
-      <Breadcrumbs aria-label="breadcrumb">
-      <Link to='/job-templates' className={style.gobackBut}><ChevronLeft color="#475467" size={20} /> Go Back</Link>
-        <Link
-          underline="hover"
-          sx={{ display: 'flex', alignItems: 'center' }}
-          color="inherit"
-          href="/"
-        >
-         <HouseDoor color="#475467" size={20} />
-          
-        </Link>
-        <Link
-          underline="hover"
-          sx={{ display: 'flex', alignItems: 'center' }}
-          color="inherit"
-          href="#"
-        >
-         
-         Templates
-        </Link>
-        <Typography className={style.activeDepartment}
-          sx={{ color: 'text.primary', display: 'flex', alignItems: 'center' }}
-        >
-         
-         {departmentsName}
-        </Typography>
-      </Breadcrumbs>
+    <div className="p-breadcrumb p-component">
+      
+      <a href="https://primereact.org" className="p-menuitem-link">
+        <span className="pi pi-home"></span>
+      </a>
+     
+      <span className="p-breadcrumb-chevron"> / </span>
+
+   
+      {items.map((item, index) => (
+        <React.Fragment key={index}>
+          {item.template ? (
+            item.template()
+          ) : (
+            <span className="p-menuitem-text">{item.label}</span>
+          )}
+    
+          {index < items.length - 1 && (
+            <span className="p-breadcrumb-chevron"> / </span>
+          )}
+        </React.Fragment>
+      ))}
     </div>
   );
-}
+};
+
+export default BreadCrumbPage;
