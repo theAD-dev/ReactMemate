@@ -27,10 +27,10 @@ const ViewMerge = ({ title, alias, items }) => {
 
                 <ListGroup variant="flush border" style={{ marginTop: '16px' }}>
                     {
-                        items?.map((data) =>
-                            <ListGroup.Item key={data.label} className='d-flex justify-content-between border-0'>
+                        items?.map((data, index) =>
+                            <ListGroup.Item key={index} className='d-flex justify-content-between border-0'>
                                 <span style={{ color: '#475467', fontSize: '14px', fontWeight: 400 }}>{data?.label}</span>
-                                <span style={{ color: '#475467', fontSize: '14px', fontWeight: 600 }}>$ {data?.value}</span>
+                                <span style={{ color: '#475467', fontSize: '14px', fontWeight: 600 }}>$ {data?.total || "0.00"}</span>
                             </ListGroup.Item>
                         )
                     }

@@ -12,6 +12,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     ...client,
     addresses: client?.addresses?.map((address) => ({
       id: address?.id || "",
+      title: address?.title || "",
       country: address?.country_id || "",
       state: address?.state_id || "",
       city: address?.city || "",

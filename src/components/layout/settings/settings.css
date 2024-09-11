@@ -1298,7 +1298,7 @@ background: #FFF;
 }
 .listwrapper.orgColorStatus table tr td {
     position: relative !important;
-    z-index: auto;
+    z-index: auto !important;
 }
 .butcolorIn {
     width: 132px;
