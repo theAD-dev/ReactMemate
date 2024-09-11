@@ -53,7 +53,7 @@ const schema = yup.object({
     })
   ).required(),
 
-  description: yup.string().required('Description is required'),
+  description: yup.string(),
 
 }).required();
 

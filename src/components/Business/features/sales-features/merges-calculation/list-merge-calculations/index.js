@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import DeleteMerge from '../delete-merge-calculation';
 
 const ListMergeCalculations = ({ unique_id, merges, refetch }) => {
+    console.log('merges: ', merges);
     return (
         <>
             <div className={clsx('w-100', style.divider)} style={{}}></div>
@@ -20,10 +21,10 @@ const ListMergeCalculations = ({ unique_id, merges, refetch }) => {
                             {merge?.alias}
                         </div>
                         <div className='d-flex align-items-center gap-3' style={{ width: '317px' }}>
-                            <ViewMerge title={merge.title} alias={merge?.alias} items={merge.items} />
+                            <ViewMerge title={merge.title} alias={merge?.alias} items={merge.calculators} />
                             <button onClick={() => toast.error(`EDIT API is under construction...`)} className='btn text-button p-0 mt-1'>Edit</button>
                         </div>
-                        <span style={{ minWidth: '120px', color: '#667085' }}>$ {merge?.items?.reduce((sum, item) => sum + parseFloat(item.value), 0).toFixed(2) || "0.00"}</span>
+                        <span style={{ minWidth: '120px', color: '#667085' }}>$ {merge?.calculators?.reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2) || "0.00"}</span>
                         <DeleteMerge id={merge.id} refetch={refetch} />
                     </div>
                 ))

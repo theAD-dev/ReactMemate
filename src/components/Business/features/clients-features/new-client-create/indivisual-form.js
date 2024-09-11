@@ -34,7 +34,7 @@ const schema = yup
             state: yup.number().typeError("State must be a number").required("State is required"),
             postcode: yup.string().required("Postcode is required")
         }),
-        description: yup.string().required("Description is required"),
+        description: yup.string(),
     })
     .required();
 

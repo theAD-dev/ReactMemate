@@ -107,23 +107,22 @@ const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
     )
 }
 
-const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
+const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
     const handleChange = (event, key, values) => {
         setSelectItem((oldItems) => {
             if (event.target.checked) {
-                const { label, total, calculator, id } = values.reduce((acc, value, index) => {
-                    if (index === 0) {
-                        acc.label = value.label;
-                        acc.calculator = value?.id;
-                        acc.id = value?.index;
-                    }
-                    acc.total += parseFloat(value.total || 0.00);
-                    return acc;
-                }, { label: '', total: 0, calculator: null, id: null });
+                const items = values.map((value) => ({
+                    label: value.label,
+                    description: value?.description,
+                    calculator: value?.calculator,
+                    id: value?.id,
+                    index: value?.index,
+                    total: value?.total
+                }))
 
                 return {
                     ...oldItems,
-                    [key]: { label, total, calculator, id }
+                    [key]: items
                 };
             } else {
                 const updatedItems = { ...oldItems };
@@ -167,7 +166,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                                                 </div>
                                                             ) : (
                                                                 <label className="customCheckBox checkbox" style={{ marginRight: '10px' }}>
-                                                                    <input type="checkbox" onChange={(e) => handleChange(e, key, values)} />
+                                                                    <input type="checkbox" checked={selectItem[key] ? true : false} onChange={(e) => handleChange(e, key, values)} />
                                                                     <span className="checkmark" style={{ top: '0px' }}>
                                                                         <Check color="#1AB2FF" size={20} />
                                                                     </span>
@@ -329,7 +328,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
             subtotal += (subtotal * margin) / 100;
         } else if (item.profit_type === "MRG") {
             subtotal = subtotal / (1 - margin / 100);
-        } else if (item.profit_type === "AMT") {
+        } else if (item.profit_type === "AMN") {
             subtotal += margin;
         }
 
@@ -501,35 +500,20 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
     }, [preExistCalculation, preExistMerges, departments]);
 
     useEffect(() => {
-        if (preExistMerges?.length !==0 && preExistCalculation?.length === 0 && departments?.length) {
-
-            // Build a map of subindex id to subindex name
-            const subindexMap = departments.reduce((map, department) => {
-                department.subindexes.forEach(subindex => {
-                    map[subindex.id] = subindex.name;
-                });
-                return map;
-            }, {});
-
-            // Create key-index map and reformat preExistMerges data
+        if (merges?.length !== 0 && departments?.length) {
             const keyIndexMap = {};
-            const preExistCalculation = Object.values(rows) || [];
-            const reformattedMerges = preExistMerges.map((merge, index) => {
+            const reformattedMerges = merges.map((merge, index) => {
                 const alias = romanize(index + 1);
 
-                const items = merge?.calculators?.map(cal => {
-                    const findData = preExistCalculation.find(data => data?.[0].index === cal.id);
-                    keyIndexMap[cal.calculator] = alias;
-                    return { label: subindexMap[findData?.[0]?.index], value: findData?.[0]?.total };
+                merge?.calculators?.map(cal => {
+                    keyIndexMap[cal.id] = alias;
                 });
-
-                return { ...merge, alias, items };
             });
 
-            setMerges(reformattedMerges);
             setMapMergeItemWithNo(keyIndexMap);
+            setPayload((others) => ({...others, merges}))
         }
-    }, [preExistMerges]);
+    }, [merges]);
 
 
     return (
@@ -545,6 +529,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
                                     updateData={updateData}
                                     deleteRow={deleteRow}
                                     isDiscountActive={isDiscountActive}
+                                    selectItem={selectItem}
                                     setSelectItem={setSelectItem}
                                     mapMergeItemWithNo={mapMergeItemWithNo}
                                     checkedItems={Object.keys(selectItem)}

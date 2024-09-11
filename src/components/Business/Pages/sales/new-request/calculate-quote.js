@@ -5,7 +5,7 @@ import CustomRadioButton from './ui/custom-radio-button';
 import DepartmentQuote from './department-quote';
 import { toast } from 'sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createNewCalculationQuoteRequest, getQuoteByUniqueId } from '../../../../../APIs/CalApi';
+import { createNewCalculationQuoteRequest, createNewMergeQuote, getQuoteByUniqueId } from '../../../../../APIs/CalApi';
 import { Spinner } from 'react-bootstrap';
 
 const CalculateQuote = () => {
@@ -41,8 +41,6 @@ const CalculateQuote = () => {
         mutationFn: (data) => createNewCalculationQuoteRequest(data),
         onSuccess: (response) => {
             if (response) {
-                navigate(`/sales/quote-calculation/${response}`);
-                toast.success("Calculation quote created successfully.");
             } else {
                 toast.error(`Failed to create new calculation quote. Please try again.`);
             }
@@ -53,10 +51,14 @@ const CalculateQuote = () => {
         }
     });
 
-    const createNewRequest = (action) => {
+    const createNewRequest = async (action) => {
         payload.action = action;
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
         console.log('payload: ', payload);
+
+        const merges = payload.merges;
+        delete payload.merges;
+
 
         if (!payload?.client) return toast.error('Client is required');
         if (!payload?.contact_person) return toast.error('Contact person is required');
@@ -66,7 +68,31 @@ const CalculateQuote = () => {
         if (!payload?.expense) return toast.error('Expense is required');
 
         if (unique_id) return toast.error('UPDATE API is under construction...');
-        newRequestMutation.mutate(payload);
+        const result = await newRequestMutation.mutateAsync(payload);
+        console.log('result: ', result);
+        let uniqueid = result?.unique_id;
+        if (merges.length) {
+            let calculatorMap = result.calculations?.reduce((map, item) => {
+                map[item.calculator] = item.id;
+                return map;
+            }, {});
+
+            const updateMerges = merges?.map(item => ({
+                ...item,
+                unique_id: uniqueid,
+                calculators: item.calculators.map(calc => ({
+                    calculator: calculatorMap[calc.id]
+                }))
+            }));
+
+            updateMerges.forEach(async (merge) => {
+                try {
+                    const result = await createNewMergeQuote(merge);
+                } catch(error) {
+                    console.log('Error during with creating merge: ', error);
+                }
+            });
+        };
     }
 
     return (

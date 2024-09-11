@@ -1853,3 +1853,6 @@ ul.client {
   color: #158ecc;
 }
 
+.mergeForm .modal-content {
+  border-radius: 10px;
+}
