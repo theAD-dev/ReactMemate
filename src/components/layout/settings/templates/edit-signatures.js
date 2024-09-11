@@ -17,8 +17,8 @@ import { InputTextarea } from "primereact/inputtextarea"
 import { Editor } from "primereact/editor";
 
 
-const EditEmail = () => {
-    const [activeTab, setActiveTab] = useState('email-templates');
+const EditSignatures = () => {
+    const [activeTab, setActiveTab] = useState('edit-signatures');
     const location = useLocation();
     const [ingredient, setIngredient] = useState('');
     const [text, setText] = useState('');
@@ -59,7 +59,7 @@ const EditEmail = () => {
 
       const navigate = useNavigate(); 
       const backHandle = () => {   
-        navigate("/settings/templates/email-templates/");
+        navigate("/settings/templates/email-signatures/");
       };
 
     return (
@@ -71,7 +71,7 @@ const EditEmail = () => {
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className='settings-content'>
             <div className={` ${style.templateBoxWrap}`}>
-            <BreadCrumbPage backHandle={backHandle} templateName='Email Templates' departmentsName={departments || 'No Departments'} /> 
+            <BreadCrumbPage backHandle={backHandle} templateName='Email Signatures' departmentsName={departments || 'No Departments'} /> 
                
                 <div className={style.templateHeadBorder}>
                 <h1>
@@ -98,10 +98,10 @@ const EditEmail = () => {
             
              <Col sm={12}>
             <div className="d-flex flex-column gap-1 mb-4">
-                 <label className={clsx(style.lable)}>Subject</label>
+                 <label className={clsx(style.lable)}>Name of Signature</label>
                  <IconField>
                  <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
-                 <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Enter subject' />
+                 <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Payment Reminder: Invoice {number}' />
                  </IconField>
                  {errors.name && <p className="error-message">{errors.name.message}</p>}
              </div>
@@ -109,7 +109,7 @@ const EditEmail = () => {
             
              <Col sm={12}>
                      <div className="d-flex flex-column gap-1">
-                         <label className={clsx(style.lable)}>Message </label>
+                         <label className={clsx(style.lable)}>HTML </label>
                          <Editor value={text} onTextChange={(e) => setText(e.htmlValue)} style={{ height: '320px' }} />
                          {errors.description && <p className="error-message">{errors.description.message}</p>}
                      </div>
@@ -143,4 +143,4 @@ const EditEmail = () => {
     );
 }
 
-export default EditEmail;
+export default EditSignatures;

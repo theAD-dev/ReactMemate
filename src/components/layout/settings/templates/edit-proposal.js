@@ -3,7 +3,7 @@ import Sidebar from '../Sidebar';
 import style from './job-template.module.scss';
 import BreadCrumbPage from './bread-crumb';
 import { useLocation ,useNavigate} from 'react-router-dom';
-import { PencilSquare} from "react-bootstrap-icons";
+import { PencilSquare,Trash,PlusLg} from "react-bootstrap-icons";
 import { Button, Col, Row } from 'react-bootstrap';
 import clsx from 'clsx';
 import { IconField } from "primereact/iconfield";
@@ -17,8 +17,8 @@ import { InputTextarea } from "primereact/inputtextarea"
 import { Editor } from "primereact/editor";
 
 
-const EditEmail = () => {
-    const [activeTab, setActiveTab] = useState('email-templates');
+const EditProposal = () => {
+    const [activeTab, setActiveTab] = useState('proposal-templates');
     const location = useLocation();
     const [ingredient, setIngredient] = useState('');
     const [text, setText] = useState('');
@@ -26,7 +26,7 @@ const EditEmail = () => {
     const [cardData, setCardData] = useState(null);
     const [isDepartments, setisDepartments] = useState(false);
     const [editedDepartments, seteditedDepartments] = useState('');
-   
+    const [sections, setSections] = useState([{ name: '', message: '' }]);
 
     const onSubmit = data => {
         console.log(data);
@@ -59,8 +59,25 @@ const EditEmail = () => {
 
       const navigate = useNavigate(); 
       const backHandle = () => {   
-        navigate("/settings/templates/email-templates/");
+        navigate("/settings/templates/proposal-templates/");
       };
+
+
+
+
+
+     
+      
+      
+      const addSection = () => {
+        setSections([...sections, { name: '', message: '' }]); 
+      };
+    
+      const removeSection = (index) => {
+        setSections(sections.filter((_, i) => i !== index)); 
+      };
+
+
 
     return (
         <>
@@ -71,7 +88,7 @@ const EditEmail = () => {
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className='settings-content'>
             <div className={` ${style.templateBoxWrap}`}>
-            <BreadCrumbPage backHandle={backHandle} templateName='Email Templates' departmentsName={departments || 'No Departments'} /> 
+            <BreadCrumbPage backHandle={backHandle} templateName='Proposal Templates' departmentsName={departments || 'No Departments'} /> 
                
                 <div className={style.templateHeadBorder}>
                 <h1>
@@ -92,31 +109,64 @@ const EditEmail = () => {
             </h1>
                 </div>
                 <div className={style.formTemplateGroup}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                
-                <Row>
-            
-             <Col sm={12}>
-            <div className="d-flex flex-column gap-1 mb-4">
-                 <label className={clsx(style.lable)}>Subject</label>
-                 <IconField>
-                 <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
-                 <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Enter subject' />
-                 </IconField>
-                 {errors.name && <p className="error-message">{errors.name.message}</p>}
-             </div>
-             </Col>
-            
-             <Col sm={12}>
-                     <div className="d-flex flex-column gap-1">
-                         <label className={clsx(style.lable)}>Message </label>
-                         <Editor value={text} onTextChange={(e) => setText(e.htmlValue)} style={{ height: '320px' }} />
-                         {errors.description && <p className="error-message">{errors.description.message}</p>}
-                     </div>
-                 </Col>
-            
-                </Row>
- 
+                <form onSubmit={handleSubmit(onSubmit)}>  
+               <>
+               {sections.map((section, index) => (
+        <div key={index} className={style.proposalSetions}>
+          <h2>
+            Section {index + 1}{' '}
+            <span>
+              <Trash
+                size={16}
+                color='#F04438'
+                style={{ cursor: 'pointer' }}
+                onClick={() => removeSection(index)} // Remove section on click
+              />
+            </span>
+          </h2>
+          <Row>
+            <Col sm={12}>
+              <div className="d-flex flex-column gap-1 mb-4">
+                <label className={clsx(style.lable)}>Title</label>
+                <IconField>
+                  <InputIcon>
+                    {errors.name && (
+                      <img src={exclamationCircle} className="mb-3" alt="error-icon" />
+                    )}
+                  </InputIcon>
+                  <InputText
+                    {...register(`name${index}`)} // Use unique field names for each section
+                    className={clsx(style.inputText, { [style.error]: errors[`name${index}`] })}
+                    placeholder={`Payment Reminder: Invoice {number}`}
+                  />
+                </IconField>
+                {errors[`name${index}`] && (
+                  <p className="error-message">{errors[`name${index}`].message}</p>
+                )}
+              </div>
+            </Col>
+            <Col sm={12}>
+              <div className="d-flex flex-column gap-1">
+                <label className={clsx(style.lable)}>Message</label>
+                <Editor
+                  value={text}
+                  onTextChange={(e) => setText(e.htmlValue)}
+                  style={{ height: '407px' }}
+                />
+                {errors[`description${index}`] && (
+                  <p className="error-message">{errors[`description${index}`].message}</p>
+                )}
+              </div>
+            </Col>
+          </Row>
+        </div>
+      ))}
+      <div className={style.addNewSections}>
+        <Button onClick={addSection}>
+          Add New Section <PlusLg size={20} color="#106B99" />
+        </Button>
+      </div>
+               </>
                 
                 
                  </form>
@@ -143,4 +193,4 @@ const EditEmail = () => {
     );
 }
 
-export default EditEmail;
+export default EditProposal;

@@ -33,7 +33,7 @@ const EmailTemplates = () => {
     };
     const editTemplateHandle = () => {
      
-        navigate("/settings/templates/edit-email/", { state: { departments} });
+        navigate("/settings/templates/edit-email/");
       };
 
 
@@ -47,7 +47,7 @@ const EmailTemplates = () => {
                 <h1>Templates</h1>
                 <div className='contentMenuTab'>
                 <ul>
-                <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
+                       <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                         <li className='menuActive'><Link to="/settings/templates/email-templates">Email Templates</Link></li>
                         <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
                         <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
@@ -58,14 +58,14 @@ const EmailTemplates = () => {
                 <div className='content_wrapper'>
                     <div className="listwrapper">
                     <div className="topHeadStyle pb-4">
-                    <h2>Email Templates</h2>
-                        <button onClick={() => createIndex()}>Create New Template <PlusLg color="#000000" size={20} /></button>
+                        <h2>Template Name</h2>
+                        <button onClick={() => editTemplateHandle()}>Create New Template <PlusLg color="#000000" size={20} /></button>
                     </div>
                     <div>
                         <div className='boxwrap'>
                         <div className={style.boxlist}>
                         <span>theAd | Management | Thu</span>
-                        <div className={style.ricons}> <PencilSquare onClick={() => editTemplateHandle()} className={style.pencilSquare} color="#344054" size={20} />&nbsp;<GripVertical color="#98A2B3" size={16} className={style.iconSpace} /></div>
+                        <div className={style.ricons}> <PencilSquare onClick={() => createIndex()} className={style.pencilSquare} color="#344054" size={20} />&nbsp;<GripVertical color="#98A2B3" size={16} className={style.iconSpace} /></div>
                         </div>
                        
                         
@@ -73,7 +73,7 @@ const EmailTemplates = () => {
                         {departments.map((department, index) => (
                           <div key={index} className={style.boxlist}>
                           <span>{department}</span>
-                          <div className={style.ricons}> <PencilSquare onClick={() => editTemplateHandle()} className={style.pencilSquare} color="#344054" size={20} />&nbsp;<GripVertical  color="#98A2B3" size={16} className={style.iconSpace} /></div>
+                          <div className={style.ricons}> <PencilSquare onClick={() => createIndex()} className={style.pencilSquare} color="#344054" size={20} />&nbsp;<GripVertical  color="#98A2B3" size={16} className={style.iconSpace} /></div>
                         </div>
                         ))}
                     </div>
@@ -101,7 +101,7 @@ const EmailTemplates = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h2>Create Index</h2>
+                                            <h2>Edit Template Name</h2>
                                         </span>
                                         <IconButton
                                             edge="end"
@@ -112,23 +112,9 @@ const EmailTemplates = () => {
                                         </IconButton>
                                     </div>
                                     <div className='stepBoxStyle stepBoxStylePayment'>
-                                    <div className="formgroup">
-                                            <label>Department name</label>
-                                            <div className={`inputInfo`}>
-                                                <input
-                                                type="text"
-                                                name="dname"
-                                                value={dname}
-                                                placeholder="Department name"
-                                                onChange={(e) => setDname(e.target.value)}
-                                                />
-                                            </div>
-                                        </div>
+                                 
                                     </div>
-                                    <div className='footerButton'>
-                                        <button className='Cancel' onClick={handleClose}>Cancel</button>
-                                        <Button className='save' onClick={handleSave}>Save</Button>
-                                    </div>
+                                    
                                 </>
                             </Typography>
                         </Box>
