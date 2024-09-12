@@ -33,7 +33,7 @@ const JobTemplates = () => {
     };
     const editTemplateHandle = () => {
      
-        navigate("/settings/templates/edit-template/", { state: { departments} });
+        navigate("/settings/templates/edit-template/");
       };
 
 

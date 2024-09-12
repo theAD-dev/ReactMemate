@@ -50,32 +50,58 @@
     border-radius: var(--radius-xs, 4px);
     background: var(--Gray-50, #F9FAFB);
     padding: 32px 24px;
-    .gobackBut {
-        color: var(--Gray-600, #475467);
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px;
-        background: transparent;
-        border: 0;
-        padding: 0;
-        text-decoration: none;
-        cursor: pointer;
-        &:hover{
+    .breadcrumbWrap {
+        display: flex;
+        align-items: center;
+        .gobackBut {
             color: var(--Gray-600, #475467);
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 24px;
-        background: transparent;
-        border: 0;
-        padding: 0;
+            font-family: Inter;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            text-decoration: none;
+            display: flex;
+            cursor: pointer;
+            &:hover{
+                color: var(--Gray-600, #475467);
+            font-family: Inter;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 24px;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            }
+        }
+        .activeLinkbread{
+            color: var(--Primary-700, #106B99);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px;
+        }
+        .readcrumbChevron {
+            padding: 0 12px;
+        }
+        .MenuitemText {
+            color: var(--Gray-600, #475467);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px;
         }
     }
+    
     .templateHeadBorder{
     border-bottom: 1px solid #EAECF0;
+    margin-bottom: 20px;
     
     h1{
         color: var(--Gray-900, #101828);
@@ -83,7 +109,54 @@
         font-size: 18px;
         font-style: normal;
         font-weight: 600;
-        line-height: 28px; 
+        line-height: 28px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+}
+.proposalSetions {
+    border-radius: var(--radius-xs, 4px);
+    background: #FFF;
+    padding: var(--spacing-3xl, 24px);
+    margin-bottom: 24px;
+    h2{
+        color: var(--Gray-900, #101828);
+        font-family: Inter;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 28px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        span {
+            border-radius: 22px;
+            background: var(--Error-100, #FEE4E2);
+            padding: var(--spacing-xs, 4px);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+.addNewSections {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin: 32px 0;
+    button {
+        border-radius: var(--radius-xs, 4px);
+        border: 1px solid var(--Primary-200, #A3E0FF);
+        background: var(--Primary-50, #EBF8FF);
+        padding: 10px 18px;
+        color: var(--Primary-700, #106B99);
+        font-family: Inter;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 24px; 
     }
 }
 }

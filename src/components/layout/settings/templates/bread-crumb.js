@@ -1,50 +1,45 @@
 import React from 'react';
 import { BreadCrumb } from 'primereact/breadcrumb';
+import { ChevronLeft,HouseDoor ,SlashLg} from "react-bootstrap-icons";
+import style from './job-template.module.scss';
 
-const BreadCrumbPage = ({ backHandle }) => {
+const BreadCrumbPage = ({ backHandle,templateName }) => {
   const GobackHandle = () => {   
     backHandle();
   };
 
   const items = [
+   
+    { label: templateName },
+   
     { 
-      label: 'Go Back',
-      template: () => (
-        <a onClick={GobackHandle} className="text-primary font-semibold cursor-pointer">
-          Go Back
-        </a>
-      )
-    },
-    { label: 'Components' },
-    { label: 'Form' },
-    { 
-      label: 'InputText',
-      template: () => <span className="text-primary font-semibold">InputText</span>
+      label: '[ Template Name ] ',
+      template: () => <span className={style.activeLinkbread}>[ Template Name ] </span>
     }
   ];
 
-  const home = { icon: 'pi pi-home', url: 'https://primereact.org' };
+
 
   return (
-    <div className="p-breadcrumb p-component">
-      
-      <a href="https://primereact.org" className="p-menuitem-link">
-        <span className="pi pi-home"></span>
-      </a>
+    <div className={style.breadcrumbWrap}>
+      <a onClick={GobackHandle} className={`cursor-pointer flex align-items-center ${style.gobackBut}`}>
+      <ChevronLeft color="#475467" size={20} /> Go Back
+        </a>
+      <a href="/" className={style.readcrumbChevron}>
+      <HouseDoor color="#475467" size={20} /> 
      
-      <span className="p-breadcrumb-chevron"> / </span>
-
-   
+      </a>
+      <span className={style.readcrumbChevron}>  <SlashLg color="#D0D5DD" size={20} />  </span> 
       {items.map((item, index) => (
         <React.Fragment key={index}>
           {item.template ? (
             item.template()
           ) : (
-            <span className="p-menuitem-text">{item.label}</span>
+            <span className={style.MenuitemText}>{item.label}</span>
           )}
     
           {index < items.length - 1 && (
-            <span className="p-breadcrumb-chevron"> / </span>
+          <span className={style.readcrumbChevron}>  <SlashLg color="#D0D5DD" size={20} />  </span> 
           )}
         </React.Fragment>
       ))}

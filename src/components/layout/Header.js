@@ -84,6 +84,8 @@ import SupplierPage from "../Business/Pages/suppliers";
 import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
 import EditTemplates from "./settings/templates/edit-template";
 import EditEmail from "./settings/templates/edit-email";
+import EditSignatures from "./settings/templates/edit-signatures";
+import EditProposal from "./settings/templates/edit-proposal";
 
 
 
@@ -677,6 +679,16 @@ const Header = ({ onClick }) => {
             path="/settings/templates/edit-email/"
             element={<EditEmail />}
           />
+          <Route
+            path="/settings/templates/edit-signatures/"
+            element={<EditSignatures />}
+          />
+          <Route
+            path="/settings/templates/edit-proposal/"
+            element={<EditProposal />}
+          />
+        
+         
 
 
 

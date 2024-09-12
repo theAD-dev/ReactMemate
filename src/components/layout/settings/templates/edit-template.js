@@ -71,7 +71,7 @@ const EditTemplates = () => {
             <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             <div className='settings-content'>
             <div className={` ${style.templateBoxWrap}`}>
-            <BreadCrumbPage backHandle={backHandle} departmentsName={departments || 'No Departments'} /> 
+            <BreadCrumbPage backHandle={backHandle} templateName='Job Templates' departmentsName={departments || 'No Departments'} /> 
                
                 <div className={style.templateHeadBorder}>
                 <h1>
