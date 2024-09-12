@@ -269,6 +269,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
     const [merges, setMerges] = useState([]);
     const [selectItem, setSelectItem] = useState({});
     const [mapMergeItemWithNo, setMapMergeItemWithNo] = useState({});
+    console.log('mapMergeItemWithNo: ', mapMergeItemWithNo);
 
     const { data: departments } = useQuery({
         queryKey: ['departments'],
@@ -480,22 +481,19 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
         }, {});
 
         // Create key-index map and reformat preExistMerges data
-        const keyIndexMap = {};
         const reformattedMerges = preExistMerges.map((merge, index) => {
             const alias = romanize(index + 1);
 
-            const items = merge?.calculators?.map(cal => {
+            const calculators = merge?.calculators?.map(cal => {
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
-                keyIndexMap[cal.calculator] = alias;
-                return { label: subindexMap[findData?.index], value: findData?.total };
+                return { label: subindexMap[findData?.index], total: findData?.total, id: findData.id };
             });
 
-            return { ...merge, alias, items };
+            return { ...merge, alias, calculators };
         });
 
         setRows(reformattedData);
         setMerges(reformattedMerges);
-        setMapMergeItemWithNo(keyIndexMap);
 
     }, [preExistCalculation, preExistMerges, departments]);
 

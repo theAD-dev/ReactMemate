@@ -19,7 +19,9 @@ const CalculateQuote = () => {
         queryFn: () => getQuoteByUniqueId(unique_id),
         enabled: !!unique_id,
         retry: 1,
+        cacheTime: 0
     });
+    console.log('newRequestQuery......', newRequestQuery.data);
 
     useEffect(() => {
         if (!unique_id) {
@@ -71,7 +73,7 @@ const CalculateQuote = () => {
         const result = await newRequestMutation.mutateAsync(payload);
         console.log('result: ', result);
         let uniqueid = result?.unique_id;
-        if (merges.length) {
+        if (merges?.length) {
             let calculatorMap = result.calculations?.reduce((map, item) => {
                 map[item.calculator] = item.id;
                 return map;
@@ -80,7 +82,7 @@ const CalculateQuote = () => {
             const updateMerges = merges?.map(item => ({
                 ...item,
                 unique_id: uniqueid,
-                calculators: item.calculators.map(calc => ({
+                calculations: item.calculators.map(calc => ({
                     calculator: calculatorMap[calc.id]
                 }))
             }));
@@ -92,7 +94,12 @@ const CalculateQuote = () => {
                     console.log('Error during with creating merge: ', error);
                 }
             });
-        };
+            toast.success(`Calculations and new merges items created successfully.`);
+            navigate(`/sales/quote-calculation/${uniqueid}`);
+        } else {
+            toast.success(`Calculations created successfully.`);
+            navigate(`/sales/quote-calculation/${uniqueid}`);
+        }
     }
 
     return (

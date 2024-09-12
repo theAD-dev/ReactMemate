@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 import DeleteMerge from '../delete-merge-calculation';
 
 const ListMergeCalculations = ({ unique_id, merges, refetch }) => {
-    console.log('merges: ', merges);
     return (
         <>
             <div className={clsx('w-100', style.divider)} style={{}}></div>
