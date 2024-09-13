@@ -359,24 +359,6 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                                         </div>
                                     </div>
 
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
-                                        <X color='#1AB2FF' size={12} />
-                                    </div>
-                                </div>
-                            </Col>
-
-                            <Col>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <div className='left'>
-                                        <label>Discount</label>
-                                        <InputNumber className={clsx(style.inputNumber)} prefix="$"
-                                            value={parseFloat(tempCalculator?.discount || 0)}
-                                            onValueChange={(e) => setTempCalculator((others) => ({ ...others, discount: e.value }))}
-                                            maxFractionDigits={2}
-                                            minFractionDigits={2}
-                                            inputId="minmaxfraction"
-                                        />
-                                    </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
                                         =
                                     </div>
@@ -384,8 +366,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
 
                             <Col>
-                                <label>Sub Total:</label>
-                                <strong className='mt-4'>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
+                                <label className='mb-2'>Sub Total:</label>
+                                <strong>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
                             </Col>
                         </Row>
 
@@ -541,7 +523,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 <Col>
                     <div className='d-flex justify-content-between align-items-center'>
                         <div className='d-flex flex-column'>
-                            <label>Markup/Margin</label>
+                            <label className='d-block text-center'>Markup/Margin</label>
                             <div className='d-flex gap-1 align-items-center'>
                                 <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
                                     onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
@@ -560,24 +542,6 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                             </div>
                         </div>
 
-                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
-                            <X color='#1AB2FF' size={12} />
-                        </div>
-                    </div>
-                </Col>
-
-                <Col>
-                    <div className='d-flex justify-content-between align-items-center'>
-                        <div className='left'>
-                            <label>Discount</label>
-                            <InputNumber className={clsx(style.inputNumber)} prefix="$"
-                                value={parseFloat(tempCalculator?.discount || 0)}
-                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, discount: e.value }))}
-                                maxFractionDigits={2}
-                                minFractionDigits={2}
-                                inputId="minmaxfraction"
-                            />
-                        </div>
                         <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
                             =
                         </div>
@@ -585,8 +549,8 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 </Col>
 
                 <Col>
-                    <label>Sub Total:</label>
-                    <strong className='mt-4'>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
+                    <label className='mb-2'>Sub Total:</label>
+                    <strong>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
                 </Col>
             </Row>
 

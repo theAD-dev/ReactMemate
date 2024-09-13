@@ -1,3 +1,16 @@
+.mergeButton,
+.mergeButton:hover,
+.mergeButton:focus {
+  font-weight: 600;
+  width: fit-content;
+  font-size: 14px !important;
+  color: #158ecc !important;
+}
+
+.disabled {
+  cursor: not-allowed !important;
+}
+
 .cancelButton,
 .cancelButton:focus,
 .cancelButton:hover {
@@ -16,4 +29,15 @@
   border: 1px solid transparent !important;
   background: transparent !important;
   color: var(--Gray-600, #475467) !important;
+}
+
+.deleteButton, .deleteButton:hover, .deleteButton:focus {
+  display: flex;
+  padding: 10px var(--spacing-xl, 16px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
 }

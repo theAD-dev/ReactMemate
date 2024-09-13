@@ -26,7 +26,6 @@ const CustomOption = (props) => {
 };
 
 const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges }) => {
-  console.log('payload: ', payload);
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('');
   const [selectedManagers, setSelectedManagers] = useState([]);
@@ -110,7 +109,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 onChange={handleDataChange}
                 onBlur={handleSaveReference}
                 autoFocus
-               className="border rounded p-2"
+               className="border rounded p-2 w-100"
               />
               </p>
             ) : (
@@ -128,14 +127,15 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
               </Placeholder>
             ) : isEditingDescription ? (
               <p>
-                <input
+                <textarea
                 type="text"
                 value={editedDescription}
                 onChange={handleDataChange}
                 onBlur={handleSaveDescription}
                 autoFocus
                 className="border rounded p-2"
-              />
+                style={{ resize: 'none', width: '100%', height: '120px' }}
+              ></textarea>
               </p>
             ) : (
               <div>
@@ -160,7 +160,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
 
-        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} isDiscountActive={true} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} />
+        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} defaultDiscount={clientQuery?.data?.category?.value} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} />
 
         <Row>
           <Col md={6}>

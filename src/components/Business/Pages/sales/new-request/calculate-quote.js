@@ -21,7 +21,6 @@ const CalculateQuote = () => {
         retry: 1,
         cacheTime: 0
     });
-    console.log('newRequestQuery......', newRequestQuery.data);
 
     useEffect(() => {
         if (!unique_id) {
@@ -56,7 +55,6 @@ const CalculateQuote = () => {
     const createNewRequest = async (action) => {
         payload.action = action;
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
-        console.log('payload: ', payload);
 
         const merges = payload.merges;
         delete payload.merges;
@@ -90,15 +88,23 @@ const CalculateQuote = () => {
             updateMerges.forEach(async (merge) => {
                 try {
                     const result = await createNewMergeQuote(merge);
-                } catch(error) {
+                } catch (error) {
                     console.log('Error during with creating merge: ', error);
                 }
             });
             toast.success(`Calculations and new merges items created successfully.`);
-            navigate(`/sales/quote-calculation/${uniqueid}`);
+            if (unique_id) {
+                navigate(`/sales/quote-calculation/${unique_id}`);
+            } else {
+                navigate(`/sales`)
+            }
         } else {
             toast.success(`Calculations created successfully.`);
-            navigate(`/sales/quote-calculation/${uniqueid}`);
+            if (unique_id) {
+                navigate(`/sales/quote-calculation/${unique_id}`);
+            } else {
+                navigate(`/sales`)
+            }
         }
     }
 

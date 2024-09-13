@@ -1,14 +1,15 @@
 import React from 'react'
 import { toast } from 'sonner';
 import { Trash } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Spinner } from 'react-bootstrap';
 import { useMutation } from '@tanstack/react-query';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 
 import { deleteMergeQuote } from '../../../../../../APIs/CalApi';
 
-const DeleteMerge = ({ id, refetch }) => {
+const DeleteMerge = ({ id, alias, refetch, setMerges }) => {
+  const { unique_id } = useParams();
   const deleteMutation = useMutation({
     mutationFn: (data) => deleteMergeQuote(id),
     onSuccess: () => {
@@ -20,11 +21,20 @@ const DeleteMerge = ({ id, refetch }) => {
     }
   });
 
-  const accept = () => deleteMutation.mutate();
+  const accept = () => {
+    if (unique_id) {
+      if (!id) return toast.error("Id not found");
+      deleteMutation.mutate();
+    } else {
+      setMerges((merges) => {
+        let updatedMerges = merges.filter((merge) => merge.alias !== alias);
+        return updatedMerges;
+      })
+    }
+  }
   const reject = () => { };
 
   const deleteMergeItem = (event) => {
-    if (!id) return toast.error("Id not found");
     confirmPopup({
       target: event.currentTarget,
       message: 'Do you want to delete this record?',
