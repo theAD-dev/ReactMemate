@@ -88,15 +88,23 @@ const CalculateQuote = () => {
             updateMerges.forEach(async (merge) => {
                 try {
                     const result = await createNewMergeQuote(merge);
-                } catch(error) {
+                } catch (error) {
                     console.log('Error during with creating merge: ', error);
                 }
             });
             toast.success(`Calculations and new merges items created successfully.`);
-            navigate(`/sales/quote-calculation/${uniqueid}`);
+            if (unique_id) {
+                navigate(`/sales/quote-calculation/${unique_id}`);
+            } else {
+                navigate(`/sales`)
+            }
         } else {
             toast.success(`Calculations created successfully.`);
-            navigate(`/sales/quote-calculation/${uniqueid}`);
+            if (unique_id) {
+                navigate(`/sales/quote-calculation/${unique_id}`);
+            } else {
+                navigate(`/sales`)
+            }
         }
     }
 

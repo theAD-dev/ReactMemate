@@ -72,7 +72,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, i
                     <div className='d-flex align-items-center'>
                         <input
                             type="text"
-                            style={{ width: '30px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
+                            style={{ width: '35px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
                             value={`${0}`}
                             onChange={(e) => { }}
                         />
@@ -232,7 +232,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                                 <div className='d-flex align-items-center'>
                                                     <input
                                                         type="text"
-                                                        style={{ width: '30px', padding: '4px', background: 'transparent', fontSize: '14px' }}
+                                                        style={{ width: '35px', padding: '4px', background: 'transparent', fontSize: '14px' }}
                                                         value={`${value.discount || 0}`}
                                                         onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
                                                     />
