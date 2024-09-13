@@ -13,7 +13,7 @@ import CreateMergeCalculation from '../../../../features/sales-features/merges-c
 import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
 import { romanize } from '../../../../shared/utils/helper';
 
-const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, isDiscountActive }) => {
+const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
     return (
         <tr>
             <td style={{ width: '24px' }}></td>
@@ -67,19 +67,17 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, i
                     </select>
                 </div>
             </td>
-            {isDiscountActive &&
-                <td style={{ width: '83px' }}>
-                    <div className='d-flex align-items-center'>
-                        <input
-                            type="text"
-                            style={{ width: '35px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
-                            value={`${0}`}
-                            onChange={(e) => { }}
-                        />
-                        <span>%</span>
-                    </div>
-                </td>
-            }
+            <td style={{ width: '83px' }}>
+                <div className='d-flex align-items-center'>
+                    <input
+                        type="text"
+                        style={{ width: '35px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
+                        value={`${0}`}
+                        onChange={(e) => { }}
+                    />
+                    <span>%</span>
+                </div>
+            </td>
             <td style={{ width: '118px', textAlign: 'left' }}>$ {0}</td>
             <td style={{ width: '32px' }}>
                 <Trash color="#98A2B3" style={{ cursor: 'not-allowed', opacity: '.5' }} onClick={() => { }} />
@@ -88,7 +86,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange, i
     )
 }
 
-const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
+const DepartmentCalculationTableHead = () => {
     return (
         <thead>
             <tr>
@@ -99,7 +97,7 @@ const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
                 <th style={{ width: '128px' }}>Rate</th>
                 <th style={{ width: '166px' }}>Qty / Unit</th>
                 <th style={{ width: '185px' }}>Markup / Margin</th>
-                {isDiscountActive && <th style={{ width: '83px' }}>Discount</th>}
+                <th style={{ width: '83px' }}>Discount</th>
                 <th style={{ width: '118px' }}>Amount</th>
                 <th style={{ width: '32px' }}></th>
             </tr>
@@ -107,7 +105,7 @@ const DepartmentCalculationTableHead = ({ isDiscountActive }) => {
     )
 }
 
-const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscountActive, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
+const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDiscount, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
     const handleChange = (event, value) => {
         setSelectItem((oldItems) => {
             if (event.target.checked) {
@@ -227,19 +225,19 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
                                                 </select>
                                             </div>
                                         </td>
-                                        {isDiscountActive &&
-                                            <td style={{ width: '83px' }}>
-                                                <div className='d-flex align-items-center'>
-                                                    <input
-                                                        type="text"
-                                                        style={{ width: '35px', padding: '4px', background: 'transparent', fontSize: '14px' }}
-                                                        value={`${value.discount || 0}`}
-                                                        onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
-                                                    />
-                                                    <span style={{ fontSize: '14px' }}>%</span>
-                                                </div>
-                                            </td>
-                                        }
+
+                                        <td style={{ width: '83px' }}>
+                                            <div className='d-flex align-items-center'>
+                                                <input
+                                                    type="text"
+                                                    style={{ width: '35px', padding: '4px', background: 'transparent', fontSize: '14px' }}
+                                                    value={`${value.discount || defaultDiscount || 0}`}
+                                                    onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
+                                                />
+                                                <span style={{ fontSize: '14px' }}>%</span>
+                                            </div>
+                                        </td>
+
                                         <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.total || 0.00}</td>
                                         <td style={{ width: '32px' }}>
                                             <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id)} />
@@ -255,7 +253,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, isDiscoun
     );
 }
 
-const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, xero_tax, preExistCalculation, preMerges, refetch }) => {
+const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xero_tax, preExistCalculation, preMerges, refetch }) => {
     const { unique_id } = useParams();
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
@@ -513,7 +511,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
         <div>
             <DragDropContext onDragEnd={onDragEnd}>
                 <table className='w-100 department-calculation'>
-                    <DepartmentCalculationTableHead isDiscountActive={isDiscountActive} />
+                    <DepartmentCalculationTableHead />
                     <Droppable droppableId="departmentQuoteTable">
                         {(provided) => (
                             <tbody {...provided.droppableProps} ref={provided.innerRef}>
@@ -521,17 +519,17 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, isDiscountActive, x
                                     rows={rows}
                                     updateData={updateData}
                                     deleteRow={deleteRow}
-                                    isDiscountActive={isDiscountActive}
+                                    defaultDiscount={defaultDiscount}
                                     selectItem={selectItem}
                                     setSelectItem={setSelectItem}
                                     mapMergeItemWithNo={mapMergeItemWithNo}
                                     checkedItems={Object.keys(selectItem)}
                                 />
                                 {
-                                    isLoadingSubItem && <DepartmentQuoteTableRowLoading isDiscountActive={isDiscountActive} />
+                                    isLoadingSubItem && <DepartmentQuoteTableRowLoading />
                                 }
 
-                                <DepartmentCalculationTableEmptyRow srNo={Object.keys(rows || {}).length} departments={departments} handleChange={handleChange} isDiscountActive={isDiscountActive} />
+                                <DepartmentCalculationTableEmptyRow srNo={Object.keys(rows || {}).length} departments={departments} handleChange={handleChange} />
                                 {provided.placeholder}
                             </tbody>
                         )}

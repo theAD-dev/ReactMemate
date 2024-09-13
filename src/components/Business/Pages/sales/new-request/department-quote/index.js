@@ -160,7 +160,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
 
-        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} isDiscountActive={true} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} />
+        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} defaultDiscount={clientQuery?.data?.category?.value} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} />
 
         <Row>
           <Col md={6}>
