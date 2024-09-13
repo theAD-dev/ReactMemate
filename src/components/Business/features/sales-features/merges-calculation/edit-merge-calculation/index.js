@@ -21,7 +21,6 @@ const schema = yup
   .required();
 
 const EditMergeCalculation = ({ merge, alias, setMerges, refetch }) => {
-  console.log('merge: ', merge);
   const [show, setShow] = useState(false);
   const romanNo = alias;
   const [defaultValues, setDefaultValues] = useState({
@@ -56,7 +55,11 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch }) => {
         description: value.description
       }))
     }
-    setMerges((others) => ([...others, payload]));
+    setMerges((merges) => 
+      merges.map((item) => 
+        item.alias === romanNo ? { ...item, ...payload } : item
+      )
+    );
     handleClose();
   }
 
