@@ -1,18 +1,16 @@
 import clsx from 'clsx';
 import * as yup from 'yup';
 import { toast } from 'sonner';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { QuestionCircle } from 'react-bootstrap-icons';
-import { Button, InputGroup, ListGroup, Modal } from 'react-bootstrap';
+import { QuestionCircle, Trash } from 'react-bootstrap-icons';
+import { Button, Col, InputGroup, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
 
-import style from './create-merge-calculation.module.scss';
-import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
+import style from './edit-merge-calculation.module.scss';
 import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
-import { romanize } from '../../../../shared/utils/helper';
 
 // Validation schema
 const schema = yup
@@ -22,16 +20,19 @@ const schema = yup
   })
   .required();
 
-const EditMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, setMerges, setPayload, setPreExistMerges, refetch }) => {
+const EditMergeCalculation = ({ merge, alias, setMerges, refetch }) => {
+  console.log('merge: ', merge);
   const [show, setShow] = useState(false);
-  const romanNo = romanize((merges?.length || 0) + 1);
+  const romanNo = alias;
   const [defaultValues, setDefaultValues] = useState({
-    title: '',
-    description: ''
+    title: merge?.title || "",
+    description: merge?.description || ""
   })
   const { register, reset, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema), defaultValues
   });
+
+  useEffect(() => { reset() }, [alias])
 
   const mutation = useMutation({
     mutationFn: (data) => createNewMergeQuote(data),
@@ -49,46 +50,66 @@ const EditMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, se
   const onSubmit = (data) => {
     const payload = {
       ...data,
-      calculations: Object.values(selectItem).reduce((acc, value, index) => {
-        acc.push({ calculator: value.calculator });
-        return acc;
-      }, [])
+      alias: romanNo,
+      calculators: merge?.calculators?.map((value) => ({
+        calculator: "", id: value.id, label: value.label, total: value.total,
+        description: value.description
+      }))
     }
-
-    if (unique_id) {
-      payload.unique_id = unique_id;
-      mutation.mutate(payload);
-    }
-    else {
-      setPreExistMerges((others) => ([...others, payload]))
-      setPayload((others) => ({
-        ...others,
-        merges: others.merges ? [...others.merges, payload] : [payload]
-      }));
-    }
+    setMerges((others) => ([...others, payload]));
+    handleClose();
   }
 
-  const deleteAndCancel = () => setShow(false);
+  const deleteCalculator = (calculatorId) => {
+    setMerges((prevState) => {
+      const updatedState = prevState.map((item) => {
+        if (item.alias === alias) {
+          const updatedCalculators = item.calculators.filter(
+            (calc) => calc.id !== calculatorId
+          );
+          return {
+            ...item,
+            calculators: updatedCalculators,
+          };
+        }
+        return item;
+      });
+
+      return updatedState;
+    });
+  }
+
+  useEffect(() => {
+    if (merge?.calculators?.length < 2) {
+      setMerges((merges) => {
+        let updatedMerges = merges.filter((merge) => merge.alias !== alias);
+        return updatedMerges;
+      })
+    }
+  }, [merge])
+
+  const deleteAndCancel = () => {
+    setShow(false);
+  }
   const handleClose = () => setShow(false);
   const handleOpen = () => setShow(true);
 
   return (
     <React.Fragment>
-      <button onClick={handleOpen} className='btn text-button p-0 mt-1'>Edit</button>
+      <Button type='button' onClick={handleOpen} className={clsx(style.mergeButton, 'text-button')}>Edit</Button>
       <Modal
+        size="lg"
         show={show}
         centered
         onHide={handleClose}
-        className='task-form'
+        className={clsx('task-form', 'mergeForm')}
       >
         <Modal.Header closeButton>
-          <Modal.Title>
-            <img
-              src={mergeItemsImg}
-              alt='merge-img'
-              style={{ width: '48px', height: '48px' }}
-            />
-            <span className='modal-task-title'>Merge Items</span>
+          <Modal.Title className='d-flex align-items-center' style={{ padding: '24px' }}>
+            <div className='d-flex justify-content-center align-items-center' style={{ width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #EAECF0', background: '#F2F4F7', color: '#344054', fontSize: '14px', fontWeight: 600 }}>
+              {romanNo}
+            </div>
+            <span className='modal-task-title'>Edit Merge Items</span>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className='px-0'>
@@ -96,17 +117,12 @@ const EditMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, se
             <div className='px-4' style={{ maxHeight: '450px', overflow: 'auto', }}>
               <Form.Group className="mb-3">
                 <Form.Label>Task Title</Form.Label>
-                <InputGroup >
-                  <Form.Control
-                    {...register("title")}
-                    type="text"
-                    placeholder="Merge items title"
-                    className={`${errors.title ? 'border border-danger' : ''}`}
-                  />
-                  <InputGroup.Text className={`${errors.title ? 'border border-danger' : ''}`}>
-                    <QuestionCircle />
-                  </InputGroup.Text>
-                </InputGroup>
+                <Form.Control
+                  {...register("title")}
+                  type="text"
+                  placeholder="Merge items title"
+                  className={`${errors.title ? 'border border-danger' : ''}`}
+                />
                 {errors.title && <Form.Text className="text-danger">{errors.title.message}</Form.Text>}
               </Form.Group>
 
@@ -122,28 +138,40 @@ const EditMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, se
                 />
                 {errors.description && <Form.Text className="text-danger">{errors.description.message}</Form.Text>}
               </Form.Group>
-
-              <ListGroup variant="flush border mb-1">
-                <ListGroup.Item>
-                  <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px' }}>
-                    {romanNo}
-                  </div>
-                </ListGroup.Item>
+              <ListGroup variant="flush border rounded mb-4" style={{ border: "1px solid var(--Gray-100, #F2F4F7)" }}>
                 {
-                  Object.entries(selectItem)?.map(([key, value]) =>
-                    <ListGroup.Item key={key} className='d-flex justify-content-between'>
-                      <span style={{ color: '#101828', fontSize: '16px' }}>{value?.label}</span>
-                      <span style={{ color: '#101828', fontSize: '16px' }}>$ {value?.total}</span>
+                  merge?.calculators?.map((value, index) =>
+                    <ListGroup.Item key={`${index}-${value.id}`} className='d-flex justify-content-between'>
+                      <Row className='w-100'>
+                        <Col sm={4} className='text-start'>
+                          <span style={{ color: '#101828', fontSize: '16px' }}>
+                             {value?.label || ""}
+                          </span>
+                        </Col>
+                        <Col sm={6}>
+                          <span style={{ color: '#101828', fontSize: '16px' }}>
+                            {value?.description || ""}
+                          </span>
+                        </Col>
+                        <Col sm={2} className='text-end text-nowrap'>
+                          <span style={{ color: '#101828', fontSize: '16px', textAlign: 'end' }}>
+                            $ {parseFloat(value?.total).toFixed(2)}
+                          </span>
+                          <Trash onClick={() => deleteCalculator(value.id)} color='#98A2B3' size={16} className='ms-2' style={{ position: 'relative', left: '20px', cursor: 'pointer' }} />
+                        </Col>
+                      </Row>
                     </ListGroup.Item>
                   )
                 }
               </ListGroup>
             </div>
             <Modal.Footer className='d-flex justify-content-between align-items-center'>
-              <Button type='button' onClick={handleClose} className={clsx(style.cancelButton)}>Cancel</Button>
+              <Button type='button' onClick={deleteAndCancel} className={style.deleteButton}>
+                <Trash color='#B42318' size={18} />
+              </Button>
               <div className='d-flex align-items-center gap-3'>
-                <Button type='button' onClick={deleteAndCancel} className='delete-button'>Delete</Button>
-                <Button type='submit' className='save-button'>Save</Button>
+                <Button type='button' onClick={handleClose} className='outline-button' style={{ minWidth: '67px' }}>Cancel</Button>
+                <Button type='submit' className='solid-button' style={{ minWidth: '67px' }}>Save</Button>
               </div>
             </Modal.Footer>
           </Form>

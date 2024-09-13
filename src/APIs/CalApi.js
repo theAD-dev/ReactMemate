@@ -7,7 +7,7 @@ export const getDepartments = async (all) => {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  if (all) url.searchParams.append('all', 1);
+  if (all === 1) url.searchParams.append('all', 1);
   
   return fetchAPI(url.toString(), options);
 }

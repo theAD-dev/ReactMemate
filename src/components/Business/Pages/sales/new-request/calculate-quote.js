@@ -21,7 +21,6 @@ const CalculateQuote = () => {
         retry: 1,
         cacheTime: 0
     });
-    console.log('newRequestQuery......', newRequestQuery.data);
 
     useEffect(() => {
         if (!unique_id) {
@@ -56,7 +55,6 @@ const CalculateQuote = () => {
     const createNewRequest = async (action) => {
         payload.action = action;
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
-        console.log('payload: ', payload);
 
         const merges = payload.merges;
         delete payload.merges;

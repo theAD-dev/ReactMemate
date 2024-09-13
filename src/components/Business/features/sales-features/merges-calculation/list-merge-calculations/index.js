@@ -5,8 +5,10 @@ import { Trash } from 'react-bootstrap-icons';
 import ViewMerge from '../view-merge-calculation';
 import { toast } from 'sonner';
 import DeleteMerge from '../delete-merge-calculation';
+import EditMergeCalculation from '../edit-merge-calculation';
 
-const ListMergeCalculations = ({ unique_id, merges, refetch }) => {
+const ListMergeCalculations = ({ unique_id, merges, setMerges, refetch }) => {
+    console.log('merges: ', merges);
     return (
         <>
             <div className={clsx('w-100', style.divider)} style={{}}></div>
@@ -21,10 +23,10 @@ const ListMergeCalculations = ({ unique_id, merges, refetch }) => {
                         </div>
                         <div className='d-flex align-items-center gap-3' style={{ width: '317px' }}>
                             <ViewMerge title={merge.title} alias={merge?.alias} items={merge.calculators} />
-                            <button onClick={() => toast.error(`EDIT API is under construction...`)} className='btn text-button p-0 mt-1'>Edit</button>
+                            <EditMergeCalculation merge={merge} setMerges={setMerges} alias={merge?.alias} />
                         </div>
                         <span style={{ minWidth: '120px', color: '#667085' }}>$ {merge?.calculators?.reduce((sum, item) => sum + parseFloat(item.total), 0).toFixed(2) || "0.00"}</span>
-                        <DeleteMerge id={merge.id} refetch={refetch} />
+                        <DeleteMerge id={merge.id} alias={merge?.alias} refetch={refetch} setMerges={setMerges} />
                     </div>
                 ))
             }

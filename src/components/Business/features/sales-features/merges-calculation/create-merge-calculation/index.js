@@ -23,7 +23,6 @@ const schema = yup
   .required();
 
 const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, setMerges, refetch }) => {
-  console.log('selectItem: ', selectItem);
   const [show, setShow] = useState(false);
   const romanNo = romanize((merges?.length || 0) + 1);
   const [defaultValues, setDefaultValues] = useState({
@@ -54,7 +53,10 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
     const payload = {
       ...data,
       alias: romanNo,
-      calculators: Object.values(selectItem)?.flat().map((value) => ({ calculator: "", id: value.id, label: value.label, total: value.total }))
+      calculators: Object.values(selectItem)?.flat().map((value) => ({ 
+        calculator: "", id: value.id, label: value.label, total: value.total,
+        description: value.description
+      }))
     }
     setMerges((others) => ([...others, payload]));
     handleClose();
@@ -120,7 +122,7 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
                         <Row className='w-100'>
                           <Col sm={4} className='text-start'>
                             <span style={{ color: '#101828', fontSize: '16px' }}>
-                              {index === 0 ? value?.label : ""}
+                              {value?.label || ""}
                             </span>
                           </Col>
                           <Col sm={6}>

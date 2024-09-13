@@ -21,7 +21,6 @@ const schema = yup
 
 const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, setMapMergeItemWithNo }) => {
     const { unique_id } = useParams();
-    console.log('selectItems: ', selectItems);
     const romanNo = romanize((Object.keys(mergeItems)?.length || 0) + 1);
     const [show, setShow] = useState(false);
     const [defaultValues, setDefaultValues] = useState({
