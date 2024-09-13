@@ -7,7 +7,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { getIndustriesList, newIndustries,readIndustry ,updateIndustry} from '../../../../APIs/industrieslist-api';
+import { getIndustriesList, newIndustries,readIndustry ,updateIndustry,deleteIndustry} from '../../../../APIs/industrieslist-api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -89,6 +89,19 @@ const Industries = () => {
             handleClose();
         },
     });
+
+    const deleteIndustryMutation = useMutation({
+        mutationFn: async (id) => {
+            if (!id) {
+                throw new Error('Industry ID is missing');
+            }
+            return await deleteIndustry(id); 
+        },
+        onSuccess: () => {
+            refetch();  
+            handleClose();
+        },
+    });
     
     
     
@@ -146,6 +159,14 @@ const Industries = () => {
 
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
+            <Button className='outline-button' onClick={() => deleteIndustryMutation.mutate(selectedIndustryId)}>
+            Delete
+        </Button>
+            <Button className='solid-button' style={{ width: '132px' }} onClick={handleSubmit(onSubmit)}>Save Details</Button>
+        </div>
+    );
+    const footerContent1 = (
+        <div className='d-flex justify-content-end gap-2'>
             <Button className='outline-button' onClick={handleClose}>Cancel</Button>
             <Button className='solid-button' style={{ width: '132px' }} onClick={handleSubmit(onSubmit)}>Save Details</Button>
         </div>
@@ -191,7 +212,7 @@ const Industries = () => {
                                         </div>
                                     </Dialog>
 
-                                    <Dialog visible={visible} modal={true} header={headerElement1} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
+                                    <Dialog visible={visible} modal={true} header={headerElement1} footer={footerContent1} className={`${style.modal} custom-modal`} onHide={handleClose}>
                                         <div className="d-flex flex-column">
                                             <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Industry name</p>
                                             <InputText {...register('name')} placeholder='Industry name' className={style.inputBox} />
