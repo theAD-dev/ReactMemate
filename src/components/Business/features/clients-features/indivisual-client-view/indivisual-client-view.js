@@ -11,6 +11,8 @@ import DeleteClient from '../delete-client';
 import { dateFormat, formatMoney } from '../../../shared/utils/helper';
 import { getClientCategories } from '../../../../../APIs/ClientsApi';
 import { useQuery } from '@tanstack/react-query';
+import { Tag } from 'primereact/tag';
+import Restore from '../restore-client';
 
 const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
@@ -35,7 +37,10 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
                 client.photo ? <img src={client.photo} alt='client-photo' /> : <Person color='#667085' size={26} />
               }
             </div>
-            <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{client.name}</span>
+            <div className='d-flex align-items-center gap-2'>
+              <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{client.name}</span>
+              {client.deleted ? <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
+            </div>
           </div>
           <span>
             <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -56,13 +61,18 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
         </div>
 
         <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
-          <DeleteClient id={client?.id} />
+          {
+            !client.deleted ? (<DeleteClient id={client?.id} />) : <span></span>
+          }
+
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
               <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
               <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '179px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
             </div>
-              : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
+              : client.deleted
+                ? <Restore id={client?.id} refetch={refetch} />
+                : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
           }
         </div>
       </div>
