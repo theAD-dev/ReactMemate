@@ -143,3 +143,11 @@ export const updateCalculator = async (index, id, data) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const deleteSettingCalculator = async (endpoint) => {
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
