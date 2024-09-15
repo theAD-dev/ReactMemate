@@ -25,7 +25,7 @@ const CustomOption = (props) => {
   );
 };
 
-const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges }) => {
+const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges, setMergeDeletedItems }) => {
   const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('');
   const [selectedManagers, setSelectedManagers] = useState([]);
@@ -52,7 +52,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
 
   const handleSaveReference = () => {
     setIsEditingReference(false);
-    setPayload((prev) => ({ ...prev, reference : editedReference }));
+    setPayload((prev) => ({ ...prev, reference: editedReference }));
   };
   const handleSaveDescription = () => {
     setIsEditingDescription(false);
@@ -82,7 +82,14 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
 
   useEffect(() => {
     if (payload.managers) {
-      const initialManagers = payload.managers.map(manager => ({
+      const uniqueManagers = payload.managers.reduce((acc, manager) => {
+        if (!acc.some(item => item.manager === manager.manager)) {
+          acc.push(manager);
+        }
+        return acc;
+      }, []);
+
+      const initialManagers = uniqueManagers.map(manager => ({
         value: manager.manager,
         label: projectManagerQuery?.data?.find(user => user.id === manager.manager)?.name || 'Unknown',
         image: projectManagerQuery?.data?.find(user => user.id === manager.manager)?.photo || 'https://dev.memate.com.au/media/no_org.png'
@@ -104,21 +111,21 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             ) : isEditingReference ? (
               <p>
                 <input
-                type="text"
-                value={editedReference}
-                onChange={handleDataChange}
-                onBlur={handleSaveReference}
-                autoFocus
-               className="border rounded p-2 w-100"
-              />
+                  type="text"
+                  value={editedReference}
+                  onChange={handleDataChange}
+                  onBlur={handleSaveReference}
+                  autoFocus
+                  className="border rounded p-2 w-100"
+                />
               </p>
             ) : (
               <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.reference} <PencilSquare size={16} color="#106B99" onClick={handleEditReference} style={{ cursor: 'pointer' }} /></p> 
+                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.reference} <PencilSquare size={16} color="#106B99" onClick={handleEditReference} style={{ cursor: 'pointer' }} /></p>
 
               </div>
             )}
- 
+
 
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Description</h3>
             {clientQuery.isLoading ? (
@@ -128,22 +135,22 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             ) : isEditingDescription ? (
               <p>
                 <textarea
-                type="text"
-                value={editedDescription}
-                onChange={handleDataChange}
-                onBlur={handleSaveDescription}
-                autoFocus
-                className="border rounded p-2"
-                style={{ resize: 'none', width: '100%', height: '120px' }}
-              ></textarea>
+                  type="text"
+                  value={editedDescription}
+                  onChange={handleDataChange}
+                  onBlur={handleSaveDescription}
+                  autoFocus
+                  className="border rounded p-2"
+                  style={{ resize: 'none', width: '100%', height: '120px' }}
+                ></textarea>
               </p>
             ) : (
               <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.description} <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} style={{ cursor: 'pointer' }} /></p> 
+                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.description} <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} style={{ cursor: 'pointer' }} /></p>
 
               </div>
             )}
-           
+
           </Col>
           <Col md={4}>
             <h3 style={{ color: '#344054', fontSize: '16px', fontWeight: '600' }}>Quote To  <InfoCircle color="#667085" size={16} /></h3>
@@ -160,7 +167,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
 
-        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} defaultDiscount={clientQuery?.data?.category?.value} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} />
+        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} defaultDiscount={clientQuery?.data?.category?.value} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} setMergeDeletedItems={setMergeDeletedItems}/>
 
         <Row>
           <Col md={6}>
@@ -193,7 +200,10 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                           components={{ Option: CustomOption }}
                           value={selectedManagers}
                           onChange={(selected) => {
-                            const managers = selected ? selected.map((obj) => ({ manager: obj.value })) : [];
+                            const managers = selected
+                              ? [...new Map(selected.map((obj) => [obj.value, { manager: obj.value }])).values()]
+                              : [];
+
                             setSelectedManagers(selected);
                             setPayload((others) => ({ ...others, managers }));
                           }}
@@ -303,9 +313,16 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                     </div>
                   </Col>
                   <Col sm={12}>
-                    <div className='toggle-switch-wrap'>
+                    <div className="toggle-switch-wrap">
                       <label className="toggle-switch">
-                        <input type="checkbox" checked={isDiscountDisplayed} onChange={() => setIsDiscountDisplayed(!isDiscountDisplayed)} />
+                        <input
+                          type="checkbox"
+                          checked={Boolean(payload.display_discount)}
+                          onChange={(e) => setPayload((prevPayload) => ({
+                            ...prevPayload,
+                            display_discount: e.target.checked
+                          }))}
+                        />
                         <span className="switch" />
                       </label>
                       <em>Display Discounts</em>

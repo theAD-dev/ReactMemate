@@ -54,7 +54,7 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
       ...data,
       alias: romanNo,
       calculators: Object.values(selectItem)?.flat().map((value) => ({ 
-        calculator: "", id: value.id, label: value.label, total: value.total,
+        calculator: value.calculator, id: value.id, label: value.label, total: value.total,
         description: value.description
       }))
     }

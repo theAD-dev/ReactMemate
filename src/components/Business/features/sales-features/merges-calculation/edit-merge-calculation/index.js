@@ -6,8 +6,8 @@ import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { QuestionCircle, Trash } from 'react-bootstrap-icons';
-import { Button, Col, InputGroup, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
+import { Trash } from 'react-bootstrap-icons';
+import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
 import style from './edit-merge-calculation.module.scss';
 import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
@@ -20,7 +20,7 @@ const schema = yup
   })
   .required();
 
-const EditMergeCalculation = ({ merge, alias, setMerges, refetch }) => {
+const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCalculator }) => {
   const [show, setShow] = useState(false);
   const romanNo = alias;
   const [defaultValues, setDefaultValues] = useState({
@@ -51,7 +51,7 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch }) => {
       ...data,
       alias: romanNo,
       calculators: merge?.calculators?.map((value) => ({
-        calculator: "", id: value.id, label: value.label, total: value.total,
+        calculator: value.calculator, id: value.id, label: value.label, total: value.total,
         description: value.description
       }))
     }
@@ -62,34 +62,6 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch }) => {
     );
     handleClose();
   }
-
-  const deleteCalculator = (calculatorId) => {
-    setMerges((prevState) => {
-      const updatedState = prevState.map((item) => {
-        if (item.alias === alias) {
-          const updatedCalculators = item.calculators.filter(
-            (calc) => calc.id !== calculatorId
-          );
-          return {
-            ...item,
-            calculators: updatedCalculators,
-          };
-        }
-        return item;
-      });
-
-      return updatedState;
-    });
-  }
-
-  useEffect(() => {
-    if (merge?.calculators?.length < 2) {
-      setMerges((merges) => {
-        let updatedMerges = merges.filter((merge) => merge.alias !== alias);
-        return updatedMerges;
-      })
-    }
-  }, [merge])
 
   const deleteAndCancel = () => {
     setShow(false);
@@ -160,7 +132,7 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch }) => {
                           <span style={{ color: '#101828', fontSize: '16px', textAlign: 'end' }}>
                             $ {parseFloat(value?.total).toFixed(2)}
                           </span>
-                          <Trash onClick={() => deleteCalculator(value.id)} color='#98A2B3' size={16} className='ms-2' style={{ position: 'relative', left: '20px', cursor: 'pointer' }} />
+                          <Trash onClick={() => deleteMergeCalculator(value.calculator)} color='#98A2B3' size={16} className='ms-2' style={{ position: 'relative', left: '20px', cursor: 'pointer' }} />
                         </Col>
                       </Row>
                     </ListGroup.Item>
