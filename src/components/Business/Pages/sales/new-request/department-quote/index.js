@@ -33,9 +33,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedDescription, setEditedDescription] = useState('');
   const [isEditingDescription, setIsEditingDescription] = useState(false);
-
-
-
+  console.log('payload merges.........: ', payload.merges);
   const handleEditReference = () => {
     setIsEditingReference(true);
     setEditedReference(payload.reference || '');
@@ -205,7 +203,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                               : [];
 
                             setSelectedManagers(selected);
-                            setPayload((others) => ({ ...others, managers }));
+                            setPayload((others) => ({ ...others, managers: managers || [] }));
                           }}
                           isMulti
                           styles={{

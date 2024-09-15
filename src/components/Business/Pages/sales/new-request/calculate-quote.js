@@ -78,15 +78,15 @@ const CalculateQuote = () => {
 
         const merges = payload.merges;
         console.log('merges: ', merges);
-        delete payload.merges;
-
+        if (payload.merges) delete payload.merges;
+        
         if (!payload?.client) return toast.error('Client is required');
         if (!payload?.contact_person) return toast.error('Contact person is required');
         if (!payload?.managers || !payload.managers?.length) return toast.error('Project manager is required');
         if (!payload?.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
         if (!payload?.xero_tax) return toast.error('Tax details is required');
         if (!payload?.expense) return toast.error('Expense is required');
-
+        
         let result;
         setIsLoading(true);
         if (mergeDeletedItems.length) {
@@ -99,17 +99,20 @@ const CalculateQuote = () => {
             };
         }
         if (unique_id) {
+            // temporary
             const previousManagers = newRequestQuery?.data?.managers || [];
             const updatedManagers = payload?.managers || [];
             const uniqueUpdatedManagers = updatedManagers.filter(
                 newManager => !previousManagers.some(prevManager => prevManager.manager === newManager.manager)
             );
             payload.managers = uniqueUpdatedManagers;
-
+            console.log('After update managers payload.....: ', payload);
+            console.log('merges: ', merges);
+            
             result = await updateRequestMutation.mutateAsync(payload);
             let uniqueid = result?.unique_id;
 
-            if (merges?.length) {
+            if (merges && merges?.length) {
                 let calculatorMap = result.calculations?.reduce((map, item) => {
                     map[item.calculator] = item.id;
                     return map;
@@ -134,6 +137,7 @@ const CalculateQuote = () => {
                         console.log('Error during with creating merge: ', error);
                     }
                 };
+                toast.success(`Calculations and merge items updated successfully.`);
             } else {
                 toast.success(`Calculations updated successfully.`);
             }
@@ -144,7 +148,7 @@ const CalculateQuote = () => {
             result = await newRequestMutation.mutateAsync(payload);
             let uniqueid = result?.unique_id;
 
-            if (merges?.length) {
+            if (merges && merges?.length) {
                 let calculatorMap = result.calculations?.reduce((map, item) => {
                     map[item.calculator] = item.id;
                     return map;
@@ -165,7 +169,7 @@ const CalculateQuote = () => {
                         console.log('Error during with creating merge: ', error);
                     }
                 });
-                toast.success(`Calculations and new merges items created successfully.`);
+                toast.success(`Calculations and new merge items created successfully.`);
                 if (unique_id) {
                     navigate(`/sales/quote-calculation/${unique_id}`);
                 } else {
