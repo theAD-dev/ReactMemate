@@ -8,7 +8,7 @@ import BusinessClientEdit from '../business-client-edit/business-client-edit'
 import style from './business-client.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import { useQuery } from '@tanstack/react-query';
-import { getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
+import { getClientIndustries } from '../../../../../APIs/ClientsApi';
 import DeleteClient from '../delete-client';
 import { Tag } from 'primereact/tag';
 import Restore from '../restore-client';
@@ -18,7 +18,6 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
   const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
 
   const handleExternalSubmit = () => {
@@ -56,7 +55,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           </div>
           {
             isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
-              : <ViewSection client={client} industries={industriesQuery?.data} categories={categoriesQuery?.data} />
+              : <ViewSection client={client} industries={industriesQuery?.data} />
           }
         </div>
 
@@ -80,7 +79,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   )
 }
 
-const ViewSection = ({ client, industries, categories }) => {
+const ViewSection = ({ client, industries }) => {
   const payments = [
     { value: 1, label: "COD" },
     { value: 0, label: "Prepaid" },
@@ -88,14 +87,11 @@ const ViewSection = ({ client, industries, categories }) => {
     { value: 14, label: "Two weeks" },
     { value: 30, label: "One month" },
   ]
-  let clientCategory = categories?.find((category) => category.id === client?.category)
   let clientIndustry = industries?.find((industry) => industry.id === client?.industry)
   let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
   return (
     <>
       <div className={clsx(style.box)}>
-        <label className={clsx(style.label)}>Customer Category</label>
-        <h4 className={clsx(style.text)}>{clientCategory?.name || "-"}</h4>
         <Row>
           <Col sm={6}>
             <label className={clsx(style.label)}>ABN</label>
@@ -151,8 +147,16 @@ const ViewSection = ({ client, industries, categories }) => {
 
       <h5 className={clsx(style.boxLabel)}>Payment Terms</h5>
       <div className={clsx(style.box)}>
-        <label className={clsx(style.label)}>Payment Terms</label>
-        <h4 className={clsx(style.text, 'mb-0')}>{clientPayment?.label || "-"}</h4>
+        <Row>
+          <Col sm={6}>
+            <label className={clsx(style.label)}>Payment Terms</label>
+            <h4 className={clsx(style.text, 'mb-0')}>{clientPayment?.label || "-"}</h4>
+          </Col>
+          <Col sm={6}>
+            <label className={clsx(style.label)}>Customers Discount Category</label>
+            <h4 className={clsx(style.text)}>{client?.category?.name || "-"}</h4>
+          </Col>
+        </Row>
       </div>
 
       <h5 className={clsx(style.boxLabel)}>Contact Person</h5>
@@ -229,7 +233,11 @@ const ViewSection = ({ client, industries, categories }) => {
             </div>
 
             <Row>
-              <Col>
+              <Col sm={6}>
+                <label className={clsx(style.label)}>Location Name</label>
+                <h4 className={clsx(style.text)}>{`${address.title || "-"}`}</h4>
+              </Col>
+              <Col sm={6}>
                 <label className={clsx(style.label)}>Country</label>
                 <h4 className={clsx(style.text)}>{`${address.country || "-"}`}</h4>
               </Col>

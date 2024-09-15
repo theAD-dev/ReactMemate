@@ -347,6 +347,7 @@ const Header = ({ onClick }) => {
                       username={profileData?.full_name || ""}
                       userType={profileData?.type || ""}
                       aliasName={profileData?.alias_name || ""}
+                      photo={profileData?.photo || ""}
                     />
                   </Col>
                 </Row>

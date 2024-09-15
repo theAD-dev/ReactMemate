@@ -21,11 +21,14 @@ import { getCities, getClientCategories, getCountries, getStates } from '../../.
 
 const schema = yup
     .object({
-        category: yup.number().typeError("Enter a valid category").required('Category is required'),
-        phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
         firstname: yup.string().required("First name is required"),
         lastname: yup.string().required("Last name is required"),
         email: yup.string().email("Invalid email address").required("Email is required"),
+        phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+
+        payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
+        category: yup.number().typeError("Enter a valid category").required('Category is required'),
+
         address: yup.object({
             id: yup.string(),
             country: yup.string().required("Country is required"),
@@ -74,55 +77,6 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Customer Category</label>
-                        <Controller
-                            name="category"
-                            control={control}
-                            render={({ field }) => (
-                                <Dropdown
-                                    {...field}
-                                    options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
-                                        value: category.id,
-                                        label: category.name
-                                    }))) || []}
-                                    onChange={(e) => {
-                                        field.onChange(e.value);
-                                    }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
-                                    style={{ height: '46px' }}
-                                    value={field.value}
-                                    loading={categoriesQuery?.isFetching}
-                                    placeholder="Select a category"
-                                    filter
-                                />
-                            )}
-                        />
-                        {errors.category && <p className="error-message">{errors.category.message}</p>}
-                    </div>
-                </Col>
-
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Phone number</label>
-                        <Controller
-                            name="phone"
-                            control={control}
-                            render={({ field }) => (
-                                <PhoneInput
-                                    defaultCountry='au'
-                                    value={field.value}
-                                    className='phoneInput'
-                                    containerClass={styles.countrySelector}
-                                    onChange={field.onChange}
-                                />
-                            )}
-                        />
-                        {errors.phone && <p className="error-message">{errors.phone.message}</p>}
-                    </div>
-                </Col>
-
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mb-4">
                         <label className={clsx(styles.lable)}>First Name</label>
                         <IconField>
                             <InputIcon>{errors.firstname && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
@@ -151,6 +105,87 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                             <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
                         </IconField>
                         {errors.email && <p className="error-message">{errors.email.message}</p>}
+                    </div>
+                </Col>
+
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1">
+                        <label className={clsx(styles.lable)}>Phone number</label>
+                        <Controller
+                            name="phone"
+                            control={control}
+                            render={({ field }) => (
+                                <PhoneInput
+                                    defaultCountry='au'
+                                    value={field.value}
+                                    className='phoneInput'
+                                    containerClass={styles.countrySelector}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
+                        {errors.phone && <p className="error-message">{errors.phone.message}</p>}
+                    </div>
+                </Col>
+            </Row>
+
+            <h2 className={clsx(styles.headingInputs, 'mt-4')}>Payment Terms</h2>
+            <Row className={clsx(styles.bgGreay)}>
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mb-4">
+                        <label className={clsx(styles.lable)}>Payment Terms</label>
+                        <Controller
+                            name="payment_terms"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={[
+                                        { value: 1, label: "COD" },
+                                        { value: 0, label: "Prepaid" },
+                                        { value: 7, label: "Week" },
+                                        { value: 14, label: "Two weeks" },
+                                        { value: 30, label: "One month" },
+                                    ] || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    placeholder="COD"
+                                />
+                            )}
+                        />
+                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                    </div>
+                </Col>
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mb-4">
+                        <label className={clsx(styles.lable)}>Customers Discount Category</label>
+                        <Controller
+                            name="category"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
+                                        value: category.id,
+                                        label: category.name
+                                    }))) || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    loading={categoriesQuery?.isFetching}
+                                    placeholder="Select a category"
+                                    filter
+                                />
+                            )}
+                        />
+                        {errors.category && <p className="error-message">{errors.category.message}</p>}
                     </div>
                 </Col>
             </Row>

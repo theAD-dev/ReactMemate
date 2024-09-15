@@ -10,6 +10,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
 
   const [defaultValues, setDefaultValues] = useState({
     ...client,
+    category: client?.category?.id || "",
     addresses: client?.addresses?.map((address) => ({
       id: address?.id || "",
       title: address?.title || "",

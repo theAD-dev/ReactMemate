@@ -19,8 +19,6 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
-
   const handleExternalSubmit = () => {
     if (formRef.current) {
       formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
@@ -56,7 +54,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
           </div>
           {
             isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
-              : <ViewSection client={client} categories={categoriesQuery?.data} />
+              : <ViewSection client={client} />
           }
         </div>
 
@@ -80,20 +78,23 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   )
 }
 
-const ViewSection = ({ client, categories }) => {
-  let clientCategory = categories?.find((category) => category.id === client?.category)
+const ViewSection = ({ client }) => {
+  const payments = [
+    { value: 1, label: "COD" },
+    { value: 0, label: "Prepaid" },
+    { value: 7, label: "Week" },
+    { value: 14, label: "Two weeks" },
+    { value: 30, label: "One month" },
+  ]
   const getOrderFrequencyPerMonth = (totalOrders, created) => {
     const monthsActive = (new Date().getFullYear() - new Date(+created * 1000).getFullYear()) * 12 + (new Date().getMonth() - new Date(created * 1000).getMonth());
     const result = monthsActive > 0 ? (parseFloat(totalOrders) / monthsActive).toFixed(2) : 0;
     return `${result} p/m`;
   };
+  let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
   return (
     <>
       <div className={clsx(style.box)}>
-        <label className={clsx(style.label)}>Customer Category</label>
-        <h4 className={clsx(style.text)}>{clientCategory?.name || "-"}</h4>
-
-
         <Row>
           <Col sm={6}>
             <label className={clsx(style.label)}>Email</label>
@@ -114,6 +115,20 @@ const ViewSection = ({ client, categories }) => {
           <Col sm={6}>
             <label className={clsx(style.label)}>Phone</label>
             <h4 className={clsx(style.text)}>{client?.phone || "-"}</h4>
+          </Col>
+        </Row>
+      </div>
+
+      <h5 className={clsx(style.boxLabel)}>Payment Terms</h5>
+      <div className={clsx(style.box)}>
+        <Row>
+          <Col sm={6}>
+            <label className={clsx(style.label)}>Payment Terms</label>
+            <h4 className={clsx(style.text, 'mb-0')}>{clientPayment?.label || "-"}</h4>
+          </Col>
+          <Col sm={6}>
+            <label className={clsx(style.label)}>Customers Discount Category</label>
+            <h4 className={clsx(style.text)}>{client?.category?.name || "-"}</h4>
           </Col>
         </Row>
       </div>

@@ -19,7 +19,6 @@ import { getCities, getCountries, getStates, getClientCategories, getClientIndus
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 
 const schema = yup.object({
-  category: yup.number().typeError("Enter a valid category").required('Category is required'),
   name: yup.string().required('Company name is required'),
   industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
   abn: yup.string().required('ABN is required'),
@@ -27,6 +26,7 @@ const schema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
   website: yup.string().url('Invalid URL').required('URL is required'),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
+  category: yup.number().typeError("Enter a valid category").required('Category is required'),
 
   addresses: yup.array().of(
     yup.object({
@@ -123,37 +123,6 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
           </div>
           <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
         </Col>
-
-        <Col sm={6}>
-          <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Customer Category</label>
-            <Controller
-              name="category"
-              control={control}
-              render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
-                    value: category.id,
-                    label: category.name
-                  }))) || []}
-                  onChange={(e) => {
-                    field.onChange(e.value);
-                  }}
-                  className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
-                  style={{ height: '46px' }}
-                  value={field.value}
-                  loading={categoriesQuery?.isFetching}
-                  placeholder="Select a category"
-                  filter
-                />
-              )}
-            />
-            {errors.category && <p className="error-message">{errors.category.message}</p>}
-          </div>
-        </Col>
-
-        <Col sm={6}></Col>
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
@@ -280,6 +249,34 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
             {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
           </div>
         </Col>
+        <Col sm={6}>
+          <div className="d-flex flex-column gap-1 mb-4">
+            <label className={clsx(styles.lable)}>Customers Discount Category</label>
+            <Controller
+              name="category"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
+                    value: category.id,
+                    label: category.name
+                  }))) || []}
+                  onChange={(e) => {
+                    field.onChange(e.value);
+                  }}
+                  className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                  style={{ height: '46px' }}
+                  value={field.value}
+                  loading={categoriesQuery?.isFetching}
+                  placeholder="Select a category"
+                  filter
+                />
+              )}
+            />
+            {errors.category && <p className="error-message">{errors.category.message}</p>}
+          </div>
+        </Col>
       </Row>
 
       <h2 className={clsx(styles.headingInputs, 'mt-4')}>Contact Person</h2>
@@ -289,19 +286,6 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
             <div key={item.id}>
               <input type="hidden" {...register(`contact_persons.${index}.is_main`)} value={index === 0} />
               <Row className={clsx(styles.bgGreay)}>
-                <Col sm={6}>
-                  <div className="d-flex flex-column gap-1 mb-4">
-                    <label className={clsx(styles.lable)}>Position</label>
-                    <IconField>
-                      <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.position && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
-                      <InputText {...register(`contact_persons.${index}.position`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.position })} style={{ resize: 'none' }} placeholder='Manager' />
-                    </IconField>
-                    {errors.contact_persons?.[index]?.position && <p className="error-message">{errors.contact_persons?.[index]?.position?.message}</p>}
-                  </div>
-                </Col>
-
-                <Col sm={6}></Col>
-
                 <Col sm={6}>
                   <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>First Name</label>
@@ -354,6 +338,18 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                     {errors.contact_persons?.[index]?.phone && <p className="error-message">{errors.contact_persons?.[index]?.phone.message}</p>}
                   </div>
                 </Col>
+                <Col sm={6}>
+                  <div className="d-flex flex-column gap-1 mb-4">
+                    <label className={clsx(styles.lable)}>Position</label>
+                    <IconField>
+                      <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.position && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
+                      <InputText {...register(`contact_persons.${index}.position`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.position })} style={{ resize: 'none' }} placeholder='Manager' />
+                    </IconField>
+                    {errors.contact_persons?.[index]?.position && <p className="error-message">{errors.contact_persons?.[index]?.position?.message}</p>}
+                  </div>
+                </Col>
+
+                <Col sm={6}></Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
                 {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => removeContact(index)}>Delete</Button>}
