@@ -8,11 +8,14 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
   console.log('IndivisualClientEdit: ', client);
   const [photo, setPhoto] = useState(client?.photo || null);
   const [defaultValues, setDefaultValues] = useState({
-    category: client?.category || "43",
-    phone: client?.phone,
     firstname: client?.name?.split(" ")?.[0] || "",
     lastname: client?.name?.split(" ")?.[1] || "",
     email: client?.email,
+    phone: client?.phone,
+    
+    category: client?.category?.id || "43",
+    payment_terms: client?.payment_terms || "",
+
     description: client?.description,
     address: {
       id: client.addresses?.[0]?.id || "",

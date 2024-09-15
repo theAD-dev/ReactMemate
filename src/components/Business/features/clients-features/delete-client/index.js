@@ -1,11 +1,12 @@
 import React from 'react'
-import { Button, Spinner } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { toast } from 'sonner';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { useMutation } from '@tanstack/react-query';
 import { deleteClient } from '../../../../../APIs/ClientsApi';
 import { useNavigate } from 'react-router-dom';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const DeleteClient = ({ id }) => {
     const navigate = useNavigate();
@@ -44,9 +45,7 @@ const DeleteClient = ({ id }) => {
             <Button type='button' onClick={handleDeleteClient} className='outline-button'>
                 {
                     deleteMutation.isPending ? (
-                        <Spinner animation="border" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>
+                        <ProgressSpinner style={{ width: '20px', height: '20px' }} />
                     ) : <Trash color='#344054' size={20} />
                 }
             </Button>

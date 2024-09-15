@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
 import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
 
-import { getCalculationByReferenceId, getDepartments, getMergeItemsByUniqueId, getQuoteByUniqueId } from '../../../../../../APIs/CalApi';
+import { deleteMergeQuote, getCalculationByReferenceId, getDepartments, getMergeItemsByUniqueId, getQuoteByUniqueId } from '../../../../../../APIs/CalApi';
 import SelectComponent from './select-component';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import './select-component.css';
@@ -153,14 +153,14 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                 index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
                                             }
                                         </td>
-                                        <td style={{ width: '64px', textAlign: 'left' }}>
+                                        <td calculator={value.calculator} style={{ width: '64px', textAlign: 'left' }}>
 
                                             <div className='d-flex align-items-center justify-content-end gap-2'>
                                                 {index === 0 && (<span>{id + 1}</span>)}
                                                 {
-                                                    mapMergeItemWithNo[value.id] ? (
+                                                    mapMergeItemWithNo[value.calculator] ? (
                                                         <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '0px' }}>
-                                                            {mapMergeItemWithNo[value.id]}
+                                                            {mapMergeItemWithNo[value.calculator]}
                                                         </div>
                                                     ) : (
                                                         <label className="customCheckBox checkbox" style={{ marginRight: '0px' }}>
@@ -240,7 +240,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
 
                                         <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.total || 0.00}</td>
                                         <td style={{ width: '32px' }}>
-                                            <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id)} />
+                                            <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id, value.calculator)} />
                                         </td>
                                     </tr>
                                 )}
@@ -253,7 +253,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
     );
 }
 
-const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xero_tax, preExistCalculation, preMerges, refetch }) => {
+const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xero_tax, preExistCalculation, preMerges, refetch, setMergeDeletedItems }) => {
     const { unique_id } = useParams();
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
@@ -349,7 +349,26 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         });
     };
 
-    const deleteRow = (key, id) => {
+    const deleteMergeCalculator = (calcReferenceId) => {
+        let idsToDelete = [];
+        const updatedMerges = merges.reduce((result, item) => {
+            const updatedCalculators = item.calculators.filter(
+                calc => calc.calculator !== calcReferenceId
+            );
+
+            if (updatedCalculators.length < 2) {
+                if (item.id && unique_id) idsToDelete.push(item.id);
+                return result;
+            }
+
+            result.push({ ...item, calculators: updatedCalculators });
+            return result;
+        }, []);
+        setMerges(updatedMerges);
+        setMergeDeletedItems((prev) => [...new Set([...prev, ...idsToDelete])]);
+    }
+
+    const deleteRow = (key, id, calcReferenceId) => {
         setRows(prevRows => {
             const updatedRows = {
                 ...prevRows,
@@ -360,6 +379,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
             return updatedRows;
         });
+        deleteMergeCalculator(calcReferenceId);
     };
 
     useEffect(() => {
@@ -469,7 +489,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         const reformattedData = preExistCalculation.reduce((acc, { order, index, ...item }) => {
             const key = `_${index}_`;
             acc[key] = acc[key] || [];
-            acc[key].push({ ...item, label: subindexMap[index] });
+            acc[key].push({ ...item, label: subindexMap[index], index });
             return acc;
         }, {});
 
@@ -479,7 +499,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
             const calculators = merge?.calculators?.map(cal => {
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
-                return { label: subindexMap[findData?.index], total: findData?.total, id: findData.id };
+                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, id: findData?.id, calculator: findData?.calculator };
             });
 
             return { ...merge, alias, calculators };
@@ -487,6 +507,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
         setRows(reformattedData);
         setMerges(reformattedMerges);
+        console.log('reformattedMerges: ', reformattedMerges);
 
     }, [preExistCalculation, preExistMerges, departments]);
 
@@ -497,7 +518,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 const alias = romanize(index + 1);
 
                 merge?.calculators?.map(cal => {
-                    keyIndexMap[cal.id] = alias;
+                    keyIndexMap[cal.calculator] = alias;
                 });
             });
 
@@ -545,6 +566,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 <ListMergeCalculations unique_id={unique_id} merges={merges}
                     setMerges={setMerges}
                     refetch={refetch}
+                    deleteMergeCalculator={deleteMergeCalculator}
                 />
             </div>
         </div>

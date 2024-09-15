@@ -4,14 +4,18 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import CustomRadioButton from './ui/custom-radio-button';
 import DepartmentQuote from './department-quote';
 import { toast } from 'sonner';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createNewCalculationQuoteRequest, createNewMergeQuote, getQuoteByUniqueId } from '../../../../../APIs/CalApi';
+import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
 import { Spinner } from 'react-bootstrap';
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
     const [quoteType, setQuoteType] = useState('Standard');
     const [payload, setPayload] = useState({});
+    const [mergeDeletedItems, setMergeDeletedItems] = useState([]);
+    console.log('mergeDeletedItems: ', mergeDeletedItems);
     const [totals, setTotals] = useState({ budget: 0, operationalProfit: 0, subtotal: 0, tax: 0, total: 0 });
     const { unique_id } = useParams();
     const newRequestQuery = useQuery({
@@ -28,6 +32,7 @@ const CalculateQuote = () => {
             setPayload((others) => ({
                 ...others,
                 xero_tax: "ex",
+                display_discount: true,
                 managers: [{ manager: 20 }],
                 client: storedSessionData?.id || "",
                 reference: storedSessionData?.reference || "",
@@ -52,60 +57,134 @@ const CalculateQuote = () => {
         }
     });
 
+    const updateRequestMutation = useMutation({
+        mutationFn: (data) => updateNewCalculationQuoteRequest(unique_id, data),
+        onSuccess: (response) => {
+            if (response) {
+            } else {
+                toast.error(`Failed to update calculation quote. Please try again.`);
+            }
+        },
+        onError: (error) => {
+            console.error('Error updating new calculation quote:', error);
+            toast.error(`Failed to update calculation quote. Please try again.`);
+        }
+    });
+
     const createNewRequest = async (action) => {
         payload.action = action;
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
+        console.log('payload.........: ', payload);
 
         const merges = payload.merges;
-        delete payload.merges;
-
-
+        console.log('merges: ', merges);
+        if (payload.merges) delete payload.merges;
+        
         if (!payload?.client) return toast.error('Client is required');
         if (!payload?.contact_person) return toast.error('Contact person is required');
         if (!payload?.managers || !payload.managers?.length) return toast.error('Project manager is required');
         if (!payload?.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
         if (!payload?.xero_tax) return toast.error('Tax details is required');
         if (!payload?.expense) return toast.error('Expense is required');
-
-        if (unique_id) return toast.error('UPDATE API is under construction...');
-        const result = await newRequestMutation.mutateAsync(payload);
-        console.log('result: ', result);
-        let uniqueid = result?.unique_id;
-        if (merges?.length) {
-            let calculatorMap = result.calculations?.reduce((map, item) => {
-                map[item.calculator] = item.id;
-                return map;
-            }, {});
-
-            const updateMerges = merges?.map(item => ({
-                ...item,
-                unique_id: uniqueid,
-                calculations: item.calculators.map(calc => ({
-                    calculator: calculatorMap[calc.id]
-                }))
-            }));
-
-            updateMerges.forEach(async (merge) => {
+        
+        let result;
+        setIsLoading(true);
+        if (mergeDeletedItems.length) {
+            for (const id of mergeDeletedItems) {
                 try {
-                    const result = await createNewMergeQuote(merge);
+                    if (id) await deleteMergeQuote(id);
                 } catch (error) {
-                    console.log('Error during with creating merge: ', error);
+                    console.log('Error during with deleting merge: ', error);
                 }
-            });
-            toast.success(`Calculations and new merges items created successfully.`);
-            if (unique_id) {
-                navigate(`/sales/quote-calculation/${unique_id}`);
+            };
+        }
+        if (unique_id) {
+            // temporary
+            const previousManagers = newRequestQuery?.data?.managers || [];
+            const updatedManagers = payload?.managers || [];
+            const uniqueUpdatedManagers = updatedManagers.filter(
+                newManager => !previousManagers.some(prevManager => prevManager.manager === newManager.manager)
+            );
+            payload.managers = uniqueUpdatedManagers;
+            console.log('After update managers payload.....: ', payload);
+            console.log('merges: ', merges);
+            
+            result = await updateRequestMutation.mutateAsync(payload);
+            let uniqueid = result?.unique_id;
+
+            if (merges && merges?.length) {
+                let calculatorMap = result.calculations?.reduce((map, item) => {
+                    map[item.calculator] = item.id;
+                    return map;
+                }, {});
+
+                console.log('calculatorMap: ', calculatorMap);
+
+                const updateMerges = merges?.map(item => ({
+                    ...item,
+                    unique_id: uniqueid,
+                    calculations: item.calculators.map(calc => ({
+                        calculator: calculatorMap[calc.calculator]
+                    }))
+                }));
+
+                console.log('updateMerges: ', updateMerges);
+                for (const merge of updateMerges) {
+                    try {
+                        if (merge.id) await deleteMergeQuote(merge.id);
+                        await createNewMergeQuote(merge);
+                    } catch (error) {
+                        console.log('Error during with creating merge: ', error);
+                    }
+                };
+                toast.success(`Calculations and merge items updated successfully.`);
             } else {
-                navigate(`/sales`)
+                toast.success(`Calculations updated successfully.`);
             }
+
+            newRequestQuery.refetch();
+            
         } else {
-            toast.success(`Calculations created successfully.`);
-            if (unique_id) {
-                navigate(`/sales/quote-calculation/${unique_id}`);
+            result = await newRequestMutation.mutateAsync(payload);
+            let uniqueid = result?.unique_id;
+
+            if (merges && merges?.length) {
+                let calculatorMap = result.calculations?.reduce((map, item) => {
+                    map[item.calculator] = item.id;
+                    return map;
+                }, {});
+
+                const updateMerges = merges?.map(item => ({
+                    ...item,
+                    unique_id: uniqueid,
+                    calculations: item.calculators.map(calc => ({
+                        calculator: calculatorMap[calc.calculator]
+                    }))
+                }));
+
+                updateMerges.forEach(async (merge) => {
+                    try {
+                        await createNewMergeQuote(merge);
+                    } catch (error) {
+                        console.log('Error during with creating merge: ', error);
+                    }
+                });
+                toast.success(`Calculations and new merge items created successfully.`);
+                if (unique_id) {
+                    navigate(`/sales/quote-calculation/${unique_id}`);
+                } else {
+                    navigate(`/sales`)
+                }
             } else {
-                navigate(`/sales`)
+                toast.success(`Calculations created successfully.`);
+                if (unique_id) {
+                    navigate(`/sales/quote-calculation/${unique_id}`);
+                } else {
+                    navigate(`/sales`)
+                }
             }
         }
+        setIsLoading(false);
     }
 
     return (
@@ -150,7 +229,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', padding: '16px 32px' }}>
-                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} />
+                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems}/>
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #EAECF0', boxShadow: '0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)' }}>
@@ -195,18 +274,27 @@ const CalculateQuote = () => {
                     <div className='d-flex align-items-center' style={{ gap: '8px' }}>
                         <button type="button" onClick={() => createNewRequest('draft')} className="button-custom text-button">
                             Save Draft
+                            {(newRequestMutation.isPending || updateRequestMutation.isPending)
+                                && ( newRequestMutation?.variables?.action === "draft" || updateRequestMutation?.variables?.action === "draft")
+                                && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
                         <button type="button" onClick={() => createNewRequest('save')} className="button-custom submit-button-light">
                             Save
+                            {(newRequestMutation.isPending || updateRequestMutation.isPending)
+                                && ( newRequestMutation?.variables?.action === "save" || updateRequestMutation?.variables?.action === "save")
+                                && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
                         <button type="button" onClick={() => createNewRequest('send')} className="submit-button">
                             Save and Send
+                            {(newRequestMutation.isPending || updateRequestMutation.isPending)
+                                && ( newRequestMutation?.variables?.action === "send" || updateRequestMutation?.variables?.action === "send")
+                                && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
                     </div>
                 </div>
             </div>
             {
-                (newRequestMutation.isPending || newRequestQuery.isFetching) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+                (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
                     <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>

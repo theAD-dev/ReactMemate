@@ -8,15 +8,16 @@ import BusinessClientEdit from '../business-client-edit/business-client-edit'
 import style from './business-client.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import { useQuery } from '@tanstack/react-query';
-import { getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
+import { getClientIndustries } from '../../../../../APIs/ClientsApi';
 import DeleteClient from '../delete-client';
+import { Tag } from 'primereact/tag';
+import Restore from '../restore-client';
 
 const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
   const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
-  const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
   const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
 
   const handleExternalSubmit = () => {
@@ -35,7 +36,10 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
                 client.photo ? <img src={client.photo} alt='client-photo' /> : <Building color='#667085' size={26} />
               }
             </div>
-            <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{client.name}</span>
+            <div className='d-flex align-items-center gap-2'>
+              <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{client.name}</span>
+              {client.deleted ? <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
+            </div>
           </div>
           <span>
             <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -51,18 +55,23 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           </div>
           {
             isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
-              : <ViewSection client={client} industries={industriesQuery?.data} categories={categoriesQuery?.data} />
+              : <ViewSection client={client} industries={industriesQuery?.data} />
           }
         </div>
 
         <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
-          <DeleteClient id={client?.id} />
+          {
+            !client.deleted ? (<DeleteClient id={client?.id} />) : <span></span>
+          }
+
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
               <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
-              <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ width: '180px' }}>{ isPending ? "Loading..." : "Save Client Details" }</Button>
+              <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ width: '180px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
             </div>
-              : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
+              : client.deleted
+                ? <Restore id={client?.id} refetch={refetch} />
+                : <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Client</Button>
           }
         </div>
       </div>
@@ -70,7 +79,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   )
 }
 
-const ViewSection = ({ client, industries, categories }) => {
+const ViewSection = ({ client, industries }) => {
   const payments = [
     { value: 1, label: "COD" },
     { value: 0, label: "Prepaid" },
@@ -78,14 +87,11 @@ const ViewSection = ({ client, industries, categories }) => {
     { value: 14, label: "Two weeks" },
     { value: 30, label: "One month" },
   ]
-  let clientCategory = categories?.find((category) => category.id === client?.category)
   let clientIndustry = industries?.find((industry) => industry.id === client?.industry)
   let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
   return (
     <>
       <div className={clsx(style.box)}>
-        <label className={clsx(style.label)}>Customer Category</label>
-        <h4 className={clsx(style.text)}>{clientCategory?.name || "-"}</h4>
         <Row>
           <Col sm={6}>
             <label className={clsx(style.label)}>ABN</label>
@@ -141,8 +147,16 @@ const ViewSection = ({ client, industries, categories }) => {
 
       <h5 className={clsx(style.boxLabel)}>Payment Terms</h5>
       <div className={clsx(style.box)}>
-        <label className={clsx(style.label)}>Payment Terms</label>
-        <h4 className={clsx(style.text, 'mb-0')}>{clientPayment?.label || "-"}</h4>
+        <Row>
+          <Col sm={6}>
+            <label className={clsx(style.label)}>Payment Terms</label>
+            <h4 className={clsx(style.text, 'mb-0')}>{clientPayment?.label || "-"}</h4>
+          </Col>
+          <Col sm={6}>
+            <label className={clsx(style.label)}>Customers Discount Category</label>
+            <h4 className={clsx(style.text)}>{client?.category?.name || "-"}</h4>
+          </Col>
+        </Row>
       </div>
 
       <h5 className={clsx(style.boxLabel)}>Contact Person</h5>
@@ -219,7 +233,11 @@ const ViewSection = ({ client, industries, categories }) => {
             </div>
 
             <Row>
-              <Col>
+              <Col sm={6}>
+                <label className={clsx(style.label)}>Location Name</label>
+                <h4 className={clsx(style.text)}>{`${address.title || "-"}`}</h4>
+              </Col>
+              <Col sm={6}>
                 <label className={clsx(style.label)}>Country</label>
                 <h4 className={clsx(style.text)}>{`${address.country || "-"}`}</h4>
               </Col>

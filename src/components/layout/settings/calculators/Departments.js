@@ -15,6 +15,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { toast } from 'sonner';
+import DeleteConfirmationModal from './delete-confirmation-modal';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -58,7 +59,10 @@ const Departments = () => {
         setEditDepartment(data);
     }
 
-    const createSubDepartment = (parent) => {
+    const createSubDepartment = (e, parent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         setSubDepartment({ parent });
         setVisible2(true);
     }
@@ -78,9 +82,15 @@ const Departments = () => {
                 key={department.id}
                 header={
                     <span className="d-flex align-items-center justify-content-between">
-                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
-                        <div className='editItem' onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
-                            <PencilSquare color="#344054" size={20} style={{ marginRight: '30px' }} />
+                        <div className='d-flex align-items-center'>
+                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
+                            <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
+                                <PencilSquare color="#106B99" size={16} />
+                            </div>
+                        </div>
+                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
+                            <DeleteConfirmationModal title={"Deparment"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
+                            <Button className={style.create} onClick={(e) => createSubDepartment(e, department.id)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
                         </div>
                     </span>
                 }
@@ -108,11 +118,16 @@ const Departments = () => {
                                 key={subindex.id}
                                 header={(
                                     <span className="d-flex align-items-center justify-content-between">
-                                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
+                                        <div className='d-flex align-items-center'>
+                                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
+                                            <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
+                                                <PencilSquare color="#106B99" size={16} />
+                                            </div>
+                                        </div>
+
                                         <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
-                                            <Button className={style.delete} onClick={(e) => { }}><Trash color="#B42318" size={18} className='me-2' />Delete Sub Deparment</Button>
-                                            <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id)}><PlusLg color="#106B99" size={18} className='me-2' />Add Calculator</Button>
-                                            <Button className={style.editBut} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)}><PencilSquare color="#1D2939" size={18} className='me-2' />Edit</Button>
+                                            <DeleteConfirmationModal title={"Sub Deparment"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
+                                            <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
                                         </div>
                                     </span>
                                 )}
@@ -139,10 +154,6 @@ const Departments = () => {
                         ))
                     }
                 </Accordion>
-                <Button onClick={() => createSubDepartment(department.id)} className={clsx(style.creaeDepartment, 'mt-3')}>
-                    <Plus color="#475467" size={20} className='me-1' style={{ marginBottom: '3px' }} />
-                    Create Sub Department
-                </Button>
             </AccordionTab>
         ));
     };
@@ -380,17 +391,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                     </>
                 ) : (
                     <>
-                        <div className='d-flex justify-content-between align-items-center'>
-                            <h6>Description</h6>
-                            <div className='d-flex gap-2 align-items-center'>
-                                <button onClick={() => setIsEdit(true)} className={clsx(style.editIcon, 'd-flex justify-content-center align-items-center')}>
-                                    <Pencil color='#344054' size={14} />
-                                </button>
-                                <button className={clsx(style.deleteIcon, 'd-flex justify-content-center align-items-center')}>
-                                    <Trash color='#F04438' size={16} />
-                                </button>
-                            </div>
-                        </div>
+
+                        <h6>Description</h6>
                         <p>{calculator?.description || ""}</p>
                         <Row>
                             <Col sm={3}>
@@ -410,6 +412,13 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                                 <strong>$ {parseFloat(calculator.total || 0).toFixed(2)}</strong>
                             </Col>
                         </Row>
+                        <div className='d-flex justify-content-between align-items-center mt-4'>
+                            <span></span>
+                            <div className={clsx(style.RItem)}>
+                                <DeleteConfirmationModal title={"Calculator"} api={`/references/calculators/delete/${calculator.id}/`} refetch={() => refetch(index)} />
+                                <Button className={style.create} onClick={() => setIsEdit(true)}><PencilSquare color="#106B99" size={18} className='me-2' />Edit Calculator</Button>
+                            </div>
+                        </div>
                     </>
                 )
             }
@@ -476,7 +485,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
             <h6>Full Description</h6>
             <InputTextarea autoResize value={tempCalculator?.description}
                 onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
-                className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
+                className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none', outline: 'none', boxShadow: 'none' }} />
 
             <Row>
                 <Col>
@@ -573,13 +582,13 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
     return (
         <div>
             {
-                uniqueCalculators.map(calculator => (
-                    <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
-                ))
+                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} />
             }
 
             {
-                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} />
+                uniqueCalculators.map(calculator => (
+                    <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
+                ))
             }
 
             <div className={style.calculateBox}>

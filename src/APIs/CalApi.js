@@ -40,6 +40,18 @@ export const createNewCalculationQuoteRequest = async (data) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const updateNewCalculationQuoteRequest = async (unique_id, data) => {
+  if(!unique_id) throw new Error("No id found");
+
+  const endpoint = `/sales/projects/${unique_id}/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const createNewMergeQuote = async (data) => {
   const endpoint = '/projects/merges/new/';
   const options = {
@@ -127,6 +139,14 @@ export const updateCalculator = async (index, id, data) => {
   const options = {
     method: 'PUT',
     body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const deleteSettingCalculator = async (endpoint) => {
+  const options = {
+    method: 'DELETE',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);

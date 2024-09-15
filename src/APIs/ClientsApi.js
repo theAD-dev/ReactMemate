@@ -21,6 +21,15 @@ export const createNewBusinessClient = async (data) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const restoreClient = async (id) => {
+  const endpoint = `/clients/restore/${id}/`;
+  const options = {
+    method: 'POST'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const getClientById = async (id) => {
   const endpoint = `/clients/${id}/`;
   const options = {

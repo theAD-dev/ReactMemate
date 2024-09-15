@@ -3,7 +3,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Building, GeoAlt, Globe, Person } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
-import { Skeleton } from 'primereact/skeleton';
 
 import style from './clients.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
