@@ -499,7 +499,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
             const calculators = merge?.calculators?.map(cal => {
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
-                return { label: subindexMap[findData?.index], total: findData?.total, id: findData?.id, calculator: findData?.calculator };
+                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, id: findData?.id, calculator: findData?.calculator };
             });
 
             return { ...merge, alias, calculators };
