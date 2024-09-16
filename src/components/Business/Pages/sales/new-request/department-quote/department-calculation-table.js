@@ -471,7 +471,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     }, [rows, xero_tax]);
 
     useEffect(() => {
-        if (preMerges && preMerges?.length) setPreExistMerges(preMerges)
+        setPreExistMerges(preMerges)
     }, [preMerges])
 
     useEffect(() => {
