@@ -26,7 +26,6 @@ const CustomOption = (props) => {
 };
 
 const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges, setMergeDeletedItems }) => {
-  const [isDiscountDisplayed, setIsDiscountDisplayed] = useState(true);
   const [paymentCollection, setPaymentCollection] = useState('');
   const [selectedManagers, setSelectedManagers] = useState([]);
   const [editedReference, setEditedReference] = useState('');

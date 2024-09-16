@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
 import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
 
-import { deleteMergeQuote, getCalculationByReferenceId, getDepartments, getMergeItemsByUniqueId, getQuoteByUniqueId } from '../../../../../../APIs/CalApi';
+import { getCalculationByReferenceId, getDepartments } from '../../../../../../APIs/CalApi';
 import SelectComponent from './select-component';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import './select-component.css';
@@ -514,10 +514,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     useEffect(() => {
         if (departments?.length) {
             const keyIndexMap = {};
-            const reformattedMerges = merges.map((merge, index) => {
+            merges?.forEach((merge, index) => {
                 const alias = romanize(index + 1);
-
-                merge?.calculators?.map(cal => {
+                merge?.calculators?.forEach(cal => {
                     keyIndexMap[cal.calculator] = alias;
                 });
             });
