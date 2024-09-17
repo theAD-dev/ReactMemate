@@ -25,8 +25,14 @@ import ScheduleUpdate from './schedule-update';
 import { ProjectCardApi, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
+  const navigate = useNavigate();
+  const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cardData, setCardData] = useState(null);
   const [isEditingReference, setIsEditingReference] = useState(false);
@@ -65,6 +71,21 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
       console.error('Error fetching project card data:', error);
     } finally {
       setIsFetching(false);
+    }
+  }
+
+  const duplicateSale = async () => {
+    try {
+      if (!projectId) return toast.error("Project id not found");
+      setIsDuplicating(true);
+      const data = await fetchduplicateData(projectId);
+      navigate('/sales');
+      toast.success('Sale has been successfully duplicated');
+    } catch (error) {
+      console.error('Error is duplicating:', error);
+      toast.error(`Failed to duplicate sale. Please try again.`);
+    } finally {
+      setIsDuplicating(false);
     }
   }
 
@@ -512,8 +533,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <Row className='projectCardactionBut'>
               <Col className='actionLeftSide'>
                 <Button className='declineAction'><XCircle size={20} color='#912018' /> Decline Order</Button>
-                <Button className='duplicateAction'><Files size={20} color='#0A4766' /> Duplicate</Button>
-                <Button className='sendBackAction'><Reply size={20} color='#344054' /> Send Back to Sales</Button>
+                <Button disabled={isDuplicating} className='duplicateAction' onClick={duplicateSale}>
+                  <Files size={20} color='#0A4766' className='me-1' />
+                  <span style={{ position: 'relative', top: '2px' }}>Duplicate</span> {isDuplicating && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '6px' }} />}
+                </Button>
+                <Button disabled={!cardData?.can_be_return} className='sendBackAction'><Reply size={20} color='#344054' opacity={!cardData?.can_be_return ? .5 : 1} /> Send Back to Sales</Button>
               </Col>
               <Col className='actionRightSide'>
                 <Button className='InvoiceAction InvoiceActive'>Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>

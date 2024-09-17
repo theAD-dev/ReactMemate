@@ -14,7 +14,7 @@ export const fetchInvoices = async (limit, offset) => {
 
   try {
     // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/invoices`);
+    const url = new URL(`${API_BASE_URL}/invoices/`);
     url.searchParams.append("limit", limit);
     url.searchParams.append("offset", offset);
 

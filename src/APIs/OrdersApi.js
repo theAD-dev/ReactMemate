@@ -14,7 +14,7 @@ export const fetchOrders = async (limit, offset) => {
 
   try {
     // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/orders`);
+    const url = new URL(`${API_BASE_URL}/orders/`);
     url.searchParams.append("limit", limit);
     url.searchParams.append("offset", offset);
 

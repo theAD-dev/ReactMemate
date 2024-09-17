@@ -23,7 +23,7 @@ export const getIndustriesList = async () => {
   
 
   export const readIndustry = async (id) => {
-    const endpoint = `/references/clients/industries/${id}`;
+    const endpoint = `/references/clients/industries/${id}/`;
     const options = {
       method: 'GET',
 
@@ -36,7 +36,7 @@ export const getIndustriesList = async () => {
   
   export const updateIndustry = async (id,data) => {
 
-    const endpoint = `/references/clients/industries/${id}`;
+    const endpoint = `/references/clients/industries/${id}/`;
     const options = {
       method: 'PUT',
       body: data
@@ -49,7 +49,7 @@ export const getIndustriesList = async () => {
 
   export const deleteIndustry = async (id,data) => {
 
-    const endpoint = `/references/clients/industries/${id}`;
+    const endpoint = `/references/clients/industries/${id}/`;
     const options = {
       method: 'DELETE',
       body: data
@@ -84,7 +84,7 @@ export const getCategoriesList = async () => {
   
 
   export const readCategories = async (id) => {
-    const endpoint = `/references/clients/categories/${id}`;
+    const endpoint = `/references/clients/categories/${id}/`;
     const options = {
       method: 'GET',
 
@@ -97,7 +97,7 @@ export const getCategoriesList = async () => {
   
   export const updateCategories = async (id,data) => {
 
-    const endpoint = `/references/clients/categories/${id}`;
+    const endpoint = `/references/clients/categories/${id}/`;
     const options = {
       method: 'PUT',
       body: data
@@ -109,7 +109,7 @@ export const getCategoriesList = async () => {
 
   export const deleteCategories = async (id,data) => {
 
-    const endpoint = `/references/clients/categories/${id}`;
+    const endpoint = `/references/clients/categories/${id}/`;
     const options = {
       method: 'DELETE',
       body: data

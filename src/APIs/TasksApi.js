@@ -42,7 +42,7 @@ export const fetchTasksRead = async (taskId) => {
 
   try {
     // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/tasks/${taskId}`);
+    const url = new URL(`${API_BASE_URL}/tasks/${taskId}/`);
 
     const response = await fetch(url, requestOptions);
     const data = await response.json();
@@ -69,7 +69,7 @@ export const fetchTasksUpdate= async (mainData,taskId) => {
 
   try {
     // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/tasks/update/${taskId}`);
+    const url = new URL(`${API_BASE_URL}/tasks/update/${taskId}/`);
 
     const response = await fetch(url, requestOptions);
     const data = await response.json();
@@ -96,7 +96,7 @@ export const partialsTasksUpdate= async (taskId, data) => {
   };
 
   try {
-    const url = new URL(`${API_BASE_URL}/tasks/update/${taskId}`);
+    const url = new URL(`${API_BASE_URL}/tasks/update/${taskId}/`);
     const response = await fetch(url, requestOptions);
     const data = await response.json();
     return data;
@@ -197,7 +197,7 @@ export const fetchTasksDelete = async (taskId) => {
 
   try {
     // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/tasks/delete/${taskId}`);
+    const url = new URL(`${API_BASE_URL}/tasks/delete/${taskId}/`);
 
     const response = await fetch(url, requestOptions);
     if (response.ok) 
@@ -231,7 +231,7 @@ export const TaskCompleteJob = async (taskId, finished) => {
   };
 
   try {
-    const url = new URL(`${API_BASE_URL}/tasks/complete/${taskId}`);
+    const url = new URL(`${API_BASE_URL}/tasks/complete/${taskId}/`);
     const response = await fetch(url, requestOptions);
     const data = await response.json();
     return data;

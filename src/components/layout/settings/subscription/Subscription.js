@@ -63,8 +63,8 @@ const Subscription = () => {
                           </div>
                           <div className="progressSubsIn">
                             <h4>Business Subscription </h4>
-                            <div class="progressWrapMain">
-                              <div class="progressWrapSubs">
+                            <div className="progressWrapMain">
+                              <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-businessBar"
                                   style={{ width: "100%" }}
@@ -84,8 +84,8 @@ const Subscription = () => {
                           </div>
                           <div className="progressSubsIn">
                             <h4>Company Users </h4>
-                            <div class="progressWrapMain">
-                              <div class="progressWrapSubs">
+                            <div className="progressWrapMain">
+                              <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-companyBar"
                                   style={{ width: "40%" }}
@@ -112,8 +112,8 @@ const Subscription = () => {
                           </div>
                           <div className="progressSubsIn">
                             <h4>Work Subscription</h4>
-                            <div class="progressWrapMain">
-                              <div class="progressWrapSubs">
+                            <div className="progressWrapMain">
+                              <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-WorkBar"
                                   style={{ width: "5%" }}
@@ -139,8 +139,8 @@ const Subscription = () => {
                           </div>
                           <div className="progressSubsIn">
                             <h4>Mobile App Users</h4>
-                            <div class="progressWrapMain">
-                              <div class="progressWrapSubs">
+                            <div className="progressWrapMain">
+                              <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-appBar"
                                   style={{ width: "1%" }}
@@ -165,8 +165,8 @@ const Subscription = () => {
                           </div>
                           <div className="progressSubsIn">
                             <h4>Locations</h4>
-                            <div class="progressWrapMain">
-                              <div class="progressWrapSubs">
+                            <div className="progressWrapMain">
+                              <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-locationsBar"
                                   style={{ width: "100%" }}

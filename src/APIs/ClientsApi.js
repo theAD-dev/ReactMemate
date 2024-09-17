@@ -127,8 +127,44 @@ export const clientOrderHistory = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const markeMainAddress = async (id) => {
+  const endpoint = `/clients/address/${id}/main`;
+  const options = {
+    method: 'PUT',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const markeMainContact = async (id) => {
+  const endpoint = `/clients/contact-persons/${id}/main`;
+  const options = {
+    method: 'PUT',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const deleteClient = async (id) => {
   const endpoint = `/clients/delete/${id}/`;
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const deleteContactPerson = async (id) => {
+  const endpoint = `/clients/contact-persons/${id}/delete/`;
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const deleteAddress = async (id) => {
+  const endpoint = `/clients/address/${id}/delete/`;
   const options = {
     method: 'DELETE',
   };

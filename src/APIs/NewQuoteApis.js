@@ -93,7 +93,7 @@ export const newQuoteClientListids = async (id) => {
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}/clients/${id}`, requestOptions);
+    const response = await fetch(`${API_BASE_URL}/clients/${id}/`, requestOptions);
     const result = await response.json();
     return result; // Return the result if needed
   } catch (error) {
@@ -117,7 +117,7 @@ export const SearchClientList = async (query) => {
   };
 
   try {
-    const response = await fetch(`${API_BASE_URL}/clients/?name=${query}`, requestOptions);
+    const response = await fetch(`${API_BASE_URL}/clients/?name=${query}/`, requestOptions);
     const result = await response.json();
     return result; // Return the result if needed
   } catch (error) {

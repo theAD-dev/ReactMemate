@@ -8,10 +8,12 @@ import BusinessClientEdit from '../business-client-edit/business-client-edit'
 import style from './business-client.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import { useQuery } from '@tanstack/react-query';
-import { getClientIndustries } from '../../../../../APIs/ClientsApi';
+import { getClientIndustries, markeMainAddress, markeMainContact } from '../../../../../APIs/ClientsApi';
 import DeleteClient from '../delete-client';
 import { Tag } from 'primereact/tag';
 import Restore from '../restore-client';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
 
 const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
@@ -55,7 +57,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           </div>
           {
             isEdit ? <BusinessClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
-              : <ViewSection client={client} industries={industriesQuery?.data} />
+              : <ViewSection client={client} industries={industriesQuery?.data} refetch={refetch} />
           }
         </div>
 
@@ -79,7 +81,8 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   )
 }
 
-const ViewSection = ({ client, industries }) => {
+const ViewSection = ({ client, industries, refetch }) => {
+  const [isMainLoading, setIsMainLoading] = useState(null);
   const payments = [
     { value: 1, label: "COD" },
     { value: 0, label: "Prepaid" },
@@ -89,6 +92,39 @@ const ViewSection = ({ client, industries }) => {
   ]
   let clientIndustry = industries?.find((industry) => industry.id === client?.industry)
   let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
+
+  const markContactPersonMain = async(id) => {
+    try {
+      if (!id) return toast.error("Id not found");
+      setIsMainLoading(id);
+
+      const data = await markeMainContact(id);
+      refetch();
+      toast.success('Contact person has been successfully set as the primary contact');
+    } catch (error) {
+      console.error('Error is setting primary contact:', error);
+      toast.error(`Failed to set primary contact. Please try again.`);
+    } finally {
+      setIsMainLoading(null);
+    }
+  }
+
+  const markAddressMain = async(id) => {
+    try {
+      if (!id) return toast.error("Id not found");
+      setIsMainLoading(id);
+
+      const data = await markeMainAddress(id);
+      refetch();
+      toast.success('Address has been successfully set as the primary address');
+    } catch (error) {
+      console.error('Error is setting primary address:', error);
+      toast.error(`Failed to set primary address. Please try again.`);
+    } finally {
+      setIsMainLoading(null);
+    }
+  }
+
   return (
     <>
       <div className={clsx(style.box)}>
@@ -164,8 +200,11 @@ const ViewSection = ({ client, industries }) => {
         client?.contact_persons?.map((contact) => (
           <div key={contact.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
-              <div className={clsx(style.iconBox)}>
-                <StarFill color={contact.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
+              <div className={clsx(style.iconBox, 'cursor-pointer')} onClick={() => markContactPersonMain(contact.id)}>
+                {
+                  (isMainLoading === contact.id) ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+                    : <StarFill color={contact.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
+                }
               </div>
             </div>
             <Row>
@@ -224,8 +263,11 @@ const ViewSection = ({ client, industries }) => {
         client?.addresses?.map((address) => (
           <div key={address.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
-              <div className={clsx(style.iconBox)}>
-                <StarFill color={address.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
+              <div className={clsx(style.iconBox, 'cursor-pointer')} onClick={()=> markAddressMain(address.id)}>
+                {
+                  (isMainLoading === address.id) ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+                    : <StarFill color={address.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
+                }
               </div>
               <div className={clsx(style.iconBox)}>
                 <Link to={`http://maps.google.com/?q=${address.address}`} target='_blank'><img src={mapicon} alt='map' /></Link>
