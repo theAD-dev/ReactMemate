@@ -15,7 +15,9 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
   const navigate = useNavigate();
   const observerRef = useRef(null);
   const [expenses, setExpenses] = useState([]);
+  console.log('expenses: ', expenses);
   const [page, setPage] = useState(1);
+  
   const [sort, setSort] = useState({ sortField: null, sortOrder: null });
   const [hasMoreData, setHasMoreData] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -89,6 +91,23 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
     setSort({ sortField, sortOrder })
   };
 
+  const StatusBody = (rowData) => {
+   
+    return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
+        <div className={`styleGrey01 exstatus paid${rowData.paid}`}>
+         
+     
+        {rowData.paid === true ? (
+            <><span className="dots"></span> Paid </>
+          ) : (
+            <>Not Paid <span className="dots"></span></>
+          )}
+           
+        </div>
+    </div>
+}
+
+
   return (
     <DataTable ref={ref} value={expenses} scrollable selectionMode={'checkbox'} removableSort
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
@@ -111,7 +130,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
       <Column field='order.number' header="Interval/Order" style={{ minWidth: '130px' }}></Column>
       <Column field="department.name" header="Department" style={{ minWidth: '217px' }}></Column>
       <Column field='account_code.code' header="Account Code" body={accountCodeBodyTemplate} style={{ minWidth: '214px' }}></Column>
-      <Column field='paid' header="Status" bodyClassName={"text-center"} style={{ minWidth: '123px' }}></Column>
+      <Column field='paid' body={StatusBody} header="Status" bodyClassName={"text-center"} style={{ minWidth: '123px' }}></Column>
     </DataTable>
   )
 })

@@ -306,9 +306,9 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
                             className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
 
-                        <Row>
+                        <Row className={style.edidcodtUpdate}>
                             <Col>
-                                <div className='d-flex gap-2 justify-content-between align-items-center'>
+                            <div className={`d-flex gap-2 justify-content-between align-items-center `}>
                                     <div className='left'>
                                         <label>Cost</label>
                                         <InputNumber className={clsx(style.inputNumber)} prefix="$" value={parseFloat(tempCalculator?.cost || 0)}

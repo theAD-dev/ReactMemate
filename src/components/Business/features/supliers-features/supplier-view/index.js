@@ -138,11 +138,11 @@ const ViewSection = ({ data }) => {
         {
             data?.contact_persons?.map((contact) => (
                 <div key={contact.id} className={clsx(style.box)}>
-                    <div className={clsx(style.iconBoxsContainer)}>
+                    {/* <div className={clsx(style.iconBoxsContainer)}>
                         <div className={clsx(style.iconBox)}>
                             <StarFill color={contact.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
                         </div>
-                    </div>
+                    </div> */}
                     <Row>
                         <Col sm={6}>
                             <label className={clsx(style.label)}>Full Name</label>
@@ -198,9 +198,9 @@ const ViewSection = ({ data }) => {
             data?.addresses?.map((address) => (
                 <div key={address.id} className={clsx(style.box)}>
                     <div className={clsx(style.iconBoxsContainer)}>
-                        <div className={clsx(style.iconBox)}>
+                        {/* <div className={clsx(style.iconBox)}>
                             <StarFill color={address.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
-                        </div>
+                        </div> */}
                         <div className={clsx(style.iconBox)}>
                             <Link to={`http://maps.google.com/?q=${address.address}`} target='_blank'><img src={mapicon} alt='map' /></Link>
                         </div>

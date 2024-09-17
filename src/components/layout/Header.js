@@ -49,12 +49,12 @@ import EmailTemplates from "./settings/templates/EmailTemplates";
 import EmailSignatures from "./settings/templates/EmailSignatures";
 import ProposalTemplates from "./settings/templates/ProposalTemplates";
 import CompanyEthos from "./settings/companyethos/CompanyEthos";
-import Integrations from "./settings/Integrations";
+import Integrations from "./settings/integrations";
 import RecurringQuotes from "./settings/quotesjobs/RecurringQuotes ";
 import RecurringJobs from "./settings/quotesjobs/RecurringJobs";
 import TermsandConditions from "./settings/termsandconditions/TermsandConditions";
 import TermsConditionsInvoice from "./settings/termsandconditions/TermsConditionsInvoice";
-import Industries from "./settings/customerssettings/Industries";
+import Industries from "./settings/integrations/index";
 import CustomersDiscountCategory from "./settings/customerssettings/CustomersDiscountCategory";
 import DepartmentTurnoverPlan from "./settings/accounting/DepartmentTurnoverPlan";
 import ExpensesAccount from "./settings/accounting/ExpensesAccount";
@@ -66,7 +66,7 @@ import Dashboard from "../Work/Pages/Dashboard";
 import Tasks from "../Work/Pages/tasks/Tasks";
 import News from "../Work/Pages/News";
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
-import Item2 from "./settings/projectstatus/Item2";
+import OutgoingEmails from "./settings/projectstatus/outgoing-emails";
 import NewClient from "../Business/Pages/sales/new-request/new-client";
 import ClientLayout from "../Business/Pages/sales/new-request";
 import IndividualClientInformation from "../Business/Pages/sales/new-request/individual-client-information";
@@ -594,8 +594,8 @@ const Header = ({ onClick }) => {
             element={<ProjectStatus />}
           />
           <Route
-            path="/settings/projectstatus/item2"
-            element={<Item2 />}
+            path="/settings/projectstatus/outgoing-emails"
+            element={<OutgoingEmails />}
           />
 
           <Route
