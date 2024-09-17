@@ -212,7 +212,7 @@ function MyProfile() {
                             )}
                           </strong>
                         ) : (
-                          <div class="upload-btn-wrapper">
+                          <div className="upload-btn-wrapper">
                               <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
                           </div>
                         )}

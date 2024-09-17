@@ -3,8 +3,10 @@ import { restoreClient } from '../../../../../APIs/ClientsApi';
 import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Restore = ({ id, refetch }) => {
+    const navigate = useNavigate();
     const [isRestoring, setIsRestoring] = useState(false);
 
     const restorClient = async (id) => {
@@ -14,7 +16,7 @@ const Restore = ({ id, refetch }) => {
             setIsRestoring(true);
             const res = await restoreClient(id);
             if (res?.detail) {
-                refetch();
+                navigate('/clients');
                 toast.success(`Client restored successfully`);
             }
             else throw new Error("Failed to restore client.");

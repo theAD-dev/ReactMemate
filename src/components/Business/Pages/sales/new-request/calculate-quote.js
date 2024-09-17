@@ -142,7 +142,7 @@ const CalculateQuote = () => {
                 toast.success(`Calculations updated successfully.`);
             }
 
-            newRequestQuery.refetch();
+            navigate(`/sales`)
             
         } else {
             result = await newRequestMutation.mutateAsync(payload);
@@ -170,18 +170,10 @@ const CalculateQuote = () => {
                     }
                 });
                 toast.success(`Calculations and new merge items created successfully.`);
-                if (unique_id) {
-                    navigate(`/sales/quote-calculation/${unique_id}`);
-                } else {
-                    navigate(`/sales`)
-                }
+                navigate(`/sales`)
             } else {
                 toast.success(`Calculations created successfully.`);
-                if (unique_id) {
-                    navigate(`/sales/quote-calculation/${unique_id}`);
-                } else {
-                    navigate(`/sales`)
-                }
+                navigate(`/sales`)
             }
         }
         setIsLoading(false);

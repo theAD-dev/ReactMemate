@@ -64,7 +64,7 @@ export const createProjectStatus = async (data) => {
 }
 
 export const updateProjectStatusById = async (id, data) => {
-  const endpoint = `/settings/project-statuses/update/${id}`;
+  const endpoint = `/settings/project-statuses/update/${id}/`;
   const options = {
     method: 'PUT',
     body: data
@@ -74,7 +74,7 @@ export const updateProjectStatusById = async (id, data) => {
 }
 
 export const deleteProjectStatusById = async (id) => {
-  const endpoint = `/settings/project-statuses/delete/${id}`;
+  const endpoint = `/settings/project-statuses/delete/${id}/`;
   const options = {
     method: 'DELETE',
   };

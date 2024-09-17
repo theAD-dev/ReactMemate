@@ -14,7 +14,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     phone: client?.phone,
     
     category: client?.category?.id || "43",
-    payment_terms: client?.payment_terms || "",
+    payment_terms: client?.payment_terms,
 
     description: client?.description,
     address: {

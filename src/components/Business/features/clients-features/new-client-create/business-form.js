@@ -24,7 +24,7 @@ const schema = yup.object({
   abn: yup.string().required('ABN is required'),
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  website: yup.string().url('Invalid URL').required('URL is required'),
+  // website: yup.string().url('Invalid URL').required('URL is required'),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
 
@@ -52,8 +52,6 @@ const schema = yup.object({
       is_main: yup.boolean().default(false).required('Main contact selection is required'),
     })
   ).required(),
-
-  description: yup.string(),
 
 }).required();
 
@@ -242,7 +240,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
                   style={{ height: '46px' }}
                   value={field.value}
-                  placeholder="COD"
+                  placeholder="Select payment terms"
                 />
               )}
             />
@@ -260,7 +258,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   {...field}
                   options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
                     value: category.id,
-                    label: category.name
+                    label: `${category.name} - ${category.value}%`
                   }))) || []}
                   onChange={(e) => {
                     field.onChange(e.value);
@@ -270,7 +268,6 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   value={field.value}
                   loading={categoriesQuery?.isFetching}
                   placeholder="Select a category"
-                  filter
                 />
               )}
             />
@@ -369,7 +366,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
               <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                   <div className="d-flex flex-column gap-1 mb-4">
-                    <label className={clsx(styles.lable)}>Location Name (Optional)</label>
+                    <label className={clsx(styles.lable)}>Location Name</label>
                     <IconField>
                       <InputIcon>{errors.addresses?.[index]?.title && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
                       <InputText {...register(`addresses.${index}.title`)} className={clsx(styles.inputText, { [styles.error]: errors.addresses?.[index]?.title })} placeholder='Enter location name' />

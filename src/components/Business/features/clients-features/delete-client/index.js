@@ -13,8 +13,8 @@ const DeleteClient = ({ id }) => {
     const deleteMutation = useMutation({
         mutationFn: (data) => deleteClient(id),
         onSuccess: () => {
-            toast.success(`Client deleted successfully`);
             navigate('/clients');
+            toast.success(`Client deleted successfully`);
         },
         onError: (error) => {
             toast.error(`Failed to delete client. Please try again.`);

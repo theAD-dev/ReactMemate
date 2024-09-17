@@ -37,7 +37,6 @@ const schema = yup
             state: yup.number().typeError("State must be a number").required("State is required"),
             postcode: yup.string().required("Postcode is required")
         }),
-        description: yup.string(),
     })
     .required();
 
@@ -153,7 +152,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
                                     style={{ height: '46px' }}
                                     value={field.value}
-                                    placeholder="COD"
+                                    placeholder="Select payment terms"
                                 />
                             )}
                         />
@@ -171,7 +170,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     {...field}
                                     options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
                                         value: category.id,
-                                        label: category.name
+                                        label: `${category.name} - ${category.value}%`
                                     }))) || []}
                                     onChange={(e) => {
                                         field.onChange(e.value);
@@ -181,7 +180,6 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={categoriesQuery?.isFetching}
                                     placeholder="Select a category"
-                                    filter
                                 />
                             )}
                         />
@@ -194,7 +192,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
             <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Location Name (Optional)</label>
+                        <label className={clsx(styles.lable)}>Location Name</label>
                         <IconField>
                             <InputIcon>{errors.address?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("address.title")} className={clsx(styles.inputText, { [styles.error]: errors.address?.title })} placeholder='Enter location name' />

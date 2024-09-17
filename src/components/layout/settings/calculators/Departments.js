@@ -814,7 +814,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
             <Dialog visible={visible} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
                 <div className="d-flex flex-column">
                     <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Department name</p>
-                    <InputText value={department} keyfilter={"alphanum"} onChange={(e) => setDepartment(e.target.value)} className={style.inputBox} />
+                    <InputText value={department} onChange={(e) => setDepartment(e.target.value)} className={style.inputBox} />
                 </div>
             </Dialog>
         </>
@@ -891,7 +891,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
             <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
                 <div className="d-flex flex-column">
                     <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Sub Department name</p>
-                    <InputText value={subDepartment} keyfilter={"alphanum"} onChange={(e) => setSubDepartment(e.target.value)} className={style.inputBox} />
+                    <InputText value={subDepartment} onChange={(e) => setSubDepartment(e.target.value)} className={style.inputBox} />
                 </div>
             </Dialog>
         </>
