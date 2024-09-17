@@ -56,6 +56,7 @@ function MyProfile() {
     mutationFn: (data) => updateProfile(data, photo),
 
     onSuccess: () => {
+      window.location.reload();
       setIsEditingGroup(false);
     },
   });
