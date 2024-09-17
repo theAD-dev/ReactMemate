@@ -258,7 +258,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   {...field}
                   options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
                     value: category.id,
-                    label: category.name
+                    label: `${category.name} - ${category.value}%`
                   }))) || []}
                   onChange={(e) => {
                     field.onChange(e.value);
