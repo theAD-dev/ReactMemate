@@ -18,13 +18,13 @@ import AvatarImg from "../../../assets/images/img/Avatar.png";
 import FileUploader from "../../../ui/file-uploader/file-uploader";
 
 const schema = yup.object().shape({
-  full_name: yup.string().required("Full Name is required"),
+  first_name: yup.string().required("First Name is required"),
+  last_name: yup.string().required("Last Name is required"),
   email: yup
     .string()
     .email("Invalid email")
     .required("Main Company Email is required"),
   phone: yup.string(),
-  photo: yup.mixed().nullable(),
 });
 
 function MyProfile() {
@@ -52,17 +52,17 @@ function MyProfile() {
     },
   });
 
-  console.log("data: ", data);
   const mutation = useMutation({
     mutationFn: (data) => updateProfile(data, photo),
 
     onSuccess: () => {
+      window.location.reload();
       setIsEditingGroup(false);
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 
   const onSubmit = (data) => {
+    console.log("data: ", data);
     mutation.mutate({ ...data });
   };
 
@@ -111,8 +111,8 @@ function MyProfile() {
                   <ul>
                     <li
                       className={`${isEditingGroup
-                          ? `${styles.editBorderWrap}`
-                          : `${styles.viewBorderWrap}`
+                        ? `${styles.editBorderWrap}`
+                        : `${styles.viewBorderWrap}`
                         }`}
                     >
                       <div className={styles.editinfo}>
@@ -122,9 +122,8 @@ function MyProfile() {
                         ) : (
                           <>
                             <div
-                              className={`inputInfo ${
-                                errors.first_name ? "error-border" : ""
-                              }`}
+                              className={`inputInfo ${errors.first_name ? "error-border" : ""
+                                }`}
                             >
                               <input
                                 {...register("first_name")}
@@ -151,8 +150,8 @@ function MyProfile() {
                     </li>
                     <li
                       className={`${isEditingGroup
-                          ? `${styles.editBorderWrap}`
-                          : `${styles.viewBorderWrap}`
+                        ? `${styles.editBorderWrap}`
+                        : `${styles.viewBorderWrap}`
                         }`}
                     >
                       <div className={styles.editinfo}>
@@ -162,9 +161,8 @@ function MyProfile() {
                         ) : (
                           <>
                             <div
-                              className={`inputInfo ${
-                                errors.last_name ? "error-border" : ""
-                              }`}
+                              className={`inputInfo ${errors.last_name ? "error-border" : ""
+                                }`}
                             >
                               <input
                                 {...register("last_name")}
@@ -191,8 +189,8 @@ function MyProfile() {
                     </li>
                     <li
                       className={`${isEditingGroup
-                          ? `${styles.editBorderWrap}`
-                          : `${styles.viewBorderWrap}`
+                        ? `${styles.editBorderWrap}`
+                        : `${styles.viewBorderWrap}`
                         }`}
                     >
                       <div className={styles.editinfo}>
@@ -213,7 +211,7 @@ function MyProfile() {
                           </strong>
                         ) : (
                           <div className="upload-btn-wrapper">
-                              <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
+                            <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
                           </div>
                         )}
                       </div>
@@ -221,14 +219,14 @@ function MyProfile() {
                       {!isEditingGroup ? (
                         <></>
                       ) : (
-                       ''
+                        ''
                       )}
                     </li>
 
                     <li
                       className={`${isEditingGroup
-                          ? `${styles.editBorderWrap}`
-                          : `${styles.viewBorderWrap}`
+                        ? `${styles.editBorderWrap}`
+                        : `${styles.viewBorderWrap}`
                         }`}
                     >
                       <div className={styles.editinfo}>
@@ -272,8 +270,8 @@ function MyProfile() {
                     </li>
                     <li
                       className={`${isEditingGroup
-                          ? `${styles.editBorderWrap}`
-                          : `${styles.viewBorderWrap}`
+                        ? `${styles.editBorderWrap}`
+                        : `${styles.viewBorderWrap}`
                         }`}
                     >
                       <div className={styles.editinfo}>
@@ -319,8 +317,8 @@ function MyProfile() {
                     </li>
                     <li
                       className={`${isEditingGroup
-                          ? `${styles.editBorderWrap}`
-                          : `${styles.viewBorderWrap}`
+                        ? `${styles.editBorderWrap}`
+                        : `${styles.viewBorderWrap}`
                         }`}
                     >
                       <div className={styles.editinfo}>
@@ -388,8 +386,7 @@ function MyProfile() {
   );
 }
 
-function FileUpload({ photo, setPhoto,data }) {
-  console.log('photo: ', photo);
+function FileUpload({ photo, setPhoto, data }) {
   const [show, setShow] = useState(false);
 
   return (
@@ -425,37 +422,36 @@ function FileUpload({ photo, setPhoto,data }) {
             style={{
               width: "40px",
               height: "40px",
-              padding: "10px",
               border: "1px solid #EAECF0",
               background: "#fff",
               borderRadius: "4px",
               marginBottom: "16px",
             }}
           >
-              {photo || data.photo ? (
-      <div
-        style={{
-          width: '64px',
-          height: '64px',
-          borderRadius: '50%',
-          overflow: 'hidden',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <img
-          src={photo || data.photo} 
-          width={76}
-          alt="Uploaded Photo"
-        />
-      </div>
-    ) : (
-      <Upload />
-    )}
+            {data.photo ? (
+              <div
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <img
+                  src={data.photo}
+                  className="w-100"
+                  alt="Uploaded Photo"
+                />
+              </div>
+            ) : (
+              <Upload />
+            )}
 
 
-         
+
           </button>
         )}
         <p className="mb-0" style={{ color: "#475467", fontSize: "14px" }}>
