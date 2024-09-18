@@ -26,31 +26,31 @@ const schema = yup.object({
   abn: yup.string().required('ABN is required'),
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   services: yup.string().required('Services is required'),
-  // note: yup.string().required('Note is required'),
+  note: yup.string().required('Note is required'),
 
-  // addresses: yup.array().of(
-  //   yup.object({
-  //     id: yup.string(),
-  //     title: yup.string(),
-  //     country: yup.string().required('Country is required'),
-  //     address: yup.string().required('Address is required'),
-  //     city: yup.number().typeError("City must be a number").required("City is required"),
-  //     state: yup.number().typeError("State must be a number").required("State is required"),
-  //     postcode: yup.string().required('Postcode is required'),
-  //     is_main: yup.boolean().default(false).required('Main address selection is required'),
-  //   })
-  // ).required(),
+  addresses: yup.array().of(
+    yup.object({
+      id: yup.string(),
+      title: yup.string(),
+      country: yup.string().required('Country is required'),
+      address: yup.string().required('Address is required'),
+      city: yup.number().typeError("City must be a number").required("City is required"),
+      state: yup.number().typeError("State must be a number").required("State is required"),
+      postcode: yup.string().required('Postcode is required'),
+      is_main: yup.boolean().default(false).required('Main address selection is required'),
+    })
+  ).required(),
 
-  // contact_persons: yup.array().of(
-  //   yup.object({
-  //     position: yup.string().required('Position is required'),
-  //     firstname: yup.string().required('First name is required'),
-  //     lastname: yup.string().required('Last name is required'),
-  //     email: yup.string().email('Invalid email').required('Email is required'),
-  //     phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-  //     is_main: yup.boolean().default(false).required('Main contact selection is required'),
-  //   })
-  // ).required(),
+  contact_persons: yup.array().of(
+    yup.object({
+      position: yup.string().required('Position is required'),
+      firstname: yup.string().required('First name is required'),
+      lastname: yup.string().required('Last name is required'),
+      email: yup.string().email('Invalid email').required('Email is required'),
+      phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+      is_main: yup.boolean().default(false).required('Main contact selection is required'),
+    })
+  ).required(),
 
 }).required();
 
@@ -209,14 +209,10 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
           <div className="d-flex flex-column gap-1">
             <label className={clsx(styles.lable)}>Notes</label>
             <IconField>
-              {/* <InputIcon style={{ top: '75%' }}>{errors.note && <img src={exclamationCircle} alt='error-icon' />}</InputIcon> */}
-              <InputTextarea {...register("note")} rows={4} cols={30} className={clsx(styles.inputText, 
-                // { [styles.error]: errors.note }
-              )
-              } 
-                style={{ resize: 'none' }} placeholder='Enter a note...' />
+              <InputIcon style={{ top: '75%' }}>{errors.note && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
+              <InputTextarea {...register("note")} rows={4} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.note })} style={{ resize: 'none' }} placeholder='Enter a note...' />
             </IconField>
-            {/* {errors.note && <p className="error-message">{errors.note.message}</p>} */}
+            {errors.note && <p className="error-message">{errors.note.message}</p>}
           </div>
         </Col>
       </Row>
