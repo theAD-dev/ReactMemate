@@ -8,9 +8,11 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
 import { Spinner } from 'react-bootstrap';
+import SendQuote from '../../../features/sales-features/send-quote/send-quote';
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
+    const [showQuoteModal, setShowQuoteModal] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [quoteType, setQuoteType] = useState('Standard');
     const [payload, setPayload] = useState({});
@@ -285,6 +287,9 @@ const CalculateQuote = () => {
                     </div>
                 </div>
             </div>
+
+            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} />
+
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
                     <Spinner animation="border" role="status">

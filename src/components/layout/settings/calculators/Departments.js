@@ -440,8 +440,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
             if (tempCalculator?.profit_type === "MRK") {
                 subtotal += (subtotal * margin) / 100;
             } else if (tempCalculator?.profit_type === "MRG") {
-                if (margin >= 100) subtotal *= 1 + (margin / 100);
-                else subtotal = subtotal / (1 - margin / 100);
+                subtotal = subtotal / (1 - margin / 100);
             } else if (tempCalculator?.profit_type === "AMN") {
                 subtotal += margin;
             }
