@@ -9,7 +9,7 @@ import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-foun
 import { ArrowLeftCircle, FilePdf, Files, FileText, InfoCircle, Link45deg, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
-import { getListOfExpenses } from '../../../../../APIs/SuppliersApi';
+import { getSupplierHistory } from '../../../../../APIs/SuppliersApi';
 
 const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected }, ref) => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
       if (sort?.sortOrder === 1) order = `${sort.sortField}`;
       else if (sort?.sortOrder === -1) order = `-${sort.sortField}`;
 
-      const data = await getListOfExpenses(page, limit, searchValue, order);
+      const data = await getSupplierHistory(page, limit, searchValue, order);
       if (page === 1) setExpenses(data.results);
       else {
         if (data?.results?.length > 0)
@@ -109,14 +109,25 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
 
   const CreatedBody = (rowData) => {
    
-    return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
+    return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
         {formatDate(rowData.created)}
     </div>
 }
   const TotalBody = (rowData) => {
    
-    return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-       {(rowData.total).toFixed(2)}
+    return <div className={` show-on-hover ${style.boxBorderRound}`}>
+       $ {(rowData.total).toFixed(2)}
+    </div>
+}
+  const dueDate = (rowData) => {
+   
+    return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
+       {formatDate(rowData.due_date)}
+    </div>
+}
+  const gstbody = (rowData) => {
+    return <div className={` show-on-hover ${style.boxBorderCorner}`} >
+       $ {rowData.gst}
     </div>
 }
 
@@ -150,14 +161,14 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
       onSort={onSort}
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-      <Column field="number" header="Expense ID" frozen sortable style={{ minWidth: '122px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
+      <Column field="number" header="Expense ID" frozen sortable style={{ minWidth: '122px' ,color:'#667085' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
       <Column field="created" body={CreatedBody} header="Date Input" style={{ minWidth: '122px' }} sortable></Column>
-      <Column header="Date Payed" style={{ minWidth: '122px' }} sortable></Column>
-      <Column field="invoice_reference" header="Reference" style={{ minWidth: '606px' }}></Column>
-      <Column header="GST" style={{ minWidth: '107px' }} bodyClassName={"text-end"} sortable></Column>
-      <Column field='total' header="Total" body={TotalBody} bodyClassName={"text-right"} style={{ minWidth: '111px' }} sortable></Column>
+      <Column field='due_date' body={dueDate} header="Date Payed" style={{ minWidth: '122px' }} sortable></Column>
+      <Column field="reference" header="Reference" style={{ minWidth: '606px' }}></Column>
+      <Column field='gst' body={gstbody} header="GST" style={{ minWidth: '107px' }} bodyClassName={"text-end"} sortable></Column>
+      <Column field='total' header="Total" body={TotalBody} bodyClassName={"text-end"} style={{ minWidth: '111px' }} sortable></Column>
       <Column field='order.number' header="Interval/Order" style={{ minWidth: '130px' }}></Column>
-      <Column field="department.name" header="Department" style={{ minWidth: '217px' }}></Column>
+      <Column field="department" header="Department" style={{ minWidth: '217px' }}></Column>
       <Column field='account_code.code' header="Account Code" body={accountCodeBodyTemplate} style={{ minWidth: '214px' }}></Column>
       <Column field='paid' body={StatusBody} header="Status" bodyClassName={"text-center"} style={{ minWidth: '123px' }}></Column>
     </DataTable>

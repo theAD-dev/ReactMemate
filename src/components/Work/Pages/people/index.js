@@ -39,5 +39,4 @@ const PeoplePage = () => {
         </PrimeReactProvider>
     )
 }
-
 export default PeoplePage

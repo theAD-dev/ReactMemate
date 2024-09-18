@@ -1,28 +1,18 @@
+import { fetchAPI } from "./base-api";
 const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
-export const fetchOrders = async (limit, offset) => {
-  const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
-  myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", `application/json`);
-
-  const requestOptions = {
+export const getListOfOrder = async (page, limit, name="", order="", isShowDeleted) => {
+  const offset = (page - 1) * limit;
+  const endpoint = `/orders/`;
+  const options = {
     method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
   };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  if (name) url.searchParams.append("name", name);
+  if (order) url.searchParams.append("ordering", order);
+  if (isShowDeleted) url.searchParams.append('deleted', 1)
 
-  try {
-    // Append the limit and offset parameters to the URL query string
-    const url = new URL(`${API_BASE_URL}/orders/`);
-    url.searchParams.append("limit", limit);
-    url.searchParams.append("offset", offset);
-
-    const response = await fetch(url, requestOptions);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Orders fetch error:', error);
-    throw error;
-  }
-};
+  return fetchAPI(url.toString(), options);
+}

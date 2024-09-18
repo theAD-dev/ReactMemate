@@ -42,7 +42,6 @@ import Users from "../layout/settings/users/Users";
 import MobileApp from "../layout/settings/users/MobileApp";
 import ExistingClients from "../Business/Pages/sales/new-request/existing-clients";
 import SelectClientType from "../Business/Pages/sales/new-request/select-client";
-import Locations from "./settings/Locations";
 import Departments from "../layout/settings/calculators/Departments";
 import JobTemplates from "./settings/templates/JobTemplates";
 import EmailTemplates from "./settings/templates/EmailTemplates";
@@ -86,6 +85,10 @@ import EditTemplates from "./settings/templates/edit-template";
 import EditEmail from "./settings/templates/edit-email";
 import EditSignatures from "./settings/templates/edit-signatures";
 import EditProposal from "./settings/templates/edit-proposal";
+import Headquarter from "./settings/locations/headquarter";
+import InnovationStudio from "./settings/locations/innovation-studio";
+import CreativeHub from "./settings/locations/creative-hub";
+
 
 
 
@@ -545,16 +548,27 @@ const Header = ({ onClick }) => {
               element={<CalculateQuote />}
             />
           </Route>
+           
+           
 
-
-          <Route
-            path="/sales/settings/locations"
-            element={<Locations />}
-          />
           <Route
             path="/settings/calculators/departments"
             element={<Departments />}
           />
+          <Route
+            path="/settings/location/headquarter"
+            element={<Headquarter />}
+          />
+          <Route
+            path="/settings/location/innovation-studio"
+            element={<InnovationStudio />}
+          />
+          <Route
+            path="/settings/location/creative-hub"
+            element={<CreativeHub />}
+          />
+         
+        
           <Route
             path="/settings/templates/job-templates"
             element={<JobTemplates />}

@@ -178,3 +178,55 @@ font-weight: 500;
 line-height: 18px; /* 150% */
 padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px) var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
 }
+
+.inProgressProfit{
+  border-radius: 30px;
+border: 1px solid var(--Success-200, #ABEFC6);
+background: var(--Success-50, #ECFDF3);
+mix-blend-mode: multiply;
+padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px) var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+color: var(--Success-700, #067647);
+text-align: center;
+
+/* Text xs/Medium */
+font-family: Inter;
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 150% */
+
+}
+.completeProfit{
+  border-radius: 30px;
+border: 1px solid var(--Warning-200, #FEDF89);
+background: var(--Warning-50, #FFFAEB);
+mix-blend-mode: multiply;
+padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px) var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+color: var(--Warning-700, #B54708);
+text-align: center;
+
+/* Text xs/Medium */
+font-family: Inter;
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 150% */
+
+}
+.lostProfit{
+  border-radius: 30px;
+  border: 1px solid var(--Error-200, #FECDCA);
+  background: var(--Error-50, #FEF3F2);
+  mix-blend-mode: multiply;
+padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px) var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+color: var(--Warning-700, #B42318);
+text-align: center;
+
+/* Text xs/Medium */
+font-family: Inter;
+font-size: 12px;
+font-style: normal;
+font-weight: 500;
+line-height: 18px; /* 150% */
+
+}

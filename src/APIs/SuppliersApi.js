@@ -39,6 +39,14 @@ export const getSupplierById = async (id) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+export const getSupplierHistory = async (id) => {
+  const endpoint = `/suppliers/history/${id}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
 
 

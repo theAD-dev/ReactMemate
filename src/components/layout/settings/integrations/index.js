@@ -12,6 +12,7 @@ import googleLogo from "../../../../assets/images/icon/googleLogo.png";
 import googleCalLogo from "../../../../assets/images/icon/googleCalLogo.png";
 import googleAnalyticLogo from "../../../../assets/images/icon/googleAnalyticLogo.png";
 import stripHeadLogo from "../../../../assets/images/icon/stripHeadLogo.png";
+import googleReview from "../../../../assets/images/icon/googleReview.png";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -21,6 +22,7 @@ const schema = yup.object().shape({
       secret: yup
         .string()
         .email("Invalid secret address")
+       
         .required("secret is required"),
       public: yup.string().required("public is required"),
     })
@@ -29,7 +31,7 @@ const schema = yup.object().shape({
 const Integrations = () => {
   const [activeTab, setActiveTab] = useState("integrations");
   const [visible, setVisible] = useState(false);
-
+  const [selectedIntegration, setSelectedIntegration] = useState(null);
   const {
     control,
     handleSubmit,
@@ -38,7 +40,7 @@ const Integrations = () => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      keys: [{ secret: "", public: "", commission: "" }],
+      keys: [{ secret: "", public: "", commission: "", link:"" }],
     },
   });
 
@@ -50,6 +52,7 @@ const Integrations = () => {
     {
       id: 1,
       title: "Stripe Settings",
+      method: "stripe",
       content:
         "Integrate Stripe to enable easy online invoice payments via credit card, ensuring quick and secure money transfers to your account.",
       status: false,
@@ -58,6 +61,7 @@ const Integrations = () => {
     {
       id: 2,
       title: "Xero",
+      method: "xero",
       content:
         "Connect Xero to directly send expenses and invoices to your Xero account, simplifying your accounting process.",
       status: true,
@@ -66,14 +70,16 @@ const Integrations = () => {
     {
       id: 3,
       title: "Google Review Link",
+      method: "googlereview",
       content:
         "Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click.",
-      status: true,
+      status: false,
       img: googleLogo,
     },
     {
       id: 4,
       title: "Google Calendar",
+      method: "googlecalendar",
       content: `Connect your company's Google Calendar to automatically send booking notifications to your clients.`,
       status: true,
       img: googleCalLogo,
@@ -81,6 +87,7 @@ const Integrations = () => {
     {
       id: 5,
       title: "Google Analytic Widgets",
+      method: "googleanalytic",
       content: `Add Google Analytics to monitor your website's online performance effortlessly.`,
       status: true,
       img: googleAnalyticLogo,
@@ -106,6 +113,25 @@ const Integrations = () => {
       <div className="d-flex align-items-center gap-2">
         <img src={stripHeadLogo} alt={stripHeadLogo} />
         Stripe Settings
+      </div>
+    </div>
+  );
+  const footerContentgReview = (
+    <div className="d-flex justify-content-end gap-2">
+      <Button className="outline-button" onClick={handleClose}>
+        Cancel
+      </Button>
+      <Button className="solid-button" style={{ width: "132px" }}>
+        Save Details
+      </Button>
+    </div>
+  );
+
+  const headerElementgReview = (
+    <div className={`${style.modalHeader}`}>
+      <div className="d-flex align-items-center gap-2">
+        <img src={googleReview} alt={googleReview} />
+        Google Review Link
       </div>
     </div>
   );
@@ -148,7 +174,7 @@ const Integrations = () => {
                             {item.status === true ? (
                               <></>
                             ) : (
-                              <button onClick={() => setVisible(true)}>
+                              <button onClick={() => { setVisible(true); setSelectedIntegration(item.method); }}>
                                 Connect
                               </button>
                             )}
@@ -164,6 +190,58 @@ const Integrations = () => {
         </div>
       </div>
 
+      {selectedIntegration === 'googlereview' ? (
+         <Dialog
+         visible={visible}
+         modal={true}
+         header={headerElementgReview}
+         footer={footerContentgReview}
+         className={`${style.modal} custom-modal custom-scroll-integration `}
+         onHide={handleClose}
+       >
+           <div className="d-flex flex-column">
+           <form onSubmit={handleSubmit(onSubmit)}>
+             <div className={style.formWrapEmail}>
+               <div className={style.boxGroupList}> 
+                 <div className={`mb-5 ${style.googlereviewBox}`}>
+                   <label htmlFor="keys.link">Link</label>
+                   <Controller
+                     name="keys.link"
+                     control={control}
+                     render={({ field }) => (
+                       <input
+                         {...field}
+                         id="keys.link"
+                         placeholder="http......"
+                         type="text"
+                       />
+                     )}
+                   />
+                 </div>
+                 {errors.keys?.link && <p>{errors.keys.link.message}</p>}
+               </div>
+           
+              
+             </div>
+           </form>
+           <div className={style.tmsCondition}>
+             <ul>
+               <h3 className="mt-0">Step 1: Sign in to Google My Business</h3>
+               <li>
+               Access Your GMB Account: Log in to your Google My Business account. If you haven't set up your business on GMB yet, you'll need to go through the process of claiming and verifying your business listing.
+               </li>
+               <h3>Step 2: Navigate to the "Home" Tab</h3>
+               <li>Dashboard: Once logged in, navigate to the "Home" tab on your GMB dashboard.</li>
+               
+               <h3>Step 3: Get More Reviews</h3>
+               <li>Find the ‘Get more reviews’ Card: In the "Home" tab, look for a card or section titled "Get more reviews". This section provides a direct link that you can share with customers to write reviews.</li>
+               <li>Copy Your Link: Click on the "Share review form" button or similar option to copy your unique link.</li>
+               
+             </ul>
+           </div>
+         </div>
+       </Dialog>
+        ) : (
       <Dialog
         visible={visible}
         modal={true}
@@ -172,7 +250,7 @@ const Integrations = () => {
         className={`${style.modal} custom-modal custom-scroll-integration `}
         onHide={handleClose}
       >
-        <div className="d-flex flex-column">
+          <div className="d-flex flex-column">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={style.formWrapEmail}>
               <div className={style.boxGroupList}>
@@ -219,7 +297,7 @@ const Integrations = () => {
                     control={control}
                     render={({ field }) => (
                       <div className={style.commesionBox}>
-                        <span>$</span>
+                       
                         <input
                           style={{ width: "93px" }}
                           {...field}
@@ -227,6 +305,7 @@ const Integrations = () => {
                           placeholder="2.00"
                           type="number"
                         />
+                         <span>%</span>
                       </div>
                     )}
                   />
@@ -263,6 +342,7 @@ const Integrations = () => {
           </div>
         </div>
       </Dialog>
+        )}
     </>
   );
 };

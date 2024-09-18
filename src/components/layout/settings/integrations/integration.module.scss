@@ -118,6 +118,15 @@
   }
 
 .boxGroupList{
+    .googlereviewBox{
+        label{
+            display: block;
+            width: 100%;
+        }
+        input{
+            width: 100%;
+        }
+    }
     label {
         color: var(--Gray-800, #1D2939);
         font-family: Inter;

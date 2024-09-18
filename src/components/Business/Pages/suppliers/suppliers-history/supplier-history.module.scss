@@ -52,3 +52,31 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.boxBorderCorner{
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; 
+  display: inline-block;
+}
+.boxBorderRound{
+  border-radius: 16px;
+  border: 1px solid var(--Gray-200, #EAECF0);
+  background: var(--Gray-50, #F9FAFB);
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: inline-block;
+}
