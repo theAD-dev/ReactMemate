@@ -1,0 +1,67 @@
+.headerTitle {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px; /* 155.556% */
+  letter-spacing: -0.27px;
+}
+
+.lable {
+  color: var(--Gray-600, #475467);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.dropdownSelect {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.autoCompleteBox {
+  width: 83%;
+}
+
+.AutoComplete ul {
+  width: 100%;
+  padding: 4px 14px 4px 55px;
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid var(--Border, #d0d5dd);
+}
+
+.box,
+.box:hover,
+.box:focus {
+  width: 60px;
+  height: 44px;
+  display: flex;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  align-items: center;
+  justify-content: center;
+  color: var(--Gray-700, #344054);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Gray-50, #f9fafb);
+}
+
+.inputBox {
+    padding: 10px 14px;
+    outline: none !important;
+    box-shadow: none !important;
+    border: 1px solid var(--Gray-300, #d0d5dd);  
+}
