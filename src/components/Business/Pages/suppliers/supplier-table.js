@@ -14,6 +14,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [suppliers, setSuppliers] = useState([]);
+    
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: null, sortOrder: null });
     const [hasMoreData, setHasMoreData] = useState(true);

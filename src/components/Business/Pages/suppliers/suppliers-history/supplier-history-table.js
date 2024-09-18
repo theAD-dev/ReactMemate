@@ -91,6 +91,35 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
     setSort({ sortField, sortOrder })
   };
 
+
+
+ // Formate Date
+ const formatDate = (timestamp) => {
+  const date = new Date(timestamp * 1000);
+  const day = date.getDate();
+  const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+  }).format(date);
+  const year = date.getFullYear();
+  return `${day} ${monthAbbreviation} ${year}`;
+};
+
+
+
+
+  const CreatedBody = (rowData) => {
+   
+    return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
+        {formatDate(rowData.created)}
+    </div>
+}
+  const TotalBody = (rowData) => {
+   
+    return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
+       {(rowData.total).toFixed(2)}
+    </div>
+}
+
   const StatusBody = (rowData) => {
    
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
@@ -122,11 +151,11 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected },
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
       <Column field="number" header="Expense ID" frozen sortable style={{ minWidth: '122px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
-      <Column field="created" header="Date Input" style={{ minWidth: '122px' }} sortable></Column>
+      <Column field="created" body={CreatedBody} header="Date Input" style={{ minWidth: '122px' }} sortable></Column>
       <Column header="Date Payed" style={{ minWidth: '122px' }} sortable></Column>
       <Column field="invoice_reference" header="Reference" style={{ minWidth: '606px' }}></Column>
       <Column header="GST" style={{ minWidth: '107px' }} bodyClassName={"text-end"} sortable></Column>
-      <Column field='total' header="Total" bodyClassName={"text-center"} style={{ minWidth: '111px' }} sortable></Column>
+      <Column field='total' header="Total" body={TotalBody} bodyClassName={"text-right"} style={{ minWidth: '111px' }} sortable></Column>
       <Column field='order.number' header="Interval/Order" style={{ minWidth: '130px' }}></Column>
       <Column field="department.name" header="Department" style={{ minWidth: '217px' }}></Column>
       <Column field='account_code.code' header="Account Code" body={accountCodeBodyTemplate} style={{ minWidth: '214px' }}></Column>
