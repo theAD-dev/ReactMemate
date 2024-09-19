@@ -451,23 +451,35 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                               <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>
-                                    {type === "quote" ? (
-                                      <FileEarmark size={16} color='#1AB2FF' />
-                                    ) : type === "order" ? (
-                                      <Check2Circle size={16} color='#1AB2FF' />
-                                    ) : type === "note" ? (
-                                      <CardChecklist size={16} color='#1AB2FF' />
-                                    ) : type === "tag" ? (
-                                      <ListCheck size={16} color='#1AB2FF' />
-                                    ) : type === "invoice" ? (
-                                      <FileText size={16} color='#1AB2FF' />
-                                    ) : type === "billing" ? (
-                                      <PhoneVibrate size={16} color='#1AB2FF' />
-                                    ) : (
-                                      ''
-                                    )}
+                                  {type === "quote" ? (
+                                    <FileEarmark size={16} color="#1AB2FF" />
+                                  ) : type === "task" ? (
+                                    <Check2Circle size={16} color="#1AB2FF" />
+                                  ) : type === "order" ? (
+                                    <Check2Circle size={16} color="#1AB2FF" />
+                                  ) : type === "note" ? (
+                                    <>
+                                   <>
+                                    <CardChecklist size={16} color="#1AB2FF" />{" "}
+                                    <strong>&nbsp;{title ? title : "Note"}</strong>
+                                  </>
+                                    </>
+                                  ) : type === "tag" ? (
+                                    <ListCheck size={16} color="#1AB2FF" />
+                                  ) : type === "invoice" ? (
+                                    <FileText size={16} color="#1AB2FF" />
+                                  ) : type === "billing" ? (
+                                    <PhoneVibrate size={16} color="#1AB2FF" />
+                                  ) : (
+                                    ''
+                                  )}
+                                  {title ? (
+                                    <strong>&nbsp; {title} </strong>
+                                  ) : (
+                                    <> <strong> &nbsp; </strong> </>
+                                  )}
                                   </li>
-                                  <li><strong>{title}</strong></li>
+                                 
                                 </ul>
                                 <h6>{text}</h6>
                                 <p>{formatTimestamp(created)} by {manager}</p>

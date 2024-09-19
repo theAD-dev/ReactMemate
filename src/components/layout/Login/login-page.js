@@ -6,7 +6,7 @@ import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import unlockIcon from "../../../assets/images/icon/unlock.svg";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import loginSlide from "../../../assets/images/img/loginSlide.jpg";
+import loginSlide from "../../../assets/images/img/loginslidebg.png";
 import Header from "../Header";
 import { authenticateUser } from "../../../APIs/LoginApi";
 
@@ -148,6 +148,7 @@ const Login = () => {
                   backgroundImage: `url(${loginSlide})`,
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
+                  backgroundPosition: 'bottom'
                 }}
               >
                 <p>Reduce admin work at every stage.</p>
