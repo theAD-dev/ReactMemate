@@ -105,13 +105,6 @@ const CalculateQuote = () => {
             };
         }
         if (unique_id) {
-            // temporary
-            const previousManagers = newRequestQuery?.data?.managers || [];
-            const updatedManagers = payload?.managers || [];
-            const uniqueUpdatedManagers = updatedManagers.filter(
-                newManager => !previousManagers.some(prevManager => prevManager.manager === newManager.manager)
-            );
-            payload.managers = uniqueUpdatedManagers;
             console.log('After update managers payload.....: ', payload);
             console.log('merges: ', merges);
 
