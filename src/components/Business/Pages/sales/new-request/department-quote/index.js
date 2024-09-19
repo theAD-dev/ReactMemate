@@ -119,8 +119,10 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
               </p>
             ) : (
               <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.reference} <PencilSquare size={16} color="#106B99" onClick={handleEditReference} style={{ cursor: 'pointer' }} /></p>
-
+                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px', whiteSpace: "pre-line" }}>
+                  {payload.reference}
+                  <PencilSquare size={16} color="#106B99" onClick={handleEditReference} className='ms-2' style={{ cursor: 'pointer' }} />
+                </p>
               </div>
             )}
 
@@ -144,8 +146,9 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
               </p>
             ) : (
               <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px' }}>{payload.description} <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} style={{ cursor: 'pointer' }} /></p>
-
+                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px', whiteSpace: "pre-line" }}>
+                  {payload.description}
+                  <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} className='ms-2' style={{ cursor: 'pointer' }} /></p>
               </div>
             )}
 
@@ -165,7 +168,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       </div>
       <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px' }}>
 
-        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} defaultDiscount={clientQuery?.data?.category?.value} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} setMergeDeletedItems={setMergeDeletedItems}/>
+        <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} defaultDiscount={clientQuery?.data?.category?.value} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} setMergeDeletedItems={setMergeDeletedItems} />
 
         <Row>
           <Col md={6}>
