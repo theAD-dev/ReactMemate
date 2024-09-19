@@ -266,7 +266,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 }
 
 .innnerAccordian .p-accordion-content {
-   padding: 0px;
+  padding: 0px;
 }
 
 .p-accordion .p-accordion-tab {
@@ -274,3 +274,43 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 }
 
 /* Accordion customize end */
+
+.p-component.p-editor-container {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.p-editor-toolbar.ql-toolbar.ql-snow {
+  border-radius: 4px 4px 0px 0px !important;
+  border-right: 1px solid #d0d5dd !important;
+  border-bottom: 1px solid #d0d5dd !important;
+  border-left: 1px solid #d0d5dd !important;
+  border-top: 0px solid #fff !important;
+  background: var(--Gray-25, #fcfcfd) !important;
+}
+
+.p-editor-content.ql-container.ql-snow {
+  font-family: Inter !important;
+  border-radius: var(--radius-xs, 4px) var(--radius-xs, 4px) 0px 0px !important;
+  border-top: 1px solid #d0d5dd !important;
+  border-right: 1px solid #d0d5dd !important;
+  border-left: 1px solid #d0d5dd !important;
+  border-bottom: 0px solid #d0d5dd !important;
+  background: var(--Base-White, #fff) !important;
+}
+
+.ql-editor > * {
+  font-size: 16px;
+  font-family: Inter !important;
+}
+
+.ql-formats button {
+  margin-right: 20px;
+}
+
+.p-autocomplete .p-autocomplete-multiple-container .p-autocomplete-token {
+  padding: 0px !important;
+  color: #475467 !important;
+  background: transparent !important;
+  border: 0px solid #D0D5DD !important;
+}
