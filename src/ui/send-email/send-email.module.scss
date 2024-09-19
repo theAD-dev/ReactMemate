@@ -40,6 +40,10 @@
   border: 1px solid var(--Border, #d0d5dd);
 }
 
+.AutoComplete.bcc ul {
+    padding: 4px 14px 4px 65px;  
+}
+
 .box,
 .box:hover,
 .box:focus {
@@ -59,9 +63,17 @@
   background: var(--Gray-50, #f9fafb);
 }
 
+.box.active,
+.box.active:hover,
+.box.active:focus {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
 .inputBox {
-    padding: 10px 14px;
-    outline: none !important;
-    box-shadow: none !important;
-    border: 1px solid var(--Gray-300, #d0d5dd);  
+  padding: 10px 14px;
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid var(--Gray-300, #d0d5dd);
 }

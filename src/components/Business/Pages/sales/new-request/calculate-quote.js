@@ -12,12 +12,12 @@ import SendQuote from '../../../features/sales-features/send-quote/send-quote';
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
-    const [showQuoteModal, setShowQuoteModal] = useState(true);
+    const [contactPersons, setContactPersons] = useState([]);
+    const [showQuoteModal, setShowQuoteModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [quoteType, setQuoteType] = useState('Standard');
     const [payload, setPayload] = useState({});
     const [mergeDeletedItems, setMergeDeletedItems] = useState([]);
-    console.log('mergeDeletedItems: ', mergeDeletedItems);
     const [totals, setTotals] = useState({ budget: 0, operationalProfit: 0, subtotal: 0, tax: 0, total: 0 });
     const { unique_id } = useParams();
     const newRequestQuery = useQuery({
@@ -75,20 +75,24 @@ const CalculateQuote = () => {
 
     const createNewRequest = async (action) => {
         payload.action = action;
+        if (action === "send") {
+            setShowQuoteModal(true);
+            return;
+        }
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
         console.log('payload.........: ', payload);
 
         const merges = payload.merges;
         console.log('merges: ', merges);
         if (payload.merges) delete payload.merges;
-        
+
         if (!payload?.client) return toast.error('Client is required');
         if (!payload?.contact_person) return toast.error('Contact person is required');
         if (!payload?.managers || !payload.managers?.length) return toast.error('Project manager is required');
         if (!payload?.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
         if (!payload?.xero_tax) return toast.error('Tax details is required');
         if (!payload?.expense) return toast.error('Expense is required');
-        
+
         let result;
         setIsLoading(true);
         if (mergeDeletedItems.length) {
@@ -110,7 +114,7 @@ const CalculateQuote = () => {
             payload.managers = uniqueUpdatedManagers;
             console.log('After update managers payload.....: ', payload);
             console.log('merges: ', merges);
-            
+
             result = await updateRequestMutation.mutateAsync(payload);
             let uniqueid = result?.unique_id;
 
@@ -145,7 +149,7 @@ const CalculateQuote = () => {
             }
 
             navigate(`/sales`)
-            
+
         } else {
             result = await newRequestMutation.mutateAsync(payload);
             let uniqueid = result?.unique_id;
@@ -223,7 +227,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', padding: '16px 32px' }}>
-                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems}/>
+                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems} setContactPersons={setContactPersons}/>
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #EAECF0', boxShadow: '0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)' }}>
@@ -269,26 +273,26 @@ const CalculateQuote = () => {
                         <button type="button" onClick={() => createNewRequest('draft')} className="button-custom text-button">
                             Save Draft
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
-                                && ( newRequestMutation?.variables?.action === "draft" || updateRequestMutation?.variables?.action === "draft")
+                                && (newRequestMutation?.variables?.action === "draft" || updateRequestMutation?.variables?.action === "draft")
                                 && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
                         <button type="button" onClick={() => createNewRequest('save')} className="button-custom submit-button-light">
                             Save
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
-                                && ( newRequestMutation?.variables?.action === "save" || updateRequestMutation?.variables?.action === "save")
+                                && (newRequestMutation?.variables?.action === "save" || updateRequestMutation?.variables?.action === "save")
                                 && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
                         <button type="button" onClick={() => createNewRequest('send')} className="submit-button">
                             Save and Send
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
-                                && ( newRequestMutation?.variables?.action === "send" || updateRequestMutation?.variables?.action === "send")
+                                && (newRequestMutation?.variables?.action === "send" || updateRequestMutation?.variables?.action === "send")
                                 && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
                     </div>
                 </div>
             </div>
 
-            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} />
+            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons}/>
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

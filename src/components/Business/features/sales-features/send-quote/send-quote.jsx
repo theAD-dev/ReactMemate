@@ -1,9 +1,9 @@
 import React from 'react'
 import SendEmail from '../../../../../ui/send-email/send-email'
 
-const SendQuote = ({ show, setShow }) => {
+const SendQuote = ({ show, setShow, contactPersons }) => {
   return (
-    <SendEmail show={show} setShow={setShow} />
+    <SendEmail show={show} setShow={setShow} contactPersons={contactPersons} />
   )
 }
 

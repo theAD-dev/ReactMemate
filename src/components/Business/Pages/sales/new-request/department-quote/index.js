@@ -25,7 +25,7 @@ const CustomOption = (props) => {
   );
 };
 
-const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges, setMergeDeletedItems }) => {
+const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges, setMergeDeletedItems, setContactPersons }) => {
   const [paymentCollection, setPaymentCollection] = useState('');
   const [selectedManagers, setSelectedManagers] = useState([]);
   const [editedReference, setEditedReference] = useState('');
@@ -74,6 +74,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       } else {
         setPayload((others) => ({ ...others, contact_person: person.id }));
       }
+      setContactPersons(clientQuery.data?.contact_persons);
     }
   }, [clientQuery.data])
 
