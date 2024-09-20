@@ -762,6 +762,17 @@ strong.dollorIcon {
   margin: 0;
   padding: 0;
 }
+.projectHistorygroup h5 {
+  color: var(--Gray-500, #344054);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  margin: 0;
+  padding: 0;
+}
 .projectHistorygroup p {
   color: var(--Gray-400, #98a2b3);
   font-family: Inter;
@@ -995,12 +1006,21 @@ strong.dollorIcon {
 }
 .projectCardactionBut .actionLeftSide button.declineAction {
   color: #b42318;
+  display: flex;
+    align-items: center;
+}
+.projectCardactionBut .actionLeftSide button svg {
+ margin-right: 5px;
 }
 .projectCardactionBut .actionLeftSide button.duplicateAction {
   color: #106b99;
+  display: flex;
+    align-items: center;
 }
 .projectCardactionBut .actionLeftSide button.sendBackAction {
   color: #475467;
+  display: flex;
+    align-items: center;
 }
 .projectCardactionBut .actionLeftSide button.duplicateAction {
   padding: 0 32px;
@@ -1024,6 +1044,8 @@ strong.dollorIcon {
 }
 .projectCardactionBut .actionLeftSide {
   padding-left: 0;
+  display: flex;
+  align-items: center;
 }
 .projectCardactionBut .actionRightSide button.ProgressAction {
   margin: 0 8px;

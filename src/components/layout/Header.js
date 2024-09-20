@@ -27,7 +27,7 @@ import Management from "../Business/Pages/management/management-page";
 import SelectOption from "./SelectOption";
 import Profile from "./Login/profile";
 import Invoices from "../Business/Pages/invoices/invoices";
-import Expenses from "../Business/Pages/expenses/expenses";
+import Expenses from "../Business/Pages/expenses";
 import Home from "../Home";
 
 import Statistics from "../Business/Pages/statistics";
@@ -79,6 +79,7 @@ import OrderPage from "../Business/Pages/orders";
 import ClientPage from "../Business/Pages/clients"
 import ApprovalPage from "../Work/Pages/approval";
 import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
+
 import SupplierPage from "../Business/Pages/suppliers";
 import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
 import EditTemplates from "./settings/templates/edit-template";
@@ -88,6 +89,7 @@ import EditProposal from "./settings/templates/edit-proposal";
 import Headquarter from "./settings/locations/headquarter";
 import InnovationStudio from "./settings/locations/innovation-studio";
 import CreativeHub from "./settings/locations/creative-hub";
+import ClientExpensesHistory from "../Business/Pages/expenses/expenses-order-history";
 
 
 
@@ -465,6 +467,10 @@ const Header = ({ onClick }) => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/expenses" element={<Expenses />} />
+      
+         <Route path="/expenses/:id/expense-history" element={<ClientExpensesHistory />} />
+
+
           <Route
             path="/settings/generalinformation"
             element={<GeneralInformation />}

@@ -472,35 +472,68 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                 <ul>
                                   <li>
                                     {type === "quote" ? (
-                                      <FileEarmark size={16} color="#1AB2FF" />
+                                      <>
+                                      <>
+                                      <FileEarmark size={16} color="#1AB2FF" />{" "}
+                                        <strong>&nbsp; Quote</strong>
+                                      </>
+                                    </>
+                                     
                                     ) : type === "task" ? (
-                                      <Check2Circle size={16} color="#1AB2FF" />
+                                      <>
+                                      <>
+                                      <Check2Circle size={16} color="#1AB2FF" />{" "}
+                                        <strong>&nbsp; Task</strong>
+                                      </>
+                                    </>
+                                      
                                     ) : type === "order" ? (
-                                      <Check2Circle size={16} color="#1AB2FF" />
+                                      <>
+                                      <>
+                                      <Check2Circle size={16} color="#1AB2FF" />{" "}
+                                        <strong>&nbsp; Order</strong>
+                                      </>
+                                    </>
+                                   
                                     ) : type === "note" ? (
                                       <>
                                         <>
                                           <CardChecklist size={16} color="#1AB2FF" />{" "}
-                                          <strong>&nbsp;{title ? title : "Note"}</strong>
+                                          <strong>&nbsp; Note</strong>
                                         </>
                                       </>
                                     ) : type === "tag" ? (
-                                      <ListCheck size={16} color="#1AB2FF" />
+                                      <>
+                                      <>
+                                      <ListCheck size={16} color="#1AB2FF" />{" "}
+                                        <strong>&nbsp; Tag</strong>
+                                      </>
+                                    </>
+                                     
                                     ) : type === "invoice" ? (
-                                      <FileText size={16} color="#1AB2FF" />
+                                      <>
+                                      <>
+                                      <FileText size={16} color="#1AB2FF" />{" "}
+                                        <strong>&nbsp; Invoice</strong>
+                                      </>
+                                    </>
+                                      
                                     ) : type === "billing" ? (
-                                      <PhoneVibrate size={16} color="#1AB2FF" />
+                                      <>
+                                      <>
+                                      <PhoneVibrate size={16} color="#1AB2FF" />{" "}
+                                        <strong>&nbsp; Billing</strong>
+                                      </>
+                                    </>
+                                      
                                     ) : (
                                       ''
                                     )}
-                                    {title ? (
-                                      <strong>&nbsp; {title} </strong>
-                                    ) : (
-                                      <> <strong> &nbsp; </strong> </>
-                                    )}
+                                   
                                   </li>
 
                                 </ul>
+                                <h5 style={{ whiteSpace: "pre-line" }}>{title}</h5>
                                 <h6 style={{ whiteSpace: "pre-line" }}>{text}</h6>
                                 <p>{formatTimestamp(created)} by {manager}</p>
                               </div>
