@@ -11,9 +11,8 @@ import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputTextarea } from "primereact/inputtextarea";
-import { CountryService } from "./CountryService";
 import { InputText } from "primereact/inputtext";
-import { getEmail, getEmailTemplates } from "../../APIs/email-template";
+import { getEmail, getEmailTemplates, getOutgoingEmail } from "../../APIs/email-template";
 import { useQuery } from "@tanstack/react-query";
 
 const schema = yup
@@ -45,6 +44,10 @@ const SendEmail = ({ show, setShow, contactPersons }) => {
         queryKey: ["emailTemplate"],
         queryFn: getEmailTemplates,
     });
+    const outgoingEmailTemplateQuery = useQuery({
+        queryKey: ["getOutgoingEmail"],
+        queryFn: getOutgoingEmail,
+    });
     const emailQuery = useQuery({
         queryKey: ["emailQuery", emailTemplateId],
         queryFn: () => getEmail(emailTemplateId),
@@ -69,6 +72,20 @@ const SendEmail = ({ show, setShow, contactPersons }) => {
     const onSubmit = (data) => { };
 
     const handleClose = () => setShow(false);
+
+    const filterContacts = (query, selected) => {
+        return contactPersons
+            .filter(person =>
+                ![...to, ...cc, ...bcc].some(sel => sel.email === person.email) &&
+                person.email.toLowerCase().includes(query?.toLowerCase())
+            )
+            .map(person => ({ name: person.email, code: person.email }));
+    };
+
+    const handleFilter = (setFiltered, selected) => (e) => {
+        const filtered = filterContacts(e.query, selected);
+        setFiltered(filtered);
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -160,9 +177,11 @@ const SendEmail = ({ show, setShow, contactPersons }) => {
                                             <Dropdown
                                                 {...field}
                                                 options={
-                                                    [
-                                                        { value: "max@thead.com", label: "max@thead.com" },
-                                                    ] || []
+                                                    (outgoingEmailTemplateQuery && outgoingEmailTemplateQuery?.data && ([{
+                                                        value: outgoingEmailTemplateQuery?.data?.outgoing_email,
+                                                        label: `${outgoingEmailTemplateQuery?.data?.outgoing_email}`,
+                                                    }])) ||
+                                                    []
                                                 }
                                                 onChange={(e) => {
                                                     field.onChange(e.value);
@@ -257,14 +276,11 @@ const SendEmail = ({ show, setShow, contactPersons }) => {
                                         <AutoComplete
                                             field="name"
                                             multiple
-                                            value={to}
                                             suggestions={filteredTo}
-                                            completeMethod={(e) => {
-                                                let persons = contactPersons.map((person) => ({ name: person.email, code: person.email }))
-                                                let filtered = persons.filter(person => person?.name?.toLowerCase().includes(e.query.toLowerCase()));
-                                                setFilteredTo(filtered);
-                                            }}
+                                            completeMethod={handleFilter(setFilteredTo, to)}
                                             onChange={(e) => setTo(e.value)}
+                                            onFocus={(e) => handleFilter(setFilteredTo, to)(e)}
+                                            value={to}
                                             className={clsx(style.AutoComplete, "w-100")}
                                             placeholder="TO"
                                         />
@@ -324,12 +340,9 @@ const SendEmail = ({ show, setShow, contactPersons }) => {
                                                 multiple
                                                 value={cc}
                                                 suggestions={filteredCC}
-                                                completeMethod={(e) => {
-                                                    let persons = contactPersons.map((person) => ({ name: person.email, code: person.email }))
-                                                    let filtered = persons.filter(person => person?.name?.toLowerCase().includes(e.query.toLowerCase()));
-                                                    setFilteredCC(filtered);
-                                                }}
+                                                completeMethod={handleFilter(setFilteredCC, cc)}
                                                 onChange={(e) => setCC(e.value)}
+                                                onFocus={(e) => handleFilter(setFilteredCC, cc)(e)}
                                                 className={clsx(style.AutoComplete, "w-100")}
                                                 placeholder="CC"
                                             />
@@ -402,10 +415,10 @@ const SendEmail = ({ show, setShow, contactPersons }) => {
                             />
                         </div>
 
-                        <div className="d-flex flex-column gap-1 mb-3">
+                        <div className="d-flex flex-column gap-1">
                             <label className={clsx(style.lable)}>Message</label>
                             <Editor
-                                style={{ height: "150px" }}
+                                style={{ minHeight: "150px" }}
                                 headerTemplate={header}
                                 value={text}
                                 onTextChange={(e) => setText(e.htmlValue)}

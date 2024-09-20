@@ -63,9 +63,9 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
                                 <>{
                                     updateMutation.isPending ? (<div class="dot-flashing"></div>) : (
                                         <>
-                                            <div className="h-100" style={{ width: '4px', background: `${colorMapping[selectedOption?.color].border}` }}></div>
-                                            <div className="h-100 statusFlex d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[selectedOption?.color].bg}` }}>
-                                                <span style={{ color: `${colorMapping[selectedOption?.color].color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{selectedOption?.title}</span>
+                                            <div className="h-100" style={{ width: '4px', background: `${colorMapping[selectedOption?.color]?.border}` }}></div>
+                                            <div className="h-100 statusFlex d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[selectedOption?.color]?.bg}` }}>
+                                                <span style={{ color: `${colorMapping[selectedOption?.color]?.color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{selectedOption?.title}</span>
                                                 <span className='inArrow'><ChevronDown color="#98A2B3" size={15} /></span>
                                             </div>
                                             
@@ -98,9 +98,9 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
             {statusOptions?.map((status, i) => (
                 <MenuItem style={{ textAlign: 'left' }} onClick={() => handleSubMenuClick(status)} key={status.id}>
                     <div className="d-flex" style={{ width: '163px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
-                        <div className="h-100" style={{ width: '4px', background: `${colorMapping[status?.color].border}` }}></div>
-                        <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[status?.color].bg}` }}>
-                            <span style={{ color: `${colorMapping[status?.color].color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{status?.title}</span>
+                        <div className="h-100" style={{ width: '4px', background: `${colorMapping[status?.color]?.border}` }}></div>
+                        <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[status?.color]?.bg}` }}>
+                            <span style={{ color: `${colorMapping[status?.color]?.color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{status?.title}</span>
                         </div>
                     </div>
                 </MenuItem>

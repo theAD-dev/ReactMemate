@@ -12,7 +12,7 @@ import './task.css';
 import { useMutation } from '@tanstack/react-query';
 import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 
-const CreateTask = ({ show, setShow, project, reInitilize }) => {
+const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) => {
     const [taskTitle, setTaskTitle] = useState('');
     const [description, setDescription] = useState('');
     const [user, setUser] = useState(null);
@@ -42,6 +42,7 @@ const CreateTask = ({ show, setShow, project, reInitilize }) => {
             setShow(false);
             reset();
             reInitilize();
+            if (projectCardData) projectCardData();
         },
         onError: (error) => {
             console.error('Error creating task:', error);

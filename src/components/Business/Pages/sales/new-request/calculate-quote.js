@@ -220,7 +220,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', padding: '16px 32px' }}>
-                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems} setContactPersons={setContactPersons}/>
+                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems} setContactPersons={setContactPersons} />
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #EAECF0', boxShadow: '0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)' }}>
@@ -255,9 +255,17 @@ const CalculateQuote = () => {
                         <button type="button" className="button-custom text-button padding-left-0" style={{ color: '#B42318' }}>
                             Cancel
                         </button>
-                        <button type="button" className="button-custom text-button px-2">
-                            Quote PDF
-                        </button>
+                        {
+                            (unique_id && newRequestQuery?.data?.quote_url) ? (
+                                <a href={`${newRequestQuery?.data?.quote_url}`} target='_blank' type="button" className="button-custom text-button px-2">
+                                    Quote PDF
+                                </a>
+                            ) : (
+                                <a href='#' type="button" className="button-custom text-button px-2">
+                                    Quote PDF
+                                </a>
+                            )
+                        }
                         <button type="button" className="button-custom text-button px-2">
                             Create Proposal
                         </button>
@@ -285,7 +293,7 @@ const CalculateQuote = () => {
                 </div>
             </div>
 
-            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons}/>
+            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} />
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

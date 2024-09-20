@@ -86,6 +86,16 @@ export const createProjectNoteById = async (id, data) => {
     return fetchAPI(url.toString(), options);
 }
 
+export const projectsToSalesUpdate = async (id) => {
+    const endpoint = `/projects/to-sales/`;
+    const options = {
+        method: 'PUT',
+        body: { unique_id: id }
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
     const accessToken = sessionStorage.getItem("access_token");
