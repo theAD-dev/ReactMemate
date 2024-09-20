@@ -22,7 +22,7 @@ import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import ProjectCardFilter from './project-card-filter';
 import FilesModel from './files-model';
 import ScheduleUpdate from './schedule-update';
-import { ProjectCardApi, updateProjectReferenceById } from "../../../../../APIs/management-api";
+import { ProjectCardApi, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -119,6 +119,26 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     const dateString = `${day}.${month}.${year}`;
     return `${timeString} | ${dayString} | ${dateString}`;
   };
+
+  const updateReturnMutation = useMutation({
+    mutationFn: (data) => projectsToSalesUpdate(data),
+    onSuccess: (response) => {
+      if (response) {
+        navigate('/sales');
+      } else {
+        toast.error(`Failed to update sendBack to sales. Please try again.`);
+      }
+    },
+    onError: (error) => {
+      console.error('Error updating sendBack to sales:', error);
+      toast.error(`Failed to update sendBack to sales. Please try again.`);
+    }
+  });
+
+  const canReturn = (isReturn) => {
+    if (isReturn) return;
+    updateReturnMutation.mutate(projectId);
+  }
 
   useEffect(() => {
     if (filteredHistoryOptions?.length) {
@@ -410,7 +430,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
-                    <NewTask project={project} reInitilize={reInitilize} />
+                    <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS />
                     <ComposeEmail />
                   </Col>
@@ -451,37 +471,37 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                               <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>
-                                  {type === "quote" ? (
-                                    <FileEarmark size={16} color="#1AB2FF" />
-                                  ) : type === "task" ? (
-                                    <Check2Circle size={16} color="#1AB2FF" />
-                                  ) : type === "order" ? (
-                                    <Check2Circle size={16} color="#1AB2FF" />
-                                  ) : type === "note" ? (
-                                    <>
-                                   <>
-                                    <CardChecklist size={16} color="#1AB2FF" />{" "}
-                                    <strong>&nbsp;{title ? title : "Note"}</strong>
-                                  </>
-                                    </>
-                                  ) : type === "tag" ? (
-                                    <ListCheck size={16} color="#1AB2FF" />
-                                  ) : type === "invoice" ? (
-                                    <FileText size={16} color="#1AB2FF" />
-                                  ) : type === "billing" ? (
-                                    <PhoneVibrate size={16} color="#1AB2FF" />
-                                  ) : (
-                                    ''
-                                  )}
-                                  {title ? (
-                                    <strong>&nbsp; {title} </strong>
-                                  ) : (
-                                    <> <strong> &nbsp; </strong> </>
-                                  )}
+                                    {type === "quote" ? (
+                                      <FileEarmark size={16} color="#1AB2FF" />
+                                    ) : type === "task" ? (
+                                      <Check2Circle size={16} color="#1AB2FF" />
+                                    ) : type === "order" ? (
+                                      <Check2Circle size={16} color="#1AB2FF" />
+                                    ) : type === "note" ? (
+                                      <>
+                                        <>
+                                          <CardChecklist size={16} color="#1AB2FF" />{" "}
+                                          <strong>&nbsp;{title ? title : "Note"}</strong>
+                                        </>
+                                      </>
+                                    ) : type === "tag" ? (
+                                      <ListCheck size={16} color="#1AB2FF" />
+                                    ) : type === "invoice" ? (
+                                      <FileText size={16} color="#1AB2FF" />
+                                    ) : type === "billing" ? (
+                                      <PhoneVibrate size={16} color="#1AB2FF" />
+                                    ) : (
+                                      ''
+                                    )}
+                                    {title ? (
+                                      <strong>&nbsp; {title} </strong>
+                                    ) : (
+                                      <> <strong> &nbsp; </strong> </>
+                                    )}
                                   </li>
-                                 
+
                                 </ul>
-                                <h6>{text}</h6>
+                                <h6 style={{ whiteSpace: "pre-line" }}>{text}</h6>
                                 <p>{formatTimestamp(created)} by {manager}</p>
                               </div>
                             ))
@@ -549,7 +569,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Files size={20} color='#0A4766' className='me-1' />
                   <span style={{ position: 'relative', top: '2px' }}>Duplicate</span> {isDuplicating && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '6px' }} />}
                 </Button>
-                <Button disabled={!cardData?.can_be_return} className='sendBackAction'><Reply size={20} color='#344054' opacity={!cardData?.can_be_return ? .5 : 1} /> Send Back to Sales</Button>
+                <Button disabled={!cardData?.can_be_return} onClick={() => canReturn(!cardData?.can_be_return)} className='sendBackAction'>
+                  <Reply size={20} color='#344054' opacity={!cardData?.can_be_return ? .5 : 1} />
+                  Send Back to Sales
+                  {
+                    updateReturnMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '5px' }}/>
+                  }
+                </Button>
               </Col>
               <Col className='actionRightSide'>
                 <Button className='InvoiceAction InvoiceActive'>Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>

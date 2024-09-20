@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.dabd7236.css",
-    "main.js": "/static/js/main.150f2799.js",
+    "main.css": "/static/css/main.83f0de93.css",
+    "main.js": "/static/js/main.2bcf022c.js",
     "static/js/692.42243182.chunk.js": "/static/js/692.42243182.chunk.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js",
@@ -17,6 +17,8 @@
     "reactPlayerKaltura.js": "/static/js/reactPlayerKaltura.a505dfe3.chunk.js",
     "reactPlayerFilePlayer.js": "/static/js/reactPlayerFilePlayer.a0d03520.chunk.js",
     "reactPlayerPreview.js": "/static/js/reactPlayerPreview.40333d14.chunk.js",
+    "static/media/loginslidebg.png": "/static/media/loginslidebg.fc6dcee6c1884ac26420.png",
+    "static/media/onboardingmain.png": "/static/media/onboardingmain.d535056666a083ec9ded.png",
     "static/media/businessVideo.mp4": "/static/media/businessVideo.738a1df4eb3c423f77b4.mp4",
     "static/media/emailSlider02.png": "/static/media/emailSlider02.0e6165f1c2e47a64bf76.png",
     "static/media/changepassword.png": "/static/media/changepassword.8150bf70099d467a10b7.png",
@@ -40,7 +42,6 @@
     "static/media/newQuote.png": "/static/media/newQuote.9cbe4c1c556f514b424a.png",
     "static/media/passwordreset.jpg": "/static/media/passwordreset.df5953efdc81faf9b7ef.jpg",
     "static/media/NodataImg.png": "/static/media/NodataImg.6399433469b1c69e792c.png",
-    "static/media/loginSlide.jpg": "/static/media/loginSlide.99c0b6209ac24e00470f.jpg",
     "static/media/nodata.png": "/static/media/nodata.1f066de0dd0d7036f545.png",
     "static/media/datecal.png": "/static/media/datecal.c64cfda413febc150714.png",
     "static/media/lender-panel 1.png": "/static/media/lender-panel 1.96a12436892f043e75aa.png",
@@ -118,8 +119,8 @@
     "static/media/newTaskAdd.svg": "/static/media/newTaskAdd.d67b4091dd3fbc4db540e612a91301d6.svg",
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.dabd7236.css.map": "/static/css/main.dabd7236.css.map",
-    "main.150f2799.js.map": "/static/js/main.150f2799.js.map",
+    "main.83f0de93.css.map": "/static/css/main.83f0de93.css.map",
+    "main.2bcf022c.js.map": "/static/js/main.2bcf022c.js.map",
     "692.42243182.chunk.js.map": "/static/js/692.42243182.chunk.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
     "reactPlayerSoundCloud.0b756129.chunk.js.map": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js.map",
@@ -137,7 +138,7 @@
     "reactPlayerPreview.40333d14.chunk.js.map": "/static/js/reactPlayerPreview.40333d14.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.dabd7236.css",
-    "static/js/main.150f2799.js"
+    "static/css/main.83f0de93.css",
+    "static/js/main.2bcf022c.js"
   ]
 }
