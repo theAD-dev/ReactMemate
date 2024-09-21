@@ -1,0 +1,157 @@
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 36px;
+}
+
+.menu {
+  width: 229px;
+  padding: 4px 4px;
+  border-radius: 4px;
+}
+
+.newButton,
+.newButton:hover,
+.newButton:focus {
+  gap: 8px;
+  display: flex;
+  padding: 4px 14px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--Primary-600, #158ecc);
+  background: var(--Primary-600, #158ecc);
+}
+
+.total {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.08px;
+}
+
+.totalCount {
+  color: var(--Primary-500, #1ab2ff);
+  text-align: center;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  align-items: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  border-radius: 16px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.clientImg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 0.75px solid #ccc;
+  margin-right: 10px;
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
+}
+
+.ellipsis {
+  white-space: nowrap;
+  width: 224px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.location {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  padding: var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Primary-200, #e9d7fe);
+  background: var(--Gray-50, #f9fafb);
+}
+
+.active {
+  background: #ebf8ff;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
+.deletedRow td {
+  background-color: #FFFBFA !important;
+}
+
+.plusIcon{
+  background: #fef3f2;
+    border: 1px solid #fecdca;
+    border: 1px solid var(--Success-200, #fecdca);
+    border-radius: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    margin-left: 8px;
+    padding: 1px;
+}
+.fontStanderdSize{
+  align-items: center;
+    display: flex;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    justify-content: flex-end;
+    line-height: 18px;
+    text-align: center;
+}
+.expensesStatus{
+  .false {
+    background: #fef3f2;
+    background: var(--Error-50,#fef3f2);
+    border: 1px solid #fecdca;
+    border: 1px solid var(--Error-200,#fecdca);
+    border-radius: 16px;
+    color: #b42318;
+    color: var(--Error-700,#b42318);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 18px;
+    text-align: center;
+  }
+
+.false {
+  .dots {
+    background: #f04438;
+  }
+}
+
+  .dots {
+    background: #17b26a;
+    border-radius: 100%;
+    content: "";
+    display: inline-block;
+    height: 8px;
+    margin-left: 0;
+    width: 8px;
+  
+}
+}

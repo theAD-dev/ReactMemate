@@ -11,11 +11,15 @@ import { getListOfOrder } from '../../../../APIs/OrdersApi';
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
+import { Dialog } from "primereact/dialog";
+import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
   const navigate = useNavigate();
   const observerRef = useRef(null);
+  const [visible, setVisible] = useState(false);
   const [orders, setOrders] = useState([]);
+  console.log('orders: ', orders);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
   const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
@@ -75,7 +79,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
         {rowdata.number}
       </div>
-      <Button label="Open" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text />
+      {/* <Button label="Open" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text /> */}
     </div>
   }
 
@@ -109,19 +113,20 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   }
 
   const statusBody = (rowData) => {
-    const type = rowData.status;
-    switch (type) {
-      case 'In Progress':
-        return <Chip className={`type ${style.inProgress}`} label={type} />
-      case 'Complete':
-        return <Chip className={`type ${style.complete}`} label={type} />
-      case 'Lost':
-        return <Chip className={`type ${style.lost}`} label={type} />
-      default:
-        return <Chip className={`type ${style.defaultStatus}`} label={type} />;
-    }
-  }
-
+    return (
+      <div className='d-flex align-items-center'>
+        <div className={`d-flex justify-content-center align-items-center`}>
+       
+            {rowData.status === "In progress" ? (
+            <><span className={style.statusComplete}> Complete </span></>
+          ) : (
+            <>In Complete <span className="dots"></span></>
+          )}
+        </div>
+      </div>
+    );
+  };
+  
   const reaclCost = (rowData) => {
     const realCost = (rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense) / rowData.total * 100;
 
@@ -253,8 +258,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
   const OperatingExpenseBody = (rowData) => {
     const oeCast = (rowData.real_cost + rowData.labor_expenses + rowData.cost_of_sale) / rowData.total * 100;
-    return <div
-      className={`d-flex justify-content-center align-items-center ${style.piCircleStyle} ${style.operCircleStyle}`}
+    return <div onClick={setVisible}
+      className={`d-flex justify-content-center align-items-center  ${style.piCircleStyle} ${style.operCircleStyle}` }
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
@@ -323,7 +328,29 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     setPage(1);  // Reset to page 1 whenever searchValue changes
   };
 
+
+  const handleClose = (e) => {
+    setVisible(false);
+  };
+
+
+
+
+  const headerElementg = (
+    <div className={`${style.modalHeader}`}>
+      <div className="d-flex align-items-center gap-2">
+        <img src={exploreOperatingimg} alt={exploreOperatingimg} />
+      </div>
+    </div>
+  );
+
+
+
+
+
+
   return (
+    <>
     <DataTable ref={ref} value={orders} scrollable selectionMode={'checkbox'}
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
       scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedOrder}
@@ -337,8 +364,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       rowClassName={rowClassName}
     >
       <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-      <Column field="number" header="Order #" body={orderBody} style={{ minWidth: '205px' }} frozen sortable></Column>
-      <Column field="client.name" header="Customer" body={customerBody} style={{ minWidth: '186px' }} sortable></Column>
+      <Column field="number" header="Order #" body={orderBody} style={{ minWidth: '205px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
+      <Column field="client.name" header="Customer" body={customerBody} style={{ minWidth: '186px' }}   sortable></Column>
       <Column field="reference" header="Order Reference" style={{ minWidth: '221px' }} ></Column>
       <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
       <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
@@ -350,7 +377,43 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       <Column field="total" body={totalInvocide} header="Total Invoice" style={{ minWidth: '101x', textAlign: 'center' }} ></Column>
       <Column field='profit' header="operationalprofit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '150px' }} sortable></Column>
     </DataTable>
-  )
-})
 
+
+
+
+    <Dialog
+visible={visible}
+modal={true}
+header={headerElementg}
+className={`${style.modal} ${style.exploreModel} custom-modal custom-scroll-integration `}
+onHide={handleClose}>
+<div className="d-flex flex-column">
+<h2>Explore Operating Expense</h2>
+<ul>
+  <li>
+    <h3>Yearly based expenses total amount: <strong>$51894.66</strong></h3>
+  </li>
+  <li>
+    <h3>Monthly based expenses total amount:  <strong>$6893.32</strong></h3>
+  </li>
+  <li>
+    <h3>Number of invoices:  <strong>6</strong></h3>
+  </li>
+  <li>
+    <h3>One month:  <strong>$51894.66 / 12 + $6893.32 = 11217.88;$11217.88 / 6 = $1869.65</strong></h3>
+  </li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+</Dialog>
+</>
+) 
+})
 export default OrdersTable
