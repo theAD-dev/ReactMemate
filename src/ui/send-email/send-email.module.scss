@@ -8,6 +8,42 @@
   letter-spacing: -0.27px;
 }
 
+.customLabel {
+  width: fit-content;
+  height: 24px;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px)
+    var(--spacing-xxs, 2px) 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  color: var(--Gray-700, #344054);
+  text-align: center;
+
+  /* Text sm/Medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  position: absolute;
+  top: 11px;
+  left: 14px;
+  z-index: 1;
+}
+
+.bag {
+  background-color: #fff;
+  z-index: 1;
+  height: 40px;
+  top: 3px;
+  left: 1px;
+  position: absolute;
+}
+
 .lable {
   color: var(--Gray-600, #475467);
 
@@ -38,10 +74,17 @@
   outline: none !important;
   box-shadow: none !important;
   border: 1px solid var(--Border, #d0d5dd);
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: auto;
 }
 
 .AutoComplete.bcc ul {
-    padding: 4px 14px 4px 65px;  
+  padding: 4px 14px 4px 65px;
+}
+
+.AutoComplete input {
+  min-width: 100px;
 }
 
 .box,

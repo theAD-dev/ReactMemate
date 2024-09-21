@@ -75,10 +75,11 @@ const CalculateQuote = () => {
 
     const createNewRequest = async (action) => {
         payload.action = action;
-        if (action === "send") {
+        if (action === "saveAndsend") {
             setShowQuoteModal(true);
             return;
         }
+
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
         console.log('payload.........: ', payload);
 
@@ -176,6 +177,7 @@ const CalculateQuote = () => {
             }
         }
         setIsLoading(false);
+        setShowQuoteModal(false);
     }
 
     return (
@@ -283,7 +285,7 @@ const CalculateQuote = () => {
                                 && (newRequestMutation?.variables?.action === "save" || updateRequestMutation?.variables?.action === "save")
                                 && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
-                        <button type="button" onClick={() => createNewRequest('send')} className="submit-button">
+                        <button type="button" onClick={() => createNewRequest('saveAndsend')} className="submit-button">
                             Save and Send
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
                                 && (newRequestMutation?.variables?.action === "send" || updateRequestMutation?.variables?.action === "send")
@@ -293,7 +295,7 @@ const CalculateQuote = () => {
                 </div>
             </div>
 
-            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} />
+            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest}/>
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
