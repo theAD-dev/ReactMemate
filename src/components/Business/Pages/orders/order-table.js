@@ -19,7 +19,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [orders, setOrders] = useState([]);
-  console.log('orders: ', orders);
+
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
   const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
@@ -297,6 +297,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       <span>${rowData.operating_expense}</span>
     </div>
   }
+
   const profitBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
@@ -328,13 +329,9 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     setPage(1);  // Reset to page 1 whenever searchValue changes
   };
 
-
   const handleClose = (e) => {
     setVisible(false);
   };
-
-
-
 
   const headerElementg = (
     <div className={`${style.modalHeader}`}>
@@ -343,11 +340,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       </div>
     </div>
   );
-
-
-
-
-
 
   return (
     <>
