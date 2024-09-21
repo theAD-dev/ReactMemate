@@ -22,7 +22,6 @@ const HistoryPopover = ({ onClose, historyData }) => {
   return (
     <div style={{ padding: '10px' }}>
      {historyData}
-  
       <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '5px', right: '5px' }} onClick={onClose} />
     </div>
   );
@@ -44,20 +43,20 @@ const ActionsDots = ({ saleUniqueId,refreshData }) => {
     const [historyData, setHistoryData] = useState([]);
   
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchhistoryData(saleUniqueId);
-        setHistoryData(data);
-      } catch (error) {
-        console.error('Error fetching history data:', error);
-        // Handle error, set default or empty value for historyData
-        setHistoryData([]);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = await fetchhistoryData(saleUniqueId);
+  //       setHistoryData(data);
+  //     } catch (error) {
+  //       console.error('Error fetching history data:', error);
+  //       // Handle error, set default or empty value for historyData
+  //       setHistoryData([]);
+  //     }
+  //   };
 
-    fetchData();
-  }, [saleUniqueId]);
+  //   fetchData();
+  // }, []);
 
   const handleClick = async (event, option) => {
     if (option.label === "Replicate") {
