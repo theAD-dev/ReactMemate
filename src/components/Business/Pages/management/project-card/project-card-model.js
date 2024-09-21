@@ -22,7 +22,7 @@ import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import ProjectCardFilter from './project-card-filter';
 import FilesModel from './files-model';
 import ScheduleUpdate from './schedule-update';
-import { ProjectCardApi, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
+import { ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -148,6 +148,22 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     onError: (error) => {
       console.error('Error declining the order:', error);
       toast.error(`Failed to decline the order. Please try again.`);
+    }
+  });
+
+  const completeMutation = useMutation({
+    mutationFn: (data) => projectsComplete(data),
+    onSuccess: (response) => {
+      if (response) {
+        navigate('/sales');
+        toast.success('Project has been successfully completed');
+      } else {
+        toast.error(`Failed to complete the project. Please try again.`);
+      }
+    },
+    onError: (error) => {
+      console.error('Error completing the project:', error);
+      toast.error(`Failed to complete the project. Please try again.`);
     }
   });
 
@@ -620,7 +636,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined} className='declineAction'>
                   <XCircle size={20} color='#912018' /> Decline Order
                   {
-                    declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '5px' }}/>
+                    declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/>
                   }
                 </Button>
                 <Button disabled={isDuplicating} className='duplicateAction' onClick={duplicateSale}>
@@ -631,14 +647,19 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Reply size={20} color='#344054' opacity={!cardData?.can_be_return ? .5 : 1} />
                   Send Back to Sales
                   {
-                    updateReturnMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '5px' }}/>
+                    updateReturnMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/>
                   }
                 </Button>
               </Col>
               <Col className='actionRightSide'>
                 <Button className='InvoiceAction InvoiceActive'>Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>
                 <Button className='ProgressAction'>Progress Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>
-                <Button className='CompleteActionBut'>Complete & Archive</Button>
+                <Button onClick={() => completeMutation.mutate(projectId)} disabled={!cardData?.can_be_completed} className='CompleteActionBut'>
+                  Complete & Archive
+                  {
+                    completeMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/>
+                  }
+                </Button>
               </Col>
             </Row>
             <Row className='projectBreakdown'>
