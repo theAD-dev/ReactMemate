@@ -163,7 +163,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
                         </div>
 
                         {
-                            tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} />
+                            tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} deleteAddress={()=> { }} deleteContact={() => {}} />
                                 : <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
                         }
                     </div>

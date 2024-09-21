@@ -17,6 +17,7 @@ import { Exclamation, Person, Building, Plus } from 'react-bootstrap-icons';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import { getCities, getCountries, getStates, getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
@@ -24,13 +25,11 @@ const schema = yup.object({
   abn: yup.string().required('ABN is required'),
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  // website: yup.string().url('Invalid URL').required('URL is required'),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
 
   addresses: yup.array().of(
     yup.object({
-      id: yup.string(),
       title: yup.string(),
       country: yup.string().required('Country is required'),
       address: yup.string().required('Address is required'),
@@ -43,7 +42,6 @@ const schema = yup.object({
 
   contact_persons: yup.array().of(
     yup.object({
-      id: yup.string(),
       position: yup.string().required('Position is required'),
       firstname: yup.string().required('First name is required'),
       lastname: yup.string().required('Last name is required'),
@@ -55,9 +53,10 @@ const schema = yup.object({
 
 }).required();
 
-const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
+const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, deleteAddress, deleteContact }, ref) => {
   const [show, setShow] = useState(false);
   const [addressIndex, setAddressIndex] = useState(0);
+  const [deleteIndex, setDeleteIndex] = useState({ type: null, index: null });
 
   const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
   const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
@@ -89,6 +88,19 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   const { fields: contactFields, append: appendContact, remove: removeContact } = useFieldArray({ control, name: 'contact_persons' });
   const { fields: addressFields, append: appendAddress, remove: removeAddress } = useFieldArray({ control, name: 'addresses' });
 
+  const deleteContactIndex = async (index, id) => {
+    setDeleteIndex({ type: 'contact', index: index });
+    if (id) await deleteContact(id);
+    removeContact(index);
+    setDeleteIndex({ type: null, index: null });
+  }
+
+  const deleteAddressIndex = async (index, id) => {
+    setDeleteIndex({ type: 'address', index: index });
+    if (id) await deleteAddress(id);
+    removeAddress(index);
+    setDeleteIndex({ type: null, index: null });
+  }
 
   useEffect(() => {
     if (defaultValues?.addresses?.length) {
@@ -349,7 +361,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                 <Col sm={6}></Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
-                {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => removeContact(index)}>Delete</Button>}
+                {contactFields?.length !== 1 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteContactIndex(index, item.uniqeId)}>Delete {deleteIndex?.type === "contact" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
                 {index === contactFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendContact({})}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>
@@ -492,7 +504,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                 </Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
-                {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => removeAddress(index)}>Delete</Button>}
+                {addressFields?.length !== 1 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteAddressIndex(index, item.uniqeId)}>Delete {deleteIndex?.type === "address" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
                 {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({})}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>
