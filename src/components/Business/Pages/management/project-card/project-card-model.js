@@ -22,7 +22,7 @@ import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import ProjectCardFilter from './project-card-filter';
 import FilesModel from './files-model';
 import ScheduleUpdate from './schedule-update';
-import { ProjectCardApi, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
+import { ProjectCardApi, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -134,6 +134,26 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
       toast.error(`Failed to update sendBack to sales. Please try again.`);
     }
   });
+
+  const declinecOrderMutation = useMutation({
+    mutationFn: (data) => projectsOrderDecline(data),
+    onSuccess: (response) => {
+      if (response) {
+        navigate('/sales');
+        toast.success('Order has been successfully declined');
+      } else {
+        toast.error(`Failed to decline the order. Please try again.`);
+      }
+    },
+    onError: (error) => {
+      console.error('Error declining the order:', error);
+      toast.error(`Failed to decline the order. Please try again.`);
+    }
+  });
+
+  const declinecOrder = () => {
+    declinecOrderMutation.mutate(projectId);
+  }
 
   const canReturn = (isReturn) => {
     if (isReturn) return;
@@ -597,7 +617,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </Row>
             <Row className='projectCardactionBut'>
               <Col className='actionLeftSide'>
-                <Button className='declineAction'><XCircle size={20} color='#912018' /> Decline Order</Button>
+                <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined} className='declineAction'>
+                  <XCircle size={20} color='#912018' /> Decline Order
+                  {
+                    declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '5px' }}/>
+                  }
+                </Button>
                 <Button disabled={isDuplicating} className='duplicateAction' onClick={duplicateSale}>
                   <Files size={20} color='#0A4766' className='me-1' />
                   <span style={{ position: 'relative', top: '2px' }}>Duplicate</span> {isDuplicating && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '6px' }} />}

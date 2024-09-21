@@ -96,6 +96,16 @@ export const projectsToSalesUpdate = async (id) => {
     return fetchAPI(url.toString(), options);
 }
 
+export const projectsOrderDecline = async (id) => {
+    const endpoint = `/projects/decline/`;
+    const options = {
+        method: 'PUT',
+        body: { unique_id: id }
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
     const accessToken = localStorage.getItem("access_token");
