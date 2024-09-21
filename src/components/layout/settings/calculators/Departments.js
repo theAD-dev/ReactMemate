@@ -77,7 +77,7 @@ const Departments = () => {
     }
 
     const createDynamicTabs = () => {
-        return departmentQuery?.data?.map((department, i) => (
+        return departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => (
             <AccordionTab
                 className={clsx(style.accorHeadbox, 'main-accordion-header')}
                 key={department.id}
@@ -113,7 +113,7 @@ const Departments = () => {
                     }}
                 >
                     {
-                        department?.subindexes?.map((subindex) => (
+                        department?.subindexes?.filter((data) => !data?.deleted)?.map((subindex) => (
                             <AccordionTab
                                 className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
                                 key={subindex.id}
@@ -607,7 +607,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
 
 const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, cancelCreateCalculator }) => {
     const uniqueCalculators = calculators.filter((item, index, self) =>
-        index === self.findIndex((t) => t.id === item.id)
+        index === self.findIndex((t) => t.id === item.id && !item?.deleted)
     );
     const summary = calculateSummary(uniqueCalculators, 'no');
 
@@ -618,7 +618,7 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
             }
 
             {
-                uniqueCalculators.map(calculator => (
+                uniqueCalculators?.map(calculator => (
                     <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
                 ))
             }
@@ -809,7 +809,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
                 }
 
                 refetch();
-                setVisible(false)
+                handleClose();
             }
         } catch (error) {
             console.error(`Error ${editDepartment?.id ? 'updating' : 'creating'} department:`, error);
@@ -886,7 +886,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
                 }
 
                 refetch();
-                setVisible2(false)
+                handleClose();
             }
         } catch (error) {
             console.error(`Error ${editSubDepartment?.id ? 'updating' : 'creating'} sub department:`, error);
