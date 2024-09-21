@@ -41,8 +41,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       else {
         if (data?.results?.length > 0)
           setOrders(prev => {
-            const existingOrderIds = new Set(prev.map(order => order.id));
-            const newOrder = data.results.filter(order => !existingOrderIds.has(order.id));
+            const existingOrderIds = new Set(prev.map(order => order.unique_id));
+            const newOrder = data.results.filter(order => !existingOrderIds.has(order.unique_id));
             return [...prev, ...newOrder];
           });
       }
@@ -99,6 +99,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       </div>
     </div>
   }
+
   const totalInvocide = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center`}>
@@ -106,8 +107,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       </div>
     </div>
   }
-
-
 
   const statusBody = (rowData) => {
     const type = rowData.status;
@@ -122,8 +121,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         return <Chip className={`type ${style.defaultStatus}`} label={type} />;
     }
   }
-
-
 
   const reaclCost = (rowData) => {
     const realCost = (rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense) / rowData.total * 100;
@@ -169,8 +166,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     </div>
   }
 
-
-
   const labourBody = (rowData) => {
     const labourCost = (rowData.real_cost + rowData.cost_of_sale + rowData.operating_expense) / rowData.total * 100;
     return <div
@@ -213,7 +208,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       <span>${rowData.labor_expenses}</span>
     </div>
   }
-
 
   const costofSaleBody = (rowData) => {
     const costofsale = (rowData.real_cost + rowData.labor_expenses + rowData.operating_expense) / rowData.total * 100;
@@ -324,7 +318,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
-    console.log('sortField: ', sortField);
 
     setTempSort({ sortField, sortOrder })
     setPage(1);  // Reset to page 1 whenever searchValue changes
