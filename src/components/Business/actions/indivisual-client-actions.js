@@ -35,7 +35,7 @@ export const createFormData = (data, photo) => {
 
 // Helper function to handle API requests with FormData
 export const handleApiRequest = async (url, method, formData, onSuccess, onError) => {
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
 
     try {
         const response = await fetch(url, {

@@ -3,7 +3,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 // Sale Table Api
 export const fetchSales = async () => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const requestOptions = {
@@ -26,7 +26,7 @@ export const fetchSales = async () => {
 // Sales Note Api
 export const fetchSalesNotes = async (saleUniqueId, updatedNote) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json"); 
 
@@ -60,7 +60,7 @@ export const fetchSalesNotes = async (saleUniqueId, updatedNote) => {
 // Sale Won Api
 export const fetchWon = async (saleUniqueId) => {
 const myHeaders = new Headers();
-const accessToken = sessionStorage.getItem("access_token");
+const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
    myHeaders.append("Content-Type", "application/json");
 const raw = JSON.stringify({
@@ -82,7 +82,7 @@ return result[0];
 // Sale Contact Api
 export const fetchContacts = async (saleUniqueId, formData) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json");
   const requestOptions = {
@@ -110,7 +110,7 @@ export const fetchContacts = async (saleUniqueId, formData) => {
 // Sale Lead Api
 export const fetchSaleslead = async (saleUniqueId, updatedLead) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json"); 
 
@@ -146,7 +146,7 @@ export const fetchSaleslead = async (saleUniqueId, updatedLead) => {
 // Sale Multi Won Api
 export const fetchMultipleData = async (selectedUniqueIds) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json"); 
 
@@ -177,7 +177,7 @@ export const fetchMultipleData = async (selectedUniqueIds) => {
 // Sale DUPLICATE Api
 export const fetchduplicateData = async (saleUniqueId) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json"); 
 
@@ -198,7 +198,7 @@ return result[0];
 // Sale history Api
 export const fetchhistoryData = async (saleUniqueId) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json"); 
 
@@ -222,7 +222,7 @@ export const fetchhistoryData = async (saleUniqueId) => {
 // Sale Multi Lost Api
 export const fetchMultipleLost = async (selectedUniqueIds) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json"); 
 

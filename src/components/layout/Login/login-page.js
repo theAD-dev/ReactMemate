@@ -14,7 +14,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(
-    sessionStorage.getItem("isLoggedIn") === "true"
+    localStorage.getItem("isLoggedIn") === "true"
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,7 +36,7 @@ const Login = () => {
       console.log('success: ', success);
 
       if (success) {
-        sessionStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
         // Redirect or handle successful login
       } else {
@@ -50,7 +50,7 @@ const Login = () => {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
   };
   return (

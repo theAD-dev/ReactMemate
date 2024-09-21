@@ -6,7 +6,7 @@
  */
 export const fetchAPI = async (endpoint, options = {}) => {
     const { method = 'GET', headers = {}, body } = options;
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
     const isFormData = body instanceof FormData;
 
     const defaultHeaders = {

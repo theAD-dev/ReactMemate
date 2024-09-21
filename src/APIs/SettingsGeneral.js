@@ -10,7 +10,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
  */
 const fetchAPI = async (endpoint, options = {}) => {
   const { method = 'GET', headers = {}, body } = options;
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
 
   const defaultHeaders = {
     'Authorization': `Bearer ${accessToken}`,
@@ -90,7 +90,7 @@ export const deleteProjectStatusById = async (id) => {
 
 export const SettingsGeneralInformation = async () => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const requestOptions = {
@@ -111,7 +111,7 @@ export const SettingsGeneralInformation = async () => {
 
 export const updateGeneralInformation = async (data, photo) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const formData = new FormData();
@@ -145,7 +145,7 @@ export const updateGeneralInformation = async (data, photo) => {
 export const SettingsBankInformation = async () => {
 
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const requestOptions = {
@@ -166,7 +166,7 @@ export const SettingsBankInformation = async () => {
 
 export const updateBankInformation = async (generalData) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const formData = new FormData();
@@ -195,7 +195,7 @@ export const updateBankInformation = async (generalData) => {
 export const ProjectStatusesList = async () => {
 
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const requestOptions = {

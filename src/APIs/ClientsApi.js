@@ -174,7 +174,7 @@ export const deleteAddress = async (id) => {
 
 export const fetchClients = async (limit, offset) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 

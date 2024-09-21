@@ -62,7 +62,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
 
     try {
       setIsPending(true);
-      const accessToken = sessionStorage.getItem("access_token");
+      const accessToken = localStorage.getItem("access_token");
       const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/update/business/${client.id}/`, {
         method: 'PUT',
         headers: {

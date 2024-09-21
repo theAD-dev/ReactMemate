@@ -2,7 +2,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
 export const fetchExpenses = async (limit, offset) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
