@@ -75,9 +75,21 @@ const CalculateQuote = () => {
 
     const createNewRequest = async (action) => {
         payload.action = action;
+        if (action !== "send") {
+            delete payload.subject;
+            delete payload.email_body;
+            delete payload.to;
+            delete payload.cc;
+            delete payload.bcc;
+        }
+
         if (action === "saveAndsend") {
             setShowQuoteModal(true);
             return;
+        }
+
+        if (action === "quote-pdf-open") {
+            payload.action = "save";
         }
 
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
@@ -142,8 +154,6 @@ const CalculateQuote = () => {
                 toast.success(`Calculations updated successfully.`);
             }
 
-            navigate(`/sales`)
-
         } else {
             result = await newRequestMutation.mutateAsync(payload);
             let uniqueid = result?.unique_id;
@@ -170,12 +180,20 @@ const CalculateQuote = () => {
                     }
                 });
                 toast.success(`Calculations and new merge items created successfully.`);
-                navigate(`/sales`)
             } else {
                 toast.success(`Calculations created successfully.`);
-                navigate(`/sales`)
             }
         }
+
+        if (action === "quote-pdf-open") {
+            if (result?.quote_url) {
+                return navigate(`${result?.quote_url}`);
+            } else {
+                toast.error('Quote PDF not found.');
+            }
+        }
+
+        navigate(`/sales`)
         setIsLoading(false);
         setShowQuoteModal(false);
     }
@@ -263,7 +281,7 @@ const CalculateQuote = () => {
                                     Quote PDF
                                 </a>
                             ) : (
-                                <a href='#' type="button" className="button-custom text-button px-2">
+                                <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-2">
                                     Quote PDF
                                 </a>
                             )
@@ -295,7 +313,7 @@ const CalculateQuote = () => {
                 </div>
             </div>
 
-            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest}/>
+            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest} />
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
