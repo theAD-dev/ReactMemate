@@ -272,9 +272,9 @@ const CalculateQuote = () => {
                 </div>
                 <div className='d-flex justify-content-between align-items-center'>
                     <div className='d-flex align-items-center' style={{ gap: '0px' }}>
-                        <button type="button" className="button-custom text-button padding-left-0" style={{ color: '#B42318' }}>
+                        <a href='/sales' type="button" className="button-custom text-button padding-left-0" style={{ color: '#B42318' }}>
                             Cancel
-                        </button>
+                        </a>
                         {
                             (unique_id && newRequestQuery?.data?.quote_url) ? (
                                 <a href={`${newRequestQuery?.data?.quote_url}`} target='_blank' type="button" className="button-custom text-button px-2">
