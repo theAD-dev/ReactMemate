@@ -114,8 +114,10 @@ const formatDate = (timestamp) => {
     }
     const totalBody = (rowData) => {
    
-        return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`} style={{ color: "#7a271a"}}> 
+        return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}> 
+        <div className={` ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
               $ {(rowData.total).toFixed(2)}<span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span>
+        </div>
         </div>
     }
     const accountCode = (rowData) => {
@@ -132,15 +134,15 @@ const formatDate = (timestamp) => {
     const StatusBody = (rowData) => {
    
         return <div className={`d-flex align-items-center justify-content-between show-on-hover ${style.expensesStatus}`}>
-            <div className={`styleGrey01 exstatus paid ${rowData.paid}`}>
-            {rowData.paid === true ? (
-                <><span className="dots"></span> Paid </>
-              ) : (
-                <>Not Paid <span className="dots"></span></>
-              )}
-               
-            </div>
+        <div className={`styleGrey01 exstatus ${style.paid} ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
+          {rowData.paid ? (
+            <><span className="dots"></span> Complete </>
+          ) : (
+            <>Not Complete <span className="dots"></span></>
+          )}
         </div>
+      </div>
+      
     }
 
     const loadingIconTemplate = () => {

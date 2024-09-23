@@ -3,11 +3,10 @@ import { nanoid } from 'nanoid';
 import React, { useEffect, useRef, useState } from 'react'
 import { Sidebar } from 'primereact/sidebar';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from 'react-bootstrap-icons';
+import {  PlusCircle, X } from 'react-bootstrap-icons';
 
 import styles from './new-expense-create.module.scss';
 import IndivisualForm from './indivisual-form';
-import BusinessForm from './business-form';
 // import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
 import { toast } from 'sonner';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
@@ -61,27 +60,11 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
         formData.append("industry", data.industry);
         formData.append("description", data.description);
 
-        data.addresses.forEach((address, index) => {
-            formData.append(`addresses[${index}]address`, address.address);
-            formData.append(`addresses[${index}]city`, address.city);
-            formData.append(`addresses[${index}]postcode`, address.postcode);
-            formData.append(`addresses[${index}]is_main`, address.is_main);
-            formData.append(`addresses[${index}]title`, address.title);
-        });
+     
 
-        data.contact_persons.forEach((person, index) => {
-            formData.append(`contact_persons[${index}]firstname`, person.firstname);
-            formData.append(`contact_persons[${index}]lastname`, person.lastname);
-            formData.append(`contact_persons[${index}]email`, person.email);
-            formData.append(`contact_persons[${index}]phone`, person.phone);
-            formData.append(`contact_persons[${index}]position`, person.position);
-            formData.append(`contact_persons[${index}]is_main`, person.is_main);
-        });
+     
 
-        if (photo?.croppedImageBlob) {
-            const photoHintId = nanoid(6);
-            formData.append('photo', photo?.croppedImageBlob, `${photoHintId}.jpg`);
-        }
+     
 
         try {
             setIsPending(true);
@@ -108,11 +91,7 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
     }
 
     const handleSubmit = async (data) => {
-        if (data && tab === "2") {
-            indivisualFormSubmit(data);
-        } else {
-            businessFormSubmit(data);
-        }
+            indivisualFormSubmit(data);  
     };
 
     const handleExternalSubmit = () => {
@@ -121,9 +100,7 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
         }
     };
 
-    useEffect(() => {
-        if (!visible) setPhoto(null);
-    }, [visible])
+
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
@@ -135,7 +112,7 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
                                     <PlusCircle size={24} color="#17B26A" />
                                 </div>
                             </div>
-                            <span style={{ color: '344054', fontSize: '20px', fontWeight: 600 }}>Create New Client</span>
+                            <span style={{ color: '344054', fontSize: '20px', fontWeight: 600 }}>Create new Expense</span>
                         </div>
                         <span>
                             <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -145,27 +122,12 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
                     </div>
 
                     <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
-                        <div style={{ padding: "24px 18px 0px 18px", background: '#f9fafb' }}>
-                            <div className={clsx('tabs d-flex gap-3')}>
-                                <div onClick={() => setTab("1")} className={clsx(styles.tab, { [styles.active]: tab === "1" })}>
-                                    <div className={clsx(styles.iconBox)}>
-                                        <BuildingAdd size={24} color='#1AB2FF' />
-                                    </div>
-                                    <span className={clsx(styles.tabText)}>Business</span>
-                                </div>
-                                <div onClick={() => setTab("2")} className={clsx(styles.tab, { [styles.active]: tab === "2" })}>
-                                    <div className={clsx(styles.iconBox)}>
-                                        <PersonAdd size={24} color='#1AB2FF' />
-                                    </div>
-                                    <span className={clsx(styles.tabText)}>Individual</span>
-                                </div>
-                            </div>
+                    <div class={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
+                        <h5>Supplier Details</h5>
+                        <h6>Expense ID: ELT-339047-1</h6>
                         </div>
+                             <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
 
-                        {
-                            tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} />
-                                : <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
-                        }
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>

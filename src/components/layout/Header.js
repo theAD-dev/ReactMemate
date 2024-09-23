@@ -52,7 +52,6 @@ import RecurringQuotes from "./settings/quotesjobs/RecurringQuotes ";
 import RecurringJobs from "./settings/quotesjobs/RecurringJobs";
 import TermsandConditions from "./settings/termsandconditions/TermsandConditions";
 import TermsConditionsInvoice from "./settings/termsandconditions/TermsConditionsInvoice";
-import Industries from "./settings/integrations/index";
 import CustomersDiscountCategory from "./settings/customerssettings/CustomersDiscountCategory";
 import DepartmentTurnoverPlan from "./settings/accounting/DepartmentTurnoverPlan";
 import ExpensesAccount from "./settings/accounting/ExpensesAccount";
@@ -90,6 +89,7 @@ import InnovationStudio from "./settings/locations/innovation-studio";
 import CreativeHub from "./settings/locations/creative-hub";
 import ClientExpensesHistory from "../Business/Pages/expenses/expenses-order-history";
 import StatisticsPage from "../Business/Pages/statistics";
+import CustomersIndustries from "./settings/customerssettings/Industries";
 
 
 
@@ -629,7 +629,7 @@ const Header = ({ onClick }) => {
           />
           <Route
             path="/settings/customerssettings/industries"
-            element={<Industries />}
+            element={<CustomersIndustries />}
           />
           <Route
             path="/settings/customerssettings/customers-discount-category"

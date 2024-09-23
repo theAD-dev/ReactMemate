@@ -101,42 +101,85 @@
   background-color: #FFFBFA !important;
 }
 
-.plusIcon{
-  background: #fef3f2;
-    border: 1px solid #fecdca;
-    border: 1px solid var(--Success-200, #fecdca);
-    border-radius: 16px;
-    cursor: pointer;
-    display: inline-flex;
-    margin-left: 8px;
-    padding: 1px;
-}
+
 .fontStanderdSize{
-  align-items: center;
+    align-items: center;
     display: flex;
+    font-family: Inter;
+    color: var(--Success-900, #074D31);
+    text-align: center;
     font-family: Inter;
     font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    justify-content: flex-end;
-    line-height: 18px;
-    text-align: center;
+    line-height: 18px; 
+    svg{
+      fill: #074D31;
+    }
+    .plusIcon{
+      background: #F6FEF9;
+      border-radius: 16px;
+      border: 1px solid var(--Success-200, #A9EFC5);
+        cursor: pointer;
+        display: inline-flex;
+        margin-left: 8px;
+        padding: 1px;
+    }
+    .paid-false{
+      color: var(--Error-900, #7A271A);
+      text-align: center;
+      font-family: Inter;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 18px;
+      svg{
+        fill: #D92D20;
+      }
+      .plusIcon{
+        background: #F6FEF9;
+        border-radius: 16px;
+        border: 1px solid var(--Error-200, #FECDCA);
+        background: var(--Error-50, #FEF3F2);
+          cursor: pointer;
+          display: inline-flex;
+          margin-left: 8px;
+          padding: 1px;
+      }
+    }
 }
+
 .expensesStatus{
-  .false {
-    background: #fef3f2;
-    background: var(--Error-50,#fef3f2);
-    border: 1px solid #fecdca;
-    border: 1px solid var(--Error-200,#fecdca);
-    border-radius: 16px;
-    color: #b42318;
-    color: var(--Error-700,#b42318);
+  .paid {
     font-family: Inter;
     font-size: 12px;
     font-style: normal;
     line-height: 18px;
     text-align: center;
+    border-radius: 16px;
+    padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px) var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+
+
+  
+    &.paid-false {
+      background: #fef3f2;
+      background: var(--Error-50, #fef3f2);
+      border: 1px solid #fecdca;
+      color: #b42318;
+      color: var(--Error-700, #b42318);
+    }
+  
+    &.paid-true {
+      background: #e5f9e7;
+      background: var(--Success-50, #e5f9e7); /* Assuming a greenish color for "Paid" status */
+      border: 1px solid #33b679;
+      color: #1b5e20;
+      color: var(--Success-700, #1b5e20); /* Assuming green for "Paid" status */
+    }
   }
+  
+ 
+  
 
 .false {
   .dots {

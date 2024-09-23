@@ -12,6 +12,9 @@ import { InputTextarea } from "primereact/inputtextarea"
 import { yupResolver } from '@hookform/resolvers/yup';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
 import * as yup from 'yup';
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Editor } from "primereact/editor";
+import { useQuery } from "@tanstack/react-query";
 
 const TermsandConditions = () => {
     const [activeTab, setActiveTab] = useState('terms-and-conditions');
@@ -113,12 +116,29 @@ A. If any provision of these Terms and Conditions is held to be invalid or unenf
 B. No Joint Venture, No Derogation of Rights. You agree that no joint venture, partnership, employment, or agency relationship exists between you and us as a result of these Terms and Conditions or your use of the Site. Our performance of these Terms and Conditions is subject to existing laws and legal process, and nothing contained herein is in derogation of our right to comply with governmental, court and law enforcement requests or requirements relating to your use of the Site or information provided to or gathered by us with respect to such use.
  </p>
 </li>
-</ul>`);  // abbreviated for brevity
+</ul>`);  
 
 
 useEffect(() => {
     setValue('terms', 'This is the pre-filled description.');
 }, [setValue]);
+const [text, setText] = useState(null);
+const [subject, setSubject] = useState(null);
+const [emailTemplateId, setEmailTemplatedId] = useState(null);
+const emailQuery = useQuery({
+    queryKey: ["emailQuery", emailTemplateId],
+
+    enabled: !!emailTemplateId,
+    retry: 1,
+});
+const [errors1, setErrors] = useState({});
+useEffect(() => {
+    setText(emailQuery?.data?.body || "");
+    setSubject(emailQuery?.data?.subject);
+    setErrors((others) => ({ ...others, subject: false }));
+    setErrors((others) => ({ ...others, text: false }));
+}, [emailQuery?.data?.body]);
+
 
 
     const handleEditClick = () => setEdit(true);
@@ -155,32 +175,31 @@ useEffect(() => {
                                         <>
                                        
                                             <Row>
-                                            <Col sm={12}>
-                    <div className="d-flex flex-column gap-1">
+                                    
+                <Col sm={12}>
+                    <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
                         <label className={clsx(style.lable)}>Message</label>
-                        <IconField>
-            <InputIcon style={{ top: '80%' }}>
-                {errors.terms && <img src={exclamationCircle} alt="Error" />}
-            </InputIcon>
-            <InputTextarea 
-                {...register("terms")} 
-                rows={5} 
-                cols={30} 
-                className={clsx(style.inputText, { [style.error]: errors.terms })} 
-                style={{ resize: 'none' }} 
-                placeholder='Enter a description...' 
-            />
-        </IconField>
-                        {errors.terms && <p className="error-message">{errors.terms.message}</p>}
+                        <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                            {emailQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                        </InputIcon>
+                        <Editor 
+                                    value={terms} 
+                                    onTextChange={(e) => setTerms(e.htmlValue)} 
+                                />
                     </div>
+                    {errors?.text && (
+                        <p className="error-message mb-0">{"Message is required"}</p>
+                    )}
                 </Col>
                                             </Row>
-                                            <div>
-                                                <button onClick={handleSaveClick}>Save &nbsp; <Check color="#4CAF50" size={20} /></button>
-                                                <button onClick={handleCancelClick}>Cancel &nbsp; <X color="#FF0000" size={20} /></button>
+                                            <div className='d-flex justify-content-end mt-4'>
+                                               <Button className=' outline-button me-2' onClick={handleCancelClick}>Cancel &nbsp; </Button>
+                                                <Button className=' solid-button' onClick={handleSaveClick}>Send &nbsp; </Button>
+                                               
                                             </div>
                                         </>
                                     ) : (
+                                  
                                         <div className={style.editPara} dangerouslySetInnerHTML={{ __html: terms }} />
                                     )}
                                 </div>

@@ -7,49 +7,6 @@
   }
 }
 
-.tab {
-  display: flex;
-  padding: var(--spacing-lg, 12px) var(--spacing-xl, 16px);
-  align-items: center;
-  gap: var(--spacing-xs, 4px);
-  flex: 1 0 0;
-  border-radius: var(--radius-xs, 4px);
-  border: 1px solid #eaecf0;
-  background: #fff;
-  cursor: pointer;
-
-  .iconBox {
-    display: flex;
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--radius-full, 9999px);
-    background: var(--Primary-50, #ebf8ff);
-  }
-
-  .tabText {
-    color: #344054;
-    font-size: 14px;
-    font-weight: 500;
-    margin-left: 12px;
-  }
-}
-
-.tab.active {
-  border: 1px solid var(--Primary-300, #76d1ff);
-  background: var(--Primary-50, #ebf8ff);
-
-  .iconBox {
-    border-radius: var(--radius-full, 9999px);
-    background: var(--Primary-100, #bae8ff);
-  }
-
-  .tabText {
-    color: var(--Primary-700, #106b99);
-  }
-}
 
 .bgGreay {
   margin: 0px;
@@ -72,30 +29,6 @@
   margin: 16px 0px;
 }
 
-.uploadedImgBox {
-  width: 56px;
-  height: 56px;
-  display: flex;
-  flex-shrink: 0;
-  cursor: pointer;
-  overflow: hidden;
-  border-radius: 36px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #dedede;
-}
-
-.uploadedText1 {
-  color: #475467;
-  font-size: 14px;
-}
-
-.uploadedText2 {
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--Primary-700, #106b99);
-}
 
 .lable {
   color: var(--Gray-600, #475467);
@@ -182,4 +115,49 @@
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-50, #ebf8ff);
+}
+
+
+.expensesEditHead{
+  h5{
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; 
+    letter-spacing: -0.18px;
+  }
+  h6{
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+  }
+}
+.expensesCreateNew{
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; 
+  background: none;
+  padding: 0;
+  border: 0;
+  text-align: end;
+  &:hover{
+    color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; 
+  background: none;
+  padding: 0;
+  border: 0;
+  }
 }

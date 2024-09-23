@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-const Industries = () => {
+const CustomersIndustries = () => {
     const [activeTab, setActiveTab] = useState('industries');
     const [selectedIndustryId, setSelectedIndustryId] = useState(null);
 
@@ -229,4 +229,4 @@ const Industries = () => {
     );
 };
 
-export default Industries;
+export default CustomersIndustries;

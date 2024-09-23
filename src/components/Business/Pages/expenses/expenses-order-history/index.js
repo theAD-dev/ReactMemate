@@ -12,8 +12,6 @@ import style from './expenses-history.module.scss';
 import ClientOrderHistoryTable from './expenses-history-table';
 import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
 import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
-import BusinessClientView from '../../../features/clients-features/business-client-view/business-client-view';
-import SidebarClientLoading from '../../../features/clients-features/sidebar-client-loading/sidebar-client-loading';
 import { toast } from 'sonner';
 
 const ClientExpensesHistory = () => {
@@ -37,8 +35,8 @@ const ClientExpensesHistory = () => {
     };
 
     if (clientDetails?.error?.message === "Not found") {
-        toast.error('Client not found');
-        navigate('/clients');
+        toast.error('expenses not found');
+        navigate('/expenses');
     }
     return (
         <PrimeReactProvider className='client-order-history-page'>
@@ -80,11 +78,7 @@ const ClientExpensesHistory = () => {
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
-                    clientDetails?.data?.is_business
-                        ? <BusinessClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} setVisible={setVisible}/>
-                        : clientDetails?.data?.is_business === false
-                            ? <IndivisualClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} />
-                            : <SidebarClientLoading />
+                        <IndivisualClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} setVisible={setVisible}/>   
                 )}
             ></Sidebar>
         </PrimeReactProvider>
