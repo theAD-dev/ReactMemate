@@ -65,7 +65,7 @@ const StatisticsPage = () => {
                         </p>
                     </Link>
                 </div>
-                <div className='d-flex justify-content-center flex-wrap' style={{ gap: '24px' }}>
+                <div className='d-flex justify-content-center' style={{ gap: '24px' }}>
                     <Link className={style.box}>
                         <div className={clsx(style.executiveBox, style.executiveBox4)}>
                             <WindowDesktop color='#667085' size={40} />

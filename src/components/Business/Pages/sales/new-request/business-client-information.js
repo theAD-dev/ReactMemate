@@ -192,7 +192,7 @@ const BusinessClientInformation = () => {
 
       try {
         const accessToken = localStorage.getItem("access_token");
-        const response = await fetch('https://dev.memate.com.au/api/v1/clients/business/new/', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/business/new/`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${accessToken}`

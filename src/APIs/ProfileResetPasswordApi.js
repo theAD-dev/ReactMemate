@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export const ProfileResetUpdate = async (email) => {
     const myHeaders = new Headers();
@@ -40,7 +40,7 @@ export const ProfileChangePassword = async (password,tokenId) => {
   };
 
   try {
-    const response = await fetch(`https://dev.memate.com.au/api/v1/${tokenId}/`, requestOptions);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/${tokenId}/`, requestOptions);
     const result = await response.text();
     console.log(result);
     return result; // Return the result to handle success or error in the component

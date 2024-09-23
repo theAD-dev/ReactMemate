@@ -1,5 +1,5 @@
 import { fetchAPI } from "./base-api";
-const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
+const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export const createNewIndividualClient = async (data) => {
   const endpoint = '/clients/individual/new/';
