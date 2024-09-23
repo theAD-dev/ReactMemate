@@ -8,7 +8,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
  */
 const fetchAPI = async (endpoint, options = {}) => {
     const { method = 'GET', headers = {}, body } = options;
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
 
     const defaultHeaders = {
         'Authorization': `Bearer ${accessToken}`,
@@ -96,9 +96,29 @@ export const projectsToSalesUpdate = async (id) => {
     return fetchAPI(url.toString(), options);
 }
 
+export const projectsOrderDecline = async (id) => {
+    const endpoint = `/projects/decline/`;
+    const options = {
+        method: 'PUT',
+        body: { unique_id: id }
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
+export const projectsComplete = async (id) => {
+    const endpoint = `/projects/complete/`;
+    const options = {
+        method: 'PUT',
+        body: { unique_id: id }
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
     myHeaders.append("Authorization", `Bearer ${accessToken}`);
     myHeaders.append("Content-Type", "application/json");
 
@@ -122,7 +142,7 @@ export const getManagement = async () => {
 
 export const ProjectCardApi = async (uniqueId) => {
     const myHeaders = new Headers();
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
     myHeaders.append("Authorization", `Bearer ${accessToken}`);
     myHeaders.append("Content-Type", "application/json");
 
@@ -144,7 +164,7 @@ export const ProjectCardApi = async (uniqueId) => {
 
 export const cardScheduleUpdateApi = async (uniqueId) => {
     const myHeaders = new Headers();
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
     myHeaders.append("Authorization", `Bearer ${accessToken}`);
     myHeaders.append("Content-Type", "application/json");
 
@@ -167,7 +187,7 @@ export const cardScheduleUpdateApi = async (uniqueId) => {
 
 export const cardAddNoteApi = async (projectId) => {
     const myHeaders = new Headers();
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
     myHeaders.append("Authorization", `Bearer ${accessToken}`);
     myHeaders.append("Content-Type", "application/json");
 

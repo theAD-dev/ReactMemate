@@ -72,13 +72,13 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                     <input
                         type="text"
                         style={{ width: '60px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
-                        value={`${0}`}
+                        value={`${"0.00"}`}
                         onChange={(e) => { }}
                     />
                     <span>%</span>
                 </div>
             </td>
-            <td style={{ width: '118px', textAlign: 'left' }}>$ {0}</td>
+            <td style={{ width: '118px', textAlign: 'left' }}>$ {"0.00"}</td>
             <td style={{ width: '32px' }}>
                 <Trash color="#98A2B3" style={{ cursor: 'not-allowed', opacity: '.5' }} onClick={() => { }} />
             </td>
@@ -191,7 +191,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                 <input
                                                     type="text"
                                                     style={{ padding: '4px', width: '100px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.cost || '0.00'}`}
+                                                    value={`${value.cost}`}
                                                     onChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
                                                 />
                                             </div>
@@ -201,7 +201,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                 <input
                                                     type="text"
                                                     style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.quantity || '0.00'}`}
+                                                    value={`${value.quantity}`}
                                                     onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
                                                 />
                                                 <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
@@ -215,7 +215,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                 <input
                                                     type="text"
                                                     style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.profit_type_value || '0.00'}`}
+                                                    value={`${value.profit_type_value}`}
                                                     onChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
                                                 />
                                                 <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
@@ -231,7 +231,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                 <input
                                                     type="text"
                                                     style={{ width: '60px', padding: '4px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.discount || defaultDiscount || 0}`}
+                                                    value={`${value.discount}`}
                                                     onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
                                                 />
                                                 <span style={{ fontSize: '14px' }}>%</span>
@@ -339,6 +339,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 [key]: prevRows[key].map(item => {
                     if (item.id === id) {
                         const updatedItem = { ...item, [type]: value };
+                        if (updatedItem.profit_type === "MRG" && updatedItem.profit_type_value > 100) {
+                            updatedItem.profit_type_value = 99.99;
+                        }
                         updatedItem.total = calculateTotal(updatedItem);
                         return updatedItem;
                     }
@@ -389,12 +392,15 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     item.label = subItemLabel;
                     item.calculator = item.id;
                     item.index = subItem;
+                    item.discount = defaultDiscount;
+                    item.total = calculateTotal(item);
                 })
             } else {
                 data.push({
                     label: subItemLabel,
                     calculator: data.id,
                     index: subItem,
+                    discount: defaultDiscount
                 });
             }
 
@@ -464,6 +470,10 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             const { id, ...rest } = item; // Remove 'id' using destructuring
             return {
                 ...rest,
+                cost: parseFloat(rest.cost || 0.00).toFixed(2),
+                quantity: parseFloat(rest.quantity || 0.00).toFixed(2),
+                profit_type_value: parseFloat(rest.profit_type_value || 0.00).toFixed(2),
+                discount: parseFloat(rest.discount || 0.00).toFixed(2),
                 order: index // Add 'order' key with index value
             };
         });

@@ -1,9 +1,17 @@
 import React from 'react'
-import SendEmail from '../../../../../ui/send-email/send-email'
+import SendEmailForm from '../../../../../ui/send-email/send-email-form'
+import { toast } from 'sonner';
 
-const SendQuote = ({ show, setShow, contactPersons }) => {
+const SendQuote = ({ show, setShow, contactPersons, setPayload, createNewRequest }) => {
+  const save = async () => {
+    try {
+      await createNewRequest('send');
+    } catch (err) {
+    }
+  }
+
   return (
-    <SendEmail show={show} setShow={setShow} contactPersons={contactPersons} />
+    <SendEmailForm show={show} setShow={setShow} contactPersons={contactPersons} setPayload={setPayload} save={save} />
   )
 }
 

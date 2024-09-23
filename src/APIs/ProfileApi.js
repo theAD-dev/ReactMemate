@@ -11,7 +11,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
 export const fetchProfile = async () => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const requestOptions = {
@@ -44,7 +44,7 @@ export const fetchProfile = async () => {
 
 export const updateProfile = async (data, photo) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
 
   const formData = new FormData();

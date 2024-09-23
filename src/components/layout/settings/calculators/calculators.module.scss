@@ -1,3 +1,7 @@
+.wraper {
+  height: calc(100vh - 207px) !important;
+}
+
 .topHeadBorder {
   border-bottom: 1px solid #eaecf0;
   margin-bottom: 24px;
@@ -463,10 +467,10 @@
   margin-left: 12px;
   margin-right: 12px;
 }
-.edidcodtUpdate{
+.edidcodtUpdate {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: #FFF;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
   padding: 12px 12px;
   margin: 0 0;
 }

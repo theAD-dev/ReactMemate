@@ -30,7 +30,6 @@ import Invoices from "../Business/Pages/invoices/invoices";
 import Expenses from "../Business/Pages/expenses";
 import Home from "../Home";
 
-import Statistics from "../Business/Pages/statistics";
 import GeneralInformation from "../layout/settings/generalinformation/GeneralInformation";
 import BankDetails from "../layout/settings/generalinformation/BankDetails";
 import RegionLanguage from "../layout/settings/generalinformation/RegionLanguage";
@@ -90,6 +89,7 @@ import Headquarter from "./settings/locations/headquarter";
 import InnovationStudio from "./settings/locations/innovation-studio";
 import CreativeHub from "./settings/locations/creative-hub";
 import ClientExpensesHistory from "../Business/Pages/expenses/expenses-order-history";
+import StatisticsPage from "../Business/Pages/statistics";
 
 
 
@@ -456,6 +456,7 @@ const Header = ({ onClick }) => {
           <Route path="/suppliers" element={<SupplierPage />} />
           <Route path="/suppliers/:id/history" element={<SupplierHistoryPage />} />
 
+          <Route path="/statistics" element={<StatisticsPage />} />
 
 
 
@@ -463,7 +464,7 @@ const Header = ({ onClick }) => {
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/management" element={<Management />} />
           <Route path="/orders" element={<OrderPage />} />
-          <Route path="/statistics" element={<Statistics />} />
+          
           <Route path="/profile" element={<Profile />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/expenses" element={<Expenses />} />

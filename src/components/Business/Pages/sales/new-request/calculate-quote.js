@@ -75,10 +75,23 @@ const CalculateQuote = () => {
 
     const createNewRequest = async (action) => {
         payload.action = action;
-        if (action === "send") {
+        if (action !== "send") {
+            delete payload.subject;
+            delete payload.email_body;
+            delete payload.to;
+            delete payload.cc;
+            delete payload.bcc;
+        }
+
+        if (action === "saveAndsend") {
             setShowQuoteModal(true);
             return;
         }
+
+        if (action === "quote-pdf-open") {
+            payload.action = "save";
+        }
+
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
         console.log('payload.........: ', payload);
 
@@ -141,8 +154,6 @@ const CalculateQuote = () => {
                 toast.success(`Calculations updated successfully.`);
             }
 
-            navigate(`/sales`)
-
         } else {
             result = await newRequestMutation.mutateAsync(payload);
             let uniqueid = result?.unique_id;
@@ -169,13 +180,22 @@ const CalculateQuote = () => {
                     }
                 });
                 toast.success(`Calculations and new merge items created successfully.`);
-                navigate(`/sales`)
             } else {
                 toast.success(`Calculations created successfully.`);
-                navigate(`/sales`)
             }
         }
+
+        if (action === "quote-pdf-open") {
+            if (result?.quote_url) {
+                return navigate(`${result?.quote_url}`);
+            } else {
+                toast.error('Quote PDF not found.');
+            }
+        }
+
+        navigate(`/sales`)
         setIsLoading(false);
+        setShowQuoteModal(false);
     }
 
     return (
@@ -252,16 +272,16 @@ const CalculateQuote = () => {
                 </div>
                 <div className='d-flex justify-content-between align-items-center'>
                     <div className='d-flex align-items-center' style={{ gap: '0px' }}>
-                        <button type="button" className="button-custom text-button padding-left-0" style={{ color: '#B42318' }}>
+                        <a href='/sales' type="button" className="button-custom text-button padding-left-0" style={{ color: '#B42318' }}>
                             Cancel
-                        </button>
+                        </a>
                         {
                             (unique_id && newRequestQuery?.data?.quote_url) ? (
                                 <a href={`${newRequestQuery?.data?.quote_url}`} target='_blank' type="button" className="button-custom text-button px-2">
                                     Quote PDF
                                 </a>
                             ) : (
-                                <a href='#' type="button" className="button-custom text-button px-2">
+                                <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-2">
                                     Quote PDF
                                 </a>
                             )
@@ -283,7 +303,7 @@ const CalculateQuote = () => {
                                 && (newRequestMutation?.variables?.action === "save" || updateRequestMutation?.variables?.action === "save")
                                 && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
-                        <button type="button" onClick={() => createNewRequest('send')} className="submit-button">
+                        <button type="button" onClick={() => createNewRequest('saveAndsend')} className="submit-button">
                             Save and Send
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
                                 && (newRequestMutation?.variables?.action === "send" || updateRequestMutation?.variables?.action === "send")
@@ -293,7 +313,7 @@ const CalculateQuote = () => {
                 </div>
             </div>
 
-            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} />
+            <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest} />
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

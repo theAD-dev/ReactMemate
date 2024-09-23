@@ -414,8 +414,8 @@ function FileUpload({ photo, setPhoto, data }) {
               />
             </div>
           ) : (
-            <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '10px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
-              {photo || data.photo ? (
+            <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '2px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
+              {data?.company_logo ? (
                 <div
                   style={{
                     width: '64px',
@@ -428,8 +428,8 @@ function FileUpload({ photo, setPhoto, data }) {
                   }}
                 >
                   <img
-                    src={photo || data.photo}
-                    width={76}
+                    src={data?.company_logo}
+                    style={{ width: '100%' }}
                     alt="Uploaded Photo"
                   />
                 </div>

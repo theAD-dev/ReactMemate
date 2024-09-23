@@ -2,7 +2,7 @@
 
   export const fetchHomePage = async () => {
     const myHeaders = new Headers();
-    const accessToken = sessionStorage.getItem("access_token");
+    const accessToken = localStorage.getItem("access_token");
     myHeaders.append("Authorization", `Bearer ${accessToken}`);
   
     const requestOptions = {

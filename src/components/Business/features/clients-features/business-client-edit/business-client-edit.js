@@ -2,25 +2,39 @@ import { nanoid } from 'nanoid';
 import React, { forwardRef, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import BusinessForm from '../new-client-create/business-form';
+import { deleteAddress, deleteContactPerson } from '../../../../../APIs/ClientsApi';
 
 
 const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
   const [photo, setPhoto] = useState(client?.photo || null);
-  if (client?.addresses?.length === 0) client.addresses.push({});
 
   const [defaultValues, setDefaultValues] = useState({
     ...client,
     category: client?.category?.id || "",
-    addresses: client?.addresses?.map((address) => ({
-      id: address?.id || "",
-      title: address?.title || "",
-      country: address?.country_id || "",
-      state: address?.state_id || "",
-      city: address?.city || "",
-      address: address?.address || "",
-      postcode: address?.postcode || ""
-    }))
-  } || null)
+    contact_persons: client?.contact_persons
+      ?.filter((contact) => !contact?.deleted)
+      .map((contact) => ({
+        ...contact,
+        uniqeId: contact?.id || "",
+        deleted: contact?.deleted
+      })),
+    addresses: client?.addresses
+      ?.filter((address) => !address?.deleted)
+      .map((address) => ({
+        id: address?.id || "",
+        uniqeId: address?.id || "",
+        deleted: address?.deleted,
+        title: address?.title || "",
+        country: address?.country_id || "",
+        state: address?.state_id || "",
+        city: address?.city || "",
+        address: address?.address || "",
+        postcode: address?.postcode || ""
+      }))
+  } || null);
+
+  if (defaultValues?.addresses?.length === 0) defaultValues.addresses.push({ deleted: false });
+  if (defaultValues?.contact_persons?.length === 0) defaultValues.contact_persons.push({ deleted: false });
 
   const businessFormSubmit = async (data) => {
     console.log('data: ', data);
@@ -62,7 +76,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
 
     try {
       setIsPending(true);
-      const accessToken = sessionStorage.getItem("access_token");
+      const accessToken = localStorage.getItem("access_token");
       const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/update/business/${client.id}/`, {
         method: 'PUT',
         headers: {
@@ -92,8 +106,43 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
       toast.error('Client id not found');
     }
   };
+
+  const deleteLocation = async (id) => {
+    try {
+      const response = await deleteAddress(id);
+      console.log('response: ', response);
+
+      if (response.message) {
+        toast.success(`Address deleted successfully.`);
+      } else {
+        toast.error(`Failed to delete address. Please try again.`);
+      }
+    } catch (err) {
+      toast.error(`Failed to delete address. Please try again.`);
+    }
+  };
+
+  const deleteContact = async (id) => {
+    try {
+      const response = await deleteContactPerson(id)
+
+      if (response.message) {
+        toast.success(`Contact deleted successfully.`);
+      } else {
+        toast.error(`Failed to delete contact. Please try again.`);
+      }
+    } catch (err) {
+      toast.error(`Failed to delete contact. Please try again.`);
+    }
+  };
+
   return (
-    <BusinessForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues} />
+    <BusinessForm photo={photo} setPhoto={setPhoto}
+      ref={ref} onSubmit={handleSubmit}
+      defaultValues={defaultValues}
+      deleteAddress={deleteLocation}
+      deleteContact={deleteContact}
+    />
   )
 })
 

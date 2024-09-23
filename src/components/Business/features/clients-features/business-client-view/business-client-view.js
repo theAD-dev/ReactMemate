@@ -93,7 +93,10 @@ const ViewSection = ({ client, industries, refetch }) => {
   let clientIndustry = industries?.find((industry) => industry.id === client?.industry)
   let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
 
-  const markContactPersonMain = async(id) => {
+  const addresses = client?.addresses?.filter((address) => !address?.deleted);
+  const contacts = client?.contact_persons?.filter((contact) => !contact?.deleted);
+
+  const markContactPersonMain = async (id) => {
     try {
       if (!id) return toast.error("Id not found");
       setIsMainLoading(id);
@@ -109,7 +112,7 @@ const ViewSection = ({ client, industries, refetch }) => {
     }
   }
 
-  const markAddressMain = async(id) => {
+  const markAddressMain = async (id) => {
     try {
       if (!id) return toast.error("Id not found");
       setIsMainLoading(id);
@@ -197,7 +200,7 @@ const ViewSection = ({ client, industries, refetch }) => {
 
       <h5 className={clsx(style.boxLabel)}>Contact Person</h5>
       {
-        client?.contact_persons?.map((contact) => (
+        contacts?.map((contact) => (
           <div key={contact.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
               <div className={clsx(style.iconBox, 'cursor-pointer')} onClick={() => markContactPersonMain(contact.id)}>
@@ -255,15 +258,15 @@ const ViewSection = ({ client, industries, refetch }) => {
           </div>
         ))
       }
-      {client?.contact_persons?.length === 0 && <div className={clsx(style.box)}>-</div>}
 
+      {contacts?.length === 0 && <div className={clsx(style.box)}>-</div>}
 
       <h5 className={clsx(style.boxLabel)}>Locations</h5>
       {
-        client?.addresses?.map((address) => (
+        addresses?.map((address) => (
           <div key={address.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
-              <div className={clsx(style.iconBox, 'cursor-pointer')} onClick={()=> markAddressMain(address.id)}>
+              <div className={clsx(style.iconBox, 'cursor-pointer')} onClick={() => markAddressMain(address.id)}>
                 {
                   (isMainLoading === address.id) ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
                     : <StarFill color={address.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
@@ -308,7 +311,7 @@ const ViewSection = ({ client, industries, refetch }) => {
           </div>
         ))
       }
-      {client?.addresses?.length === 0 && <div className={clsx(style.box)}>-</div>}
+      {addresses?.length === 0 && <div className={clsx(style.box)}>-</div>}
 
 
       <h5 className={clsx(style.boxLabel)}>Client Description</h5>

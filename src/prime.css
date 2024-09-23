@@ -300,7 +300,16 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 }
 
 .ql-editor > * {
-  font-size: 16px;
+  font-size: 16px !important;
+  font-family: Inter !important;
+}
+
+.ql-editor.ql-blank::before  {
+  color: var(--Gray-400, #98a2b3) !important;
+  font-size: 16px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 24px !important;
   font-family: Inter !important;
 }
 
@@ -312,5 +321,5 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   padding: 0px !important;
   color: #475467 !important;
   background: transparent !important;
-  border: 0px solid #D0D5DD !important;
+  border: 0px solid #d0d5dd !important;
 }

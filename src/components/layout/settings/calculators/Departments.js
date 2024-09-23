@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../Sidebar';
-import { PlusLg, PencilSquare, ChevronDown, Plus, Trash, ChevronUp, X, PlusCircle, Pencil } from "react-bootstrap-icons";
+import { PlusLg, PencilSquare, ChevronDown, Plus, Trash, ChevronUp, X, PlusCircle, Pencil, Save, Backspace } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import style from './calculators.module.scss';
@@ -16,6 +16,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { toast } from 'sonner';
 import DeleteConfirmationModal from './delete-confirmation-modal';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -76,7 +77,7 @@ const Departments = () => {
     }
 
     const createDynamicTabs = () => {
-        return departmentQuery?.data?.map((department, i) => (
+        return departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => (
             <AccordionTab
                 className={clsx(style.accorHeadbox, 'main-accordion-header')}
                 key={department.id}
@@ -112,7 +113,7 @@ const Departments = () => {
                     }}
                 >
                     {
-                        department?.subindexes?.map((subindex) => (
+                        department?.subindexes?.filter((data) => !data?.deleted)?.map((subindex) => (
                             <AccordionTab
                                 className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
                                 key={subindex.id}
@@ -167,7 +168,7 @@ const Departments = () => {
                         <div className='headSticky'>
                             <h1>Calculators</h1>
                         </div>
-                        <div className={`content_wrap_main`}>
+                        <div className={clsx(style.wraper, `content_wrap_main`)}>
                             <div className='content_wrapper'>
                                 <div className="listwrapper">
                                     <div className={`topHeadStyle pb-4 ${style.topHeadBorder}`}>
@@ -240,6 +241,14 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
     const [tempCalculator, setTempCalculator] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
 
+    useEffect(() => {
+        if (tempCalculator?.profit_type === "MRG") {
+            let value = tempCalculator?.profit_type_value || 0.00;
+            if (value > 100.00) value = 99.99;
+            setTempCalculator((others) => ({ ...others, profit_type_value: value }))
+        }
+    }, [tempCalculator])
+
     const saveCalculator = async () => {
         console.log('tempCalculator: ', tempCalculator);
         let payload = {
@@ -288,7 +297,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             }
 
             let discount = parseFloat(tempCalculator?.discount) || 0;
-            let total = subtotal - (subtotal * discount) / 100;
+            let total = parseFloat(subtotal - (subtotal * discount) / 100).toFixed(2);
 
             if (total !== tempCalculator.total) {
                 setTempCalculator((others) => ({ ...others, total }));
@@ -308,7 +317,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
 
                         <Row className={style.edidcodtUpdate}>
                             <Col>
-                            <div className={`d-flex gap-2 justify-content-between align-items-center `}>
+                                <div className={`d-flex gap-2 justify-content-between align-items-center `}>
                                     <div className='left'>
                                         <label>Cost</label>
                                         <InputNumber className={clsx(style.inputNumber)} prefix="$" value={parseFloat(tempCalculator?.cost || 0)}
@@ -357,7 +366,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                                                 onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
                                                 maxFractionDigits={2}
                                                 minFractionDigits={2}
-                                                inputId="minmaxfraction"
+                                                max={tempCalculator?.profit_type === "MRG" ? 99.99 : undefined}
                                             />
                                             <select value={tempCalculator?.profit_type}
                                                 style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
@@ -382,10 +391,17 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
                         </Row>
 
-                        <div className={clsx(style.bottom)}>
-                            <div className='d-flex justify-content-end gap-3 align-items-center h-100'>
-                                <Button onClick={() => setIsEdit(false)} className='outline-button'>Cancel</Button>
-                                <Button onClick={saveCalculator} className='solid-button'>{isLoading ? "Loading..." : "Save Details"}</Button>
+                        <div className='d-flex justify-content-between align-items-center mt-4'>
+                            <span></span>
+                            <div className={clsx(style.RItem)}>
+                                <Button className={style.delete} onClick={(e) => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
+                                <Button className={style.create} onClick={saveCalculator}>
+                                    {
+                                        isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
+                                            : <Save color="#106B99" size={18} className='me-2' />
+                                    }
+                                    Save Calculator
+                                </Button>
                             </div>
                         </div>
                     </>
@@ -429,6 +445,14 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
 const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [tempCalculator, setTempCalculator] = useState(null);
+    if (!tempCalculator?.profit_type) setTempCalculator((others) => ({ ...others, profit_type: "MRG" }));
+    useEffect(() => {
+        if (tempCalculator?.profit_type === "MRG") {
+            let value = tempCalculator?.profit_type_value || 0.00;
+            if (value > 100.00) value = 99.99;
+            setTempCalculator((others) => ({ ...others, profit_type_value: value }))
+        }
+    }, [tempCalculator])
 
     useEffect(() => {
         if (tempCalculator) {
@@ -446,7 +470,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
             }
 
             let discount = parseFloat(tempCalculator?.discount) || 0;
-            let total = subtotal - (subtotal * discount) / 100;
+            let total = parseFloat(subtotal - (subtotal * discount) / 100).toFixed(2);
 
             if (total !== tempCalculator.total) {
                 setTempCalculator((others) => ({ ...others, total }));
@@ -535,10 +559,11 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                             <label className='d-block text-center'>Markup/Margin</label>
                             <div className='d-flex gap-1 align-items-center'>
                                 <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
-                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
+                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: parseFloat(e.value) }))}
+                                    max={tempCalculator?.profit_type === "MRG" ? 99.99 : undefined}
                                     maxFractionDigits={2}
                                     minFractionDigits={2}
-                                    inputId="minmaxfraction"
+                                    useGrouping={false}
                                 />
                                 <select value={tempCalculator?.profit_type}
                                     style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
@@ -563,10 +588,17 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 </Col>
             </Row>
 
-            <div className={clsx(style.bottom)}>
-                <div className='d-flex justify-content-end gap-3 align-items-center h-100'>
-                    <Button onClick={() => cancelCreateCalculator(null)} className='outline-button'>Cancel</Button>
-                    <Button onClick={saveCalculator} className='solid-button'>{isLoading ? "Loading..." : "Save Details"}</Button>
+            <div className='d-flex justify-content-between align-items-center mt-4'>
+                <span></span>
+                <div className={clsx(style.RItem)}>
+                    <Button className={style.delete} onClick={(e) => cancelCreateCalculator(null)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
+                    <Button className={style.create} onClick={saveCalculator}>
+                        {
+                            isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
+                                : <Save color="#106B99" size={18} className='me-2' />
+                        }
+                        Save Calculator
+                    </Button>
                 </div>
             </div>
         </div>
@@ -575,7 +607,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
 
 const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, cancelCreateCalculator }) => {
     const uniqueCalculators = calculators.filter((item, index, self) =>
-        index === self.findIndex((t) => t.id === item.id)
+        index === self.findIndex((t) => t.id === item.id && !item?.deleted)
     );
     const summary = calculateSummary(uniqueCalculators, 'no');
 
@@ -586,7 +618,7 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
             }
 
             {
-                uniqueCalculators.map(calculator => (
+                uniqueCalculators?.map(calculator => (
                     <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
                 ))
             }
@@ -777,7 +809,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
                 }
 
                 refetch();
-                setVisible(false)
+                handleClose();
             }
         } catch (error) {
             console.error(`Error ${editDepartment?.id ? 'updating' : 'creating'} department:`, error);
@@ -854,7 +886,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
                 }
 
                 refetch();
-                setVisible2(false)
+                handleClose();
             }
         } catch (error) {
             console.error(`Error ${editSubDepartment?.id ? 'updating' : 'creating'} sub department:`, error);

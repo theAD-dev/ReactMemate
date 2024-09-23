@@ -29,12 +29,12 @@ const SelectComponent = ({ departments, handleChange, isShowlabel = false, title
             overflow={"auto"}
             position={"anchor"}
         >
-            {departments?.map((department, i) => (
+            {departments?.filter((data) => !data?.deleted)?.map((department, i) => (
                 <React.Fragment key={department.id}>
                     {
                         department?.subindexes?.length ? (
                             <SubMenu overflow='auto' menuStyle={{ maxHeight: '320px', overflow: 'auto', textAlign: 'left' }} key={department.id} label={department?.name}> {
-                                department?.subindexes?.map((subitem) => (
+                                department.subindexes?.filter((data) => !data?.deleted)?.map((subitem) => (
                                     <MenuItem key={subitem.id} onClick={() => handleSubMenuClick(subitem?.name, subitem?.id)}>{subitem?.name}</MenuItem>
                                 ))
                             }

@@ -4,7 +4,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 
 export const clientsBusinessNewCreate = async (mainData) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json");
 
@@ -28,7 +28,7 @@ export const clientsBusinessNewCreate = async (mainData) => {
 
 export const clientsIndividualClient = async (mainData) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json");
 
@@ -53,7 +53,7 @@ export const clientsIndividualClient = async (mainData) => {
 
 export const newQuoteClientList = async (limit, offset, name) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json");
 
@@ -81,7 +81,7 @@ export const newQuoteClientList = async (limit, offset, name) => {
 
 export const newQuoteClientListids = async (id) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json");
 
@@ -105,7 +105,7 @@ export const newQuoteClientListids = async (id) => {
 
 export const SearchClientList = async (query) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json");
 
@@ -134,7 +134,7 @@ export const SearchClientList = async (query) => {
 
 export const DesktopUserInfo = async () => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", "application/json");
 

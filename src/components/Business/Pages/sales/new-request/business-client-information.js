@@ -191,7 +191,7 @@ const BusinessClientInformation = () => {
       }
 
       try {
-        const accessToken = sessionStorage.getItem("access_token");
+        const accessToken = localStorage.getItem("access_token");
         const response = await fetch('https://dev.memate.com.au/api/v1/clients/business/new/', {
           method: 'POST',
           headers: {

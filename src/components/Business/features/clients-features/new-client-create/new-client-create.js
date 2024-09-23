@@ -85,7 +85,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
 
         try {
             setIsPending(true);
-            const accessToken = sessionStorage.getItem("access_token");
+            const accessToken = localStorage.getItem("access_token");
             const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/business/new/`, {
                 method: 'POST',
                 headers: {
@@ -163,7 +163,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
                         </div>
 
                         {
-                            tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} />
+                            tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} deleteAddress={()=> { }} deleteContact={() => {}} />
                                 : <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
                         }
                     </div>

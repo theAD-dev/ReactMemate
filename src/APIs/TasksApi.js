@@ -3,7 +3,7 @@ const API_BASE_URL = 'https://dev.memate.com.au/api/v1';
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Fetch API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasks = async (limit, offset) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -31,7 +31,7 @@ export const fetchTasks = async (limit, offset) => {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> View Task API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasksRead = async (taskId) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -57,7 +57,7 @@ export const fetchTasksRead = async (taskId) => {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Task Update API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasksUpdate= async (mainData,taskId) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -85,7 +85,7 @@ export const partialsTasksUpdate= async (taskId, data) => {
   console.log('taskId: ', taskId);
   console.log('data: ', data);
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -111,7 +111,7 @@ export const partialsTasksUpdate= async (taskId, data) => {
 export const fetchTasksNew = async (formData) => {
 
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -136,7 +136,7 @@ export const fetchTasksNew = async (formData) => {
 export const fetchTasksProject = async () => {
  
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -161,7 +161,7 @@ export const fetchTasksProject = async () => {
 export const fetchTasksUsers = async () => {
  
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -185,7 +185,7 @@ export const fetchTasksUsers = async () => {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DELETE Task  API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const fetchTasksDelete = async (taskId) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 
@@ -215,7 +215,7 @@ export const fetchTasksDelete = async (taskId) => {
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Complete Task  API >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 export const TaskCompleteJob = async (taskId, finished) => {
   const myHeaders = new Headers();
-  const accessToken = sessionStorage.getItem("access_token");
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
   myHeaders.append("Content-Type", `application/json`);
 

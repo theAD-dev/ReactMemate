@@ -23,8 +23,8 @@ export const authenticateUser = async (email, password) => {
         const result = await response.json();
       
         const { access, refresh } = result;
-        sessionStorage.setItem("access_token", access);
-        sessionStorage.setItem("refresh_token", refresh);
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
       
         return { success: true };
       } catch (error) {

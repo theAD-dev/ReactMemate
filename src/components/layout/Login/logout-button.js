@@ -2,7 +2,7 @@ import React from "react";
 import BoxArrowRight from "../../../assets/images/icon/box-arrow-right.png";
 const LogoutButton = () => {
   const onClick = () => {
-    sessionStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("isLoggedIn");
     window.location.href = "/login";
   };
 
