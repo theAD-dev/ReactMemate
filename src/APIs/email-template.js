@@ -10,6 +10,26 @@ export const getEmailTemplates = async () => {
   return fetchAPI(url.toString(), options);
 }
 
+export const createEmailTemplate = async (data) => {
+  const endpoint = `/settings/templates/email-templates/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const updateEmailTemplate = async (id, data) => {
+  const endpoint = `/settings/templates/email-templates/${id}`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const getEmail = async (id) => {
   const endpoint = `/settings/templates/email-templates/${id}/`;
   const options = {

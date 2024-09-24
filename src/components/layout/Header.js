@@ -43,7 +43,7 @@ import ExistingClients from "../Business/Pages/sales/new-request/existing-client
 import SelectClientType from "../Business/Pages/sales/new-request/select-client";
 import Departments from "../layout/settings/calculators/Departments";
 import JobTemplates from "./settings/templates/JobTemplates";
-import EmailTemplates from "./settings/templates/EmailTemplates";
+import EmailTemplates from "./settings/templates/email-templates";
 import EmailSignatures from "./settings/templates/EmailSignatures";
 import ProposalTemplates from "./settings/templates/ProposalTemplates";
 import CompanyEthos from "./settings/companyethos/CompanyEthos";
@@ -90,6 +90,7 @@ import CreativeHub from "./settings/locations/creative-hub";
 import ClientExpensesHistory from "../Business/Pages/expenses/expenses-order-history";
 import StatisticsPage from "../Business/Pages/statistics";
 import CustomersIndustries from "./settings/customerssettings/Industries";
+import CreateEmailTemplate from "./settings/templates/create-email-template";
 
 
 
@@ -455,10 +456,10 @@ const Header = ({ onClick }) => {
 
           <Route path="/suppliers" element={<SupplierPage />} />
           <Route path="/suppliers/:id/history" element={<SupplierHistoryPage />} />
-          
+
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/expenses/:id/expense-history" element={<ClientExpensesHistory />} />
-          
+
           <Route path="/orders" element={<OrderPage />} />
 
           <Route path="/statistics" element={<StatisticsPage />} />
@@ -468,10 +469,10 @@ const Header = ({ onClick }) => {
           <Route path="/work" element={<Work />} />
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/management" element={<Management />} />
-          
+
           <Route path="/profile" element={<Profile />} />
           <Route path="/invoices" element={<Invoices />} />
-      
+
 
 
           <Route
@@ -557,8 +558,8 @@ const Header = ({ onClick }) => {
               element={<CalculateQuote />}
             />
           </Route>
-           
-           
+
+
 
           <Route
             path="/settings/calculators/departments"
@@ -576,8 +577,8 @@ const Header = ({ onClick }) => {
             path="/settings/location/creative-hub"
             element={<CreativeHub />}
           />
-         
-        
+
+
           <Route
             path="/settings/templates/job-templates"
             element={<JobTemplates />}
@@ -585,6 +586,14 @@ const Header = ({ onClick }) => {
           <Route
             path="/settings/templates/email-templates"
             element={<EmailTemplates />}
+          />
+          <Route
+            path="/settings/templates/email-templates/new"
+            element={<CreateEmailTemplate />}
+          />
+          <Route
+            path="/settings/templates/email-templates/:id"
+            element={<CreateEmailTemplate />}
           />
           <Route
             path="/settings/templates/email-signatures"
@@ -711,8 +720,8 @@ const Header = ({ onClick }) => {
             path="/settings/templates/edit-proposal/"
             element={<EditProposal />}
           />
-        
-         
+
+
 
 
 
