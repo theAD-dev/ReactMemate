@@ -448,13 +448,18 @@ const Header = ({ onClick }) => {
       </div>
       <div className="main-wrapper">
         <Routes>
-          <Route path="*" element={<Home />} />
+          <Route path="/" element={<Home />} />
 
           <Route path="/clients" element={<ClientPage />} />
           <Route path="/clients/:id/order-history" element={<ClientOrderHistory />} />
 
           <Route path="/suppliers" element={<SupplierPage />} />
           <Route path="/suppliers/:id/history" element={<SupplierHistoryPage />} />
+          
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/expenses/:id/expense-history" element={<ClientExpensesHistory />} />
+          
+          <Route path="/orders" element={<OrderPage />} />
 
           <Route path="/statistics" element={<StatisticsPage />} />
 
@@ -463,13 +468,10 @@ const Header = ({ onClick }) => {
           <Route path="/work" element={<Work />} />
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/management" element={<Management />} />
-          <Route path="/orders" element={<OrderPage />} />
           
           <Route path="/profile" element={<Profile />} />
           <Route path="/invoices" element={<Invoices />} />
-          <Route path="/expenses" element={<Expenses />} />
       
-         <Route path="/expenses/:id/expense-history" element={<ClientExpensesHistory />} />
 
 
           <Route
