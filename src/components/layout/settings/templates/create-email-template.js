@@ -148,11 +148,9 @@ const CreateEmailTemplate = () => {
                     </div>
                     <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB' }}>
                         <div className='content_wrapper d-block px-3' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
-                            <Link to={'/settings/templates/email-templates/'}>
-                                <Button className={clsx(style.transparent, 'text-button px-0')} style={{ marginBottom: '16px' }}>
-                                    <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
-                                </Button>
-                            </Link>
+                            <a href='/settings/templates/email-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
+                                <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
+                            </a>
 
                             <div className='d-flex align-items-center w-100'>
                                 {
