@@ -11,9 +11,9 @@ import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from 'primereact/dropdown';
-
+import { Calendar } from 'primereact/calendar';
 import styles from './new-expense-create.module.scss';
-import { Plus } from 'react-bootstrap-icons';
+import { Plus ,Calendar3} from 'react-bootstrap-icons';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 // import { getCities, getClientCategories, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 
@@ -26,7 +26,8 @@ const schema = yup
 
 const IndivisualForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
 
-
+    const [date, setDate] = useState(null);
+    const [dueDate, setDueDate] = useState(null);
 
     const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
@@ -34,6 +35,13 @@ const IndivisualForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
     });
 
 
+    const [activeTab, setActiveTab] = useState("tab1");
+
+    const handleTabClick = (tab) => {
+      setActiveTab(tab);
+    };
+
+    
     return (
         <form ref={ref} onSubmit={handleSubmit(onSubmit)} >
             <Row className={clsx(styles.bgGreay, 'pt-3')}>
@@ -66,12 +74,160 @@ const IndivisualForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                         {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
                     </div>
                 </Col>
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mt-4">
+                        <label className={clsx(styles.lable)}>Date</label>
+                        <div className={styles.customCalendar}>
+                            <Calendar
+                                id="date"
+                                value={date}
+                                onChange={(e) => setDate(e.value)}
+                                showIcon={false}
+                                inputStyle={{ paddingRight: '2rem' }} 
+                            />
+                             <span className={styles.customIcon}>
+                                <Calendar3 size={20} color="#667085" />
+                            </span>
+                            </div>
+                        {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
+                    </div>
+                </Col>
+                <Col sm={6}>
+                <div className="d-flex flex-column gap-1 mt-4">
+                        <label className={clsx(styles.lable)}>Due Date</label>
+                        <div className={styles.customCalendar}>
+                            <Calendar
+                                id="duedate"
+                                value={dueDate}
+                                onChange={(e) => setDueDate(e.value)}
+                                showIcon={false}
+                                inputStyle={{ paddingRight: '2rem' }} 
+                            />
+                            <span className={styles.customIcon}>
+                                <Calendar3 size={20} color="#667085" />
+                            </span>
+                            </div>
+                        {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
+                    </div>
+                </Col>
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mt-4">
+                        <label className={clsx(styles.lable)}>Total Amount</label>
+                        <IconField>
+                            <InputIcon>{errors.invoice?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                            <InputText {...register("invoice.title")} className={clsx(styles.inputText, { [styles.error]: errors.invoice?.title })} placeholder='Enter total amount$' />
+                        </IconField>
+                        {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
+                    </div>
+                </Col>
+          
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                        <label className={clsx(styles.lable)}>GST</label>
+                        <Controller
+                            name="gst"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={[
+                                        { value: 1, label: "GST Exclusive" },
+                                     
+                                    ] || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    placeholder="Select GST"
+                                />
+                            )}
+                        />
+                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                    </div>
+                </Col>
 
             
             </Row>
+            <Row className={`mb-4 ${styles.expTotalRow}`}>
+                <Col>
+                <div className={styles.CalItem}>
+                    <div>
+                    <span>Subtotal</span>
+                    <strong>$ 1,996.90</strong>
+                    </div>
+                </div>
+                </Col>
+                <Col>
+                <div className={styles.CalItem}>
+                    <div>
+                    <span>Tax</span>
+                    <strong>$ 2,326.90</strong>
+                    </div>
+                </div>
+                </Col>
+                <Col>
+                <div className={`${styles.CalItemActive} ${styles.CalItem}`}>
+                   <div> 
+                    <span>Total</span>
+                   <strong>$ 2,100.26</strong>
+                   </div>
+                </div>
+                </Col>
+            </Row>
+            <Row className={clsx(styles.bgGreay)}>
+            <div>
+      <div className="tabs">
+        <button
+          className={activeTab === "tab1" ? "active" : ""}
+          onClick={() => handleTabClick("tab1")}
+        >
+          Tab 1
+        </button>
+        <button
+          className={activeTab === "tab2" ? "active" : ""}
+          onClick={() => handleTabClick("tab2")}
+        >
+          Tab 2
+        </button>
 
+      </div>
 
+      <div className="tab-content">
+        {activeTab === "tab1" && <div>This is Tab 1 content</div>}
+        {activeTab === "tab2" && <div>This is Tab 2 content</div>}
 
+      </div>
+    </div>
+             <Col sm={8}>
+             <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                        <label className={clsx(styles.lable)}>Expense time interval</label>
+                        <Controller
+                            name="gst"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={[
+                                        { value: 1, label: "Monthly" },
+                                     
+                                    ] || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    placeholder="Select "
+                                />
+                            )}
+                        />
+                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                    </div>
+             </Col>
+            </Row>
+          
          
 
         </form>

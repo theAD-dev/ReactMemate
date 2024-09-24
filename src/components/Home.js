@@ -26,6 +26,7 @@ import AccountingContact from './layout/modals/accounting-contact';
 const Home = () => {
     const [selectedOption, setSelectedOption] = useState('');
     const [profileData, setProfileData] = useState(null);
+    console.log('profileData: ', profileData);
     
     const [homeData, setHomeData] = useState({
        
@@ -54,7 +55,7 @@ const Home = () => {
       const fetchData = async () => {
         try {
           const data = await fetchProfile();
-          const parsedData = JSON.parse(data);
+          const parsedData = data;
           setProfileData(parsedData);
         } catch (error) {
           console.error("Error fetching profile:", error);
