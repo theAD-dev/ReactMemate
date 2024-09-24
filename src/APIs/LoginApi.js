@@ -12,7 +12,7 @@ export const authenticateUser = async (email, password) => {
     };
   
     try {
-        const response = await fetch("https://dev.memate.com.au/api/v1/login/", requestOptions);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/login/`, requestOptions);
       
         if (!response.ok) {
           console.error('Authentication error:', response.statusText);

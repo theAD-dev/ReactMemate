@@ -22,11 +22,11 @@ import exclamationCircle from "../../../../../assets/images/icon/exclamation-cir
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  website: yup.string().url('Invalid URL').required('URL is required'),
+  // website: yup.string().url('Invalid URL').required('URL is required'),
   abn: yup.string().required('ABN is required'),
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   services: yup.string().required('Services is required'),
-  note: yup.string().required('Note is required'),
+  // note: yup.string().required('Note is required'),
 
   addresses: yup.array().of(
     yup.object({
