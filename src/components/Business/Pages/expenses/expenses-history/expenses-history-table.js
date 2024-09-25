@@ -9,7 +9,7 @@ import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-foun
 import { ArrowLeftCircle, FilePdf, Files, FileText, InfoCircle, Link45deg, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 
-const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
+const ExpensesHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
   const statusBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
@@ -81,4 +81,4 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
   )
 })
 
-export default ClientOrderHistoryTable
+export default ExpensesHistoryTable

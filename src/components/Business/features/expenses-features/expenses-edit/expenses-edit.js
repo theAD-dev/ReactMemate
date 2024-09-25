@@ -1,10 +1,10 @@
 import { nanoid } from 'nanoid';
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner';
-import IndivisualForm from '../new-client-create/indivisual-form';
+import ExpensesForm from '../new-client-create/expenses-form';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
-const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
+const ExpensesEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
   console.log('IndivisualClientEdit: ', client);
   const [photo, setPhoto] = useState(client?.photo || null);
   const [defaultValues, setDefaultValues] = useState({
@@ -28,8 +28,8 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     }
   });
 
-  const indivisualFormSubmit = async (data) => {
-    console.log('indivisualFormSubmit: ', data);
+  const expensesFormSubmit = async (data) => {
+    console.log('expensesFormSubmit: ', data);
     const formData = createFormData(data, photo);
     const onSuccess = (response) => {
       refetch();
@@ -43,7 +43,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
 
     setIsPending(true);
     await handleApiRequest(
-      `${process.env.REACT_APP_BACKEND_API_URL}/clients/update/individual/${client.id}/`,
+      `${process.env.REACT_APP_BACKEND_API_URL}/expenses/update/expenses/${client.id}/`,
       'PUT',
       formData,
       onSuccess,
@@ -54,15 +54,15 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
 
   const handleSubmit = async (data) => {
     if (client.id) {
-      indivisualFormSubmit(data);
+      expensesFormSubmit(data);
     } else {
       toast.error('Client id not found');
     }
   };
 
   return (
-    <IndivisualForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues} />
+    <ExpensesForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues} />
   )
 })
 
-export default IndivisualClientEdit
+export default ExpensesEdit

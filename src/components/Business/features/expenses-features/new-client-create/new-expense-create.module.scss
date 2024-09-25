@@ -240,3 +240,43 @@ strong{
 }
   }
 }
+
+
+.tabsExpenses{
+  button  {
+    border: 1px solid var(--Gray-300, #D0D5DD);
+    background: var(--Base-White, #FFF);
+    padding: var(--spacing-md, 10px) var(--spacing-xl, 16px);
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    width: 31%;
+    &:first-child{
+      border-right: 0;
+      border-radius: 8px 0 0px 8px;
+    }
+    &:last-child{
+      border-radius: 0 8px 8px 0;
+    }
+    &.active {
+      border: 1px solid var(--Gray-300, #D0D5DD);
+      background: var(--Primary-50, #EBF8FF);
+      padding: var(--spacing-md, 10px) var(--spacing-xl, 16px) var(--spacing-md, 10px) 14px;
+      color: var(--Primary-500, #1AB2FF);
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 20px; 
+      &:first-child{
+        border-right: 0;
+      }
+
+    }
+    
+}
+
+}

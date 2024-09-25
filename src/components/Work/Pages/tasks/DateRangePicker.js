@@ -64,6 +64,9 @@ const DateRangePicker = ({ onDataApply, dateRange }) => {
   const flatpickrOptions = {
     dateFormat: "Y-m-d",
     mode: "range",
+    locale: {
+      firstDayOfWeek: 1 
+  },
     inline: true,
     // onDayCreate: function (dObj, dStr, fp, dayElem) {
     //   if (Math.random() < 0.15)

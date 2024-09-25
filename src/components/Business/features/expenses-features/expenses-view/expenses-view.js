@@ -4,17 +4,17 @@ import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import style from './indivisual-client-view.module.scss';
+import style from './expenses-view.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png'
-import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
-import DeleteClient from '../delete-client';
+import ExpensesEdit from '../expenses-edit/expenses-edit';
+// import DeleteClient from '../delete-client';
 import { dateFormat, formatMoney } from '../../../shared/utils/helper';
 import { getClientCategories } from '../../../../../APIs/ClientsApi';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from 'primereact/tag';
 import Restore from '../restore-client';
 
-const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
+const ExpensesView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
   const [isPending, setIsPending] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -53,14 +53,14 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
           </div>
           {
-            isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
+            isEdit ? <ExpensesEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
               : <ViewSection client={client} />
           }
         </div>
 
         <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
           {
-            !client.deleted ? (<DeleteClient id={client?.id} />) : <span></span>
+            // !client.deleted ? (<DeleteClient id={client?.id} />) : <span></span>
           }
 
           {
@@ -295,4 +295,4 @@ const ViewSection = ({ client }) => {
   )
 }
 
-export default IndivisualClientView
+export default ExpensesView

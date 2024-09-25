@@ -24,7 +24,7 @@ const schema = yup
     })
     .required();
 
-const IndivisualForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
+const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
 
     const [date, setDate] = useState(null);
     const [dueDate, setDueDate] = useState(null);
@@ -178,29 +178,25 @@ const IndivisualForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
             </Row>
             <Row className={clsx(styles.bgGreay)}>
             <div>
-      <div className="tabs">
+      <div className={`tabs ${styles.tabsExpenses}`}>
         <button
-          className={activeTab === "tab1" ? "active" : ""}
+          className={activeTab === "tab1" ? `${styles.active}` : ""}
           onClick={() => handleTabClick("tab1")}
         >
-          Tab 1
+          Assign to order
         </button>
         <button
-          className={activeTab === "tab2" ? "active" : ""}
+          className={activeTab === "tab2" ? `${styles.active}` : ""}
           onClick={() => handleTabClick("tab2")}
         >
-          Tab 2
+        Assign to timeframe
         </button>
 
       </div>
 
       <div className="tab-content">
-        {activeTab === "tab1" && <div>This is Tab 1 content</div>}
-        {activeTab === "tab2" && <div>This is Tab 2 content</div>}
-
-      </div>
-    </div>
-             <Col sm={8}>
+        {activeTab === "tab1" && <div>
+            <Col sm={8}>
              <div className="d-flex flex-column gap-1 mt-4 mb-4">
                         <label className={clsx(styles.lable)}>Expense time interval</label>
                         <Controller
@@ -226,12 +222,100 @@ const IndivisualForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                         {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
                     </div>
              </Col>
+            
+            </div>}
+        {activeTab === "tab2" && <div>
+            
+            <Col sm={8}>
+             <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                        <label className={clsx(styles.lable)}>Expense time interval</label>
+                        <Controller
+                            name="gst"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={[
+                                        { value: 1, label: "Monthly" },
+                                     
+                                    ] || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    placeholder="Select "
+                                />
+                            )}
+                        />
+                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                    </div>
+             </Col>
+            </div>}
+
+      </div>
+    </div>
+           
             </Row>
           
-         
+            <Row className={clsx(styles.bgGreay)}>
+         <Col sm={6}>
+             <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                        <label className={clsx(styles.lable)}>Account Code </label>
+                        <Controller
+                            name="gst"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={[
+                                        { value: 1, label: "Select" },
+                                     
+                                    ] || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    placeholder="Select "
+                                />
+                            )}
+                        />
+                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                    </div>
+             </Col>
+             <Col sm={6}>
+             <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                        <label className={clsx(styles.lable)}>Department</label>
+                        <Controller
+                            name="gst"
+                            control={control}
+                            render={({ field }) => (
+                                <Dropdown
+                                    {...field}
+                                    options={[
+                                        { value: 1, label: "Select" },
+                                     
+                                    ] || []}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                    }}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    style={{ height: '46px' }}
+                                    value={field.value}
+                                    placeholder="Select "
+                                />
+                            )}
+                        />
+                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                    </div>
+             </Col>
+         </Row>
 
         </form>
     )
 })
 
-export default IndivisualForm
+export default ExpensesForm

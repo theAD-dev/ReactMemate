@@ -9,12 +9,12 @@ import { Sidebar } from 'primereact/sidebar';
 import { useDebounce } from 'primereact/hooks';
 
 import style from './expenses-history.module.scss';
-import ClientOrderHistoryTable from './expenses-history-table';
+import ExpenseHistoryTable from './expenses-history-table';
 import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
-import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
+import ExpensesView from '../../../features/expenses-features/expenses-view/expenses-view';
 import { toast } from 'sonner';
 
-const ClientExpensesHistory = () => {
+const ExpensesHistory = () => {
     const navigate = useNavigate();
     const dt = useRef(null);
     const { id } = useParams();
@@ -74,15 +74,15 @@ const ClientExpensesHistory = () => {
                         <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
                     </div>
                 </div>
-                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
+                <ExpenseHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
-                        <IndivisualClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} setVisible={setVisible}/>   
+                        <ExpensesView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} setVisible={setVisible}/>   
                 )}
             ></Sidebar>
         </PrimeReactProvider>
     )
 }
 
-export default ClientExpensesHistory
+export default ExpensesHistory

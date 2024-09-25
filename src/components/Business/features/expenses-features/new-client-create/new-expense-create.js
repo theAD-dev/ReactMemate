@@ -6,7 +6,7 @@ import { Button, Col, Row } from 'react-bootstrap';
 import {  PlusCircle, X } from 'react-bootstrap-icons';
 
 import styles from './new-expense-create.module.scss';
-import IndivisualForm from './indivisual-form';
+import ExpensesForm from './expenses-form';
 // import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
 import { toast } from 'sonner';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
@@ -21,8 +21,8 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
         contact_persons: [{}],
         addresses: [{}],
     });
-    const indivisualFormSubmit = async (data) => {
-        console.log('indivisualFormSubmit: ', data);
+    const expensesFormSubmit = async (data) => {
+        console.log('expensesFormSubmit: ', data);
 
         const formData = createFormData(data, photo);
         const onSuccess = (response) => {
@@ -91,7 +91,7 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
     }
 
     const handleSubmit = async (data) => {
-            indivisualFormSubmit(data);  
+        expensesFormSubmit(data);  
     };
 
     const handleExternalSubmit = () => {
@@ -126,7 +126,7 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
                         <h5>Supplier Details</h5>
                         <h6>Expense ID: ELT-339047-1</h6>
                         </div>
-                             <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
+                             <ExpensesForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
 
                     </div>
 
