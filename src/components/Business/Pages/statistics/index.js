@@ -22,7 +22,7 @@ const StatisticsPage = () => {
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/key-results"} className='d-flex align-items-center px-2'>
                     <WindowDesktop color='#667085' size={16} className='me-2' />
                     <span className={style.topbartext}>Key Results</span>
                 </Link>
