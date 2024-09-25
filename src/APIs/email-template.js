@@ -47,3 +47,12 @@ export const getOutgoingEmail = async () => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const deleteEmailTemplates = async (id) => {
+  const endpoint = `/settings/templates/email-templates/${id}/`;
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

@@ -40,7 +40,7 @@ const EmailTemplates = () => {
                                     emailTemplateQuery?.data?.map((email) =>
                                         <div key={email.id} className={clsx(style.listbox, 'mb-2')}>
                                             <h2 className={clsx(style.heading)}>{email?.name}</h2>
-                                            <Link to={`/settings/templates/email-templates/${email.id}`}>
+                                            <Link to={`/settings/templates/email-templates/${email.id}?isCustom=${email.type === 'Custom'}`}>
                                                 <PencilSquare color='#1AB2FF' size={16} className={clsx(style.editPencil)} style={{ visibility: 'hidden' }} />
                                             </Link>
                                         </div>
