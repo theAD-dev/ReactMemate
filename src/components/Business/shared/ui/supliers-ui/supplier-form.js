@@ -28,29 +28,29 @@ const schema = yup.object({
   services: yup.string().required('Services is required'),
   // note: yup.string().required('Note is required'),
 
-  addresses: yup.array().of(
-    yup.object({
-      id: yup.string(),
-      title: yup.string(),
-      country: yup.string().required('Country is required'),
-      address: yup.string().required('Address is required'),
-      city: yup.number().typeError("City must be a number").required("City is required"),
-      state: yup.number().typeError("State must be a number").required("State is required"),
-      postcode: yup.string().required('Postcode is required'),
-      is_main: yup.boolean().default(false).required('Main address selection is required'),
-    })
-  ).required(),
+  // addresses: yup.array().of(
+  //   yup.object({
+  //     id: yup.string(),
+  //     title: yup.string(),
+  //     country: yup.string().required('Country is required'),
+  //     address: yup.string().required('Address is required'),
+  //     city: yup.number().typeError("City must be a number").required("City is required"),
+  //     state: yup.number().typeError("State must be a number").required("State is required"),
+  //     postcode: yup.string().required('Postcode is required'),
+  //     is_main: yup.boolean().default(false).required('Main address selection is required'),
+  //   })
+  // ).required(),
 
-  contact_persons: yup.array().of(
-    yup.object({
-      position: yup.string().required('Position is required'),
-      firstname: yup.string().required('First name is required'),
-      lastname: yup.string().required('Last name is required'),
-      email: yup.string().email('Invalid email').required('Email is required'),
-      phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-      is_main: yup.boolean().default(false).required('Main contact selection is required'),
-    })
-  ).required(),
+  // contact_persons: yup.array().of(
+  //   yup.object({
+  //     position: yup.string().required('Position is required'),
+  //     firstname: yup.string().required('First name is required'),
+  //     lastname: yup.string().required('Last name is required'),
+  //     email: yup.string().email('Invalid email').required('Email is required'),
+  //     phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+  //     is_main: yup.boolean().default(false).required('Main contact selection is required'),
+  //   })
+  // ).required(),
 
 }).required();
 
