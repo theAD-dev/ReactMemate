@@ -97,6 +97,18 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
         retry: 1,
     });
 
+    useEffect(() => {
+        if (outgoingEmailTemplateQuery?.data) {
+            if (outgoingEmailTemplateQuery?.data?.outgoing_email)
+                setFrom(outgoingEmailTemplateQuery?.data?.outgoing_email);
+        }
+
+        if (emailTemplateQuery?.data) {
+            setEmailTemplatedId(17);
+        }
+
+    }, [emailQuery, outgoingEmailTemplateQuery])
+
     const onSubmit = async () => {
         let errorCount = 0;
         setErrors({});
