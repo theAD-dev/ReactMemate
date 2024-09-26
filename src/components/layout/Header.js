@@ -90,6 +90,7 @@ import CreativeHub from "./settings/locations/creative-hub";
 import StatisticsPage from "../Business/Pages/statistics";
 import CustomersIndustries from "./settings/customerssettings/Industries";
 import CreateEmailTemplate from "./settings/templates/create-email-template";
+import KeyResultsPage from "../Business/Pages/statistics/key-results";
 
 
 
@@ -462,6 +463,7 @@ const Header = ({ onClick }) => {
           <Route path="/orders" element={<OrderPage />} />
 
           <Route path="/statistics" element={<StatisticsPage />} />
+          <Route path="/statistics/key-results" element={<KeyResultsPage />} />
 
 
 

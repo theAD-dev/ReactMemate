@@ -46,19 +46,19 @@
 }
 
 .executiveBox3 {
-    background: #FEE4E2 !important;
+  background: #fee4e2 !important;
 }
 
 .executiveBox4 {
-    background: #F2F4F7 !important;
+  background: #f2f4f7 !important;
 }
 
 .executiveBox5 {
-    background: #F2F4F7 !important;
+  background: #f2f4f7 !important;
 }
 
 .executiveBox6 {
-    background: #FEF0C7 !important;
+  background: #fef0c7 !important;
 }
 
 .boxTitle {
@@ -80,4 +80,102 @@
   line-height: 22px;
   text-align: left;
   letter-spacing: 0.14px;
+}
+
+.activeTab {
+  border-radius: var(--radius-sm, 6px) !important;
+  background: var(--Gray-100, #f2f4f7) !important;
+}
+
+.keyResults {
+  .keyResultsTitle {
+    color: var(--Gray-800, #1d2939);
+    text-align: center;
+    font-family: Inter;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.39px;
+  }
+
+  .button {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 10px 14px;
+    margin-top: 16px;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Gray-300, #d0d5dd);
+    background: var(--Base-White, #fff);
+  }
+
+  .monthName {
+    color: var(--Gray-500, #667085);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.175px;
+    background: #fff;
+    border: none !important;
+    outline: none !important;
+    border-radius: 0px !important;
+    padding-bottom: 12px;
+  }
+
+  .monthName.activeButton {
+    border-bottom: 2px solid var(--Primary-700, #106b99) !important;
+  }
+
+  .chartBox {
+    width: 279px;
+    height: 279px;
+    background: #fff;
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+  }
+
+  .rightBox {
+    min-width: 636px;
+  }
+
+  .firstBox {
+    height: 130px;
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+    background: #fff;
+    margin-bottom: 16px;
+  }
+
+  .secondBox {
+    height: 130px;
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+    background: #fff;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    margin: 32px 0px;
+    background: #eaecf0;
+  }
+
+  .chartTextBox {
+    display: flex;
+    width: 891px;
+    height: 40px;
+    padding: var(--spacing-md, 8px) var(--spacing-3xl, 24px);
+    align-items: center;
+    gap: var(--spacing-4xl, 32px);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+    margin-bottom: 16px;
+    background-color: #fff;
+  }
 }

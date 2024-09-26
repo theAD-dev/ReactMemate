@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import Sidebar from '../Sidebar';
 import { ChevronLeft, PencilSquare } from "react-bootstrap-icons";
@@ -6,7 +6,7 @@ import style from './job-template.module.scss';
 import clsx from 'clsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Spinner } from 'react-bootstrap';
-import { createEmailTemplate, getEmail, updateEmailTemplate } from '../../../../APIs/email-template';
+import { createEmailTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../APIs/email-template';
 import { InputText } from 'primereact/inputtext';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
@@ -57,11 +57,14 @@ const header = renderHeader();
 const CreateEmailTemplate = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const [searchParams] = useSearchParams();
     const editorRef = useRef(null);
+    const subjectRef = useRef(null);
     const [name, setName] = useState("");
     const [subject, setSubject] = useState(null);
     const [text, setText] = useState(null);
 
+    const isCustom = searchParams.get('isCustom');
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
     const [activeTab, setActiveTab] = useState('job-templates');
@@ -82,22 +85,43 @@ const CreateEmailTemplate = () => {
             toast.error("Failed to save the template. Please try again.");
         },
     });
+    const deleteMutation = useMutation({
+        mutationFn: () => (id && deleteEmailTemplates(id)),
+        onSuccess: () => {
+            toast.success("Template deleted successfully!");
+            navigate('/settings/templates/email-templates/');
+        },
+        onError: (error) => {
+            console.error("Error deleting template:", error);
+            toast.error("Failed to delete the template. Please try again.");
+        },
+    })
 
     const insertTextAtCursor = (insertedText) => {
-        const editorInstance = editorRef.current; // Get the editor instance
+        const activeElement = document.activeElement;
 
-        if (editorInstance) {
-            const currentHtmlValue = text || ""; // Get the current HTML content
-            const selection = window.getSelection(); // Get the current selection
-            const range = selection.getRangeAt(0); // Get the range at the cursor point
+        // Check if the active element is an InputText field
+        if (subjectRef.current && subjectRef.current.element === activeElement) {
+            const input = activeElement;
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const value = input.value;
+            const newText = value.slice(0, start) + insertedText + value.slice(end);
 
-            // Create a document fragment to insert text at the current cursor position
-            const textNode = document.createTextNode(insertedText);
-            range.deleteContents(); // Remove any selected text
-            range.insertNode(textNode); // Insert the new text node
+            // Update subject state
+            setSubject(newText);
+            // Update input box value
+            input.value = newText;
+            // Set cursor position after inserted text
+            input.setSelectionRange(start + insertedText.length, start + insertedText.length);
+        } else if (editorRef.current) {
+            // If the active element is the rich text editor, insert HTML content at cursor
+            const editorInstance = editorRef.current.getQuill(); // Assuming PrimeReact Editor uses Quill
+            const range = editorInstance.getSelection();
 
-            // Update the editor's HTML value in the state
-            setText(editorInstance.innerHTML);
+            if (range) {
+                editorInstance.clipboard.dangerouslyPasteHTML(range.index, insertedText); // Insert text at the cursor
+            }
         }
     };
     const handleSubmit = (e) => {
@@ -120,6 +144,12 @@ const CreateEmailTemplate = () => {
             body: text,
         };
         mutation.mutate(templateData);
+    }
+
+    const handleDelete = () => {
+        if (id) {
+            deleteMutation.mutate()
+        }
     }
 
     useEffect(() => {
@@ -185,6 +215,7 @@ const CreateEmailTemplate = () => {
                                         {emailQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                     </InputIcon>
                                     <InputText
+                                        ref={subjectRef}
                                         value={subject}
                                         className={clsx(style.inputBox, 'w-100')}
                                         onChange={(e) => {
@@ -233,10 +264,17 @@ const CreateEmailTemplate = () => {
                         </div>
                     </div>
                     <div className={style.bottom}>
-                        <Link to={'/settings/templates/email-templates/'}>
-                            <Button className='outline-button'>Cancel</Button>
-                        </Link>
-                        <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
+                        {
+                            isCustom == "true" && id ?
+                                <Button onClick={handleDelete} className='danger-outline-button'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
+                                : <span></span>
+                        }
+                        <div className='d-flex gap-2'>
+                            <Link to={'/settings/templates/email-templates/'}>
+                                <Button className='outline-button'>Cancel</Button>
+                            </Link>
+                            <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
+                        </div>
                     </div>
                 </div>
             </div>
