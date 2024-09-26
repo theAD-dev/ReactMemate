@@ -224,11 +224,12 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
             ...prev,
             subject: subject,
             email_body: text,
+            from: from,
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })
         }))
-    }, [subject, text, to, cc, bcc]);
+    }, [subject, text, from, to, cc, bcc]);
 
     useEffect(() => {
         setText(emailQuery?.data?.body || "");
