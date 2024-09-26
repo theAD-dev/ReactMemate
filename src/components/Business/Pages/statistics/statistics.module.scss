@@ -135,6 +135,9 @@
   .chartBox {
     width: 279px;
     height: 279px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #fff;
     border-radius: var(--radius-sm, 6px);
     border: 1px solid var(--Gray-200, #eaecf0);
@@ -144,19 +147,18 @@
     min-width: 636px;
   }
 
-  .firstBox {
-    height: 130px;
-    border-radius: var(--radius-sm, 6px);
-    border: 1px solid var(--Gray-200, #eaecf0);
-    background: #fff;
-    margin-bottom: 16px;
-  }
-
+  .firstBox,
   .secondBox {
+    gap: 24px;
     height: 130px;
+    display: flex;
+    padding: 16px;
+    background: #fff;
+    align-items: center;
+    margin-bottom: 16px;
+    justify-content: space-between;
     border-radius: var(--radius-sm, 6px);
     border: 1px solid var(--Gray-200, #eaecf0);
-    background: #fff;
   }
 
   .divider {
@@ -167,15 +169,177 @@
   }
 
   .chartTextBox {
+    gap: 32px;
     display: flex;
     width: 891px;
     height: 40px;
     padding: var(--spacing-md, 8px) var(--spacing-3xl, 24px);
     align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-4xl, 32px);
     border-radius: var(--radius-md, 8px);
     border: 1px solid var(--Gray-200, #eaecf0);
     margin-bottom: 16px;
     background-color: #fff;
+  }
+
+  .chartTextLable {
+    color: var(--Gray-800, #1d2939);
+
+    /* Body large bold */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 150% */
+    letter-spacing: 0.08px;
+  }
+
+  .boxlable {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+    letter-spacing: -0.154px;
+  }
+
+  .uptoDate {
+    color: #1ab2ff;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 34px; /* 106.25% */
+    letter-spacing: -0.8px;
+  }
+
+  .target {
+    color: var(--Gray-600, #475467);
+
+    /* Title Screen */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 34px; /* 113.333% */
+    letter-spacing: -0.75px;
+  }
+
+  .daysComplete {
+    color: var(--Orange-500, #ffb258);
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 34px; /* 106.25% */
+    letter-spacing: -0.8px;
+  }
+
+  .daysTotal {
+    color: var(--Gray-600, #475467);
+
+    /* Title Screen */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 34px; /* 113.333% */
+    letter-spacing: -0.75px;
+  }
+
+  .circularProgressDiv {
+    width: 97px;
+    height: 97px;
+    height: 97px;
+    display: flex;
+    font-size: 22px;
+    font-weight: 600;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dedede;
+    padding: 0px 25.5px 0px 26.5px;
+    color: var(--Gray-800, #1d2939);
+  }
+
+  .chartProgressText {
+    color: var(--Gray-700, #344054);
+
+    /* Body large */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.08px;
+  }
+
+  .text1 {
+    /* Body large bold */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 150% */
+    letter-spacing: 0.08px;
+  }
+
+  .ProgressBar {
+    width: 462px;
+    height: 14px;
+    border-radius: var(--radius-xs, 4px);
+    background: #EAECF0;
+  }
+
+  .ProgressBarInner {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #21b4da 9.67%, #93ecff 80.73%),
+      linear-gradient(90deg, #18c5f2 9.67%, #344054 80.73%);
+  }
+
+  .ProgressBarInner2 {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #93ECFF 0.86%, #2CB932 99.03%);
+  }
+
+  .ProgressBarInner3 {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #EDE014 0.98%, #2CB932 99.97%);
+  }
+
+  .ProgressBarInner4 {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #EDE014 0.86%, #F28C7F 99.03%);
+  }
+
+  .ProgressBarInner::after {
+    content: "130,59%";
+    top: -5px;
+    right: 0px;
+    width: fit-content;
+    height: 18px;
+    position: absolute;
+    padding: 4px 6px;
+    border-radius: var(--radius-xl, 12px);
+    border: 1px solid var(--Gray-100, #f2f4f7);
+    background: var(--Base-White, #fff);
+    color: var(--Gray-500, #667085);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    padding-bottom: 20px !important;
+    line-height: 18px; /* 150% */
   }
 }
