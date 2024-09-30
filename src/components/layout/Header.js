@@ -45,7 +45,7 @@ import Departments from "../layout/settings/calculators/Departments";
 import JobTemplates from "./settings/templates/JobTemplates";
 import EmailTemplates from "./settings/templates/email-templates";
 import EmailSignatures from "./settings/templates/EmailSignatures";
-import ProposalTemplates from "./settings/templates/ProposalTemplates";
+import ProposalTemplates from "./settings/templates/proposal-templates";
 import CompanyEthos from "./settings/companyethos/CompanyEthos";
 import Integrations from "./settings/integrations";
 import RecurringQuotes from "./settings/quotesjobs/RecurringQuotes ";
