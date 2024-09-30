@@ -1,3 +1,14 @@
+.active {
+  background: #ebf8ff;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
 .filterBox {
   display: flex;
   padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
