@@ -5,10 +5,11 @@ import { PencilSquare } from "react-bootstrap-icons";
 import style from './terms-.module.scss';
 import { Button, Col, Row } from 'react-bootstrap';
 import clsx from 'clsx';
-import { getInvoiceTerms, updateTerms } from "../../../../APIs/terms-and-condition";
+import { getInvoiceTermsapp, updateTermsapp } from "../../../../APIs/terms-and-condition";
 import { Editor } from "primereact/editor";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from 'sonner';
+import { Placeholder } from "react-bootstrap";
 
 const TermsandConditions = () => {
     const [activeTab, setActiveTab] = useState('terms-and-conditions');
@@ -21,7 +22,7 @@ const TermsandConditions = () => {
     const fetchData = async () => {
         try {
             setIsLoading(true);
-            const data = await getInvoiceTerms();
+            const data = await getInvoiceTermsapp();
             setTerms(data);  // Assuming 'data' is a string
         } catch (error) {
             console.error('Error fetching data: ', error);
@@ -36,7 +37,7 @@ const TermsandConditions = () => {
     }, []);
 
     const updateMutation = useMutation({
-        mutationFn: (data) => updateTerms(data),
+        mutationFn: (data) => updateTermsapp(data),
         onSuccess: async () => {
             toast.success('Terms have been successfully updated.');
             await fetchData();
@@ -51,7 +52,7 @@ const TermsandConditions = () => {
     const handleEditClick = () => setEdit(true);
 
     const handleSaveClick = () => {
-        updateMutation.mutate(terms);  // Save the updated terms
+        updateMutation.mutate(terms); 
     };
 
     const handleCancelClick = () => setEdit(false);
@@ -91,16 +92,22 @@ const TermsandConditions = () => {
 
                                 <div>
                                     {isLoading ? (
-                                        <p>Loading terms...</p>
+                                          <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                          <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
+                                        </Placeholder>
+                                   
                                     ) : edit ? (
                                         <>
-                                            <Row>
+                                            <Row className={style.qlEditorText}>
                                                 <Col sm={12}>
                                                     <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
                                                         <label className={clsx(style.label)}>Message</label>
                                                         <Editor 
                                                             value={terms.terms_invoice} 
-                                                            onTextChange={(e) => setTerms(e.htmlValue)} 
+                                                            onTextChange={(e) => setTerms(prevTerms => ({
+                                                                ...prevTerms,
+                                                                terms_invoice: e.htmlValue
+                                                              }))}
                                                         />
                                                     </div>
                                                 </Col>

@@ -16,7 +16,6 @@ const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClient
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
-    console.log('clients: ', clients);
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
