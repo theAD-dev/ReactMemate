@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
-import { PlusLg, PencilSquare } from "react-bootstrap-icons";
+import { Tooltip } from 'primereact/tooltip';
+import { PlusLg, PencilSquare, InfoCircle } from "react-bootstrap-icons";
 import style from './job-template.module.scss';
 import clsx from 'clsx';
 import { getEmailTemplates } from '../../../../APIs/email-template';
@@ -37,11 +38,15 @@ const EmailTemplates = () => {
                         <div className='content_wrapper'>
                             <div className='listwrapper' style={{ height: 'calc(100vh - 229px)' }}>
                                 {
-                                    emailTemplateQuery?.data?.map((email) =>
-                                        <div key={email.id} className={clsx(style.listbox, 'mb-2')}>
-                                            <h2 className={clsx(style.heading)}>{email?.name}</h2>
+                                    emailTemplateQuery?.data?.map((email, index) =>
+                                        <div key={email.id} className={clsx(style.listbox, { [style.notCustomBox]: email.type !== 'Custom' }, 'mb-2')}>
+                                            <Tooltip position='top' className={style.customTooltip} target={`.info-${index}`} />
+                                            <h2 className={clsx(style.heading)}>
+                                                {email?.name}
+                                                { email.type !== 'Custom' &&  <InfoCircle color='#667085' className={`ms-2 info-${index}`} data-pr-tooltip="This is a default email template." /> }
+                                            </h2>
                                             <Link to={`/settings/templates/email-templates/${email.id}?isCustom=${email.type === 'Custom'}`}>
-                                                <PencilSquare color='#1AB2FF' size={16} className={clsx(style.editPencil)} style={{ visibility: 'hidden' }} />
+                                                <Button className={clsx(style.editPencil, 'text-button p-0')} style={{ color: '#1AB2FF', visibility: 'hidden' }}>edit</Button>
                                             </Link>
                                         </div>
                                     )

@@ -56,3 +56,22 @@ export const deleteEmailTemplates = async (id) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const getProposalsTemplates = async () => {
+  const endpoint = `/settings/proposals/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const createProposalTemplate = async (data) => {
+  const endpoint = `/settings/proposals/new/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

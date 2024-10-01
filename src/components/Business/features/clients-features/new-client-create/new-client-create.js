@@ -18,10 +18,14 @@ const NewClientCreate = ({ visible, setVisible }) => {
     const [photo, setPhoto] = useState(null);
     const [tab, setTab] = useState('1');
     const [businessDefaultValues, setBusinessDefaultValues] = useState({
+        payment_terms: 1,
         phone: { country: '', number: '' },
         contact_persons: [{}],
         addresses: [{}],
     });
+    const [individualDefaultValues, setIndividualDefaultValues] = useState({
+        payment_terms: 1,
+    })
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);
 
@@ -164,7 +168,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
 
                         {
                             tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} deleteAddress={()=> { }} deleteContact={() => {}} />
-                                : <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
+                                : <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={individualDefaultValues} />
                         }
                     </div>
 

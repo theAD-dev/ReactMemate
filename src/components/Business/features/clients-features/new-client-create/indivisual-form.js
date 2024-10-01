@@ -28,15 +28,6 @@ const schema = yup
 
         payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
         category: yup.number().typeError("Enter a valid category").required('Category is required'),
-
-        address: yup.object({
-            id: yup.string(),
-            country: yup.string().required("Country is required"),
-            city: yup.number().typeError("City must be a number").required("City is required"),
-            address: yup.string().required("Address is required"),
-            state: yup.number().typeError("State must be a number").required("State is required"),
-            postcode: yup.string().required("Postcode is required")
-        }),
     })
     .required();
 
