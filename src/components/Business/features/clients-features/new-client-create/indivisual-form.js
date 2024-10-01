@@ -140,7 +140,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     onChange={(e) => {
                                         field.onChange(e.value);
                                     }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.payment_terms })}
                                     style={{ height: '46px' }}
                                     value={field.value}
                                     placeholder="Select payment terms"
@@ -159,10 +159,13 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                             render={({ field }) => (
                                 <Dropdown
                                     {...field}
-                                    options={(categoriesQuery && categoriesQuery.data?.map((category) => ({
-                                        value: category.id,
-                                        label: `${category.name} - ${category.value}%`
-                                    }))) || []}
+                                    options={[
+                                        { value: "0", label: 'Default - 0.00%' },
+                                        ...(categoriesQuery && categoriesQuery.data?.map((category) => ({
+                                            value: category.id,
+                                            label: `${category.name} - ${category.value}%`
+                                        }))) || []
+                                    ]}
                                     onChange={(e) => {
                                         field.onChange(e.value);
                                     }}
