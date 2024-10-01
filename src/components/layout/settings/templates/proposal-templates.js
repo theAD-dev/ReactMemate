@@ -41,12 +41,8 @@ const ProposalTemplates = () => {
                             <div className='listwrapper' style={{ height: 'calc(100vh - 229px)' }}>
                                 {
                                     proposalTemplateQuery?.data?.map((proposal, index) =>
-                                        <div key={proposal.id} className={clsx(style.listbox, { [style.notCustomBox]: proposal?.type !== 'Custom' }, 'mb-2')}>
-                                            <Tooltip position='top' className={style.customTooltip} target={`.info-${index}`} />
-                                            <h2 className={clsx(style.heading)}>
-                                                {proposal?.name}
-                                                {proposal?.type !== 'Custom' && <InfoCircle color='#667085' className={`ms-2 info-${index}`} data-pr-tooltip="This is a default email template." />}
-                                            </h2>
+                                        <div key={proposal.id} className={clsx(style.listbox, 'mb-2')}>
+                                            <h2 className={clsx(style.heading)}>{proposal?.name}</h2>
                                             <Link to={`/settings/templates/email-templates/${proposal?.id}?isCustom=${proposal?.type === 'Custom'}`}>
                                                 <Button className={clsx(style.editPencil, 'text-button p-0')} style={{ color: '#1AB2FF', visibility: 'hidden' }}>edit</Button>
                                             </Link>
