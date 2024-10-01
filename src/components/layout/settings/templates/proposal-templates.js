@@ -32,7 +32,7 @@ const ProposalTemplates = () => {
                                 <li className='menuActive'><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
                             </ul>
                         </div>
-                        <Link to={'/settings/templates/email-templates/new'}>
+                        <Link to={'/settings/templates/proposal-templates/new'}>
                             <Button className='outline-button' style={{ position: 'absolute', right: 0, bottom: '16px' }}>Create New Template <PlusLg color='#344054' size={20} /></Button>
                         </Link>
                     </div>

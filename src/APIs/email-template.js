@@ -65,3 +65,13 @@ export const getProposalsTemplates = async () => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const createProposalTemplate = async (data) => {
+  const endpoint = `/settings/proposals/new/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

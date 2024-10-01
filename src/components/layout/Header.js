@@ -91,6 +91,7 @@ import StatisticsPage from "../Business/Pages/statistics";
 import CustomersIndustries from "./settings/customerssettings/Industries";
 import CreateEmailTemplate from "./settings/templates/create-email-template";
 import KeyResultsPage from "../Business/Pages/statistics/key-results";
+import CreateProposalTemplate from "./settings/templates/create-proposal-template";
 
 
 
@@ -603,6 +604,10 @@ const Header = ({ onClick }) => {
           <Route
             path="/settings/templates/proposal-templates"
             element={<ProposalTemplates />}
+          />
+          <Route
+            path="/settings/templates/proposal-templates/new"
+            element={<CreateProposalTemplate />}
           />
 
           <Route
