@@ -201,7 +201,7 @@ const CreateProposalTemplate = () => {
                                         <Trash color='#F04438' size={16} />
                                     </div>
 
-                                    <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px', marginBottom: "16px" }}>
+                                    <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
                                         <label className={style.label}>Title</label>
                                         <IconField>
                                             <InputIcon>

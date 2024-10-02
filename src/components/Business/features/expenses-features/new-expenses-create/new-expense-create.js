@@ -6,8 +6,7 @@ import { Button, Col, Row } from 'react-bootstrap';
 import {  PlusCircle, X } from 'react-bootstrap-icons';
 
 import styles from './new-expense-create.module.scss';
-import ExpensesForm from './expenses-form';
-// import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
+import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 import { toast } from 'sonner';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
