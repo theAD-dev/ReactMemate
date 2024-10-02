@@ -609,6 +609,10 @@ const Header = ({ onClick }) => {
             path="/settings/templates/proposal-templates/new"
             element={<CreateProposalTemplate />}
           />
+          <Route
+            path="/settings/templates/proposal-templates/:id"
+            element={<CreateProposalTemplate />}
+          />
 
           <Route
             path="/settings/companyethos/company-ethos"

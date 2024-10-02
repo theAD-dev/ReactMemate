@@ -15,7 +15,9 @@ const ProposalTemplates = () => {
         queryKey: ["proposalTemplates"],
         queryFn: getProposalsTemplates,
     });
-    console.log('proposalTemplateQuery: ', proposalTemplateQuery.data);
+    const openEditPage = (id, data) => {
+        sessionStorage.setItem(`proposal-${id}`, JSON.stringify(data));
+    }
 
     return (
         <div className='settings-wrap'>
@@ -43,7 +45,7 @@ const ProposalTemplates = () => {
                                     proposalTemplateQuery?.data?.map((proposal, index) =>
                                         <div key={proposal.id} className={clsx(style.listbox, 'mb-2')}>
                                             <h2 className={clsx(style.heading)}>{proposal?.name}</h2>
-                                            <Link to={`/settings/templates/email-templates/${proposal?.id}?isCustom=${proposal?.type === 'Custom'}`}>
+                                            <Link onClick={() => openEditPage(proposal?.id, proposal)} to={`/settings/templates/proposal-templates/${proposal?.id}?isCustom=true`}>
                                                 <Button className={clsx(style.editPencil, 'text-button p-0')} style={{ color: '#1AB2FF', visibility: 'hidden' }}>edit</Button>
                                             </Link>
                                         </div>
