@@ -69,10 +69,12 @@
   font-weight: 400;
   line-height: 22px; /* 157.143% */
   letter-spacing: 0.14px;
-  padding: unset !important;
-  padding-bottom: 12px !important;
   background: unset !important;
   border: unset !important;
+}
+
+#viewtask {
+
 }
 
 .edit-button,

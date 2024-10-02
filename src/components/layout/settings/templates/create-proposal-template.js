@@ -113,13 +113,13 @@ const CreateProposalTemplate = () => {
 
             const formData = new FormData();
             formData.append('name', name);
-            formData.append('sections', sections);
+            // formData.append('sections', sections);
             console.log('sections: ', sections);
 
-            // sections.forEach((section, index) => {
-            //     formData.append(`sections[${index}].title`, section.title);
-            //     formData.append(`sections[${index}].description`, section.description);
-            // });
+            sections.forEach((section, index) => {
+                formData.append(`sections[${index}]title`, section.title);
+                formData.append(`sections[${index}]description`, section.description);
+            });
             const method = id ? 'PUT' : 'POST';
 
             const accessToken = localStorage.getItem("access_token");
