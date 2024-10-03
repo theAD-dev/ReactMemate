@@ -13,6 +13,7 @@ import { Calendar } from 'primereact/calendar';
 import styles from './expenses-form.module.scss';
 import { Plus, Calendar3 } from 'react-bootstrap-icons';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import { Link } from 'react-router-dom';
 
 
 const schema = yup
@@ -55,7 +56,9 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
 
                 <Col sm={6}>
                     <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-4 pt-3 mb-4">
-                        <Button className={styles.expensesCreateNew}>Create New Suplier  <Plus size={24} color="#475467" /></Button>
+                        <Link to={"/suppliers"}>
+                            <Button className={styles.expensesCreateNew}>Create New Suplier  <Plus size={24} color="#475467" /></Button>
+                        </Link>
                     </div>
                 </Col>
 
