@@ -36,21 +36,6 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                     />
                 </div>
             </td>
-            <td style={{ width: '166px' }}>
-                <div className='d-flex align-items-center'>
-                    <input
-                        type="text"
-                        disabled
-                        style={{ padding: '4px', width: '60px', background: 'transparent', color: '#98A2B3' }}
-                        value={`${'0.00'}`}
-                        onChange={(e) => { }}
-                    />
-                    <select value={"Cost"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => { }}>
-                        <option value="Cost">1/Q</option>
-                        <option value="Hourly">1/H</option>
-                    </select>
-                </div>
-            </td>
             <td style={{ width: '185px' }}>
                 <div className='d-flex align-items-center'>
                     <input
@@ -64,6 +49,22 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         <option value={"MRG"}>MRG %</option>
                         <option value={"AMN"}>AMT $</option>
                         <option value={"MRK"}>MRK %</option>
+                    </select>
+                </div>
+            </td>
+            <td style={{ width: '118px', textAlign: 'left' }}>$ {"0.00"}</td>
+            <td style={{ width: '166px' }}>
+                <div className='d-flex align-items-center'>
+                    <input
+                        type="text"
+                        disabled
+                        style={{ padding: '4px', width: '60px', background: 'transparent', color: '#98A2B3' }}
+                        value={`${'0.00'}`}
+                        onChange={(e) => { }}
+                    />
+                    <select value={"Cost"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => { }}>
+                        <option value="Cost">1/Q</option>
+                        <option value="Hourly">1/H</option>
                     </select>
                 </div>
             </td>
@@ -94,9 +95,10 @@ const DepartmentCalculationTableHead = () => {
                 <th style={{ width: '64px', textAlign: 'left' }}>Order</th>
                 <th style={{ width: '192px' }}>Department</th>
                 <th style={{ width: '100%' }}>Description</th>
-                <th style={{ width: '128px' }}>Rate</th>
-                <th style={{ width: '166px' }}>Qty / Unit</th>
+                <th style={{ width: '128px' }}>Cost</th>
                 <th style={{ width: '185px' }}>Markup / Margin</th>
+                <th style={{ width: '118px' }}>Unit Price</th>
+                <th style={{ width: '166px' }}>Qty / Unit</th>
                 <th style={{ width: '83px' }}>Discount</th>
                 <th style={{ width: '118px' }}>Amount</th>
                 <th style={{ width: '32px' }}></th>
@@ -196,20 +198,6 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                 />
                                             </div>
                                         </td>
-                                        <td style={{ width: '166px' }}>
-                                            <div className='d-flex align-items-center'>
-                                                <input
-                                                    type="text"
-                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.quantity}`}
-                                                    onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
-                                                />
-                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
-                                                    <option value="Cost">1/Q</option>
-                                                    <option value="Hourly">1/H</option>
-                                                </select>
-                                            </div>
-                                        </td>
                                         <td style={{ width: '185px' }}>
                                             <div className='d-flex align-items-center'>
                                                 <input
@@ -222,6 +210,21 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                     <option value={"MRG"}>MRG %</option>
                                                     <option value={"AMN"}>AMT $</option>
                                                     <option value={"MRK"}>MRK %</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.unit_price || "0.00"}</td>
+                                        <td style={{ width: '166px' }}>
+                                            <div className='d-flex align-items-center'>
+                                                <input
+                                                    type="text"
+                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
+                                                    value={`${value.quantity}`}
+                                                    onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
+                                                />
+                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
+                                                    <option value="Cost">1/Q</option>
+                                                    <option value="Hourly">1/H</option>
                                                 </select>
                                             </div>
                                         </td>
@@ -313,9 +316,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     }
 
     const calculateTotal = (item) => {
-        let rate = parseFloat(item.cost) || 0;
+        let cost = parseFloat(item.cost) || 0;
         let quantity = parseFloat(item.quantity) || 0;
-        let subtotal = rate * quantity;
+        let subtotal = cost * quantity;
 
         let margin = parseFloat(item.profit_type_value) || 0;
         if (item.profit_type === "MRK") {
@@ -332,6 +335,22 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         return total.toFixed(2);
     }
 
+    const calculateUnitPrice = (item) => {
+        let cost = parseFloat(item.cost) || 0;
+        let unit_price = 0.00;
+
+        let margin = parseFloat(item.profit_type_value) || 0;
+        if (item.profit_type === "MRK") {
+            unit_price = cost + (cost * (margin / 100));
+        } else if (item.profit_type === "MRG") {
+            unit_price = cost / (1 - (margin / 100));
+        } else if (item.profit_type === "AMN") {
+            unit_price = cost + margin;
+        }
+
+        return unit_price.toFixed(2);
+    }
+
     const updateData = (key, id, type, value) => {
         setRows(prevRows => {
             const updatedRows = {
@@ -339,9 +358,10 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 [key]: prevRows[key].map(item => {
                     if (item.id === id) {
                         const updatedItem = { ...item, [type]: value };
-                        if (updatedItem.profit_type === "MRG" && updatedItem.profit_type_value > 100) {
+                        if (updatedItem.profit_type === "MRG" && updatedItem.profit_type_value >= 100) {
                             updatedItem.profit_type_value = 99.99;
                         }
+                        updatedItem.unit_price = calculateUnitPrice(updatedItem);
                         updatedItem.total = calculateTotal(updatedItem);
                         return updatedItem;
                     }
@@ -393,6 +413,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     item.calculator = item.id;
                     item.index = subItem;
                     item.discount = defaultDiscount;
+                    item.unit_price = calculateUnitPrice(item);
                     item.total = calculateTotal(item);
                 })
             } else {
@@ -471,8 +492,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             return {
                 ...rest,
                 cost: parseFloat(rest.cost || 0.00).toFixed(2),
-                quantity: parseFloat(rest.quantity || 0.00).toFixed(2),
                 profit_type_value: parseFloat(rest.profit_type_value || 0.00).toFixed(2),
+                unit_price: parseFloat(rest.unit_price || 0.00).toFixed(),
+                quantity: parseFloat(rest.quantity || 0.00).toFixed(2),
                 discount: parseFloat(rest.discount || 0.00).toFixed(2),
                 order: index // Add 'order' key with index value
             };
@@ -499,7 +521,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         const reformattedData = preExistCalculation.reduce((acc, { order, index, ...item }) => {
             const key = `_${index}_`;
             acc[key] = acc[key] || [];
-            acc[key].push({ ...item, label: subindexMap[index], index });
+            let unit_price = item.unit_price;
+            if (item.unit_price === "0.00") {
+                unit_price = calculateUnitPrice(item);
+            }
+            acc[key].push({ ...item, unit_price, label: subindexMap[index], index });
             return acc;
         }, {});
 

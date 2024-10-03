@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Login/login.css";
 import LoinLogo from "../../../assets/images/logo.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
@@ -11,6 +11,7 @@ import Header from "../Header";
 import { authenticateUser } from "../../../APIs/LoginApi";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -38,7 +39,7 @@ const Login = () => {
       if (success) {
         localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
-        // Redirect or handle successful login
+        navigate('/'); // Redirect or handle successful login
       } else {
         setError("Invalid credentials.");
       }

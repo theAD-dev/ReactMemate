@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner';
-import ExpensesForm from '../new-client-create/expenses-form';
+import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
 const ExpensesEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {

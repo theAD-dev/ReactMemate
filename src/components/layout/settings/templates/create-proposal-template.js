@@ -5,8 +5,8 @@ import { ChevronLeft, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons"
 import style from './job-template.module.scss';
 import clsx from 'clsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button, Spinner } from 'react-bootstrap';
-import { createEmailTemplate, createProposalTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../APIs/email-template';
+import { Button } from 'react-bootstrap';
+import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
 import { InputText } from 'primereact/inputtext';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
@@ -46,16 +46,28 @@ const CreateProposalTemplate = () => {
     const isCustom = searchParams.get('isCustom');
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (id) {
+            let tempData = sessionStorage.getItem(`proposal-${id}`);
+            if (tempData) {
+                tempData = JSON.parse(tempData);
+                setName(tempData?.name);
+                setSections(tempData.sections);
+            }
+        }
+    }, [id])
 
     const proposalQuery = useQuery({
-        queryKey: ["getEmail", id],
-        queryFn: () => getEmail(id),
+        queryKey: ["getProposal", id],
+        queryFn: () => getProposalsTemplate(id),
         enabled: !!id,
-        retry: 1,
+        retry: 0,
     });
 
     const deleteMutation = useMutation({
-        mutationFn: () => (id && deleteEmailTemplates(id)),
+        mutationFn: () => (id && deleteProposalTemplates(id)),
         onSuccess: () => {
             toast.success("Template deleted successfully!");
             navigate('/settings/templates/proposal-templates/');
@@ -66,23 +78,9 @@ const CreateProposalTemplate = () => {
         },
     });
 
-    const mutation = useMutation({
-        mutationFn: (templateData) => (id ? updateEmailTemplate(id, templateData) : createProposalTemplate(templateData)),
-        onSuccess: (data) => {
-            if (data){
-                toast.success("Template saved successfully!");
-                navigate('/settings/templates/proposal-templates/');
-            }
-        },
-        onError: (error) => {
-            console.error("Error saving template:", error);
-            toast.error("Failed to save the template. Please try again.");
-        },
-    });
-
     const handleDelete = () => {
         if (id) {
-            // deleteMutation.mutate()
+            deleteMutation.mutate()
         }
     }
 
@@ -108,22 +106,22 @@ const CreateProposalTemplate = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-
-            mutation.mutate({name, sections});
-
             const formData = new FormData();
             formData.append('name', name);
-            formData.append('sections', sections);
             console.log('sections: ', sections);
 
-            // sections.forEach((section, index) => {
-            //     formData.append(`sections[${index}].title`, section.title);
-            //     formData.append(`sections[${index}].description`, section.description);
-            // });
-            const method = id ? 'PUT' : 'POST';
+            sections.forEach((section, index) => {
+                formData.append(`sections[${index}]title`, section.title);
+                formData.append(`sections[${index}]description`, section.description);
+                if (section.id) formData.append(`sections[${index}]id`, section.id);
+            });
 
+            const method = id ? 'PUT' : 'POST';
+            const URL = id ? `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/update/${id}` : `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/new/`
+
+            setIsLoading(true);
             const accessToken = localStorage.getItem("access_token");
-            fetch(`${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/new/`, {
+            fetch(URL, {
                 method: method,
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
@@ -132,12 +130,14 @@ const CreateProposalTemplate = () => {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    if (data){
+                    setIsLoading(false);
+                    if (data) {
                         toast.success("Template saved successfully!");
                         navigate('/settings/templates/proposal-templates/');
                     }
                 })
                 .catch((error) => {
+                    setIsLoading(false);
                     console.error("Error saving template:", error);
                     toast.error("Failed to save the template. Please try again.");
                 });
@@ -201,7 +201,7 @@ const CreateProposalTemplate = () => {
                                         <Trash color='#F04438' size={16} />
                                     </div>
 
-                                    <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px', marginBottom: "16px" }}>
+                                    <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
                                         <label className={style.label}>Title</label>
                                         <IconField>
                                             <InputIcon>
@@ -258,7 +258,7 @@ const CreateProposalTemplate = () => {
                     <div className={style.bottom}>
                         {isCustom === "true" && id ? (
                             <Button onClick={handleDelete} className='danger-outline-button'>
-                                {deleteMutation.isPending ? "Loading..." : "Delete Template"}
+                                Delete Template {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>
                         ) : (
                             <span></span>
@@ -268,7 +268,7 @@ const CreateProposalTemplate = () => {
                                 <Button className='outline-button'>Cancel</Button>
                             </Link>
                             <Button onClick={handleSubmit} className='solid-button'>
-                                {mutation.isPending ? "Loading..." : "Save Template"}
+                                Save Template {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>
                         </div>
                     </div>

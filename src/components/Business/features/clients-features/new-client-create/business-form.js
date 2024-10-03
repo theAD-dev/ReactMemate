@@ -224,7 +224,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   onChange={(e) => {
                     field.onChange(e.value);
                   }}
-                  className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                  className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.payment_terms })}
                   style={{ height: '46px' }}
                   value={field.value}
                   placeholder="Select payment terms"
@@ -244,7 +244,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 <Dropdown
                   {...field}
                   options={[
-                    { value: null, label: 'Default - 0.00%' },
+                    { value: "0", label: 'Default - 0.00%' },
                     ...(categoriesQuery && categoriesQuery.data?.map((category) => ({
                       value: category.id,
                       label: `${category.name} - ${category.value}%`

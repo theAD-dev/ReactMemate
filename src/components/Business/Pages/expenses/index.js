@@ -7,7 +7,7 @@ import { useDebounce } from 'primereact/hooks';
 
 import style from './expenses.module.scss';
 import ExpensesTable from './expenses-table';
-import NewExpensesCreate from '../../features/expenses-features/new-client-create/new-expense-create';
+import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
 import { TieredMenu } from 'primereact/tieredmenu';
 import clsx from 'clsx';
 

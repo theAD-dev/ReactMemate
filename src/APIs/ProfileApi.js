@@ -14,15 +14,25 @@ export const fetchProfile = async () => {
 
   try {
     const response = await fetch(`${API_BASE_URL}/profile/`, requestOptions);
+    if (response.status === 401) {
+      window.localStorage.removeItem('access_token');
+      window.localStorage.removeItem('refresh_token');
+      window.localStorage.removeItem('isLoggedIn');
+      window.location = "/login"
+    }
+
     if (!response.ok) {
       if (response.status === 404) throw new Error('Not found');
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
-      return await response.json();
+      const data = await response.json();
+      localStorage.setItem('profileData', JSON.stringify(data));
+      return data;
     } else {
       const text = await response.text();
+      localStorage.setItem('profileData', text);
       return text
     }
   } catch (error) {
