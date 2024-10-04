@@ -59,14 +59,14 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         const formData = new FormData();
 
         formData.append("name", data.name);
-        formData.append("abn", data.abn);
+        if (data.abn) formData.append("abn", data.abn);
         formData.append("phone", data.phone);
         formData.append("email", data.email);
-        formData.append("website", data.website);
+        if (data.website) formData.append("website", data.website);
         formData.append("payment_terms", data.payment_terms);
         if (data.category != "0") formData.append("category", data.category);
         formData.append("industry", data.industry);
-        formData.append("description", data.description);
+        if (data.description) formData.append("description", data.description);
 
         data.addresses.forEach((address, index) => {
             if (address.city) {
