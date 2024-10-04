@@ -252,7 +252,7 @@ const CreateProposalTemplate = () => {
                     </div>
 
                     <div className={style.bottom}>
-                        {isCustom === "true" && id ? (
+                        { id ? (
                             <Button onClick={handleDelete} className='danger-outline-button'>
                                 Delete Template {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>
