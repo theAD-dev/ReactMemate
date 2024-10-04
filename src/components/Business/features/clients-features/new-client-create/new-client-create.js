@@ -12,7 +12,7 @@ import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
 import { toast } from 'sonner';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
-const NewClientCreate = ({ visible, setVisible }) => {
+const NewClientCreate = ({ visible, setVisible, refetch }) => {
     const formRef = useRef(null);
     const [isPending, setIsPending] = useState(false);
     const [photo, setPhoto] = useState(null);
@@ -36,6 +36,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
             console.log('response: ', response);
             toast.success(`New client created successfully`);
             setVisible(false);
+            refetch(" ");
         };
 
         const onError = () => {
@@ -63,25 +64,29 @@ const NewClientCreate = ({ visible, setVisible }) => {
         formData.append("email", data.email);
         formData.append("website", data.website);
         formData.append("payment_terms", data.payment_terms);
-        formData.append("category", data.category);
+        if (data.category != "0") formData.append("category", data.category);
         formData.append("industry", data.industry);
         formData.append("description", data.description);
 
         data.addresses.forEach((address, index) => {
-            formData.append(`addresses[${index}]address`, address.address);
-            formData.append(`addresses[${index}]city`, address.city);
-            formData.append(`addresses[${index}]postcode`, address.postcode);
-            formData.append(`addresses[${index}]is_main`, address.is_main);
-            formData.append(`addresses[${index}]title`, address.title);
+            if (address.city) {
+                formData.append(`addresses[${index}]address`, address.address);
+                formData.append(`addresses[${index}]city`, address.city);
+                formData.append(`addresses[${index}]postcode`, address.postcode);
+                formData.append(`addresses[${index}]is_main`, address.is_main);
+                formData.append(`addresses[${index}]title`, address.title);
+            }
         });
 
         data.contact_persons.forEach((person, index) => {
-            formData.append(`contact_persons[${index}]firstname`, person.firstname);
-            formData.append(`contact_persons[${index}]lastname`, person.lastname);
-            formData.append(`contact_persons[${index}]email`, person.email);
-            formData.append(`contact_persons[${index}]phone`, person.phone);
-            formData.append(`contact_persons[${index}]position`, person.position);
-            formData.append(`contact_persons[${index}]is_main`, person.is_main);
+            if (person.firstname || person.email) {
+                formData.append(`contact_persons[${index}]firstname`, person.firstname);
+                formData.append(`contact_persons[${index}]lastname`, person.lastname);
+                formData.append(`contact_persons[${index}]email`, person.email);
+                formData.append(`contact_persons[${index}]phone`, person.phone);
+                formData.append(`contact_persons[${index}]position`, person.position);
+                formData.append(`contact_persons[${index}]is_main`, person.is_main);
+            }
         });
 
         if (photo?.croppedImageBlob) {
@@ -103,6 +108,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
                 console.log('response: ', response);
                 toast.success(`New client created successfully`);
                 setVisible(false);
+                refetch(" ");
             } else {
                 toast.error('Failed to create new client. Please try again.');
             }
@@ -169,7 +175,7 @@ const NewClientCreate = ({ visible, setVisible }) => {
                         </div>
 
                         {
-                            tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} deleteAddress={()=> { }} deleteContact={() => {}} />
+                            tab === "1" ? <BusinessForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={businessDefaultValues} deleteAddress={() => { }} deleteContact={() => { }} />
                                 : <IndivisualForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={individualDefaultValues} />
                         }
                     </div>

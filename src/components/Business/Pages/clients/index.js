@@ -78,7 +78,7 @@ const ClientPage = () => {
                 </div>
             </div>
             <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} />
-            <NewClientCreate visible={visible} setVisible={setVisible} />
+            <NewClientCreate visible={visible} setVisible={setVisible} refetch={setInputValue}/>
         </PrimeReactProvider>
     )
 }
