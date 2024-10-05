@@ -146,7 +146,12 @@ const Location = () => {
                                                     ? <Skeleton width="100%"></Skeleton>
                                                     : locationReadQuery?.data?.country || "-"
                                                 }
-                                                <Button onClick={handleEditLocation} className={clsx(style.hoverShow, 'p-0 text-button')} style={{ visibility: 'hidden' }}>Edit</Button>
+                                                {locationsQuery?.data?.locations?.[0]?.id === activeLocation
+                                                    ? <Link to={"/settings/generalinformation"}>
+                                                        <Button className={clsx(style.hoverShow, 'p-0 text-button')} style={{ visibility: 'hidden' }}>Edit</Button>
+                                                    </Link>
+                                                    : <Button onClick={handleEditLocation} className={clsx(style.hoverShow, 'p-0 text-button')} style={{ visibility: 'hidden' }}>Edit</Button>
+                                                }
                                             </td>
                                             <td className={style.td}>
                                                 {locationReadQuery?.isFetching
@@ -220,7 +225,7 @@ const Location = () => {
                                     </thead>
                                     <tbody>
                                         {
-                                            locationReadQuery?.data?.users?.map((user) =>
+                                            locationReadQuery?.data?.users?.map((user, index) =>
                                                 <tr key={user.id}>
                                                     <td>
                                                         {user.first_name} {user.last_name}

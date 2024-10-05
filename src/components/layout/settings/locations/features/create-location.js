@@ -38,11 +38,14 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
     const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
     const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
-    const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
+    const { control, register, reset, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });
-    const handleClose = () => setVisible(false);
+    const handleClose = () => {
+        setVisible(false);
+        reset();
+    }
     const mutation = useMutation({
         mutationFn: (data) => id ? updateLocation(id, data) : createLocation(data),
         onSuccess: (response) => {
@@ -50,6 +53,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
             refetch2();
             handleClose();
             toast.success(`Location created successfully.`);
+            reset();
         },
         onError: (error) => {
             console.error('Error creating location:', error);
@@ -64,6 +68,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
             fallbackLocation();
             handleClose();
             toast.success(`Location deleted successfully`);
+            reset();
         },
         onError: (error) => {
             toast.error(`Failed to delete location. Please try again.`);
