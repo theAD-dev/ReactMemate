@@ -1,245 +1,263 @@
-.userSettingPage{
-    .userHead {
-        p {
-            color: var(--Gray-600, #475467);
-            font-family: Inter;
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 22px;
-            letter-spacing: 0.14px;
-            span{
-                color: var(--Primary-600, #158ECC);
-                font-family: Inter;
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 600;
-                line-height: 20px; 
-            }
-        }
-    }
-    .users_userHead{
-        h2 {
-            margin-bottom: 0;
-        }
-    }
-    .contentwrapmain {
-        margin-top: 0;
-    }
-    .ellipsis{
-        margin-left: 10px;
-    }
-    tr{
-        td{
-            color: var(--Gray-700, #344054);
-            font-family: Inter;
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 22px; 
-            letter-spacing: 0.14px;
-        }
-    }
-    .userImg{
-        border-radius: 19px;
-        display: flex;
-        width: 24px;
-        height: 24px;
-        justify-content: center;
-        align-items: center;
-    }
-    .privilege{
-        border-radius: 16px;
-        border: 1px solid var(--Success-200, #ABEFC6);
-        background: var(--Success-50, #ECFDF3);
-        mix-blend-mode: multiply;
-        padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
-        color: var(--Success-700, #067647);
-        text-align: center;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18px; 
-        white-space: nowrap;
-    
-    }
-    .contentMenuTab {
-        display: flex;
-        justify-content: space-between;
-        align-items: self-end;
-        .addUserBut{
-            border-radius: var(--radius-xs, 4px);
-            border: 1px solid var(--Gray-300, #D0D5DD);
-            background: var(--Base-White, #FFF);
-            padding: 8px 18px;
-            color: var(--Gray-700, #344054);
-            font-family: Inter;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 24px; 
-            margin-bottom: 8px;
-        }
-    }
-    .showDeleteBut{
-        color: #B42318;
+.userSettingPage {
+  .userHead {
+    p {
+      color: var(--Gray-600, #475467);
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.14px;
+      span {
+        color: var(--Primary-600, #158ecc);
         font-family: Inter;
         font-size: 14px;
         font-style: normal;
         font-weight: 600;
-        line-height: 20px; 
-        border-radius: var(--radius-xs, 4px);
-        border: 1px solid var(--Error-300, #FDA29B);
-        background: #FFF;
-        padding: var(--spacing-md, 8px) 14px;
-    
-    
-    }
-    }
-    #appSettingPage{
-    .showDeleteBut{
-        color: #B42318;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px; 
-        border-radius: var(--radius-xs, 4px);
-        border: 1px solid var(--Error-300, #FDA29B);
-        background: #FFF;
-        padding: var(--spacing-md, 8px) 14px;
-    
-    }
-    .appaction{
-        button{
-            color: var(--Primary-600, #158ECC);
-            font-family: Inter;
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 20px;
-            background: transparent;
-            border: 0;
-            padding: 0;
-            &:hover{
-                color: var(--Primary-600, #158ECC);
-            font-family: Inter;
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 20px;
-            background: transparent;
-            border: 0;
-            padding: 0;
-            }
-        }
-    }
-    .appstatus{
-        border-radius: 16px;
-        border: 1px solid var(--Success-200, #ABEFC6);
-        background: var(--Success-50, #ECFDF3);
-        mix-blend-mode: multiply;
-        padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
-        color: var(--Success-700, #067647);
-        text-align: center;
-        font-family: Inter;
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 18px;
-    }
-    }
-    .editBut{
-        color: var(--Primary-600, #158ECC);
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px; 
-    }
-
-    .HeadquarterDesktop{
-        margin-top: 60px;
-    }
-
-    .userHeadSelect {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%; 
-        h2{
-            margin: 0;
-        }
-    }
-
-    .selectuserInput{
-        border-radius: var(--radius-xs, 4px);
-        border: 1px solid var(--Gray-300, #D0D5DD);
-        padding: 0px 14px;
-        color: var(--Gray-800, #1D2939);
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 20px; 
-
-
-    }
-
-    .modal {
-        width: 659px;
-        border-radius: var(--radius-xs, 4px);
-        background: var(--Base-White, #fff);
-        box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
-          0px 8px 8px -4px rgba(16, 24, 40, 0.03);
-         
+        line-height: 20px;
       }
-      
-      .modalHeader {
-        gap: 16px;
-        display: flex;
-        align-items: center;
-      }
-      
-      .headerTitle {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--Gray-700, #344054);
-      }
-      .circledesignstyle{
-        .out{
-            border-radius: 28px;
-            border: 8px solid var(--Success-50, #ECFDF3);
-            background: var(--Success-100, #DCFAE6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            padding: 6px;
-        }
-      }
-
-      
-.lable {
-    color: var(--Gray-600, #475467);
+    }
+  }
+  .users_userHead {
+    h2 {
+      margin-bottom: 0;
+    }
+  }
+  .contentwrapmain {
+    margin-top: 0;
+  }
+  .ellipsis {
+    margin-left: 10px;
+  }
+  tr {
+    td {
+      color: var(--Gray-700, #344054);
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.14px;
+    }
+  }
+  .userImg {
+    border-radius: 19px;
+    display: flex;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+  }
+  .privilege {
+    border-radius: 16px;
+    border: 1px solid var(--Success-200, #abefc6);
+    background: var(--Success-50, #ecfdf3);
+    mix-blend-mode: multiply;
+    padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+    color: var(--Success-700, #067647);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    white-space: nowrap;
+  }
+  .contentMenuTab {
+    display: flex;
+    justify-content: space-between;
+    align-items: self-end;
+    .addUserBut {
+      border-radius: var(--radius-xs, 4px);
+      border: 1px solid var(--Gray-300, #d0d5dd);
+      background: var(--Base-White, #fff);
+      padding: 8px 18px;
+      color: var(--Gray-700, #344054);
+      font-family: Inter;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px;
+      margin-bottom: 8px;
+    }
+  }
+  .showDeleteBut {
+    color: #b42318;
     font-family: Inter;
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 22px; /* 157.143% */
-    letter-spacing: 0.14px;
-  }
-  
-  .inputText {
-    width: 100%;
-    padding: 10px 14px;
+    font-weight: 600;
+    line-height: 20px;
     border-radius: var(--radius-xs, 4px);
-    border: 1px solid var(--Border, #d0d5dd);
-    background: var(--Base-White, #fff);
-    box-shadow: none !important;
-    outline: none !important;
-    font-family: Inter;
-    color: var(--Gray-900, #101828) !important;
+    border: 1px solid var(--Error-300, #fda29b);
+    background: #fff;
+    padding: var(--spacing-md, 8px) 14px;
   }
+}
+#appSettingPage {
+  .showDeleteBut {
+    color: #b42318;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Error-300, #fda29b);
+    background: #fff;
+    padding: var(--spacing-md, 8px) 14px;
+  }
+  .appaction {
+    button {
+      color: var(--Primary-600, #158ecc);
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 20px;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      &:hover {
+        color: var(--Primary-600, #158ecc);
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        background: transparent;
+        border: 0;
+        padding: 0;
+      }
+    }
+  }
+  .appstatus {
+    border-radius: 16px;
+    border: 1px solid var(--Success-200, #abefc6);
+    background: var(--Success-50, #ecfdf3);
+    mix-blend-mode: multiply;
+    padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+    color: var(--Success-700, #067647);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+  }
+}
+.editBut {
+  color: var(--Primary-600, #158ecc);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.HeadquarterDesktop {
+  margin-top: 60px;
+}
+
+.userHeadSelect {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  h2 {
+    margin: 0;
+  }
+}
+
+.selectuserInput {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  padding: 0px 14px;
+  color: var(--Gray-800, #1d2939);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.modal {
+  width: 659px;
+  border-radius: var(--radius-xs, 4px);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+.modalHeader {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--Gray-700, #344054);
+}
+.circledesignstyle {
+  .out {
+    border-radius: 28px;
+    border: 8px solid var(--Success-50, #ecfdf3);
+    background: var(--Success-100, #dcfae6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 6px;
+  }
+}
+
+.lable {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.inputText {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+  font-family: Inter;
+  color: var(--Gray-900, #101828) !important;
+}
+
+.lable {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.inputText {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+  font-family: Inter;
+  color: var(--Gray-900, #101828) !important;
+}
+
+.error {
+  border: 1px solid red !important;
+}
