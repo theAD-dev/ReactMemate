@@ -3,14 +3,16 @@ import React, { forwardRef, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import BusinessForm from '../new-client-create/business-form';
 import { deleteAddress, deleteContactPerson } from '../../../../../APIs/ClientsApi';
+import { useNavigate } from 'react-router-dom';
 
 
 const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
+  const navigate = useNavigate();
   const [photo, setPhoto] = useState(client?.photo || null);
 
   const [defaultValues, setDefaultValues] = useState({
     ...client,
-    category: client?.category?.id || "",
+    category: client?.category?.id || 1,
     contact_persons: client?.contact_persons
       ?.filter((contact) => !contact?.deleted)
       .map((contact) => ({
@@ -51,22 +53,26 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     formData.append("description", data.description);
 
     data.addresses.forEach((address, index) => {
-      formData.append(`addresses[${index}]city`, address.city);
-      formData.append(`addresses[${index}]title`, address.title);
-      formData.append(`addresses[${index}]address`, address.address);
-      formData.append(`addresses[${index}]is_main`, address.is_main);
-      formData.append(`addresses[${index}]postcode`, address.postcode);
-      if (address?.id) formData.append(`addresses[${index}]id`, address?.id);
+      if (address.city) {
+        formData.append(`addresses[${index}]city`, address.city);
+        formData.append(`addresses[${index}]title`, address.title);
+        formData.append(`addresses[${index}]address`, address.address);
+        formData.append(`addresses[${index}]is_main`, address.is_main);
+        formData.append(`addresses[${index}]postcode`, address.postcode);
+        if (address?.id) formData.append(`addresses[${index}]id`, address?.id);
+      }
     });
 
     data.contact_persons.forEach((person, index) => {
-      formData.append(`contact_persons[${index}]firstname`, person.firstname);
-      formData.append(`contact_persons[${index}]lastname`, person.lastname);
-      formData.append(`contact_persons[${index}]email`, person.email);
-      formData.append(`contact_persons[${index}]phone`, person.phone);
-      formData.append(`contact_persons[${index}]position`, person.position);
-      formData.append(`contact_persons[${index}]is_main`, person.is_main);
-      if (person?.id) formData.append(`contact_persons[${index}]id`, person?.id);
+      if (person.firstname || person.email) {
+        formData.append(`contact_persons[${index}]firstname`, person.firstname);
+        formData.append(`contact_persons[${index}]lastname`, person.lastname);
+        formData.append(`contact_persons[${index}]email`, person.email);
+        formData.append(`contact_persons[${index}]phone`, person.phone);
+        formData.append(`contact_persons[${index}]position`, person.position);
+        formData.append(`contact_persons[${index}]is_main`, person.is_main);
+        if (person?.id) formData.append(`contact_persons[${index}]id`, person?.id);
+      }
     });
 
     if (photo?.croppedImageBlob) {
@@ -85,10 +91,10 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
         body: formData,
       });
       if (response.ok) {
-        refetch();
         setIsEdit(false);
         console.log('response: ', response);
         toast.success(`Client updated successfully`);
+        navigate('/clients');
       } else {
         toast.error('Failed to update client. Please try again.');
       }

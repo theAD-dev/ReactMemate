@@ -14,6 +14,7 @@ import clsx from 'clsx';
 const ClientPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
+    const [refetch, setRefetch] = useState(false);
     const [totalClients, setTotalClients] = useState(0);
     const [visible, setVisible] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
@@ -77,8 +78,8 @@ const ClientPage = () => {
                     <div className={`${style.totalCount}`}>{totalClients} Clients</div>
                 </div>
             </div>
-            <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} />
-            <NewClientCreate visible={visible} setVisible={setVisible} refetch={setInputValue}/>
+            <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} refetch={refetch}/>
+            <NewClientCreate visible={visible} setVisible={setVisible} refetch={setRefetch}/>
         </PrimeReactProvider>
     )
 }

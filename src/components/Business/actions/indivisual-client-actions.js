@@ -13,7 +13,7 @@ export const createFormData = (data, photo) => {
     if (data.category != "0") formData.append("category", data.category);
     formData.append("payment_terms", data.payment_terms);
 
-    formData.append("description", data.description);
+    if(data.description) formData.append("description", data.description);
 
     // Append address data
     if (data.address.city) {

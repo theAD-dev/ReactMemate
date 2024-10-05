@@ -19,14 +19,14 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
     const [tab, setTab] = useState('1');
     const [businessDefaultValues, setBusinessDefaultValues] = useState({
         payment_terms: 1,
-        category: "0",
+        category: 1,
         phone: { country: '', number: '' },
         contact_persons: [{}],
         addresses: [{}],
     });
     const [individualDefaultValues, setIndividualDefaultValues] = useState({
         payment_terms: 1,
-        category: "0",
+        category: 1,
     })
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);
@@ -36,7 +36,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
             console.log('response: ', response);
             toast.success(`New client created successfully`);
             setVisible(false);
-            refetch(" ");
+            refetch((prev) => !prev);
         };
 
         const onError = () => {
@@ -108,7 +108,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
                 console.log('response: ', response);
                 toast.success(`New client created successfully`);
                 setVisible(false);
-                refetch(" ");
+                refetch((prev) => !prev);
             } else {
                 toast.error('Failed to create new client. Please try again.');
             }
