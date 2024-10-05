@@ -139,7 +139,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     mutationFn: (data) => projectsOrderDecline(data),
     onSuccess: (response) => {
       if (response) {
-        navigate('/sales');
+        handleClose();
         toast.success('Order has been successfully declined');
       } else {
         toast.error(`Failed to decline the order. Please try again.`);
