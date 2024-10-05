@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { Tag } from 'primereact/tag';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -7,9 +7,18 @@ import { Column } from 'primereact/column';
 import style from './client-order-history.module.scss';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 import { ArrowLeftCircle, FilePdf, Files, FileText, InfoCircle, Link45deg, PlusSlashMinus } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { useMutation } from '@tanstack/react-query';
+import { projectsToSalesUpdate } from '../../../../../APIs/management-api';
 
 const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
+  const navigate = useNavigate();
+  const [isDuplicating, setIsDuplicating] = useState(null);
+  const [isBringBack, setIsBringBack] = useState(null);
+
   const statusBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
@@ -44,19 +53,68 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
 
   const InvoiceBodyTemplate = (rowData) => {
     return <div className='d-flex align-items-center justify-content-center gap-4'>
-      <Link to={rowData.invoice_url}><FilePdf color='#FF0000' size={16}/></Link>
-      <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16}/></Link>
+      <Link to={rowData.invoice_url}><FilePdf color='#FF0000' size={16} /></Link>
+      <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16} /></Link>
     </div>
   }
 
   const quoteBodyTemplate = (rowData) => {
     return <div className='d-flex align-items-center justify-content-center gap-4'>
-      <Link to={"#"}><div><PlusSlashMinus color='#FDB022' size={16}/></div></Link>
-      <Link to={rowData.quote_url}><FilePdf color='#FF0000' size={16}/></Link>
-      <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16}/></Link>
+      <Link to={"#"}><div><PlusSlashMinus color='#FDB022' size={16} /></div></Link>
+      <Link to={rowData.quote_url}><FilePdf color='#FF0000' size={16} /></Link>
+      <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16} /></Link>
     </div>
   }
-  
+
+  const duplicateSale = async (projectId) => {
+    try {
+      if (!projectId) return toast.error("Project id not found");
+      setIsDuplicating(projectId);
+      const data = await fetchduplicateData(projectId);
+      navigate('/sales');
+      toast.success('Sale has been successfully duplicated');
+    } catch (error) {
+      console.error('Error is duplicating:', error);
+      toast.error(`Failed to duplicate sale. Please try again.`);
+    } finally {
+      setIsDuplicating(null);
+    }
+  }
+
+  const bringBackSale = async (projectId) => {
+    try {
+      if (!projectId) return toast.error("Project id not found");
+      setIsBringBack(projectId);
+      const data = await projectsToSalesUpdate(projectId);
+      if (data) {
+        navigate('/sales');
+      } else {
+        toast.error(`Failed to update sendBack to sales. Please try again.`);
+      }
+    } catch (error) {
+      console.error('Error updating sendBack to sales:', error);
+      toast.error(`Failed to update sendBack to sales. Please try again.`);
+    } finally {
+      setIsBringBack(null);
+    }
+  }
+
+  const duplicateBodyTemplate = (rowData) => {
+    return <>
+      {rowData?.unique_id === isDuplicating
+        ? <ProgressSpinner style={{ width: '18px', height: '18px', position: 'relative', top: '2px' }} />
+        : <Files color='#667085' size={16} className='cursor-pointer' onClick={() => duplicateSale(rowData?.unique_id)} />}
+    </>
+  }
+
+  const bringBackBodyTemplate = (rowData) => {
+    return <>
+      {rowData?.unique_id === isBringBack
+        ? <ProgressSpinner style={{ width: '18px', height: '18px', position: 'relative', top: '2px' }} />
+        : <ArrowLeftCircle color='#667085' size={16} className='cursor-pointer' onClick={() => bringBackSale(rowData?.unique_id)} />}
+    </>
+  }
+
   return (
     <DataTable ref={ref} value={clientOrders} scrollable selectionMode={'checkbox'} removableSort
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
@@ -71,12 +129,12 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
       <Column field="status" header="Status" body={statusBodyTemplate} sortable style={{ minWidth: '113px' }}></Column>
       <Column header="Invoice" body={InvoiceBodyTemplate} style={{ minWidth: '114px' }}></Column>
       <Column header="Quote" body={quoteBodyTemplate} style={{ minWidth: '160px' }}></Column>
-      <Column header="History" body={<FileText color='#667085' size={16}/>} bodyClassName={"text-center"} style={{ minWidth: '70px' }}></Column>
-      <Column header="Info" body={<InfoCircle color='#667085' size={16}/>} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
+      <Column header="History" body={<FileText color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '70px' }}></Column>
+      <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
       <Column field="total" header="Total" body={totalBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '110px' }}></Column>
       <Column field='profit' header="Operational Profit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '144px' }} sortable></Column>
-      <Column header="Replicate" body={<Files color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '82px' }}></Column>
-      <Column header="Bring Back" body={<ArrowLeftCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '110px' }}></Column>
+      <Column header="Duplicate" body={duplicateBodyTemplate} bodyClassName={"text-center"} style={{ minWidth: '82px' }}></Column>
+      <Column header="Bring Back" body={bringBackBodyTemplate} bodyClassName={"text-center"} style={{ minWidth: '110px' }}></Column>
     </DataTable>
   )
 })
