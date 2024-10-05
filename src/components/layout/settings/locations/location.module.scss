@@ -49,6 +49,7 @@
     align-items: center;
   }
   .privilege {
+    width: fit-content;
     border-radius: 16px;
     border: 1px solid var(--Success-200, #abefc6);
     background: var(--Success-50, #ecfdf3);
@@ -260,4 +261,38 @@
 
 .error {
   border: 1px solid red !important;
+}
+
+.td {
+  padding: 12px 16px !important;
+  background: #f9fafb !important;
+  border-right: 1px solid var(--Gray-200, #eaecf0) !important;
+}
+
+tr:hover .td {
+  background: #ebf8ff !important;
+}
+
+.hoverShow,
+.hoverShow:hover {
+  background: transparent !important;
+}
+
+tr:hover .hoverShow {
+  visibility: visible !important;
+}
+
+.borderNone {
+  border-bottom: 0px solid #fff !important;
+}
+
+.dangerTextButton,
+.dangerTextButton:hover {
+  color: var(--Error-700, #b42318) !important;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  background: transparent !important;
 }

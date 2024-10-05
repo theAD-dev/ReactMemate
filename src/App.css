@@ -74,7 +74,7 @@ table thead tr th,table tbody tr td{
     height: calc(100vh - 164px);
     padding-bottom: 2px;
 }
-table:not(.p-datatable-table) thead tr th:first-child, table:not(.p-datatable-table) tbody tr td:first-child {
+table:not(.p-datatable-table):not(.custom-table) thead tr th:first-child, table:not(.p-datatable-table):not(.custom-table) tbody tr td:first-child {
     position: sticky;
     left: 0;
     width: 40px;
@@ -82,6 +82,10 @@ table:not(.p-datatable-table) thead tr th:first-child, table:not(.p-datatable-ta
     border-right: 0;
     text-align: left;
     padding: 0px 6px 0 22px !important;
+}
+
+.custom-table td{
+    vertical-align: middle;
 }
 
 table tbody tr td:first-child label {

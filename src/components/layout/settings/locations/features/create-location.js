@@ -17,11 +17,12 @@ import * as yup from 'yup';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { createLocation } from '../../../../../APIs/location-api';
+import { createLocation, deleteLocation, updateLocation } from '../../../../../APIs/location-api';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const schema = yup
     .object({
-        title: yup.string().required('Title is required'),
+        name: yup.string().required('Name is required'),
         country: yup.string().required('Country is required'),
         address: yup.string().required('Address is required'),
         city: yup.number().typeError("City must be a number").required("City is required"),
@@ -30,7 +31,7 @@ const schema = yup
     })
     .required();
 
-const CreateLocation = ({ visible, setVisible, defaultValues = null, id }) => {
+const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, refetch, refetch2, fallbackLocation }) => {
     const [countryId, setCountryId] = useState('');
     const [stateId, setStateId] = useState('');
     const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
@@ -43,9 +44,10 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id }) => {
     });
     const handleClose = () => setVisible(false);
     const mutation = useMutation({
-        mutationFn: (data) => createLocation(data),
+        mutationFn: (data) => id ? updateLocation(id, data) : createLocation(data),
         onSuccess: (response) => {
-            // refetch();
+            refetch();
+            refetch2();
             handleClose();
             toast.success(`Location created successfully.`);
         },
@@ -55,10 +57,33 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id }) => {
         }
     });
 
+    const deleteMutation = useMutation({
+        mutationFn: () => deleteLocation(id),
+        onSuccess: () => {
+            refetch();
+            fallbackLocation();
+            handleClose();
+            toast.success(`Location deleted successfully`);
+        },
+        onError: (error) => {
+            toast.error(`Failed to delete location. Please try again.`);
+        }
+    });
+
     const onSubmit = (data) => {
-        console.log(data);
-        // Handle your save logic here
+        mutation.mutate(data);
     };
+
+    useEffect(() => {
+        if (defaultValues) {
+            Object.keys(defaultValues).forEach(key => {
+                setValue(key, defaultValues[key]);
+            });
+
+            if (defaultValues?.country) setCountryId(defaultValues?.country);
+            if (defaultValues?.state) setStateId(defaultValues?.state);
+        }
+    }, [defaultValues, setValue]);
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -79,10 +104,19 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id }) => {
     );
     const footerContent = (
         <div className='d-flex justify-content-between'>
-            <Button className='danger-outline-button'>Delete</Button>
+            {id
+                ? <Button onClick={() => deleteMutation.mutate()} className='danger-outline-button' >
+                    Delete
+                    {deleteMutation.isPending && (<ProgressSpinner style={{ width: '20px', height: '20px' }} />)}
+                </Button>
+                : <span></span>
+            }
             <div className='d-flex justify-content-end gap-2'>
-                <Button className='outline-button' >Cancel</Button>
-                <Button type='submit' onClick={handleSubmit(onSubmit)} className='solid-button' style={{ width: '132px' }} >Save Details</Button>
+                <Button className='outline-button' onClick={handleClose}>Cancel</Button>
+                <Button type='submit' onClick={handleSubmit(onSubmit)} className='solid-button'>
+                    {id ? "Update" : "Save"} Details
+                    {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+                </Button>
             </div>
         </div>
     );
@@ -96,10 +130,10 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id }) => {
                             <div className="d-flex flex-column gap-1 mb-4">
                                 <label className={clsx(style.lable)}>Location Name</label>
                                 <IconField>
-                                    <InputIcon>{errors?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                                    <InputText {...register("title")} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.title })} placeholder='Enter location name' />
+                                    <InputIcon>{errors?.name && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                    <InputText {...register("name")} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.name })} placeholder='Enter location name' />
                                 </IconField>
-                                {errors?.title && <p className="error-message">{errors?.title?.message}</p>}
+                                {errors?.name && <p className="error-message">{errors?.name?.message}</p>}
                             </div>
                         </Col>
                         <Col sm={6}>
