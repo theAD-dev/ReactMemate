@@ -52,7 +52,7 @@ table thead tr th {
   vertical-align: middle;
   color: #475467 !important;
 }
-table:not(.p-datatable-table):not(.custom-table) tbody tr td {
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;

@@ -1,6 +1,6 @@
 @use "three-dots";
 
-.outline-none, .outline-none:focus, .outline-none:hover {
+.outline-none, .outline-none:focus, .outline-none:hover, input {
   outline: none !important;
   box-shadow: none !important;
 }

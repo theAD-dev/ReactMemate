@@ -340,3 +340,108 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 .p-tooltip.p-tooltip-top .p-tooltip-arrow {
   border-top-color: #fff;
 }
+
+.customSelectButton .p-button.p-component {
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
+
+.customSelectButton .p-button.p-component:first-child {
+  border-right: 0px solid #d0d5dd;
+}
+
+.customSelectButton .p-button.p-component.p-highlight {
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.customSelectButton .p-button.p-component .p-button-label {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.customSelectButton .p-button.p-component.p-highlight .p-button-label {
+  color: var(--Primary-500, #1ab2ff);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.p-datepicker {
+  padding: 16px 24px !important;
+}
+
+.p-datepicker table td.p-datepicker-today > span {
+  color: #fff !important;
+  background: var(--Primary-500, #1ab2ff) !important;
+}
+
+.p-datepicker-calendar td,
+.p-datepicker-calendar th {
+  border: none !important;
+  padding: 8px 6px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  background: #fff !important;
+}
+
+.p-datepicker table td > span {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: box-shadow 0.2s;
+  border: 1px solid transparent;
+}
+
+.p-datepicker-buttonbar {
+  padding: 5px 0px 0px 0px !important;
+}
+
+.p-datepicker-header {
+  padding: 0px 0px 5px 0px !important;
+}
+
+.p-datepicker-buttonbar .p-button {
+  color: var(--Gray-800, #1d2939);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 8px 14px 0px 14px !important;
+}
+
+.p-yearpicker,
+.p-monthpicker {
+  justify-content: space-around;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 344px !important;
+}
+
+.p-yearpicker span {
+  max-width: 140px !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.p-monthpicker span {
+  max-width: 100px;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.p-calendar .p-button-icon-only {
+  background: #fff;
+  padding: 0px !important;
+  border: none !important;
+  border-radius: 4px !important;
+}
