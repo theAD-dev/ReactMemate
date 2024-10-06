@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SalesIcon from "../../../../assets/images/icon/SalesIcon.svg";
 import ArchiveIcon from "../../../../assets/images/icon/archive.svg"
 import ProgressLogo from "../../../../assets/images/progressLogo.png";
-import { fetchWon  } from "../../../../APIs/SalesApi";
+import { markLost  } from "../../../../APIs/SalesApi";
 import ConfettiComponent from '../../../layout/ConfettiComponent';
 
 
@@ -24,7 +24,7 @@ const QuoteWon = ( {salesData,saleUniqueId,LostQuote,quoteType,onRemoveRow}) => 
   const handleMoveToManagementLost = async () => {
     try {
       if(saleUniqueId){
-            const success = await fetchWon(saleUniqueId);
+            const success = await markLost([saleUniqueId]);
             if (success.status === 'wn') {
               console.log("salesData123 ===> ",salesData)
                onRemoveRow()

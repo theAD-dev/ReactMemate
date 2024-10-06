@@ -244,7 +244,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 <Dropdown
                   {...field}
                   options={[
-                    { value: "0", label: 'Default - 0.00%' },
+                    { value: 1, label: 'Default - 0.00%' },
                     ...(categoriesQuery && categoriesQuery.data?.map((category) => ({
                       value: category.id,
                       label: `${category.name} - ${category.value}%`

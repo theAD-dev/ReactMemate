@@ -224,7 +224,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
             ...prev,
             subject: subject,
             email_body: text,
-            from: from,
+            from_email: from,
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })

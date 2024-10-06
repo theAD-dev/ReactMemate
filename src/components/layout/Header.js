@@ -84,14 +84,12 @@ import EditTemplates from "./settings/templates/edit-template";
 import EditEmail from "./settings/templates/edit-email";
 import EditSignatures from "./settings/templates/edit-signatures";
 import EditProposal from "./settings/templates/edit-proposal";
-import Headquarter from "./settings/locations/headquarter";
-import InnovationStudio from "./settings/locations/innovation-studio";
-import CreativeHub from "./settings/locations/creative-hub";
 import StatisticsPage from "../Business/Pages/statistics";
 import CustomersIndustries from "./settings/customerssettings/Industries";
 import CreateEmailTemplate from "./settings/templates/create-email-template";
 import KeyResultsPage from "../Business/Pages/statistics/key-results";
 import CreateProposalTemplate from "./settings/templates/create-proposal-template";
+import Location from "./settings/locations";
 
 
 
@@ -567,19 +565,8 @@ const Header = ({ onClick }) => {
             path="/settings/calculators/departments"
             element={<Departments />}
           />
-          <Route
-            path="/settings/location/headquarter"
-            element={<Headquarter />}
-          />
-          <Route
-            path="/settings/location/innovation-studio"
-            element={<InnovationStudio />}
-          />
-          <Route
-            path="/settings/location/creative-hub"
-            element={<CreativeHub />}
-          />
-
+          
+          <Route path="/settings/location" element={<Location />} />
 
           <Route
             path="/settings/templates/job-templates"

@@ -3,94 +3,40 @@ import { nanoid } from 'nanoid';
 import React, { useEffect, useRef, useState } from 'react'
 import { Sidebar } from 'primereact/sidebar';
 import { Button, Col, Row } from 'react-bootstrap';
-import {  PlusCircle, X } from 'react-bootstrap-icons';
+import { PlusCircle, X } from 'react-bootstrap-icons';
 
 import styles from './new-expense-create.module.scss';
 import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 import { toast } from 'sonner';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
+import { useMutation } from '@tanstack/react-query';
+import { createNewExpense } from '../../../../../APIs/expenses-api';
 
 const NewExpensesCreate = ({ visible, setVisible }) => {
     const formRef = useRef(null);
-    const [isPending, setIsPending] = useState(false);
-    const [photo, setPhoto] = useState(null);
-    const [tab, setTab] = useState('1');
-    const [businessDefaultValues, setBusinessDefaultValues] = useState({
-        phone: { country: '', number: '' },
-        contact_persons: [{}],
-        addresses: [{}],
+    const [defaultValues, setDefaultValues] = useState({
+        option: 'Assign to order'
     });
-    const expensesFormSubmit = async (data) => {
-        console.log('expensesFormSubmit: ', data);
-
-        const formData = createFormData(data, photo);
-        const onSuccess = (response) => {
+    const mutation = useMutation({
+        mutationFn: (data) => createNewExpense(data),
+        onSuccess: (response) => {
             console.log('response: ', response);
-            toast.success(`New client created successfully`);
+            toast.success(`Expense created successfully`);
             setVisible(false);
-        };
-
-        const onError = () => {
-            toast.error('Failed to create new client. Please try again.');
-        };
-
-        setIsPending(true);
-        await handleApiRequest(
-            `${process.env.REACT_APP_BACKEND_API_URL}/expenses/individual/new/`,
-            'POST',
-            formData,
-            onSuccess,
-            onError
-        );
-        setIsPending(false);
-    }
-
-    const businessFormSubmit = async (data) => {
-        console.log('data: ', data);
-        const formData = new FormData();
-
-        formData.append("name", data.name);
-        formData.append("abn", data.abn);
-        formData.append("phone", data.phone);
-        formData.append("email", data.email);
-        formData.append("website", data.website);
-        formData.append("payment_terms", data.payment_terms);
-        formData.append("category", data.category);
-        formData.append("industry", data.industry);
-        formData.append("description", data.description);
-
-     
-
-     
-
-     
-
-        try {
-            setIsPending(true);
-            const accessToken = sessionStorage.getItem("access_token");
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/clients/business/new/`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                },
-                body: formData,
-            });
-            if (response.ok) {
-                console.log('response: ', response);
-                toast.success(`New client created successfully`);
-                setVisible(false);
-            } else {
-                toast.error('Failed to create new client. Please try again.');
-            }
-        } catch (err) {
-            toast.error(`Failed to create new client. Please try again.`);
-        } finally {
-            setIsPending(false);
+        },
+        onError: (error) => {
+            console.error('Error creating expense:', error);
+            toast.error('Failed to create expense. Please try again.');
         }
-    }
+    });
 
     const handleSubmit = async (data) => {
-        expensesFormSubmit(data);  
+        delete data["gst-calculation"];
+        delete data.option;
+        delete data.totalAmount
+        delete data.tax;
+        console.log('data: ', data);
+        mutation.mutate(data);
     };
 
     const handleExternalSubmit = () => {
@@ -121,17 +67,16 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
                     </div>
 
                     <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
-                    <div class={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
-                        <h5>Supplier Details</h5>
-                        <h6>Expense ID: ELT-339047-1</h6>
+                        <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
+                            <h5>Supplier Details</h5>
+                            <h6>Expense ID: </h6>
                         </div>
-                             <ExpensesForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} />
-
+                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} />
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '179px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
+                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }}>{mutation.isPending ? "Loading..." : "Save"}</Button>
                     </div>
                 </div>
             )}

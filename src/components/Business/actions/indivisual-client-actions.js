@@ -10,19 +10,21 @@ export const createFormData = (data, photo) => {
     formData.append("email", data.email);
     formData.append("phone", data.phone);
 
-    formData.append("category", data.category);
+    if (data.category != "0") formData.append("category", data.category);
     formData.append("payment_terms", data.payment_terms);
-    
-    formData.append("description", data.description);
+
+    if(data.description) formData.append("description", data.description);
 
     // Append address data
-    formData.append("address.country", data.address.country);
-    formData.append("address.title", data.address.title);
-    formData.append("address.city", data.address.city);
-    formData.append("address.address", data.address.address);
-    formData.append("address.state", data.address.state);
-    formData.append("address.postcode", data.address.postcode);
-    if (data.address.id) formData.append("address.id", data.address.id);
+    if (data.address.city) {
+        formData.append("address.country", data.address.country);
+        formData.append("address.title", data.address.title);
+        formData.append("address.city", data.address.city);
+        formData.append("address.address", data.address.address);
+        formData.append("address.state", data.address.state);
+        formData.append("address.postcode", data.address.postcode);
+        if (data.address.id) formData.append("address.id", data.address.id);
+    }
 
     // Append photo if it exists
     if (photo?.croppedImageBlob) {

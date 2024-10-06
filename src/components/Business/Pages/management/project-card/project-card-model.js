@@ -139,7 +139,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     mutationFn: (data) => projectsOrderDecline(data),
     onSuccess: (response) => {
       if (response) {
-        navigate('/sales');
+        handleClose();
         toast.success('Order has been successfully declined');
       } else {
         toast.error(`Failed to decline the order. Please try again.`);
@@ -468,7 +468,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS />
-                    <ComposeEmail />
+                    <ComposeEmail clientId={cardData?.client}/>
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
