@@ -200,10 +200,20 @@ const Location = () => {
                                                 onChange={(e) => assignedUser(e.value)}
                                                 options={desktopsUsersOptions?.map((user) => ({
                                                     value: user?.id,
-                                                    label: user?.name || "-"
+                                                    label: user?.name || "-",
+                                                    photo: user?.photo || "",
                                                 }))}
                                                 placeholder="Select Desktop User"
-                                                filter
+                                                itemTemplate={(option) => {
+                                                    return (
+                                                        <div className='d-flex gap-2 align-items-center'>
+                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
+                                                                <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+                                                            </div>
+                                                            {option?.label}
+                                                        </div>
+                                                    )
+                                                }}
                                                 className='outline-none'
                                                 style={{ width: '230px' }}
                                                 loading={desktopUser?.isFetching}
@@ -228,7 +238,12 @@ const Location = () => {
                                             locationReadQuery?.data?.users?.map((user, index) =>
                                                 <tr key={user.id}>
                                                     <td>
-                                                        {user.first_name} {user.last_name}
+                                                        <div className='d-flex gap-2 align-items-center'>
+                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
+                                                                <img src={user.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+                                                            </div>
+                                                            {user.first_name} {user.last_name}
+                                                        </div>
                                                     </td>
                                                     <td>
                                                         {user.email || "-"}
@@ -245,10 +260,11 @@ const Location = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <Button onClick={() => unassignedMutation.mutate({ id: user.id })} className={clsx(style.dangerTextButton, 'text-button')}>
-                                                            Delete
+                                                        <Button onClick={() => unassignedMutation.mutate({ id: user.id })} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
                                                             {
-                                                                unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending && <ProgressSpinner style={{ width: '15px', height: '15px' }} />
+                                                                (unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending)
+                                                                    ? <ProgressSpinner style={{ width: '15px', height: '15px' }} />
+                                                                    : "Delete"
                                                             }
                                                         </Button>
                                                     </td>
