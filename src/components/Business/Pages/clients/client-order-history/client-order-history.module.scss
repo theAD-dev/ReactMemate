@@ -53,9 +53,9 @@
   text-overflow: ellipsis;
 }
 
-.inProgress {
+.lost {
   margin: auto;
-  width: fit-content;
+  width: 81px;
   color: var(--Warning-700, #b54708);
   text-align: center;
   /* Text xs/Medium */
@@ -92,7 +92,7 @@
   background: var(--Success-50, #ecfdf3);
 }
 
-.lost {
+.declined {
   margin: auto;
   width: fit-content;
   color: var(--Error-700, #b42318);
@@ -112,7 +112,47 @@
   background: var(--Error-50, #fef3f2);
 }
 
-.inProgressProfit {
+.inprogress {
+  margin: auto;
+  width: fit-content;
+  color: var(--Gray-700, #026AA2);
+  text-align: center;
+
+  /* Text xs/Medium */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid var(--Gray-300, #B9E6FE);
+  background: var(--Gray-25, #F0F9FF);
+}
+
+.defaultStatus {
+  margin: auto;
+  width: fit-content;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+
+  /* Text xs/Medium */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Gray-25, #fcfcfd);
+}
+
+.lostProfit {
   margin-left: auto;
   width: fit-content;
   color: var(--Warning-800, #93370d);
@@ -130,6 +170,26 @@
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Warning-300, #fec84b);
   background: var(--Warning-100, #fef0c7);
+}
+
+.inprogressProfit {
+  margin-left: auto;
+  width: fit-content;
+  color: var(--Success-800, #026AA2);
+  text-align: center;
+
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+  align-items: center;
+  /* Text xs/Medium */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #B9E6FE);
+  background: var(--Gray-25, #F0F9FF);
 }
 
 .completeProfit {
@@ -152,7 +212,7 @@
   background: var(--Success-100, #dcfae6);
 }
 
-.lostProfit {
+.declinedProfit {
   margin-left: auto;
   width: fit-content;
   color: var(--Error-800, #912018);

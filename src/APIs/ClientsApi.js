@@ -198,3 +198,13 @@ export const fetchClients = async (limit, offset) => {
     throw error;
   }
 };
+
+export const bringBack = async (id) => {
+  const endpoint = `/projects/back/`;
+  const options = {
+      method: 'PUT',
+      body: { unique_id: id }
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

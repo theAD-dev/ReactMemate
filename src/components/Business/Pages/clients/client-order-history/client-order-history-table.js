@@ -14,8 +14,8 @@ import { toast } from 'sonner';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useMutation } from '@tanstack/react-query';
-import { projectsToSalesUpdate } from '../../../../../APIs/management-api';
 import { CloseButton } from 'react-bootstrap';
+import { bringBack } from '../../../../../APIs/ClientsApi';
 
 const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
   const navigate = useNavigate();
@@ -25,12 +25,14 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
   const statusBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
-      case 'In progress':
-        return <Tag className={`status ${style.inProgress}`} value={status} />
-      case 'Complete':
-        return <Tag className={`status ${style.complete}`} value={status} />
       case 'Lost':
         return <Tag className={`status ${style.lost}`} value={status} />
+      case 'Completed':
+        return <Tag className={`status ${style.complete}`} value={status} />
+      case 'In progress':
+        return <Tag className={`status ${style.inprogress}`} value={status} />
+      case 'Declined':
+        return <Tag className={`status ${style.declined}`} value={status} />
       default:
         return <Tag className={`status ${style.defaultStatus}`} value={status} />;
     }
@@ -39,12 +41,14 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
   const profitBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
-      case 'In progress':
-        return <Tag className={`profit ${style.inProgressProfit} rounded`} value={`$ ${rowData.profit}`} />
-      case 'Complete':
-        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${rowData.profit}`} />
       case 'Lost':
         return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${rowData.profit}`} />
+      case 'Completed':
+        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${rowData.profit}`} />
+      case 'In progress':
+        return <Tag className={`profit ${style.inprogressProfit}`} value={`$ ${rowData.profit}`} />
+      case 'Declined':
+        return <Tag className={`profit ${style.declinedProfit} rounded`} value={`$ ${rowData.profit}`} />
       default:
         return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$ ${rowData.profit}`} />;
     }
@@ -84,13 +88,15 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     }
   }
 
-  const bringBackSale = async (projectId) => {
+  const bringBackSale = async (projectId, status) => {
     try {
       if (!projectId) return toast.error("Project id not found");
       setIsBringBack(projectId);
-      const data = await projectsToSalesUpdate(projectId);
+      const data = await bringBack(projectId);
       if (data) {
-        navigate('/sales');
+        if (status === 'Lost' || status === "In progress") navigate('/sales');
+        else if (status === 'Completed' || status === 'Declined') navigate('/management');
+        else window.location.reload();
       } else {
         toast.error(`Failed to update sendBack to sales. Please try again.`);
       }
@@ -230,7 +236,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     return <>
       {rowData?.unique_id === isBringBack
         ? <ProgressSpinner style={{ width: '18px', height: '18px', position: 'relative', top: '2px' }} />
-        : <ArrowLeftCircle color='#667085' size={16} className='cursor-pointer' onClick={() => bringBackSale(rowData?.unique_id)} />}
+        : <ArrowLeftCircle color='#667085' size={16} className='cursor-pointer' onClick={() => bringBackSale(rowData?.unique_id, rowData.status)} />}
     </>
   }
 
