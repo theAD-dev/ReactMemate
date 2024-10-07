@@ -11,7 +11,7 @@ import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
 
-const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted }, ref) => {
+const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted, refetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
@@ -24,7 +24,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, isShowDeleted]);
+    }, [searchValue, isShowDeleted, refetch]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -52,7 +52,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
 
         loadData();
 
-    }, [page, searchValue, tempSort, isShowDeleted]);
+    }, [page, searchValue, tempSort, isShowDeleted, refetch]);
 
     useEffect(() => {
         if (clients.length > 0 && hasMoreData) {

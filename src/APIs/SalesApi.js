@@ -1,3 +1,4 @@
+import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 // Sale Table Api
@@ -28,12 +29,12 @@ export const fetchSalesNotes = async (saleUniqueId, updatedNote) => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json"); 
+  myHeaders.append("Content-Type", "application/json");
 
   const requestOptions = {
-    method: 'PUT', 
+    method: 'PUT',
     headers: myHeaders,
-    body: JSON.stringify({ sales_note: updatedNote }), 
+    body: JSON.stringify({ sales_note: updatedNote }),
     redirect: 'follow',
   };
 
@@ -45,7 +46,7 @@ export const fetchSalesNotes = async (saleUniqueId, updatedNote) => {
       throw new Error(`Sales notes update failed with status ${response.status}: ${errorText}`);
     }
 
-    const result = await response.text(); 
+    const result = await response.text();
 
     const parsedResult = result.trim() ? JSON.parse(result) : null;
 
@@ -56,26 +57,45 @@ export const fetchSalesNotes = async (saleUniqueId, updatedNote) => {
   }
 };
 
+export const markWon = async (ids) => {
+  const endpoint = `/sales/status/won/`;
+  const options = {
+    method: 'PUT',
+    body: {ids: ids}
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const markLost = async (ids) => {
+  const endpoint = `/sales/status/lost/`;
+  const options = {
+    method: 'PUT',
+    body: {ids: ids}
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
 
 // Sale Won Api
 export const fetchWon = async (saleUniqueId) => {
-const myHeaders = new Headers();
-const accessToken = localStorage.getItem("access_token");
+  const myHeaders = new Headers();
+  const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-   myHeaders.append("Content-Type", "application/json");
-const raw = JSON.stringify({
-  "ids": [saleUniqueId]
-});
+  myHeaders.append("Content-Type", "application/json");
+  const raw = JSON.stringify({
+    "ids": [saleUniqueId]
+  });
 
-const requestOptions = {
-  method: "PUT",
-  headers: myHeaders,
-  body: raw,
-  redirect: "follow"
-};
-const response = await fetch(`${API_BASE_URL}/sales/status/won/`, requestOptions);
-const result = await response.json();
-return result[0];
+  const requestOptions = {
+    method: "PUT",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow"
+  };
+  const response = await fetch(`${API_BASE_URL}/sales/status/won/`, requestOptions);
+  const result = await response.json();
+  return result[0];
 }
 
 
@@ -112,12 +132,12 @@ export const fetchSaleslead = async (saleUniqueId, updatedLead) => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json"); 
+  myHeaders.append("Content-Type", "application/json");
 
   const requestOptions = {
-    method: 'PUT', 
+    method: 'PUT',
     headers: myHeaders,
-    body: JSON.stringify({ lead: updatedLead, unique_id: saleUniqueId }), 
+    body: JSON.stringify({ lead: updatedLead, unique_id: saleUniqueId }),
     redirect: 'follow',
   };
 
@@ -129,7 +149,7 @@ export const fetchSaleslead = async (saleUniqueId, updatedLead) => {
       throw new Error(`Sales lead update failed with status ${response.status}: ${errorText}`);
     }
 
-    const result = await response.text(); 
+    const result = await response.text();
 
     const parsedResult = result.trim() ? JSON.parse(result) : null;
 
@@ -148,7 +168,7 @@ export const fetchMultipleData = async (selectedUniqueIds) => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json"); 
+  myHeaders.append("Content-Type", "application/json");
 
   const raw = JSON.stringify({
     "ids": selectedUniqueIds
@@ -167,9 +187,9 @@ export const fetchMultipleData = async (selectedUniqueIds) => {
     ]);
 
     const data = await Promise.all(responses.map(response => response.json()));
-    return data; 
+    return data;
   } catch (error) {
-    throw error; 
+    throw error;
   }
 };
 
@@ -179,17 +199,17 @@ export const fetchduplicateData = async (saleUniqueId) => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json"); 
+  myHeaders.append("Content-Type", "application/json");
 
-const requestOptions = {
-  method: "GET",
-  headers: myHeaders,
-  redirect: "follow"
-};
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow"
+  };
 
-const response = await fetch(`${API_BASE_URL}/sales/${saleUniqueId}/duplicate/`, requestOptions);
-const result = await response.json();
-return result[0];
+  const response = await fetch(`${API_BASE_URL}/sales/${saleUniqueId}/duplicate/`, requestOptions);
+  const result = await response.json();
+  return result[0];
 }
 
 
@@ -200,7 +220,7 @@ export const fetchhistoryData = async (saleUniqueId) => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json"); 
+  myHeaders.append("Content-Type", "application/json");
 
   const requestOptions = {
     method: "GET",
@@ -224,7 +244,7 @@ export const fetchMultipleLost = async (selectedUniqueIds) => {
   const myHeaders = new Headers();
   const accessToken = localStorage.getItem("access_token");
   myHeaders.append("Authorization", `Bearer ${accessToken}`);
-  myHeaders.append("Content-Type", "application/json"); 
+  myHeaders.append("Content-Type", "application/json");
 
   const raw = JSON.stringify({
     "ids": selectedUniqueIds

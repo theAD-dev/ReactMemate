@@ -171,3 +171,27 @@
   border: 1px solid var(--Error-300, #fda29b);
   background: var(--Error-100, #fee4e2);
 }
+
+.department {
+  color: var(--Gray-900, #101828);
+
+  /* Text lg/Semibold */
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px; /* 155.556% */
+  margin-bottom: 0px;
+}
+
+.subdepartment {
+  color: var(--Gray-600, #475467);
+
+/* Text sm/Regular */
+font-family: Inter;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 20px; /* 142.857% */
+margin-bottom: 0px;
+}

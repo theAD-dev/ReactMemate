@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Button, Col, Row } from 'react-bootstrap';
 import { useQuery } from '@tanstack/react-query';
-import React, { forwardRef, useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -11,149 +11,340 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import styles from './expenses-form.module.scss';
-import { Plus, Calendar3 } from 'react-bootstrap-icons';
+import { Plus, Calendar3, QuestionCircle } from 'react-bootstrap-icons';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { Link } from 'react-router-dom';
+import { AutoComplete } from 'primereact/autocomplete';
+import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
+import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-api';
+import { getDepartments } from '../../../../../APIs/CalApi';
+import { SelectButton } from 'primereact/selectbutton';
+import { Tooltip } from 'primereact/tooltip';
+import { Checkbox } from 'primereact/checkbox';
 
+function debounce(fn, delay) {
+    let timeoutId;
+    return (...args) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn(...args), delay);
+    };
+}
 
 const schema = yup
     .object({
-        searchsupplier: yup.string().required("Search for Supplier is required"),
+        supplier: yup.number().required("Supplier is required"),
+        invoice_reference: yup.string().required("Invoice reference is required"),
+        date: yup.string().required("Date is required"),
+        due_date: yup.string().required("Due date is required"),
+        amount: yup.string().required("Amount is required"),
+        nogst: yup.boolean().required("NOGST must be a boolean"),
+        gst: yup.boolean().required("GST must be a boolean"),
+        account_code: yup.string().required("Account Code is required"),
+        department: yup.number().required("Department is required"),
     })
     .required();
 
 const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
+    const autoCompleteRef = useRef(null);
+    const observerRef = useRef(null);
 
-    const [date, setDate] = useState(null);
-    const [dueDate, setDueDate] = useState(null);
+    const [supplierValue, setSupplierValue] = useState("");
+    const [suppliers, setSuppliers] = useState([]);
+    const [page, setPage] = useState(1);
+    const [searchValue, setSearchValue] = useState("");
+    const [hasMoreData, setHasMoreData] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const limit = 25;
 
-    const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
+    const { control, register, handleSubmit, setValue, getValues, watch, setError, trigger, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });
 
+    useEffect(() => {
+        setValue('supplier', +supplierValue?.id)
+        if (supplierValue?.id) trigger(['supplier'])
 
-    const [activeTab, setActiveTab] = useState("tab1");
+    }, [supplierValue]);
 
-    const handleTabClick = (tab) => {
-        setActiveTab(tab);
+    const onFocus = () => {
+        if (autoCompleteRef.current) autoCompleteRef.current.show();
+        const lastRow = document.querySelector('.p-autocomplete-items li.p-autocomplete-item:last-child');
+        if (lastRow) {
+            observerRef.current.observe(lastRow);
+        }
     };
 
+    const search = debounce((event) => {
+        const query = event?.query?.toLowerCase() || '';
+        setSearchValue(query);
+    }, 300);
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchValue]);
+
+    useEffect(() => {
+        const loadData = async () => {
+            setLoading(true);
+            const data = await getListOfSuppliers(page, limit, searchValue, 'name');
+            if (page === 1) setSuppliers(data.results);
+
+            else {
+                if (data?.results?.length > 0)
+                    setSuppliers(prev => {
+                        const existingSupplierIds = new Set(prev.map(supplier => supplier.id));
+                        const newSuppliers = data.results.filter(supplier => !existingSupplierIds.has(supplier.id));
+                        return [...prev, ...newSuppliers];
+                    });
+            }
+            setHasMoreData(data.count !== suppliers.length);
+            setLoading(false);
+        };
+
+        loadData();
+    }, [page, searchValue]);
+
+    useEffect(() => {
+        if (suppliers.length > 0 && hasMoreData) {
+            observerRef.current = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) setPage(prevPage => prevPage + 1);
+                console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
+            });
+
+            const lastRow = document.querySelector('.p-autocomplete-items li.p-autocomplete-item:last-child');
+            if (lastRow) observerRef.current.observe(lastRow);
+        }
+
+        return () => {
+            if (observerRef.current) observerRef.current.disconnect();
+        };
+    }, [suppliers, hasMoreData]);
+
+    const calculateAmounts = (amount, gstType) => {
+        let calculatedTax = 0;
+        let subtotal = 0;
+
+        if (gstType === 'ex') {
+            subtotal = amount;
+            calculatedTax = subtotal * 0.10;
+        } else if (gstType === 'in') {
+            calculatedTax = amount * 0.10 / 1.10;
+            subtotal = amount - calculatedTax;
+        } else {
+            subtotal = amount;
+            calculatedTax = 0;
+        }
+
+        return {
+            subtotal: subtotal.toFixed(2),
+            calculatedTax: calculatedTax.toFixed(2),
+            totalAmount: (parseFloat(subtotal) + parseFloat(calculatedTax)).toFixed(2),
+        };
+    };
+
+    const handleGstChange = (value) => {
+        if (value) {
+            const totalAmount = parseFloat(getValues("amount")) || 0;
+            const { subtotal, calculatedTax, totalAmount: newTotalAmount } = calculateAmounts(totalAmount, value);
+
+            setValue("tax", calculatedTax);
+            setValue("amount", subtotal);
+            setValue("totalAmount", newTotalAmount);
+            setValue("nogst", value === 'no');
+            setValue("gst", value === 'ex');
+            trigger(['gst'])
+        }
+    };
+
+    const xeroCodesList = useQuery({ queryKey: ['getXeroCodesList'], queryFn: getXeroCodesList });
+    const departmentsList = useQuery({ queryKey: ['getDepartments'], queryFn: getDepartments });
+    const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
+
+    const options = ['Assign to order', 'Assign to timeframe'];
+    const [option, setOptionValue] = useState(options[0]);
+
+    const watchOrder = watch('order');
+    useEffect(()=> {
+        if (watchOrder) trigger(['order']);
+    }, [watchOrder])
+    const watchType = watch('type');
+    const validateFields = () => {
+        if (option === 'Assign to order' && !watchOrder) {
+            setError("order", { type: "manual", message: "Order is required" });
+        }
+
+        if (option === 'Assign to timeframe' && !watchType) {
+            setError("type", { type: "manual", message: "Type is required" });
+        }
+    };
+
+    useEffect(() => {
+        validateFields();
+    }, [errors]);
+
+    useEffect(() => {
+        setValue('order', '');
+        setValue('type', '');
+        setValue('option', option);
+    }, [option]);
+
+    const handleFormSubmit = (data) => {
+        validateFields();
+
+        if (Object.keys(errors).length > 0) {
+            console.log('Validation errors:', errors);
+            return;
+        }
+
+        onSubmit(data)
+    }
 
     return (
-        <form ref={ref} onSubmit={handleSubmit(onSubmit)} >
+        <form ref={ref} onSubmit={handleSubmit(handleFormSubmit)} >
             <Row className={clsx(styles.bgGreay, 'pt-3')}>
-                <Col sm={6}>
+                <Col sm={8}>
                     <div className="d-flex flex-column gap-1 mb-4">
                         <label className={clsx(styles.lable)}>Supplier</label>
-                        <IconField>
-                            <InputIcon>{errors.searchsupplier && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                            <InputText {...register("searchsupplier")} className={clsx(styles.inputText, { [styles.error]: errors.searchsupplier })} placeholder='Search for Supplier' />
-                        </IconField>
-                        {errors.searchsupplier && <p className="error-message">{errors.searchsupplier.message}</p>}
+                        <input type="hidden" {...register("supplier")} />
+                        <AutoComplete
+                            ref={autoCompleteRef}
+                            value={supplierValue || ""}
+                            completeMethod={search}
+                            onChange={(e) => {
+                                if (!e.value) setSearchValue("");
+                                setSupplierValue(e.value)
+                            }}
+                            dropdownAutoFocus
+                            field="name"
+                            suggestions={suppliers}
+                            onClick={onFocus}
+                            onFocus={onFocus}
+                            onBlur={() => {
+                                console.log('blur')
+                                setPage(1);
+                                setSearchValue("");
+                                setHasMoreData(true);
+                            }}
+                            style={{ height: '46px' }}
+                            className={clsx(styles.autoComplete, "w-100", { [styles.error]: errors.supplier })}
+                            placeholder="Search for supplier"
+                        />
+                        {errors.supplier && <p className="error-message">{errors.supplier.message}</p>}
                     </div>
                 </Col>
 
-                <Col sm={6}>
+                <Col sm={4}>
                     <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-4 pt-3 mb-4">
                         <Link to={"/suppliers"}>
                             <Button className={styles.expensesCreateNew}>Create New Suplier  <Plus size={24} color="#475467" /></Button>
                         </Link>
                     </div>
                 </Col>
-
                 <Col sm={12}>
                     <div className="d-flex flex-column gap-1">
                         <label className={clsx(styles.lable)}>Invoice/#Ref</label>
                         <IconField>
-                            <InputIcon>{errors.invoice?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                            <InputText {...register("invoice.title")} className={clsx(styles.inputText, { [styles.error]: errors.invoice?.title })} placeholder='Enter invoice reference' />
+                            <InputIcon>{errors?.invoice_reference && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                            <InputText {...register("invoice_reference")} className={clsx(styles.inputText, { [styles.error]: errors.invoice_reference })} placeholder='Enter invoice reference' />
                         </IconField>
-                        {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
-                    </div>
-                </Col>
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4">
-                        <label className={clsx(styles.lable)}>Date</label>
-                        <div className={styles.customCalendar}>
-                            <Calendar
-                                id="date"
-                                value={date}
-                                onChange={(e) => setDate(e.value)}
-                                showIcon={false}
-                                inputStyle={{ paddingRight: '2rem' }}
-                            />
-                            <span className={styles.customIcon}>
-                                <Calendar3 size={20} color="#667085" />
-                            </span>
-                        </div>
-                        {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
-                    </div>
-                </Col>
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4">
-                        <label className={clsx(styles.lable)}>Due Date</label>
-                        <div className={styles.customCalendar}>
-                            <Calendar
-                                id="duedate"
-                                value={dueDate}
-                                onChange={(e) => setDueDate(e.value)}
-                                showIcon={false}
-                                inputStyle={{ paddingRight: '2rem' }}
-                            />
-                            <span className={styles.customIcon}>
-                                <Calendar3 size={20} color="#667085" />
-                            </span>
-                        </div>
-                        {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
-                    </div>
-                </Col>
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4">
-                        <label className={clsx(styles.lable)}>Total Amount</label>
-                        <IconField>
-                            <InputIcon>{errors.invoice?.title && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                            <InputText {...register("invoice.title")} className={clsx(styles.inputText, { [styles.error]: errors.invoice?.title })} placeholder='Enter total amount$' />
-                        </IconField>
-                        {errors.invoice?.title && <p className="error-message">{errors.invoice?.title?.message}</p>}
+                        {errors?.invoice_reference && <p className="error-message">{errors.invoice_reference?.message}</p>}
                     </div>
                 </Col>
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>GST</label>
+                        <label className={clsx(styles.lable)}>Date</label>
                         <Controller
-                            name="gst"
+                            name="date"
+                            control={control}
+                            render={({ field }) => (
+                                <Calendar {...field}
+                                    onChange={(e) => field.onChange(e.value)}
+                                    showButtonBar
+                                    placeholder='DD/MM/YY'
+                                    dateFormat="dd/mm/yy"
+                                    showIcon
+                                    style={{ height: '46px' }}
+                                    icon={<Calendar3 color='#667085' size={20} />}
+                                    className={clsx(styles.inputText, { [styles.error]: errors.date }, 'p-0 outline-none')}
+                                />
+                            )}
+                        />
+                        {errors?.date && <p className="error-message">{errors.date?.message}</p>}
+                    </div>
+                </Col>
+
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                        <label className={clsx(styles.lable)}>Due Date</label>
+                        <Controller
+                            name="due_date"
+                            control={control}
+                            render={({ field }) => (
+                                <Calendar {...field}
+                                    onChange={(e) => field.onChange(e.value)}
+                                    showButtonBar
+                                    placeholder='DD/MM/YY'
+                                    dateFormat="dd/mm/yy"
+                                    showIcon
+                                    style={{ height: '46px' }}
+                                    icon={<Calendar3 color='#667085' size={20} />}
+                                    className={clsx(styles.inputText, { [styles.error]: errors.due_date }, 'p-0 outline-none')}
+                                />
+                            )}
+                        />
+                        {errors?.due_date && <p className="error-message">{errors.due_date?.message}</p>}
+                    </div>
+                </Col>
+
+
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mt-4">
+                        <label className={clsx(styles.lable)}>Total Amount</label>
+                        <IconField>
+                            <InputText keyfilter="money" {...register("amount")} className={clsx(styles.inputText, { [styles.error]: errors.amount })} placeholder='$ Enter total amount' />
+                            <InputIcon>{errors.amount && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                        </IconField>
+                        {errors?.amount && <p className="error-message">{errors.amount?.message}</p>}
+                    </div>
+                </Col>
+                <Col sm={6}>
+                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                        <label className={clsx(styles.lable)}>GST</label>
+                        <input type="hidden" {...register("nogst")} />
+                        <Controller
+                            name="gst-calculation"
                             control={control}
                             render={({ field }) => (
                                 <Dropdown
                                     {...field}
                                     options={[
-                                        { value: 1, label: "GST Exclusive" },
-
+                                        { value: 'ex', label: "GST Exclusive" },
+                                        { value: 'in', label: "GST Inclusive" },
+                                        { value: 'no', label: "No GST" },
                                     ] || []}
                                     onChange={(e) => {
                                         field.onChange(e.value);
+                                        handleGstChange(e.value);
                                     }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.gst })}
                                     style={{ height: '46px' }}
                                     value={field.value}
                                     placeholder="Select GST"
                                 />
                             )}
                         />
-                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                        {errors?.gst && <p className="error-message">{errors.gst?.message}</p>}
                     </div>
                 </Col>
-
-
             </Row>
             <Row className={`mb-4 ${styles.expTotalRow}`}>
                 <Col>
                     <div className={styles.CalItem}>
                         <div>
                             <span>Subtotal</span>
-                            <strong>$ 1,996.90</strong>
+                            <strong>$ {watch('amount') || "0.00"}</strong>
                         </div>
                     </div>
                 </Col>
@@ -161,7 +352,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                     <div className={styles.CalItem}>
                         <div>
                             <span>Tax</span>
-                            <strong>$ 2,326.90</strong>
+                            <strong>$ {watch('tax') || "0.00"}</strong>
                         </div>
                     </div>
                 </Col>
@@ -169,149 +360,145 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                     <div className={`${styles.CalItemActive} ${styles.CalItem}`}>
                         <div>
                             <span>Total</span>
-                            <strong>$ 2,100.26</strong>
+                            <strong>$ {watch('totalAmount') || "0.00"}</strong>
                         </div>
                     </div>
                 </Col>
             </Row>
-            <Row className={clsx(styles.bgGreay)}>
-                <div>
-                    <div className={`tabs ${styles.tabsExpenses}`}>
-                        <button
-                            className={activeTab === "tab1" ? `${styles.active}` : ""}
-                            onClick={() => handleTabClick("tab1")}
-                        >
-                            Assign to order
-                        </button>
-                        <button
-                            className={activeTab === "tab2" ? `${styles.active}` : ""}
-                            onClick={() => handleTabClick("tab2")}
-                        >
-                            Assign to timeframe
-                        </button>
 
-                    </div>
-
-                    <div className="tab-content">
-                        {activeTab === "tab1" && <div>
-                            <Col sm={8}>
+            <Row className={clsx(styles.bgGreay, 'customSelectButton')}>
+                <SelectButton value={option} onChange={(e) => setOptionValue(e.value)} options={options} />
+                {
+                    option === 'Assign to order'
+                        ? (
+                            <Col sm={6}>
                                 <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                                    <label className={clsx(styles.lable)}>Expense time interval</label>
+                                    <Tooltip position='top' target={`.info-timeinterval`} />
+                                    <label className={clsx(styles.lable)}>Search Project <QuestionCircle color='#667085' className={`ms-2 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
                                     <Controller
-                                        name="gst"
+                                        name="order"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Dropdown
+                                                {...field}
+                                                options={projectsList?.data?.map((project) => ({
+                                                    value: project.id,
+                                                    label: `${project.number}: ${project.reference}`
+                                                })) || []}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                }}
+                                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.order })}
+                                                style={{ height: '46px' }}
+                                                value={field.value}
+                                                loading={projectsList?.isFetching}
+                                                placeholder="Select project"
+                                                filter
+                                            />
+                                        )}
+                                    />
+                                    {errors?.order && <p className="error-message">{errors.order?.message}</p>}
+                                </div>
+                            </Col>
+                        )
+                        : (
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                                    <Tooltip position='top' target={`.info-timeinterval`} />
+                                    <label className={clsx(styles.lable)}>Expense time interval <QuestionCircle color='#667085' className={`ms-2 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
+                                    <Controller
+                                        name="type"
                                         control={control}
                                         render={({ field }) => (
                                             <Dropdown
                                                 {...field}
                                                 options={[
-                                                    { value: 1, label: "Monthly" },
-
-                                                ] || []}
+                                                    { value: 1, label: 'Monthly' },
+                                                    { value: 2, label: 'Yearly' }
+                                                ]}
                                                 onChange={(e) => {
                                                     field.onChange(e.value);
                                                 }}
-                                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.type })}
                                                 style={{ height: '46px' }}
                                                 value={field.value}
-                                                placeholder="Select "
+                                                placeholder="Select expense time interval"
                                             />
                                         )}
                                     />
-                                    {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                                    {errors?.type && <p className="error-message">{errors.type?.message}</p>}
                                 </div>
                             </Col>
-
-                        </div>}
-                        {activeTab === "tab2" && <div>
-
-                            <Col sm={8}>
-                                <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                                    <label className={clsx(styles.lable)}>Expense time interval</label>
-                                    <Controller
-                                        name="gst"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Dropdown
-                                                {...field}
-                                                options={[
-                                                    { value: 1, label: "Monthly" },
-
-                                                ] || []}
-                                                onChange={(e) => {
-                                                    field.onChange(e.value);
-                                                }}
-                                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
-                                                style={{ height: '46px' }}
-                                                value={field.value}
-                                                placeholder="Select "
-                                            />
-                                        )}
-                                    />
-                                    {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
-                                </div>
-                            </Col>
-                        </div>}
-
-                    </div>
-                </div>
-
+                        )
+                }
             </Row>
+
 
             <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>Account Code </label>
+                        <label className={clsx(styles.lable)}>Account Code</label>
                         <Controller
-                            name="gst"
+                            name="account_code"
                             control={control}
                             render={({ field }) => (
                                 <Dropdown
                                     {...field}
                                     options={[
-                                        { value: 1, label: "Select" },
-
+                                        ...(xeroCodesList && xeroCodesList?.data?.map((code) => ({
+                                            value: code.id,
+                                            label: `${code.name} - ${code.code}%`
+                                        }))) || []
                                     ] || []}
                                     onChange={(e) => {
                                         field.onChange(e.value);
                                     }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.account_code })}
                                     style={{ height: '46px' }}
                                     value={field.value}
-                                    placeholder="Select "
+                                    loading={xeroCodesList?.isFetching}
+                                    placeholder="Select account code"
                                 />
                             )}
                         />
-                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                        {errors?.account_code && <p className="error-message">{errors.account_code?.message}</p>}
                     </div>
                 </Col>
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
                         <label className={clsx(styles.lable)}>Department</label>
                         <Controller
-                            name="gst"
+                            name="department"
                             control={control}
                             render={({ field }) => (
                                 <Dropdown
                                     {...field}
                                     options={[
-                                        { value: 1, label: "Select" },
-
+                                        ...(departmentsList && departmentsList?.data?.map((department) => ({
+                                            value: department.id,
+                                            label: `${department.name}`
+                                        }))) || []
                                     ] || []}
                                     onChange={(e) => {
                                         field.onChange(e.value);
                                     }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.category })}
+                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.department })}
                                     style={{ height: '46px' }}
                                     value={field.value}
-                                    placeholder="Select "
+                                    loading={departmentsList?.isFetching}
+                                    placeholder="Select department"
                                 />
                             )}
                         />
-                        {errors.payment_terms && <p className="error-message">{errors.payment_terms.message}</p>}
+                        {errors?.department && <p className="error-message">{errors.department?.message}</p>}
                     </div>
                 </Col>
             </Row>
 
+            {/* <div className="flex align-items-center">
+                <Checkbox {...register("notification")} onChange={(e)=> setValue('notification', e.checked)} />
+                <label className="ml-2">Send Email Notification when paid</label>
+            </div> */}
         </form>
     )
 })

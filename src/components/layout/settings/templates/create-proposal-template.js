@@ -48,17 +48,6 @@ const CreateProposalTemplate = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        if (id) {
-            let tempData = sessionStorage.getItem(`proposal-${id}`);
-            if (tempData) {
-                tempData = JSON.parse(tempData);
-                setName(tempData?.name);
-                setSections(tempData.sections);
-            }
-        }
-    }, [id])
-
     const proposalQuery = useQuery({
         queryKey: ["getProposal", id],
         queryFn: () => getProposalsTemplate(id),
@@ -151,6 +140,13 @@ const CreateProposalTemplate = () => {
     const handleDeleteSection = (index) => {
         setSections((prevSections) => prevSections.filter((_, i) => i !== index));
     };
+
+    useEffect(() => {
+        if (id && proposalQuery?.data) {
+            setName(proposalQuery?.data?.name);
+            setSections(proposalQuery?.data?.sections);
+        }
+    }, [id, proposalQuery?.data])
 
     return (
         <div className='settings-wrap'>
@@ -256,7 +252,7 @@ const CreateProposalTemplate = () => {
                     </div>
 
                     <div className={style.bottom}>
-                        {isCustom === "true" && id ? (
+                        { id ? (
                             <Button onClick={handleDelete} className='danger-outline-button'>
                                 Delete Template {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>

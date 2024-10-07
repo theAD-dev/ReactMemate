@@ -103,10 +103,10 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
               <li>
                 {" "}
                 <Link
-                  to="/settings/location/headquarter"
-                  className={`sidebar-tab ${activeTab === "headquarter" ? "activelist" : ""
+                  to="/settings/location"
+                  className={`sidebar-tab ${activeTab === "locations" ? "activelist" : ""
                     }`}
-                  onClick={() => setActiveTab("headquarter")}
+                  onClick={() => setActiveTab("locations")}
                 >
                   <Map color="#667085" size={18} />
                   Locations

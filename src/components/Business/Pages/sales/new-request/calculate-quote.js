@@ -54,6 +54,7 @@ const CalculateQuote = () => {
             }
         },
         onError: (error) => {
+            setIsLoading(false);
             console.error('Error creating new calculation quote:', error);
             toast.error(`Failed to create new calculation quote. Please try again.`);
         }
@@ -64,10 +65,12 @@ const CalculateQuote = () => {
         onSuccess: (response) => {
             if (response) {
             } else {
+                setIsLoading(false);
                 toast.error(`Failed to update calculation quote. Please try again.`);
             }
         },
         onError: (error) => {
+            setIsLoading(false);
             console.error('Error updating new calculation quote:', error);
             toast.error(`Failed to update calculation quote. Please try again.`);
         }
@@ -146,6 +149,7 @@ const CalculateQuote = () => {
                         if (merge.id) await deleteMergeQuote(merge.id);
                         await createNewMergeQuote(merge);
                     } catch (error) {
+                        setIsLoading(false);
                         console.log('Error during with creating merge: ', error);
                     }
                 };
@@ -176,6 +180,7 @@ const CalculateQuote = () => {
                     try {
                         await createNewMergeQuote(merge);
                     } catch (error) {
+                        setIsLoading(false);
                         console.log('Error during with creating merge: ', error);
                     }
                 });
@@ -198,6 +203,7 @@ const CalculateQuote = () => {
         setShowQuoteModal(false);
     }
 
+    console.log('newRequestMutation.isPending || newRequestQuery.isFetching || isLoading: ', newRequestMutation.isPending , newRequestQuery.isFetching , isLoading);
     return (
         <div className='newQuotePage'>
             <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative' }}>

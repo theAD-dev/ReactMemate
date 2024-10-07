@@ -3,9 +3,10 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner';
 import IndivisualForm from '../new-client-create/indivisual-form';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
+import { useNavigate } from 'react-router-dom';
 
 const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
-  console.log('IndivisualClientEdit: ', client);
+  const navigate = useNavigate();
   const [photo, setPhoto] = useState(client?.photo || null);
   const [defaultValues, setDefaultValues] = useState({
     firstname: client?.name?.split(" ")?.[0] || "",
@@ -13,7 +14,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     email: client?.email,
     phone: client?.phone,
     
-    category: client?.category?.id || "43",
+    category: client?.category?.id || 1,
     payment_terms: client?.payment_terms,
 
     description: client?.description,
@@ -32,10 +33,10 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     console.log('indivisualFormSubmit: ', data);
     const formData = createFormData(data, photo);
     const onSuccess = (response) => {
-      refetch();
       setIsEdit(false);
       console.log('response: ', response);
       toast.success(`Client updated successfully`);
+      navigate('/clients');
     };
     const onError = () => {
       toast.error('Failed to update client. Please try again.');

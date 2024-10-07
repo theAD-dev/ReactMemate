@@ -7,7 +7,7 @@ import { Tag } from 'primereact/tag';
 import style from './expenses.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { getListOfExpensens } from "../../../../APIs/ExpensesApi";
+import { getListOfExpensens } from "../../../../APIs/expenses-api";
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
