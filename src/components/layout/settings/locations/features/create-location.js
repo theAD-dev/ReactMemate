@@ -1,8 +1,8 @@
 
 import clsx from 'clsx';
 import style from '../location.module.scss';
-import { PencilSquare, Plus, PlusCircle } from 'react-bootstrap-icons';
-import React, { forwardRef, useEffect, useState } from 'react'
+import { PencilSquare, PlusCircle } from 'react-bootstrap-icons';
+import React, { useEffect, useState } from 'react'
 import { InputText } from "primereact/inputtext";
 import { Col, Row } from 'react-bootstrap';
 import { Button } from 'primereact/button';
@@ -45,6 +45,8 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
     const handleClose = () => {
         setVisible(false);
         reset();
+        setCountryId("");
+        setStateId("");
     }
     const mutation = useMutation({
         mutationFn: (data) => id ? updateLocation(id, data) : createLocation(data),
@@ -54,6 +56,8 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
             handleClose();
             toast.success(`Location created successfully.`);
             reset();
+            setCountryId("");
+            setStateId("");
         },
         onError: (error) => {
             console.error('Error creating location:', error);
@@ -69,6 +73,8 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
             handleClose();
             toast.success(`Location deleted successfully`);
             reset();
+            setCountryId("");
+            setStateId("");
         },
         onError: (error) => {
             toast.error(`Failed to delete location. Please try again.`);
@@ -135,7 +141,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
                             <div className="d-flex flex-column gap-1 mb-4">
                                 <label className={clsx(style.lable)}>Location Name</label>
                                 <IconField>
-                                    <InputIcon>{errors?.name && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                    <InputIcon>{errors?.name && <img src={exclamationCircle} alt='error' className='mb-3' />}</InputIcon>
                                     <InputText {...register("name")} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.name })} placeholder='Enter location name' />
                                 </IconField>
                                 {errors?.name && <p className="error-message">{errors?.name?.message}</p>}
@@ -233,7 +239,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
                             <div className="d-flex flex-column gap-1">
                                 <label className={clsx(style.lable)}>Street Address</label>
                                 <IconField>
-                                    <InputIcon>{errors?.address && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                    <InputIcon>{errors?.address && <img src={exclamationCircle} alt='error' className='mb-3' />}</InputIcon>
                                     <InputText {...register("address")} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.address })} placeholder='Enter street address' />
                                 </IconField>
                                 {errors?.address && <p className="error-message">{errors?.address?.message}</p>}
@@ -244,7 +250,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
                             <div className="d-flex flex-column gap-1">
                                 <label className={clsx(style.lable)}>Postcode</label>
                                 <IconField>
-                                    <InputIcon>{errors?.postcode && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                    <InputIcon>{errors?.postcode && <img src={exclamationCircle} alt='error' className='mb-3' />}</InputIcon>
                                     <InputText {...register("postcode")} keyfilter="int" className={clsx(style.inputText, "outline-none", { [style.error]: errors?.postcode })} placeholder='Enter postcode' />
                                 </IconField>
                                 {errors?.postcode && <p className="error-message">{errors?.postcode?.message}</p>}

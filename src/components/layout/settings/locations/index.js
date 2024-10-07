@@ -29,7 +29,8 @@ const Location = () => {
         queryKey: ['states', activeLocation],
         queryFn: () => getLocation(activeLocation),
         enabled: !!activeLocation,
-        retry: 1
+        retry: 1,
+        cacheTime: 0
     });
     const desktopUser = useQuery({
         queryKey: ["desktop-users"],
@@ -69,6 +70,9 @@ const Location = () => {
             id: locationReadQuery?.data?.id,
             name: locationReadQuery?.data?.name,
             address: locationReadQuery?.data?.address,
+            country: locationReadQuery?.data?.country,
+            state: locationReadQuery?.data?.state,
+            city: locationReadQuery?.data?.city,
             postcode: locationReadQuery?.data?.postcode
         })
         setVisible(true);
@@ -88,7 +92,7 @@ const Location = () => {
         if (!activeLocation && locationsQuery?.data?.locations?.length) {
             setActiveLocation(locationsQuery?.data?.locations[0].id);
         }
-    }, [locationsQuery?.data])
+    }, [locationsQuery?.data, activeLocation])
 
     useEffect(() => {
         const locationUserIds = locationReadQuery?.data?.users.map(user => user.id);
@@ -144,7 +148,7 @@ const Location = () => {
                                             <td className={clsx(style.td, 'd-flex align-items-center gap-2')}>
                                                 {locationReadQuery?.isFetching
                                                     ? <Skeleton width="100%"></Skeleton>
-                                                    : locationReadQuery?.data?.country || "-"
+                                                    : locationReadQuery?.data?.country_name || "-"
                                                 }
                                                 {locationsQuery?.data?.locations?.[0]?.id === activeLocation
                                                     ? <Link to={"/settings/generalinformation"}>
@@ -156,13 +160,13 @@ const Location = () => {
                                             <td className={style.td}>
                                                 {locationReadQuery?.isFetching
                                                     ? <Skeleton width="100%"></Skeleton>
-                                                    : locationReadQuery?.data?.state || "-"
+                                                    : locationReadQuery?.data?.state_name || locationReadQuery?.data?.state_alias || "-"
                                                 }
                                             </td>
                                             <td className={style.td}>
                                                 {locationReadQuery?.isFetching
                                                     ? <Skeleton width="100%"></Skeleton>
-                                                    : locationReadQuery?.data?.city || "-"
+                                                    : locationReadQuery?.data?.city_name || "-"
                                                 }
                                             </td>
                                             <td className={style.td}>

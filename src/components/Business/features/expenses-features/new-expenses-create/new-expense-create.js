@@ -1,21 +1,19 @@
-import clsx from 'clsx';
-import { nanoid } from 'nanoid';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Sidebar } from 'primereact/sidebar';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
 
 import styles from './new-expense-create.module.scss';
 import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 import { toast } from 'sonner';
-import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 import { useMutation } from '@tanstack/react-query';
 import { createNewExpense } from '../../../../../APIs/expenses-api';
 
-const NewExpensesCreate = ({ visible, setVisible }) => {
+const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
     const formRef = useRef(null);
     const [defaultValues, setDefaultValues] = useState({
-        option: 'Assign to order'
+        option: 'Assign to order',
+        notification: false
     });
     const mutation = useMutation({
         mutationFn: (data) => createNewExpense(data),
@@ -23,6 +21,7 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
             console.log('response: ', response);
             toast.success(`Expense created successfully`);
             setVisible(false);
+            setRefetch((refetch)=> !refetch);
         },
         onError: (error) => {
             console.error('Error creating expense:', error);
@@ -33,8 +32,14 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
     const handleSubmit = async (data) => {
         delete data["gst-calculation"];
         delete data.option;
+        delete data.subtotal;
         delete data.totalAmount
         delete data.tax;
+        
+        if (!data.order) delete data.order;
+        if (!data.type) data.type = 1;
+        if (data.date) data.date = new Date(data.date).toISOString().split('T')[0];
+        if (data.due_date) data.due_date = new Date(data.due_date).toISOString().split('T')[0];
         console.log('data: ', data);
         mutation.mutate(data);
     };
@@ -69,9 +74,8 @@ const NewExpensesCreate = ({ visible, setVisible }) => {
                     <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
                             <h5>Supplier Details</h5>
-                            <h6>Expense ID: </h6>
                         </div>
-                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} />
+                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues}/>
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>

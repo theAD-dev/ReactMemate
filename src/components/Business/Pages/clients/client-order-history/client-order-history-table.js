@@ -8,7 +8,7 @@ import '@szhsin/react-menu/dist/index.css';
 
 import style from './client-order-history.module.scss';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
-import { ArrowLeftCircle, FilePdf, Files, FileText, InfoCircle, Link45deg, ListUl, PlusSlashMinus } from 'react-bootstrap-icons';
+import { ArrowLeftCircle, CardChecklist, Check2Circle, FileEarmark, FilePdf, Files, FileText, InfoCircle, Link45deg, ListCheck, ListUl, PhoneVibrate, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
@@ -102,18 +102,55 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     }
   }
 
-  const InfoBodyTemplate = (rowData) => {
+  const HistoryBodyTemplate = (rowData) => {
     const ref = useRef(null);
     const [isOpen, setOpen] = useState(false);
     const anchorProps = useClick(isOpen, setOpen);
+
+    const historyDescription = (history) => {
+      const timestamp = +history.created * 1000;
+      const date = new Date(timestamp);
+      const options = { weekday: 'short' };
+      const day = date.toLocaleString('en-US', options).substring(0, 3);
+      const time = date.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      }).replace(',', '');
+      const formattedDate = date.toLocaleDateString('en-GB').replaceAll('\/', '.');
+      const result = `${time} | ${day} | ${formattedDate} by ${history?.manager || "-"}`
+      return result;
+    }
+
+    function getIconByType(type) {
+      switch (type) {
+        case 'billing':
+          return <PhoneVibrate size={16} color="#1AB2FF" />;
+        case 'quote':
+          return <FileEarmark size={16} color="#1AB2FF" />;
+        case 'invoice':
+          return <FileText size={16} color="#1AB2FF" />;
+        case 'task':
+          return <Check2Circle size={16} color="#1AB2FF" />;
+        case 'order':
+          return <Check2Circle size={16} color="#1AB2FF" />;
+        case 'note':
+          return <CardChecklist size={16} color="#1AB2FF" />;
+        case 'tag':
+          return <ListCheck size={16} color="#1AB2FF" />;
+        default:
+          return '-';
+      }
+    }
+
     return <React.Fragment>
-      <InfoCircle color='#667085' size={16} className='cursor-pointer' ref={ref} {...anchorProps} />
-      <div style={{ position: 'fixed', top: '40%', left: '40%' }}>
+      <FileText color='#667085' size={16} className='cursor-pointer' ref={ref} {...anchorProps} />
+      <div className='fixedMenu' style={{ position: 'fixed', top: '50%', left: '40%' }} key={rowData.id}>
         <ControlledMenu
           state={isOpen ? 'open' : 'closed'}
           anchorRef={ref}
           onClose={() => setOpen(false)}
-          menuStyle={{ padding: '24px 24px 20px 24px', width: '365px' }}
+          menuStyle={{ padding: '24px 24px 20px 24px', width: '405px', textAlign: 'left' }}
         >
           <div className='d-flex justify-content-between mb-4'>
             <div className='BoxNo'>
@@ -123,15 +160,59 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
             </div>
             <CloseButton onClick={() => setOpen(false)} />
           </div>
+          <h1 className={clsx(style.orderHeading, 'mb-3')}>Order card history </h1>
+          <div style={{ maxHeight: '300px', overflow: 'auto' }}>
+            {
+              rowData?.history?.map((history) => (
+                <div className='d-flex flex-column mb-4 text-start'>
+                  <div className='d-flex align-items-center gap-1'>
+                    {getIconByType(history.type)}
+                    <p className={clsx(style.historyTitle, 'mb-0')}>{history?.title || "-"}</p>
+                  </div>
+                  {history?.text && <p className={clsx(style.historyText, 'mb-1')} dangerouslySetInnerHTML={{ __html: history?.text }} />}
+                  <p className={clsx(style.historyDescription, 'mb-0')}>
+                    {historyDescription(history)}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+        </ControlledMenu>
+      </div>
+    </React.Fragment>
+  }
 
-          {
-            rowData?.indexes?.map(index => (
-              <div className={clsx('mb-3 text-start')}>
-                <h1 className={style.department}>{index[1]}</h1>
-                <h5 className={style.subdepartment}>{index[2]}</h5>
+  const InfoBodyTemplate = (rowData) => {
+    const ref = useRef(null);
+    const [isOpen, setOpen] = useState(false);
+    const anchorProps = useClick(isOpen, setOpen);
+    return <React.Fragment>
+      <InfoCircle color='#667085' size={16} className='cursor-pointer' ref={ref} {...anchorProps} />
+      <div className='fixedMenu' style={{ position: 'fixed', top: '40%', left: '40%' }}>
+        <ControlledMenu
+          state={isOpen ? 'open' : 'closed'}
+          anchorRef={ref}
+          onClose={() => setOpen(false)}
+          menuStyle={{ padding: '24px 24px 20px 24px', width: '365px', marginTop: '45px' }}
+        >
+          <div className='d-flex justify-content-between mb-4'>
+            <div className='BoxNo'>
+              <div>
+                <ListUl color='#FFFFFF' size={24} />
               </div>
-            ))
-          }
+            </div>
+            <CloseButton onClick={() => setOpen(false)} />
+          </div>
+          <div style={{ maxHeight: '300px', overflow: 'auto' }}>
+            {
+              rowData?.indexes?.map(index => (
+                <div key={index[0]} className={clsx('mb-3 text-start')}>
+                  <h1 className={style.department}>{index[1]}</h1>
+                  <h5 className={style.subdepartment}>{index[2]}</h5>
+                </div>
+              ))
+            }
+          </div>
         </ControlledMenu>
       </div>
     </React.Fragment>
@@ -167,7 +248,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
       <Column field="status" header="Status" body={statusBodyTemplate} sortable style={{ minWidth: '113px' }}></Column>
       <Column header="Invoice" body={InvoiceBodyTemplate} style={{ minWidth: '114px' }}></Column>
       <Column header="Quote" body={quoteBodyTemplate} style={{ minWidth: '160px' }}></Column>
-      <Column header="History" body={<FileText color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '70px' }}></Column>
+      <Column header="History" body={HistoryBodyTemplate} bodyClassName={"text-center"} style={{ minWidth: '70px' }}></Column>
       <Column header="Info" body={InfoBodyTemplate} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
       <Column field="total" header="Total" body={totalBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '110px' }}></Column>
       <Column field='profit' header="Operational Profit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '144px' }} sortable></Column>

@@ -35,10 +35,29 @@ export const getProjectsList = async () => {
   return fetchAPI(url.toString(), options);
 }
 
+export const getExpense = async (id) => {
+  const endpoint = `/expenses/update/${id}`;
+  const options = {
+    method: 'GET'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const createNewExpense = async (data) => {
   const endpoint = '/expenses/new/';
   const options = {
     method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const updateExpense = async (id, data) => {
+  const endpoint = `/expenses/update/${id}`;
+  const options = {
+    method: 'PUT',
     body: data
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);

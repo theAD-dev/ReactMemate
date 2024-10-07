@@ -32,7 +32,7 @@ function debounce(fn, delay) {
 
 const schema = yup
     .object({
-        supplier: yup.number().required("Supplier is required"),
+        supplier: yup.number().typeError("Supplier must be a valid id").required("Supplier is required"),
         invoice_reference: yup.string().required("Invoice reference is required"),
         date: yup.string().required("Date is required"),
         due_date: yup.string().required("Due date is required"),
@@ -44,19 +44,18 @@ const schema = yup
     })
     .required();
 
-const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
+const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier }, ref) => {
     const autoCompleteRef = useRef(null);
     const observerRef = useRef(null);
 
-    const [supplierValue, setSupplierValue] = useState("");
+    const [supplierValue, setSupplierValue] = useState(defaultSupplier || "");
     const [suppliers, setSuppliers] = useState([]);
     const [page, setPage] = useState(1);
-    const [searchValue, setSearchValue] = useState("");
+    const [searchValue, setSearchValue] = useState(defaultSupplier?.name || "");
     const [hasMoreData, setHasMoreData] = useState(true);
-    const [loading, setLoading] = useState(false);
     const limit = 25;
 
-    const { control, register, handleSubmit, setValue, getValues, watch, setError, trigger, formState: { errors } } = useForm({
+    const { control, reset, register, handleSubmit, setValue, getValues, watch, setError, trigger, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });
@@ -86,7 +85,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
 
     useEffect(() => {
         const loadData = async () => {
-            setLoading(true);
             const data = await getListOfSuppliers(page, limit, searchValue, 'name');
             if (page === 1) setSuppliers(data.results);
 
@@ -99,7 +97,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                     });
             }
             setHasMoreData(data.count !== suppliers.length);
-            setLoading(false);
         };
 
         loadData();
@@ -149,7 +146,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
             const { subtotal, calculatedTax, totalAmount: newTotalAmount } = calculateAmounts(totalAmount, value);
 
             setValue("tax", calculatedTax);
-            setValue("amount", subtotal);
+            setValue("subtotal", subtotal);
             setValue("totalAmount", newTotalAmount);
             setValue("nogst", value === 'no');
             setValue("gst", value === 'ex');
@@ -162,10 +159,10 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
     const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
 
     const options = ['Assign to order', 'Assign to timeframe'];
-    const [option, setOptionValue] = useState(options[0]);
+    const [option, setOptionValue] = useState(defaultValues?.option || options[0]);
 
     const watchOrder = watch('order');
-    useEffect(()=> {
+    useEffect(() => {
         if (watchOrder) trigger(['order']);
     }, [watchOrder])
     const watchType = watch('type');
@@ -180,14 +177,25 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
     };
 
     useEffect(() => {
-        validateFields();
+        if (Object.keys(errors).length > 0)
+            validateFields();
     }, [errors]);
 
     useEffect(() => {
-        setValue('order', '');
-        setValue('type', '');
+        if (option === 'Assign to timeframe') {
+            setValue('order', '');
+            if (defaultValues?.type) setValue('type', defaultValues?.type);
+        } else if (option === 'Assign to order') {
+            setValue('type', '');
+            if (defaultValues?.order) setValue('order', defaultValues?.order);
+        }
+
         setValue('option', option);
     }, [option]);
+
+    useEffect(() => {
+        if (defaultValues?.option) setOptionValue(defaultValues?.option)
+    }, [defaultValues?.option])
 
     const handleFormSubmit = (data) => {
         validateFields();
@@ -197,7 +205,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
             return;
         }
 
-        onSubmit(data)
+        onSubmit(data, reset);
     }
 
     return (
@@ -344,7 +352,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                     <div className={styles.CalItem}>
                         <div>
                             <span>Subtotal</span>
-                            <strong>$ {watch('amount') || "0.00"}</strong>
+                            <strong>$ {watch('subtotal') || "0.00"}</strong>
                         </div>
                     </div>
                 </Col>
@@ -447,7 +455,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                                     options={[
                                         ...(xeroCodesList && xeroCodesList?.data?.map((code) => ({
                                             value: code.id,
-                                            label: `${code.name} - ${code.code}%`
+                                            label: `${code.name}`
                                         }))) || []
                                     ] || []}
                                     onChange={(e) => {
@@ -458,6 +466,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                                     value={field.value}
                                     loading={xeroCodesList?.isFetching}
                                     placeholder="Select account code"
+                                    filter
                                 />
                             )}
                         />
@@ -487,6 +496,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                                     value={field.value}
                                     loading={departmentsList?.isFetching}
                                     placeholder="Select department"
+                                    filter
                                 />
                             )}
                         />
@@ -495,10 +505,23 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                 </Col>
             </Row>
 
-            {/* <div className="flex align-items-center">
-                <Checkbox {...register("notification")} onChange={(e)=> setValue('notification', e.checked)} />
-                <label className="ml-2">Send Email Notification when paid</label>
-            </div> */}
+            <div className="flex align-items-center">
+                <Controller
+                    name="notification"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value, ref } }) => (
+                        <Checkbox
+                            inputRef={ref}
+                            checked={value}
+                            onChange={(e) => {
+                                onChange(e.checked);
+                            }}
+                            onBlur={onBlur}
+                        />
+                    )}
+                />
+                <label className="ms-2" style={{ position: 'relative', top: '1px', color: '#344054', fontWeight: 500, fontSize: '14px' }}>Send Email Notification when paid</label>
+            </div>
         </form>
     )
 })

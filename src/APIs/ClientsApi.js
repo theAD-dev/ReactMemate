@@ -85,7 +85,7 @@ export const getCities = async (state) => {
 }
 
 export const getProjectManager = async () => {
-  const endpoint = `/references/all-users/`;
+  const endpoint = `/references/desktop-users/`;
   const options = {
     method: 'GET',
   };
