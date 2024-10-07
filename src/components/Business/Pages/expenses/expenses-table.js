@@ -12,6 +12,7 @@ import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
+import { Badge } from 'primereact/badge';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -87,7 +88,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClient
     const ExpensesIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span>{rowData.order?.number}</span>
-            <Button label="Open" onClick={() => { setVisible(true); setEditData({id: rowData?.id, name: rowData?.supplier?.name}) }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }) }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
 
@@ -131,14 +132,12 @@ const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClient
     }
 
     const StatusBody = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-between show-on-hover ${style.expensesStatus}`}>
-            <div className={`styleGrey01 exstatus ${style.paid} ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
-                {rowData.paid ? (
-                    <><span className="dots"></span> Complete </>
-                ) : (
-                    <>Not Complete <span className="dots"></span></>
-                )}
+        if (rowData.paid)
+            return <div className={`${style.status} ${style.active}`}>
+                <Badge severity="success"></Badge> Paid
             </div>
+        return <div className={`${style.status} ${style.inactive}`}>
+            Not Paid <Badge severity="danger"></Badge>
         </div>
     }
 
