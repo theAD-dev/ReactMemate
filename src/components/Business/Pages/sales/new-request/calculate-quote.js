@@ -31,11 +31,12 @@ const CalculateQuote = () => {
     useEffect(() => {
         if (!unique_id) {
             const storedSessionData = JSON.parse(window.sessionStorage.getItem(`new-request`) || "{}");
+            const profileData = JSON.parse(window.localStorage.getItem('profileData') || "{}");
             setPayload((others) => ({
                 ...others,
                 xero_tax: "ex",
                 display_discount: true,
-                managers: [{ manager: 20 }],
+                managers: [{ manager: profileData?.id }],
                 client: storedSessionData?.id || "",
                 reference: storedSessionData?.reference || "",
                 description: storedSessionData?.requirements || ""

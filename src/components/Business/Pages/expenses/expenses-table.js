@@ -11,8 +11,20 @@ import { getListOfExpensens } from "../../../../APIs/expenses-api";
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
+import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
+import { Badge } from 'primereact/badge';
 
-const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted }, ref) => {
+const formatDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+    }).format(date);
+    const year = date.getFullYear();
+    return `${day} ${monthAbbreviation} ${year}`;
+};
+
+const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted, refetch, setRefetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
@@ -23,21 +35,12 @@ const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClient
     const [loading, setLoading] = useState(false);
     const limit = 25;
 
+    const [editData, setEditData] = useState("");
+    const [visible, setVisible] = useState(false);
+
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, isShowDeleted]);
-
-
-// Formate Date
-const formatDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    const day = date.getDate();
-    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-      month: "short",
-    }).format(date);
-    const year = date.getFullYear();
-    return `${day} ${monthAbbreviation} ${year}`;
-  };
+    }, [searchValue, refetch]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -65,7 +68,7 @@ const formatDate = (timestamp) => {
 
         loadData();
 
-    }, [page, searchValue, tempSort, isShowDeleted]);
+    }, [page, searchValue, tempSort, refetch]);
 
     useEffect(() => {
         if (clients.length > 0 && hasMoreData) {
@@ -85,63 +88,57 @@ const formatDate = (timestamp) => {
     const ExpensesIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span>{rowData.order?.number}</span>
-            <Button label="Open" onClick={() => navigate(`/expenses/${rowData.id}/expenses-history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }) }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
 
-    
     const nameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
             <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData.is_business ? "" : "rounded-circle"}`}>
                 {rowData.supplier?.photo ? <img src={rowData.supplier?.photo} alt='clientImg' className='w-100' /> : rowData.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
             </div>
             <div className='d-flex flex-column gap-1'>
-            <div className={`${style.ellipsis}`}>{rowData.supplier?.name}</div>
-            {rowData.deleted ?
+                <div className={`${style.ellipsis}`}>{rowData.supplier?.name}</div>
+                {rowData.deleted ?
                     <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
             </div>
-            
         </div>
     }
-
 
     const dueDate = (rowData) => {
-   
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
-           {formatDate(rowData.created)}
+            {formatDate(rowData.created)}
         </div>
     }
+
     const totalBody = (rowData) => {
-   
-        return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}> 
-        <div className={` ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
-              $ {(rowData.total).toFixed(2)}<span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span>
-        </div>
+        return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
+            <div className={` ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
+                $ {(rowData.total).toFixed(2)}<span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span>
+            </div>
         </div>
     }
+
     const accountCode = (rowData) => {
-   
-        return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}> 
-            {rowData.account_code?.code} : {rowData.account_code?.name}             
+        return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}>
+            {rowData.account_code?.code} : {rowData.account_code?.name}
         </div>
     }
+
     const departmentBody = (rowData) => {
-           return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}> 
-           {rowData?.department?.name}        
+        return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}>
+            {rowData?.department?.name}
         </div>
     }
+
     const StatusBody = (rowData) => {
-   
-        return <div className={`d-flex align-items-center justify-content-between show-on-hover ${style.expensesStatus}`}>
-        <div className={`styleGrey01 exstatus ${style.paid} ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
-          {rowData.paid ? (
-            <><span className="dots"></span> Complete </>
-          ) : (
-            <>Not Complete <span className="dots"></span></>
-          )}
+        if (rowData.paid)
+            return <div className={`${style.status} ${style.active}`}>
+                <Badge severity="success"></Badge> Paid
+            </div>
+        return <div className={`${style.status} ${style.inactive}`}>
+            Not Paid <Badge severity="danger"></Badge>
         </div>
-      </div>
-      
     }
 
     const loadingIconTemplate = () => {
@@ -153,7 +150,7 @@ const formatDate = (timestamp) => {
     }
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
-    
+
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
 
@@ -162,32 +159,33 @@ const formatDate = (timestamp) => {
     };
 
     return (
-        <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
-            columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-            scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedClients}
-            onSelectionChange={(e) => setSelectedClients(e.value)}
-            loading={loading}
-            loadingIcon={loadingIconTemplate}
-            emptyMessage={NoDataFoundTemplate}
-            sortField={sort?.sortField}
-            sortOrder={sort?.sortOrder}
-            onSort={onSort}
-            rowClassName={rowClassName}
-        >
-            <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-            <Column field="id" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
-            <Column field="name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-            <Column field="invoice_reference" header="Reference"  style={{ minWidth: '94px' }}></Column>
-            <Column field="created" header="Due Date" body={dueDate}  style={{ minWidth: '56px' }} className='text-center'></Column>
-            <Column field='jobsdone' header="Total" body={totalBody}  style={{ minWidth: '56px', textAlign: 'end' }}></Column>
-            <Column field='type' header="Interval/Order"  style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
-            <Column field='average_pd' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
-            <Column field='total_requests' header="Xero/Myob"  style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
-            <Column field='department' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
-            <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
-           
-            
-        </DataTable>
+        <>
+            <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
+                columnResizeMode="expand" resizableColumns showGridlines size={'large'}
+                scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedClients}
+                onSelectionChange={(e) => setSelectedClients(e.value)}
+                loading={loading}
+                loadingIcon={loadingIconTemplate}
+                emptyMessage={NoDataFoundTemplate}
+                sortField={sort?.sortField}
+                sortOrder={sort?.sortOrder}
+                onSort={onSort}
+                rowClassName={rowClassName}
+            >
+                <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
+                <Column field="id" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field="name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
+                <Column field="invoice_reference" header="Reference" style={{ minWidth: '94px' }}></Column>
+                <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
+                <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
+                <Column field='type' header="Interval/Order" style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
+                <Column field='average_pd' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
+                <Column field='total_requests' header="Xero/Myob" style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
+                <Column field='department' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
+                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
+            </DataTable>
+            <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
+        </>
     )
 })
 

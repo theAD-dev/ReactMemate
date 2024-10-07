@@ -77,7 +77,6 @@ import OrderPage from "../Business/Pages/orders";
 import ClientPage from "../Business/Pages/clients"
 import ApprovalPage from "../Work/Pages/approval";
 import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
-import ExpensesHistory from "../Business/Pages/expenses/expenses-history";
 import SupplierPage from "../Business/Pages/suppliers";
 import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
 import EditTemplates from "./settings/templates/edit-template";
@@ -457,7 +456,6 @@ const Header = ({ onClick }) => {
           <Route path="/suppliers/:id/history" element={<SupplierHistoryPage />} />
 
           <Route path="/expenses" element={<ExpensesPage />} />
-          <Route path="/expenses/:id/expense-history" element={<ExpensesHistory />} />
 
           <Route path="/orders" element={<OrderPage />} />
 

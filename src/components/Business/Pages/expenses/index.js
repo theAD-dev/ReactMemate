@@ -16,6 +16,7 @@ const ExpensesPage = () => {
     const menu = useRef(null);
     const [totalClients, setTotalClients] = useState(0);
     const [visible, setVisible] = useState(false);
+    const [refetch, setRefetch] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
     const [selectedClients, setSelectedClients] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
@@ -77,8 +78,13 @@ const ExpensesPage = () => {
                     <div className={`${style.totalCount}`}>{totalClients} Expenses</div>
                 </div>
             </div>
-            <ExpensesTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} />
-            <NewExpensesCreate visible={visible} setVisible={setVisible} />
+            <ExpensesTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients}
+                selectedClients={selectedClients} setSelectedClients={setSelectedClients}
+                isShowDeleted={isShowDeleted}
+                refetch={refetch}
+                setRefetch={setRefetch}
+            />
+            <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
         </PrimeReactProvider>
     )
 }

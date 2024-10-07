@@ -41,7 +41,7 @@ const CreateProposalTemplate = () => {
     const [searchParams] = useSearchParams();
 
     const [name, setName] = useState("");
-    const [sections, setSections] = useState([{ title: "", description: "" }]);
+    const [sections, setSections] = useState([{ title: "", description: "", delete: false }]);
 
     const isCustom = searchParams.get('isCustom');
     const [errors, setErrors] = useState({});
@@ -102,6 +102,7 @@ const CreateProposalTemplate = () => {
             sections.forEach((section, index) => {
                 formData.append(`sections[${index}]title`, section.title);
                 formData.append(`sections[${index}]description`, section.description);
+                formData.append(`sections[${index}]delete`, !!section.delete);
                 if (section.id) formData.append(`sections[${index}]id`, section.id);
             });
 
@@ -138,7 +139,11 @@ const CreateProposalTemplate = () => {
     };
 
     const handleDeleteSection = (index) => {
-        setSections((prevSections) => prevSections.filter((_, i) => i !== index));
+        setSections((prevSections) =>
+            prevSections.map((section, i) => 
+                i === index ? { ...section, delete: true } : section
+            )
+        );
     };
 
     useEffect(() => {
@@ -190,7 +195,7 @@ const CreateProposalTemplate = () => {
 
                             <div className={style.divider}></div>
 
-                            {sections.map((section, index) => (
+                            {sections?.filter(section => !section.delete)?.map((section, index) => (
                                 <div key={index} className={style.section}>
                                     <h1 className={clsx(style.sectionName)}>Section {index + 1}</h1>
                                     <div className={clsx(style.deleteButton)} onClick={() => handleDeleteSection(index)}>

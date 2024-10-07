@@ -445,3 +445,14 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   border: none !important;
   border-radius: 4px !important;
 }
+
+.fixedMenu, .szh-menu-container {
+  z-index: 10000;
+}
+.fixedMenu .szh-menu-container .szh-menu {
+  top: 50% !important;
+  left: 50% !important;
+  z-index: 100000;
+  position: fixed !important;
+  transform: translate(-50%, -50%);
+}
