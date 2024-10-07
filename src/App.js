@@ -19,6 +19,7 @@ import ResendEmail from './components/layout/onboarding/ResendEmail';
 import ChangePassword from './components/layout/Login/change-password';
 import Demo from './components/layout/settings/Demo';
 import Components from '../src/ui/memate-select';
+import QuotationEmail from './components/layout/browser-web/quotation-email';
 
 function App() {
   return (
@@ -42,6 +43,9 @@ function App() {
         <Route path="/resend-email" element={<ResendEmail />} />
         <Route path="/demo" element={<Demo />} />
         <Route path="/ui/components" element={<Components />} />
+        <Route path="/Quote/quotation" element={<QuotationEmail />} />
+        
+        
       </Routes>
     </AuthProvider>
   );
