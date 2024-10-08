@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { fetchTasksRead, fetchTasksProject, fetchTasksUpdate,fetchTasksDelete,TaskCompleteJob } from '../../../../APIs/TasksApi';
+import { fetchTasksRead, fetchTasksProject, fetchTasksUpdate,fetchTasksDelete,TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import TaskDetailsIcon from "../../../../assets/images/icon/TaskDetailsIcon.svg";
 import { ArrowRight, CheckCircleFill ,X} from "react-bootstrap-icons";
 import taskbinImage from '../../../../assets/images/icon/taskbinImage.png';

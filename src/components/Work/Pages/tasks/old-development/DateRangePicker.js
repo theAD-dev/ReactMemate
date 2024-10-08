@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "flatpickr/dist/themes/material_green.css";
 import Flatpickr from "react-flatpickr";
 
-const DateRangePicker = ({ onDataApply, dateRange }) => {
+const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   const calendarRef = useRef(null);
   const [startDate, setStartDate] = useState(null);
@@ -54,6 +54,7 @@ const DateRangePicker = ({ onDataApply, dateRange }) => {
     setStartDate(null);
     setEndDate(null);
     setIsApplying(false);
+    if (onClose) onClose();
 
     const existingCustomDiv = document.querySelector(".custom-div p");
     if (existingCustomDiv) {

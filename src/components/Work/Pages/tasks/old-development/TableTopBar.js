@@ -10,7 +10,7 @@ import User01 from "../../../../assets/images/icon/user-01.png";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import DateRangePicker from "./DateRangePicker";
-import NewTaskModal from "../../../layout/modals/new-task-modal";
+import NewTaskModal from "../../../../layout/modals/new-task-modal";
 
 const TableTopBar = ({rows,onRowsFilterChange, TasksData, selectedRowCount,selectClass,selectedRow }) => {
   const [totalAmount, setTotalAmount] = useState(0);

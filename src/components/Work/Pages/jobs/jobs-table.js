@@ -125,7 +125,6 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
 
   const nameBody = (rowData) => {
     const name = `${rowData?.worker.first_name} ${rowData?.worker.last_name}`;
-    console.log('name: ', name);
     const initials = name.split(' ').map(word => word[0]).join('');
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { fetchTasks } from "../../../../APIs/TasksApi";
+import { fetchTasks } from "../../../../../APIs/TasksApi";
 import TasksTables from "./TasksTables";
 import "./tasksTables.css"
 const Tasks = () => {

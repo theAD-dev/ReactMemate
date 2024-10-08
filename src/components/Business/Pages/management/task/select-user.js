@@ -3,6 +3,7 @@ import { Person } from 'react-bootstrap-icons';
 import { Spinner } from 'react-bootstrap';
 import { fetchTasksUsers } from '../../../../../APIs/TasksApi';
 import { useQuery } from '@tanstack/react-query';
+import './task.css';
 
 const CustomOption = ({ image, text, isSelected }) => (
     <div className="custom-option">

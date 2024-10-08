@@ -1,20 +1,21 @@
 import React, { useRef, useState } from 'react';
-import style from './jobs.module.scss';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
-import JobsTable from './jobs-table';
 import { useDebounce } from 'primereact/hooks';
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import JobChat from '../../features/job-chat';
+import style from './task.module.scss';
+import TaskTable from './task-table';
+import CreateTask from '../../features/task/create-task/create-task';
 
-const JobsPage = () => {
+const TaskPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
     const [total, setTotal] = useState(0);
     const [visible, setVisible] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const [selected, setSelected] = useState([]);
+    const [refetch, setRefetch] = useState(false);
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -54,18 +55,18 @@ const JobsPage = () => {
                 </div>
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
-                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Jobs</h1>
-                    <Button className={`${style.newButton}`}>New</Button>
+                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Tasks</h1>
+                    <Button onClick={()=> setVisible(true)} className={`${style.newButton}`}>New</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Jobs</div>
                 </div>
             </div>
-            <JobsTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} />
-            <JobChat />
+            <TaskTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch}/>
+            <CreateTask show={visible} setShow={setVisible} refetch={() => setRefetch((refetch)=> !refetch)}/>
         </PrimeReactProvider>
     )
 }
 
-export default JobsPage
+export default TaskPage
