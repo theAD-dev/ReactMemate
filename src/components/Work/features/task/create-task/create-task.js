@@ -6,11 +6,13 @@ import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import newTaskImg from '../../../../../assets/images/new-task.svg';
+import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import { createNewTask, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { Dropdown } from 'primereact/dropdown';
 import { getProjectsList } from '../../../../../APIs/expenses-api';
 import SelectDate from '../../../../Business/Pages/management/task/select-date';
 import { toast } from 'sonner';
+import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
 
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return null;
@@ -113,15 +115,31 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                 to_date: date.endDate,
             })
         }
-
     }
+
+    const deleteMutation = useMutation({
+        mutationFn: (data) => fetchTasksDelete(taskId),
+        onSuccess: () => {
+            console.log('Delete success');
+            setShow(false);
+            refetch();
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+        }
+    });
+
+    const handleDelete = () => {
+        deleteMutation.mutate();
+    }
+
     const handleClose = () => setShow(false);
     return (
         <Modal show={show} centered onHide={handleClose} className='task-form'>
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <img src={newTaskImg} alt='task-details' style={{ width: '48px', height: '48px' }} />
-                    <span className='modal-task-title'>{taskId ? "Update" : "New"} Task</span>
+                    <img src={taskId ? taskEditIcon : newTaskImg} alt='task-details' style={{ width: '48px', height: '48px' }} />
+                    <span className='modal-task-title'>{taskId ? "Edit" : "New"} Task</span>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{ background: '#f9fafb' }}>
@@ -236,7 +254,8 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                     {errors.date && <Form.Text className="text-danger">Date is required</Form.Text>}
                 </div>
             }
-            <Modal.Footer>
+            <Modal.Footer className='d-flex justify-content-between'>
+                <Button type='button' className='delete-button' onClick={handleDelete}>{deleteMutation.isPending ? 'Loading...' : 'Delete Task'}</Button>
                 <Button type='button' className='save-button' onClick={handleSubmit}>{mutation.isPending ? 'Loading...' : `${taskId ? "Update" : "Create"} Task`}</Button>
             </Modal.Footer>
         </Modal>
