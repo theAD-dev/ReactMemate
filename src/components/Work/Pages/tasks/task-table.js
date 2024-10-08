@@ -49,7 +49,6 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfTasks(page, limit, searchValue, order);
-            console.log('data: ', data);
             setTotal(() => (data?.count || 0))
             if (page === 1) setTasks(data.results);
             else {

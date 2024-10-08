@@ -21,8 +21,6 @@ const dateFormat = (dateInMiliSec) => {
 }
 
 const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue }) => {
-    console.log('show: ', show);
-    console.log('defaultValue: ', defaultValue);
     const dropdownRef = useRef(null);
     const [submitted, setSubmitted] = useState(false);
 
@@ -114,7 +112,6 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                 from_date: date.startDate,
                 to_date: date.endDate,
             })
-            console.log('Form submitted with:', { taskTitle, description, user, date });
         }
 
     }
