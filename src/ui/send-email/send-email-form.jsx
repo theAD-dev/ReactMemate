@@ -322,6 +322,13 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                                 onClick={onFocus}
                                 onFocus={onFocus}
                                 onKeyUp={onInputChange}
+                                onBlur={(e) => {
+                                    const currentValue = e.target.value.trim();
+                                    if (currentValue) {
+                                        setTo((prev) => [...new Set([...prev, currentValue])]);
+                                        e.target.value = '';
+                                    }
+                                }}
                                 className={clsx(style.AutoComplete, "w-100")}
                                 placeholder="TO"
                             />
@@ -359,6 +366,13 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                                 onClick={onFocus2}
                                 onFocus={onFocus2}
                                 onKeyUp={onInputChange2}
+                                onBlur={(e) => {
+                                    const currentValue = e.target.value.trim();
+                                    if (currentValue) {
+                                        setCC((prev) => [...new Set([...prev, currentValue])]);
+                                        e.target.value = '';
+                                    }
+                                }}
                                 className={clsx(style.AutoComplete, "w-100")}
                                 placeholder="CC"
                             />
@@ -381,6 +395,13 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                                 onClick={onFocus3}
                                 onFocus={onFocus3}
                                 onKeyUp={onInputChange3}
+                                onBlur={(e) => {
+                                    const currentValue = e.target.value.trim();
+                                    if (currentValue) {
+                                        setBCC((prev) => [...new Set([...prev, currentValue])]);
+                                        e.target.value = '';
+                                    }
+                                }}
                                 className={clsx(style.AutoComplete, style.bcc, "w-100")}
                                 placeholder="BCC"
                             />

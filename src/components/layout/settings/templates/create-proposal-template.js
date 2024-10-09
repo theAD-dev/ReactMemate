@@ -107,7 +107,7 @@ const CreateProposalTemplate = () => {
             });
 
             const method = id ? 'PUT' : 'POST';
-            const URL = id ? `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/update/${id}` : `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/new/`
+            const URL = id ? `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/update/${id}/` : `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/new/`
 
             setIsLoading(true);
             const accessToken = localStorage.getItem("access_token");
