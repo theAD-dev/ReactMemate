@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.a7ae2552.css",
-    "main.js": "/static/js/main.a012c671.js",
+    "main.css": "/static/css/main.ee47ac1d.css",
+    "main.js": "/static/js/main.0ffbc05d.js",
     "static/js/692.2280fcce.chunk.js": "/static/js/692.2280fcce.chunk.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js",
@@ -50,7 +50,6 @@
     "static/media/inter-latin-400-normal.woff": "/static/media/inter-latin-400-normal.b0c8fe9db56dd415a25a.woff",
     "static/media/inter-latin-ext-400-normal.woff2": "/static/media/inter-latin-ext-400-normal.3d10c85fbd16969509a2.woff2",
     "static/media/background-pattern-decorative.png": "/static/media/background-pattern-decorative.af8208509fc3e778a44d.png",
-    "static/media/taskbinImage.png": "/static/media/taskbinImage.28a4cdd2493f19a89864.png",
     "static/media/inter-latin-400-normal.woff2": "/static/media/inter-latin-400-normal.9698cc7dbf147ed363b6.woff2",
     "static/media/roboto-latin-400-normal.woff2": "/static/media/roboto-latin-400-normal.297d48e1b5a10c0831a9.woff2",
     "static/media/roboto-latin-400-normal.woff": "/static/media/roboto-latin-400-normal.047a7839f69b209db815.woff",
@@ -108,18 +107,16 @@
     "static/media/taskEditIcon.svg": "/static/media/taskEditIcon.5073a6098e75cbfe59e3f782e1a2d772.svg",
     "static/media/task-details.svg": "/static/media/task-details.6c24fdfe452b19f485da192519e9cbe3.svg",
     "static/media/merge-items.svg": "/static/media/merge-items.10cdb05ad32cd34a2d36b94cdd5ddf9e.svg",
-    "static/media/TaskDetailsIcon.svg": "/static/media/TaskDetailsIcon.b8f35dcecd335db7bdac03fb67e34dd2.svg",
     "static/media/folderFileIcon.svg": "/static/media/folderFileIcon.ea8d1ab0e5f9d712876b6e6f3e9f303d.svg",
     "static/media/exclamation-circle.svg": "/static/media/exclamation-circle.cae916ce28e0a8d8d07a477235f7a993.svg",
     "static/media/unlock.svg": "/static/media/unlock.5229ed0737dba142ff1428b223a851a0.svg",
     "static/media/envelope.svg": "/static/media/envelope.c9c11cfa6a43774942324c9ac7f33f2d.svg",
     "static/media/new-task.svg": "/static/media/new-task.1f7c3f35d1b3af6863cc0437d88ae2f1.svg",
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
-    "static/media/newTaskAdd.svg": "/static/media/newTaskAdd.d67b4091dd3fbc4db540e612a91301d6.svg",
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.a7ae2552.css.map": "/static/css/main.a7ae2552.css.map",
-    "main.a012c671.js.map": "/static/js/main.a012c671.js.map",
+    "main.ee47ac1d.css.map": "/static/css/main.ee47ac1d.css.map",
+    "main.0ffbc05d.js.map": "/static/js/main.0ffbc05d.js.map",
     "692.2280fcce.chunk.js.map": "/static/js/692.2280fcce.chunk.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
     "reactPlayerSoundCloud.0b756129.chunk.js.map": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js.map",
@@ -137,7 +134,7 @@
     "reactPlayerPreview.40333d14.chunk.js.map": "/static/js/reactPlayerPreview.40333d14.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a7ae2552.css",
-    "static/js/main.a012c671.js"
+    "static/css/main.ee47ac1d.css",
+    "static/js/main.0ffbc05d.js"
   ]
 }

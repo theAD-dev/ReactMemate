@@ -60,7 +60,6 @@ import AppNotifications from "./settings/notifications/AppNotifications";
 import EmailNotifications from "./settings/notifications/EmailNotifications";
 import DemoTable from "../Business/Pages/management/project-card/DemoTable";
 import Dashboard from "../Work/Pages/Dashboard";
-import Tasks from "../Work/Pages/tasks/Tasks";
 import News from "../Work/Pages/News";
 import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import OutgoingEmails from "./settings/projectstatus/outgoing-emails";
@@ -89,6 +88,7 @@ import CreateEmailTemplate from "./settings/templates/create-email-template";
 import KeyResultsPage from "../Business/Pages/statistics/key-results";
 import CreateProposalTemplate from "./settings/templates/create-proposal-template";
 import Location from "./settings/locations";
+import TaskPage from "../Work/Pages/tasks";
 
 
 
@@ -465,6 +465,13 @@ const Header = ({ onClick }) => {
 
 
           <Route path="/work" element={<Work />} />
+          <Route path="/work/dashboard" element={<Dashboard />} />
+          <Route path="/work/tasks" element={<TaskPage />} />
+          <Route path="/work/news" element={<News />} />
+          <Route path="/work/approval" element={<ApprovalPage />} />
+          <Route path="/work/jobs" element={<JobsPage />} />
+          <Route path="/work/people" element={<PeoplePage />}/>
+
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/management" element={<Management />} />
 
@@ -672,33 +679,6 @@ const Header = ({ onClick }) => {
             element={<DemoTable />}
           />
 
-
-
-
-          <Route
-            path="/work/dashboard"
-            element={<Dashboard />}
-          />
-          <Route
-            path="/work/tasks"
-            element={<Tasks />}
-          />
-          <Route
-            path="/work/news"
-            element={<News />}
-          />
-          <Route
-            path="/work/approval"
-            element={<ApprovalPage />}
-          />
-          <Route
-            path="/work/jobs"
-            element={<JobsPage />}
-          />
-          <Route
-            path="/work/people"
-            element={<PeoplePage />}
-          />
           <Route
             path="/settings/templates/edit-template/"
             element={<EditTemplates />}

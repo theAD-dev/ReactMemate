@@ -456,3 +456,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   position: fixed !important;
   transform: translate(-50%, -50%);
 }
+
+.p-dropdown-panel {
+  z-index: 3100 !important;
+}

@@ -1,13 +1,11 @@
 import React, { useRef, useState } from 'react';
 import style from './jobs.module.scss';
 import { Button } from 'react-bootstrap';
-import { CalendarWeek, CurrencyDollar, Download, Filter, People } from 'react-bootstrap-icons';
+import { Download, Filter } from 'react-bootstrap-icons';
 import JobsTable from './jobs-table';
 import { useDebounce } from 'primereact/hooks';
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { TieredMenu } from 'primereact/tieredmenu';
-import { ListBox } from 'primereact/listbox';
 import JobChat from '../../features/job-chat';
 
 const JobsPage = () => {

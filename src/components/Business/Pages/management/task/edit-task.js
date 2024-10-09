@@ -21,8 +21,6 @@ const dateFormat = (dateInMiliSec) => {
 }
 
 const EditTask = ({ show, setShow, data, reInitilize }) => {
-    console.log('data: ', data);
-
     const taskId = data?.id;
     const project = { value: data?.project?.id, reference: data?.project?.reference, number: data?.project?.number };
     const [taskTitle, setTaskTitle] = useState(data.title || "");
