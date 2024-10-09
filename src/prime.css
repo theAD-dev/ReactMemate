@@ -458,5 +458,5 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 }
 
 .p-dropdown-panel {
-  z-index: 1100 !important;
+  z-index: 3100 !important;
 }

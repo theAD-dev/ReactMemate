@@ -114,7 +114,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
   }, [expense?.data])
 
   return (
-    <Sidebar visible={visible} position="right" onHide={() => { setVisible(false); setEditData({}) }} modal={true} dismissable={true} style={{ width: '702px' }}
+    <Sidebar visible={visible} position="right" onHide={() => { setVisible(false); setEditData({}) }} modal={false} dismissable={false} style={{ width: '702px' }}
       content={({ closeIconRef, hide }) => (
         <div className='create-sidebar d-flex flex-column'>
           <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '24px' }}>
@@ -134,14 +134,16 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
           </div>
 
           <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
-            <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
-              <h5>Supplier Details</h5>
-              <h6>Expense ID: {id || "-"}</h6>
-            </div>
-            {defaultValues?.option
-              ? <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} />
+            {!expense?.isFetching
+              ? <>
+                <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
+                  <h5>Supplier Details</h5>
+                  <h6>Expense ID: {id || "-"}</h6>
+                </div>
+                <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} />
+              </>
               : <SidebarClientLoading />
-          }
+            }
           </div>
 
           <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
