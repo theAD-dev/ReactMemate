@@ -43,7 +43,7 @@ function App() {
         <Route path="/resend-email" element={<ResendEmail />} />
         <Route path="/demo" element={<Demo />} />
         <Route path="/ui/components" element={<Components />} />
-        <Route path="/Quote/quotation" element={<QuotationEmail />} />
+        <Route path="/quote" element={<QuotationEmail />} />
         
         
       </Routes>
