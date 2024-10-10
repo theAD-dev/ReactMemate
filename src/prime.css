@@ -14,9 +14,11 @@
   color: #475467;
   width: 10px;
 }
+
 th.headerRightAligh .p-column-header-content {
   justify-content: flex-end;
 }
+
 .p-datatable.p-datatable-lg .p-datatable-header {
   padding: 4px;
   display: flex;
