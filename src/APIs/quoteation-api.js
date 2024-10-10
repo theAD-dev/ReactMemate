@@ -4,8 +4,8 @@ import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 
-export const emailQuoteationApi = async () => {
-    const endpoint = `/quote/view/3fa6f1eb-f2f9-4e94-b2d7-344dcf661a64/`;
+export const emailQuoteationApi = async (lastId) => {
+    const endpoint = `/quote/view/${lastId}`;
     const options = {
       method: 'GET',
     };

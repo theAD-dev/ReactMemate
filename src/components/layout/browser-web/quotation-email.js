@@ -6,16 +6,19 @@ import { emailQuoteationApi } from "../../../APIs/quoteation-api";
 import { Placeholder } from "react-bootstrap";
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
+import { useLocation } from 'react-router-dom';
 
 const QuotationEmail = () => {
     const [quote, setQuote] = useState();  
-    console.log('quotedddddddddddddddddddddddddd: ', quote);
     const [isLoading, setIsLoading] = useState(false);
+    const location = useLocation();
+    const [lastId, setLastId] = useState('');
+    console.log('lastId: ', lastId);
 
     const fetchData = async () => {
       try {
           setIsLoading(true);
-          const data = await emailQuoteationApi();
+          const data = await emailQuoteationApi(lastId);
           setQuote(data);  
       } catch (error) {
           console.error('Error fetching data: ', error);
@@ -28,6 +31,15 @@ const QuotationEmail = () => {
         fetchData();
     }, []);
 
+
+    useEffect(() => {
+        //const pathname1 = 'https://dev.memate.com.au/quote/view/f4f511e3-e923-468e-a40c-910dbfaf610a';
+         const pathArray = location.pathname.split('/');
+
+        console.log('array'+pathArray.length);
+        const lastSegment = pathArray[pathArray.length - 1];  
+        setLastId(lastSegment);
+    }, [location]);
 
     const formatDate = (isoDate) => {
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -101,8 +113,9 @@ const QuotationEmail = () => {
             ) : (
                 <>
                     <div className={style.quotationWrapperPage}>
+                        <div className={style.quotationScroll}>
                         <div className={style.quotationWrapper}>
-                            <div className={style.quotationHead}>
+                        <div className={style.quotationHead}>
                                 <div className={style.left}>
                                     <h1>Quotation</h1>
                                     <p><span>{quote?.number}</span></p>
@@ -145,7 +158,7 @@ const QuotationEmail = () => {
                             </div>
                         
                             <div className={style.quotationtable}>
-                                <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable} scrollable scrollHeight="calc(100vh - 594px)" style={{ minWidth: '50rem' }}>
+                                <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable} scrollable  style={{ minWidth: '50rem' }}>
                                 <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '17.21px' }} />
                                 {footerGroup}
                                     <Column field="index" body={ServicesBody} header="Services" style={{ width: '392px' }}></Column>
@@ -160,6 +173,7 @@ const QuotationEmail = () => {
                             <div className={style.logoWrapperFooter}>
                              <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
                             </div>
+                        </div>
                         </div>
 
                         <div className={style.quotationfooter}>
