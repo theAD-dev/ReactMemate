@@ -2,34 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import style from './quote.module.scss';
-import { emailQuoteationApi, emailDeclineApi, emailAcceptApi, emailChangesApi } from "../../../APIs/quoteation-api";
-import { Placeholder } from "react-bootstrap";
+import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } from "../../../APIs/quoteation-api";
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Button from "react-bootstrap/Button";
 import { Dialog } from "primereact/dialog";
 import googleReview from "../../../assets/images/icon/checbold.svg";
+import { Skeleton } from 'primereact/skeleton';
+import { toast } from 'sonner';
 
 const QuotationEmail = () => {
-    const [quote, setQuote] = useState();  
+    const { id } = useParams();
+
+    const [quote, setQuote] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const location = useLocation();
     const [updateDis, setUpdateDis] = useState('');
     const [errors, setErrors] = useState({});
-    const [lastId, setLastId] = useState('');
-    console.log('lastId: ', lastId);
     const [actionLoading, setActionLoading] = useState({ decline: false, changes: false, accept: false });
-    console.log('actionLoading: ', actionLoading);
     const [visible, setVisible] = useState(false);
 
     const fetchData = async () => {
         try {
             setIsLoading(true);
-            const data = await emailQuoteationApi(lastId);
-            setQuote(data);  
+            const data = await getQuoteation(id);
+            setQuote(data);
         } catch (error) {
             console.error('Error fetching data: ', error);
+            toast.error("Failed to get the Quotation. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -37,24 +37,16 @@ const QuotationEmail = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
-
-    useEffect(() => {
-        // const pathname1 = 'https://dev.memate.com.au/quote/view/6a3e12db-4050-4f58-b8e9-8326e310b758';
-        // const pathArray = pathname1.split('/');
-              const pathArray = location.pathname.split('/');
-      
-        const lastSegment = pathArray[pathArray.length - 1];  
-        setLastId(lastSegment);
-    }, [location]);
+    }, [id]);
 
     const handleDecline = async () => {
         try {
             setActionLoading(prev => ({ ...prev, decline: true }));
-            await emailDeclineApi(lastId);
-            alert("Quotation declined successfully.");
+            await quotationDecline(id);
+            toast.success("Quotation declined successfully.");
         } catch (error) {
             console.error('Error declining quotation: ', error);
+            toast.error("Failed to decline the Quotation. Please try again.");
         } finally {
             setActionLoading(prev => ({ ...prev, decline: false }));
         }
@@ -66,13 +58,13 @@ const QuotationEmail = () => {
                 setErrors({ description: 'Note is required' });
                 return;
             }
-    
             setActionLoading(prev => ({ ...prev, changes: true }));
-            await emailChangesApi(lastId, { note: updateDis });
-            alert("Requested changes successfully.");
+            await quotationChanges(id, { note: updateDis });
+            toast.success("Quotation changes request has been sent");
             setVisible(false);
         } catch (error) {
-            console.error('Error requesting changes: ', error);
+            console.error('Error sending the Quotation changes: ', error);
+            toast.error("Failed to sent the Quotation changes request. Please try again.");
         } finally {
             setActionLoading(prev => ({ ...prev, changes: false }));
         }
@@ -81,10 +73,11 @@ const QuotationEmail = () => {
     const handleAccept = async () => {
         try {
             setActionLoading(prev => ({ ...prev, accept: true }));
-            await emailAcceptApi(lastId);
-            alert("Quotation accepted successfully.");
+            await quotationAccept(id);
+            toast.success("Quotation accepted successfully.");
         } catch (error) {
             console.error('Error accepting quotation: ', error);
+            toast.error("Failed to accept the Quotation. Please try again.");
         } finally {
             setActionLoading(prev => ({ ...prev, accept: false }));
         }
@@ -111,10 +104,12 @@ const QuotationEmail = () => {
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
         </div>
     );
+
     const handleClose = (e) => {
         setVisible(false);
-      };
-      const footerContent = (
+    };
+
+    const footerContent = (
         <div className="d-flex justify-content-between gap-2">
             <Button className={`outline-button ${style.modelreadOutLIne}`} onClick={handleClose}>
                 Cancel
@@ -127,15 +122,12 @@ const QuotationEmail = () => {
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
-          <div className="d-flex align-items-center gap-2">
-          <img src={googleReview} alt={googleReview} />
-          Request Change
-          </div>
+            <div className="d-flex align-items-center gap-2">
+                <img src={googleReview} alt={googleReview} />
+                Request Change
+            </div>
         </div>
-      );
-
-
-
+    );
 
     const CounterBody = (rowData, { rowIndex }) => <span>{rowIndex + 1}</span>;
 
@@ -170,140 +162,132 @@ const QuotationEmail = () => {
 
     return (
         <>
-            {isLoading ? (
-                <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
-                    <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
-                </Placeholder>
-            ) : (
-                <>
-                    <div className={style.quotationWrapperPage}>
-                        <div className={style.quotationScroll}>
-                            <div className={style.quotationWrapper}>
-                                <div className={style.quotationHead}>
-                                    <div className={style.left}>
-                                        <h1>Quotation</h1>
-                                        <p><span>{quote?.number}</span></p>
-                                    </div>
-                                    <div className={style.right}>
-                                        <img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' />
-                                    </div>
-                                </div>
-
-                                <div className={style.quotationRefress}>
-                                    <div className={style.left}>
-                                        <p>Date of issue: <span>{formatDate(quote?.due_date)}</span></p>
-                                    </div>
-                                    <div className={style.right}>
-                                        <p>Reference</p>
-                                        <p><strong>{quote?.reference}</strong></p>
-                                    </div>
-                                </div>
-
-                                <div className={style.quotationAddress}>
-                                    <div className={style.left}>
-                                        <p>From:</p>
-                                        <ul>
-                                            <li><strong>{quote?.organization.account_name}</strong></li>
-                                            <li>ABN:{quote?.organization.abn}</li>
-                                            <li>Address:{quote?.organization.address}</li>
-                                            <li>Phone:{quote?.organization.phone}</li>
-                                            <li>Email:{quote?.organization.email}</li>
-                                        </ul>
-                                    </div>
-                                    <div className={style.right}>
-                                        <p>To:</p>
-                                        <ul>
-                                            <li><strong>{quote?.client.name}</strong></li>
-                                            <li>{quote?.client.email}</li>
-                                            <li>{quote?.client.phone}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div className={style.quotationtable}>
-                                    <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable}>
-                                        <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '17.21px' }} />
-                                        <Column field="index" body={ServicesBody} header="Services" style={{ width: '400px' }} />
-                                        <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', color: '#667085' }} headerClassName='headerRightAligh' />
-                                        <Column field="unit_price" header="Price" style={{ width: '130px', textAlign: 'right' }} headerClassName='headerRightAligh' />
-                                        <Column field="discount" header="Discount" style={{ width: '120px', color: '#667085', textAlign: 'right' }} headerClassName='headerRightAligh' />
-                                        <Column field="total" header="Total" style={{ width: '66px', textAlign: 'right' }} headerClassName='headerRightAligh' />
-                                    </DataTable>
-                                </div>
-
-                                <div className={style.logoWrapperFooter}>
-                                    <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
-                                </div>
+            <div className={style.quotationWrapperPage}>
+                <div className={style.quotationScroll}>
+                    <div className={style.quotationWrapper}>
+                        <div className={style.quotationHead}>
+                            <div className={style.left}>
+                                <h1>Quotation</h1>
+                                <p className='mb-2 mt-2'> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
+                            </div>
+                            <div className={style.right}>
+                                <img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' />
                             </div>
                         </div>
 
-                        <div className={style.quotationfooter}>
-                            <div className={style.contanerfooter}>
-                                <div className={style.left}>
-                                    <button
-                                        className={style.decline}
-                                        onClick={handleDecline}
-                                        disabled={actionLoading.decline}
-                                    >
-                                        {actionLoading.decline ? 'Declining...' : 'Decline'}
-                                    </button>
-                                </div>
-                                <div className={style.right}>
-                                    <button
-                                        // onClick={handleRequestChanges}
-                                        onClick={() => { setVisible(true)}}
-                                        // disabled={actionLoading.changes}
-                                    >
-                                        {actionLoading.changes ? 'Requesting changes...' : 'Request changes'}
-                                    </button>
-                                    <button
-                                        className={style.accept}
-                                        onClick={handleAccept}
-                                        disabled={actionLoading.accept}
-                                    >
-                                        {actionLoading.accept ? 'Accepting...' : 'Accept'}
-                                    </button>
-                                </div>
+                        <div className={style.quotationRefress}>
+                            <div className={style.left}>
+                                <p className='d-flex gap-2 align-items-center'>Date of issue:
+                                    {isLoading ? <Skeleton width="6rem" height='12px' className='mb-0 rounded'></Skeleton> : <span>{formatDate(quote?.due_date)}</span>}
+                                </p>
                             </div>
+                            <div className={style.right}>
+                                <p>Reference</p>
+                                {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{quote?.reference}</strong></p>}
+                            </div>
+                        </div>
+
+                        <div className={style.quotationAddress}>
+                            <div className={style.left}>
+                                <p>From:</p>
+                                <ul>
+                                    <li>
+                                        {isLoading ? <Skeleton width="10rem" height='15px' className='rounded'></Skeleton> : <strong>{quote?.organization.account_name}</strong>}
+                                    </li>
+                                    <li>ABN:{quote?.organization.abn}</li>
+                                    <li>Address:{quote?.organization.address}</li>
+                                    <li>Phone:{quote?.organization.phone}</li>
+                                    <li>Email:{quote?.organization.email}</li>
+                                </ul>
+                            </div>
+                            <div className={style.right}>
+                                <p>To:</p>
+                                <ul>
+                                    <li><strong>{quote?.client.name}</strong></li>
+                                    <li>{quote?.client.email}</li>
+                                    <li>{quote?.client.phone}</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div className={style.quotationtable}>
+                            <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable}>
+                                <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '17.21px' }} />
+                                <Column field="index" body={ServicesBody} header="Services" style={{ width: '400px' }} />
+                                <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', color: '#667085' }} headerClassName='headerRightAligh' />
+                                <Column field="unit_price" header="Price" style={{ width: '130px', textAlign: 'right' }} headerClassName='headerRightAligh' />
+                                <Column field="discount" header="Discount" style={{ width: '120px', color: '#667085', textAlign: 'right' }} headerClassName='headerRightAligh' />
+                                <Column field="total" header="Total" style={{ width: '66px', textAlign: 'right' }} headerClassName='headerRightAligh' />
+                            </DataTable>
+                        </div>
+
+                        <div className={style.logoWrapperFooter}>
+                            <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
                         </div>
                     </div>
-                </>
-            )}
-               <Dialog
-         visible={visible}
-         modal={true}
-         header={headerElement}
-         footer={footerContent}
-         className={`${style.modal} custom-modal custom-scroll-integration `}
-         onHide={handleClose}
-       >
-           <div className="d-flex flex-column">
-           <form >
-             <div className={style.formWrapNote}>
-             
-               <div className="formgroup mb-2 mt-2">
-                  <label>Note </label>
-                  <div className={`${style.inputInfo} ${errors.description ? 'error-border' : ''}`}>
-                    <textarea
-                      type="text"
-                      name="Enter a description..."
-                      value={updateDis}
-                      placeholder='Enter a description...'
-                      onChange={(e) => {
-                        setUpdateDis(e.target.value);
-                      }}
-                    />
-                  </div>
-                  {errors.description && <p className="error-message">{errors.description}</p>}
                 </div>
-              
-           
-              
-             </div>
-           </form>
-        
-         </div>
-       </Dialog>
+
+                <div className={style.quotationfooter}>
+                    <div className={style.contanerfooter}>
+                        <div className={style.left}>
+                            <button
+                                className={style.decline}
+                                onClick={handleDecline}
+                                disabled={actionLoading.decline}
+                            >
+                                {actionLoading.decline ? 'Declining...' : 'Decline'}
+                            </button>
+                        </div>
+                        <div className={style.right}>
+                            <button
+                                // onClick={handleRequestChanges}
+                                onClick={() => { setVisible(true) }}
+                            // disabled={actionLoading.changes}
+                            >
+                                {actionLoading.changes ? 'Requesting changes...' : 'Request changes'}
+                            </button>
+                            <button
+                                className={style.accept}
+                                onClick={handleAccept}
+                                disabled={actionLoading.accept}
+                            >
+                                {actionLoading.accept ? 'Accepting...' : 'Accept'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <Dialog
+                visible={visible}
+                modal={true}
+                header={headerElement}
+                footer={footerContent}
+                className={`${style.modal} custom-modal custom-scroll-integration `}
+                onHide={handleClose}
+            >
+                <div className="d-flex flex-column">
+                    <form >
+                        <div className={style.formWrapNote}>
+                            <div className="formgroup mb-2 mt-2">
+                                <label>Note </label>
+                                <div className={`${style.inputInfo} ${errors.description ? 'error-border' : ''}`}>
+                                    <textarea
+                                        type="text"
+                                        name="Enter a description..."
+                                        value={updateDis}
+                                        placeholder='Enter a description...'
+                                        onChange={(e) => {
+                                            setUpdateDis(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                {errors.description && <p className="error-message">{errors.description}</p>}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </Dialog>
         </>
     );
 };

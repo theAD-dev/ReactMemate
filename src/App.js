@@ -44,8 +44,6 @@ function App() {
         <Route path="/demo" element={<Demo />} />
         <Route path="/ui/components" element={<Components />} />
         <Route path="/quote/:id" element={<QuotationEmail />} />
-        
-        
       </Routes>
     </AuthProvider>
   );
