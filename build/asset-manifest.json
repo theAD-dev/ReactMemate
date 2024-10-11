@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.3e181bca.css",
-    "main.js": "/static/js/main.1b03d57d.js",
+    "main.css": "/static/css/main.a986d488.css",
+    "main.js": "/static/js/main.3e5df881.js",
     "static/js/692.2280fcce.chunk.js": "/static/js/692.2280fcce.chunk.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js",
@@ -109,14 +109,15 @@
     "static/media/merge-items.svg": "/static/media/merge-items.10cdb05ad32cd34a2d36b94cdd5ddf9e.svg",
     "static/media/folderFileIcon.svg": "/static/media/folderFileIcon.ea8d1ab0e5f9d712876b6e6f3e9f303d.svg",
     "static/media/exclamation-circle.svg": "/static/media/exclamation-circle.cae916ce28e0a8d8d07a477235f7a993.svg",
+    "static/media/checbold.svg": "/static/media/checbold.46982ac8db5260866e48b47073903a71.svg",
     "static/media/unlock.svg": "/static/media/unlock.5229ed0737dba142ff1428b223a851a0.svg",
     "static/media/envelope.svg": "/static/media/envelope.c9c11cfa6a43774942324c9ac7f33f2d.svg",
     "static/media/new-task.svg": "/static/media/new-task.1f7c3f35d1b3af6863cc0437d88ae2f1.svg",
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.3e181bca.css.map": "/static/css/main.3e181bca.css.map",
-    "main.1b03d57d.js.map": "/static/js/main.1b03d57d.js.map",
+    "main.a986d488.css.map": "/static/css/main.a986d488.css.map",
+    "main.3e5df881.js.map": "/static/js/main.3e5df881.js.map",
     "692.2280fcce.chunk.js.map": "/static/js/692.2280fcce.chunk.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
     "reactPlayerSoundCloud.0b756129.chunk.js.map": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js.map",
@@ -134,7 +135,7 @@
     "reactPlayerPreview.40333d14.chunk.js.map": "/static/js/reactPlayerPreview.40333d14.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3e181bca.css",
-    "static/js/main.1b03d57d.js"
+    "static/css/main.a986d488.css",
+    "static/js/main.3e5df881.js"
   ]
 }
