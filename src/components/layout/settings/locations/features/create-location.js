@@ -31,7 +31,7 @@ const schema = yup
     })
     .required();
 
-const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, refetch, refetch2, fallbackLocation }) => {
+const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, refetch, refetch2, fallbackLocation }) => {
     const [countryId, setCountryId] = useState('');
     const [stateId, setStateId] = useState('');
     const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
@@ -44,9 +44,12 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
     });
     const handleClose = () => {
         setVisible(false);
-        reset();
         setCountryId("");
         setStateId("");
+        reset();
+        setValue('country', '');
+        setValue('state', '');
+        setValue('city', '');
     }
     const mutation = useMutation({
         mutationFn: (data) => id ? updateLocation(id, data) : createLocation(data),
@@ -55,9 +58,12 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
             refetch2();
             handleClose();
             toast.success(`Location created successfully.`);
-            reset();
             setCountryId("");
             setStateId("");
+            reset();
+            setValue('country', '');
+            setValue('state', '');
+            setValue('city', '');
         },
         onError: (error) => {
             console.error('Error creating location:', error);
@@ -72,9 +78,12 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
             fallbackLocation();
             handleClose();
             toast.success(`Location deleted successfully`);
-            reset();
             setCountryId("");
             setStateId("");
+            reset();
+            setValue('country', '');
+            setValue('state', '');
+            setValue('city', '');
         },
         onError: (error) => {
             toast.error(`Failed to delete location. Please try again.`);
@@ -94,7 +103,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = null, id = null, 
             if (defaultValues?.country) setCountryId(defaultValues?.country);
             if (defaultValues?.state) setStateId(defaultValues?.state);
         }
-    }, [defaultValues, setValue]);
+    }, [defaultValues]);
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>

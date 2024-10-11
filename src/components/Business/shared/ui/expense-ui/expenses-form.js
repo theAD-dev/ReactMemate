@@ -311,7 +311,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier 
                     <div className="d-flex flex-column gap-1 mt-4">
                         <label className={clsx(styles.lable)}>Total Amount</label>
                         <IconField>
-                            <InputText keyfilter="money" {...register("amount")} className={clsx(styles.inputText, { [styles.error]: errors.amount })} placeholder='$ Enter total amount' />
+                            <InputText keyfilter="money" {...register("amount")} onBlur={(e) => setValue('amount', parseFloat(e?.target?.value || 0).toFixed(2)) } onKeyUp={(e)=> handleGstChange(getValues('gst-calculation')) } className={clsx(styles.inputText, { [styles.error]: errors.amount })} placeholder='$ Enter total amount' />
                             <InputIcon>{errors.amount && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                         </IconField>
                         {errors?.amount && <p className="error-message">{errors.amount?.message}</p>}
