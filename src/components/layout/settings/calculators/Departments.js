@@ -236,6 +236,22 @@ const calculateSummary = (calculators, taxType) => {
     };
 }
 
+const calculateUnitPrice = (item) => {
+    let cost = parseFloat(item?.cost) || 0;
+    let unit_price = 0.00;
+
+    let margin = parseFloat(item?.profit_type_value) || 0;
+    if (item?.profit_type === "MRK") {
+        unit_price = cost + (cost * (margin / 100));
+    } else if (item?.profit_type === "MRG") {
+        unit_price = cost / (1 - (margin / 100));
+    } else if (item?.profit_type === "AMN") {
+        unit_price = cost + margin;
+    }
+
+    return unit_price.toFixed(2);
+}
+
 const ViewSectionComponent = ({ calculator, index, refetch }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [tempCalculator, setTempCalculator] = useState(null);
@@ -327,31 +343,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                                             inputId="minmaxfraction"
                                         />
                                     </div>
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', padding: '4px', background: '#EBF8FF' }}>
-                                        <X color='#1AB2FF' size={12} />
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <div className='d-flex flex-column'>
-                                        <label>Quantity/Hours</label>
-                                        <div className='d-flex gap-2 align-items-center'>
-                                            <InputNumber className={clsx(style.inputNumber2)}
-                                                inputId="withoutgrouping"
-                                                value={parseInt(tempCalculator?.quantity || 0)}
-                                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
-                                            />
-                                            <select value={tempCalculator?.type}
-                                                style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
-                                                onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
-                                            >
-                                                <option value="Cost">1/Q</option>
-                                                <option value="Hourly">1/H</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', padding: '4px', background: '#EBF8FF', marginTop: '25px' }}>
                                         <X color='#1AB2FF' size={12} />
                                     </div>
                                 </div>
@@ -379,7 +371,46 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                                         </div>
                                     </div>
 
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle pt-3' style={{ width: '20px', height: '20px' }}>
+                                        =
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='d-flex flex-column'>
+                                        <label className='mb-2'>Unit Price</label>
+                                        <div className='d-flex gap-2 align-items-center'>
+                                            <strong>$ {calculateUnitPrice(tempCalculator)}</strong>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF', marginTop: '30px' }}>
+                                        <X color='#1AB2FF' size={12} />
+                                    </div>
+                                </div>
+                            </Col>
+
+                            <Col>
+                                <div className='d-flex justify-content-between align-items-center'>
+                                    <div className='d-flex flex-column'>
+                                        <label>Quantity/Hours</label>
+                                        <div className='d-flex gap-2 align-items-center'>
+                                            <InputNumber className={clsx(style.inputNumber2)}
+                                                inputId="withoutgrouping"
+                                                value={parseInt(tempCalculator?.quantity || 0)}
+                                                onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
+                                            />
+                                            <select value={tempCalculator?.type}
+                                                style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                                onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
+                                            >
+                                                <option value="Cost">1/Q</option>
+                                                <option value="Hourly">1/H</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center rounded-circle pt-3' style={{ width: '20px', height: '20px' }}>
                                         =
                                     </div>
                                 </div>
@@ -411,19 +442,23 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <h6>Description</h6>
                         <p>{calculator?.description || ""}</p>
                         <Row>
-                            <Col sm={3}>
+                            <Col>
                                 <label>Cost</label>
                                 <strong>$ {parseFloat((calculator?.cost || 0)).toFixed(2)}</strong>
                             </Col>
-                            <Col sm={3}>
-                                <label>Margin</label>
+                            <Col>
+                                <label>Margin/Markup</label>
                                 <strong>{parseFloat(calculator?.profit_type_value || 0).toFixed(2)}{calculator?.profit_type === "AMN" ? "$" : "%"}</strong>
                             </Col>
-                            <Col sm={3}>
-                                <label>Budget</label>
-                                <strong>$ {(parseFloat(calculator?.quantity || 0) * parseFloat(calculator?.cost || 0)).toFixed(2)}</strong>
+                            <Col>
+                                <label>Unit Price</label>
+                                <strong>$ {calculateUnitPrice(calculator)}</strong>
                             </Col>
-                            <Col sm={3}>
+                            <Col>
+                                <label>Quantity/Hours</label>
+                                <strong>$ {parseFloat(calculator?.quantity || 0)}</strong>
+                            </Col>
+                            <Col>
                                 <label>Sub Total:</label>
                                 <strong>$ {parseFloat(calculator.total || 0).toFixed(2)}</strong>
                             </Col>
@@ -523,31 +558,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                                 inputId="minmaxfraction"
                             />
                         </div>
-                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', padding: '4px', background: '#EBF8FF' }}>
-                            <X color='#1AB2FF' size={12} />
-                        </div>
-                    </div>
-                </Col>
-                <Col>
-                    <div className='d-flex justify-content-between align-items-center'>
-                        <div className='d-flex flex-column'>
-                            <label>Quantity/Hours</label>
-                            <div className='d-flex gap-2 align-items-center'>
-                                <InputNumber className={clsx(style.inputNumber2)}
-                                    inputId="withoutgrouping"
-                                    value={parseInt(tempCalculator?.quantity || 0)}
-                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
-                                />
-                                <select value={tempCalculator?.type}
-                                    style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
-                                    onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
-                                >
-                                    <option value="Cost">1/Q</option>
-                                    <option value="Hourly">1/H</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', padding: '4px', background: '#EBF8FF', marginTop: '20px' }}>
                             <X color='#1AB2FF' size={12} />
                         </div>
                     </div>
@@ -576,7 +587,46 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                             </div>
                         </div>
 
-                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle pt-3' style={{ width: '20px', height: '20px' }}>
+                            =
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='d-flex flex-column'>
+                            <label className='mb-2'>Unit Price</label>
+                            <div className='d-flex gap-2 align-items-center'>
+                                <strong>$ {calculateUnitPrice(tempCalculator)}</strong>
+                            </div>
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF', marginTop: '35px' }}>
+                            <X color='#1AB2FF' size={12} />
+                        </div>
+                    </div>
+                </Col>
+
+                <Col>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className='d-flex flex-column'>
+                            <label>Quantity/Hours</label>
+                            <div className='d-flex gap-2 align-items-center'>
+                                <InputNumber className={clsx(style.inputNumber2)}
+                                    inputId="withoutgrouping"
+                                    value={parseInt(tempCalculator?.quantity || 0)}
+                                    onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
+                                />
+                                <select value={tempCalculator?.type}
+                                    style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
+                                    onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
+                                >
+                                    <option value="Cost">1/Q</option>
+                                    <option value="Hourly">1/H</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', marginTop: '20px' }}>
                             =
                         </div>
                     </div>
