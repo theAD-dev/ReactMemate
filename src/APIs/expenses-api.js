@@ -63,3 +63,23 @@ export const updateExpense = async (id, data) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const paidExpense = async (data) => {
+  const endpoint = '/expenses/paid/';
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const unpaidExpense = async (data) => {
+  const endpoint = '/expenses/unpaid/';
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

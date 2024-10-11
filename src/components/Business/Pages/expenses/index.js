@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
+import { CheckCircle, Download, Eye, EyeSlash, Filter, Send, XCircle } from 'react-bootstrap-icons';
 import { Button } from 'react-bootstrap';
 import { useDebounce } from 'primereact/hooks';
 
@@ -10,15 +10,19 @@ import ExpensesTable from './expenses-table';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
 import { TieredMenu } from 'primereact/tieredmenu';
 import clsx from 'clsx';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { paidExpense, unpaidExpense } from '../../../../APIs/expenses-api';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const ExpensesPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
-    const [totalClients, setTotalClients] = useState(0);
+    const [total, setTotal] = useState(0);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
-    const [selectedClients, setSelectedClients] = useState(null);
+    const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
     const exportCSV = (selectionOnly) => {
@@ -29,15 +33,50 @@ const ExpensesPage = () => {
         }
     };
 
+    const paidMutation = useMutation({
+        mutationFn: (data) => paidExpense(data),
+        onSuccess: () => {
+            setRefetch((refetch) => !refetch);
+            toast.success(`Expenses have been successfully marked as paid.`);
+        },
+        onError: (error) => {
+            toast.error(`Failed to mark the expenses as paid. Please try again.`);
+        }
+    });
+
+    const unpaidMutation = useMutation({
+        mutationFn: (data) => unpaidExpense(data),
+        onSuccess: () => {
+            setRefetch((refetch) => !refetch);
+            toast.success(`Expenses have been successfully marked as unpaid.`);
+        },
+        onError: (error) => {
+            toast.error(`Failed to mark the expenses as unpaid. Please try again.`);
+        }
+    });
+
+    const handlePaidExpense = () => {
+        const ids = selected.map(item => item.id);
+        paidMutation.mutate({ ids: ids});
+    }
+
+    const handleUnPaidExpense = () => {
+        const ids = selected.map(item => item.id);
+        unpaidMutation.mutate({ id: ids });
+    }
+ 
     return (
         <PrimeReactProvider className='peoples-page'>
-            <div className={`topbar ${selectedClients?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
+            <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
-                        selectedClients?.length ? (
+                        selected?.length ? (
                             <>
-                                <h6 className={style.selectedCount}>Selected: {selectedClients?.length}</h6>
-                                <div className='filtered-box'>
+                                <h6 className={style.selectedCount}>Selected: {selected?.length}</h6>
+                                <div className='filtered-box d-flex align-items-center gap-2'>
+                                    <button className={`danger-outline-button ${style.actionButton}`} onClick={handleUnPaidExpense}>Mark as Unpaid {unpaidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <XCircle color='#B42318' size={20} />} </button>
+                                    <button className={`success-outline-button ${style.actionButton}`} onClick={handlePaidExpense}>Mark as Paid {paidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <CheckCircle color='#067647' size={20} />} </button>
+                                    <button className={`outline-button ${style.actionButton}`} onClick={() => { }}>Send to Xero/MYOB <Send color='#1D2939' size={20} /> </button>
                                     <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
                                 </div>
                             </>
@@ -75,16 +114,16 @@ const ExpensesPage = () => {
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
-                    <div className={`${style.totalCount}`}>{totalClients} Expenses</div>
+                    <div className={`${style.totalCount}`}>{total} Expenses</div>
                 </div>
             </div>
-            <ExpensesTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients}
-                selectedClients={selectedClients} setSelectedClients={setSelectedClients}
+            <ExpensesTable ref={dt} searchValue={debouncedValue} setTotal={setTotal}
+                selected={selected} setSelected={setSelected}
                 isShowDeleted={isShowDeleted}
                 refetch={refetch}
                 setRefetch={setRefetch}
             />
-            <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
+            <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
         </PrimeReactProvider>
     )
 }

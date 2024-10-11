@@ -24,7 +24,7 @@ const formatDate = (timestamp) => {
     return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted, refetch, setRefetch }, ref) => {
+const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
@@ -51,7 +51,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClient
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfExpensens(page, limit, searchValue, order, isShowDeleted);
-            setTotalClients(() => (data?.count || 0))
+            setTotal(() => (data?.count || 0))
             if (page === 1) setCients(data.results);
             else {
                 if (data?.results?.length > 0)
@@ -162,8 +162,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotalClients, selectedClient
         <>
             <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-                scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedClients}
-                onSelectionChange={(e) => setSelectedClients(e.value)}
+                scrollHeight={"calc(100vh - 175px)"} className="border" selection={selected}
+                onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
                 emptyMessage={NoDataFoundTemplate}

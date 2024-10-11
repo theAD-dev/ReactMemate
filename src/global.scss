@@ -75,6 +75,28 @@
   line-height: 24px; 
 }
 
+.success-outline-button,
+.success-outline-button:hover,
+.success-outline-button:focus {
+  gap: 8px;
+  display: flex;
+  padding: 10px 18px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  outline: none !important;
+  box-shadow: none !important;
+  background: #ECFDF3 !important;
+  border-radius: 4px;
+  border: 1px solid #A9EFC5;
+  color: #067647;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; 
+}
+
 .danger-button,
 .danger-button:hover,
 .danger-button:focus  {

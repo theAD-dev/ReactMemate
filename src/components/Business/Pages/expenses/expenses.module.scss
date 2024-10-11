@@ -7,7 +7,7 @@
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: #fff;
-  height: 32px;
+  height: 36px;
   width: 36px;
 }
 
@@ -186,4 +186,9 @@
   border-radius: 16px;
   border: 1px solid var(--Error-200, #FECDCA);
   background: var(--Error-50, #FEF3F2);
+}
+
+.actionButton {
+  font-size: 14px !important;
+  padding: 8px 14px !important;
 }
