@@ -1,11 +1,11 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, GeoAlt, Plus, Person } from 'react-bootstrap-icons';
+import { Building, Plus, Person } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
 
 import style from './expenses.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { getListOfExpensens } from "../../../../APIs/expenses-api";
 import { Button } from 'primereact/button';
@@ -13,6 +13,7 @@ import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-t
 import { Spinner } from 'react-bootstrap';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import { Badge } from 'primereact/badge';
+import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -37,6 +38,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
 
     const [editData, setEditData] = useState("");
     const [visible, setVisible] = useState(false);
+    const [showDialog, setShowDialog] = useState({ data: null, show: false });
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
@@ -114,7 +116,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
     const totalBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={` ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
-                $ {(rowData.total).toFixed(2)}<span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span>
+                $ {(rowData.total).toFixed(2)}
+                <span onClick={() => setShowDialog({ data: rowData, show: true })} className={style.plusIcon}><Plus size={12} color="#7a271a" /></span>
             </div>
         </div>
     }
@@ -185,6 +188,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
             <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
+            <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch}/>
         </>
     )
 })

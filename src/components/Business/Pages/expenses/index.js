@@ -62,7 +62,7 @@ const ExpensesPage = () => {
 
     const handleUnPaidExpense = () => {
         const ids = selected.map(item => item.id);
-        unpaidMutation.mutate({ id: ids });
+        unpaidMutation.mutate({ ids: ids });
     }
  
     return (

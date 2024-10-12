@@ -89,6 +89,7 @@ import KeyResultsPage from "../Business/Pages/statistics/key-results";
 import CreateProposalTemplate from "./settings/templates/create-proposal-template";
 import Location from "./settings/locations";
 import TaskPage from "../Work/Pages/tasks";
+import NotFoundTemplate from "../../ui/404-template/not-found-template";
 
 
 
@@ -462,7 +463,22 @@ const Header = ({ onClick }) => {
           <Route path="/statistics" element={<StatisticsPage />} />
           <Route path="/statistics/key-results" element={<KeyResultsPage />} />
 
+          <Route path="/sales" element={<Sales profileData={profileData} />} />
+          <Route path="/sales" element={<ClientLayout />}>
+            <Route path="newquote/selectyourclient" element={<SelectClientType />} />
+            <Route path="newquote/selectyourclient/existing-clients" element={<ExistingClients />} />
+            <Route path="newquote/selectyourclient/new-clients" element={<NewClient />} />
+            <Route path="newquote/selectyourclient/business-client" element={<BusinessClientInformation />} />
+            <Route path="newquote/selectyourclient/business-client/:id" element={<BusinessClientInformation />} />
+            <Route path="newquote/selectyourclient/individual-client" element={<IndividualClientInformation />} />
+            <Route path="newquote/selectyourclient/individual-client/:id" element={<IndividualClientInformation />} />
+            <Route path="newquote/selectyourclient/client-information/scope-of-work" element={<ScopeOfWorkComponent />} />
+            <Route path="newquote/selectyourclient/client-information/scope-of-work/:id" element={<ScopeOfWorkComponent />} />
+            <Route path="quote-calculation" element={<CalculateQuote />} />
+            <Route path="quote-calculation/:unique_id" element={<CalculateQuote />} />
+          </Route>
 
+          <Route path="/management" element={<Management />} />
 
           <Route path="/work" element={<Work />} />
           <Route path="/work/dashboard" element={<Dashboard />} />
@@ -470,235 +486,52 @@ const Header = ({ onClick }) => {
           <Route path="/work/news" element={<News />} />
           <Route path="/work/approval" element={<ApprovalPage />} />
           <Route path="/work/jobs" element={<JobsPage />} />
-          <Route path="/work/people" element={<PeoplePage />}/>
-
-          <Route path="/sales" element={<Sales profileData={profileData} />} />
-          <Route path="/management" element={<Management />} />
+          <Route path="/work/people" element={<PeoplePage />} />
 
           <Route path="/profile" element={<Profile />} />
           <Route path="/invoices" element={<Invoices />} />
 
-
-
-          <Route
-            path="/settings/generalinformation"
-            element={<GeneralInformation />}
-          />
-          <Route
-            path="/settings/generalinformation/bank-details"
-            element={<BankDetails />}
-          />
-          <Route
-            path="/settings/generalinformation/region-and-language"
-            element={<RegionLanguage />}
-          />
-          <Route
-            path="/settings/generalinformation/profile"
-            element={<MyProfile profileData={profileData} />}
-          />
-          <Route
-            path="/settings/generalinformation/subscription"
-            element={<Subscription />}
-          />
-          <Route
-            path="/settings/generalinformation/bills"
-            element={<Bills />}
-          />
-          <Route
-            path="/settings/generalinformation/billing-info"
-            element={<BillingInfo />}
-          />
-          <Route
-            path="/settings/users/desktop"
-            element={<Users />}
-          />
-          <Route
-            path="/settings/users/mobile-app"
-            element={<MobileApp />}
-          />
-
-          <Route path="/sales" element={<ClientLayout />}>
-            <Route
-              path="newquote/selectyourclient"
-              element={<SelectClientType />}
-            />
-            <Route
-              path="newquote/selectyourclient/existing-clients"
-              element={<ExistingClients />}
-            />
-            <Route
-              path="newquote/selectyourclient/new-clients"
-              element={<NewClient />}
-            />
-            <Route
-              path="newquote/selectyourclient/business-client"
-              element={<BusinessClientInformation />}
-            />
-            <Route
-              path="newquote/selectyourclient/business-client/:id"
-              element={<BusinessClientInformation />}
-            />
-            <Route
-              path="newquote/selectyourclient/individual-client"
-              element={<IndividualClientInformation />}
-            />
-            <Route
-              path="newquote/selectyourclient/individual-client/:id"
-              element={<IndividualClientInformation />}
-            />
-            <Route
-              path="newquote/selectyourclient/client-information/scope-of-work"
-              element={<ScopeOfWorkComponent />}
-            />
-            <Route
-              path="newquote/selectyourclient/client-information/scope-of-work/:id"
-              element={<ScopeOfWorkComponent />}
-            />
-            <Route
-              path="quote-calculation"
-              element={<CalculateQuote />}
-            />
-            <Route
-              path="quote-calculation/:unique_id"
-              element={<CalculateQuote />}
-            />
-          </Route>
-
-
-
-          <Route
-            path="/settings/calculators/departments"
-            element={<Departments />}
-          />
-          
+          <Route path="/settings/generalinformation" element={<GeneralInformation />} />
+          <Route path="/settings/generalinformation/bank-details" element={<BankDetails />} />
+          <Route path="/settings/generalinformation/region-and-language" element={<RegionLanguage />} />
+          <Route path="/settings/generalinformation/profile" element={<MyProfile profileData={profileData} />} />
+          <Route path="/settings/generalinformation/subscription" element={<Subscription />} />
+          <Route path="/settings/generalinformation/bills" element={<Bills />} />
+          <Route path="/settings/generalinformation/billing-info" element={<BillingInfo />} />
+          <Route path="/settings/users/desktop" element={<Users />} />
+          <Route path="/settings/users/mobile-app" element={<MobileApp />} />
+          <Route path="/settings/calculators/departments" element={<Departments />} />
           <Route path="/settings/location" element={<Location />} />
+          <Route path="/settings/templates/job-templates" element={<JobTemplates />} />
+          <Route path="/settings/templates/email-templates" element={<EmailTemplates />} />
+          <Route path="/settings/templates/email-templates/new" element={<CreateEmailTemplate />} />
+          <Route path="/settings/templates/email-templates/:id" element={<CreateEmailTemplate />} />
+          <Route path="/settings/templates/email-signatures" element={<EmailSignatures />} />
+          <Route path="/settings/templates/proposal-templates" element={<ProposalTemplates />} />
+          <Route path="/settings/templates/proposal-templates/new" element={<CreateProposalTemplate />} />
+          <Route path="/settings/templates/proposal-templates/:id" element={<CreateProposalTemplate />} />
+          <Route path="/settings/companyethos/company-ethos" element={<CompanyEthos />} />
+          <Route path="/settings/integrations" element={<Integrations />} />
+          <Route path="/settings/quotesjobs/recurring-quotes" element={<RecurringQuotes />} />
+          <Route path="/settings/quotesjobs/recurring-jobs" element={<RecurringJobs />} />
+          <Route path="/settings/projectstatus/project-status" element={<ProjectStatus />} />
+          <Route path="/settings/projectstatus/outgoing-emails" element={<OutgoingEmails />} />
+          <Route path="/settings/termsandconditions/terms-and-conditions" element={<TermsandConditions />} />
+          <Route path="/settings/termsandconditions/terms-and-conditions-invoice" element={<TermsConditionsInvoice />} />
+          <Route path="/settings/customerssettings/industries" element={<CustomersIndustries />} />
+          <Route path="/settings/customerssettings/customers-discount-category" element={<CustomersDiscountCategory />} />
+          <Route path="/settings/accounting/expenses" element={<ExpensesAccount />} />
+          <Route path="/settings/accounting/department-turnover-plan" element={<DepartmentTurnoverPlan />} />
+          <Route path="/settings/notifications/dashboard-notifications" element={<DashboardNotifications />} />
+          <Route path="/settings/notifications/app-notifications" element={<AppNotifications />} />
+          <Route path="/settings/notifications/email-notifications" element={<EmailNotifications />} />
+          <Route path="/settings/templates/edit-template/" element={<EditTemplates />} />
+          <Route path="/settings/templates/edit-email/" element={<EditEmail />} />
+          <Route path="/settings/templates/edit-signatures/" element={<EditSignatures />} />
+          <Route path="/settings/templates/edit-proposal/" element={<EditProposal />} />
 
-          <Route
-            path="/settings/templates/job-templates"
-            element={<JobTemplates />}
-          />
-          <Route
-            path="/settings/templates/email-templates"
-            element={<EmailTemplates />}
-          />
-          <Route
-            path="/settings/templates/email-templates/new"
-            element={<CreateEmailTemplate />}
-          />
-          <Route
-            path="/settings/templates/email-templates/:id"
-            element={<CreateEmailTemplate />}
-          />
-          <Route
-            path="/settings/templates/email-signatures"
-            element={<EmailSignatures />}
-          />
-          <Route
-            path="/settings/templates/proposal-templates"
-            element={<ProposalTemplates />}
-          />
-          <Route
-            path="/settings/templates/proposal-templates/new"
-            element={<CreateProposalTemplate />}
-          />
-          <Route
-            path="/settings/templates/proposal-templates/:id"
-            element={<CreateProposalTemplate />}
-          />
-
-          <Route
-            path="/settings/companyethos/company-ethos"
-            element={<CompanyEthos />}
-          />
-          <Route
-            path="/settings/integrations"
-            element={<Integrations />}
-          />
-          <Route
-            path="/settings/quotesjobs/recurring-quotes"
-            element={<RecurringQuotes />}
-          />
-
-          <Route
-            path="/settings/quotesjobs/recurring-jobs"
-            element={<RecurringJobs />}
-          />
-          <Route
-            path="/settings/projectstatus/project-status"
-            element={<ProjectStatus />}
-          />
-          <Route
-            path="/settings/projectstatus/outgoing-emails"
-            element={<OutgoingEmails />}
-          />
-
-          <Route
-            path="/settings/termsandconditions/terms-and-conditions"
-            element={<TermsandConditions />}
-          />
-          <Route
-            path="/settings/termsandconditions/terms-and-conditions-invoice"
-            element={<TermsConditionsInvoice />}
-          />
-          <Route
-            path="/settings/customerssettings/industries"
-            element={<CustomersIndustries />}
-          />
-          <Route
-            path="/settings/customerssettings/customers-discount-category"
-            element={<CustomersDiscountCategory />}
-          />
-
-
-          <Route
-            path="/settings/accounting/expenses"
-            element={<ExpensesAccount />}
-          />
-
-          <Route
-            path="/settings/accounting/department-turnover-plan"
-            element={<DepartmentTurnoverPlan />}
-          />
-
-          <Route
-            path="/settings/notifications/dashboard-notifications"
-            element={<DashboardNotifications />}
-          />
-
-          <Route
-            path="/settings/notifications/app-notifications"
-            element={<AppNotifications />}
-          />
-
-          <Route
-            path="/settings/notifications/email-notifications"
-            element={<EmailNotifications />}
-          />
-          <Route
-            path="/demo"
-            element={<DemoTable />}
-          />
-
-          <Route
-            path="/settings/templates/edit-template/"
-            element={<EditTemplates />}
-          />
-          <Route
-            path="/settings/templates/edit-email/"
-            element={<EditEmail />}
-          />
-          <Route
-            path="/settings/templates/edit-signatures/"
-            element={<EditSignatures />}
-          />
-          <Route
-            path="/settings/templates/edit-proposal/"
-            element={<EditProposal />}
-          />
-
-
-
-
+          <Route path="/404" element={<NotFoundTemplate />} />
+          <Route path="/demo" element={<DemoTable />} />
 
         </Routes>
         <Outlet />

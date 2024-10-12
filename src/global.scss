@@ -5,6 +5,10 @@
   box-shadow: none !important;
 }
 
+.font-Weight-600, .font-Weight-600 > span {
+  font-weight: 600 !important;
+}
+
 .solid-button,
 .solid-button:hover,
 .solid-button:focus {
@@ -17,6 +21,21 @@
   justify-content: center;
   border: 1px solid var(--Primary-600, #158ecc);
   background: var(--Primary-600, #158ecc) !important;
+}
+
+.success-button,
+.success-button:hover,
+.success-button:focus {
+  gap: 8px;
+  display: flex;
+  padding: 10px 18px;
+  border-radius: 4px;
+  align-items: center;
+  font-family: "Inter";
+  font-weight: 600;
+  justify-content: center;
+  border: 1px solid var(--Primary-600, #17B26A);
+  background: var(--Primary-600, #17B26A) !important;
 }
 
 .outline-button,
