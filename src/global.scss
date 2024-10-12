@@ -1,11 +1,19 @@
 @use "three-dots";
 
-.outline-none, .outline-none:focus, .outline-none:hover, input {
+.w-fit {
+  width: fit-content;
+}
+
+.outline-none,
+.outline-none:focus,
+.outline-none:hover,
+input {
   outline: none !important;
   box-shadow: none !important;
 }
 
-.font-Weight-600, .font-Weight-600 > span {
+.font-Weight-600,
+.font-Weight-600 > span {
   font-weight: 600 !important;
 }
 
@@ -34,8 +42,8 @@
   font-family: "Inter";
   font-weight: 600;
   justify-content: center;
-  border: 1px solid var(--Primary-600, #17B26A);
-  background: var(--Primary-600, #17B26A) !important;
+  border: 1px solid var(--Primary-600, #17b26a);
+  background: var(--Primary-600, #17b26a) !important;
 }
 
 .outline-button,
@@ -83,15 +91,15 @@
   justify-content: center;
   outline: none !important;
   box-shadow: none !important;
-  background: #fff !important;
+  background: #fef3f2 !important;
   border-radius: 4px;
-  border: 1px solid #FDA29B;
-  color: #B42318;
+  border: 1px solid #fda29b;
+  color: #b42318;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 24px; 
+  line-height: 24px;
 }
 
 .success-outline-button,
@@ -105,20 +113,20 @@
   justify-content: center;
   outline: none !important;
   box-shadow: none !important;
-  background: #ECFDF3 !important;
+  background: #ecfdf3 !important;
   border-radius: 4px;
-  border: 1px solid #A9EFC5;
+  border: 1px solid #a9efc5;
   color: #067647;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 24px; 
+  line-height: 24px;
 }
 
 .danger-button,
 .danger-button:hover,
-.danger-button:focus  {
+.danger-button:focus {
   gap: 8px;
   display: flex;
   font-family: "Inter";
@@ -194,30 +202,53 @@
   position: relative;
 }
 
-.customscrollBar::-webkit-scrollbar, 
-.custom-scroll-integration .p-dialog-content::-webkit-scrollbar 
-{
+.customscrollBar::-webkit-scrollbar,
+.custom-scroll-integration .p-dialog-content::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
 
 .customscrollBar::-webkit-scrollbar-track,
-.custom-scroll-integration .p-dialog-content::-webkit-scrollbar-track
- {
+.custom-scroll-integration .p-dialog-content::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
 
-.customscrollBar::-webkit-scrollbar-thumb ,
-.custom-scroll-integration .p-dialog-content::-webkit-scrollbar-thumb 
-{
+.customscrollBar::-webkit-scrollbar-thumb,
+.custom-scroll-integration .p-dialog-content::-webkit-scrollbar-thumb {
   background: #eaecf0;
   border-radius: 10px;
 }
 
-.customscrollBar::-webkit-scrollbar-thumb:hover ,
-.custom-scroll-integration .p-dialog-content::-webkit-scrollbar-thumb:hover 
-{
+.customscrollBar::-webkit-scrollbar-thumb:hover,
+.custom-scroll-integration .p-dialog-content::-webkit-scrollbar-thumb:hover {
   background: #eaecf0;
+}
+
+.text-danger,
+.text-danger:hover,
+.text-danger:focus {
+  color: #b42318 !important;
+}
+
+.info-button,
+.info-button:hover,
+.info-button:focus {
+  color: var(--Primary-700, #106b99) !important;
+
+  /* Text md/Semibold */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  display: flex;
+  padding: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Primary-200, #a3e0ff) !important;
+  background: var(--Primary-50, #ebf8ff) !important;
 }

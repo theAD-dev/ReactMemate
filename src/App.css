@@ -501,3 +501,7 @@ table.department-calculation tbody tr:hover .checkbox{
 .checkbox:has(table.department-calculation tbody tr input[type="checkbox"]:checked) {
     visibility: visible !important;
 }
+
+.proposal-accordion .p-accordion-content {
+  background: #FBFCFD;
+}

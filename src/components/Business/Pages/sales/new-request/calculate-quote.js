@@ -9,11 +9,13 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
 import { Spinner } from 'react-bootstrap';
 import SendQuote from '../../../features/sales-features/send-quote/send-quote';
+import CreateProposal from '../../../features/sales-features/create-proposal/create-proposal';
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
     const [contactPersons, setContactPersons] = useState([]);
     const [showQuoteModal, setShowQuoteModal] = useState(false);
+    const [showProposalModal, setShowProposalModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [quoteType, setQuoteType] = useState('Standard');
     const [payload, setPayload] = useState({});
@@ -293,7 +295,7 @@ const CalculateQuote = () => {
                                 </a>
                             )
                         }
-                        <button type="button" className="button-custom text-button px-2">
+                        <button type="button" className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
                             Create Proposal
                         </button>
                     </div>
@@ -321,6 +323,7 @@ const CalculateQuote = () => {
             </div>
 
             <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest} />
+            <CreateProposal show={showProposalModal} setShow={setShowProposalModal} />
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

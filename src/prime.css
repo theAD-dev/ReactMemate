@@ -102,6 +102,10 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   background: var(--Gray-50, #f9fafb);
 }
 
+.p-0.custom-modal .p-dialog-content {
+  padding: 0px !important;
+}
+
 .custom-modal .p-dialog-footer {
   padding: 24px;
 }
