@@ -64,7 +64,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
+const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save, handleOtherClose }) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
@@ -80,7 +80,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
     const [showCC, setShowCC] = useState(false);
     const [showBCC, setShowBCC] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    console.log('isLoading: ', isLoading);
     const handleClose = () => setShow(false);
     const [emailTemplateId, setEmailTemplatedId] = useState(null);
     const emailTemplateQuery = useQuery({
@@ -166,7 +165,6 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         emails = emails.filter((email) =>
             email.toLowerCase().includes(query)
         );
-        console.log('emails: ', emails);
 
         setFilteredEmails(emails);
     };

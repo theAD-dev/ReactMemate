@@ -186,7 +186,7 @@ const QuotationEmail = () => {
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
                     {
-                        quote?.status !== "Sent" && <div className={clsx(style.topCaption, style.text, style[quote?.status])}>
+                        (quote?.status !== "Sent" && quote?.status !== "Saved") && <div className={clsx(style.topCaption, style.text, style[quote?.status])}>
                             {projectStatus[quote?.status] ? projectStatus[quote?.status] : quote?.status}
                         </div>
                     }
@@ -254,8 +254,13 @@ const QuotationEmail = () => {
                             <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
                         </div>
                 </div>
+<<<<<<< HEAD
                 
                   
+=======
+                {
+                    (quote?.status === 'Sent' || quote?.status === 'Saved') && <div className={style.quotationfooter}>
+>>>>>>> 886d21a66717d699d8374f3d25eba6bd9ca19050
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
                                 <button

@@ -176,7 +176,6 @@ export const EditMergeItems = ({ id, setMergeItems, romanNo, items, title, descr
     }, [title, description, reset]);
 
     const onSubmit = (data) => {
-        console.log('data: ', data);
         setMergeItems((oldMergeItems) => {
             const updatedItems = { ...oldMergeItems };
             updatedItems[id] = {

@@ -211,7 +211,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
               </Link>
             </li>
             <li className={`${params.row.Status}`}>
-              <Link to={params.row.CalculationURL} target="_blank" rel="noopener noreferrer">
+              <Link to={`/quote/${params.row.unique_id}`} target="_blank" rel="noopener noreferrer">
                 <Link45deg color="#3366CC" size={16} />
               </Link>
             </li>

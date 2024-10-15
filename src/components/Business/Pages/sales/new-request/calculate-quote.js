@@ -99,10 +99,8 @@ const CalculateQuote = () => {
         }
 
         payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
-        console.log('payload.........: ', payload);
 
         const merges = payload.merges;
-        console.log('merges: ', merges);
         if (payload.merges) delete payload.merges;
 
         if (!payload?.client) return toast.error('Client is required');
@@ -124,9 +122,6 @@ const CalculateQuote = () => {
             };
         }
         if (unique_id) {
-            console.log('After update managers payload.....: ', payload);
-            console.log('merges: ', merges);
-
             result = await updateRequestMutation.mutateAsync(payload);
             let uniqueid = result?.unique_id;
 
@@ -136,8 +131,6 @@ const CalculateQuote = () => {
                     return map;
                 }, {});
 
-                console.log('calculatorMap: ', calculatorMap);
-
                 const updateMerges = merges?.map(item => ({
                     ...item,
                     unique_id: uniqueid,
@@ -146,7 +139,6 @@ const CalculateQuote = () => {
                     }))
                 }));
 
-                console.log('updateMerges: ', updateMerges);
                 for (const merge of updateMerges) {
                     try {
                         if (merge.id) await deleteMergeQuote(merge.id);
@@ -206,7 +198,6 @@ const CalculateQuote = () => {
         setShowQuoteModal(false);
     }
 
-    console.log('newRequestMutation.isPending || newRequestQuery.isFetching || isLoading: ', newRequestMutation.isPending, newRequestQuery.isFetching, isLoading);
     return (
         <div className='newQuotePage'>
             <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative' }}>
@@ -298,7 +289,7 @@ const CalculateQuote = () => {
                         {
                             newRequestQuery?.data?.proposal_pdf ? (
                                 <div className='d-flex align-items-center'>
-                                    <button type="button" className="button-custom text-button px-2">
+                                    <button type="button" className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
                                         Edit Proposal
                                     </button>
                                     <a href={`${newRequestQuery?.data?.proposal_pdf}`} target='_blank' type="button" className="button-custom text-button px-2">

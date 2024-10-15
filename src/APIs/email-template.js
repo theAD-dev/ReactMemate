@@ -39,6 +39,15 @@ export const getEmail = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const getProposalBySalesId = async (id) => {
+  const endpoint = `/proposals/${id}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const getOutgoingEmail = async () => {
   const endpoint = `/references/outgoing-email/`;
   const options = {

@@ -543,7 +543,6 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
         setRows(reformattedData);
         setMerges(reformattedMerges);
-        console.log('reformattedMerges: ', reformattedMerges);
 
     }, [preExistCalculation, preExistMerges, departments]);
 

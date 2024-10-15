@@ -37,6 +37,7 @@ const ExpensesPage = () => {
         mutationFn: (data) => paidExpense(data),
         onSuccess: () => {
             setRefetch((refetch) => !refetch);
+            setSelected(null);
             toast.success(`Expenses have been successfully marked as paid.`);
         },
         onError: (error) => {
@@ -48,6 +49,7 @@ const ExpensesPage = () => {
         mutationFn: (data) => unpaidExpense(data),
         onSuccess: () => {
             setRefetch((refetch) => !refetch);
+            setSelected(null);
             toast.success(`Expenses have been successfully marked as unpaid.`);
         },
         onError: (error) => {
