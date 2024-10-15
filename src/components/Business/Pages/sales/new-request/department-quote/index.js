@@ -32,7 +32,6 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
   const [isEditingReference, setIsEditingReference] = useState(false);
   const [editedDescription, setEditedDescription] = useState('');
   const [isEditingDescription, setIsEditingDescription] = useState(false);
-  console.log('payload merges.........: ', payload.merges);
   const handleEditReference = () => {
     setIsEditingReference(true);
     setEditedReference(payload.reference || '');
