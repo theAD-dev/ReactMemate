@@ -14,7 +14,6 @@ import ConfettiComponent from '../../../layout/ConfettiComponent';
 
 
 const QuoteWon = ( {salesData,saleUniqueId,LostQuote,quoteType,onRemoveRow}) => {
-  
   const [open, setOpen] = React.useState(false);
   const [confetti, setConfetti] = useState(false); 
   const handleOpen = () => setOpen(true);

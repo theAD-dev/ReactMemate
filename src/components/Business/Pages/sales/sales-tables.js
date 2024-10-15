@@ -110,13 +110,13 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       ),
 
       renderCell: (params) => (
-         <div className="innerFlex styleColor2 d-flex justify-content-between">
-         <div className="styleColor1">
-         <strong>{params.value}</strong>
-          <p>{formatDate(params.row.created)}</p>
-         </div>
-         <Link to={`/sales/quote-calculation/${params.row.unique_id}`}><Button className="linkByttonStyle" variant="link">Open</Button></Link>
-       </div>
+        <div className="innerFlex styleColor2 d-flex justify-content-between">
+          <div className="styleColor1">
+            <strong>{params.value}</strong>
+            <p>{formatDate(params.row.created)}</p>
+          </div>
+          <Link to={`/sales/quote-calculation/${params.row.unique_id}`}><Button className="linkByttonStyle" variant="link">Open</Button></Link>
+        </div>
       ),
     },
 
@@ -149,7 +149,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
               />
               <span>{params.value}</span>
             </div>
-       
+
           </div>
         </div>
       ),
@@ -454,7 +454,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
 
   return (
     <div className="salesTableWrap">
-      <TableTopBar profileData={profileData} salesData={salesData} rowsfilter={rowsfilter} removeRowMulti={removeRow} selectedUniqueIds={selected1UniqueIds()} onRowsFilterChange={handleRowsFilterChange} rows={sortedSalesData} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
+      <TableTopBar profileData={profileData} salesData={salesData} rowsfilter={rowsfilter} removeRowMulti={removeRow} selectedUniqueIds={selected1UniqueIds()} onRowsFilterChange={handleRowsFilterChange} rows={sortedSalesData} setSelectedRows={setSelectedRows} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
       <Table responsive>
         <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
           <tr>
