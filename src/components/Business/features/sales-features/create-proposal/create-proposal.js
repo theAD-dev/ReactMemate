@@ -14,7 +14,7 @@ import { Accordion, AccordionTab } from 'primereact/accordion';
 
 import style from './create-proposal.module.scss';
 import { Check2Circle, PlusLg, Upload } from 'react-bootstrap-icons';
-import { getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
+import { getProposalBySalesId, getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import SendProposal from '../send-proposal/send-proposal';
@@ -88,6 +88,21 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         queryKey: ["proposalTemplate"],
         queryFn: getProposalsTemplates,
     });
+
+    const readProposalQuery = useQuery({
+        queryKey: ["readProposal", unique_id],
+        queryFn: () => getProposalBySalesId(unique_id),
+        enabled: !!unique_id,
+        retry: 0,
+    });
+
+    useEffect(() => {
+      if (readProposalQuery?.data) {
+        console.log('read proposal: ', readProposalQuery?.data);
+        setTemplatedId(readProposalQuery?.data?.template);
+      }
+    }, [readProposalQuery?.data])
+
     const proposalQuery = useQuery({
         queryKey: ["getProposal", templateId],
         queryFn: () => getProposalsTemplate(templateId),
@@ -95,6 +110,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         retry: 0,
     });
     const sendProposalAction = () => {
+        if (!templateId) return toast.error('Template is required');
         if (!unique_id) return toast.error('Id not found');
         if (!sections?.length) return toast.error('Please add proposal content');
 
@@ -109,6 +125,11 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         if (sectionErrors.some(sectionError => Object.keys(sectionError).length > 0)) {
             newErrors.sections = sectionErrors;
         }
+
+        // if (!image) {
+        //     newErrors.image = true;
+        // }
+
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
@@ -117,6 +138,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         }
     }
     const onSubmit = async (action) => {
+        if (!templateId) return toast.error('Template is required');
         if (!unique_id) return toast.error('Id not found');
         if (!sections?.length) return toast.error('Please add proposal content');
         setErrors({});
@@ -132,6 +154,11 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         if (sectionErrors.some(sectionError => Object.keys(sectionError).length > 0)) {
             newErrors.sections = sectionErrors;
         }
+
+        // if (!image) {
+        //     newErrors.image = true;
+        // }
+
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
             const formData = new FormData();
@@ -140,8 +167,8 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                 formData.append(`sections[${index}]title`, section.title);
                 formData.append(`sections[${index}]description`, section.description);
                 formData.append(`sections[${index}]delete`, !!section.delete);
-                if (section.id) formData.append(`sections[${index}]id`, section.id);
             });
+            formData.append('template', templateId)
 
             if (action === "send") {
                 formData.append('action', 'send');
@@ -176,17 +203,18 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
 
                 if (response.ok) {
                     handleClose();
-                    toast.success("Proposal created successfully!");
+                    toast.success(`Proposal ${action === 'send' ? 'created and send' : 'created'} successfully!`);
                     refetch();
+                    readProposalQuery.refetch();
                     return "success";
                 } else {
-                    toast.error("Failed to create the proposal. Please try again.");
+                    toast.error(`Failed to ${action === 'send' ? 'create and send' : 'create'} the proposal. Please try again.`);
                     return "error";
                 }
             } catch (error) {
                 setIsLoading(false);
                 console.error("Error creating proposal:", error);
-                toast.error("Failed to create the proposal. Please try again.");
+                toast.error(`Failed to ${action === 'send' ? 'create and send' : 'create'} the proposal. Please try again.`);
                 return "error";
             } finally {
                 setIsLoading(false);
@@ -195,10 +223,10 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
     }
     const handleClose = () => {
         setShow(false);
-        setTemplatedId(null);
-        setSections([]);
-        setImage(null);
-        setFileName('');
+        // setTemplatedId(null);
+        // setSections([]);
+        // setImage(null);
+       // setFileName('');
         setShowSendModal(false);
     }
     const handleAddSection = () => {
@@ -238,14 +266,15 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                 </Button>
             </div>
         </div>
-
     );
 
     useEffect(() => {
-        if (templateId && proposalQuery?.data) {
+        if (templateId && templateId != readProposalQuery?.data?.template && proposalQuery?.data) {
             setSections(proposalQuery?.data?.sections);
+        } else if (templateId === readProposalQuery?.data?.template) {
+            setSections(readProposalQuery?.data?.sections);
         }
-    }, [templateId, proposalQuery?.data])
+    }, [templateId, proposalQuery?.data, readProposalQuery?.data])
 
     return (
         <>
@@ -287,8 +316,8 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                     </Col>
                 </Row>
                 <div className='d-flex flex-column px-4'>
-                    <div className='d-flex gap-3 align-items-center'>
-                        <Button className='outline-button w-fit mb-3' style={{ position: 'relative', cursor: 'pointer' }}>
+                    <div className='d-flex gap-3 align-items-center mb-1'>
+                        <Button className='outline-button w-fit' style={{ position: 'relative', cursor: 'pointer' }}>
                             Upload Image <Upload />
                             <input
                                 type="file"
@@ -304,14 +333,15 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                             />
                         </Button>
                         {fileName && (
-                            <span className="mb-3">{fileName}</span>
+                            <span>{fileName}</span>
                         )}
                     </div>
-
-
-                    <Accordion activeIndex={0}>
+                    {errors?.image && (
+                        <p className="error-message mb-2">{"Image is required"}</p>
+                    )}
+                    <Accordion activeIndex={0} className='mt-3'>
                         {sections?.filter(section => !section.delete)?.map((section, index) => (
-                            <AccordionTab className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
+                            <AccordionTab key={section?.id} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
                                 <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
                                     <label className={style.label}>Paragraph title</label>
                                     <IconField>
@@ -365,7 +395,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                     </Accordion>
                 </div>
             </Dialog >
-            <SendProposal show={showSendModal} setShow={setShowSendModal} contactPersons={contactPersons} setPayload={setPayload} onSubmit={onSubmit} />
+            <SendProposal show={showSendModal} setShow={setShowSendModal} contactPersons={contactPersons} setPayload={setPayload} onSubmit={onSubmit} handleClose={handleClose}/>
         </>
     )
 }

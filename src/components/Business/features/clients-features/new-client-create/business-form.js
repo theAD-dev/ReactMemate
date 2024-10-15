@@ -26,6 +26,12 @@ const schema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
+
+  contact_persons: yup.array().of(
+    yup.object({
+      email: yup.string().nullable().email('Invalid contact email format').test('is-valid', 'Contact email must be a valid email if provided', value => !value || yup.string().email().isValidSync(value)),
+    })
+  )
 }).required();
 
 const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, deleteAddress, deleteContact }, ref) => {
@@ -296,7 +302,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 </Col>
 
                 <Col sm={6}>
-                  <div className="d-flex flex-column gap-1 mb-2">
+                  <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>Email</label>
                     <IconField>
                       <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.email && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
@@ -307,7 +313,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 </Col>
 
                 <Col sm={6}>
-                  <div className="d-flex flex-column gap-1 mb-2">
+                  <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>Phone number</label>
                     <Controller
                       name={`contact_persons.${index}.phone`}

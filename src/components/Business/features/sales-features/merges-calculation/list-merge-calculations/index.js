@@ -6,7 +6,6 @@ import DeleteMerge from '../delete-merge-calculation';
 import EditMergeCalculation from '../edit-merge-calculation';
 
 const ListMergeCalculations = ({ unique_id, merges, setMerges, refetch, deleteMergeCalculator }) => {
-    console.log('merges: ', merges);
     return (
         <>
             <div className={clsx('w-100', style.divider)} style={{}}></div>

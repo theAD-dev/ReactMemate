@@ -4,16 +4,19 @@
  * @param {object} options - The fetch options including method, headers, and body.
  * @returns {Promise<any>} - The JSON response from the API.
  */
-export const fetchAPI = async (endpoint, options = {}) => {
+export const fetchAPI = async (endpoint, options = {}, isRequiredLoggedin = true) => {
     const { method = 'GET', headers = {}, body } = options;
     const accessToken = localStorage.getItem("access_token");
     const isFormData = body instanceof FormData;
 
     const defaultHeaders = {
-        'Authorization': `Bearer ${accessToken}`,
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
         ...headers
     };
+    
+    if (isRequiredLoggedin) {
+        defaultHeaders['Authorization'] = `Bearer ${accessToken}`;
+    }
 
     const requestOptions = {
         method,

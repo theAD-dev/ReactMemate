@@ -27,6 +27,11 @@ const schema = yup.object({
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   services: yup.string().required('Services is required'),
   // note: yup.string().required('Note is required'),
+  contact_persons: yup.array().of(
+    yup.object({
+      email: yup.string().nullable().email('Invalid contact email format').test('is-valid', 'Contact email must be a valid email if provided', value => !value || yup.string().email().isValidSync(value)),
+    })
+  )
 
   // addresses: yup.array().of(
   //   yup.object({
@@ -202,7 +207,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                 />
               )}
             />
-            {errors.services && <span className="text-danger">{errors.services.message}</span>}
+            {errors.services && <span className="error-message">{errors.services.message}</span>}
           </div>
         </Col>
         <Col sm={12}>
@@ -247,18 +252,18 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                 </Col>
 
                 <Col sm={6}>
-                  <div className="d-flex flex-column gap-1 mb-2">
+                  <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>Email</label>
                     <IconField>
                       <InputIcon style={{ top: '40%' }}>{errors.contact_persons?.[index]?.email && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
                       <InputText {...register(`contact_persons.${index}.email`)} rows={5} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.contact_persons?.[index]?.email })} style={{ resize: 'none' }} placeholder='golden@harvest.com' />
                     </IconField>
-                    {/* {errors.contact_persons?.[index]?.email && <p className="error-message">{errors.contact_persons?.[index]?.email?.message}</p>} */}
+                    {errors.contact_persons?.[index]?.email && <p className="error-message">{errors.contact_persons?.[index]?.email?.message}</p>}
                   </div>
                 </Col>
 
                 <Col sm={6}>
-                  <div className="d-flex flex-column gap-1 mb-2">
+                  <div className="d-flex flex-column gap-1 mb-4">
                     <label className={clsx(styles.lable)}>Phone (Optional)</label>
                     <Controller
                       name={`contact_persons.${index}.phone`}
