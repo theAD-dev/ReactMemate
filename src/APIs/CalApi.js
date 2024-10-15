@@ -151,3 +151,13 @@ export const deleteSettingCalculator = async (endpoint) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const createQuoteProposal = async (id, data) => {
+  const endpoint = `/proposals/new/${id}/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

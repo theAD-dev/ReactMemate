@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ChevronLeft, PlusSlashMinus } from 'react-bootstrap-icons'
+import { ChevronLeft, FiletypePdf, PlusSlashMinus } from 'react-bootstrap-icons'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import CustomRadioButton from './ui/custom-radio-button';
 import DepartmentQuote from './department-quote';
@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
-import { Spinner } from 'react-bootstrap';
+import { Button, Spinner } from 'react-bootstrap';
 import SendQuote from '../../../features/sales-features/send-quote/send-quote';
 import CreateProposal from '../../../features/sales-features/create-proposal/create-proposal';
 
@@ -206,7 +206,7 @@ const CalculateQuote = () => {
         setShowQuoteModal(false);
     }
 
-    console.log('newRequestMutation.isPending || newRequestQuery.isFetching || isLoading: ', newRequestMutation.isPending , newRequestQuery.isFetching , isLoading);
+    console.log('newRequestMutation.isPending || newRequestQuery.isFetching || isLoading: ', newRequestMutation.isPending, newRequestQuery.isFetching, isLoading);
     return (
         <div className='newQuotePage'>
             <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative' }}>
@@ -295,9 +295,22 @@ const CalculateQuote = () => {
                                 </a>
                             )
                         }
-                        <button type="button" className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
-                            Create Proposal
-                        </button>
+                        {
+                            newRequestQuery?.data?.proposal_pdf ? (
+                                <div className='d-flex align-items-center'>
+                                    <button type="button" className="button-custom text-button px-2">
+                                        Edit Proposal
+                                    </button>
+                                    <a href={`${newRequestQuery?.data?.proposal_pdf}`} target='_blank' type="button" className="button-custom text-button px-2">
+                                        <FiletypePdf color='#106B99' size={20} />
+                                    </a>
+                                </div>
+                            ) : (
+                                <button type="button" className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
+                                    Create Proposal
+                                </button>
+                            )
+                        }
                     </div>
                     <div className='d-flex align-items-center' style={{ gap: '8px' }}>
                         <button type="button" onClick={() => createNewRequest('draft')} className="button-custom text-button">
@@ -323,7 +336,7 @@ const CalculateQuote = () => {
             </div>
 
             <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest} />
-            <CreateProposal show={showProposalModal} setShow={setShowProposalModal} />
+            <CreateProposal show={showProposalModal} setShow={setShowProposalModal} refetch={newRequestQuery?.refetch} contactPersons={contactPersons}/>
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
@@ -332,7 +345,7 @@ const CalculateQuote = () => {
                     </Spinner>
                 </div>
             }
-        </div>
+        </div >
     )
 }
 

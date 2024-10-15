@@ -15,6 +15,9 @@ import { Accordion, AccordionTab } from 'primereact/accordion';
 import style from './create-proposal.module.scss';
 import { Check2Circle, PlusLg, Upload } from 'react-bootstrap-icons';
 import { getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
+import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import SendProposal from '../send-proposal/send-proposal';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -68,13 +71,19 @@ const renderHeader = () => (
 
 const header = renderHeader();
 
-const CreateProposal = ({ show, setShow }) => {
+const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
+    const { unique_id } = useParams();
     const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [fileName, setFileName] = useState('');
+    const [errorIndex, setErrorIndex] = useState(null);
+    const [showSendModal, setShowSendModal] = useState(false);
+    const [payload, setPayload] = useState({});
+
     const [templateId, setTemplatedId] = useState(null);
     const [sections, setSections] = useState([]);
-    const [errors, setErrors] = useState({});
+    const [image, setImage] = useState(null);
 
-    console.log('sections: ', sections);
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplate"],
         queryFn: getProposalsTemplates,
@@ -85,8 +94,113 @@ const CreateProposal = ({ show, setShow }) => {
         enabled: !!templateId,
         retry: 0,
     });
-    const onSubmit = async () => { }
-    const handleClose = () => setShow(false);
+    const sendProposalAction = () => {
+        if (!unique_id) return toast.error('Id not found');
+        if (!sections?.length) return toast.error('Please add proposal content');
+
+        const newErrors = {};
+        const sectionErrors = sections.map((section, index) => {
+            const sectionError = {};
+
+            if (!section.title) sectionError.title = true;
+            if (!section.description) sectionError.description = true;
+            return sectionError;
+        });
+        if (sectionErrors.some(sectionError => Object.keys(sectionError).length > 0)) {
+            newErrors.sections = sectionErrors;
+        }
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            setShow(false);
+            setShowSendModal(true);
+        }
+    }
+    const onSubmit = async (action) => {
+        if (!unique_id) return toast.error('Id not found');
+        if (!sections?.length) return toast.error('Please add proposal content');
+        setErrors({});
+
+        const newErrors = {};
+        const sectionErrors = sections.map((section, index) => {
+            const sectionError = {};
+
+            if (!section.title) sectionError.title = true;
+            if (!section.description) sectionError.description = true;
+            return sectionError;
+        });
+        if (sectionErrors.some(sectionError => Object.keys(sectionError).length > 0)) {
+            newErrors.sections = sectionErrors;
+        }
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length === 0) {
+            const formData = new FormData();
+
+            sections.forEach((section, index) => {
+                formData.append(`sections[${index}]title`, section.title);
+                formData.append(`sections[${index}]description`, section.description);
+                formData.append(`sections[${index}]delete`, !!section.delete);
+                if (section.id) formData.append(`sections[${index}]id`, section.id);
+            });
+
+            if (action === "send") {
+                formData.append('action', 'send');
+                formData.append('subject', payload?.subject);
+                formData.append('email_body', payload?.email_body);
+                formData.append('from_email', payload?.from_email);
+                formData.append('to', payload?.to);
+                if (payload?.cc) formData.append('cc', payload?.cc);
+                if (payload?.bcc) formData.append('bcc', payload?.bcc);
+            } else {
+                formData.append('action', 'create');
+            }
+
+            if (image) formData.append('image', image);
+            const accessToken = localStorage.getItem("access_token");
+
+            setIsLoading(true);
+            const URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/new/${unique_id}/`;
+            try {
+                setIsLoading(true);
+
+                const response = await fetch(URL, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                    body: formData,
+                });
+
+                const data = await response.json();
+                setIsLoading(false);
+
+                if (response.ok) {
+                    handleClose();
+                    toast.success("Proposal created successfully!");
+                    refetch();
+                    return "success";
+                } else {
+                    toast.error("Failed to create the proposal. Please try again.");
+                    return "error";
+                }
+            } catch (error) {
+                setIsLoading(false);
+                console.error("Error creating proposal:", error);
+                toast.error("Failed to create the proposal. Please try again.");
+                return "error";
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    }
+    const handleClose = () => {
+        setShow(false);
+        setTemplatedId(null);
+        setSections([]);
+        setImage(null);
+        setFileName('');
+        setShowSendModal(false);
+    }
     const handleAddSection = () => {
         setSections([...sections, { title: "", description: "" }]);
     };
@@ -97,23 +211,30 @@ const CreateProposal = ({ show, setShow }) => {
             )
         );
     };
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setImage(file);
+            setFileName(file.name);
+        }
+    };
     const footerContent = (
         <div className='d-flex justify-content-between'>
-            <Button className='text-button text-danger'>Cancel</Button>
+            <Button className='text-button text-danger' onClick={handleClose}>Cancel</Button>
             <div className="d-flex justify-content-end gap-2">
                 <Button className="btn info-button" onClick={handleAddSection}>
                     Add  New Section <PlusLg color='#106B99' />
                 </Button>
-                <Button className="outline-button" onClick={() => {}}>
+                <Button className="outline-button" onClick={onSubmit}>
                     Create & Save
-                </Button>
-                <Button className="solid-button" onClick={onSubmit}>
-                    Send Proposal{" "}
                     {isLoading && (
                         <ProgressSpinner
                             style={{ width: "20px", height: "20px", color: "#fff" }}
                         />
                     )}
+                </Button>
+                <Button className="solid-button" onClick={sendProposalAction}>
+                    Send Proposal
                 </Button>
             </div>
         </div>
@@ -127,101 +248,125 @@ const CreateProposal = ({ show, setShow }) => {
     }, [templateId, proposalQuery?.data])
 
     return (
-        <Dialog
-            visible={show}
-            modal={true}
-            header={headerElement}
-            footer={footerContent}
-            className={`${style.modal} custom-modal p-0`}
-            style={{ width: "896px" }}
-            onHide={handleClose}
-        >
-            <Row className='px-4 pt-4 border-bottom mb-3 bg-white'>
-                <Col sm={12} className='mb-3'>
-                    <div style={{ position: 'relative' }}>
-                        <label className={clsx(style.customLabel)}>Templates</label>
-                        <Dropdown
-                            options={
-                                (proposalTemplateQuery &&
-                                    proposalTemplateQuery.data?.map((template) => ({
-                                        value: template.id,
-                                        label: `${template.name}`,
-                                    }))) ||
-                                []
-                            }
-                            className={clsx(
-                                style.dropdownSelect,
-                                "dropdown-height-fixed w-100"
-                            )}
-                            style={{ height: "46px", paddingLeft: '88px' }}
-                            placeholder="Select template"
-                            onChange={(e) => {
-                                setTemplatedId(e.value);
-                            }}
-                            value={templateId}
-                            loading={proposalTemplateQuery?.isFetching}
-                        />
+        <>
+            <Dialog
+                visible={show}
+                modal={true}
+                header={headerElement}
+                footer={footerContent}
+                className={`${style.modal} custom-modal p-0`}
+                style={{ width: "896px" }}
+                onHide={handleClose}
+            >
+                <Row className='px-4 pt-4 border-bottom mb-3 bg-white'>
+                    <Col sm={12} className='mb-3'>
+                        <div style={{ position: 'relative' }}>
+                            <label className={clsx(style.customLabel)}>Templates</label>
+                            <Dropdown
+                                options={
+                                    (proposalTemplateQuery &&
+                                        proposalTemplateQuery.data?.map((template) => ({
+                                            value: template.id,
+                                            label: `${template.name}`,
+                                        }))) ||
+                                    []
+                                }
+                                className={clsx(
+                                    style.dropdownSelect,
+                                    "dropdown-height-fixed w-100"
+                                )}
+                                style={{ height: "46px", paddingLeft: '88px' }}
+                                placeholder="Select template"
+                                onChange={(e) => {
+                                    setTemplatedId(e.value);
+                                }}
+                                value={templateId}
+                                loading={proposalTemplateQuery?.isFetching}
+                            />
+                        </div>
+                    </Col>
+                </Row>
+                <div className='d-flex flex-column px-4'>
+                    <div className='d-flex gap-3 align-items-center'>
+                        <Button className='outline-button w-fit mb-3' style={{ position: 'relative', cursor: 'pointer' }}>
+                            Upload Image <Upload />
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                style={{
+                                    position: 'absolute',
+                                    opacity: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    cursor: 'pointer',
+                                }}
+                            />
+                        </Button>
+                        {fileName && (
+                            <span className="mb-3">{fileName}</span>
+                        )}
                     </div>
-                </Col>
-            </Row>
-            <div className='d-flex flex-column px-4'>
-                <Button className='outline-button w-fit mb-3'>Upload Image <Upload /></Button>
-                <Accordion activeIndex={0}>
-                    {sections?.filter(section => !section.delete)?.map((section, index) => (
-                        <AccordionTab className={clsx(style.accordion, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
-                            <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
-                                <label className={style.label}>Paragraph title</label>
-                                <IconField>
-                                    <InputIcon>
+
+
+                    <Accordion activeIndex={0}>
+                        {sections?.filter(section => !section.delete)?.map((section, index) => (
+                            <AccordionTab className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
+                                <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
+                                    <label className={style.label}>Paragraph title</label>
+                                    <IconField>
+                                        <InputIcon>
+                                            {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                                        </InputIcon>
+                                        <InputText
+                                            value={section?.title || ""}
+                                            className={clsx(style.inputBox, 'w-100 border mt-2')}
+                                            onChange={(e) => {
+                                                setSections(prevSections => {
+                                                    const newSections = [...prevSections];
+                                                    newSections[index] = { ...newSections[index], title: e.target.value };
+                                                    return newSections;
+                                                });
+                                            }}
+                                            placeholder="Section Title"
+                                        />
+                                    </IconField>
+                                    {errors?.sections?.[index]?.title && (
+                                        <p className="error-message mb-0">{"Title is required"}</p>
+                                    )}
+                                </div>
+                                <div className="d-flex flex-column gap-1 w-100 pb-2" style={{ position: 'relative' }}>
+                                    <label className={clsx(style.lable)}>Paragraph</label>
+                                    <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                         {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                     </InputIcon>
-                                    <InputText
-                                        value={section?.title || ""}
-                                        className={clsx(style.inputBox, 'w-100 border mt-2')}
-                                        onChange={(e) => {
+                                    <Editor
+                                        style={{ minHeight: "299px" }}
+                                        headerTemplate={header}
+                                        value={section.description}
+                                        placeholder='Enter a description...'
+                                        onTextChange={(e) => {
                                             setSections(prevSections => {
                                                 const newSections = [...prevSections];
-                                                newSections[index] = { ...newSections[index], title: e.target.value };
+                                                newSections[index] = { ...newSections[index], description: e.htmlValue };
                                                 return newSections;
                                             });
                                         }}
-                                        placeholder="Section Title"
                                     />
-                                </IconField>
-                                {errors?.sections?.[index]?.title && (
-                                    <p className="error-message mb-0">{"Title is required"}</p>
-                                )}
-                            </div>
-                            <div className="d-flex flex-column gap-1 w-100 pb-2" style={{ position: 'relative' }}>
-                                <label className={clsx(style.lable)}>Paragraph</label>
-                                <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
-                                    {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                </InputIcon>
-                                <Editor
-                                    style={{ minHeight: "299px" }}
-                                    headerTemplate={header}
-                                    value={section.description}
-                                    placeholder='Enter a description...'
-                                    onTextChange={(e) => {
-                                        setSections(prevSections => {
-                                            const newSections = [...prevSections];
-                                            newSections[index] = { ...newSections[index], description: e.htmlValue };
-                                            return newSections;
-                                        });
-                                    }}
-                                />
-                                {errors?.sections?.[index]?.description && (
-                                    <p className="error-message mb-0">{"Message is required"}</p>
-                                )}
-                            </div>
-                            <div className='bg-white mt-2 pt-2 d-flex justify-content-end'>
-                                <Button className='danger-outline-button' onClick={() => handleDeleteSection(index)}>Delete Paragraph</Button>
-                            </div>
-                        </AccordionTab>
-                    ))}
-                </Accordion>
-            </div>
-        </Dialog>
+                                    {errors?.sections?.[index]?.description && (
+                                        <p className="error-message mb-0">{"Message is required"}</p>
+                                    )}
+                                </div>
+                                <div className='bg-white mt-2 pt-2 d-flex justify-content-end'>
+                                    <Button className='danger-outline-button' onClick={() => handleDeleteSection(index)}>Delete Paragraph</Button>
+                                </div>
+                            </AccordionTab>
+                        ))}
+                    </Accordion>
+                </div>
+            </Dialog >
+            <SendProposal show={showSendModal} setShow={setShowSendModal} contactPersons={contactPersons} setPayload={setPayload} onSubmit={onSubmit} />
+        </>
     )
 }
 
