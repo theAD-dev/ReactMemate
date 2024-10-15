@@ -186,7 +186,7 @@ const QuotationEmail = () => {
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
                     {
-                        (quote?.status !== "Sent" && quote?.status !== "Save") && <div className={clsx(style.topCaption, style.text, style[quote?.status])}>
+                        (quote?.status !== "Sent" && quote?.status !== "Saved") && <div className={clsx(style.topCaption, style.text, style[quote?.status])}>
                             {projectStatus[quote?.status] ? projectStatus[quote?.status] : quote?.status}
                         </div>
                     }
@@ -254,7 +254,7 @@ const QuotationEmail = () => {
                     </div>
                 </div>
                 {
-                    (quote?.status === 'Sent' || quote?.status === 'Save') && <div className={style.quotationfooter}>
+                    (quote?.status === 'Sent' || quote?.status === 'Saved') && <div className={style.quotationfooter}>
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
                                 <button
