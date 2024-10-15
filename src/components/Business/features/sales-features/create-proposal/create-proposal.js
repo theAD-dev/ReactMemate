@@ -126,9 +126,9 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             newErrors.sections = sectionErrors;
         }
 
-        if (!image) {
-            newErrors.image = true;
-        }
+        // if (!image) {
+        //     newErrors.image = true;
+        // }
 
         setErrors(newErrors);
 
@@ -155,9 +155,9 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             newErrors.sections = sectionErrors;
         }
 
-        if (!image) {
-            newErrors.image = true;
-        }
+        // if (!image) {
+        //     newErrors.image = true;
+        // }
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
@@ -223,10 +223,10 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
     }
     const handleClose = () => {
         setShow(false);
-        setTemplatedId(null);
-        setSections([]);
-        setImage(null);
-        setFileName('');
+        // setTemplatedId(null);
+        // setSections([]);
+        // setImage(null);
+       // setFileName('');
         setShowSendModal(false);
     }
     const handleAddSection = () => {
