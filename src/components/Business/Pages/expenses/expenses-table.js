@@ -117,7 +117,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={` ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
                 $ {(rowData.total).toFixed(2)}
-                <span onClick={() => setShowDialog({ data: rowData, show: true })} className={style.plusIcon}><Plus size={12} color="#7a271a" /></span>
+                {/* <span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span> */}
             </div>
         </div>
     }
@@ -136,12 +136,15 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
 
     const StatusBody = (rowData) => {
         if (rowData.paid)
-            return <div className={`${style.status} ${style.active}`}>
-                <Badge severity="success"></Badge> Paid
-            </div>
-        return <div className={`${style.status} ${style.inactive}`}>
-            Not Paid <Badge severity="danger"></Badge>
-        </div>
+            return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='success-outline-button font-14' style={{ width: '86px', height: '36px' }}>Paid</Button>
+        return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='danger-outline-button font-14' style={{ width: '86px', height: '36px' }}>Not Paid</Button>
+
+        //  <div className={`${style.status} ${style.inactive}`}>
+        //     Not Paid <Badge severity="danger"></Badge>
+        // </div>
+        // <div className={`${style.status} ${style.active}`}>
+        //     <Badge severity="success"></Badge> Paid
+        // </div>
     }
 
     const loadingIconTemplate = () => {
@@ -152,7 +155,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
         </div>
     }
 
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
+    const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
@@ -188,7 +191,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
             <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
-            <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch}/>
+            <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />
         </>
     )
 })

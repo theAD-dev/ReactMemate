@@ -14,10 +14,6 @@ import ConfettiComponent from '../../../layout/ConfettiComponent';
 
 
 const QuoteWon = ({ salesData, saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
-  console.log('wonQuote: ', wonQuote);
-
-
-
   const [open, setOpen] = React.useState(false);
   const [confetti, setConfetti] = useState(false);
   const handleOpen = () => setOpen(true);

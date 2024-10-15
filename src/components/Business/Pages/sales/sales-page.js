@@ -3,9 +3,9 @@ import "./sales-style.css";
 import SalesTables from "./sales-tables";
 import { fetchSales } from "../../../../APIs/SalesApi";
 
-const Sales = ({profileData}) => {
+const Sales = () => {
+  const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [salesData, setSalesData] = useState([]);
-  // const [flag,setFlag] = useState(false)
   useEffect(() => {
     fetchData(); 
   }, []);

@@ -39,6 +39,7 @@ const TableTopBar = ({
   selectedRowCount,
   selectClass,
   selectedRow,
+  setSelectedRows,
   profileData
 }) => {
   const [totalAmount, setTotalAmount] = useState(0);
@@ -59,6 +60,7 @@ const TableTopBar = ({
       if (selectedUniqueIds) {
         const success = await fetchMultipleData(selectedUniqueIds);
         if (success) {
+          setSelectedRows([]);
           removeRowMulti();
           setConfetti(true);
           setMessage({
@@ -87,6 +89,7 @@ const TableTopBar = ({
       if (selectedUniqueIds) {
         const success = await fetchMultipleLost(selectedUniqueIds);
         if (success) {
+          setSelectedRows([]);
           removeRowMulti();
           setConfetti(true);
           setMessage({
@@ -127,7 +130,7 @@ const TableTopBar = ({
         (total, sale) => total + sale.amountData,
         0
       );
-      setTotalFAmount(calculatedFilterAmount); 
+      setTotalFAmount(calculatedFilterAmount);
     }
   }, [rowsfilter]);
 
@@ -410,7 +413,7 @@ const TableTopBar = ({
                       <NavLink to="#">Sales</NavLink>
                     </li>
                     <li>
-                    {profileData && profileData.bank_detail && profileData.bank_detail.account_number ? (
+                      {profileData && profileData.bank_detail && profileData.bank_detail.account_number ? (
                         <NavLink className="tabActive" to="/sales/newquote/selectyourclient">
                           New <PlusLg color="#fff" size={16} />
                         </NavLink>
@@ -426,21 +429,21 @@ const TableTopBar = ({
                   <p className="flexEndStyle styleT3">
                     Total{" "}
                     <span className="styleT2">
-                    
-                    {rowsfilter.length ? (
-                      <> {rowsfilter.length}</>
-                    ) : (
-                      <>{salesData.length} </>
-                    )}
-                    
-                    Sales</span>{" "}
+
+                      {rowsfilter.length ? (
+                        <> {rowsfilter.length}</>
+                      ) : (
+                        <>{salesData.length} </>
+                      )}
+
+                      Sales</span>{" "}
                     <strong className="styleT1">
-                    ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
+                      ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
                         <>{formattedFAmount}</>
                       ) : (
                         <>{formattedAmount}</>
                       )}
-                  </strong>
+                    </strong>
                   </p>
                 ) : (
                   <p className="flexEndStyle styleT3">
@@ -506,31 +509,37 @@ const TableTopBar = ({
                       <NavLink to="/sales">Sales</NavLink>
                     </li>
                     <li>
-                      <BankDetailsModel />
+                      {profileData && profileData.bank_detail && profileData.bank_detail.account_number ? (
+                        <NavLink className="tabActive" to="/sales/newquote/selectyourclient">
+                          New <PlusLg color="#fff" size={16} />
+                        </NavLink>
+                      ) : (
+                        <BankDetailsModel />
+                      )}
                     </li>
                   </ul>
                 </div>
               </Col>
               <Col style={{ textAlign: "right" }}>
-              {salesData && salesData.length > 0 ? (
+                {salesData && salesData.length > 0 ? (
                   <p className="flexEndStyle styleT3">
                     Total{" "}
                     <span className="styleT2">
-                    
-                    {rowsfilter.length ? (
-                      <> {rowsfilter.length}</>
-                    ) : (
-                      <>{salesData.length} </>
-                    )}
-                    
-                    Sales</span>{" "}
+
+                      {rowsfilter.length ? (
+                        <> {rowsfilter.length}</>
+                      ) : (
+                        <>{salesData.length} </>
+                      )}
+
+                      Sales</span>{" "}
                     <strong className="styleT1">
-                    ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
+                      ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
                         <>{formattedFAmount}</>
                       ) : (
                         <>{formattedAmount}</>
                       )}
-                  </strong>
+                    </strong>
                   </p>
                 ) : (
                   <p className="flexEndStyle styleT3">

@@ -11,6 +11,7 @@ import { Dialog } from "primereact/dialog";
 import googleReview from "../../../assets/images/icon/checbold.svg";
 import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
+import clsx from 'clsx';
 
 const QuotationEmail = () => {
     const { id } = useParams();
@@ -43,6 +44,7 @@ const QuotationEmail = () => {
         try {
             setActionLoading(prev => ({ ...prev, decline: true }));
             await quotationDecline(id);
+            fetchData();
             toast.success("Quotation declined successfully.");
         } catch (error) {
             console.error('Error declining quotation: ', error);
@@ -74,6 +76,7 @@ const QuotationEmail = () => {
         try {
             setActionLoading(prev => ({ ...prev, accept: true }));
             await quotationAccept(id);
+            fetchData();
             toast.success("Quotation accepted successfully.");
         } catch (error) {
             console.error('Error accepting quotation: ', error);
@@ -142,23 +145,22 @@ const QuotationEmail = () => {
 
     const footerGroup = (
         <ColumnGroup>
-            <Row>  
+            <Row>
                 <Column colSpan={4} />
                 <Column footer="Subtotal" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
                 <Column footer={`\$${quote?.subtotal}`} className={`${style.footerBoldTextLight} ${style.footerBorder}`} />
             </Row>
             <Row>
-            <Column colSpan={4} />
+                <Column colSpan={4} />
                 <Column footer="GST (10%)" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${quote?.gst}`} className={`${style.footerBoldTextLight} ${style.footerBorder}`}/>
+                <Column footer={`\$${quote?.gst}`} className={`${style.footerBoldTextLight} ${style.footerBorder}`} />
             </Row>
             <Row>
-            <Column colSpan={4} />
-            <Column footer="Total" className={`${style.footerBoldText} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-            <Column footer={`\$${quote?.total}`} className={`${style.footerBoldText} ${style.footerBorder}`} />
-    </Row>
+                <Column colSpan={4} />
+                <Column footer="Total" className={`${style.footerBoldText} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
+                <Column footer={`\$${quote?.total}`} className={`${style.footerBoldText} ${style.footerBorder}`} />
+            </Row>
             <Row>
-                
                 <Column
                     footer={(
                         <div className={style.qupteMainColFooter}>
@@ -173,11 +175,23 @@ const QuotationEmail = () => {
         </ColumnGroup>
     );
 
+    const projectStatus = {
+        'Accepted': 'Accepted',
+        'Declined': 'Declined',
+        'Review': 'Under Review',
+        'Completed': 'Project Completed'
+    }
     return (
         <>
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
-                    <div className={style.quotationWrapper}>
+                    {
+                        quote?.status !== "Sent" && <div className={clsx(style.topCaption, style.text, style[quote?.status])}>
+                            {projectStatus[quote?.status] ? projectStatus[quote?.status] : quote?.status}
+                        </div>
+                    }
+
+                    <div className={clsx(style.quotationWrapper, style[quote?.status])}>
                         <div className={style.quotationHead}>
                             <div className={style.left}>
                                 <h1>Quotation</h1>
@@ -227,9 +241,9 @@ const QuotationEmail = () => {
                             <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable}>
                                 <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '17.21px' }} />
                                 <Column field="index" body={ServicesBody} header="Services" style={{ width: '400px' }} />
-                                <Column field="quantity"  header="Qty/Hours" style={{ width: '174px', textAlign: 'right', color: '#667085' }} headerClassName='headerRightAligh' />
+                                <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', color: '#667085' }} headerClassName='headerRightAligh' />
                                 <Column field="unit_price" body={unitPriceBody} header="Price" style={{ width: '130px', textAlign: 'right' }} headerClassName='headerRightAligh' />
-                                <Column field="discount" body={discountBody}  header="Discount" style={{ width: '120px', color: '#667085', textAlign: 'right' }} headerClassName='headerRightAligh' />
+                                <Column field="discount" body={discountBody} header="Discount" style={{ width: '120px', color: '#667085', textAlign: 'right' }} headerClassName='headerRightAligh' />
                                 <Column field="total" body={TotalBody} header="Total" style={{ width: '66px', textAlign: 'right' }} headerClassName='headerRightAligh' />
                             </DataTable>
                         </div>
@@ -239,36 +253,35 @@ const QuotationEmail = () => {
                         </div>
                     </div>
                 </div>
-
-                <div className={style.quotationfooter}>
-                    <div className={style.contanerfooter}>
-                        <div className={style.left}>
-                            <button
-                                className={style.decline}
-                                onClick={handleDecline}
-                                disabled={actionLoading.decline}
-                            >
-                                {actionLoading.decline ? 'Declining...' : 'Decline'}
-                            </button>
-                        </div>
-                        <div className={style.right}>
-                            <button
-                                // onClick={handleRequestChanges}
-                                onClick={() => { setVisible(true) }}
-                            // disabled={actionLoading.changes}
-                            >
-                                {actionLoading.changes ? 'Requesting changes...' : 'Request changes'}
-                            </button>
-                            <button
-                                className={style.accept}
-                                onClick={handleAccept}
-                                disabled={actionLoading.accept}
-                            >
-                                {actionLoading.accept ? 'Accepting...' : 'Accept'}
-                            </button>
+                {
+                    quote?.status === 'Sent' && <div className={style.quotationfooter}>
+                        <div className={style.contanerfooter}>
+                            <div className={style.left}>
+                                <button
+                                    className={style.decline}
+                                    onClick={handleDecline}
+                                    disabled={actionLoading.decline}
+                                >
+                                    {actionLoading.decline ? 'Declining...' : 'Decline'}
+                                </button>
+                            </div>
+                            <div className={style.right}>
+                                <button
+                                    onClick={() => { setVisible(true) }}
+                                >
+                                    {actionLoading.changes ? 'Requesting changes...' : 'Request changes'}
+                                </button>
+                                <button
+                                    className={style.accept}
+                                    onClick={handleAccept}
+                                    disabled={actionLoading.accept}
+                                >
+                                    {actionLoading.accept ? 'Accepting...' : 'Accept'}
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             </div>
 
             <Dialog

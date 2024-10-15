@@ -456,7 +456,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
                             <Col>
                                 <label>Quantity/Hours</label>
-                                <strong>$ {parseFloat(calculator?.quantity || 0)}</strong>
+                                <strong>{parseFloat(calculator?.quantity || 0)}</strong>
                             </Col>
                             <Col>
                                 <label>Sub Total:</label>
@@ -676,13 +676,13 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
             <div className={style.calculateBox}>
                 <ul>
                     <li>
-                        <div className={`${style.profit} ${style.boxcal}`}>
-                            <h6>Operational Profit</h6>
-                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
-                        </div>
                         <div className={`${style.boxcal}`}>
                             <h6>Budget</h6>
                             <strong>{formatMoney(+summary.budget)}</strong>
+                        </div>
+                        <div className={`${style.profit} ${style.boxcal}`}>
+                            <h6>Operational Profit</h6>
+                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
                         </div>
                     </li>
                     <li>
@@ -768,13 +768,13 @@ const EditCalculators = ({ editSubIndex, calculators }) => {
             <div className={style.calculateBox}>
                 <ul>
                     <li>
-                        <div className={`${style.profit} ${style.boxcal}`}>
-                            <h6>Operational Profit</h6>
-                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
-                        </div>
                         <div className={`${style.boxcal}`}>
                             <h6>Budget</h6>
                             <strong>{formatMoney(+summary.budget)}</strong>
+                        </div>
+                        <div className={`${style.profit} ${style.boxcal}`}>
+                            <h6>Operational Profit</h6>
+                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
                         </div>
                     </li>
                     <li>
