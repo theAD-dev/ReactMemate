@@ -26,7 +26,6 @@
       0px 6.884px 10.326px -3.442px rgba(16, 24, 40, 0.03);
     width: 1024px;
     margin: 0 auto;
-
     z-index: 9;
     position: relative;
     .quotationHead {
@@ -35,22 +34,24 @@
       justify-content: space-between;
       .left {
         h1 {
-          color: var(--Gray-900, #1a1c21);
-          font-size: 48.188px;
+          margin: 0;
+          color: var(--Gray-900, #1A1C21);
+          font-size: 48px;
           font-style: normal;
           font-weight: 600;
-          line-height: 55.072px;
+          line-height: 55.072px; 
           text-transform: capitalize;
-          margin: 0;
         }
         span {
           background: var(--Gray-800, #1d2939);
           padding: 2px 6.884px;
           color: var(--Colors-Foreground-fg-white, #fff);
+          color: var(--Colors-Foreground-fg-white, #FFF);
+          font-family: Inter;
           font-size: 18.931px;
           font-style: normal;
           font-weight: 500;
-          line-height: 27.536px;
+          line-height: 27.536px; 
           letter-spacing: 0.568px;
           text-transform: uppercase;
         }
@@ -143,30 +144,42 @@
   .left {
     width: 50%;
     p {
-      color: var(--Gray-800, #1d2939);
-      font-size: 13.768px;
+      margin: 0;
+      color: var(--Gray-800, #1D2939);
+      font-family: Inter;
+      font-size: 12px;
       font-style: normal;
       font-weight: 500;
-      line-height: 20.652px;
-      letter-spacing: 0.138px;
-      margin: 0;
+      line-height: 22px; 
+      letter-spacing: 0.12px;
+      span{
+        color: var(--Gray-800, #1D2939);
+        font-family: Inter;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 22px; 
+        letter-spacing: 0.12px;
+      }
     }
   }
   .right {
     width: 50%;
     p {
-      color: var(--Gray-800, #1d2939);
-      font-size: 15.489px;
+      margin: 0;
+      color: var(--Gray-800, #1D2939);
+      font-family: Inter;
+      font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      line-height: 24.094px;
-      margin: 0;
+      line-height: 24.094px; 
       strong {
-        color: var(--Gray-800, #1d2939);
-        font-size: 15.489px;
+        color: var(--Gray-800, #1D2939);
+        font-family: Inter;
+        font-size: 14px;
         font-style: normal;
         font-weight: 600;
-        line-height: 24.094px;
+        line-height: 24.094px; 
       }
     }
   }
@@ -179,29 +192,32 @@
   .left {
     width: 50%;
     p {
+      margin-bottom: 5px;
       color: var(--Gray-600, #475467);
-      font-size: 15.489px;
+      font-family: Inter;
+      font-size: 16px;
       font-style: normal;
       font-weight: 400;
-      line-height: 24.094px;
-      margin-bottom: 5px;
+      line-height: 24px; 
     }
     ul {
       li {
-        color: var(--Gray-800, #1d2939);
-        font-size: 15.489px;
+        color: var(--Gray-800, #1D2939);
+        font-family: Inter;
+        font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: 24.094px;
-        letter-spacing: 0.155px;
+        line-height: 24px; 
+        letter-spacing: 0.16px;
         padding: 3px 0;
         strong {
-          color: var(--Gray-800, #1d2939);
-          font-size: 15.489px;
+          color: var(--Gray-800, #1D2939);
+          font-family: Inter;
+          font-size: 16px;
           font-style: normal;
           font-weight: 600;
-          line-height: 24.094px;
-          letter-spacing: 0.194px;
+          line-height: 24px; 
+          letter-spacing: 0.2px;
         }
       }
     }
@@ -218,20 +234,22 @@
     }
     ul {
       li {
-        color: var(--Gray-800, #1d2939);
-        font-size: 15.489px;
+        color: var(--Gray-800, #1D2939);
+        font-family: Inter;
+        font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: 24.094px;
-        letter-spacing: 0.155px;
+        line-height: 24px; 
+        letter-spacing: 0.16px;
         padding: 3px 0;
         strong {
-          color: var(--Gray-800, #1d2939);
-          font-size: 15.489px;
+          color: var(--Gray-800, #1D2939);
+          font-family: Inter;
+          font-size: 16px;
           font-style: normal;
           font-weight: 600;
-          line-height: 24.094px;
-          letter-spacing: 0.194px;
+          line-height: 24px; 
+          letter-spacing: 0.2px;
         }
       }
     }
@@ -299,31 +317,35 @@
 .qupteMainColWrap {
   h2 {
     color: var(--Gray-700, #344054);
-    font-size: 15px;
+    font-family: Inter;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 27.536px;
-    letter-spacing: 0.172px;
+    line-height: 24px; 
+    letter-spacing: 0.16px;
     margin: 0;
   }
   ul {
     p {
       color: var(--Gray-500, #667085);
-      font-size: 13.768px;
+      font-family: Inter;
+      font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      line-height: 20.652px;
-      letter-spacing: 0.138px;
+      line-height: 20px; 
+      letter-spacing: 0.14px;
       margin: 0;
     }
     li {
       color: var(--Gray-500, #667085);
-      font-size: 13.768px;
+      font-family: Inter;
+      font-size: 14px;
       font-style: normal;
-      font-weight: 400;
-      line-height: 20.652px;
-      letter-spacing: 0.138px;
       list-style: disc;
+      font-weight: 400;
+      line-height: 20px; 
+      letter-spacing: 0.14px;
+      position: relative;
       margin-left: 15px;
     }
   }
@@ -332,21 +354,22 @@
   tr {
     th {
       border: 0;
-      color: var(--Gray-900, #101828);
-      font-size: 13.768px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 24.094px;
       text-align: right !important;
       justify-content: flex-end;
       background: #f9fafb;
+      color: var(--Gray-900, #101828);
+      font-family: Inter;
+      font-size: 12px !important;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24.094px; 
     }
   }
   tr {
     td {
       border: 0;
       color: var(--Gray-500, #344054);
-      font-size: 12px;
+      // font-size: 12px;
       font-style: normal;
       font-weight: 400;
       line-height: 24.094px;
@@ -360,20 +383,22 @@
 
 .qupteMainColFooter {
   h2 {
-    color: var(--Gray-800, #1d2939);
-    font-size: 12px;
+    color: var(--Gray-800, #1D2939);
+    font-family: Inter;
+    font-size: 17.21px;
     font-style: normal;
     font-weight: 600;
-    line-height: 14px;
-    letter-spacing: 0.113px;
+    line-height: 24px; 
+    letter-spacing: 0.215px;
   }
   p {
     color: var(--Gray-600, #475467);
-    font-size: 12px;
+    font-family: Inter;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 12px;
-    letter-spacing: 0.08px;
+    line-height: 20px; 
+    letter-spacing: 0.14px;
   }
 }
 .footerBorder {
@@ -388,17 +413,26 @@
 }
 .footerBoldText {
   color: var(--Gray-900, #101828) !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-style: normal !important;
   font-weight: 600 !important;
   line-height: 14px !important;
 }
 .footerBoldTextLight {
   color: var(--Gray-800, #1d2939) !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-style: normal !important;
   font-weight: 400 !important;
   line-height: 14px !important;
+}
+.footerBoldTextLight1{
+  color: var(--Gray-800, #1D2939);
+text-align: right!important;
+font-family: Inter!important;
+font-size: 18px!important;
+font-style: normal!important;
+font-weight: 400;
+line-height: 24px!important;
 }
 .logoWrapperFooter {
   display: flex;
@@ -406,9 +440,10 @@
   padding: 56px 0 26px;
   p {
     color: var(--Gray-500, #667085);
-    font-size: 11px;
+    font-family: Inter;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 400;
     line-height: normal;
     img {
       width: 37px;
