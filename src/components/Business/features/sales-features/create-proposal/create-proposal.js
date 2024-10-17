@@ -167,6 +167,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                 formData.append(`sections[${index}]title`, section.title);
                 formData.append(`sections[${index}]description`, section.description);
                 formData.append(`sections[${index}]delete`, !!section.delete);
+                if (readProposalQuery?.data) formData.append(`sections[${index}]id`, section.id);
             });
             formData.append('template', templateId)
 
@@ -186,12 +187,17 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             const accessToken = localStorage.getItem("access_token");
 
             setIsLoading(true);
-            const URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/new/${unique_id}/`;
+            let method = "POST"
+            let URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/new/${unique_id}/`;
+            if (readProposalQuery?.data) {
+                method = "PUT"
+                URL =  `${process.env.REACT_APP_BACKEND_API_URL}/proposals/update/${unique_id}/` 
+            }
             try {
                 setIsLoading(true);
 
                 const response = await fetch(URL, {
-                    method: "POST",
+                    method: method,
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                     },

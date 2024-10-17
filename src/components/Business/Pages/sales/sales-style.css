@@ -385,11 +385,11 @@ div#popoverStyleChange {
 .salesTableWrap .disPlayInlineCenter li.Draft a svg {
   fill: #c3bdbd;
 }
-.salesTableWrap .disPlayInline li:first-child:hover {
-  background: #fefaec;
+.salesTableWrap .disPlayInline .plusminus:hover {
+  background: #fefaec !important;
 }
-.salesTableWrap .disPlayInline li:first-child:hover svg {
-  fill: #fdb022;
+.salesTableWrap .disPlayInline .plusminus:hover svg {
+  fill: #fdb022 !important;
 }
 .salesTableWrap .disPlayInline li:nth-child(2):hover {
   background: #fcf3f2;

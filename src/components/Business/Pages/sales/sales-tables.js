@@ -200,11 +200,11 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       renderCell: (params) => (
         <div>
           <ul className="disPlayInline disPlayInlineCenter">
-            <li className="">
-              <Link to={`/sales/quote-calculation/${params.row.unique_id}`}>
+            <Link to={`/sales/quote-calculation/${params.row.unique_id}`}>
+              <li className="plusminus">
                 <PlusSlashMinus color="#FDB022" size={16} />
-              </Link>
-            </li>
+              </li>
+            </Link>
             <li className={`${params.row.Status}`}>
               <Link to={params.row.CalculationPDF} target="_blank" rel="noopener noreferrer">
                 <FilePdf color="#FF0000" size={16} />
