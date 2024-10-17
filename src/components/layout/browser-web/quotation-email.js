@@ -148,17 +148,17 @@ const QuotationEmail = () => {
             <Row>
                 <Column colSpan={4} />
                 <Column footer="Subtotal" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${quote?.subtotal}`} className={`${style.footerBoldTextLight} ${style.footerBorder}`} />
+                <Column footer={`\$${quote?.subtotal}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column colSpan={4} />
                 <Column footer="GST (10%)" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${quote?.gst}`} className={`${style.footerBoldTextLight} ${style.footerBorder}`} />
+                <Column footer={`\$${quote?.gst}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column colSpan={4} />
                 <Column footer="Total" className={`${style.footerBoldText} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${quote?.total}`} className={`${style.footerBoldText} ${style.footerBorder}`} />
+                <Column footer={`\$${quote?.total}`} className={`${style.footerBoldText} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column
@@ -239,22 +239,28 @@ const QuotationEmail = () => {
 
                         <div className={style.quotationtable}>
                             <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable}>
-                                <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '17.21px' }} />
-                                <Column field="index" body={ServicesBody} header="Services" style={{ width: '400px' }} />
-                                <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', color: '#667085' }} headerClassName='headerRightAligh' />
-                                <Column field="unit_price" body={unitPriceBody} header="Price" style={{ width: '130px', textAlign: 'right' }} headerClassName='headerRightAligh' />
-                                <Column field="discount" body={discountBody} header="Discount" style={{ width: '120px', color: '#667085', textAlign: 'right' }} headerClassName='headerRightAligh' />
-                                <Column field="total" body={TotalBody} header="Total" style={{ width: '66px', textAlign: 'right' }} headerClassName='headerRightAligh' />
+                                <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight:'400', letterSpacing: '0.16px' }} />
+                                <Column field="index" body={ServicesBody} header="Services" style={{ width: '456px' }} />
+                                <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight:'400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
+                                <Column field="unit_price" body={unitPriceBody} header="Price" style={{ width: '130px', textAlign: 'right',fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight:'400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
+                                <Column field="discount" body={discountBody} header="Discount" style={{ width: '120px',fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight:'400', letterSpacing: '0.16px', textAlign: 'right' }} headerClassName='headerRightAligh' />
+                                <Column field="total" body={TotalBody} header="Total" style={{ width: '66px', textAlign: 'right',fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight:'400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
                             </DataTable>
                         </div>
 
-                        <div className={style.logoWrapperFooter}>
+                       
+                    </div>
+                    <div className={style.logoWrapperFooter}>
                             <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
                         </div>
-                    </div>
                 </div>
+<<<<<<< HEAD
+                
+                  
+=======
                 {
                     (quote?.status === 'Sent' || quote?.status === 'Saved') && <div className={style.quotationfooter}>
+>>>>>>> 886d21a66717d699d8374f3d25eba6bd9ca19050
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
                                 <button
@@ -281,7 +287,7 @@ const QuotationEmail = () => {
                             </div>
                         </div>
                     </div>
-                }
+                
             </div>
 
             <Dialog
