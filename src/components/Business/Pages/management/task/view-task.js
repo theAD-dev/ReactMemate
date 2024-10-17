@@ -78,7 +78,7 @@ const TaskLoadingView = () => {
 
 const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
-  const { isLoading, data, isError, refetch } = useQuery({
+  const { isFetching: isLoading, data, isError, refetch } = useQuery({
     queryKey: ['taskId', taskId],
     queryFn: () => fetchTasksRead(taskId),
     enabled: !!taskId,
@@ -108,13 +108,13 @@ const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
     return formattedDate;
   }
 
-  function handleEdit () {
+  function handleEdit() {
     setShowEditModal(true);
     handleClose();
   }
 
   useEffect(() => {
-     if(!showEditModal) setTaskId(null);
+    if (!showEditModal) setTaskId(null);
   }, [showEditModal])
 
   return (
@@ -166,48 +166,59 @@ const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
           }
         </Modal.Body>
         <Modal.Footer>
-          <Button className='edit-button' onClick={handleEdit}>Edit Task</Button>
-          {
-            data?.finished
-              ?
-              <Button className='incomplete-button' onClick={handleInComplete}>
-                {
-                  mutation.isPending ? (
-                    <>
-                      Loading...
-                    </>
-                  ) : <>
-                    Incomplete
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
-                      <path d="M20 10.5C20 16.0228 15.5228 20.5 10 20.5C4.47715 20.5 0 16.0228 0 10.5C0 4.97715 4.47715 0.5 10 0.5C15.5228 0.5 20 4.97715 20 10.5ZM15.0379 6.71209C14.6718 6.34597 14.0782 6.34597 13.7121 6.71209C13.7032 6.72093 13.6949 6.73029 13.6872 6.74013L9.34674 12.2709L6.72985 9.65403C6.36373 9.28791 5.77014 9.28791 5.40402 9.65403C5.0379 10.0201 5.0379 10.6137 5.40402 10.9799L8.71208 14.2879C9.0782 14.654 9.67179 14.654 10.0379 14.2879C10.0461 14.2798 10.0538 14.2712 10.061 14.2622L15.0512 8.02434C15.404 7.65727 15.3995 7.07371 15.0379 6.71209Z" fill="#F04438" />
-                    </svg>
-                  </>
-                }
-              </Button>
-              :
-              <Button className='complete-button' onClick={handleComplete}>
-                {
-                  mutation.isPending ? (
-                    <>
-                      Loading...
-                    </>
-                  ) : <>
-                    Complete
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
-                      <path d="M20 10.5C20 16.0228 15.5228 20.5 10 20.5C4.47715 20.5 0 16.0228 0 10.5C0 4.97715 4.47715 0.5 10 0.5C15.5228 0.5 20 4.97715 20 10.5ZM15.0379 6.71209C14.6718 6.34597 14.0782 6.34597 13.7121 6.71209C13.7032 6.72093 13.6949 6.73029 13.6872 6.74013L9.34674 12.2709L6.72985 9.65403C6.36373 9.28791 5.77014 9.28791 5.40402 9.65403C5.0379 10.0201 5.0379 10.6137 5.40402 10.9799L8.71208 14.2879C9.0782 14.654 9.67179 14.654 10.0379 14.2879C10.0461 14.2798 10.0538 14.2712 10.061 14.2622L15.0512 8.02434C15.404 7.65727 15.3995 7.07371 15.0379 6.71209Z" fill="#17B26A" />
-                    </svg>
-                  </>
-                }
-              </Button>
+          {isLoading ? <>
+            <Placeholder as="p" animation="wave">
+              <Placeholder xs={12} bg="secondary" style={{ height: '46px', width: '115px', borderRadius: '4px' }} size='lg' />
+            </Placeholder>
+            <Placeholder as="p" animation="wave">
+              <Placeholder xs={12} bg="secondary" style={{ height: '46px', width: '125px', borderRadius: '4px' }} size='lg' />
+            </Placeholder>
+          </> :
+            <>
+              <Button className='edit-button' onClick={handleEdit}>Edit Task</Button>
+              {
+                data?.finished
+                  ?
+                  <Button className='incomplete-button' onClick={handleInComplete}>
+                    {
+                      mutation.isPending ? (
+                        <>
+                          Loading...
+                        </>
+                      ) : <>
+                        Incomplete
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                          <path d="M20 10.5C20 16.0228 15.5228 20.5 10 20.5C4.47715 20.5 0 16.0228 0 10.5C0 4.97715 4.47715 0.5 10 0.5C15.5228 0.5 20 4.97715 20 10.5ZM15.0379 6.71209C14.6718 6.34597 14.0782 6.34597 13.7121 6.71209C13.7032 6.72093 13.6949 6.73029 13.6872 6.74013L9.34674 12.2709L6.72985 9.65403C6.36373 9.28791 5.77014 9.28791 5.40402 9.65403C5.0379 10.0201 5.0379 10.6137 5.40402 10.9799L8.71208 14.2879C9.0782 14.654 9.67179 14.654 10.0379 14.2879C10.0461 14.2798 10.0538 14.2712 10.061 14.2622L15.0512 8.02434C15.404 7.65727 15.3995 7.07371 15.0379 6.71209Z" fill="#F04438" />
+                        </svg>
+                      </>
+                    }
+                  </Button>
+                  :
+                  <Button className='complete-button' onClick={handleComplete}>
+                    {
+                      mutation.isPending ? (
+                        <>
+                          Loading...
+                        </>
+                      ) : <>
+                        Complete
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                          <path d="M20 10.5C20 16.0228 15.5228 20.5 10 20.5C4.47715 20.5 0 16.0228 0 10.5C0 4.97715 4.47715 0.5 10 0.5C15.5228 0.5 20 4.97715 20 10.5ZM15.0379 6.71209C14.6718 6.34597 14.0782 6.34597 13.7121 6.71209C13.7032 6.72093 13.6949 6.73029 13.6872 6.74013L9.34674 12.2709L6.72985 9.65403C6.36373 9.28791 5.77014 9.28791 5.40402 9.65403C5.0379 10.0201 5.0379 10.6137 5.40402 10.9799L8.71208 14.2879C9.0782 14.654 9.67179 14.654 10.0379 14.2879C10.0461 14.2798 10.0538 14.2712 10.061 14.2622L15.0512 8.02434C15.404 7.65727 15.3995 7.07371 15.0379 6.71209Z" fill="#17B26A" />
+                        </svg>
+                      </>
+                    }
+                  </Button>
+              }
+            </>
           }
         </Modal.Footer>
       </Modal>
 
       {/* Edit Task Modal container */}
       {
-        data && <EditTask key={showEditModal} show={showEditModal} setShow={setShowEditModal} data={data} reInitilize={reInitilize}/>
+        data && <EditTask key={showEditModal} show={showEditModal} setShow={setShowEditModal} data={data} reInitilize={reInitilize} />
       }
-      
+
     </>
   )
 }

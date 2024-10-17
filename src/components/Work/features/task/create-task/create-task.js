@@ -241,11 +241,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                         placeholder="Select project"
                         filter
                     />
-
-
-
                 </div>
-
                 <SelectDate dateRange={date} setDateRange={setDate} />
             </div>
             {
