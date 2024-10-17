@@ -8,8 +8,6 @@ import Desktop from './desktop';
                                       
 const Users = () => {
     const [activeTab, setActiveTab] = useState('desktop');
-
-
     return (
         <>
             <div className={`settings-wrap ${style.userSettingPage}`}>

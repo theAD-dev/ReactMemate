@@ -1,7 +1,6 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-// Industries API
 export const getIndustriesList = async () => {
   const endpoint = `/references/clients/industries/`;
   const options = {
@@ -21,34 +20,26 @@ export const newIndustries = async (data) => {
   return fetchAPI(url.toString(), options);
 }
 
-
 export const readIndustry = async (id) => {
   const endpoint = `/references/clients/industries/${id}/`;
   const options = {
-    method: 'GET',
-
+    method: 'GET'
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
 
-
-
 export const updateIndustry = async (id, data) => {
-
   const endpoint = `/references/clients/industries/${id}/`;
   const options = {
     method: 'PUT',
     body: data
-
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
 
-
 export const deleteIndustry = async (id, data) => {
-
   const endpoint = `/references/clients/industries/${id}/`;
   const options = {
     method: 'DELETE',
@@ -59,10 +50,6 @@ export const deleteIndustry = async (id, data) => {
   return fetchAPI(url.toString(), options);
 }
 
-
-
-
-// Categories API
 export const getCategoriesList = async () => {
   const endpoint = `/references/clients/categories/`;
   const options = {
@@ -82,7 +69,6 @@ export const newCategories = async (data) => {
   return fetchAPI(url.toString(), options);
 }
 
-
 export const readCategories = async (id) => {
   const endpoint = `/references/clients/categories/${id}/`;
   const options = {
@@ -93,10 +79,7 @@ export const readCategories = async (id) => {
   return fetchAPI(url.toString(), options);
 }
 
-
-
 export const updateCategories = async (id, data) => {
-
   const endpoint = `/references/clients/categories/${id}/`;
   const options = {
     method: 'PUT',
@@ -108,12 +91,10 @@ export const updateCategories = async (id, data) => {
 }
 
 export const deleteCategories = async (id, data) => {
-
   const endpoint = `/references/clients/categories/${id}/`;
   const options = {
     method: 'DELETE',
     body: data
-
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
