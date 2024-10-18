@@ -1,0 +1,282 @@
+.circledesignstyle {
+    .out {
+      border-radius: 28px;
+      border: 6px solid var(--Success-50, #ecfdf3);
+      background: var(--Success-100, #dcfae6);
+      padding: 6px;
+    }
+  }
+  
+  
+  .bgGreay {
+    margin: 0px;
+    padding: 24px 5px;
+    border-radius: var(--radius-xs, 4px);
+    background: #f9fafb;
+    margin-bottom: 24px !important;
+  }
+  
+  .fileUploadBox {
+    display: flex;
+    padding: var(--spacing-xl, 16px) var(--spacing-3xl, 24px);
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs, 4px);
+    align-self: stretch;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+    background: var(--Base-White, #fff);
+    margin: 16px 0px;
+  }
+  
+  
+  .lable {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px; /* 157.143% */
+    letter-spacing: 0.14px;
+  }
+  
+  .inputText {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #d0d5dd);
+    background: var(--Base-White, #fff);
+    box-shadow: none !important;
+    outline: none !important;
+    font-family: Inter;
+    color: var(--Gray-900, #101828) !important;
+  }
+  
+  .error {
+    border: 1px solid red !important;
+  }
+  
+  .phoneInput {
+    width: 100%;
+    height: 46px !important;
+  }
+  
+  .countrySelector {
+    height: 46px;
+  }
+  
+  .headingInputs {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 125% */
+    margin-bottom: 16px;
+  }
+  
+  .dropdownSelect {
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #d0d5dd);
+    background: var(--Base-White, #fff);
+    box-shadow: none !important;
+    outline: none !important;
+  }
+  
+  .tempDelete, .tempDelete:hover, .tempDelete:focus {
+    color: #b42318;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 142.857% */
+    display: flex;
+    padding: var(--spacing-md, 8px) 14px;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md, 8px);
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Error-200, #fecdca);
+    background: var(--Error-50, #fef3f2);
+  }
+  
+  .tempAdd, .tempAdd:hover, .tempAdd:focus {
+    color: var(--Primary-700, #106b99);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 142.857% */
+    display: flex;
+    padding: var(--spacing-md, 8px) 14px;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md, 8px);
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Primary-200, #a3e0ff);
+    background: var(--Primary-50, #ebf8ff);
+  }
+  
+  
+  .expensesEditHead{
+    h5{
+      color: var(--Gray-700, #344054);
+      font-family: Inter;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px; 
+      letter-spacing: -0.18px;
+    }
+    h6{
+      color: var(--Gray-600, #475467);
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 22px;
+      letter-spacing: 0.14px;
+    }
+  }
+  .expensesCreateNew{
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; 
+    background: none;
+    padding: 0;
+    border: 0;
+    text-align: end;
+    &:hover{
+      color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; 
+    background: none;
+    padding: 0;
+    border: 0;
+    }
+  }
+  .customCalendar{
+    width: 100%;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Border, #d0d5dd);
+    background: var(--Base-White, #fff);
+    box-shadow: none !important;
+    outline: none !important;
+    font-family: Inter;
+    color: var(--Gray-900, #101828) !important;
+    position: relative;
+    height: 44px;
+    input{
+      height: 42px;
+    }
+  }
+  .customIcon{
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    pointer-events: none; 
+  }
+  
+  .expTotalRow{
+    .CalItem{
+      border-radius: var(--radius-xs, 4px);
+      border: 1px solid var(--Gray-100, #F2F4F7);
+      background: var(--Gray-50, #F9FAFB);
+      padding: var(--spacing-3xl, 24px);
+      text-align: right;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+  span{
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; 
+    letter-spacing: -0.08px;
+    display: block;
+  }
+  strong{
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.18px;
+  }
+  
+    }
+    .CalItemActive{
+      border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Primary-100, #BAE8FF);
+    background: var(--Primary-50, #EBF8FF);
+    span{
+      color: var(--Gray-800, #1D2939);
+      font-family: Inter;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 24px;
+      letter-spacing: 0.08px;
+    }
+  strong{
+    color: var(--Primary-500, #1AB2FF);
+    font-family: Inter;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px; 
+    letter-spacing: -0.39px;
+  }
+    }
+  }
+  
+  
+  .tabsExpenses{
+    button  {
+      border: 1px solid var(--Gray-300, #D0D5DD);
+      background: var(--Base-White, #FFF);
+      padding: var(--spacing-md, 10px) var(--spacing-xl, 16px);
+      color: var(--Gray-700, #344054);
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 20px;
+      width: 31%;
+      &:first-child{
+        border-right: 0;
+        border-radius: 8px 0 0px 8px;
+      }
+      &:last-child{
+        border-radius: 0 8px 8px 0;
+      }
+      &.active {
+        border: 1px solid var(--Gray-300, #D0D5DD);
+        background: var(--Primary-50, #EBF8FF);
+        padding: var(--spacing-md, 10px) var(--spacing-xl, 16px) var(--spacing-md, 10px) 14px;
+        color: var(--Primary-500, #1AB2FF);
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px; 
+        &:first-child{
+          border-right: 0;
+        }
+  
+      }
+      
+  }
+  
+  }

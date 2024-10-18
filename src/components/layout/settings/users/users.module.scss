@@ -1,0 +1,152 @@
+.userSettingPage{
+.userHead {
+    p {
+        color: var(--Gray-600, #475467);
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0.14px;
+        span{
+            color: var(--Primary-600, #158ECC);
+            font-family: Inter;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px; 
+        }
+    }
+}
+.users_userHead{
+    h2 {
+        margin-bottom: 0;
+    }
+}
+.contentwrapmain {
+    margin-top: 0;
+}
+.ellipsis{
+    margin-left: 10px;
+}
+tr{
+    td{
+        color: var(--Gray-700, #344054);
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px; 
+        letter-spacing: 0.14px;
+    }
+}
+.userImg{
+    border-radius: 19px;
+    display: flex;
+    width: 24px;
+    height: 24px;
+    justify-content: center;
+    align-items: center;
+}
+.privilege{
+    border-radius: 16px;
+    border: 1px solid var(--Success-200, #ABEFC6);
+    background: var(--Success-50, #ECFDF3);
+    mix-blend-mode: multiply;
+    padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+    color: var(--Success-700, #067647);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; 
+    white-space: nowrap;
+
+}
+.contentMenuTab {
+    display: flex;
+    justify-content: space-between;
+    align-items: self-end;
+    .addUserBut{
+        border-radius: var(--radius-xs, 4px);
+        border: 1px solid var(--Gray-300, #D0D5DD);
+        background: var(--Base-White, #FFF);
+        padding: 8px 18px;
+        color: var(--Gray-700, #344054);
+        font-family: Inter;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 24px; 
+        margin-bottom: 8px;
+    }
+}
+.showDeleteBut{
+    color: #B42318;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; 
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Error-300, #FDA29B);
+    background: #FFF;
+    padding: var(--spacing-md, 8px) 14px;
+
+
+}
+}
+#appSettingPage{
+.showDeleteBut{
+    color: #B42318;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; 
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Error-300, #FDA29B);
+    background: #FFF;
+    padding: var(--spacing-md, 8px) 14px;
+
+}
+.appaction{
+    button{
+        color: var(--Primary-600, #158ECC);
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        &:hover{
+            color: var(--Primary-600, #158ECC);
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        }
+    }
+}
+.appstatus{
+    border-radius: 16px;
+    border: 1px solid var(--Success-200, #ABEFC6);
+    background: var(--Success-50, #ECFDF3);
+    mix-blend-mode: multiply;
+    padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+    color: var(--Success-700, #067647);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+}
+}
