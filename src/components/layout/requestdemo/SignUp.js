@@ -6,6 +6,7 @@ import arrowRight from "../../../assets/images/icon/arrow.svg";
 import "./requestademo.css";
 import LoinLogo from "../../../assets/images/logo.svg";
 import RegionalSettings from "../../../assets/images/img/login_slider.jpg";
+import OnboardingLogo from "../../../assets/images/img/onboarding-logo.svg";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -90,12 +91,13 @@ const SignUp = () => {
                   <div className="linkBottom"><p>Already have an account? <Link to="set-new-password">Sign in</Link></p></div>
                 </div>
               </div>
-              <div className="sliderRight SinglBgRight" style={{
+              <div className="sliderRight logoWrapMain SinglBgRight" style={{
                 backgroundImage: `url(${RegionalSettings})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
               }}>
-                <p>Predict unprofitable business activities.</p>
+               <img src={OnboardingLogo} alt='{Onboarding Logo}' />
+               <p>Predict unprofitable business activities.</p>
               </div>
             </div>
           </form>
