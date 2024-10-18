@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
-import { ChevronDown, QuestionCircle } from 'react-bootstrap-icons';
+import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
 import SelectUser from './select-user';
 import SelectDate from './select-date';
 import newTask from '../../../../../assets/images/new-task.svg';
 
 import './task.css';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { fetchTasksNew } from '../../../../../APIs/TasksApi';
+import { Dropdown } from 'primereact/dropdown';
+import { getUserList } from '../../../../../APIs/task-api';
 
 const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) => {
+    const dropdownRef = useRef(null);
     const [taskTitle, setTaskTitle] = useState('');
     const [description, setDescription] = useState('');
     const [user, setUser] = useState(null);
@@ -72,6 +75,7 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
     };
 
     const handleClose = () => setShow(false);
+    const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
 
     return (
         <>
@@ -127,10 +131,56 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
                     </Form.Group>
                 </Modal.Body>
                 <div className='d-flex align-items-center' style={{
-                    gap: '16px', borderTop: '1px solid #eaecf0',
-                    padding: "12px 30px 8px 30px"
+                    gap: '20px', borderTop: '1px solid #eaecf0',
+                    padding: "12px 30px 8px 20px"
                 }}>
-                    <SelectUser onSelect={setUser} />
+                    {!user && <Person
+                        color={dropdownRef.current?.panel?.element?.offsetParent ? "#1AB2FF" : "#475467"}
+                        size={22} style={{ position: 'relative', left: '10px', zIndex: 1 }}
+                        onClick={() => dropdownRef.current?.show()} className='me-3 cursor-pointer' />
+                    }
+                    <Dropdown
+                        ref={dropdownRef}
+                        options={usersList?.data?.map((user) => ({
+                            value: user?.id,
+                            label: user?.name || "-",
+                            photo: user?.photo || "",
+                        })) || []}
+                        onChange={(e) => {
+                            setUser(e.value);
+                        }}
+                        valueTemplate={(option) => {
+                            return <div className='d-flex gap-2 align-items-center'>
+                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
+                                    {option?.photo && <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />}
+                                </div>
+                                {option?.label}
+                            </div>
+                        }}
+                        itemTemplate={(option) => {
+                            return (
+                                <div className='d-flex gap-2 align-items-center'>
+                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
+                                        <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+                                    </div>
+                                    {option?.label}
+                                </div>
+                            )
+                        }}
+                        className='outline-none border-0 p-0'
+                        style={{
+                            width: !user ? '0px' : 'fit-content',
+                            height: !user ? '0px' : '46px',
+                            zIndex: !user ? '0' : '1',
+                            position: 'relative',
+                            left: !user ? '-60px' : '0px',
+                            top: !user ? '-15px' : '0px',
+                        }}
+                        value={user}
+                        dropdownIcon={<></>}
+                        placeholder="Select project"
+                        filter
+                    />
                     <SelectDate dateRange={date} setDateRange={setDate} />
                 </div>
                 <div className='d-flex align-items-center' style={{ gap: '16px', padding: "0 30px 8px 30px" }}>
