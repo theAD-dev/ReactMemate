@@ -26,7 +26,6 @@ import Sales from "../Business/Pages/sales/sales-page";
 import Management from "../Business/Pages/management/management-page";
 import SelectOption from "./SelectOption";
 import Profile from "./Login/profile";
-import Invoices from "../Business/Pages/invoices/invoices";
 import ExpensesPage from "../Business/Pages/expenses";
 import Home from "../Home";
 
@@ -90,6 +89,7 @@ import CreateProposalTemplate from "./settings/templates/create-proposal-templat
 import Location from "./settings/locations";
 import TaskPage from "../Work/Pages/tasks";
 import NotFoundTemplate from "../../ui/404-template/not-found-template";
+import InvoicePage from "../Business/Pages/invoices";
 
 
 
@@ -457,6 +457,7 @@ const Header = ({ onClick }) => {
           <Route path="/suppliers/:id/history" element={<SupplierHistoryPage />} />
 
           <Route path="/expenses" element={<ExpensesPage />} />
+          <Route path="/invoices" element={<InvoicePage />} />
 
           <Route path="/orders" element={<OrderPage />} />
 
@@ -489,7 +490,6 @@ const Header = ({ onClick }) => {
           <Route path="/work/people" element={<PeoplePage />} />
 
           <Route path="/profile" element={<Profile />} />
-          <Route path="/invoices" element={<Invoices />} />
 
           <Route path="/settings/generalinformation" element={<GeneralInformation />} />
           <Route path="/settings/generalinformation/bank-details" element={<BankDetails />} />
