@@ -254,8 +254,11 @@ const QuotationEmail = () => {
                         <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
                     </div>
                 </div>
+
                 {
                     (quote?.status === 'Sent' || quote?.status === 'Saved') && <div className={style.quotationfooter}>
+
+
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
                                 <button
