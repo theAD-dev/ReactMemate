@@ -7,11 +7,12 @@ import { Button } from 'primereact/button';
 import { useQuery } from '@tanstack/react-query';
 import { getDesktopUserList } from '../../../../APIs/settings-user-api';
 import { Spinner } from 'react-bootstrap';
+import CreateDesktopUser from './features/create-desktop-user';
 
-const Desktop = () => {
+const Desktop = ({ visible, setVisible }) => {
+    const [id, setId] = useState(null);
     const desktopUsersQuery = useQuery({ queryKey: ['desktop-users'], queryFn: getDesktopUserList });
     const desktopUsers = desktopUsersQuery?.data || [];
-    console.log('desktopUsers: ', desktopUsers);
 
     const nameBody = (data) => {
         return <div className='d-flex align-items-center justify-content-between'>
@@ -21,7 +22,7 @@ const Desktop = () => {
                 <div className='d-flex flex-column gap-1'>
                     <div className={`${style.ellipsis}`}>{data.name}</div>
                 </div></div>
-            <Button label="Edit" className='primary-text-button ms-3 show-on-hover-element not-show-checked' />
+            <Button label="Edit" onClick={()=> {setId(data?.id); setVisible(true)}} className='primary-text-button ms-3 show-on-hover-element not-show-checked' />
         </div>
     }
 
@@ -52,6 +53,7 @@ const Desktop = () => {
                     </Spinner>
                 </div>
             }
+            <CreateDesktopUser id={id} setId={setId} visible={visible} setVisible={setVisible} refetch={() => desktopUsersQuery?.refetch()} />
         </>
     );
 }

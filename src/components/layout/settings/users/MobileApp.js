@@ -9,6 +9,7 @@ import { Button } from 'primereact/button';
 import { useQuery } from '@tanstack/react-query';
 import { getMobileUserList } from '../../../../APIs/settings-user-api';
 import { Spinner } from 'react-bootstrap';
+import clsx from 'clsx';
 
 const MobileApp = () => {
     const [activeTab, setActiveTab] = useState('desktop');
@@ -57,7 +58,7 @@ const MobileApp = () => {
                                     <li><Link to="/settings/users/desktop">Desktop</Link></li>
                                     <li className='menuActive'><Link to="/settings/users/mobile-app">Mobile App</Link></li>
                                 </ul>
-                                <Button className={style.addUserBut}>Add <Plus size={20} color="#000" /></Button>
+                                <Button className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
                             </div>
                         </div>
                         <div className={`content_wrap_main ${style.contentwrapmain}`}>
@@ -68,7 +69,7 @@ const MobileApp = () => {
                                             <h2>Mobile App Users</h2>
                                             <p>Desktop Users  3 / 5 <span>Buy More</span></p>
                                         </div>
-                                        <Button className={style.showDeleteBut}>Show Deleted</Button>
+                                        <Button className={style.showDeleteBut}>Show Disconnected</Button>
                                     </div>
                                     <DataTable value={mobileUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                         <Column field="name" style={{ width: 'auto' }} body={nameBody} header="Name"></Column>
