@@ -260,7 +260,7 @@ const Location = () => {
                                                     </td>
                                                     <td>
                                                         <div className={`styleGrey01  ${style.privilege}`}>
-                                                            {user.privilege || "-"}
+                                                            {user.privilege_name || "-"}
                                                         </div>
                                                     </td>
                                                     <td>
