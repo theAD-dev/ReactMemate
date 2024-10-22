@@ -22,7 +22,7 @@ import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import ProjectCardFilter from './project-card-filter';
 import FilesModel from './files-model';
 import ScheduleUpdate from './schedule-update';
-import { ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
+import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -166,6 +166,26 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
       toast.error(`Failed to complete the project. Please try again.`);
     }
   });
+
+  const createInvoiceMutation = useMutation({
+    mutationFn: (data) => createInvoiceById(data),
+    onSuccess: (response) => {
+      if (response) {
+        handleClose();
+        toast.success('Invoice has been successfully created');
+      } else {
+        toast.error(`Failed to create the invoice. Please try again.`);
+      }
+    },
+    onError: (error) => {
+      console.error('Error creating the invoice:', error);
+      toast.error(`Failed to create the invoice. Please try again.`);
+    }
+  });
+
+  const createInvoice = () => {
+    createInvoiceMutation.mutate(projectId);
+  }
 
   const declinecOrder = () => {
     declinecOrderMutation.mutate(projectId);
@@ -595,10 +615,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   ) : <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
                 }
                 <Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
-                <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button>
+                {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
                 <Button className='googleBut googleActive'>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
-                <FilesModel />
+                {/* <FilesModel /> */}
                 <Button className='calenBut calenActive'>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button>
               </Col>
             </Row>
@@ -652,8 +672,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
               <Col className='actionRightSide'>
-                <Button className='InvoiceAction InvoiceActive'>Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>
-                <Button className='ProgressAction'>Progress Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button>
+                <Button className='InvoiceAction InvoiceActive me-3' onClick={() => createInvoice(projectId)}>
+                  Invoice  <img src={InvoicesIcon} alt="Invoices" />
+                  { createInvoiceMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/> }
+                </Button>
+
+                {/* <Button className='ProgressAction'>Progress Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button> */}
+                
                 <Button onClick={() => completeMutation.mutate(projectId)} disabled={!cardData?.can_be_completed} className='CompleteActionBut'>
                   Complete & Archive
                   {

@@ -321,3 +321,14 @@ tr:hover .hoverShow {
   line-height: 22px; /* 157.143% */
   letter-spacing: 0.14px;
 }
+
+.dangerTextButton,
+.dangerTextButton:hover {
+  color: var(--Error-700, #b42318) !important;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  background: transparent !important;
+}

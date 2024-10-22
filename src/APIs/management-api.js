@@ -116,6 +116,15 @@ export const projectsComplete = async (id) => {
     return fetchAPI(url.toString(), options);
 }
 
+export const createInvoiceById = async (id) => {
+    const endpoint = `/invoices/create/${id}/`;
+    const options = {
+        method: 'POST'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
     const accessToken = localStorage.getItem("access_token");

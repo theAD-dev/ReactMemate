@@ -1493,3 +1493,13 @@ input:focus::-webkit-input-placeholder {
     white-space: nowrap;
   }
 }
+
+.szh-menu-container.threeDots ul {
+  left: -230px !important;
+  top: -0px !important;
+}
+
+.hover-greay:hover {
+  background: #dedede;
+  border-radius: 4px;
+}

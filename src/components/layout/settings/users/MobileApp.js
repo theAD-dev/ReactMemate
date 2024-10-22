@@ -67,7 +67,7 @@ const MobileApp = () => {
                                     <div className="topHeadStyle pb-4">
                                         <div className={style.userHead}>
                                             <h2>Mobile App Users</h2>
-                                            <p>Desktop Users  3 / 5 <span>Buy More</span></p>
+                                            <p>3 / 5 <span>Buy More</span></p>
                                         </div>
                                         <Button className={style.showDeleteBut}>Show Disconnected</Button>
                                     </div>
