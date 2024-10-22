@@ -13,6 +13,8 @@ import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
 import clsx from 'clsx';
 import { getInvoice } from '../../../../../APIs/invoice-api';
+import { Col, Row as BootstrapRow } from 'react-bootstrap';
+import { FilePdf } from 'react-bootstrap-icons';
 
 const PublicInvoice = () => {
     const { id } = useParams();
@@ -28,7 +30,6 @@ const PublicInvoice = () => {
         try {
             setIsLoading(true);
             const data = await getInvoice(id);
-            console.log('data: ', data);
             setInvoice(data);
         } catch (error) {
             console.error('Error fetching data: ', error);
@@ -172,7 +173,7 @@ const PublicInvoice = () => {
             <Row>
                 <Column colSpan={4} />
                 <Column footer="Deposit" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${invoice?.gst}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
+                <Column footer={`\$${invoice?.deposit}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column colSpan={4} />
@@ -260,7 +261,7 @@ const PublicInvoice = () => {
                         </div>
 
                         <div className={style.quotationtable}>
-                            <DataTable value={invoice?.calculations} footerColumnGroup={footerGroup} className={style.invoiceWrapTable}>
+                            <DataTable value={invoice?.calculations} className={style.invoiceWrapTable}>
                                 <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} />
                                 <Column field="index" body={ServicesBody} header="Services" style={{ width: '456px' }} />
                                 <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
@@ -269,6 +270,50 @@ const PublicInvoice = () => {
                                 <Column field="total" body={TotalBody} header="Total" style={{ width: '66px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
                             </DataTable>
                         </div>
+
+                        <BootstrapRow className='w-100 pb-5 pt-4'>
+                            <Col sm={8} className='ps-4'>
+                                <div className='d-flex'>
+                                    <p className='font-14 mb-0' style={{ color: '#1D2939' }}>Bank name:</p> 
+                                    <p className='font-14 mb-0 ms-5 ps-0' style={{ fontWeight: '500', color: '#1D2939' }}>{invoice?.organization?.bank_name || "-"}</p>
+                                </div>
+                                <div className='d-flex'>
+                                    <p className='font-14 mb-0' style={{ color: '#1D2939' }}>Account name:</p> 
+                                    <p className='font-14 mb-0 ms-4 ps-1' style={{ fontWeight: '500', color: '#1D2939' }}>{invoice?.organization?.account_name || "-"}</p>
+                                </div>
+                                <div className='d-flex'>
+                                    <p className='font-14 mb-0' style={{ color: '#1D2939' }}>Account number:</p> 
+                                    <p className='font-14 mb-0 ms-2 ps-1' style={{ fontWeight: '500', color: '#1D2939' }}>{invoice?.organization?.account_number || "-"}</p>
+                                </div>
+                                <div className='d-flex'>
+                                    <p className='font-14 mb-0' style={{ color: '#1D2939' }}>BSN number:</p> 
+                                    <p className='font-14 mb-0 ms-4 ps-3' style={{ fontWeight: '500', color: '#1D2939' }}>{invoice?.organization?.bsb || "-"}</p>
+                                </div>
+                                
+                                <div className={style.qupteMainColFooter} style={{ marginTop: '32px' }}>
+                                    <h2>Note</h2>
+                                    <p>{invoice?.note}</p>
+                                </div>
+                            </Col>
+                            <Col sm={4}>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', color: '#1D2939' }}>Subtotal</div>
+                                    <div style={{ fontSize: '18px', color: '#1D2939' }}>${invoice?.subtotal}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>Tax (10%)</div>
+                                    <div style={{ fontSize: '18px', }}>${invoice?.gst}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>Deposit</div>
+                                    <div style={{ fontSize: '18px', }}>${invoice?.deposit}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>Total</div>
+                                    <div style={{ fontSize: '18px', fontWeight: 600 }}>${invoice?.total}</div>
+                                </div>
+                            </Col>
+                        </BootstrapRow>
                     </div>
                     <div className={style.logoWrapperFooter}>
                         <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
@@ -276,31 +321,30 @@ const PublicInvoice = () => {
                 </div>
 
                 {
-                    (invoice?.status === 'Sent' || invoice?.status === 'Saved') && <div className={style.quotationfooter}>
-
-
+                    (invoice?.pay_status === 'not paid') && <div className={style.quotationfooter}>
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
                                 <button
-                                    className={style.decline}
+                                    className={"outline-button"}
                                     onClick={handleDecline}
                                     disabled={actionLoading.decline}
                                 >
-                                    {actionLoading.decline ? 'Declining...' : 'Decline'}
+                                    {actionLoading.decline ? 'Declining...' : 'Save PDF'}
+                                    <FilePdf size={20} color='#344054' className='ms-1'/>
                                 </button>
                             </div>
-                            <div className={style.right}>
-                                <button
-                                    onClick={() => { setVisible(true) }}
-                                >
-                                    {actionLoading.changes ? 'Requesting changes...' : 'Request changes'}
-                                </button>
+                            <div className={clsx(style.right, 'd-flex align-items-center')}>
+                                <div>
+                                    <p className='mb-0' style={{ fontSize: '24px', fontWeight: 600, color: '#1A1C21' }}>${invoice?.total}</p>
+                                    <p className='mb-0' style={{ fontSize: '16px', fontWeight: 500, color: '#FFB258' }}>{invoice?.overdue || 0} Days Overdue</p>
+                                </div>
                                 <button
                                     className={style.accept}
-                                    onClick={handleAccept}
+                                    onClick={() => {}}
                                     disabled={actionLoading.accept}
+                                    style={{ height: '48px' }}
                                 >
-                                    {actionLoading.accept ? 'Accepting...' : 'Accept'}
+                                    {actionLoading.accept ? 'Loading...' : 'Pay this invoice'}
                                 </button>
                             </div>
                         </div>
