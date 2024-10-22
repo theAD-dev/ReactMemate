@@ -20,6 +20,7 @@ import ChangePassword from './components/layout/Login/change-password';
 import Demo from './components/layout/settings/Demo';
 import Components from '../src/ui/memate-select';
 import QuotationEmail from './components/layout/browser-web/quotation-email';
+import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         <Route path="/demo" element={<Demo />} />
         <Route path="/ui/components" element={<Components />} />
         <Route path="/quote/:id" element={<QuotationEmail />} />
+        <Route path="/invoice/:id" element={<PublicInvoice />} />
       </Routes>
     </AuthProvider>
   );

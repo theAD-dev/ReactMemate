@@ -98,7 +98,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const InvoiceBody = (rowData) => {
         return <div className='d-flex align-items-center justify-content-around'>
             <Link to={`${rowData?.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
-            <Link to={`${rowData?.unique_url}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
+            <Link to={`/invoice/${rowData.unique_id}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
         </div>
     }
 

@@ -16,3 +16,12 @@ export const getListOfInvoice = async (page, limit, name = "", order = "", isSho
 
     return fetchAPI(url.toString(), options);
 }
+
+export const getInvoice = async (uniqueId) => {
+    const endpoint = `/invoices/view/${uniqueId}/`;
+    const options = {
+      method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options, false);
+  }
