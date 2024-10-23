@@ -16,7 +16,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 
 const Desktop = ({ visible, setVisible }) => {
     const [id, setId] = useState(null);
-    const desktopUsersQuery = useQuery({ queryKey: ['desktop-users'], queryFn: getDesktopUserList });
+    const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
     const privilegesQuery = useQuery({ queryKey: ['privileges-list'], queryFn: getPrivilegesList });
     const desktopUsers = desktopUsersQuery?.data?.users || [];
 

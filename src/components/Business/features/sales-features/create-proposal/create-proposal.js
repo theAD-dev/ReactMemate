@@ -97,10 +97,10 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
     });
 
     useEffect(() => {
-      if (readProposalQuery?.data) {
-        console.log('read proposal: ', readProposalQuery?.data);
-        setTemplatedId(readProposalQuery?.data?.template);
-      }
+        if (readProposalQuery?.data) {
+            console.log('read proposal: ', readProposalQuery?.data);
+            setTemplatedId(readProposalQuery?.data?.template);
+        }
     }, [readProposalQuery?.data])
 
     const proposalQuery = useQuery({
@@ -110,12 +110,13 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         retry: 0,
     });
     const sendProposalAction = () => {
-        if (!templateId) return toast.error('Template is required');
+        // if (!templateId) return toast.error('Template is required');
         if (!unique_id) return toast.error('Id not found');
-        if (!sections?.length) return toast.error('Please add proposal content');
+        let notdeletedSections = sections?.filter(section => !section.delete);
+        if (!notdeletedSections?.length) return toast.error('Please add proposal content');
 
         const newErrors = {};
-        const sectionErrors = sections.map((section, index) => {
+        const sectionErrors = sections?.filter(section => !section.delete)?.map((section, index) => {
             const sectionError = {};
 
             if (!section.title) sectionError.title = true;
@@ -138,13 +139,14 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         }
     }
     const onSubmit = async (action) => {
-        if (!templateId) return toast.error('Template is required');
+        // if (!templateId) return toast.error('Template is required');
         if (!unique_id) return toast.error('Id not found');
-        if (!sections?.length) return toast.error('Please add proposal content');
+        let notdeletedSections = sections?.filter(section => !section.delete);
+        if (!notdeletedSections?.length) return toast.error('Please add proposal content');
         setErrors({});
 
         const newErrors = {};
-        const sectionErrors = sections.map((section, index) => {
+        const sectionErrors = sections?.filter(section => !section.delete)?.map((section, index) => {
             const sectionError = {};
 
             if (!section.title) sectionError.title = true;
@@ -167,9 +169,10 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                 formData.append(`sections[${index}]title`, section.title);
                 formData.append(`sections[${index}]description`, section.description);
                 formData.append(`sections[${index}]delete`, !!section.delete);
-                if (readProposalQuery?.data) formData.append(`sections[${index}]id`, section.id);
+                if (readProposalQuery?.data && section.id) formData.append(`sections[${index}]id`, section.id);
             });
-            formData.append('template', templateId)
+            if (templateId) formData.append('template', templateId);
+            else formData.append('template', "");
 
             if (action === "send") {
                 formData.append('action', 'send');
@@ -191,7 +194,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             let URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/new/${unique_id}/`;
             if (readProposalQuery?.data) {
                 method = "PUT"
-                URL =  `${process.env.REACT_APP_BACKEND_API_URL}/proposals/update/${unique_id}/` 
+                URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/update/${unique_id}/`
             }
             try {
                 setIsLoading(true);
@@ -232,18 +235,24 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         // setTemplatedId(null);
         // setSections([]);
         // setImage(null);
-       // setFileName('');
+        // setFileName('');
         setShowSendModal(false);
     }
     const handleAddSection = () => {
         setSections([...sections, { title: "", description: "" }]);
     };
-    const handleDeleteSection = (index) => {
-        setSections((prevSections) =>
-            prevSections.map((section, i) =>
-                i === index ? { ...section, delete: true } : section
-            )
-        );
+    const handleDeleteSection = (index, id) => {
+        if (id) {
+            setSections((prevSections) =>
+                prevSections.map((section, i) =>
+                    i === index ? { ...section, delete: true } : section
+                )
+            );
+        } else {
+            setSections((prevSections) =>
+                prevSections.filter((section, i) => i !== index)
+            );
+        }  
     };
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -276,7 +285,10 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
 
     useEffect(() => {
         if (templateId && templateId != readProposalQuery?.data?.template && proposalQuery?.data) {
-            setSections(proposalQuery?.data?.sections);
+            setSections([
+                ...readProposalQuery?.data?.sections?.map(section => ({ ...section, delete: true })),
+                ...proposalQuery?.data?.sections?.map(({ id, ...rest }) => ({ ...rest }))
+            ]);
         } else if (templateId === readProposalQuery?.data?.template) {
             setSections(readProposalQuery?.data?.sections);
         }
@@ -317,6 +329,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                                 }}
                                 value={templateId}
                                 loading={proposalTemplateQuery?.isFetching}
+                                showClear
                             />
                         </div>
                     </Col>
@@ -346,8 +359,8 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                         <p className="error-message mb-2">{"Image is required"}</p>
                     )}
                     <Accordion activeIndex={0} className='mt-3'>
-                        {sections?.filter(section => !section.delete)?.map((section, index) => (
-                            <AccordionTab key={section?.id} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
+                        {sections?.map((section, originalIndex) => ({ ...section, originalIndex }))?.filter(section => !section.delete)?.map((section, index) => (
+                            <AccordionTab key={section?.id || `accordion-${index}`} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
                                 <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
                                     <label className={style.label}>Paragraph title</label>
                                     <IconField>
@@ -355,12 +368,12 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                                             {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                         </InputIcon>
                                         <InputText
-                                            value={section?.title || ""}
+                                            value={section?.title}
                                             className={clsx(style.inputBox, 'w-100 border mt-2')}
                                             onChange={(e) => {
                                                 setSections(prevSections => {
                                                     const newSections = [...prevSections];
-                                                    newSections[index] = { ...newSections[index], title: e.target.value };
+                                                    newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], title: e.target.value };
                                                     return newSections;
                                                 });
                                             }}
@@ -384,7 +397,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                                         onTextChange={(e) => {
                                             setSections(prevSections => {
                                                 const newSections = [...prevSections];
-                                                newSections[index] = { ...newSections[index], description: e.htmlValue };
+                                                newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], description: e.htmlValue };
                                                 return newSections;
                                             });
                                         }}
@@ -394,14 +407,14 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                                     )}
                                 </div>
                                 <div className='bg-white mt-2 pt-2 d-flex justify-content-end'>
-                                    <Button className='danger-outline-button' onClick={() => handleDeleteSection(index)}>Delete Paragraph</Button>
+                                    <Button className='danger-outline-button' onClick={() => handleDeleteSection(section?.originalIndex, section?.id)}>Delete Paragraph</Button>
                                 </div>
                             </AccordionTab>
                         ))}
                     </Accordion>
                 </div>
             </Dialog >
-            <SendProposal show={showSendModal} setShow={setShowSendModal} contactPersons={contactPersons} setPayload={setPayload} onSubmit={onSubmit} handleClose={handleClose}/>
+            <SendProposal show={showSendModal} setShow={setShowSendModal} contactPersons={contactPersons} setPayload={setPayload} onSubmit={onSubmit} handleClose={handleClose} />
         </>
     )
 }
