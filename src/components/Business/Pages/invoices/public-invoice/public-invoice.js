@@ -184,7 +184,7 @@ const PublicInvoice = () => {
                 <Column
                     footer={(
                         <div className={style.qupteMainColFooter}>
-                            <h2>Note</h2>
+                            <h2>Note:</h2>
                             <p>{invoice?.note}</p>
                         </div>
                     )}
