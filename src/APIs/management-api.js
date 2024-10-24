@@ -87,7 +87,7 @@ export const createProjectNoteById = async (id, data) => {
 }
 
 export const projectsToSalesUpdate = async (id) => {
-    const endpoint = `/projects/to-sales/`;
+    const endpoint = `/projects/back/`;
     const options = {
         method: 'PUT',
         body: { unique_id: id }
