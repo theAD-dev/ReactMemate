@@ -1,11 +1,11 @@
 import { Building, Person } from 'react-bootstrap-icons';
 import style from './users.module.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteDesktopUser, getDesktopUserList, getPrivilegesList } from '../../../../APIs/settings-user-api';
+import { deleteDesktopUser, getDesktopUserList, getPrivilegesList, restoreDesktopUser } from '../../../../APIs/settings-user-api';
 import { Spinner } from 'react-bootstrap';
 import CreateDesktopUser from './features/create-desktop-user';
 import clsx from 'clsx';
@@ -13,24 +13,49 @@ import { Plus } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { ControlledMenu, useClick } from '@szhsin/react-menu';
 
 const Desktop = ({ visible, setVisible }) => {
     const [id, setId] = useState(null);
+    const [isShowDeleted, setIsShowDeleted] = useState(false);
     const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
     const privilegesQuery = useQuery({ queryKey: ['privileges-list'], queryFn: getPrivilegesList });
-    const desktopUsers = desktopUsersQuery?.data?.users || [];
+    let activeUserCount = desktopUsersQuery?.data?.users?.filter((user) => user.is_active) || 0;
+    const desktopUsers = isShowDeleted ? desktopUsersQuery?.data?.users?.filter((user) => !user.is_active) : desktopUsersQuery?.data?.users?.filter((user) => user.is_active) || [];
 
     const deleteMutation = useMutation({
         mutationFn: (data) => deleteDesktopUser(data),
         onSuccess: () => {
             desktopUsersQuery?.refetch();
             toast.success(`User deleted successfully`);
+            deleteMutation.reset();
         },
         onError: (error) => {
             toast.error(`Failed to delete user. Please try again.`);
         }
     });
-    console.log('deleteMutation: ', deleteMutation?.variables);
+
+    const restoreMutation = useMutation({
+        mutationFn: (data) => restoreDesktopUser(data),
+        onSuccess: () => {
+            setIsShowDeleted(false);
+            desktopUsersQuery?.refetch();
+            toast.success(`User restored successfully`);
+            restoreMutation.reset();
+        },
+        onError: (error) => {
+            toast.error(`Failed to restore user. Please try again.`);
+        }
+    });
+
+    console.log('restoreMutation: ', restoreMutation?.variables);
+    const restore = (id) => {
+        if (desktopUsersQuery?.data?.limits?.total <= activeUserCount?.length) {
+            toast.error(`You have reached the maximum number of users allowed.`);
+        } else {
+            restoreMutation.mutate(id)
+        }
+    }
 
     const nameBody = (data) => {
         return <div className='d-flex align-items-center justify-content-between show-on-hover'>
@@ -52,11 +77,21 @@ const Desktop = ({ visible, setVisible }) => {
         </div>
     }
 
-    const actionsBody = (data) => {
-        return <Button onClick={() => { deleteMutation.mutate(data?.id)}} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
-            Delete 
-            {deleteMutation?.variables == data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
-        </Button>
+    const ActionsBody = (data) => {
+        return <React.Fragment>
+            {
+                data?.is_active
+                    ?
+                    <Button onClick={() => { deleteMutation.mutate(data?.id) }} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
+                        Delete
+                        {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                    </Button>
+                    : <Button onClick={() => restore(data?.id)} className={clsx(style.successTextButton, 'text-button')} style={{ width: '120px', color: '#067647' }}>
+                        Restore
+                        {restoreMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                    </Button>
+            }
+        </React.Fragment>
     }
 
     return (
@@ -69,7 +104,7 @@ const Desktop = ({ visible, setVisible }) => {
                             <li className='menuActive'><Link to="/settings/users/desktop">Desktop</Link></li>
                             <li><Link to="/settings/users/mobile-app">Mobile App</Link></li>
                         </ul>
-                        <Button disabled={desktopUsersQuery?.data?.limits?.total <= desktopUsersQuery?.data?.limits?.number} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                        <Button disabled={desktopUsersQuery?.data?.limits?.total <= activeUserCount?.length} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
                     </div>
                 </div>
                 <div className={`content_wrap_main ${style.contentwrapmain}`}>
@@ -78,9 +113,9 @@ const Desktop = ({ visible, setVisible }) => {
                             <div className="topHeadStyle pb-4">
                                 <div className={style.userHead}>
                                     <h2>Desktop Users</h2>
-                                    <p>{desktopUsersQuery?.data?.limits?.number || 0} / {desktopUsersQuery?.data?.limits?.total || 0} <span className='cursor-pointer'>Buy More</span></p>
+                                    <p>{activeUserCount?.length || 0} / {desktopUsersQuery?.data?.limits?.total || 0} <span className='cursor-pointer'>Buy More</span></p>
                                 </div>
-                                <Button className={style.showDeleteBut}>Show Deleted</Button>
+                                <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={clsx(style.showDeleteBut, 'outline-none')}>{!isShowDeleted ? "Show" : "Hide"} Deleted</Button>
                             </div>
                             <div className={`settings-wrap ${style.userSettingPage}`}>
                                 <DataTable value={desktopUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
@@ -89,7 +124,7 @@ const Desktop = ({ visible, setVisible }) => {
                                     <Column field="phone" style={{ width: '210px' }} header="Phone"></Column>
                                     <Column field="role" style={{ width: '210px' }} header="Role"></Column>
                                     <Column field="privilege" body={StatusBody} style={{ width: '147px' }} header="Privilege"></Column>
-                                    <Column style={{ width: '210px' }} header="Actions" body={actionsBody}></Column>
+                                    <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>
                                 </DataTable>
                             </div>
                         </div>

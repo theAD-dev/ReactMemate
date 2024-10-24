@@ -1495,7 +1495,12 @@ input:focus::-webkit-input-placeholder {
 }
 
 .szh-menu-container.threeDots ul {
-  left: -230px !important;
+  left: -225px !important;
+  top: -0px !important;
+}
+
+.szh-menu-container.threeDots-setting ul {
+  left: -155px !important;
   top: -0px !important;
 }
 
