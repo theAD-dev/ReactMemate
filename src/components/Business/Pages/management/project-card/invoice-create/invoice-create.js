@@ -12,7 +12,7 @@ const InvoiceCreate = ({ isLoading, create }) => {
             <Button className='InvoiceAction InvoiceActive me-3' onClick={()=> setShow(true)}>
                 Invoice  <img src={InvoicesIcon} alt="Invoices" />
             </Button>
-            <SendInvoiceEmailForm show={show} setShow={setShow} setPayload={setPayload} contactPersons={[]}/>
+            <SendInvoiceEmailForm show={show} create={create} isLoading={isLoading} setShow={setShow} setPayload={setPayload} contactPersons={[]}/>
         </>
     )
 }
