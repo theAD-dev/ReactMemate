@@ -72,3 +72,70 @@
 .p-accordion-content {
   background-color: red;
 }
+
+.uploadBox {
+  display: flex;
+  width: 156px;
+  aspect-ratio: 3 / 2;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl, 16px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.imageBox {
+  display: flex;
+  width: 156px;
+  aspect-ratio: 3 / 2;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl, 16px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.uploadButton {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.uploadText {
+  color: var(--Primary-700, #106b99);
+
+  /* Text sm/Semibold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+  margin-bottom: 0px;
+}
+
+.trashBox {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl, 16px);
+  position: absolute;
+  // right: 350px;
+  top: -5px;
+  right: -5px;
+  z-index: 1;
+  border-radius: 100px;
+  border: 1px solid var(--Error-100, #fee4e2);
+  background: var(--Error-50, #fef3f2);
+}

@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import style from './public-invoice.module.scss';
-import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } from "../../../../../APIs/quoteation-api";
-import { ColumnGroup } from 'primereact/columngroup';
-import { Row } from 'primereact/row';
-import { useParams } from 'react-router-dom';
-import Button from "react-bootstrap/Button";
-import { Dialog } from "primereact/dialog";
-import googleReview from "../../../../../assets/images/icon/checbold.svg";
+import { Link, useParams } from 'react-router-dom';
 import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
 import clsx from 'clsx';
@@ -21,10 +15,7 @@ const PublicInvoice = () => {
 
     const [invoice, setInvoice] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [updateDis, setUpdateDis] = useState('');
-    const [errors, setErrors] = useState({});
     const [actionLoading, setActionLoading] = useState({ decline: false, changes: false, accept: false });
-    const [visible, setVisible] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -33,7 +24,7 @@ const PublicInvoice = () => {
             setInvoice(data);
         } catch (error) {
             console.error('Error fetching data: ', error);
-            toast.error("Failed to get the Quotation. Please try again.");
+            toast.error("Failed to get the Invoice. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -42,52 +33,6 @@ const PublicInvoice = () => {
     useEffect(() => {
         fetchData();
     }, [id]);
-
-    const handleDecline = async () => {
-        try {
-            setActionLoading(prev => ({ ...prev, decline: true }));
-            await quotationDecline(id);
-            fetchData();
-            toast.success("Quotation declined successfully.");
-        } catch (error) {
-            console.error('Error declining quotation: ', error);
-            toast.error("Failed to decline the Quotation. Please try again.");
-        } finally {
-            setActionLoading(prev => ({ ...prev, decline: false }));
-        }
-    };
-
-    const handleRequestChanges = async () => {
-        try {
-            if (!updateDis.trim()) {
-                setErrors({ description: 'Note is required' });
-                return;
-            }
-            setActionLoading(prev => ({ ...prev, changes: true }));
-            await quotationChanges(id, { note: updateDis });
-            toast.success("Quotation changes request has been sent");
-            setVisible(false);
-        } catch (error) {
-            console.error('Error sending the Quotation changes: ', error);
-            toast.error("Failed to sent the Quotation changes request. Please try again.");
-        } finally {
-            setActionLoading(prev => ({ ...prev, changes: false }));
-        }
-    };
-
-    const handleAccept = async () => {
-        try {
-            setActionLoading(prev => ({ ...prev, accept: true }));
-            await quotationAccept(id);
-            fetchData();
-            toast.success("Quotation accepted successfully.");
-        } catch (error) {
-            console.error('Error accepting quotation: ', error);
-            toast.error("Failed to accept the Quotation. Please try again.");
-        } finally {
-            setActionLoading(prev => ({ ...prev, accept: false }));
-        }
-    };
 
     const formatDate = (isoDate) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -132,85 +77,11 @@ const PublicInvoice = () => {
         </div>
     );
 
-    const handleClose = (e) => {
-        setVisible(false);
-    };
-
-    const footerContent = (
-        <div className="d-flex justify-content-between gap-2">
-            <Button className={`outline-button ${style.modelreadOutLIne}`} onClick={handleClose}>
-                Cancel
-            </Button>
-            <Button className="solid-button" style={{ width: "74px" }} onClick={handleRequestChanges} disabled={actionLoading.changes}>
-                {actionLoading.changes ? 'Saving...' : 'Save'}
-            </Button>
-        </div>
-    );
-
-    const headerElement = (
-        <div className={`${style.modalHeader}`}>
-            <div className="d-flex align-items-center gap-2">
-                <img src={googleReview} alt={googleReview} />
-                Request Change
-            </div>
-        </div>
-    );
-
     const CounterBody = (rowData, { rowIndex }) => <span>{rowIndex + 1}</span>;
-
-    const footerGroup = (
-        <ColumnGroup>
-            <Row>
-                <Column colSpan={4} />
-                <Column footer="Subtotal" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${invoice?.subtotal}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
-            </Row>
-            <Row>
-                <Column colSpan={4} />
-                <Column footer="Tax (10%)" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${invoice?.gst}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
-            </Row>
-            <Row>
-                <Column colSpan={4} />
-                <Column footer="Deposit" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${invoice?.deposit}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
-            </Row>
-            <Row>
-                <Column colSpan={4} />
-                <Column footer="Total" className={`${style.footerBoldText} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${invoice?.total}`} className={`${style.footerBoldText} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
-            </Row>
-            <Row>
-                <Column
-                    footer={(
-                        <div className={style.qupteMainColFooter}>
-                            <h2>Note:</h2>
-                            <p>{invoice?.note}</p>
-                        </div>
-                    )}
-                    colSpan={6}
-                    footerStyle={{ textAlign: 'left' }}
-                />
-            </Row>
-        </ColumnGroup>
-    );
-
-    const projectStatus = {
-        'Accepted': 'Accepted',
-        'Declined': 'Declined',
-        'Review': 'Under Review',
-        'Completed': 'Project Completed'
-    }
     return (
         <>
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
-                    {
-                        (invoice?.status !== "Sent" && invoice?.status !== "Saved") && <div className={clsx(style.topCaption, style.text, style[invoice?.status])}>
-                            {projectStatus[invoice?.status] ? projectStatus[invoice?.status] : invoice?.status}
-                        </div>
-                    }
-
                     <div className={clsx(style.quotationWrapper, style[invoice?.status])}>
                         <div className={style.quotationHead}>
                             <div className={style.left}>
@@ -218,7 +89,7 @@ const PublicInvoice = () => {
                                 <p className='mb-2 mt-2'> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{invoice?.number}</span>} </p>
                             </div>
                             <div className={style.right}>
-                                <img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' />
+                                <img src={`${process.env.REACT_APP_URL}${invoice?.organization?.logo}` || "https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg"} alt='Logo' style={{ width: '102px' }} />
                             </div>
                         </div>
 
@@ -345,14 +216,14 @@ const PublicInvoice = () => {
                     (invoice?.pay_status === 'not paid') && <div className={style.quotationfooter}>
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
-                                <button
-                                    className={"outline-button"}
-                                    onClick={handleDecline}
-                                    disabled={actionLoading.decline}
-                                >
-                                    {actionLoading.decline ? 'Declining...' : 'Save PDF'}
-                                    <FilePdf size={20} color='#344054' className='ms-1' />
-                                </button>
+                                <Link to={`${process.env.REACT_APP_URL}${invoice?.invoice_url}` } target='_blank'>
+                                    <button
+                                        className={"outline-button"}
+                                    >
+                                        {actionLoading.decline ? 'Declining...' : 'Save PDF'}
+                                        <FilePdf size={20} color='#344054' className='ms-1' />
+                                    </button>
+                                </Link>
                             </div>
                             <div className={clsx(style.right, 'd-flex align-items-center')}>
                                 <div>
@@ -372,37 +243,6 @@ const PublicInvoice = () => {
                     </div>
                 }
             </div>
-
-            <Dialog
-                visible={visible}
-                modal={true}
-                header={headerElement}
-                footer={footerContent}
-                className={`${style.modal} custom-modal custom-scroll-integration `}
-                onHide={handleClose}
-            >
-                <div className="d-flex flex-column">
-                    <form >
-                        <div className={style.formWrapNote}>
-                            <div className="formgroup mb-2 mt-2">
-                                <label>Note </label>
-                                <div className={`${style.inputInfo} ${errors.description ? 'error-border' : ''}`}>
-                                    <textarea
-                                        type="text"
-                                        name="Enter a description..."
-                                        value={updateDis}
-                                        placeholder='Enter a description...'
-                                        onChange={(e) => {
-                                            setUpdateDis(e.target.value);
-                                        }}
-                                    />
-                                </div>
-                                {errors.description && <p className="error-message">{errors.description}</p>}
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </Dialog>
         </>
     )
 }

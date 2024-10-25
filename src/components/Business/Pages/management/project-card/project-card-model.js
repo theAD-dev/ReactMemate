@@ -29,8 +29,10 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import InvoiceCreate from './invoice-create/invoice-create';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
+  console.log('lo....')
   const navigate = useNavigate();
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -488,7 +490,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS />
-                    <ComposeEmail clientId={cardData?.client}/>
+                    <ComposeEmail clientId={cardData?.client} />
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
@@ -529,28 +531,28 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                   <li>
                                     {type === "quote" ? (
                                       <>
-                                      <>
-                                      <FileEarmark size={16} color="#1AB2FF" />{" "}
-                                        <strong>&nbsp; Quote</strong>
+                                        <>
+                                          <FileEarmark size={16} color="#1AB2FF" />{" "}
+                                          <strong>&nbsp; Quote</strong>
+                                        </>
                                       </>
-                                    </>
-                                     
+
                                     ) : type === "task" ? (
                                       <>
-                                      <>
-                                      <Check2Circle size={16} color="#1AB2FF" />{" "}
-                                        <strong>&nbsp; Task</strong>
+                                        <>
+                                          <Check2Circle size={16} color="#1AB2FF" />{" "}
+                                          <strong>&nbsp; Task</strong>
+                                        </>
                                       </>
-                                    </>
-                                      
+
                                     ) : type === "order" ? (
                                       <>
-                                      <>
-                                      <Check2Circle size={16} color="#1AB2FF" />{" "}
-                                        <strong>&nbsp; Order</strong>
+                                        <>
+                                          <Check2Circle size={16} color="#1AB2FF" />{" "}
+                                          <strong>&nbsp; Order</strong>
+                                        </>
                                       </>
-                                    </>
-                                   
+
                                     ) : type === "note" ? (
                                       <>
                                         <>
@@ -560,32 +562,32 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                       </>
                                     ) : type === "tag" ? (
                                       <>
-                                      <>
-                                      <ListCheck size={16} color="#1AB2FF" />{" "}
-                                        <strong>&nbsp; Tag</strong>
+                                        <>
+                                          <ListCheck size={16} color="#1AB2FF" />{" "}
+                                          <strong>&nbsp; Tag</strong>
+                                        </>
                                       </>
-                                    </>
-                                     
+
                                     ) : type === "invoice" ? (
                                       <>
-                                      <>
-                                      <FileText size={16} color="#1AB2FF" />{" "}
-                                        <strong>&nbsp; Invoice</strong>
+                                        <>
+                                          <FileText size={16} color="#1AB2FF" />{" "}
+                                          <strong>&nbsp; Invoice</strong>
+                                        </>
                                       </>
-                                    </>
-                                      
+
                                     ) : type === "billing" ? (
                                       <>
-                                      <>
-                                      <PhoneVibrate size={16} color="#1AB2FF" />{" "}
-                                        <strong>&nbsp; Billing</strong>
+                                        <>
+                                          <PhoneVibrate size={16} color="#1AB2FF" />{" "}
+                                          <strong>&nbsp; Billing</strong>
+                                        </>
                                       </>
-                                    </>
-                                      
+
                                     ) : (
                                       ''
                                     )}
-                                   
+
                                   </li>
 
                                 </ul>
@@ -656,7 +658,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined} className='declineAction'>
                   <XCircle size={20} color='#912018' /> Decline Order
                   {
-                    declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/>
+                    declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
                   }
                 </Button>
                 <Button disabled={isDuplicating} className='duplicateAction' onClick={duplicateSale}>
@@ -667,22 +669,24 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Reply size={20} color='#344054' opacity={!cardData?.can_be_return ? .5 : 1} />
                   Send Back to Sales
                   {
-                    updateReturnMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/>
+                    updateReturnMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
                   }
                 </Button>
               </Col>
               <Col className='actionRightSide'>
-                <Button className='InvoiceAction InvoiceActive me-3' onClick={() => createInvoice(projectId)}>
+                <InvoiceCreate isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)}/>
+                
+                {/* <Button className='InvoiceAction InvoiceActive me-3' >
                   Invoice  <img src={InvoicesIcon} alt="Invoices" />
-                  { createInvoiceMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/> }
-                </Button>
+                  {createInvoiceMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />}
+                </Button> */}
 
                 {/* <Button className='ProgressAction'>Progress Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button> */}
-                
+
                 <Button onClick={() => completeMutation.mutate(projectId)} disabled={!cardData?.can_be_completed} className='CompleteActionBut'>
                   Complete & Archive
                   {
-                    completeMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }}/>
+                    completeMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
                   }
                 </Button>
               </Col>
