@@ -13,11 +13,13 @@ import { InputIcon } from 'primereact/inputicon';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 
 import style from './create-proposal.module.scss';
-import { Check2Circle, PlusLg, Upload } from 'react-bootstrap-icons';
+import { Check2Circle, CloudUpload, PlusLg, Trash, Upload } from 'react-bootstrap-icons';
 import { getProposalBySalesId, getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import SendProposal from '../send-proposal/send-proposal';
+import FileUploader from './file-uploader/file-uploader';
+import { nanoid } from 'nanoid';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -74,6 +76,7 @@ const header = renderHeader();
 const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
     const { unique_id } = useParams();
     const [isLoading, setIsLoading] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
     const [errors, setErrors] = useState({});
     const [fileName, setFileName] = useState('');
     const [errorIndex, setErrorIndex] = useState(null);
@@ -95,11 +98,14 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         enabled: !!unique_id,
         retry: 0,
     });
-
+    
     useEffect(() => {
         if (readProposalQuery?.data) {
             console.log('read proposal: ', readProposalQuery?.data);
             setTemplatedId(readProposalQuery?.data?.template);
+        }
+        if (!image && readProposalQuery?.data?.image) {
+            setImage({ croppedImageBase64: readProposalQuery?.data?.image })
         }
     }, [readProposalQuery?.data])
 
@@ -186,7 +192,10 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                 formData.append('action', 'create');
             }
 
-            if (image) formData.append('image', image);
+            if (image?.croppedImageBlob) {
+                const photoHintId = nanoid(6);
+                formData.append('image', image?.croppedImageBlob, `${photoHintId}.jpg`);
+            }
             const accessToken = localStorage.getItem("access_token");
 
             setIsLoading(true);
@@ -252,7 +261,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             setSections((prevSections) =>
                 prevSections.filter((section, i) => i !== index)
             );
-        }  
+        }
     };
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -286,8 +295,8 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
     useEffect(() => {
         if (templateId && templateId != readProposalQuery?.data?.template && proposalQuery?.data) {
             setSections([
-                ...readProposalQuery?.data?.sections?.map(section => ({ ...section, delete: true })),
-                ...proposalQuery?.data?.sections?.map(({ id, ...rest }) => ({ ...rest }))
+                ...readProposalQuery?.data?.sections?.map(section => ({ ...section, delete: true })) || [],
+                ...proposalQuery?.data?.sections?.map(({ id, ...rest }) => ({ ...rest })) || []
             ]);
         } else if (templateId === readProposalQuery?.data?.template) {
             setSections(readProposalQuery?.data?.sections);
@@ -335,7 +344,36 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                     </Col>
                 </Row>
                 <div className='d-flex flex-column px-4'>
-                    <div className='d-flex gap-3 align-items-center mb-1'>
+                    <div className='d-flex gap-3 justify-content-center align-items-center mb-1'>
+                        {
+                            image?.croppedImageBase64
+                                ?
+                                <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => setIsVisible(true)}>
+                                    <div className={style.imageBox} style={{ overflow: 'hidden', textAlign: 'center' }}>
+                                        <img
+                                            alt="uploaded-file"
+                                            src={image?.croppedImageBase64}
+                                            style={{ width: "100%", height: "100#" }}
+                                        />
+                                    </div>
+                                    <div className={clsx(style.trashBox, 'cursor-pointer')} onClick={(e) => { e.stopPropagation(); setImage(null) }}>
+                                        <Trash color='#F04438' size={16} />
+                                    </div>
+                                </div>
+                                : <div className={style.uploadBox} style={{ cursor: 'pointer' }} onClick={() => setIsVisible(true)}>
+                                    <div className={style.uploadButton}>
+                                        <CloudUpload color='#475467' size={20} />
+                                    </div>
+                                    <p className={style.uploadText}>Click to upload</p>
+                                </div>
+                        }
+                    </div>
+                    <FileUploader show={isVisible} setShow={setIsVisible} setPhoto={setImage} />
+                    {errors?.image && (
+                        <p className="error-message mb-2">{"Image is required"}</p>
+                    )}
+
+                    {/* <div className='d-flex gap-3 align-items-center mb-1'>
                         <Button className='outline-button w-fit' style={{ position: 'relative', cursor: 'pointer' }}>
                             Upload Image <Upload />
                             <input
@@ -357,7 +395,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                     </div>
                     {errors?.image && (
                         <p className="error-message mb-2">{"Image is required"}</p>
-                    )}
+                    )} */}
                     <Accordion activeIndex={0} className='mt-3'>
                         {sections?.map((section, originalIndex) => ({ ...section, originalIndex }))?.filter(section => !section.delete)?.map((section, index) => (
                             <AccordionTab key={section?.id || `accordion-${index}`} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>
