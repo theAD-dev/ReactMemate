@@ -6,13 +6,15 @@ import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputText } from "primereact/inputtext";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import style from "./send-invoice.module.scss";
 import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 import clsx from 'clsx';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { toast } from 'sonner';
+import { createAndSendInvoiceById } from '../../APIs/management-api';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -54,7 +56,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save, isLoading, create }) => {
+const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save, isLoading, create, projectId }) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
@@ -96,7 +98,19 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
             setEmailTemplatedId(18);
         }
 
-    }, [emailQuery, outgoingEmailTemplateQuery])
+    }, [emailQuery, outgoingEmailTemplateQuery]);
+
+    const mutation = useMutation({
+        mutationFn: (data) => createAndSendInvoiceById(projectId, data),
+        onSuccess: (response) => {
+            handleClose();
+            toast.success(`Invoice created and send successfully.`);
+        },
+        onError: (error) => {
+            console.error('Error creating task:', error);
+            toast.error(`Failed to create and send invoice. Please try again.`);
+        }
+    });
 
     const onSubmit = async () => {
         let errorCount = 0;
@@ -124,7 +138,14 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
 
         if (errorCount) return;
 
-        await save();
+        mutation.mutate({
+            subject,
+            email_body: text,
+            from_email: from,
+            to: to?.toString(),
+            ...(cc.length > 0 && { cc: cc.toString() }),
+            ...(bcc.length > 0 && { bcc: bcc.toString() })
+        })
     }
 
     const search = (event) => {
@@ -437,15 +458,22 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
             <Modal.Footer>
                 <div className="d-flex justify-content-end gap-2">
                     <Button className="outline-button" onClick={create}>
-                        Save{" "}
+                        Create{" "}
                         {isLoading && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
                             />
                         )}
                     </Button>
-                    <Button className="solid-button">
-                        Save and Send
+                    <Button className="solid-button" onClick={onSubmit}>
+                        Create and Send{" "}
+                        {
+                            mutation?.isPending && (
+                                <ProgressSpinner
+                                    style={{ width: "20px", height: "20px", color: "#fff" }}
+                                />
+                            )
+                        }
                     </Button>
                 </div>
             </Modal.Footer>

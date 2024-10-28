@@ -887,9 +887,10 @@ strong.dollorIcon {
   justify-content: center;
 }
 .projectCardButWrap .col {
+  gap: 15px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 16px 24px;
 }
 .projectCardCalculation.row {

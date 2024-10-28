@@ -674,7 +674,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
               <Col className='actionRightSide'>
-                <InvoiceCreate isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)}/>
+                <InvoiceCreate projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)}/>
                 
                 {/* <Button className='InvoiceAction InvoiceActive me-3' >
                   Invoice  <img src={InvoicesIcon} alt="Invoices" />
