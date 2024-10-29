@@ -455,7 +455,8 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
                     </Col>
                 </Row>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className='d-flex justify-content-between'>
+                <Button onClick={handleClose} className='text-button text-danger'>Cancel</Button>
                 <div className="d-flex justify-content-end gap-2">
                     <Button className="outline-button" onClick={create}>
                         Create{" "}
