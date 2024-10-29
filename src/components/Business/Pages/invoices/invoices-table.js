@@ -7,12 +7,9 @@ import { Tag } from 'primereact/tag';
 import style from './invoice.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
-import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import { Badge } from 'primereact/badge';
-import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
 import { getListOfInvoice } from '../../../../APIs/invoice-api';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 
@@ -27,7 +24,6 @@ const formatDate = (timestamp) => {
 };
 
 const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
-    const navigate = useNavigate();
     const observerRef = useRef(null);
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
@@ -36,10 +32,6 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
-
-    const [editData, setEditData] = useState("");
-    const [visible, setVisible] = useState(false);
-    const [showDialog, setShowDialog] = useState({ data: null, show: false });
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
@@ -91,7 +83,6 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const InvoiceIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span>{rowData.number}</span>
-            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }) }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
 
@@ -241,8 +232,6 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
-            <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
-            <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />
         </>
     )
 })

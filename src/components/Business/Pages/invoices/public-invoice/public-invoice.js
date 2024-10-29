@@ -2,20 +2,74 @@ import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import style from './public-invoice.module.scss';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
 import clsx from 'clsx';
-import { getInvoice } from '../../../../../APIs/invoice-api';
-import { Col, Row as BootstrapRow } from 'react-bootstrap';
+import { getInvoice, paymentIntentCreate } from '../../../../../APIs/invoice-api';
+import { Col, Row as BootstrapRow, Button } from 'react-bootstrap';
 import { FilePdf } from 'react-bootstrap-icons';
+import { Dialog } from 'primereact/dialog';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Dropdown } from 'primereact/dropdown';
+import { Exclamation, Person } from 'react-bootstrap-icons';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import StripPayment from '../../../../../ui/strip-payment/strip-payment';
+import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
+
+const headerElement = (
+    <div className={`${style.modalHeader}`}>
+        <div className="d-flex align-items-center gap-2">
+            Pay Invoice
+        </div>
+    </div>
+);
+
+const schema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    email: yup.string().email('Invalid email').required('Email is required'),
+    city: yup.string().required('City is required'),
+    postal_code: yup.string().required('Postal code is required'),
+    address: yup.string().required('Address is required'),
+});
 
 const PublicInvoice = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [invoice, setInvoice] = useState();
     const [isLoading, setIsLoading] = useState(false);
+
+    const [client_secret, set_client_seret] = useState("pi_3QF6upKYnOJJ6D590jN7484f_secret_qtdHcdZRxTBZGbbVjWiGUq4q9");
+
+    const [visible, setVisible] = useState(false);
     const [actionLoading, setActionLoading] = useState({ decline: false, changes: false, accept: false });
+    const handleClose = (e) => setVisible(false);
+
+    const { register, control, handleSubmit, formState: { errors }, reset, setValue } = useForm({
+        resolver: yupResolver(schema),
+        defaultValues: {
+            name: '',
+            email: '',
+            city: '',
+            postal_code: '',
+            address: ''
+        }
+    });
+
+    const [countryId, setCountryId] = useState('');
+    const [stateId, setStateId] = useState('');
+    const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
+    const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
+    const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
     const fetchData = async () => {
         try {
@@ -37,6 +91,14 @@ const PublicInvoice = () => {
     const formatDate = (isoDate) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(isoDate).toLocaleDateString('en-US', options);
+    };
+
+    const daysLeft = (dueDate) => {
+        const currentDate = new Date();
+        const dueDateObj = new Date(dueDate);
+        const timeDiff = dueDateObj - currentDate;
+        const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+        return daysDiff ? `${daysDiff} Days Overdue` : '';
     };
 
     const formatTimeStamp = (timestamp) => {
@@ -78,6 +140,39 @@ const PublicInvoice = () => {
     );
 
     const CounterBody = (rowData, { rowIndex }) => <span>{rowIndex + 1}</span>;
+
+    const mutation = useMutation({
+        mutationFn: (data) => paymentIntentCreate(id, data),
+        onSuccess: (response) => {
+            handleClose();
+            toast.success(`Payment intent created successfully.`);
+            navigate(`/payment/${response.client_secret}`);
+        },
+        onError: (error) => {
+            console.error('Error creating payment intent:', error);
+            toast.error(`Failed to create payment intent. Please try again.`);
+        }
+    });
+
+    const onSubmit = (data) => {
+        const { name, email, cityname, postal_code, address } = data;
+        console.log('Form Data:', data);
+        mutation.mutate({
+            name, email, city: cityname, postal_code, address
+        })
+    };
+
+    const footerContent = (
+        <div className="d-flex justify-content-end gap-2">
+            <Button className={`outline-button`} onClick={handleClose}>
+                Cancel
+            </Button>
+            <Button onClick={handleSubmit(onSubmit)} className="solid-button" style={{ width: "74px" }} disabled={actionLoading.changes}>
+                {mutation.isPending ? 'Sending...' : 'Send'}
+            </Button>
+        </div>
+    );
+
     return (
         <>
             <div className={style.quotationWrapperPage}>
@@ -216,11 +311,11 @@ const PublicInvoice = () => {
                     (invoice?.pay_status === 'not paid') && <div className={style.quotationfooter}>
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
-                                <Link to={`${process.env.REACT_APP_URL}${invoice?.invoice_url}` } target='_blank'>
+                                <Link to={`${process.env.REACT_APP_URL}${invoice?.invoice_url}`} target='_blank'>
                                     <button
                                         className={"outline-button"}
                                     >
-                                        {actionLoading.decline ? 'Declining...' : 'Save PDF'}
+                                        {'Save PDF'}
                                         <FilePdf size={20} color='#344054' className='ms-1' />
                                     </button>
                                 </Link>
@@ -228,11 +323,11 @@ const PublicInvoice = () => {
                             <div className={clsx(style.right, 'd-flex align-items-center')}>
                                 <div>
                                     <p className='mb-0' style={{ fontSize: '24px', fontWeight: 600, color: '#1A1C21' }}>${invoice?.total}</p>
-                                    <p className='mb-0' style={{ fontSize: '16px', fontWeight: 500, color: '#FFB258' }}>{invoice?.overdue || 0} Days Overdue</p>
+                                    <p className='mb-0' style={{ fontSize: '16px', fontWeight: 500, color: '#FFB258' }}>{daysLeft(invoice?.due_date)}</p>
                                 </div>
                                 <button
                                     className={style.accept}
-                                    onClick={() => { }}
+                                    onClick={() => { setVisible(true) }}
                                     disabled={actionLoading.accept}
                                     style={{ height: '48px' }}
                                 >
@@ -243,6 +338,154 @@ const PublicInvoice = () => {
                     </div>
                 }
             </div>
+
+            <Dialog
+                visible={visible}
+                modal={true}
+                header={headerElement}
+                footer={footerContent}
+                className={`${style.modal} custom-modal custom-scroll-integration `}
+                onHide={handleClose}
+            >
+                <BootstrapRow>
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mb-4">
+                            <label className={clsx(style.lable)}>Name</label>
+                            <IconField>
+                                <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Enter name' />
+                            </IconField>
+                            {errors.name && <p className="error-message">{errors.name.message}</p>}
+                        </div>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1">
+                            <label className={clsx(style.lable)}>Email</label>
+                            <IconField>
+                                <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputText {...register("email")} className={clsx(style.inputText, { [style.error]: errors.email })} placeholder='example@email.com' />
+                            </IconField>
+                            {errors.email && <p className="error-message">{errors.email.message}</p>}
+                        </div>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mb-4">
+                            <label className={clsx(style.lable)}>Country</label>
+                            <Controller
+                                name="country"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={(countriesQuery && countriesQuery.data?.map((country) => ({
+                                            value: country.id,
+                                            label: country.name
+                                        }))) || []}
+                                        onChange={(e) => {
+                                            field.onChange(e.value);
+                                            setCountryId(e.value);
+                                        }}
+                                        className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
+                                        style={{ height: '46px' }}
+                                        value={field.value}
+                                        loading={countriesQuery?.isFetching}
+                                        placeholder="Select a country"
+                                    />
+                                )}
+                            />
+                            {errors?.country && <p className="error-message">{errors?.country?.message}</p>}
+                        </div>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mb-4">
+                            <label className={clsx(style.lable)}>State</label>
+                            <Controller
+                                name="state"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={(statesQuery && statesQuery.data?.map((state) => ({
+                                            value: state.id,
+                                            label: state.name
+                                        }))) || []}
+                                        onChange={(e) => {
+                                            field.onChange(e.value);
+                                            setStateId(e.value);
+                                        }}
+                                        className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
+                                        style={{ height: '46px' }}
+                                        value={field.value}
+                                        loading={statesQuery?.isFetching}
+                                        placeholder={"Select a state"}
+                                        filter
+                                    />
+                                )}
+                            />
+                            {errors?.state && <p className="error-message">{errors?.state?.message}</p>}
+                        </div>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mb-4">
+                            <label className={clsx(style.lable)}>City/Suburb</label>
+                            <Controller
+                                name="city"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={(citiesQuery && citiesQuery.data?.map((city) => ({
+                                            value: city.id,
+                                            label: city.name
+                                        }))) || []}
+                                        onChange={(e) => {
+                                            const selectedCity = citiesQuery.data.find(city => city.id === e.value);
+                                            field.onChange(e.value);
+                                            setValue('cityname', selectedCity?.name || "")
+                                        }}
+                                        className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
+                                        style={{ height: '46px' }}
+                                        value={field.value}
+                                        loading={citiesQuery?.isFetching}
+                                        placeholder={"Select a city"}
+                                        filter
+                                    />
+                                )}
+                            />
+                            {errors?.city && <p className="error-message">{errors?.city?.message}</p>}
+                        </div>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1">
+                            <label className={clsx(style.lable)}>Street Address</label>
+                            <IconField>
+                                <InputIcon>{errors?.address && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputText {...register("address")} className={clsx(style.inputText, { [style.error]: errors?.address })} placeholder='Enter street address' />
+                            </IconField>
+                            {errors?.address && <p className="error-message">{errors?.address?.message}</p>}
+                        </div>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1">
+                            <label className={clsx(style.lable)}>Postcode</label>
+                            <IconField>
+                                <InputIcon>{errors?.postal_code && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputText {...register("postal_code")} keyfilter="int" className={clsx(style.inputText, { [style.error]: errors?.postal_code })} placeholder='Enter postcode' />
+                            </IconField>
+                            {errors?.postal_code && <p className="error-message">{errors.postal_code?.message}</p>}
+                        </div>
+                    </Col>
+                </BootstrapRow>
+            </Dialog>
         </>
     )
 }
