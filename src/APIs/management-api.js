@@ -126,7 +126,7 @@ export const createInvoiceById = async (id) => {
 }
 
 export const createAndSendInvoiceById = async (id, data) => {
-    const endpoint = `/invoices/create/${id}/`;
+    const endpoint = `/invoices/send/${id}/`;
     const options = {
         method: 'POST',
         body: data
