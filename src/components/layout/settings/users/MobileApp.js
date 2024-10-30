@@ -11,13 +11,14 @@ import { getMobileUserList } from '../../../../APIs/settings-user-api';
 import { Spinner } from 'react-bootstrap';
 import clsx from 'clsx';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import CreateMobileUser from './features/create-mobile-user';
 
 const MobileApp = () => {
     const [activeTab, setActiveTab] = useState('desktop');
+    const [visible, setVisible] = useState(false);
 
     const mobileUsersQuery = useQuery({ queryKey: ['mobile-users'], queryFn: getMobileUserList });
     const mobileUsers = mobileUsersQuery?.data?.users || [];
-    console.log('mobileUsers: ', mobileUsers);
 
     const nameBody = (data) => {
         return <div className='d-flex align-items-center justify-content-between'>
@@ -86,7 +87,7 @@ const MobileApp = () => {
                                     <li><Link to="/settings/users/desktop">Desktop</Link></li>
                                     <li className='menuActive'><Link to="/settings/users/mobile-app">Mobile App</Link></li>
                                 </ul>
-                                <Button className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                                <Button onClick={()=> setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
                             </div>
                         </div>
                         <div className={`content_wrap_main ${style.contentwrapmain}`}>
@@ -120,6 +121,7 @@ const MobileApp = () => {
                     </Spinner>
                 </div>
             }
+            <CreateMobileUser visible={visible} setVisible={setVisible} refetch={mobileUsersQuery.refetch()} />
         </>
     );
 }
