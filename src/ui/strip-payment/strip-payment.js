@@ -10,8 +10,6 @@ import {
 import { useParams } from 'react-router-dom';
 import { Button, Card } from 'react-bootstrap';
 
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
-
 const StripPayment = () => {
     const stripe = useStripe();
     const elements = useElements();
@@ -47,7 +45,8 @@ const StripPayment = () => {
 };
 
 const StripeContainer = () => {
-    const { clientSecret } = useParams();
+    const { clientSecret, publishKey } = useParams();
+    const stripePromise = loadStripe(publishKey);
     const options = {
         clientSecret,
         appearance: {

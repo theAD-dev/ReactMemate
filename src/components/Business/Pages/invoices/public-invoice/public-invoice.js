@@ -146,7 +146,7 @@ const PublicInvoice = () => {
         onSuccess: (response) => {
             handleClose();
             toast.success(`Payment intent created successfully.`);
-            navigate(`/payment/${response.client_secret}`);
+            navigate(`/payment/${response?.client_secret}/${response?.public_key}`);
         },
         onError: (error) => {
             console.error('Error creating payment intent:', error);

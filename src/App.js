@@ -47,7 +47,7 @@ function App() {
         <Route path="/ui/components" element={<Components />} />
         <Route path="/quote/:id" element={<QuotationEmail />} />
         <Route path="/invoice/:id" element={<PublicInvoice />} />
-        <Route path='/payment/:clientSecret' element={<StripeContainer />}/>
+        <Route path='/payment/:clientSecret/:publishKey' element={<StripeContainer />}/>
       </Routes>
     </AuthProvider>
   );
