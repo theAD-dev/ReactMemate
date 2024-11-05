@@ -5,7 +5,7 @@ import LoinLogo from "../../../assets/images/logo.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import { ProfileResetUpdate, resetEmail } from '../../../APIs/ProfileResetPasswordApi';
+import { resetEmail } from '../../../APIs/ProfileResetPasswordApi';
 import forgetyourpass from "../../../assets/images/img/forgetyourpass.jpg";
 import { ProgressSpinner } from "primereact/progressspinner";
 
@@ -32,7 +32,7 @@ const ForgotPassword = () => {
       console.log('response: ', response);
       navigate(`/check-mail?email=${encodeURIComponent(email)}`);
     } catch (error) {
-      if (error.message == "Not found") {
+      if (error.message === "Not found") {
         setError("Email does not exist");
       } else {
         setError("Failed to send email. Please try again.")
