@@ -10,8 +10,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
 import { Badge } from 'primereact/badge';
-import { getListOfInvoice } from '../../../../APIs/invoice-api';
+import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -152,6 +155,19 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         </div>
     }
 
+    const deleteMutation = useMutation({
+        mutationFn: (data) => deleteInvoice(data),
+        onSuccess: () => {
+            toast.success(`Invoice deleted successfully`);
+            deleteMutation.reset();
+            setRefetch(!refetch);
+        },
+        onError: (error) => {
+            deleteMutation.reset();
+            toast.error(`Failed to delete invoice. Please try again.`);
+        }
+    });
+
     const StatusBody = (rowData) => {
         const ref = useRef(null);
         const [isOpen, setOpen] = useState(false);
@@ -180,9 +196,10 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                         <FileEarmarkSpreadsheet color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async() => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Trash color='#B42318' size={20} />
                         <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
+                        {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : "" }
                     </div>
                 </div>
             </ControlledMenu>
