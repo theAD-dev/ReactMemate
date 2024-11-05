@@ -18,12 +18,9 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from 'primereact/dropdown';
-import { Exclamation, Person } from 'react-bootstrap-icons';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
-import StripPayment from '../../../../../ui/strip-payment/strip-payment';
-import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -48,13 +45,10 @@ const PublicInvoice = () => {
     const [invoice, setInvoice] = useState();
     const [isLoading, setIsLoading] = useState(false);
 
-    const [client_secret, set_client_seret] = useState("pi_3QF6upKYnOJJ6D590jN7484f_secret_qtdHcdZRxTBZGbbVjWiGUq4q9");
-
     const [visible, setVisible] = useState(false);
-    const [actionLoading, setActionLoading] = useState({ decline: false, changes: false, accept: false });
     const handleClose = (e) => setVisible(false);
 
-    const { register, control, handleSubmit, formState: { errors }, reset, setValue } = useForm({
+    const { register, control, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             name: '',
@@ -132,13 +126,6 @@ const PublicInvoice = () => {
         <> ${rowData?.total} </>
     );
 
-    const noteBody = () => (
-        <div className={style.qupteMainColWrap}>
-            <h2>Note</h2>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-        </div>
-    );
-
     const CounterBody = (rowData, { rowIndex }) => <span>{rowIndex + 1}</span>;
 
     const mutation = useMutation({
@@ -167,8 +154,8 @@ const PublicInvoice = () => {
             <Button className={`outline-button`} onClick={handleClose}>
                 Cancel
             </Button>
-            <Button onClick={handleSubmit(onSubmit)} className="solid-button" style={{ width: "74px" }} disabled={actionLoading.changes}>
-                {mutation.isPending ? 'Sending...' : 'Send'}
+            <Button onClick={handleSubmit(onSubmit)} className="solid-button" style={{ width: "74px" }}>
+                {mutation.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : 'Send'}
             </Button>
         </div>
     );
@@ -328,10 +315,9 @@ const PublicInvoice = () => {
                                 <button
                                     className={style.accept}
                                     onClick={() => { setVisible(true) }}
-                                    disabled={actionLoading.accept}
                                     style={{ height: '48px' }}
                                 >
-                                    {actionLoading.accept ? 'Loading...' : 'Pay this invoice'}
+                                    Pay this invoice
                                 </button>
                             </div>
                         </div>
@@ -352,7 +338,7 @@ const PublicInvoice = () => {
                         <div className="d-flex flex-column gap-1 mb-4">
                             <label className={clsx(style.lable)}>Name</label>
                             <IconField>
-                                <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
                                 <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Enter name' />
                             </IconField>
                             {errors.name && <p className="error-message">{errors.name.message}</p>}
@@ -363,7 +349,7 @@ const PublicInvoice = () => {
                         <div className="d-flex flex-column gap-1">
                             <label className={clsx(style.lable)}>Email</label>
                             <IconField>
-                                <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
                                 <InputText {...register("email")} className={clsx(style.inputText, { [style.error]: errors.email })} placeholder='example@email.com' />
                             </IconField>
                             {errors.email && <p className="error-message">{errors.email.message}</p>}
@@ -467,7 +453,7 @@ const PublicInvoice = () => {
                         <div className="d-flex flex-column gap-1">
                             <label className={clsx(style.lable)}>Street Address</label>
                             <IconField>
-                                <InputIcon>{errors?.address && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputIcon>{errors?.address && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
                                 <InputText {...register("address")} className={clsx(style.inputText, { [style.error]: errors?.address })} placeholder='Enter street address' />
                             </IconField>
                             {errors?.address && <p className="error-message">{errors?.address?.message}</p>}
@@ -478,7 +464,7 @@ const PublicInvoice = () => {
                         <div className="d-flex flex-column gap-1">
                             <label className={clsx(style.lable)}>Postcode</label>
                             <IconField>
-                                <InputIcon>{errors?.postal_code && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputIcon>{errors?.postal_code && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
                                 <InputText {...register("postal_code")} keyfilter="int" className={clsx(style.inputText, { [style.error]: errors?.postal_code })} placeholder='Enter postcode' />
                             </IconField>
                             {errors?.postal_code && <p className="error-message">{errors.postal_code?.message}</p>}

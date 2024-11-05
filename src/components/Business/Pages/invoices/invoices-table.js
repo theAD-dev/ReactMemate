@@ -1,11 +1,11 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, Plus, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Send, Files, FileEarmark, FileEarmarkSpreadsheet, Trash } from 'react-bootstrap-icons';
+import { Building, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Send, Files, FileEarmarkSpreadsheet, Trash } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
 
 import style from './invoice.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
