@@ -56,7 +56,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save, isLoading, create, projectId }) => {
+const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save, isLoading, create, projectId, projectCardData }) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
@@ -104,6 +104,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
         mutationFn: (data) => createAndSendInvoiceById(projectId, data),
         onSuccess: (response) => {
             handleClose();
+            projectCardData();
             toast.success(`Invoice created and send successfully.`);
         },
         onError: (error) => {

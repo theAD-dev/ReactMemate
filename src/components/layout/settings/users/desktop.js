@@ -10,12 +10,13 @@ import { Spinner } from 'react-bootstrap';
 import CreateDesktopUser from './features/create-desktop-user';
 import clsx from 'clsx';
 import { Plus } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 
 const Desktop = ({ visible, setVisible }) => {
+    const navigate = useNavigate();
     const [id, setId] = useState(null);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
     const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
@@ -65,7 +66,14 @@ const Desktop = ({ visible, setVisible }) => {
                 <div className='d-flex flex-column gap-1'>
                     <div className={`${style.ellipsis}`}>{data.first_name} {data.last_name}</div>
                 </div></div>
-            <Button label="Edit" onClick={() => { setId(data?.id); setVisible(true) }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' />
+            <Button label="Edit" onClick={() => {
+                if (data?.privilege_name === "Admin") {
+                    navigate('/settings/generalinformation/profile')
+                } else {
+                    setId(data?.id);
+                    setVisible(true);
+                }
+            }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' />
         </div>
     }
 
@@ -78,6 +86,8 @@ const Desktop = ({ visible, setVisible }) => {
     }
 
     const ActionsBody = (data) => {
+        if (data?.privilege_name === "Admin") return "-";
+
         return <React.Fragment>
             {
                 data?.is_active

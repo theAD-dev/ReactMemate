@@ -26,7 +26,7 @@ import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecli
 import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import InvoiceCreate from './invoice-create/invoice-create';
@@ -41,6 +41,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [editedReference, setEditedReference] = useState('');
   const [expenseJobsMapping, setExpenseJobsMapping] = useState([]);
   const [filteredHistory, setFilteredHistory] = useState([]);
+  console.log('filteredHistory: ', filteredHistory);
   const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
 
   //Real Cost Calculation
@@ -174,6 +175,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     onSuccess: (response) => {
       if (response) {
         handleClose();
+        projectCardData(projectId);
         toast.success('Invoice has been successfully created');
       } else {
         toast.error(`Failed to create the invoice. Please try again.`);
@@ -525,16 +527,17 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       ) : (
                         <div className='projectHistoryScroll'>
                           {filteredHistory?.length ? (
-                            filteredHistory.map(({ id, type, text, title, created, manager }, index) => (
+                            filteredHistory.map(({ id, type, text, title, created, manager, links, ...rest }, index) => (
                               <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>
                                     {type === "quote" ? (
                                       <>
-                                        <>
+                                        <div className='d-flex align-items-center'>
                                           <FileEarmark size={16} color="#1AB2FF" />{" "}
-                                          <strong>&nbsp; Quote</strong>
-                                        </>
+                                          <strong>&nbsp; Quote &nbsp;</strong>
+                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={16}/></Link>}
+                                        </div>
                                       </>
 
                                     ) : type === "task" ? (
@@ -570,10 +573,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
                                     ) : type === "invoice" ? (
                                       <>
-                                        <>
+                                        <div className='d-flex align-items-center'>
                                           <FileText size={16} color="#1AB2FF" />{" "}
-                                          <strong>&nbsp; Invoice</strong>
-                                        </>
+                                          <strong>&nbsp; Invoice&nbsp;</strong>
+                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={16}/></Link>}
+                                          &nbsp;&nbsp;{links?.invoice_url && <Link to={`#`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                        </div>
                                       </>
 
                                     ) : type === "billing" ? (
@@ -616,7 +621,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     </Placeholder>
                   ) : <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
                 }
-                <Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
+                <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
                 <Button className='googleBut googleActive'>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
@@ -674,8 +679,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
               <Col className='actionRightSide'>
-                <InvoiceCreate projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)}/>
-                
+                <InvoiceCreate projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)} projectCardData={() => projectCardData(projectId)} />
+
                 {/* <Button className='InvoiceAction InvoiceActive me-3' >
                   Invoice  <img src={InvoicesIcon} alt="Invoices" />
                   {createInvoiceMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />}

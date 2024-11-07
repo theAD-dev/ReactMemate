@@ -185,8 +185,11 @@ const PublicInvoice = () => {
                                 </p>
                             </div>
                             <div className={style.right}>
-                                <p>Reference</p>
+                                <p>Reference:</p>
                                 {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{invoice?.reference}</strong></p>}
+                                
+                                <p className='mt-4'>PO:</p>
+                                {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{invoice?.purchase_order || "-"}</strong></p>}
                             </div>
                         </div>
 
