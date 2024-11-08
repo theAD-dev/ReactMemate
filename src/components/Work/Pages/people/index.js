@@ -27,8 +27,7 @@ const PeoplePage = () => {
                 </div>
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
-                    <h1 className="title p-0" style={{ marginRight: '16px' }}>People</h1>
-                    <Button className={`${style.newButton}`}>New</Button>
+                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Team</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <div className={`${style.totalActive}`}>Active: 130</div>

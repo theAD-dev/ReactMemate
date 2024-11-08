@@ -371,7 +371,7 @@ const Header = ({ onClick }) => {
                         }
                       >
                         <img src={Profile3user} alt="Profile3user" />
-                        People
+                        Team
                       </NavLink>
                     </li>
                     <li>
