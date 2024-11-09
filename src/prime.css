@@ -468,3 +468,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 .p-dropdown-panel {
   z-index: 3100 !important;
 }
+
+.p-autocomplete-panel {
+  z-index: 2000 !important;
+}
