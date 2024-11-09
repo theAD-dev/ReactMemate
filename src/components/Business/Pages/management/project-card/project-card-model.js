@@ -10,12 +10,11 @@ import { Placeholder, Table } from 'react-bootstrap';
 import AddNote from './add-note';
 import NewTask from './new-task';
 import SendSMS from './send-sms';
-import ComposeEmail from './compose-email';
+import ComposeEmail from './compose-email/compose-email';
 import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
 import CreatePoIcon from "../../../../../assets/images/icon/createPoIcon.svg";
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
-import GoogleReview from "../../../../../assets/images/icon/googleReviewIcon.svg";
 import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../../assets/images/icon/InvoicesIcon.svg";
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
@@ -30,6 +29,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import InvoiceCreate from './invoice-create/invoice-create';
+import GoogleReviewEmail from './google-review/google-review';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   console.log('lo....')
@@ -624,7 +624,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
-                <Button className='googleBut googleActive'>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
+                <GoogleReviewEmail clientId={cardData?.client} />
                 {/* <FilesModel /> */}
                 <Button className='calenBut calenActive'>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button>
               </Col>
@@ -679,7 +679,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
               <Col className='actionRightSide'>
-                <InvoiceCreate projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)} projectCardData={() => projectCardData(projectId)} />
+                <InvoiceCreate clientId={cardData?.client} projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)} projectCardData={() => projectCardData(projectId)} />
 
                 {/* <Button className='InvoiceAction InvoiceActive me-3' >
                   Invoice  <img src={InvoicesIcon} alt="Invoices" />
