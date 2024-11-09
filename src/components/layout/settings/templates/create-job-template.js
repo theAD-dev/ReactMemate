@@ -65,17 +65,13 @@ const CreateJobTemplate = () => {
     const [name, setName] = useState("");
     const [subject, setSubject] = useState('');
     const [text, setText] = useState('');
-    const [type, setType] = useState('');
+    const [type, setType] = useState('2');
     const [cost, setCost] = useState(0.00);
     const [time_type, set_time_type] = useState('');
     const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
     const [duration, setDuration] = useState("");
-    console.log('duration: ', duration);
 
-
-
-    const isCustom = searchParams.get('isCustom');
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
     const [activeTab, setActiveTab] = useState('job-templates');
@@ -133,9 +129,7 @@ const CreateJobTemplate = () => {
             time_type,
             cost
         };
-        if (duration) templateData.duration = duration;
-        if (start) templateData.start_date = new Date(start).toISOString()
-        if (end) templateData.end_date = new Date(end).toISOString()
+        templateData.duration = duration || 0.0;
         mutation.mutate(templateData);
     }
 
@@ -154,8 +148,6 @@ const CreateJobTemplate = () => {
             setType(jobQuery?.data?.type);
             setCost(jobQuery?.data?.cost);
             set_time_type(jobQuery?.data?.time_type)
-            if (jobQuery?.data?.start_date) setStart(new Date(+jobQuery?.data?.start_date * 1000))
-            if (jobQuery?.data?.end_date) setEnd(new Date(+jobQuery?.data?.end_date * 1000))
             if (jobQuery?.data?.duration) setDuration(+jobQuery?.data?.duration)
         }
     }, [jobQuery?.data])
@@ -266,7 +258,7 @@ const CreateJobTemplate = () => {
                                                 checked={type === '2'}
                                                 className={style.customRadio}
                                             />
-                                            <label htmlFor="fix" className={style.radioLabel}>Fix</label>
+                                            <label htmlFor="fix" className={clsx(style.radioLabel, style.fix)}>Fix</label>
                                         </div>
                                         <span>OR</span>
                                         <div className={`flex align-items-center ${style.RadioButton}`}>
@@ -279,7 +271,7 @@ const CreateJobTemplate = () => {
                                                 checked={type === '3'}
                                                 className={style.customRadio}
                                             />
-                                            <label htmlFor="hours" className={style.radioLabel}>Hours</label>
+                                            <label htmlFor="hours" className={clsx(style.radioLabel, style.hours)}>Hours</label>
                                         </div>
                                         <span>OR</span>
                                         <div className={`flex align-items-center ${style.RadioButton}`}>
@@ -292,18 +284,28 @@ const CreateJobTemplate = () => {
                                                 checked={type === '4'}
                                                 className={style.customRadio}
                                             />
-                                            <label htmlFor="timetracker" className={style.radioLabel}>Time Tracker</label>
+                                            <label htmlFor="timetracker" className={clsx(style.radioLabel, style.timetracker)}>Time Tracker</label>
                                         </div>
                                     </div>
                                     {errors?.type && (
                                         <p className="error-message mb-0">{"Payment Type is required"}</p>
                                     )}
-
-                                    <label className={clsx(style.lable, 'mt-4 mb-2')}>Payment</label>
-                                    <IconField iconPosition="left">
-                                        <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
-                                        <InputText value={cost} onChange={(e) => setCost(e.target.value)} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
-                                    </IconField>
+                                    {
+                                        type === "2" ? <>
+                                            <label className={clsx(style.lable, 'mt-4 mb-2')}>Payment</label>
+                                            <IconField iconPosition="left">
+                                                <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
+                                                <InputText value={cost} onChange={(e) => setCost(e.target.value)} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
+                                            </IconField>
+                                        </>
+                                            : <div style={{ width: 'fit-content' }}>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Duration</label>
+                                                <IconField iconPosition="right">
+                                                    <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
+                                                    <InputText value={parseFloat(duration || 0).toFixed(1)} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ width: '120px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
+                                                </IconField>
+                                            </div>
+                                    }
                                 </div>
 
                                 <div className={`${style.typeBorder} ${style.paymentType}`}>
@@ -319,7 +321,7 @@ const CreateJobTemplate = () => {
                                                 checked={time_type === '1'}
                                                 className={style.customRadio}
                                             />
-                                            <label htmlFor="shift" className={style.radioLabel}>Shift</label>
+                                            <label htmlFor="shift" className={clsx(style.radioLabel, style.shift)}>Shift</label>
                                         </div>
                                         <span>OR</span>
                                         <div className={`flex align-items-center ${style.RadioButton}`}>
@@ -332,65 +334,12 @@ const CreateJobTemplate = () => {
                                                 checked={time_type === 'T'}
                                                 className={style.customRadio}
                                             />
-                                            <label htmlFor="timeframe" className={style.radioLabel}>Time Frame</label>
+                                            <label htmlFor="timeframe" className={clsx(style.radioLabel, style.timeFrame)}>Time Frame</label>
                                         </div>
                                     </div>
                                     {errors?.time_type && (
                                         <p className="error-message mb-0">{"Time is required"}</p>
                                     )}
-
-                                    <div className='d-flex gap-3 align-items-center'>
-                                        <div>
-                                            <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Starts</label>
-                                            <Calendar
-                                                value={start}
-                                                onChange={(e) => setStart(e.value)}
-                                                showButtonBar
-                                                placeholder='17 Jun 2021'
-                                                dateFormat="dd M yy"
-                                                showIcon
-                                                style={{ height: '46px', width: '180px' }}
-                                                icon={<Calendar3 color='#667085' size={20} />}
-                                                className={clsx(style.inputText, 'p-0 outline-none')}
-                                            />
-                                        </div>
-
-                                        {
-                                            time_type === 'T' && <div>
-                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>End</label>
-                                                <Calendar
-                                                    value={end}
-                                                    onChange={(e) => setEnd(e.value)}
-                                                    showButtonBar
-                                                    placeholder='20 Jun 2021'
-                                                    dateFormat="dd M yy"
-                                                    showIcon
-                                                    style={{ height: '46px', width: '180px' }}
-                                                    icon={<Calendar3 color='#667085' size={20} />}
-                                                    className={clsx(style.inputText, 'p-0 outline-none')}
-                                                />
-                                            </div>
-                                        }
-
-                                        <div>
-                                            <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Duration</label>
-                                            {/* <Calendar
-                                                timeOnly
-                                                value={duration}
-                                                onChange={(e) => setDuration(e.value)}
-                                                showIcon
-                                                placeholder='11:00'
-                                                style={{ height: '46px', width: '120px' }}
-                                                icon={<ClockHistory color='#667085' size={20} />}
-                                                className={clsx(style.inputText, 'p-0 outline-none')}
-                                            /> */}
-                                            <IconField iconPosition="right">
-                                                <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }}/></InputIcon>
-                                                <InputText value={parseFloat(duration || 0).toFixed(1)} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ width: '120px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
-                                            </IconField>
-
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -398,7 +347,7 @@ const CreateJobTemplate = () => {
                     </div>
                     <div className={style.bottom}>
                         {
-                            isCustom == "true" && id ?
+                            id ?
                                 <Button onClick={handleDelete} className='danger-outline-button'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
                                 : <span></span>
                         }

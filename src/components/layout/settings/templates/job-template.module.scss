@@ -267,12 +267,10 @@
         background: transparent;
         transition: all 0.3s ease;
         border-radius: var(--radius-xs, 4px);
-        border: 1px solid #98b15b;
         display: flex;
         align-items: center;
         padding: 10px 18px;
         justify-content: center;
-        color: #485d14;
         font-family: Inter;
         font-size: 16px;
         font-style: normal;
@@ -281,16 +279,58 @@
         white-space: nowrap;
       }
 
-      // Create the inner dot when the radio is checked
-      &:checked + label {
-        border: 1px solid #c295e0;
-        color: #c295e0;
+      + label.fix {
+        color: #1D2939;
+        border: 1px solid #d2fa6d;
       }
 
-      &:checked + label::before {
-        border-color: #c295e0;
-        color: #c295e0;
+      &:checked + label.fix {
+        background: #E1FC9D;
+        border: 1px solid #E1FC9D;
       }
+
+      + label.hours {
+        color: #5B5813;
+        border: 1px solid #D0CA63;
+      }
+
+      &:checked + label.hours {
+        background: #D0CA63;
+        border: 1px solid #D0CA63;
+      }
+
+      + label.timetracker {
+        color: #51256E;
+        border: 1px solid #C295E0;
+      }
+
+      &:checked + label.timetracker {
+        color: #fff;
+        background: #51256E;
+        border: 1px solid #C295E0;
+      }
+
+      + label.shift, + label.timeFrame {
+        color: #344054;
+        border: 1px solid #D0D5DD;
+      }
+
+      &:checked + label.shift, &:checked + label.timeFrame {
+        color: #344054;
+        background: #F2FAFF;
+        border: 1px solid #BAE8FF;
+      }
+
+      // Create the inner dot when the radio is checked
+      // &:checked + label {
+      //   border: 1px solid #c295e0;
+      //   color: #c295e0;
+      // }
+
+      // &:checked + label::before {
+      //   border-color: #c295e0;
+      //   color: #c295e0;
+      // }
     }
 
     .radioLabel {
