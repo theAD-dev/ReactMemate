@@ -8,8 +8,10 @@ import {
 } from "@stripe/react-stripe-js";
 import { useParams } from 'react-router-dom';
 import { Button, Card } from 'react-bootstrap';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
 
-const StripPayment = () => {
+const StripPayment = ({ amount, close }) => {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -30,21 +32,23 @@ const StripPayment = () => {
             },
         });
 
-        if (resp.error) setMessage("Some Error Occurred !!");
+        if (resp.error) toast.error("Some Error Occurred !!");
         setIsLoading(false);
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <PaymentElement />
-            <Button className='solid-button m-auto mt-4' disabled={!stripe || isLoading}>Submit</Button>
-            {message && <p>{message}</p>}
+            <div className="d-flex justify-content-end gap-3 w-100 mt-5 border-top">
+                <Button className={`outline-button mt-4`} onClick={close}>Cancel</Button>
+                <Button type='submit' className='solid-button mt-4' disabled={!stripe || isLoading}>Pay {parseFloat(amount || 0).toFixed(2)} AUD {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}</Button>
+            </div>
         </form>
     );
 };
 
-const StripeContainer = () => {
-    const { clientSecret, publishKey } = useParams();
+const StripeContainer = ({ clientSecret, publishKey, amount, close }) => {
+    // const { clientSecret, publishKey } = useParams();
     const stripePromise = loadStripe(publishKey);
     const options = {
         clientSecret,
@@ -76,10 +80,10 @@ const StripeContainer = () => {
 
     return (
         clientSecret ? (
-            <Card className='w-50 m-auto mt-5'>
-                <Card.Body>
+            <Card className='w-100 m-auto border-0 p-0 bg-tranparent'>
+                <Card.Body className='border-0 p-0'>
                     <Elements stripe={stripePromise} options={options}>
-                        <StripPayment />
+                        <StripPayment amount={amount} close={close} />
                     </Elements>
                 </Card.Body>
             </Card>

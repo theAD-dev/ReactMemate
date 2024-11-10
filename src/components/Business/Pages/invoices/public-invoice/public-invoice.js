@@ -21,6 +21,7 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from 'primereact/dropdown';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { ProgressSpinner } from 'primereact/progressspinner';
+import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -44,6 +45,7 @@ const PublicInvoice = () => {
 
     const [invoice, setInvoice] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [payment, setPayment] = useState({});
 
     const [visible, setVisible] = useState(false);
     const handleClose = (e) => setVisible(false);
@@ -131,9 +133,9 @@ const PublicInvoice = () => {
     const mutation = useMutation({
         mutationFn: (data) => paymentIntentCreate(id, data),
         onSuccess: (response) => {
-            handleClose();
             toast.success(`Payment intent created successfully.`);
-            navigate(`/payment/${response?.client_secret}/${response?.public_key}`);
+            // navigate(`/payment/${response?.client_secret}/${response?.public_key}`);
+            setPayment({ client_secret: response?.client_secret, public_key: response?.public_key });
         },
         onError: (error) => {
             console.error('Error creating payment intent:', error);
@@ -150,12 +152,12 @@ const PublicInvoice = () => {
     };
 
     const footerContent = (
-        <div className="d-flex justify-content-end gap-2">
+        <div className="d-flex justify-content-end gap-3">
             <Button className={`outline-button`} onClick={handleClose}>
                 Cancel
             </Button>
             <Button onClick={handleSubmit(onSubmit)} className="solid-button" style={{ width: "74px" }}>
-                {mutation.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : 'Send'}
+                {mutation.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : 'Next'}
             </Button>
         </div>
     );
@@ -187,7 +189,7 @@ const PublicInvoice = () => {
                             <div className={style.right}>
                                 <p>Reference:</p>
                                 {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{invoice?.reference}</strong></p>}
-                                
+
                                 <p className='mt-4'>PO:</p>
                                 {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{invoice?.purchase_order || "-"}</strong></p>}
                             </div>
@@ -332,148 +334,156 @@ const PublicInvoice = () => {
                 visible={visible}
                 modal={true}
                 header={headerElement}
-                footer={footerContent}
+                footer={!(payment?.client_secret && payment?.public_key) && footerContent}
                 className={`${style.modal} custom-modal custom-scroll-integration `}
                 onHide={handleClose}
             >
-                <BootstrapRow>
-                    <Col sm={6}>
-                        <div className="d-flex flex-column gap-1 mb-4">
-                            <label className={clsx(style.lable)}>Name</label>
-                            <IconField>
-                                <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
-                                <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Enter name' />
-                            </IconField>
-                            {errors.name && <p className="error-message">{errors.name.message}</p>}
-                        </div>
-                    </Col>
+                <h6>Please pay {invoice?.outstanding_amount} AUD for {invoice?.number}</h6>
+                <p>(Includes {parseFloat(invoice?.commission || 0).toFixed(2)} processing fee)</p>
+                {
+                    payment?.client_secret && payment?.public_key
+                        ?
+                        <StripeContainer amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} />
+                        : <BootstrapRow>
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1 mb-4">
+                                    <label className={clsx(style.lable)}>Name</label>
+                                    <IconField>
+                                        <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
+                                        <InputText {...register("name")} className={clsx(style.inputText, { [style.error]: errors.name })} placeholder='Enter name' />
+                                    </IconField>
+                                    {errors.name && <p className="error-message">{errors.name.message}</p>}
+                                </div>
+                            </Col>
 
-                    <Col sm={6}>
-                        <div className="d-flex flex-column gap-1">
-                            <label className={clsx(style.lable)}>Email</label>
-                            <IconField>
-                                <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
-                                <InputText {...register("email")} className={clsx(style.inputText, { [style.error]: errors.email })} placeholder='example@email.com' />
-                            </IconField>
-                            {errors.email && <p className="error-message">{errors.email.message}</p>}
-                        </div>
-                    </Col>
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1">
+                                    <label className={clsx(style.lable)}>Email</label>
+                                    <IconField>
+                                        <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
+                                        <InputText {...register("email")} className={clsx(style.inputText, { [style.error]: errors.email })} placeholder='example@email.com' />
+                                    </IconField>
+                                    {errors.email && <p className="error-message">{errors.email.message}</p>}
+                                </div>
+                            </Col>
 
-                    <Col sm={6}>
-                        <div className="d-flex flex-column gap-1 mb-4">
-                            <label className={clsx(style.lable)}>Country</label>
-                            <Controller
-                                name="country"
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                    <Dropdown
-                                        {...field}
-                                        options={(countriesQuery && countriesQuery.data?.map((country) => ({
-                                            value: country.id,
-                                            label: country.name
-                                        }))) || []}
-                                        onChange={(e) => {
-                                            field.onChange(e.value);
-                                            setCountryId(e.value);
-                                        }}
-                                        className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
-                                        style={{ height: '46px' }}
-                                        value={field.value}
-                                        loading={countriesQuery?.isFetching}
-                                        placeholder="Select a country"
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1 mb-4">
+                                    <label className={clsx(style.lable)}>Country</label>
+                                    <Controller
+                                        name="country"
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <Dropdown
+                                                {...field}
+                                                options={(countriesQuery && countriesQuery.data?.map((country) => ({
+                                                    value: country.id,
+                                                    label: country.name
+                                                }))) || []}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    setCountryId(e.value);
+                                                }}
+                                                className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
+                                                style={{ height: '46px' }}
+                                                value={field.value}
+                                                loading={countriesQuery?.isFetching}
+                                                placeholder="Select a country"
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                            {errors?.country && <p className="error-message">{errors?.country?.message}</p>}
-                        </div>
-                    </Col>
+                                    {errors?.country && <p className="error-message">{errors?.country?.message}</p>}
+                                </div>
+                            </Col>
 
-                    <Col sm={6}>
-                        <div className="d-flex flex-column gap-1 mb-4">
-                            <label className={clsx(style.lable)}>State</label>
-                            <Controller
-                                name="state"
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                    <Dropdown
-                                        {...field}
-                                        options={(statesQuery && statesQuery.data?.map((state) => ({
-                                            value: state.id,
-                                            label: state.name
-                                        }))) || []}
-                                        onChange={(e) => {
-                                            field.onChange(e.value);
-                                            setStateId(e.value);
-                                        }}
-                                        className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
-                                        style={{ height: '46px' }}
-                                        value={field.value}
-                                        loading={statesQuery?.isFetching}
-                                        placeholder={"Select a state"}
-                                        filter
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1 mb-4">
+                                    <label className={clsx(style.lable)}>State</label>
+                                    <Controller
+                                        name="state"
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <Dropdown
+                                                {...field}
+                                                options={(statesQuery && statesQuery.data?.map((state) => ({
+                                                    value: state.id,
+                                                    label: state.name
+                                                }))) || []}
+                                                onChange={(e) => {
+                                                    field.onChange(e.value);
+                                                    setStateId(e.value);
+                                                }}
+                                                className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
+                                                style={{ height: '46px' }}
+                                                value={field.value}
+                                                loading={statesQuery?.isFetching}
+                                                placeholder={"Select a state"}
+                                                filter
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                            {errors?.state && <p className="error-message">{errors?.state?.message}</p>}
-                        </div>
-                    </Col>
+                                    {errors?.state && <p className="error-message">{errors?.state?.message}</p>}
+                                </div>
+                            </Col>
 
-                    <Col sm={6}>
-                        <div className="d-flex flex-column gap-1 mb-4">
-                            <label className={clsx(style.lable)}>City/Suburb</label>
-                            <Controller
-                                name="city"
-                                control={control}
-                                defaultValue=""
-                                render={({ field }) => (
-                                    <Dropdown
-                                        {...field}
-                                        options={(citiesQuery && citiesQuery.data?.map((city) => ({
-                                            value: city.id,
-                                            label: city.name
-                                        }))) || []}
-                                        onChange={(e) => {
-                                            const selectedCity = citiesQuery.data.find(city => city.id === e.value);
-                                            field.onChange(e.value);
-                                            setValue('cityname', selectedCity?.name || "")
-                                        }}
-                                        className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
-                                        style={{ height: '46px' }}
-                                        value={field.value}
-                                        loading={citiesQuery?.isFetching}
-                                        placeholder={"Select a city"}
-                                        filter
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1 mb-4">
+                                    <label className={clsx(style.lable)}>City/Suburb</label>
+                                    <Controller
+                                        name="city"
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <Dropdown
+                                                {...field}
+                                                options={(citiesQuery && citiesQuery.data?.map((city) => ({
+                                                    value: city.id,
+                                                    label: city.name
+                                                }))) || []}
+                                                onChange={(e) => {
+                                                    const selectedCity = citiesQuery.data.find(city => city.id === e.value);
+                                                    field.onChange(e.value);
+                                                    setValue('cityname', selectedCity?.name || "")
+                                                }}
+                                                className={clsx(style.dropdownSelect, 'dropdown-height-fixed')}
+                                                style={{ height: '46px' }}
+                                                value={field.value}
+                                                loading={citiesQuery?.isFetching}
+                                                placeholder={"Select a city"}
+                                                filter
+                                            />
+                                        )}
                                     />
-                                )}
-                            />
-                            {errors?.city && <p className="error-message">{errors?.city?.message}</p>}
-                        </div>
-                    </Col>
+                                    {errors?.city && <p className="error-message">{errors?.city?.message}</p>}
+                                </div>
+                            </Col>
 
-                    <Col sm={6}>
-                        <div className="d-flex flex-column gap-1">
-                            <label className={clsx(style.lable)}>Street Address</label>
-                            <IconField>
-                                <InputIcon>{errors?.address && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
-                                <InputText {...register("address")} className={clsx(style.inputText, { [style.error]: errors?.address })} placeholder='Enter street address' />
-                            </IconField>
-                            {errors?.address && <p className="error-message">{errors?.address?.message}</p>}
-                        </div>
-                    </Col>
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1">
+                                    <label className={clsx(style.lable)}>Street Address</label>
+                                    <IconField>
+                                        <InputIcon>{errors?.address && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
+                                        <InputText {...register("address")} className={clsx(style.inputText, { [style.error]: errors?.address })} placeholder='Enter street address' />
+                                    </IconField>
+                                    {errors?.address && <p className="error-message">{errors?.address?.message}</p>}
+                                </div>
+                            </Col>
 
-                    <Col sm={6}>
-                        <div className="d-flex flex-column gap-1">
-                            <label className={clsx(style.lable)}>Postcode</label>
-                            <IconField>
-                                <InputIcon>{errors?.postal_code && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
-                                <InputText {...register("postal_code")} keyfilter="int" className={clsx(style.inputText, { [style.error]: errors?.postal_code })} placeholder='Enter postcode' />
-                            </IconField>
-                            {errors?.postal_code && <p className="error-message">{errors.postal_code?.message}</p>}
-                        </div>
-                    </Col>
-                </BootstrapRow>
+                            <Col sm={6}>
+                                <div className="d-flex flex-column gap-1">
+                                    <label className={clsx(style.lable)}>Postcode</label>
+                                    <IconField>
+                                        <InputIcon>{errors?.postal_code && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
+                                        <InputText {...register("postal_code")} keyfilter="int" className={clsx(style.inputText, { [style.error]: errors?.postal_code })} placeholder='Enter postcode' />
+                                    </IconField>
+                                    {errors?.postal_code && <p className="error-message">{errors.postal_code?.message}</p>}
+                                </div>
+                            </Col>
+                        </BootstrapRow>
+                }
+
             </Dialog>
         </>
     )
