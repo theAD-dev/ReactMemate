@@ -17,7 +17,7 @@ import * as yup from "yup";
 import clsx from "clsx";
 import StripeIntegrations from "./stripe-integrations";
 import { useQuery } from "@tanstack/react-query";
-import { getStripeIntegrations } from "../../../../APIs/integrations-api";
+import { getGoogleReviewIntegrations, getStripeIntegrations } from "../../../../APIs/integrations-api";
 import GoogleIntegrations from "./google-review-integration";
 
 const schema = yup.object().shape({
@@ -41,18 +41,9 @@ const Integrations = () => {
   const [selectedIntegration, setSelectedIntegration] = useState(null);
 
   const stripeIntegrationsQuery = useQuery({ queryKey: ['stripeIntegrations'], queryFn: getStripeIntegrations });
+  const googleReviewIntegrationsQuery = useQuery({ queryKey: ['googleReviewIntegrations'], queryFn: getGoogleReviewIntegrations });
 
   const integrationsData = [
-    {
-      id: 1,
-      title: "Stripe Settings",
-      method: "stripe",
-      content:
-        "Integrate Stripe to enable easy online invoice payments via credit card, ensuring quick and secure money transfers to your account.",
-      status: false,
-      isConnected: !!stripeIntegrationsQuery?.data?.stripe_secret_key || false,
-      img: stripelogo,
-    },
     {
       id: 2,
       title: "Xero",
@@ -62,16 +53,6 @@ const Integrations = () => {
       status: true,
       isConnected: false,
       img: xeroLogo,
-    },
-    {
-      id: 3,
-      title: "Google Review Link",
-      method: "googlereview",
-      content:
-        "Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click.",
-      status: false,
-      isConnected: false,
-      img: googleLogo,
     },
     {
       id: 4,
@@ -106,6 +87,50 @@ const Integrations = () => {
               <div className="content_wrapper">
                 <div className="listwrapper">
                   <Row>
+                    <Col xs={4} className="pb-4">
+                      <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                        <div className={style.head}>
+                          <img src={stripelogo} alt={"Stripe Settings"} />
+                          {
+                            <button className={!!stripeIntegrationsQuery?.data?.stripe_secret_key ? style.connected : style.disconnected}>
+                              {!!stripeIntegrationsQuery?.data?.stripe_secret_key ? "Connected" : "Disconnected"}
+                              <span className={style.dots}></span>
+                            </button>
+                          }
+                        </div>
+                        <div className={style.body}>
+                          <h3>{"Stripe Settings"}</h3>
+                          <p>{"Integrate Stripe to enable easy online invoice payments via credit card, ensuring quick and secure money transfers to your account."}</p>
+                        </div>
+                        <div className={style.bottom}>
+                          <button className={style.infoButton} onClick={() => {setStripeVisible(true)}}>
+                            {!stripeIntegrationsQuery?.data?.stripe_secret_key ? 'Connect' : 'Update'}
+                          </button>
+                        </div>
+                      </div>
+                    </Col>
+                    <Col xs={4} className="pb-4">
+                      <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                        <div className={style.head}>
+                          <img src={googleLogo} alt={"Google Review Link"} />
+                          {
+                            <button className={!!stripeIntegrationsQuery?.data?.stripe_secret_key ? style.connected : style.disconnected}>
+                              {!!googleReviewIntegrationsQuery?.data?.google_review_link ? "Connected" : "Disconnected"}
+                              <span className={style.dots}></span>
+                            </button>
+                          }
+                        </div>
+                        <div className={style.body}>
+                          <h3>{"Google Review Link"}</h3>
+                          <p>{"Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click."}</p>
+                        </div>
+                        <div className={style.bottom}>
+                          <button className={style.infoButton} onClick={() => {setGoogleVisible(true)}}>
+                            {!googleReviewIntegrationsQuery?.data?.google_review_link ? 'Connect' : 'Update'}
+                          </button>
+                        </div>
+                      </div>
+                    </Col>
                     {integrationsData.map((item) => (
                       <Col key={item.id} xs={4} className="pb-4">
                         <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
@@ -146,7 +171,7 @@ const Integrations = () => {
         </div>
       </div>
       <StripeIntegrations visible={stripeVisible} setVisible={setStripeVisible} stripe={stripeIntegrationsQuery?.data} refetch={stripeIntegrationsQuery?.refetch} />
-      <GoogleIntegrations visible={googleVisible} setVisible={setGoogleVisible} />
+      <GoogleIntegrations visible={googleVisible} setVisible={setGoogleVisible} data={googleReviewIntegrationsQuery?.data} refetch={googleReviewIntegrationsQuery?.refetch}/>
     </>
   );
 };
