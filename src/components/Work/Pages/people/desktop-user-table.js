@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import clsx from 'clsx';
 
-const PeoplesTable = () => {
+const DesktopPeoplesTable = () => {
     const observerRef = useRef(null);
     const [loading, setLoading] = useState(false)
     const [peoples, setPeoples] = useState([]);
@@ -59,31 +59,9 @@ const PeoplesTable = () => {
         }
     }
 
-    // const lastJobBody = (rowData) => {
-    //     return <Chip className={`custom ${style.defaultLastJob}`} label={rowData.lastJob} />
-    // }
-
-    const ratingBody = (rowData) => {
-        return <Rating value={rowData.rating} className='yellow-rating' style={{ position: 'static' }} readOnly cancel={false} />
-    }
-
     const daysBody = (rowData) => {
         return <Chip className={`custom ${style.defaultDays}`} label={rowData.days_in_company} />
     }
-
-    const hourlyBody = (rowData) => {
-        return `$ ${rowData.hourly}`
-    }
-
-    // const statusBody = (rowData) => {
-    //     if (rowData.status === 'Active')
-    //         return <div className={`${style.status} ${style.active}`}>
-    //             <Badge severity="success"></Badge> {rowData.status}
-    //         </div>
-    //     return <div className={`${style.status} ${style.inactive}`}>
-    //         {rowData.status} <Badge severity="danger"></Badge> 
-    //     </div>
-    // }
 
     const emailBodyTemplate = (rowData) => {
         return <div className='d-flex align-items-center justify-content-center'>
@@ -125,23 +103,20 @@ const PeoplesTable = () => {
 
     return (
         <>
-           <h1 className={clsx(style.tableCaption, 'mt-2')}>Mobile App Users</h1>
+           <h1 className={clsx(style.tableCaption, 'mt-2')}>Desktop User</h1>
             <DataTable value={peoples}
                 scrollable selectionMode={'checkbox'} removableSort
                 columnResizeMode="expand" resizableColumns showGridlines
-                size={'large'} className="border" selection={selectedPeoples}
+                size={'large'}  className="border" selection={selectedPeoples}
                 onSelectionChange={(e) => setSelectedPeoples(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
             >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
                 <Column field="name" header="Name" body={nameBody} style={{ minWidth: '400px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
-                <Column field="type" header="Type" body={typeBody} style={{ minWidth: '107px' }}></Column>
-                {/* <Column field="lastJob" header="Last Job" body={lastJobBody} style={{ minWidth: '118px' }} sortable></Column>
-                <Column field="group" header="Group" style={{ minWidth: '87px' }} sortable></Column> */}
-                <Column field="rating" header="Rating" body={ratingBody} style={{ minWidth: '149px' }} sortable></Column>
+                <Column field="type" header="Role" body={typeBody} style={{ minWidth: '107px' }}></Column>
+                <Column field="rating" header="Privilege" style={{ minWidth: '149px' }} sortable></Column>
                 <Column field="days" header="Days in company" body={daysBody} style={{ minWidth: '150px' }} className='text-center' sortable></Column>
-                {/* <Column field="hourly" header="Hourly rate" body={hourlyBody} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column> */}
                 <Column field="jobs_complete" header="Jobs complete" style={{ minWidth: '131px', textAlign: 'left' }} sortable></Column>
                 <Column header="Email" body={emailBodyTemplate} style={{ minWidth: '73px', textAlign: 'center' }}></Column>
                 <Column header="Phone" body={phoneBodyTemplate} style={{ minWidth: '73px', textAlign: 'center' }}></Column>
@@ -152,4 +127,4 @@ const PeoplesTable = () => {
     )
 }
 
-export default PeoplesTable
+export default DesktopPeoplesTable
