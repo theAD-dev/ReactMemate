@@ -171,6 +171,8 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         }
     });
 
+
+
     const InfoBodyTemplate = (rowData) => {
         const ref = useRef(null);
         const [isOpen, setOpen] = useState(false);
@@ -243,13 +245,13 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
             >
                 <div className='d-flex flex-column gap-2'>
-                    <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
                         <Send color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Resend invoice</span>
                     </div>
                     <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
                         <Files color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate invoice</span>
+                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
                     </div>
                     <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
                         <FileEarmarkSpreadsheet color='#667085' size={20} />
