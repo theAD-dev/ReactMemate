@@ -113,8 +113,6 @@ const CreateJobTemplate = () => {
         if (!subject) newErrors.subject = true;
         if (!text) newErrors.text = true;
         if (!type) newErrors.type = true;
-        if (!time_type) newErrors.time_type = true;
-
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -126,7 +124,6 @@ const CreateJobTemplate = () => {
             title: subject,
             description: text,
             type,
-            time_type,
             cost
         };
         templateData.duration = duration || 0.0;
@@ -147,7 +144,6 @@ const CreateJobTemplate = () => {
             setText(jobQuery?.data?.description);
             setType(jobQuery?.data?.type);
             setCost(jobQuery?.data?.cost);
-            set_time_type(jobQuery?.data?.time_type)
             if (jobQuery?.data?.duration) setDuration(+jobQuery?.data?.duration)
         }
     }, [jobQuery?.data])
@@ -243,7 +239,7 @@ const CreateJobTemplate = () => {
                                 <p className="error-message mb-0">{"Message is required"}</p>
                             )}
 
-                            <div className={clsx(style.formTemplateGroup, "card flex justify-content-center mt-3")}>
+                            <div className={clsx(style.formTemplateGroup, "card flex justify-content-center mt-3 pb-4")}>
                                 <label className={clsx(style.lable1)}>Time / Money </label>
                                 <div className={style.paymentType}>
                                     <label className={clsx(style.lable)}>Payment Type</label>
@@ -308,7 +304,7 @@ const CreateJobTemplate = () => {
                                     }
                                 </div>
 
-                                <div className={`${style.typeBorder} ${style.paymentType}`}>
+                                {/* <div className={`${style.typeBorder} ${style.paymentType}`}>
                                     <label className={clsx(style.lable)}>Time</label>
                                     <div className={style.paymentmain}>
                                         <div className={`flex align-items-center ${style.RadioButton}`}>
@@ -340,7 +336,7 @@ const CreateJobTemplate = () => {
                                     {errors?.time_type && (
                                         <p className="error-message mb-0">{"Time is required"}</p>
                                     )}
-                                </div>
+                                </div> */}
                             </div>
 
                         </div>

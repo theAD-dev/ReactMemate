@@ -41,7 +41,7 @@ const StripeIntegrations = ({ visible, setVisible, stripe, refetch }) => {
         defaultValues: {
             stripe_secret_key: "",
             stripe_public_key: "",
-            commission: "",
+            commission: 0,
         },
     });
 
@@ -54,7 +54,7 @@ const StripeIntegrations = ({ visible, setVisible, stripe, refetch }) => {
             reset({
                 stripe_secret_key: stripe.stripe_secret_key || "",
                 stripe_public_key: stripe.stripe_public_key || "",
-                commission: stripe.commission || "",
+                commission: stripe.commission || 0,
             });
         }
     }, [stripe, reset]);
