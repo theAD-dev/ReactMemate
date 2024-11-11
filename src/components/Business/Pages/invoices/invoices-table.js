@@ -1,20 +1,21 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Send, Files, FileEarmarkSpreadsheet, Trash } from 'react-bootstrap-icons';
+import { Building, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Send, Files, FileEarmarkSpreadsheet, Trash, Plus, PlusLg, ListUl, Coin, Calendar3Event, CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
 
 import style from './invoice.module.scss';
 import { Link } from 'react-router-dom';
 
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-import { Spinner } from 'react-bootstrap';
+import { CloseButton, Spinner } from 'react-bootstrap';
 import { Badge } from 'primereact/badge';
 import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import clsx from 'clsx';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -34,6 +35,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [visible, setVisible] = useState(false);
     const limit = 25;
 
     useEffect(() => {
@@ -145,6 +147,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
             <div className={`${rowData.paid ? style['paid'] : style['unpaid']}`}>
                 $ {parseFloat(rowData.deposit || 0).toFixed(2)}
+                <span className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
             </div>
         </div>
     }
@@ -168,6 +171,62 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         }
     });
 
+    const InfoBodyTemplate = (rowData) => {
+        const ref = useRef(null);
+        const [isOpen, setOpen] = useState(false);
+        const anchorProps = useClick(isOpen, setOpen);
+        return <React.Fragment>
+            <InfoCircle color='#667085' size={18} className='cursor-pointer' ref={ref} {...anchorProps} />
+            <div className='fixedMenu' style={{ position: 'fixed', top: '40%', left: '40%' }}>
+                <ControlledMenu
+                    state={isOpen ? 'open' : 'closed'}
+                    anchorRef={ref}
+                    onClose={() => setOpen(false)}
+                    menuStyle={{ padding: '24px 24px 20px 24px', width: 'fit-content', marginTop: '45px' }}
+                >
+                    <div className='d-flex justify-content-between mb-4'>
+                        <div className='BoxNo'>
+                            <div>
+                                <InfoCircle color='#FFFFFF' size={24} />
+                            </div>
+                        </div>
+                        <CloseButton onClick={() => setOpen(false)} />
+                    </div>
+                    <div className='d-flex gap-4 border justify-content-around py-1 px-2 rounded'>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Person color='#98A2B3' size={14} />
+                            <span className='font-14'>{rowData?.client?.name}</span>
+                        </div>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Coin color='#98A2B3' size={14} />
+                            <span className='font-14 font-weight-bold'>{parseFloat(rowData.deposit || 0).toFixed(2)}</span>
+                        </div>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Coin color='#98A2B3' size={14} />
+                            <div className='border rounded font-14 px-1'>Bank</div>
+                        </div>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Calendar3Event color='#98A2B3' size={14} />
+                            <div className='font-14'>{formatDate(rowData.created)}</div>
+                        </div>
+                    </div>
+                    {
+                        rowData.paid
+                            ? <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#ECFDF3' }}>
+                                <CheckCircleFill color='#17B26A' />
+                                <span className='font-14' style={{ color: '#17B26A' }}>Invoice Paid</span>
+                            </div>
+                            : <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#FEF3F2' }}>
+                                <XCircleFill color='#F04438' />
+                                <span className='font-14' style={{ color: '#B42318' }}>Invoice Due</span>
+                            </div>
+                    }
+
+                </ControlledMenu>
+            </div>
+        </React.Fragment>
+    }
+
     const StatusBody = (rowData) => {
         const ref = useRef(null);
         const [isOpen, setOpen] = useState(false);
@@ -184,7 +243,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
             >
                 <div className='d-flex flex-column gap-2'>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
+                    <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
                         <Send color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Resend invoice</span>
                     </div>
@@ -192,14 +251,14 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                         <Files color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate invoice</span>
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
+                    <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
                         <FileEarmarkSpreadsheet color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async() => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Trash color='#B42318' size={20} />
                         <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
-                        {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : "" }
+                        {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </div>
                 </div>
             </ControlledMenu>
@@ -245,7 +304,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field='amount' header="Amount + GST" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
                 <Column field='deposit' header="Deposit/Payment" body={depositBody} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
-                <Column field='total_requests' header="Info" body={<InfoCircle color='#667085' size={20} />} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
+                <Column field='total_requests' header="Info" body={InfoBodyTemplate} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
