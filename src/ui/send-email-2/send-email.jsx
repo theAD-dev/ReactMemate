@@ -56,7 +56,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendDynamicEmailForm = ({ show, setShow, contactPersons, setPayload, isLoading, projectId, projectCardData, defaultTemplateId }) => {
+const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayload, isLoading, projectId, projectCardData, defaultTemplateId }) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
@@ -103,17 +103,6 @@ const SendDynamicEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
 
     }, [emailQuery, outgoingEmailTemplateQuery]);
 
-    const mutation = useMutation({
-        mutationFn: (data) => createAndSendInvoiceById(projectId, data),
-        onSuccess: (response) => {
-            handleClose();
-            toast.success(`Invoice created and send successfully.`);
-        },
-        onError: (error) => {
-            console.error('Error creating task:', error);
-            toast.error(`Failed to create and send invoice. Please try again.`);
-        }
-    });
 
     const onSubmit = async () => {
         let errorCount = 0;
@@ -464,9 +453,9 @@ const SendDynamicEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                     <Button className="outline-button" onClick={handleClose}>
                         Cancel{" "}
                     </Button>
-                    <Button className="solid-button" onClick={() => {}}>
+                    <Button className="solid-button" onClick={onSubmit}>
                         Send{" "}
-                        {isLoading && (
+                        {mutation?.isPending && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
                             />

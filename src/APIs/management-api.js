@@ -135,6 +135,16 @@ export const createAndSendInvoiceById = async (id, data) => {
     return fetchAPI(url.toString(), options);
 }
 
+export const sendComposeEmail = async (id, action, data) => {
+    const endpoint = `/compose/email/${id}/${action}/`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
     const accessToken = localStorage.getItem("access_token");

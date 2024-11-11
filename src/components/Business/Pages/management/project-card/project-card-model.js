@@ -492,7 +492,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS />
-                    <ComposeEmail clientId={cardData?.client} />
+                    <ComposeEmail clientId={cardData?.client} projectId={projectId}/>
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
@@ -624,7 +624,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
-                <GoogleReviewEmail clientId={cardData?.client} />
+                <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 {/* <FilesModel /> */}
                 <Button className='calenBut calenActive'>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button>
               </Col>
