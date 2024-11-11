@@ -5,7 +5,7 @@ import { Building, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Se
 import { Tag } from 'primereact/tag';
 
 import style from './invoice.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { CloseButton, Spinner } from 'react-bootstrap';
@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import clsx from 'clsx';
+import { fetchduplicateData } from '../../../../APIs/SalesApi';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -29,6 +30,7 @@ const formatDate = (timestamp) => {
 
 const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
     const observerRef = useRef(null);
+    const navigate = useNavigate();
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
@@ -171,7 +173,18 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         }
     });
 
-
+    const duplicateMutation = useMutation({
+        mutationFn: (data) => fetchduplicateData(data),
+        onSuccess: () => {
+            toast.success(`Project has been successfully duplicated`);
+            duplicateMutation.reset();
+            navigate('/sales');
+        },
+        onError: (error) => {
+            deleteMutation.reset();
+            toast.error(`Failed to duplicate project. Please try again.`);
+        }
+    });
 
     const InfoBodyTemplate = (rowData) => {
         const ref = useRef(null);
@@ -249,9 +262,10 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                         <Send color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Resend invoice</span>
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Files color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
+                        {duplicateMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </div>
                     <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
                         <FileEarmarkSpreadsheet color='#667085' size={20} />
