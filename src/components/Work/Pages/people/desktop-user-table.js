@@ -90,7 +90,7 @@ const DesktopPeoplesTable = () => {
     }
 
     const actionBody = () => {
-        return <Button className='text-button bg-tranparent'>New Job <Plus color='#158ECC' size={20} /></Button>
+        return <Button className='text-button bg-tranparent p-0 text-dark' disabled>New Job <Plus color='#667085' size={20} /></Button>
     }
 
     const loadingIconTemplate = () => {

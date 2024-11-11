@@ -112,7 +112,7 @@ const PeoplesTable = () => {
     }
 
     const actionBody = () => {
-        return <Button className='text-button bg-tranparent'>New Job <Plus color='#158ECC' size={20} /></Button>
+        return <Button className='text-button bg-tranparent p-0'>New Job <Plus color='#158ECC' size={20} /></Button>
     }
 
     const loadingIconTemplate = () => {
