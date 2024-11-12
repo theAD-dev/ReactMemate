@@ -56,7 +56,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
             "lastName": "",
             "email": "",
             "group": "",
-            "payment_cycle": "",
+            "payment_cycle": "7",
             "hourly_rate": ""
         });
     };
@@ -135,7 +135,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                 "lastName": "",
                 "email": "",
                 "group": "",
-                "payment_cycle": "",
+                "payment_cycle": "7",
                 "hourly_rate": ""
             });
         }
@@ -285,6 +285,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                                                 className={clsx(style.dropdownSelect, 'dropdown-height-fixed', "outline-none")}
                                                 placeholder="Select payment cycle"
                                                 value={field.value}
+                                                disabled
                                                 style={{ height: '46px' }}
                                                 onChange={(e) => field.onChange(e.value)}
                                             />
