@@ -17,6 +17,7 @@ import { useMutation } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import clsx from 'clsx';
 import { fetchduplicateData } from '../../../../APIs/SalesApi';
+import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -149,7 +150,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
             <div className={`${rowData.paid ? style['paid'] : style['unpaid']}`}>
                 $ {parseFloat(rowData.deposit || 0).toFixed(2)}
-                <span className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
+                <span onClick={()=> setVisible(true)} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
             </div>
         </div>
     }
@@ -324,6 +325,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
+            <InvoicePartialPayment show={visible} setShow={()=> setVisible(false)} />
         </>
     )
 })
