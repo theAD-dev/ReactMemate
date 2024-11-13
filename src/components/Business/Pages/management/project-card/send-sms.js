@@ -5,8 +5,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { X } from "react-bootstrap-icons";
 import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
+import { useNavigate } from 'react-router-dom';
 
 const SendSMS = () => {
+  const navigate = useNavigate();
   const [viewShow, setViewShow] = useState(false);
   const [updateDis, setUpdateDis] = useState('');
   const [errors, setErrors] = useState({});
@@ -16,8 +18,12 @@ const SendSMS = () => {
     setViewShow(false);
   };
   const handleShow = () => {
-    setViewShow(true);
-
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || "{}");
+    if (profileData?.has_twilio)
+      setViewShow(true);
+    else {
+      navigate('/settings/integrations?openTwilio=true');
+    }
   };
   // Handle change in form inputs
   const handleChange = (e) => {

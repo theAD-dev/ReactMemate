@@ -56,7 +56,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayload, isLoading, projectId, projectCardData, defaultTemplateId }) => {
+const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayload, defaultTemplateId }) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);

@@ -136,7 +136,10 @@ export const createAndSendInvoiceById = async (id, data) => {
 }
 
 export const sendComposeEmail = async (id, action, data) => {
-    const endpoint = `/compose/email/${id}/${action}/`;
+    let endpoint;
+    if (action) endpoint = `/compose/email/${id}/${action}/`;
+    else endpoint = `/compose/email/${id}/`;
+
     const options = {
         method: 'POST',
         body: data

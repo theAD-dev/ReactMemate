@@ -18,6 +18,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import clsx from 'clsx';
 import { fetchduplicateData } from '../../../../APIs/SalesApi';
 import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
+import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -148,9 +149,9 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
     const depositBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
-            <div className={`${rowData.paid ? style['paid'] : style['unpaid']}`}>
+            <div className={`${rowData.paid ? style['paid'] : style['unpaid']} ${rowData.deposit === '0.00' ? style['zeroPaid'] : '' }`}>
                 $ {parseFloat(rowData.deposit || 0).toFixed(2)}
-                <span onClick={()=> setVisible(true)} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
+                <span onClick={() => setVisible(true)} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
             </div>
         </div>
     }
@@ -259,10 +260,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
             >
                 <div className='d-flex flex-column gap-2'>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
-                        <Send color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Resend invoice</span>
-                    </div>
+                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} />
                     <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Files color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
@@ -325,7 +323,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
-            <InvoicePartialPayment show={visible} setShow={()=> setVisible(false)} />
+            <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} />
         </>
     )
 })

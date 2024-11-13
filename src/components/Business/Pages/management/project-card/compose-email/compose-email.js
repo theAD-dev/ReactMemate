@@ -18,7 +18,7 @@ const ComposeEmail = ({ clientId, projectId }) => {
   });
 
   const mutation = useMutation({
-    mutationFn: (data) => sendComposeEmail(projectId, "compose-email", data),
+    mutationFn: (data) => sendComposeEmail(projectId, "", data),
     onSuccess: (response) => {
       setViewShow(false);
       toast.success(`Email send successfully.`);

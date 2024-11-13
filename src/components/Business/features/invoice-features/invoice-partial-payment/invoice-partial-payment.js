@@ -63,13 +63,25 @@ const InvoicePartialPayment = ({ show, setShow }) => {
 
             <Card className={clsx(style.border, 'mb-3')}>
                 <Card.Body>
-                    <div className='d-flex justify-content-between gap-3 align-items-center'>
-                        <div className={clsx(style.box, 'd-flex flex-column text-end')}>
+                    <div className='d-flex justify-content-between gap-2 align-items-center'>
+                        <div className={clsx(style.box3, 'd-flex flex-column text-end')}>
                             <label>Budget</label>
                             <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
                         </div>
-                        <div className={clsx(style.box2, 'd-flex flex-column')}>
-                            <label>To Be Paid</label>
+                        <div className={clsx(style.box4, 'd-flex flex-column text-end')}>
+                            <label>Real Cost</label>
+                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                        </div>
+                        <div className={clsx(style.box5, 'd-flex flex-column text-end')}>
+                            <label>Cost Of Sale</label>
+                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                        </div>
+                        <div className={clsx(style.box6, 'd-flex flex-column text-end')}>
+                            <label>Labour</label>
+                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                        </div>
+                        <div className={clsx(style.box7, 'd-flex flex-column text-end')}>
+                            <label>Operational Profit</label>
                             <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
                         </div>
                     </div>

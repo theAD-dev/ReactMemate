@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,6 +10,7 @@ import stripelogo from "../../../../assets/images/icon/stripeLogo.png";
 import xeroLogo from "../../../../assets/images/icon/xeroLogo.png";
 import googleLogo from "../../../../assets/images/icon/googleLogo.png";
 import googleCalLogo from "../../../../assets/images/icon/googleCalLogo.png";
+import twilioLogo from '../../../../assets/images/twilio-logo.png';
 import googleAnalyticLogo from "../../../../assets/images/icon/googleAnalyticLogo.png";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,8 +18,10 @@ import * as yup from "yup";
 import clsx from "clsx";
 import StripeIntegrations from "./stripe-integrations";
 import { useQuery } from "@tanstack/react-query";
-import { getGoogleReviewIntegrations, getStripeIntegrations } from "../../../../APIs/integrations-api";
+import { getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations } from "../../../../APIs/integrations-api";
 import GoogleIntegrations from "./google-review-integration";
+import TwilioIntegrations from "./twilio-integration";
+import { useLocation } from "react-router-dom";
 
 const schema = yup.object().shape({
   emails: yup.array().of(
@@ -33,15 +36,17 @@ const schema = yup.object().shape({
   ),
 });
 const Integrations = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("integrations");
 
   const [googleVisible, setGoogleVisible] = useState(false);
   const [visible, setVisible] = useState(false);
   const [stripeVisible, setStripeVisible] = useState(false);
-  const [selectedIntegration, setSelectedIntegration] = useState(null);
+  const [twilioVisible, setTwilioVisible] = useState(false);
 
   const stripeIntegrationsQuery = useQuery({ queryKey: ['stripeIntegrations'], queryFn: getStripeIntegrations });
   const googleReviewIntegrationsQuery = useQuery({ queryKey: ['googleReviewIntegrations'], queryFn: getGoogleReviewIntegrations });
+  const twilioIntegrationsQuery = useQuery({ queryKey: ['twilioIntegrations'], queryFn: getTwilioIntegrations });
 
   const integrationsData = [
     {
@@ -74,6 +79,11 @@ const Integrations = () => {
     },
   ];
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const openTwilioParam = params.get('openTwilio');
+    setTwilioVisible(openTwilioParam === 'true');
+  }, [location]);
   return (
     <>
       <div className="settings-wrap">
@@ -114,8 +124,8 @@ const Integrations = () => {
                         <div className={style.head}>
                           <img src={googleLogo} alt={"Google Review Link"} />
                           {
-                            <button className={!!stripeIntegrationsQuery?.data?.stripe_secret_key ? style.connected : style.disconnected}>
-                              {!!googleReviewIntegrationsQuery?.data?.google_review_link ? "Connected" : "Disconnected"}
+                            <button className={stripeIntegrationsQuery?.data?.stripe_secret_key ? style.connected : style.disconnected}>
+                              {googleReviewIntegrationsQuery?.data?.google_review_link ? "Connected" : "Disconnected"}
                               <span className={style.dots}></span>
                             </button>
                           }
@@ -131,6 +141,30 @@ const Integrations = () => {
                         </div>
                       </div>
                     </Col>
+                    <Col xs={4} className="pb-4">
+                      <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                        <div className={style.head}>
+                          <img src={twilioLogo} style={{ width: '120px', position: 'relative', left: '-20px' }} alt={"Twilio"} />
+                          {
+                            <button className={twilioIntegrationsQuery?.data?.twilio_token ? style.connected : style.disconnected}>
+                              {twilioIntegrationsQuery?.data?.twilio_token ? "Connected" : "Disconnected"}
+                              <span className={style.dots}></span>
+                            </button>
+                          }
+                        </div>
+                        <div className={style.body}>
+                          <h3>{"Twilio"}</h3>
+                          <p>{"Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click."}</p>
+                        </div>
+                        <div className={style.bottom}>
+                          <button className={style.infoButton} onClick={() => {setTwilioVisible(true)}}>
+                            {!twilioIntegrationsQuery?.data?.twilio_token ? 'Connect' : 'Update'}
+                          </button>
+                        </div>
+                      </div>
+                    </Col>
+
+
                     {integrationsData.map((item) => (
                       <Col key={item.id} xs={4} className="pb-4">
                         <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
@@ -171,6 +205,7 @@ const Integrations = () => {
         </div>
       </div>
       <StripeIntegrations visible={stripeVisible} setVisible={setStripeVisible} stripe={stripeIntegrationsQuery?.data} refetch={stripeIntegrationsQuery?.refetch} />
+      <TwilioIntegrations visible={twilioVisible} setVisible={setTwilioVisible} twilio={twilioIntegrationsQuery?.data} refetch={twilioIntegrationsQuery?.refetch} />
       <GoogleIntegrations visible={googleVisible} setVisible={setGoogleVisible} data={googleReviewIntegrationsQuery?.data} refetch={googleReviewIntegrationsQuery?.refetch}/>
     </>
   );

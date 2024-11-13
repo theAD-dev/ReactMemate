@@ -171,6 +171,16 @@
       border-left: 1px solid #fedf89;
     }
   }
+
+  .unpaid.zeroPaid {
+    color: var(--Error-700, #B42318) !important;
+    border: 1px solid var(--Error-200, #FECDCA) !important;
+    background: var(--Error-50, #FEF3F2) !important;
+
+    .plusIcon::after {
+      border-left: 1px solid #FECDCA;
+    }
+  }
 }
 
 .status.active {

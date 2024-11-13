@@ -536,7 +536,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileEarmark size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Quote &nbsp;</strong>
-                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={16}/></Link>}
+                                          &nbsp;{projectId && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
                                         </div>
                                       </>
 
@@ -576,8 +577,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileText size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Invoice&nbsp;</strong>
-                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={16}/></Link>}
-                                          &nbsp;&nbsp;{links?.invoice_url && <Link to={`#`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                          &nbsp;{projectId && <Link to={`/invoice/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
                                         </div>
                                       </>
 
