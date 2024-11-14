@@ -40,6 +40,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
+    const [invoiceData, setInvoiceData] = useState(null);
     const limit = 25;
 
     useEffect(() => {
@@ -149,16 +150,16 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
     const depositBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
-            <div className={`${rowData.paid ? style['paid'] : style['unpaid']} ${rowData.deposit === '0.00' ? style['zeroPaid'] : '' }`}>
+            <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
                 $ {parseFloat(rowData.deposit || 0).toFixed(2)}
-                <span onClick={() => setVisible(true)} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
+                <span onClick={() => { setVisible(true); setInvoiceData(rowData) }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
             </div>
         </div>
     }
 
     const xeroBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-center`}>
-            <spam>xero</spam>
+            <span>xero</span>
         </div>
     }
 
@@ -323,7 +324,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
-            <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} />
+            <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData}/>
         </>
     )
 })

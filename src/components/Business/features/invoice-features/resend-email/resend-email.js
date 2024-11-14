@@ -13,7 +13,7 @@ const ResendInvoiceEmail = ({ projectId, clientId }) => {
     const clientQuery = useQuery({
         queryKey: ['id', clientId],
         queryFn: () => getClientById(clientId),
-        enabled: !!clientId,
+        enabled: !!clientId && !!show,
         retry: 1,
     });
 
@@ -35,7 +35,7 @@ const ResendInvoiceEmail = ({ projectId, clientId }) => {
                 <Send color='#667085' size={20} />
                 <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Resend invoice</span>
             </div>
-            <SendDynamicEmailForm show={show} setShow={setShow} setPayload={setPayload} mutation={mutation} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={() => { }} defaultTemplateId={18} />
+            <SendDynamicEmailForm show={show} setShow={setShow} setPayload={setPayload} mutation={mutation} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={() => { }} defaultTemplateId={19} />
         </>
 
     )

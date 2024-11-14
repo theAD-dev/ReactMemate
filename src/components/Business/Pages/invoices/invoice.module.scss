@@ -172,12 +172,27 @@
     }
   }
 
-  .unpaid.zeroPaid {
+  .partialPaid {
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    border-radius: 16px;
+    padding: 4px 8px;
     color: var(--Error-700, #B42318) !important;
     border: 1px solid var(--Error-200, #FECDCA) !important;
     background: var(--Error-50, #FEF3F2) !important;
-
+    svg {
+      fill: #d92d20;
+    }
     .plusIcon::after {
+      content: "";
+      left: 0px;
+      top: -5px;
+      height: 27px;
+      position: absolute;
       border-left: 1px solid #FECDCA;
     }
   }

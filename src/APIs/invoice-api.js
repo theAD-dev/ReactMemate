@@ -54,3 +54,13 @@ export const resendInvoiceEmail = async (id, data) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 }
+
+export const partialPaymentCreate = async (id, data) => {
+  const endpoint = `/invoices/partial-payment/${id}/`;
+  const options = {
+      method: 'POST',
+      body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

@@ -73,16 +73,17 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
     const [showBCC, setShowBCC] = useState(false);
     const handleClose = () => {
         setShow(false);
-        setEmailTemplatedId(null);
     }
     const [emailTemplateId, setEmailTemplatedId] = useState(null);
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
         queryFn: getEmailTemplates,
+        enabled: !!show,
     });
     const outgoingEmailTemplateQuery = useQuery({
         queryKey: ["getOutgoingEmail"],
         queryFn: getOutgoingEmail,
+        enabled: !!show,
     });
     const emailQuery = useQuery({
         queryKey: ["emailQuery", emailTemplateId],

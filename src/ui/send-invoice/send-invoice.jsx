@@ -56,7 +56,8 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save, isLoading, create, projectId, projectCardData }) => {
+const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save, isLoading, create, projectId, projectCardData, isCreated }) => {
+    console.log('isCreated: ', isCreated);
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
@@ -72,7 +73,8 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
     const [showCC, setShowCC] = useState(false);
     const [showBCC, setShowBCC] = useState(false);
     const handleClose = () => setShow(false);
-    const [emailTemplateId, setEmailTemplatedId] = useState(null);
+    const [emailTemplateId, setEmailTemplatedId] = useState(isCreated ? 19 : 18);
+    console.log('emailTemplateId: ', emailTemplateId);
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
         queryFn: getEmailTemplates,
@@ -93,11 +95,6 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
             if (outgoingEmailTemplateQuery?.data?.outgoing_email)
                 setFrom(outgoingEmailTemplateQuery?.data?.outgoing_email);
         }
-
-        if (!emailTemplateId && emailTemplateQuery?.data) {
-            setEmailTemplatedId(18);
-        }
-
     }, [emailQuery, outgoingEmailTemplateQuery]);
 
     const mutation = useMutation({

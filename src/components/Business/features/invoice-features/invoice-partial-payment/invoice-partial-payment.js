@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './invoice-partial-payment.module.scss';
 import { Dialog } from 'primereact/dialog';
 import { Card } from 'react-bootstrap';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
-import { FilePdf, Link } from 'react-bootstrap-icons';
+import { Bank, Cash, FilePdf, Link as LinkIcon } from 'react-bootstrap-icons';
 import { Input } from '@mui/material';
 import { InputText } from 'primereact/inputtext';
+import { SelectButton } from 'primereact/selectbutton';
+import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -16,27 +22,84 @@ const headerElement = (
     </div>
 );
 
-const InvoicePartialPayment = ({ show, setShow }) => {
+const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
+    const [deposit, setDeposit] = useState(0.00)
+    const [type, setType] = useState(null);
+    console.log('type: ', type);
+    const [errors, setErrors] = useState({});
+    const options = [
+        { icon: <Bank size={20} />, label: 'Bank', value: 2 },
+        { icon: <Cash size={20} />, label: 'Cash', value: 1 },
+    ]
+    const justifyTemplate = (option) => {
+        return <div className='d-flex align-items-center gap-2'>
+            {option.icon}
+            {option.label}
+        </div>
+    }
+    const mutation = useMutation({
+        mutationFn: (data) => partialPaymentCreate(invoice?.unique_id, data),
+        onSuccess: (response) => {
+            setShow(false);
+            setRefetch((old) => !old);
+            toast.success(`Partial payment is completed successfully.`);
+        },
+        onError: (error) => {
+            console.error('Failed to payment:', error);
+            toast.error(`Failed to payment. Please try again.`);
+        }
+    });
+
+    const onsubmit = () => {
+        let errorCount = 0;
+        setErrors({});
+
+        if (!type) {
+            errorCount++;
+            setErrors((others) => ({ ...others, type: true }));
+        }
+        if (!deposit) {
+            errorCount++;
+            setErrors((others) => ({ ...others, deposit: true }));
+        }
+        if (errorCount) return;
+        mutation.mutate({ deposit, type })
+    }
+
+    useEffect(() => {
+        setErrors({});
+    }, [show])
+
     return (
         <Dialog
             visible={show}
             modal={true}
             header={headerElement}
             onHide={setShow}
-            className={`${style.modal} custom-modal custom-scroll-integration `}
+            className={`${style.modal} custom-modal custom-scroll-integration`}
         >
             <Card className={clsx(style.border, 'mb-3')}>
                 <Card.Body>
                     <label>Select Payment Method</label>
                     <div className='d-flex justify-content-between align-items-center'>
-                        <div className='d-flex align-items-center'></div>
+                        <div className='d-flex flex-column pt-2'>
+                            <SelectButton className='rounded' value={type} onChange={(e) => setType(e.value)} itemTemplate={justifyTemplate} optionLabel="label" options={options} />
+                            {errors?.type && (
+                                <p className="error-message mb-0">{"Payment type is required"}</p>
+                            )}
+                        </div>
+
                         <div className='d-flex gap-2 align-items-center'>
-                            <Button className="danger-outline-button px-3 py-2">
-                                <FilePdf color='#F04438' size={17} />
-                            </Button>
-                            <Button className="info-button px-3 py-2">
-                                <Link color='#158ECC' size={17} />
-                            </Button>
+                            <Link to={`${invoice?.invoice_url}`} target='_blank'>
+                                <Button className="danger-outline-button px-3 py-2">
+                                    <FilePdf color='#F04438' size={17} />
+                                </Button>
+                            </Link>
+                            <Link to={`/invoice/${invoice?.unique_id}`} target='_blank'>
+                                <Button className="info-button px-3 py-2">
+                                    <LinkIcon color='#158ECC' size={17} />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </Card.Body>
@@ -47,15 +110,18 @@ const InvoicePartialPayment = ({ show, setShow }) => {
                     <div className='d-flex justify-content-between gap-3 align-items-center'>
                         <div className='d-flex flex-column'>
                             <label>Enter Amount</label>
-                            <InputText className={clsx(style.inputText, { [style.error]: '' })} />
+                            <InputText value={parseFloat(deposit || 0).toFixed(2)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
+                            {errors?.deposit && (
+                                <p className="error-message mb-0">{"Payment type is required"}</p>
+                            )}
                         </div>
-                        <div className={clsx(style.box, 'd-flex flex-column')}>
+                        <div className={clsx(style.box, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.amount || 0).toFixed(2))}>
                             <label>Total invoice</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.amount || 0).toFixed(2)}</h1>
                         </div>
-                        <div className={clsx(style.box2, 'd-flex flex-column')}>
+                        <div className={clsx(style.box2, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.to_be_paid || 0).toFixed(2))}>
                             <label>To Be Paid</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.to_be_paid || 0).toFixed(2)}</h1>
                         </div>
                     </div>
                 </Card.Body>
@@ -66,26 +132,42 @@ const InvoicePartialPayment = ({ show, setShow }) => {
                     <div className='d-flex justify-content-between gap-2 align-items-center'>
                         <div className={clsx(style.box3, 'd-flex flex-column text-end')}>
                             <label>Budget</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.budget || 0).toFixed(2)}</h1>
                         </div>
                         <div className={clsx(style.box4, 'd-flex flex-column text-end')}>
                             <label>Real Cost</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.real_cost || 0).toFixed(2)}</h1>
                         </div>
                         <div className={clsx(style.box5, 'd-flex flex-column text-end')}>
                             <label>Cost Of Sale</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.cost_of_sale || 0).toFixed(2)}</h1>
                         </div>
                         <div className={clsx(style.box6, 'd-flex flex-column text-end')}>
                             <label>Labour</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.labor_expenses || 0).toFixed(2)}</h1>
                         </div>
                         <div className={clsx(style.box7, 'd-flex flex-column text-end')}>
                             <label>Operational Profit</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>$13,159.32</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.profit || 0).toFixed(2)}2</h1>
                         </div>
                     </div>
                 </Card.Body>
+            </Card>
+
+            <Card className={clsx(style.border, 'mb-3')}>
+                <Card.Body className='d-flex justify-content-end gap-2'>
+                    <Button className='outline-button' onClick={() => setShow(false)}>Cancel</Button>
+                    <Button className='success-button' onClick={onsubmit}>Process Payment
+                        {mutation?.isPending && (
+                            <ProgressSpinner
+                                style={{ width: "20px", height: "20px", color: "#fff" }}
+                            />
+                        )}
+                    </Button>
+                </Card.Body>
+                <div className='mb-2 text-center' style={{ borderTop: '.5px solid #F2F4F7' }}>
+                    <Button className='text-button m-auto'>Hide History</Button>
+                </div>
             </Card>
 
         </Dialog>
