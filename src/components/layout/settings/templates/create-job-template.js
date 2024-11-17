@@ -298,7 +298,7 @@ const CreateJobTemplate = () => {
                                                 <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Duration</label>
                                                 <IconField iconPosition="right">
                                                     <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
-                                                    <InputText value={parseFloat(duration || 0).toFixed(1)} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ width: '120px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
+                                                    <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ width: '120px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
                                                 </IconField>
                                             </div>
                                     }

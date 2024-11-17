@@ -13,6 +13,8 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -23,9 +25,9 @@ const headerElement = (
 );
 
 const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
+    const [isShowHistory, setIsShowHistory] = useState(false);
     const [deposit, setDeposit] = useState(0.00)
-    const [type, setType] = useState(null);
-    console.log('type: ', type);
+    const [type, setType] = useState(2);
     const [errors, setErrors] = useState({});
     const options = [
         { icon: <Bank size={20} />, label: 'Bank', value: 2 },
@@ -110,7 +112,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                     <div className='d-flex justify-content-between gap-3 align-items-center'>
                         <div className='d-flex flex-column'>
                             <label>Enter Amount</label>
-                            <InputText value={parseFloat(deposit || 0).toFixed(2)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
+                            <InputText value={deposit} onChange={(e)=> setDeposit(e.target.value)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
                             {errors?.deposit && (
                                 <p className="error-message mb-0">{"Payment type is required"}</p>
                             )}
@@ -166,11 +168,40 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                     </Button>
                 </Card.Body>
                 <div className='mb-2 text-center' style={{ borderTop: '.5px solid #F2F4F7' }}>
-                    <Button className='text-button m-auto'>Hide History</Button>
+                    <Button className='text-button m-auto' onClick={() => setIsShowHistory(!isShowHistory)}>{isShowHistory ? "Hide" : "Show"} History</Button>
                 </div>
             </Card>
 
+            {isShowHistory && <InvoiceHistory history={invoice?.billing_history || []} />}
+
         </Dialog>
+    )
+}
+
+const InvoiceHistory = ({ history }) => {
+    const nameBody = (rowData) => {
+        return (
+            <div className='d-flex align-items-center gap-2'>
+                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden'}}>
+                    <img src={rowData?.manager?.photo} style={{ widows: '24px'}}/>
+                </div>
+                <span>{rowData?.manager?.name}</span>
+            </div>
+        )
+    }
+    return (
+        <Card className={clsx(style.border, 'mb-3 mt-2')}>
+            <Card.Body>
+                <h1 style={{ fontSize: '16px' }}>History</h1>
+                <DataTable value={history} className={style.borderTable} showGridlines>
+                    <Column field="" style={{ width: 'auto' }} body={(rowData, { rowIndex }) => <>#{rowIndex + 1}</>}  header="ID"></Column>
+                    <Column field="email" style={{ width: '267px' }} header="Reference"></Column>
+                    <Column field="deposit" style={{ width: '210px', textAlign: 'right' }} body={(rowData) => <>${rowData?.deposit}</>} header="Amount"></Column>
+                    <Column field="manager.name" style={{ width: '210px' }} header="User / Supplier" body={nameBody}></Column>
+                    <Column field="type" style={{ width: '147px' }} header="Status"></Column>
+                </DataTable>
+            </Card.Body>
+        </Card>
     )
 }
 

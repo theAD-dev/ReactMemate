@@ -238,7 +238,17 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           <div className="modelHeader">
             <ul className='d-flex justify-content-between align-items-center '>
               <li className='me-1 d-flex align-items-center'>
-                <strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438' /></strong>
+                <strong className='dollorIcon' style={{
+                  background: ! cardData?.invoice_created ? '#F9FAFB' 
+                  : cardData?.payment_status === 'paid' ? '#F2FDEC' 
+                  : cardData?.payment_status === 'not_paid' ? "#FEF3F2"
+                  : "#FFFAEB"
+                 }}><CurrencyDollar size={13} color={
+                  ! cardData?.invoice_created ? '#667085' 
+                  : cardData?.payment_status === 'paid' ? '#17B26A' 
+                  : cardData?.payment_status === 'not_paid' ? "#F04438"
+                  : "#B54708"
+                } /></strong>
                 {
                   isFetching ? (
                     <Placeholder as="span" animation="wave" className="ms-2 me-2">
@@ -536,8 +546,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileEarmark size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Quote &nbsp;</strong>
-                                          &nbsp;{projectId && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                           &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
+                                          &nbsp;&nbsp;{projectId && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                         </div>
                                       </>
 
@@ -577,8 +587,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileText size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Invoice&nbsp;</strong>
-                                          &nbsp;{projectId && <Link to={`/invoice/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                           &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
+                                          &nbsp;&nbsp;{projectId && title === "Invoice Created" && <Link to={`/invoice/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                         </div>
                                       </>
 

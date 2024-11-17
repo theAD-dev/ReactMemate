@@ -280,35 +280,35 @@
       }
 
       + label.fix {
-        color: #1D2939;
-        border: 1px solid #d2fa6d;
+        color: #1d2939;
+        border: 1px solid #98B15B;
       }
-
+  
       &:checked + label.fix {
-        background: #E1FC9D;
-        border: 1px solid #E1FC9D;
+        background: #e1fc9d;
+        border: 1px solid #e1fc9d;
       }
-
+  
       + label.hours {
         color: #5B5813;
         border: 1px solid #D0CA63;
       }
-
+  
       &:checked + label.hours {
-        background: #D0CA63;
-        border: 1px solid #D0CA63;
+        background: #F9F49A;
+        border: 1px solid #F9F49A;
       }
-
+  
       + label.timetracker {
-        color: #51256E;
+        color: #51256e;
         border: 1px solid #C295E0;
       }
-
+  
       &:checked + label.timetracker {
-        color: #fff;
-        background: #51256E;
-        border: 1px solid #C295E0;
-      }
+        color: #1D2939;
+        background: #E8CCFB;
+        border: 1px solid #E8CCFB;
+      }  
 
       + label.shift, + label.timeFrame {
         color: #344054;

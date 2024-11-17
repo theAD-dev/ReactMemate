@@ -18,10 +18,12 @@ import * as yup from "yup";
 import clsx from "clsx";
 import StripeIntegrations from "./stripe-integrations";
 import { useQuery } from "@tanstack/react-query";
-import { getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations } from "../../../../APIs/integrations-api";
+import { getEmailIntegrations, getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations } from "../../../../APIs/integrations-api";
 import GoogleIntegrations from "./google-review-integration";
 import TwilioIntegrations from "./twilio-integration";
 import { useLocation } from "react-router-dom";
+import { Envelope } from "react-bootstrap-icons";
+import EmailIntegrations from "./email-integration";
 
 const schema = yup.object().shape({
   emails: yup.array().of(
@@ -43,10 +45,12 @@ const Integrations = () => {
   const [visible, setVisible] = useState(false);
   const [stripeVisible, setStripeVisible] = useState(false);
   const [twilioVisible, setTwilioVisible] = useState(false);
+  const [emailVisible, setEmailVisible] = useState(false);
 
   const stripeIntegrationsQuery = useQuery({ queryKey: ['stripeIntegrations'], queryFn: getStripeIntegrations });
   const googleReviewIntegrationsQuery = useQuery({ queryKey: ['googleReviewIntegrations'], queryFn: getGoogleReviewIntegrations });
   const twilioIntegrationsQuery = useQuery({ queryKey: ['twilioIntegrations'], queryFn: getTwilioIntegrations });
+  const emailIntegrationsQuery = useQuery({ queryKey: ['getEmailIntegrations'], queryFn: getEmailIntegrations, retry: 1 });
 
   const integrationsData = [
     {
@@ -163,6 +167,30 @@ const Integrations = () => {
                         </div>
                       </div>
                     </Col>
+                    <Col xs={4} className="pb-4">
+                    <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                        <div className={style.head}>
+                          <div style={{ background: '#F9FAFB', }} className="d-flex justify-content-center align-items-center p-3 rounded-circle">
+                            <Envelope size={32} color="#667085" />
+                          </div>
+                          {
+                            <button className={emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
+                              {emailIntegrationsQuery?.data?.outgoing_email ? "Connected" : "Disconnected"}
+                              <span className={style.dots}></span>
+                            </button>
+                          }
+                        </div>
+                        <div className={style.body}>
+                          <h3>{"Outgoing Email"}</h3>
+                          <p>{"Link your email to be used for  all outgoing communications, including quotes, invoices, and reminders, etc."}</p>
+                        </div>
+                        <div className={style.bottom}>
+                          <button className={style.infoButton} onClick={() => {setEmailVisible(true)}}>
+                            {!emailIntegrationsQuery?.data?.outgoing_email ? 'Connect' : 'Update'}
+                          </button>
+                        </div>
+                      </div>
+                    </Col>
 
 
                     {integrationsData.map((item) => (
@@ -207,6 +235,7 @@ const Integrations = () => {
       <StripeIntegrations visible={stripeVisible} setVisible={setStripeVisible} stripe={stripeIntegrationsQuery?.data} refetch={stripeIntegrationsQuery?.refetch} />
       <TwilioIntegrations visible={twilioVisible} setVisible={setTwilioVisible} twilio={twilioIntegrationsQuery?.data} refetch={twilioIntegrationsQuery?.refetch} />
       <GoogleIntegrations visible={googleVisible} setVisible={setGoogleVisible} data={googleReviewIntegrationsQuery?.data} refetch={googleReviewIntegrationsQuery?.refetch}/>
+      <EmailIntegrations visible={emailVisible} setVisible={setEmailVisible} data={emailIntegrationsQuery?.data} refetch={emailIntegrationsQuery?.refetch}/>
     </>
   );
 };
