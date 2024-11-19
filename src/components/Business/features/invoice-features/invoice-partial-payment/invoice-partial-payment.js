@@ -121,7 +121,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                             <label>Total invoice</label>
                             <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.amount || 0).toFixed(2)}</h1>
                         </div>
-                        <div className={clsx(style.box2, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.to_be_paid || 0).toFixed(2))}>
+                        <div className={clsx(style.box, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.to_be_paid || 0).toFixed(2))}>
                             <label>To Be Paid</label>
                             <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.to_be_paid || 0).toFixed(2)}</h1>
                         </div>

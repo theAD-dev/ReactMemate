@@ -45,9 +45,16 @@
 .box {
   width: 198px;
   height: 76px;
+  cursor: pointer;
   padding: 12px 16px;
   border-radius: 4px;
   background: #f9fafb;
+  border: 1px solid #f9fafb;
+}
+
+.box:hover {
+  background: #ebf8ff;
+  border: 1px solid #bae8ff;
 }
 
 .box2 {

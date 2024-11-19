@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import clsx from 'clsx';
 import { getInvoice, paymentIntentCreate } from '../../../../../APIs/invoice-api';
 import { Col, Row as BootstrapRow, Button } from 'react-bootstrap';
-import { FilePdf } from 'react-bootstrap-icons';
+import { CheckCircleFill, FilePdf } from 'react-bootstrap-icons';
 import { Dialog } from 'primereact/dialog';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
@@ -167,6 +167,14 @@ const PublicInvoice = () => {
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
                     <div className={clsx(style.quotationWrapper, style[invoice?.status])}>
+                        {
+                            (invoice?.pay_status === 'paid') && <div className={clsx(style.paidLabel)}>
+                                <div className='d-flex align-items-center gap-2'>
+                                    <span>Paid</span>
+                                    <CheckCircleFill size={16} color='#085D3A' />
+                                </div>
+                            </div>
+                        }
                         <div className={style.quotationHead}>
                             <div className={style.left}>
                                 <h1>Invoice</h1>
@@ -272,7 +280,7 @@ const PublicInvoice = () => {
                                 </div>
                                 <div className='py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', fontWeight: 600 }}>Amount due</div>
-                                    <div style={{ fontSize: '18px', fontWeight: 600 }}>${invoice?.total}</div>
+                                    <div style={{ fontSize: '18px', fontWeight: 600 }}>${invoice?.outstanding_amount}</div>
                                 </div>
                                 <div className='py-2 w-100 d-flex justify-content-end gap-3'>
                                     <svg width="206" height="29" viewBox="0 0 206 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -300,7 +308,7 @@ const PublicInvoice = () => {
                 </div>
 
                 {
-                    (invoice?.pay_status === 'not paid') && <div className={style.quotationfooter}>
+                    (invoice?.pay_status !== 'paid') && <div className={style.quotationfooter}>
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
                                 <Link to={`${process.env.REACT_APP_URL}${invoice?.invoice_url}`} target='_blank'>
@@ -314,7 +322,7 @@ const PublicInvoice = () => {
                             </div>
                             <div className={clsx(style.right, 'd-flex align-items-center')}>
                                 <div>
-                                    <p className='mb-0' style={{ fontSize: '24px', fontWeight: 600, color: '#1A1C21' }}>${invoice?.total}</p>
+                                    <p className='mb-0' style={{ fontSize: '24px', fontWeight: 600, color: '#1A1C21' }}>${invoice?.outstanding_amount}</p>
                                     <p className='mb-0' style={{ fontSize: '16px', fontWeight: 500, color: '#FFB258' }}>{daysLeft(invoice?.due_date)}</p>
                                 </div>
                                 <button
@@ -482,7 +490,7 @@ const PublicInvoice = () => {
                     </Col>
                 </BootstrapRow>
                 {
-                    payment?.client_secret && payment?.public_key && <StripeContainer amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} /> 
+                    payment?.client_secret && payment?.public_key && <StripeContainer amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} />
                 }
             </Dialog>
         </>
