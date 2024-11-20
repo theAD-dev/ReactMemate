@@ -36,7 +36,7 @@ const PeoplesTable = () => {
     }, [])
 
     const nameBody = (rowdata) => {
-        return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
+        return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
             <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} rounded-circle}`}>
                 {rowdata.photo ? <img src={rowdata.photo} alt='clientImg' className='w-100' /> : <Person color='#667085' />}
             </div>
