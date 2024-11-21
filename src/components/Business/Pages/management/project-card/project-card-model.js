@@ -117,10 +117,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     const dayOptions = { weekday: 'short' };
     const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
     const dayString = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+    }).format(date);
     const year = date.getFullYear();
-    const dateString = `${day}.${month}.${year}`;
+    const dateString = `${day} ${monthAbbreviation} ${year}`;
     return `${timeString} | ${dayString} | ${dateString}`;
   };
 
