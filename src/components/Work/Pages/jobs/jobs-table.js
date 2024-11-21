@@ -90,12 +90,12 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
     if (rowData.type_display === 'Hours')
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentHours}`}>{rowData.type_display}</div>
-        <Repeat color='#158ECC' />
+        {rowData?.is_recurring &&<Repeat color='#158ECC' />}
       </div>
     else
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentFix}`}>{rowData.type_display}</div>
-        <Repeat color='#158ECC' />
+        {rowData?.is_recurring &&<Repeat color='#158ECC' />}
       </div>
   }
 
