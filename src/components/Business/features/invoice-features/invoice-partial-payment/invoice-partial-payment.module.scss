@@ -1,0 +1,126 @@
+.modal {
+  width: 800px;
+  border-radius: var(--radius-xs, 4px);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+.modalHeader {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.border {
+  border: 1px solid #f2f4f7 !important;
+}
+
+.lable {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.inputText {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+  font-family: Inter;
+  color: var(--Gray-900, #101828) !important;
+}
+
+.error {
+  border: 1px solid red !important;
+}
+
+.box {
+  width: 198px;
+  height: 76px;
+  cursor: pointer;
+  padding: 12px 16px;
+  border-radius: 4px;
+  background: #f9fafb;
+  border: 1px solid #f9fafb;
+}
+
+.box:hover {
+  background: #ebf8ff;
+  border: 1px solid #bae8ff;
+}
+
+.box2 {
+  width: 198px;
+  height: 76px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  background: #ebf8ff;
+  border: 1px solid #bae8ff;
+}
+
+.box3 {
+  width: 149px;
+  height: 72px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-100, #f2f4f7);
+  background: var(--Gray-50, #f9fafb);
+}
+
+.box4 {
+  width: 149px;
+  height: 72px;
+  color: #2A928F;
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-100, #F3FFFF);
+  background: #F3FFFF;
+}
+
+.box5 {
+  min-width: 149px;
+  height: 72px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  color: var(--Error-800, #912018);
+  border: 1px solid var(--Gray-100, #FFFBFA);
+  background: #FFFBFA;
+}
+
+.box6 {
+  width: 149px;
+  height: 72px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  color: var(--Error-800, #93370D);
+  border: 1px solid var(--Gray-100, #FFFBFA);
+  background: #FFFBFA;
+}
+
+.box7 {
+  min-width: 179px;
+  height: 72px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  color: #085D3A;
+  border: 1px solid var(--Success-200, #A9EFC5);
+  background: var(--Success-100, #DCFAE6);
+}
+
+.text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.borderTable {
+  border-left: 1px solid #f2f4f7;
+  border-top: 1px solid #f2f4f7;
+}

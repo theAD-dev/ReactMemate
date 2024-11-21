@@ -454,7 +454,8 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   border-radius: 4px !important;
 }
 
-.fixedMenu, .szh-menu-container {
+.fixedMenu,
+.szh-menu-container {
   z-index: 10000;
 }
 .fixedMenu .szh-menu-container .szh-menu {
@@ -467,4 +468,19 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 
 .p-dropdown-panel {
   z-index: 3100 !important;
+}
+
+.p-autocomplete-panel {
+  z-index: 2000 !important;
+}
+
+.p-selectbutton .p-button.p-highlight {
+  color: #1AB2FF;
+  border-color: #D0D5DD;
+  background: var(--Primary-25, #f2faff);
+}
+
+.p-button {
+  outline: none;
+  box-shadow: none;
 }

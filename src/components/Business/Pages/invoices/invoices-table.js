@@ -1,20 +1,24 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, Plus, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Send, Files, FileEarmark, FileEarmarkSpreadsheet, Trash } from 'react-bootstrap-icons';
+import { Building, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Send, Files, FileEarmarkSpreadsheet, Trash, Plus, PlusLg, ListUl, Coin, Calendar3Event, CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
 
 import style from './invoice.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-import { Spinner } from 'react-bootstrap';
-import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
+import { CloseButton, Spinner } from 'react-bootstrap';
 import { Badge } from 'primereact/badge';
-import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
-import { getListOfInvoice } from '../../../../APIs/invoice-api';
+import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import clsx from 'clsx';
+import { fetchduplicateData } from '../../../../APIs/SalesApi';
+import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
+import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -27,19 +31,17 @@ const formatDate = (timestamp) => {
 };
 
 const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
-    const navigate = useNavigate();
     const observerRef = useRef(null);
+    const navigate = useNavigate();
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
-    const limit = 25;
-
-    const [editData, setEditData] = useState("");
     const [visible, setVisible] = useState(false);
-    const [showDialog, setShowDialog] = useState({ data: null, show: false });
+    const [invoiceData, setInvoiceData] = useState(null);
+    const limit = 25;
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
@@ -91,7 +93,6 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const InvoiceIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span>{rowData.number}</span>
-            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }) }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
 
@@ -149,16 +150,99 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
     const depositBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
-            <div className={`${rowData.paid ? style['paid'] : style['unpaid']}`}>
+            <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
                 $ {parseFloat(rowData.deposit || 0).toFixed(2)}
+                <span onClick={() => { setVisible(true); setInvoiceData(rowData) }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
             </div>
         </div>
     }
 
     const xeroBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-center`}>
-            <spam>xero</spam>
+            <span>xero</span>
         </div>
+    }
+
+    const deleteMutation = useMutation({
+        mutationFn: (data) => deleteInvoice(data),
+        onSuccess: () => {
+            toast.success(`Invoice deleted successfully`);
+            deleteMutation.reset();
+            setRefetch(!refetch);
+        },
+        onError: (error) => {
+            deleteMutation.reset();
+            toast.error(`Failed to delete invoice. Please try again.`);
+        }
+    });
+
+    const duplicateMutation = useMutation({
+        mutationFn: (data) => fetchduplicateData(data),
+        onSuccess: () => {
+            toast.success(`Project has been successfully duplicated`);
+            duplicateMutation.reset();
+            navigate('/sales');
+        },
+        onError: (error) => {
+            deleteMutation.reset();
+            toast.error(`Failed to duplicate project. Please try again.`);
+        }
+    });
+
+    const InfoBodyTemplate = (rowData) => {
+        const ref = useRef(null);
+        const [isOpen, setOpen] = useState(false);
+        const anchorProps = useClick(isOpen, setOpen);
+        return <React.Fragment>
+            <InfoCircle color='#667085' size={18} className='cursor-pointer' ref={ref} {...anchorProps} />
+            <div className='fixedMenu' style={{ position: 'fixed', top: '40%', left: '40%' }}>
+                <ControlledMenu
+                    state={isOpen ? 'open' : 'closed'}
+                    anchorRef={ref}
+                    onClose={() => setOpen(false)}
+                    menuStyle={{ padding: '24px 24px 20px 24px', width: 'fit-content', marginTop: '45px' }}
+                >
+                    <div className='d-flex justify-content-between mb-4'>
+                        <div className='BoxNo'>
+                            <div>
+                                <InfoCircle color='#FFFFFF' size={24} />
+                            </div>
+                        </div>
+                        <CloseButton onClick={() => setOpen(false)} />
+                    </div>
+                    <div className='d-flex gap-4 border justify-content-around py-1 px-2 rounded'>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Person color='#98A2B3' size={14} />
+                            <span className='font-14'>{rowData?.client?.name}</span>
+                        </div>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Coin color='#98A2B3' size={14} />
+                            <span className='font-14 font-weight-bold'>{parseFloat(rowData.deposit || 0).toFixed(2)}</span>
+                        </div>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Coin color='#98A2B3' size={14} />
+                            <div className='border rounded font-14 px-1'>Bank</div>
+                        </div>
+                        <div className='d-flex gap-2 align-items-center'>
+                            <Calendar3Event color='#98A2B3' size={14} />
+                            <div className='font-14'>{formatDate(rowData.created)}</div>
+                        </div>
+                    </div>
+                    {
+                        rowData.paid
+                            ? <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#ECFDF3' }}>
+                                <CheckCircleFill color='#17B26A' />
+                                <span className='font-14' style={{ color: '#17B26A' }}>Invoice Paid</span>
+                            </div>
+                            : <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#FEF3F2' }}>
+                                <XCircleFill color='#F04438' />
+                                <span className='font-14' style={{ color: '#B42318' }}>Invoice Due</span>
+                            </div>
+                    }
+
+                </ControlledMenu>
+            </div>
+        </React.Fragment>
     }
 
     const StatusBody = (rowData) => {
@@ -177,21 +261,20 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
             >
                 <div className='d-flex flex-column gap-2'>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
-                        <Send color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Resend invoice</span>
-                    </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
+                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} />
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Files color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate invoice</span>
+                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
+                        {duplicateMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
+                    <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
                         <FileEarmarkSpreadsheet color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Trash color='#B42318' size={20} />
                         <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
+                        {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </div>
                 </div>
             </ControlledMenu>
@@ -237,12 +320,11 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field='amount' header="Amount + GST" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
                 <Column field='deposit' header="Deposit/Payment" body={depositBody} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
-                <Column field='total_requests' header="Info" body={<InfoCircle color='#667085' size={20} />} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
+                <Column field='total_requests' header="Info" body={InfoBodyTemplate} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
-            <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
-            <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />
+            <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData}/>
         </>
     )
 })

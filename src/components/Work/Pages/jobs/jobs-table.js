@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import style from './jobs.module.scss';
-import { Person, Repeat } from 'react-bootstrap-icons';
+import { ChatText, Person, Repeat } from 'react-bootstrap-icons';
 import { Chip } from 'primereact/chip';
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
@@ -137,14 +137,27 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
   const statusBody = (rowData) => {
     const status = rowData.status;
     switch (status) {
-      case 'In Progress':
-        return <Chip className={`status ${style.inProgress}`} label={status} />
-      case 'Finished':
-        return <Chip className={`status ${style.finished}`} label={status} />
-      case 'Assign':
-        return <Chip className={`status ${style.assign}`} label={status} />
+      case '1':
+        return <Chip className={`status ${style.open} font-14`} label={"Open"} />
+      case '2':
+        return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />
+      case '3':
+        return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />
+      case '4':
+        return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />
+      case '5':
+        return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />
+      case '6':
+        return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />
+      case 'a':
+        return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />
+      case 'd':
+        return <div className='d-flex gap-2 align-items-center'>
+          <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />
+          <ChatText size={16}/>
+        </div>
       default:
-        return <Chip className={`status ${style.defaultStatus}`} label={status} />;
+        return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
     }
   }
 

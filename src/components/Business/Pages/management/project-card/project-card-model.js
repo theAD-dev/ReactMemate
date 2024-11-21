@@ -10,12 +10,11 @@ import { Placeholder, Table } from 'react-bootstrap';
 import AddNote from './add-note';
 import NewTask from './new-task';
 import SendSMS from './send-sms';
-import ComposeEmail from './compose-email';
+import ComposeEmail from './compose-email/compose-email';
 import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
 import CreatePoIcon from "../../../../../assets/images/icon/createPoIcon.svg";
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
-import GoogleReview from "../../../../../assets/images/icon/googleReviewIcon.svg";
 import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
 import InvoicesIcon from "../../../../../assets/images/icon/InvoicesIcon.svg";
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
@@ -26,10 +25,11 @@ import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecli
 import SelectStatus from './select-status';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import InvoiceCreate from './invoice-create/invoice-create';
+import GoogleReviewEmail from './google-review/google-review';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   console.log('lo....')
@@ -41,6 +41,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [editedReference, setEditedReference] = useState('');
   const [expenseJobsMapping, setExpenseJobsMapping] = useState([]);
   const [filteredHistory, setFilteredHistory] = useState([]);
+  console.log('filteredHistory: ', filteredHistory);
   const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
 
   //Real Cost Calculation
@@ -174,6 +175,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     onSuccess: (response) => {
       if (response) {
         handleClose();
+        projectCardData(projectId);
         toast.success('Invoice has been successfully created');
       } else {
         toast.error(`Failed to create the invoice. Please try again.`);
@@ -236,7 +238,17 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           <div className="modelHeader">
             <ul className='d-flex justify-content-between align-items-center '>
               <li className='me-1 d-flex align-items-center'>
-                <strong className='dollorIcon'><CurrencyDollar size={13} color='#F04438' /></strong>
+                <strong className='dollorIcon' style={{
+                  background: ! cardData?.invoice_created ? '#F9FAFB' 
+                  : cardData?.payment_status === 'paid' ? '#F2FDEC' 
+                  : cardData?.payment_status === 'not_paid' ? "#FEF3F2"
+                  : "#FFFAEB"
+                 }}><CurrencyDollar size={13} color={
+                  ! cardData?.invoice_created ? '#667085' 
+                  : cardData?.payment_status === 'paid' ? '#17B26A' 
+                  : cardData?.payment_status === 'not_paid' ? "#F04438"
+                  : "#B54708"
+                } /></strong>
                 {
                   isFetching ? (
                     <Placeholder as="span" animation="wave" className="ms-2 me-2">
@@ -490,7 +502,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS />
-                    <ComposeEmail clientId={cardData?.client} />
+                    <ComposeEmail clientId={cardData?.client} projectId={projectId}/>
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
@@ -525,16 +537,18 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       ) : (
                         <div className='projectHistoryScroll'>
                           {filteredHistory?.length ? (
-                            filteredHistory.map(({ id, type, text, title, created, manager }, index) => (
+                            filteredHistory.map(({ id, type, text, title, created, manager, links, ...rest }, index) => (
                               <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>
                                     {type === "quote" ? (
                                       <>
-                                        <>
+                                        <div className='d-flex align-items-center'>
                                           <FileEarmark size={16} color="#1AB2FF" />{" "}
-                                          <strong>&nbsp; Quote</strong>
-                                        </>
+                                          <strong>&nbsp; Quote &nbsp;</strong>
+                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
+                                          &nbsp;&nbsp;{projectId && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                        </div>
                                       </>
 
                                     ) : type === "task" ? (
@@ -570,10 +584,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
                                     ) : type === "invoice" ? (
                                       <>
-                                        <>
+                                        <div className='d-flex align-items-center'>
                                           <FileText size={16} color="#1AB2FF" />{" "}
-                                          <strong>&nbsp; Invoice</strong>
-                                        </>
+                                          <strong>&nbsp; Invoice&nbsp;</strong>
+                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
+                                          &nbsp;&nbsp;{projectId && title === "Invoice Created" && <Link to={`/invoice/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                        </div>
                                       </>
 
                                     ) : type === "billing" ? (
@@ -616,10 +632,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     </Placeholder>
                   ) : <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
                 }
-                <Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
+                <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
-                <Button className='googleBut googleActive'>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
+                <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 {/* <FilesModel /> */}
                 <Button className='calenBut calenActive'>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button>
               </Col>
@@ -674,8 +690,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
               <Col className='actionRightSide'>
-                <InvoiceCreate isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)}/>
-                
+                <InvoiceCreate clientId={cardData?.client} isCreated={cardData?.invoice_created} projectId={projectId} isLoading={createInvoiceMutation?.isPending} create={() => createInvoice(projectId)} projectCardData={() => projectCardData(projectId)} />
+
                 {/* <Button className='InvoiceAction InvoiceActive me-3' >
                   Invoice  <img src={InvoicesIcon} alt="Invoices" />
                   {createInvoiceMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />}

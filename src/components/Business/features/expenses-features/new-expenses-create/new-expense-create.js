@@ -10,6 +10,12 @@ import { useMutation } from '@tanstack/react-query';
 import { createNewExpense } from '../../../../../APIs/expenses-api';
 
 const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
+    const url = window.location.href;
+    const urlObj = new URL(url);
+    const params = new URLSearchParams(urlObj.search);
+    const projectId = params.get('projectId');
+    if (projectId) setVisible(true);
+
     const formRef = useRef(null);
     const [defaultValues, setDefaultValues] = useState({
         option: 'Assign to order',
@@ -21,7 +27,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
             console.log('response: ', response);
             toast.success(`Expense created successfully`);
             setVisible(false);
-            setRefetch((refetch)=> !refetch);
+            setRefetch((refetch) => !refetch);
         },
         onError: (error) => {
             console.error('Error creating expense:', error);
@@ -35,7 +41,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
         delete data.subtotal;
         delete data.totalAmount
         delete data.tax;
-        
+
         if (!data.order) delete data.order;
         if (!data.type) data.type = 1;
         if (data.date) data.date = new Date(data.date).toISOString().split('T')[0];
@@ -49,8 +55,6 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
     };
-
-
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
@@ -75,7 +79,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
                             <h5>Supplier Details</h5>
                         </div>
-                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues}/>
+                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} setVisible={setVisible} projectId={projectId}/>
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>

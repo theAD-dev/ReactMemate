@@ -173,8 +173,64 @@
   font-weight: 500;
   color: #344054;
   border-radius: 16px;
-  border: 1px solid #EAECF0;
-  background: #F9FAFB;
+  border: 1px solid #eaecf0;
+  background: #f9fafb;
+}
+
+.status {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.open {
+  color: #065b76;
+  border: 1px solid #a9d6ef;
+  background: #ecf7fd;
+}
+
+.Accepted {
+  color: #067611;
+  border: 1px solid #c4efa9;
+  background: #f2fdec;
+}
+
+.CONFIRMED {
+  color: #067647;
+  border: 1px solid #A9EFC5;
+  background: #ECFDF3;
+}
+
+.ASSIGN {
+  color: #520676;
+  border: 1px solid #DDA9EF;
+  background: #F6ECFD;
+}
+
+.NotConfirmed {
+  color: #B42318;
+  border: 1px solid #FECDCA;
+  background: #FEF3F2;
+}
+
+.COMPLETED {
+  color: #067647;
+  border: 1px solid #A9EFC5;
+  background: #ECFDF3;
+}
+
+.DECLINED {
+  color: #B42318;
+  border: 1px solid #FECDCA;
+  background: #FEF3F2;
+}
+
+.MANAGER_DECLINED {
+  color: #B54708;
+  border: 1px solid #FEDF89;
+  background: #FFFAEB;
 }
 
 .finished {
@@ -182,10 +238,10 @@
   padding: 2px 6px;
   line-height: 18px;
   font-weight: 500;
-  color: #6941C6;
+  color: #6941c6;
   border-radius: 16px;
-  border: 1px solid #E9D7FE;
-  background: #F9FAFB;
+  border: 1px solid #e9d7fe;
+  background: #f9fafb;
 }
 
 .assign {
@@ -193,8 +249,8 @@
   padding: 2px 6px;
   line-height: 18px;
   font-weight: 500;
-  color: var(--Error-700, #B42318);
+  color: var(--Error-700, #b42318);
   border-radius: 16px;
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-50, #FEF3F2);
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
 }

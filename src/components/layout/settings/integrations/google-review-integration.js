@@ -8,19 +8,19 @@ import { InputNumber } from 'primereact/inputnumber';
 
 import style from "./integration.module.scss";
 import googleReview from "../../../../assets/images/icon/googleReview.png";
-import { stripeIntegrationsSet } from "../../../../APIs/integrations-api";
+import { googleReviewIntegrationsSet } from "../../../../APIs/integrations-api";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 // Updated validation schema
 const schema = yup.object().shape({
-    link: yup
+    google_review_link: yup
         .string()
-        .required("Stripe Secret Key is required")
+        .required("Google review link is required")
 });
 
-const GoogleIntegrations = ({ visible, setVisible, stripe, refetch }) => {
+const GoogleIntegrations = ({ visible, setVisible, data, refetch }) => {
     const formRef = useRef();
     const {
         control,
@@ -30,7 +30,7 @@ const GoogleIntegrations = ({ visible, setVisible, stripe, refetch }) => {
     } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            link: "",
+            google_review_link: "",
         },
     });
 
@@ -39,12 +39,12 @@ const GoogleIntegrations = ({ visible, setVisible, stripe, refetch }) => {
     };
 
     useEffect(() => {
-        if (stripe) {
+        if (data?.google_review_link) {
             reset({
-                link: ""
+                google_review_link: data?.google_review_link
             });
         }
-    }, [stripe, reset]);
+    }, [data, reset]);
 
     const handleSaveClick = () => {
         if (formRef.current) {
@@ -55,14 +55,14 @@ const GoogleIntegrations = ({ visible, setVisible, stripe, refetch }) => {
     };
 
     const mutation = useMutation({
-        mutationFn: (data) => stripeIntegrationsSet(data),
+        mutationFn: (data) => googleReviewIntegrationsSet(data),
         onSuccess: () => {
             refetch();
             handleClose();
-            toast.success(`Stripe integration has been updated successfully.`);
+            toast.success(`Google review link integration has been updated successfully.`);
         },
         onError: (error) => {
-            toast.error(`Failed to update stripe integration. Please try again.`);
+            toast.error(`Failed to update Google review link integration. Please try again.`);
         }
     });
 
@@ -105,7 +105,7 @@ const GoogleIntegrations = ({ visible, setVisible, stripe, refetch }) => {
                     <div className="d-flex flex-column mb-3">
                         <label htmlFor="stripe_secret_key">Link</label>
                         <Controller
-                            name="link"
+                            name="google_review_link"
                             control={control}
                             render={({ field }) => (
                                 <input
@@ -116,6 +116,7 @@ const GoogleIntegrations = ({ visible, setVisible, stripe, refetch }) => {
                                 />
                             )}
                         />
+                        {errors.google_review_link && <p className="mb-0 error-message">{errors.google_review_link.message}</p>}
                     </div>
                 </form>
                 <div className={style.tmsCondition}>
@@ -130,7 +131,6 @@ const GoogleIntegrations = ({ visible, setVisible, stripe, refetch }) => {
                         <h3>Step 3: Get More Reviews</h3>
                         <li>Find the ‘Get more reviews’ Card: In the "Home" tab, look for a card or section titled "Get more reviews". This section provides a direct link that you can share with customers to write reviews.</li>
                         <li>Copy Your Link: Click on the "Share review form" button or similar option to copy your unique link.</li>
-
                     </ul>
                 </div>
             </div>

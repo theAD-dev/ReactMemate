@@ -7,6 +7,7 @@ import { useDebounce } from 'primereact/hooks';
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import JobChat from '../../features/job-chat';
+import CreateJob from '../../features/create-job/create-job';
 
 const JobsPage = () => {
     const dt = useRef(null);
@@ -55,7 +56,7 @@ const JobsPage = () => {
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Jobs</h1>
-                    <Button className={`${style.newButton}`}>New</Button>
+                    <Button className={`${style.newButton}`} onClick={()=> setVisible(true)}>New</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
@@ -64,6 +65,7 @@ const JobsPage = () => {
             </div>
             <JobsTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} />
             <JobChat />
+            <CreateJob visible={visible} setVisible={setVisible}/>
         </PrimeReactProvider>
     )
 }

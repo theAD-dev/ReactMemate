@@ -125,6 +125,29 @@ export const createInvoiceById = async (id) => {
     return fetchAPI(url.toString(), options);
 }
 
+export const createAndSendInvoiceById = async (id, data) => {
+    const endpoint = `/invoices/send/${id}/`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
+export const sendComposeEmail = async (id, action, data) => {
+    let endpoint;
+    if (action) endpoint = `/custom/email/${id}/${action}/`;
+    else endpoint = `/custom/email/${id}/`;
+
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
     const accessToken = localStorage.getItem("access_token");

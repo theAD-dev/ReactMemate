@@ -6,256 +6,147 @@ import style from './people.module.scss';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { Rating } from 'primereact/rating';
-import { Envelope, Telephone } from 'react-bootstrap-icons';
+import { Chat, Envelope, Person, Plus, PlusLg, Telephone } from 'react-bootstrap-icons';
 import { Badge } from 'primereact/badge';
-
-export const CustomerService = {
-    getData() {
-        return [
-            {
-                id: 1,
-                name: "John Doe",
-                type: "Employee",
-                lastJob: "J-230064-1",
-                group: "Group 1",
-                rating: 2,
-                days: 55,
-                hourly: 31,
-                complete: 12,
-                status: "Active",
-            },
-            {
-                id: 2,
-                name: "Jane Smith",
-                type: "Contractor",
-                lastJob: "J-230065-2",
-                group: "Group 2",
-                rating: 4,
-                days: 30,
-                hourly: 25,
-                complete: 18,
-                status: "Inactive",
-            },
-            {
-                id: 3,
-                name: "Alice Johnson",
-                type: "Employee",
-                lastJob: "J-230066-3",
-                group: "Group 3",
-                rating: 5,
-                days: 45,
-                hourly: 28,
-                complete: 22,
-                status: "Active",
-            },
-            {
-                id: 4,
-                name: "Michael Brown",
-                type: "Employee",
-                lastJob: "J-230067-4",
-                group: "Group 1",
-                rating: 3,
-                days: 60,
-                hourly: 35,
-                complete: 15,
-                status: "Active",
-            },
-            {
-                id: 5,
-                name: "Emily Davis",
-                type: "Contractor",
-                lastJob: "J-230068-5",
-                group: "Group 2",
-                rating: 1,
-                days: 25,
-                hourly: 20,
-                complete: 8,
-                status: "Inactive",
-            },
-            {
-                id: 6,
-                name: "David Wilson",
-                type: "Employee",
-                lastJob: "J-230069-6",
-                group: "Group 3",
-                rating: 4,
-                days: 70,
-                hourly: 40,
-                complete: 10,
-                status: "Active",
-            },
-            {
-                id: 7,
-                name: "Sophia Martinez",
-                type: "Contractor",
-                lastJob: "J-230070-7",
-                group: "Group 1",
-                rating: 2,
-                days: 15,
-                hourly: 22,
-                complete: 5,
-                status: "Active",
-            },
-            {
-                id: 8,
-                name: "James Taylor",
-                type: "Employee",
-                lastJob: "J-230071-8",
-                group: "Group 2",
-                rating: 3,
-                days: 40,
-                hourly: 30,
-                complete: 16,
-                status: "Inactive",
-            },
-            {
-                id: 9,
-                name: "Olivia White",
-                type: "Employee",
-                lastJob: "J-230072-9",
-                group: "Group 3",
-                rating: 5,
-                days: 20,
-                hourly: 27,
-                complete: 20,
-                status: "Active",
-            },
-            {
-                id: 10,
-                name: "Daniel Harris",
-                type: "Contractor",
-                lastJob: "J-230073-10",
-                group: "Group 1",
-                rating: 4,
-                days: 50,
-                hourly: 33,
-                complete: 14,
-                status: "Inactive",
-            },
-            // Add more dummy data as needed...
-        ];
-    },
-    getCustomersSmall() {
-        return Promise.resolve(this.getData().slice(0, 2));
-    },
-    getCustomersLarge() {
-        return Promise.resolve(this.getData().slice(0, 25));
-    },
-    getCustomersPaginated(page, rowsPerPage) {
-        const startIndex = (page - 1) * rowsPerPage;
-        const endIndex = page * rowsPerPage;
-        return Promise.resolve(this.getData().slice(startIndex, endIndex));
-    }
-};
-
+import { getTeamMobileUser } from '../../../../APIs/team-api';
+import { Link } from 'react-router-dom';
+import { Spinner } from 'react-bootstrap';
+import clsx from 'clsx';
 
 const PeoplesTable = () => {
     const observerRef = useRef(null);
-
+    const [loading, setLoading] = useState(false)
     const [peoples, setPeoples] = useState([]);
-    console.log('peoples: ', peoples.length);
     const [selectedPeoples, setSelectedPeoples] = useState(null);
-    const [page, setPage] = useState(1);
-    const [hasMoreData, setHasMoreData] = useState(true);
-    const rowsPerPage = 2; // Number of rows to fetch per page
 
     useEffect(() => {
-        const loadData = async () => {
-            const data = await CustomerService.getCustomersPaginated(page, rowsPerPage);
-            console.log('data: ', data.length);
-            if (data.length > 0) {
-                setPeoples(prevPeoples => [...prevPeoples, ...data]);
-            } else {
-                setHasMoreData(false);
-            }
-        };
-
-        loadData();
-    }, [page]);
-
-    useEffect(() => {
-        if (peoples.length > 0 && hasMoreData) {
-            observerRef.current = new IntersectionObserver(entries => {
-                if (entries[0].isIntersecting) {
-                    console.log('Fetching more data...');
-                    setPage(prevPage => prevPage + 1); // Increment the page number
-                }
-            });
-
-            const lastRow = document.querySelector('.p-datatable-tbody tr:last-child');
-            if (lastRow) {
-                observerRef.current.observe(lastRow);
+        const getMobileUser = async () => {
+            setLoading(true);
+            try {
+                const users = await getTeamMobileUser();
+                console.log('users: ', users?.users || []);
+                setPeoples(users?.users || []);
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setLoading(false);
             }
         }
-
-        return () => {
-            if (observerRef.current) {
-                observerRef.current.disconnect();
-            }
-        };
-    }, [peoples, hasMoreData]);
+        getMobileUser();
+    }, [])
 
     const nameBody = (rowdata) => {
-        return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
+        return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
+            <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} rounded-circle}`}>
+                {rowdata.photo ? <img src={rowdata.photo} alt='clientImg' className='w-100' /> : <Person color='#667085' />}
+            </div>
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
-                {rowdata.name}
+                {rowdata?.first_name} {rowdata?.last_name}
             </div>
             <Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text />
         </div>
     }
 
     const typeBody = (rowData) => {
-        const type = rowData.type;
+        const type = rowData.format;
         switch (type) {
-            case 'Employee':
-                return <Chip className={`type ${style.employee}`} label={type} />
-            case 'Contractor':
-                return <Chip className={`type ${style.contractor}`} label={type} />
+            case '1':
+                return <Chip className={`type ${style.employee}`} label={"Employee"} />
+            case '2':
+                return <Chip className={`type ${style.contractor}`} label={"Contractor"} />
             default:
                 return <Chip className={`type ${style.defaultType}`} label={type} />;
         }
     }
 
-    const lastJobBody = (rowData) => {
-        return <Chip className={`custom ${style.defaultLastJob}`} label={rowData.lastJob} />
-    }
+    // const lastJobBody = (rowData) => {
+    //     return <Chip className={`custom ${style.defaultLastJob}`} label={rowData.lastJob} />
+    // }
 
     const ratingBody = (rowData) => {
         return <Rating value={rowData.rating} className='yellow-rating' style={{ position: 'static' }} readOnly cancel={false} />
     }
 
     const daysBody = (rowData) => {
-        return <Chip className={`custom ${style.defaultDays}`} label={rowData.days} />
+        return <Chip className={`custom ${style.defaultDays}`} label={rowData.days_in_company} />
     }
 
     const hourlyBody = (rowData) => {
         return `$ ${rowData.hourly}`
     }
 
-    const statusBody = (rowData) => {
-        if (rowData.status === 'Active')
-            return <div className={`${style.status} ${style.active}`}>
-                <Badge severity="success"></Badge> {rowData.status}
-            </div>
-        return <div className={`${style.status} ${style.inactive}`}>
-            {rowData.status} <Badge severity="danger"></Badge> 
+    // const statusBody = (rowData) => {
+    //     if (rowData.status === 'Active')
+    //         return <div className={`${style.status} ${style.active}`}>
+    //             <Badge severity="success"></Badge> {rowData.status}
+    //         </div>
+    //     return <div className={`${style.status} ${style.inactive}`}>
+    //         {rowData.status} <Badge severity="danger"></Badge> 
+    //     </div>
+    // }
+
+    const emailBodyTemplate = (rowData) => {
+        return <div className='d-flex align-items-center justify-content-center'>
+            <Link to='#'
+                onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = `mailto:${rowData?.email}`;
+                }}
+            >
+                <Envelope size={20} color='#98A2B3' className='email-icon' />
+            </Link>
         </div>
     }
+
+    const phoneBodyTemplate = (rowData) => {
+        return <div className='d-flex align-items-center justify-content-center'>
+            <Link to='#'
+                onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = `tel:${rowData?.phone}`;
+                }}
+            >
+                <Telephone size={20} color='#98A2B3' className='phone-icon' />
+            </Link>
+        </div>
+    }
+
+    const actionBody = () => {
+        return <Button className='text-button bg-tranparent p-0'>New Job <Plus color='#158ECC' size={20} /></Button>
+    }
+
+    const loadingIconTemplate = () => {
+        return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    }
+
     return (
         <>
-            <DataTable value={peoples} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight="600px" className="border" selection={selectedPeoples} onSelectionChange={(e) => setSelectedPeoples(e.value)}>
+           <h1 className={clsx(style.tableCaption, 'mt-2')}>Mobile App Users</h1>
+            <DataTable value={peoples}
+                scrollable selectionMode={'checkbox'} removableSort
+                columnResizeMode="expand" resizableColumns showGridlines
+                size={'large'} className="border" selection={selectedPeoples}
+                onSelectionChange={(e) => setSelectedPeoples(e.value)}
+                loading={loading}
+                loadingIcon={loadingIconTemplate}
+            >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-                <Column field="name" header="Name" body={nameBody} style={{ minWidth: '700px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
-                <Column field="type" header="Type" body={typeBody} style={{ minWidth: '107px' }} sortable></Column>
-                <Column field="lastJob" header="Last Job" body={lastJobBody} style={{ minWidth: '118px' }} sortable></Column>
-                <Column field="group" header="Group" style={{ minWidth: '87px' }} sortable></Column>
+                <Column field="name" header="Name" body={nameBody} style={{ minWidth: '400px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
+                <Column field="type" header="Type" body={typeBody} style={{ minWidth: '107px' }}></Column>
+                {/* <Column field="lastJob" header="Last Job" body={lastJobBody} style={{ minWidth: '118px' }} sortable></Column>
+                <Column field="group" header="Group" style={{ minWidth: '87px' }} sortable></Column> */}
                 <Column field="rating" header="Rating" body={ratingBody} style={{ minWidth: '149px' }} sortable></Column>
                 <Column field="days" header="Days in company" body={daysBody} style={{ minWidth: '150px' }} className='text-center' sortable></Column>
-                <Column field="hourly" header="Hourly rate" body={hourlyBody} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column>
-                <Column field="complete" header="Jobs complete	" style={{ minWidth: '131px', textAlign: 'right' }} sortable></Column>
-                <Column header="Email" body={<Envelope color='#98A2B3' size={20} />} style={{ minWidth: '73px', textAlign: 'center' }} sortable></Column>
-                <Column header="Phone" body={<Telephone color='#98A2B3' size={20} />} style={{ minWidth: '73px', textAlign: 'center' }} sortable></Column>
-                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '135px' }} sortable></Column>
+                {/* <Column field="hourly" header="Hourly rate" body={hourlyBody} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column> */}
+                <Column field="jobs_complete" header="Jobs complete" style={{ minWidth: '131px', textAlign: 'left' }} sortable></Column>
+                <Column header="Email" body={emailBodyTemplate} style={{ minWidth: '73px', textAlign: 'center' }}></Column>
+                <Column header="Phone" body={phoneBodyTemplate} style={{ minWidth: '73px', textAlign: 'center' }}></Column>
+                <Column header="Chat" body={<Chat color='#98A2B3' size={20} />} style={{ minWidth: '73px', textAlign: 'center' }}></Column>
+                <Column field="Actions" header="Status" body={actionBody} style={{ minWidth: '135px' }}></Column>
             </DataTable>
         </>
     )

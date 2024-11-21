@@ -6,12 +6,13 @@ import { Button } from 'react-bootstrap';
 
 import PeoplesTable from './peoples-table';
 import style from './people.module.scss';
+import DesktopPeoplesTable from './desktop-user-table';
 
 const PeoplePage = () => {
     const handleSearch = (e) => { }
     return (
         <PrimeReactProvider className='peoples-page'>
-            <div className="topbar" style={{ padding: '4px 46px', position: 'relative', height: '48px' }}>
+            <div className="topbar border-bottom" style={{ padding: '4px 46px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>
                         <button className={`${style.filterBox}`}><Filter /></button>
@@ -26,16 +27,16 @@ const PeoplePage = () => {
                     </div>
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
-                    <h1 className="title p-0" style={{ marginRight: '16px' }}>People</h1>
-                    <Button className={`${style.newButton}`}>New</Button>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '49%', top: '12px' }}>
+                    <h1 className="title p-0" style={{ marginRight: '0px' }}>Team</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <div className={`${style.totalActive}`}>Active: 130</div>
-                    <div className={`${style.totalInActive}`}>In Active: 93</div>
                 </div>
             </div>
-            <PeoplesTable/>
+            <div style={{ maxHeight: "calc(100vh - 175px)", overflow: 'auto' }}>
+                <DesktopPeoplesTable />
+                <PeoplesTable />
+            </div>
         </PrimeReactProvider>
     )
 }

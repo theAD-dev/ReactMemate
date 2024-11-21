@@ -41,7 +41,7 @@ import MobileApp from "../layout/settings/users/MobileApp";
 import ExistingClients from "../Business/Pages/sales/new-request/existing-clients";
 import SelectClientType from "../Business/Pages/sales/new-request/select-client";
 import Departments from "../layout/settings/calculators/Departments";
-import JobTemplates from "./settings/templates/JobTemplates";
+import JobTemplates from "./settings/templates/job-templates";
 import EmailTemplates from "./settings/templates/email-templates";
 import EmailSignatures from "./settings/templates/EmailSignatures";
 import ProposalTemplates from "./settings/templates/proposal-templates";
@@ -90,6 +90,7 @@ import Location from "./settings/locations";
 import TaskPage from "../Work/Pages/tasks";
 import NotFoundTemplate from "../../ui/404-template/not-found-template";
 import InvoicePage from "../Business/Pages/invoices";
+import CreateJobTemplate from "./settings/templates/create-job-template";
 
 
 
@@ -370,7 +371,7 @@ const Header = ({ onClick }) => {
                         }
                       >
                         <img src={Profile3user} alt="Profile3user" />
-                        People
+                        Team
                       </NavLink>
                     </li>
                     <li>
@@ -503,6 +504,8 @@ const Header = ({ onClick }) => {
           <Route path="/settings/calculators/departments" element={<Departments />} />
           <Route path="/settings/location" element={<Location />} />
           <Route path="/settings/templates/job-templates" element={<JobTemplates />} />
+          <Route path="/settings/templates/job-templates/new" element={<CreateJobTemplate />} />
+          <Route path="/settings/templates/job-templates/:id" element={<CreateJobTemplate />} />
           <Route path="/settings/templates/email-templates" element={<EmailTemplates />} />
           <Route path="/settings/templates/email-templates/new" element={<CreateEmailTemplate />} />
           <Route path="/settings/templates/email-templates/:id" element={<CreateEmailTemplate />} />

@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.58eb81c1.css",
-    "main.js": "/static/js/main.36fa65eb.js",
+    "main.css": "/static/css/main.f55806ee.css",
+    "main.js": "/static/js/main.93fe3092.js",
     "static/js/692.2280fcce.chunk.js": "/static/js/692.2280fcce.chunk.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js",
@@ -37,6 +37,7 @@
     "static/media/request03.jpg": "/static/media/request03.7aad20d55140cdfa3c23.jpg",
     "static/media/forgetyourpass.jpg": "/static/media/forgetyourpass.38863195291bb4a70113.jpg",
     "static/media/request04.jpg": "/static/media/request04.f2e3f91d879208103c9d.jpg",
+    "static/media/twilio-logo.png": "/static/media/twilio-logo.c9f32aa9e92765a4deb7.png",
     "static/media/lender-panel02.png": "/static/media/lender-panel02.6e6f53144e0e9ae79658.png",
     "static/media/lender-panel03.png": "/static/media/lender-panel03.97ed72079a5a57bde24b.png",
     "static/media/newQuote.png": "/static/media/newQuote.9cbe4c1c556f514b424a.png",
@@ -117,8 +118,8 @@
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.58eb81c1.css.map": "/static/css/main.58eb81c1.css.map",
-    "main.36fa65eb.js.map": "/static/js/main.36fa65eb.js.map",
+    "main.f55806ee.css.map": "/static/css/main.f55806ee.css.map",
+    "main.93fe3092.js.map": "/static/js/main.93fe3092.js.map",
     "692.2280fcce.chunk.js.map": "/static/js/692.2280fcce.chunk.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
     "reactPlayerSoundCloud.0b756129.chunk.js.map": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js.map",
@@ -136,7 +137,7 @@
     "reactPlayerPreview.40333d14.chunk.js.map": "/static/js/reactPlayerPreview.40333d14.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.58eb81c1.css",
-    "static/js/main.36fa65eb.js"
+    "static/css/main.f55806ee.css",
+    "static/js/main.93fe3092.js"
   ]
 }

@@ -131,7 +131,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" 
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
                                 onCropComplete={onCropComplete}
-                                aspect={1} // or remove this if you want a flexible aspect ratio
+                                aspect={3/2} // or remove this if you want a flexible aspect ratio
                                 restrictPosition={false} // Allow full movement within the bounds
                                 style={{
                                     containerStyle: {

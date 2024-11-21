@@ -63,7 +63,7 @@ export const getCountries = async () => {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+  return fetchAPI(url.toString(), options, false);
 }
 
 export const getStates = async (country) => {
@@ -72,7 +72,7 @@ export const getStates = async (country) => {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+  return fetchAPI(url.toString(), options, false);
 }
 
 export const getCities = async (state) => {
@@ -81,7 +81,7 @@ export const getCities = async (state) => {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+  return fetchAPI(url.toString(), options, false);
 }
 
 export const getProjectManager = async () => {

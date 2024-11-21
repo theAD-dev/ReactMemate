@@ -1,41 +1,45 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "../Login/login.css";
 import LoinLogo from "../../../assets/images/logo.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import { ProfileResetUpdate } from '../../../APIs/ProfileResetPasswordApi';
+import { resetEmail } from '../../../APIs/ProfileResetPasswordApi';
 import forgetyourpass from "../../../assets/images/img/forgetyourpass.jpg";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const ForgotPassword = () => {
-  const navigate = useNavigate(); 
-  const [isPasswordReset, setIsPasswordReset] = useState(false);
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault(); // Prevents the default form submission behavior
-  
+    setError(null);
+
     // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError("Please enter a valid email address.");
       return;
     }
-  
-    // Reset error state and initiate password reset
-    setError(null);
-    setIsPasswordReset(true);
-  
-    // Simulate API call to reset password
-    setTimeout(() => {
-      // Redirect to CheckMail component after a simulated delay
+
+    try {
+      setIsLoading(true);
+      const response = await resetEmail({ email: email });
+      console.log('response: ', response);
       navigate(`/check-mail?email=${encodeURIComponent(email)}`);
-    }, 2000); // Simulated 2 second delay
-  
-    // Call the ProfileResetUpdate API
-    ProfileResetUpdate(email);
+    } catch (error) {
+      if (error.message === "Not found") {
+        setError("Email does not exist");
+      } else {
+        setError("Failed to send email. Please try again.")
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -61,8 +65,9 @@ const ForgotPassword = () => {
                   <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />
                 </div>
                 {error && <div className="error-message">{error}</div>}
-                <button className="fillbtn flexcenterbox" type="submit">
-                  Reset Password <img src={arrowRight} alt="Arrow Right" />
+                <button className="fillbtn flexcenterbox" type="submit" style={{ width: '340px', height: '49px' }}>
+                  {isLoading ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner>
+                    : <>Reset Password <img src={arrowRight} alt="Arrow Right" /></>}
                 </button>
               </form>
               {/* {isPasswordReset && (

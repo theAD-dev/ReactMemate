@@ -21,6 +21,7 @@ import Demo from './components/layout/settings/Demo';
 import Components from '../src/ui/memate-select';
 import QuotationEmail from './components/layout/browser-web/quotation-email';
 import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
+import StripeContainer from './ui/strip-payment/strip-payment';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Route path="/ui/components" element={<Components />} />
         <Route path="/quote/:id" element={<QuotationEmail />} />
         <Route path="/invoice/:id" element={<PublicInvoice />} />
+        <Route path='/payment/:clientSecret/:publishKey' element={<StripeContainer />}/>
       </Routes>
     </AuthProvider>
   );

@@ -131,8 +131,19 @@
     border-radius: 16px;
     border: 1px solid var(--Success-200, #abefc6);
     background: #ecfdf3;
-    padding: 4px 8px;
+    padding: 4px 8px 4px 8px;
     mix-blend-mode: multiply;
+    svg {
+      fill: #079455;
+    }
+    .plusIcon::after {
+      content: "";
+      left: 0px;
+      top: -5px;
+      height: 27px;
+      position: absolute;
+      border-left: 1px solid #abefc6;
+    }
   }
 
   .unpaid {
@@ -148,6 +159,42 @@
     background: var(--Warning-50, #fffaeb);
     mix-blend-mode: multiply;
     padding: 4px 8px;
+    svg {
+      fill: #d92d20;
+    }
+    .plusIcon::after {
+      content: "";
+      left: 0px;
+      top: -5px;
+      height: 27px;
+      position: absolute;
+      border-left: 1px solid #fedf89;
+    }
+  }
+
+  .partialPaid {
+    text-align: center;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    border-radius: 16px;
+    padding: 4px 8px;
+    color: var(--Error-700, #B42318) !important;
+    border: 1px solid var(--Error-200, #FECDCA) !important;
+    background: var(--Error-50, #FEF3F2) !important;
+    svg {
+      fill: #d92d20;
+    }
+    .plusIcon::after {
+      content: "";
+      left: 0px;
+      top: -5px;
+      height: 27px;
+      position: absolute;
+      border-left: 1px solid #FECDCA;
+    }
   }
 }
 
