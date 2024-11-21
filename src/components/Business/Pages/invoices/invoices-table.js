@@ -200,7 +200,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                     state={isOpen ? 'open' : 'closed'}
                     anchorRef={ref}
                     onClose={() => setOpen(false)}
-                    menuStyle={{ padding: '24px 24px 20px 24px', width: 'fit-content', marginTop: '45px' }}
+                    menuStyle={{ padding: '24px 24px 20px 24px', width: '555px', marginTop: '45px' }}
                 >
                     <div className='d-flex justify-content-between mb-4'>
                         <div className='BoxNo'>
@@ -210,34 +210,44 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                         </div>
                         <CloseButton onClick={() => setOpen(false)} />
                     </div>
-                    <div className='d-flex gap-4 border justify-content-around py-1 px-2 rounded'>
-                        <div className='d-flex gap-2 align-items-center'>
-                            <Person color='#98A2B3' size={14} />
-                            <span className='font-14'>{rowData?.client?.name}</span>
-                        </div>
-                        <div className='d-flex gap-2 align-items-center'>
-                            <Coin color='#98A2B3' size={14} />
-                            <span className='font-14 font-weight-bold'>{parseFloat(rowData.deposit || 0).toFixed(2)}</span>
-                        </div>
-                        <div className='d-flex gap-2 align-items-center'>
-                            <Coin color='#98A2B3' size={14} />
-                            <div className='border rounded font-14 px-1'>Bank</div>
-                        </div>
-                        <div className='d-flex gap-2 align-items-center'>
-                            <Calendar3Event color='#98A2B3' size={14} />
-                            <div className='font-14'>{formatDate(rowData.created)}</div>
-                        </div>
-                    </div>
+                    {
+                        rowData?.billing_history.map((history) =>
+                            <div className='d-flex gap-4 border justify-content-around py-1 px-2 rounded mb-2'>
+                                <div className='d-flex gap-2 align-items-center'>
+                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '50%', overflow: 'hidden' }}>
+                                        <img src={history?.manager?.photo} style={{ widows: '20px' }} />
+                                    </div>
+                                    <span className='font-14'>{history?.manager?.name}</span>
+                                </div>
+                                <div className='d-flex gap-2 align-items-center'>
+                                    <Coin color='#98A2B3' size={14} />
+                                    <span style={{ fontWeight: 600, fontSize: 16 }}>${parseFloat(history.deposit || 0).toFixed(2)}</span>
+                                </div>
+                                <div className='d-flex gap-2 align-items-center'>
+                                    <Coin color='#98A2B3' size={14} />
+                                    <div className='border rounded font-12 px-1'>
+                                        {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : "Strip"}
+                                    </div>
+                                </div>
+                                <div className='d-flex gap-2 align-items-center'>
+                                    <Calendar3Event color='#98A2B3' size={14} />
+                                    <div className='font-14'>{formatDate(history.created)}</div>
+                                </div>
+                            </div>
+                        )
+                    }
+
                     {
                         rowData.paid
                             ? <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#ECFDF3' }}>
-                                <CheckCircleFill color='#17B26A' />
                                 <span className='font-14' style={{ color: '#17B26A' }}>Invoice Paid</span>
                             </div>
-                            : <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#FEF3F2' }}>
-                                <XCircleFill color='#F04438' />
-                                <span className='font-14' style={{ color: '#B42318' }}>Invoice Due</span>
+                            : rowData.payment_status === 'partial_payment' ? <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#fffaeb' }}>
+                                <span className='font-14' style={{ color: '#b54708' }}>Invoice Partialy Paid</span>
                             </div>
+                                : <div className='d-flex gap-2 mt-3 justify-content-center align-items-center p-2 rounded' style={{ background: '#FEF3F2' }}>
+                                    <span className='font-14' style={{ color: '#B42318' }}>Invoice Due</span>
+                                </div>
                     }
 
                 </ControlledMenu>
@@ -289,7 +299,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         </div>
     }
 
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
+    const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : data?.payment_status === 'partial_payment' ? style.partialPaidRow : style.unpaidRow);
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
@@ -324,7 +334,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
-            <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData}/>
+            <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData} />
         </>
     )
 })

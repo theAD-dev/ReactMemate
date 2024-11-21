@@ -233,8 +233,8 @@ const InvoiceHistory = ({ history }) => {
                     <Column field="" style={{ width: 'auto' }} body={(rowData, { rowIndex }) => <>#{rowIndex + 1}</>} header="ID"></Column>
                     <Column field="type" style={{ width: '150px' }} header="Reference" body={referenceBody}></Column>
                     <Column field="deposit" style={{ width: '210px', textAlign: 'right' }} body={(rowData) => <>${rowData?.deposit}</>} header="Amount"></Column>
-                    <Column field="manager.name" style={{ width: '210px' }} header="User / Supplier" body={nameBody}></Column>
-                    <Column field="created" style={{ width: '147px' }} header="Date" body={depositDate}></Column>
+                    <Column field="manager.name" style={{ width: '210px' }} header="Manager" body={nameBody}></Column>
+                    <Column field="created" style={{ width: '147px' }} header="Created at" body={depositDate}></Column>
                 </DataTable>
             </Card.Body>
         </Card>

@@ -106,7 +106,11 @@
 }
 
 .unpaidRow td {
-  background-color: #fffbfa !important;
+  background-color: #FFFBFA !important;
+}
+
+.partialPaidRow td {
+  background-color: #FFFCF5 !important;
 }
 
 .fontStanderdSize {
@@ -116,7 +120,7 @@
   color: var(--Success-900, #074d31);
   text-align: center;
   font-family: Inter;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 18px;

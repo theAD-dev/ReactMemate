@@ -4,7 +4,8 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {
-  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink
+  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink,
+  Envelope
 } from "react-bootstrap-icons";
 import { Placeholder, Table } from 'react-bootstrap';
 import AddNote from './add-note';
@@ -224,6 +225,66 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     if (projectId && viewShow) projectCardData(projectId);
   }, [projectId, viewShow]);
 
+  const parseEmailData = (text) => {
+    const lines = text.split("\n");
+
+    // Extract and clean the subject
+    const subject = lines.find((line) => line.startsWith("Subject:")).replace("Subject: ", "");
+
+    // Extract and clean the recipients
+    const rawRecipients = lines.find((line) => line.startsWith("Recipient(s):")).replace("Recipient(s): ", "");
+    const recipients = JSON.parse(rawRecipients.replace(/'/g, '"')); // Replace single quotes with double quotes
+
+    // Extract the body
+    const body = text.split("Body:")[1]?.trim();
+
+    return { subject, recipients, body };
+  };
+
+  const EmailComponent = ({ emailData }) => {
+    const [showFullBody, setShowFullBody] = useState(false);
+
+    const email = parseEmailData(emailData);
+
+    // Process email body lines, splitting by paragraph or newlines
+    const bodyLines = email.body.split(/<\/p>\s*<p>|<br\s*\/?>|\n/).map((line, idx) => `<p key=${idx}>${line.trim()}</p>`);
+
+    // Limit the number of lines displayed initially
+    const visibleBody = showFullBody ? bodyLines.join("") : bodyLines.slice(0, 3).join("");
+
+    return (
+      <div>
+        <ul className="d-flex flex-column align-items-start">
+          <li className="font-14">
+            <strong className="font-12">Subject:</strong>&nbsp; {email.subject}
+          </li>
+          <li>
+            <strong className="font-12">Recipients:</strong>&nbsp;
+            <ul>
+              {email.recipients.map((recipient, index) => (
+                <li className="font-14" key={index}>
+                  {recipient}
+                </li>
+              ))}
+            </ul>
+          </li>
+        </ul>
+        <div>
+          <div dangerouslySetInnerHTML={{ __html: visibleBody }} />
+          {bodyLines.length > 3 && (
+            <button
+              className="text-button font-12 px-0"
+              onClick={() => setShowFullBody(!showFullBody)}
+            >
+              {showFullBody ? "Show Less" : "Load More"}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+
   return (
     <>
       <Modal
@@ -239,15 +300,15 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <ul className='d-flex justify-content-between align-items-center '>
               <li className='me-1 d-flex align-items-center'>
                 <strong className='dollorIcon' style={{
-                  background: ! cardData?.invoice_created ? '#F9FAFB' 
-                  : cardData?.payment_status === 'paid' ? '#F2FDEC' 
-                  : cardData?.payment_status === 'not_paid' ? "#FEF3F2"
-                  : "#FFFAEB"
-                 }}><CurrencyDollar size={13} color={
-                  ! cardData?.invoice_created ? '#667085' 
-                  : cardData?.payment_status === 'paid' ? '#17B26A' 
-                  : cardData?.payment_status === 'not_paid' ? "#F04438"
-                  : "#B54708"
+                  background: !cardData?.invoice_created ? '#F9FAFB'
+                    : cardData?.payment_status === 'paid' ? '#F2FDEC'
+                      : cardData?.payment_status === 'not_paid' ? "#FEF3F2"
+                        : "#FFFAEB"
+                }}><CurrencyDollar size={13} color={
+                  !cardData?.invoice_created ? '#667085'
+                    : cardData?.payment_status === 'paid' ? '#17B26A'
+                      : cardData?.payment_status === 'not_paid' ? "#F04438"
+                        : "#B54708"
                 } /></strong>
                 {
                   isFetching ? (
@@ -502,7 +563,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS />
-                    <ComposeEmail clientId={cardData?.client} projectId={projectId}/>
+                    <ComposeEmail clientId={cardData?.client} projectId={projectId} />
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
@@ -546,8 +607,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileEarmark size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Quote &nbsp;</strong>
-                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
-                                          &nbsp;&nbsp;{projectId && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14} /></Link>}
+                                          &nbsp;&nbsp;{projectId && title === "Quote Created" && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                         </div>
                                       </>
 
@@ -587,7 +648,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileText size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Invoice&nbsp;</strong>
-                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
+                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14} /></Link>}
                                           &nbsp;&nbsp;{projectId && title === "Invoice Created" && <Link to={`/invoice/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                         </div>
                                       </>
@@ -600,15 +661,21 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         </>
                                       </>
 
-                                    ) : (
+                                    ) : type === "email" ? (<>
+                                      <Envelope size={16} color="#1AB2FF" />{" "}
+                                      <strong>&nbsp; Email</strong>
+                                    </>) : (
                                       ''
                                     )}
-
                                   </li>
 
                                 </ul>
                                 <h5 style={{ whiteSpace: "pre-line" }}>{title}</h5>
-                                <h6 style={{ whiteSpace: "pre-line" }}>{text}</h6>
+                                {
+                                  type === "email" ? <EmailComponent emailData={text} />
+                                    :
+                                    <h6 style={{ whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: text }} />
+                                }
                                 <p>{formatTimestamp(created)} by {manager}</p>
                               </div>
                             ))
