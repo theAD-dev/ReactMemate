@@ -24,6 +24,7 @@ import TwilioIntegrations from "./twilio-integration";
 import { useLocation } from "react-router-dom";
 import { Envelope } from "react-bootstrap-icons";
 import EmailIntegrations from "./email-integration";
+import XeroIntegration from "./xero-integration";
 
 const schema = yup.object().shape({
   emails: yup.array().of(
@@ -46,6 +47,7 @@ const Integrations = () => {
   const [stripeVisible, setStripeVisible] = useState(false);
   const [twilioVisible, setTwilioVisible] = useState(false);
   const [emailVisible, setEmailVisible] = useState(false);
+  const [xeroVisible, setXeroVisible] = useState(false);
 
   const stripeIntegrationsQuery = useQuery({ queryKey: ['stripeIntegrations'], queryFn: getStripeIntegrations });
   const googleReviewIntegrationsQuery = useQuery({ queryKey: ['googleReviewIntegrations'], queryFn: getGoogleReviewIntegrations });
@@ -53,16 +55,6 @@ const Integrations = () => {
   const emailIntegrationsQuery = useQuery({ queryKey: ['getEmailIntegrations'], queryFn: getEmailIntegrations, retry: 1 });
 
   const integrationsData = [
-    {
-      id: 2,
-      title: "Xero",
-      method: "xero",
-      content:
-        "Connect Xero to directly send expenses and invoices to your Xero account, simplifying your accounting process.",
-      status: true,
-      isConnected: false,
-      img: xeroLogo,
-    },
     {
       id: 4,
       title: "Google Calendar",
@@ -117,7 +109,7 @@ const Integrations = () => {
                           <p>{"Integrate Stripe to enable easy online invoice payments via credit card, ensuring quick and secure money transfers to your account."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => {setStripeVisible(true)}}>
+                          <button className={style.infoButton} onClick={() => { setStripeVisible(true) }}>
                             {!stripeIntegrationsQuery?.data?.stripe_secret_key ? 'Connect' : 'Update'}
                           </button>
                         </div>
@@ -139,7 +131,7 @@ const Integrations = () => {
                           <p>{"Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => {setGoogleVisible(true)}}>
+                          <button className={style.infoButton} onClick={() => { setGoogleVisible(true) }}>
                             {!googleReviewIntegrationsQuery?.data?.google_review_link ? 'Connect' : 'Update'}
                           </button>
                         </div>
@@ -161,21 +153,21 @@ const Integrations = () => {
                           <p>{"Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => {setTwilioVisible(true)}}>
+                          <button className={style.infoButton} onClick={() => { setTwilioVisible(true) }}>
                             {!twilioIntegrationsQuery?.data?.twilio_token ? 'Connect' : 'Update'}
                           </button>
                         </div>
                       </div>
                     </Col>
                     <Col xs={4} className="pb-4">
-                    <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                      <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
                         <div className={style.head}>
                           <div style={{ background: '#F9FAFB', }} className="d-flex justify-content-center align-items-center p-3 rounded-circle">
                             <Envelope size={32} color="#667085" />
                           </div>
                           {
                             <button className={emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
-                              {emailIntegrationsQuery?.data?.outgoing_email ? "Connected" : "Disconnected"}
+                              {emailIntegrationsQuery?.data?.outgoing_email ? "Verified" : "Pending"}
                               <span className={style.dots}></span>
                             </button>
                           }
@@ -185,10 +177,29 @@ const Integrations = () => {
                           <p>{"Link your email to be used for  all outgoing communications, including quotes, invoices, and reminders, etc."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => {setEmailVisible(true)}}>
+                          <button className={style.infoButton} onClick={() => { setEmailVisible(true) }}>
                             {!emailIntegrationsQuery?.data?.outgoing_email ? 'Connect' : 'Update'}
                           </button>
                         </div>
+                      </div>
+                    </Col>
+                    <Col xs={4} className="pb-4">
+                      <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                        <div className={style.head}>
+                          <img src={xeroLogo} alt="xeroLogo" />
+
+                          {
+                            <button className={!emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
+                              {!emailIntegrationsQuery?.data?.outgoing_email ? "Connected" : "Disconnected"}
+                              <span className={style.dots}></span>
+                            </button>
+                          }
+                        </div>
+                        <div className={style.body}>
+                          <h3>{"Xero"}</h3>
+                          <p>{"Connect Xero to directly send expenses and invoices to your Xero account, simplifying your accounting process."}</p>
+                        </div>
+                          <XeroIntegration />
                       </div>
                     </Col>
 
@@ -234,8 +245,9 @@ const Integrations = () => {
       </div>
       <StripeIntegrations visible={stripeVisible} setVisible={setStripeVisible} stripe={stripeIntegrationsQuery?.data} refetch={stripeIntegrationsQuery?.refetch} />
       <TwilioIntegrations visible={twilioVisible} setVisible={setTwilioVisible} twilio={twilioIntegrationsQuery?.data} refetch={twilioIntegrationsQuery?.refetch} />
-      <GoogleIntegrations visible={googleVisible} setVisible={setGoogleVisible} data={googleReviewIntegrationsQuery?.data} refetch={googleReviewIntegrationsQuery?.refetch}/>
-      <EmailIntegrations visible={emailVisible} setVisible={setEmailVisible} data={emailIntegrationsQuery?.data} refetch={emailIntegrationsQuery?.refetch}/>
+      <GoogleIntegrations visible={googleVisible} setVisible={setGoogleVisible} data={googleReviewIntegrationsQuery?.data} refetch={googleReviewIntegrationsQuery?.refetch} />
+      <EmailIntegrations visible={emailVisible} setVisible={setEmailVisible} email={emailIntegrationsQuery?.data} refetch={emailIntegrationsQuery?.refetch} />
+
     </>
   );
 };

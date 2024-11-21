@@ -59,7 +59,7 @@ export const twilioIntegrationsSet = async (data) => {
 }
 
 export const getEmailIntegrations = async () => {
-    const endpoint = `/references/outgoing-emai/`;
+    const endpoint = `/references/outgoing-email/`;
     const options = {
         method: 'GET',
     };

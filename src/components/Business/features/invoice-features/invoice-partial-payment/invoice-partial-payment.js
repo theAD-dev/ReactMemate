@@ -4,7 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { Card } from 'react-bootstrap';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
-import { Bank, Cash, FilePdf, Link as LinkIcon } from 'react-bootstrap-icons';
+import { Bank, Cash, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
 import { Input } from '@mui/material';
 import { InputText } from 'primereact/inputtext';
 import { SelectButton } from 'primereact/selectbutton';
@@ -112,7 +112,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                     <div className='d-flex justify-content-between gap-3 align-items-center'>
                         <div className='d-flex flex-column'>
                             <label>Enter Amount</label>
-                            <InputText value={deposit} onChange={(e)=> setDeposit(e.target.value)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
+                            <InputText value={deposit} onChange={(e) => setDeposit(e.target.value)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
                             {errors?.deposit && (
                                 <p className="error-message mb-0">{"Payment type is required"}</p>
                             )}
@@ -150,7 +150,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                         </div>
                         <div className={clsx(style.box7, 'd-flex flex-column text-end')}>
                             <label>Operational Profit</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.profit || 0).toFixed(2)}2</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.profit || 0).toFixed(2)}</h1>
                         </div>
                     </div>
                 </Card.Body>
@@ -182,23 +182,59 @@ const InvoiceHistory = ({ history }) => {
     const nameBody = (rowData) => {
         return (
             <div className='d-flex align-items-center gap-2'>
-                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden'}}>
-                    <img src={rowData?.manager?.photo} style={{ widows: '24px'}}/>
+                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
+                    <img src={rowData?.manager?.photo} style={{ widows: '24px' }} />
                 </div>
                 <span>{rowData?.manager?.name}</span>
             </div>
         )
     }
+
+    const referenceBody = (rawData) => {
+        let type = rawData.type;
+        if (type === 2)
+            return <div className='d-flex align-items-center gap-2'>
+                <Bank size={18} />
+                <span>Bank</span>
+            </div>
+        else if (type === 1) {
+            return <div className='d-flex align-items-center gap-2'>
+                <Cash size={18} />
+                <span>Cash</span>
+            </div>
+        } else if (type === 3) {
+            return <div className='d-flex align-items-center gap-2'>
+                <Stripe size={18} />
+                <span>Strip</span>
+            </div>
+        }
+
+    }
+
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp * 1000);
+        const day = date.getDate();
+        const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+            month: "short",
+        }).format(date);
+        const year = date.getFullYear();
+        return `${day} ${monthAbbreviation} ${year}`;
+    };
+
+    const depositDate = (rawData) => {
+        return <span>{formatDate(rawData?.created)}</span>
+    }
+
     return (
         <Card className={clsx(style.border, 'mb-3 mt-2')}>
             <Card.Body>
                 <h1 style={{ fontSize: '16px' }}>History</h1>
                 <DataTable value={history} className={style.borderTable} showGridlines>
-                    <Column field="" style={{ width: 'auto' }} body={(rowData, { rowIndex }) => <>#{rowIndex + 1}</>}  header="ID"></Column>
-                    <Column field="email" style={{ width: '267px' }} header="Reference"></Column>
+                    <Column field="" style={{ width: 'auto' }} body={(rowData, { rowIndex }) => <>#{rowIndex + 1}</>} header="ID"></Column>
+                    <Column field="type" style={{ width: '150px' }} header="Reference" body={referenceBody}></Column>
                     <Column field="deposit" style={{ width: '210px', textAlign: 'right' }} body={(rowData) => <>${rowData?.deposit}</>} header="Amount"></Column>
                     <Column field="manager.name" style={{ width: '210px' }} header="User / Supplier" body={nameBody}></Column>
-                    <Column field="type" style={{ width: '147px' }} header="Status"></Column>
+                    <Column field="created" style={{ width: '147px' }} header="Date" body={depositDate}></Column>
                 </DataTable>
             </Card.Body>
         </Card>
