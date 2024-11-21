@@ -562,8 +562,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
-                    <SendSMS />
-                    <ComposeEmail clientId={cardData?.client} projectId={projectId} />
+                    <SendSMS projectCardData={() => projectCardData(projectId)}/>
+                    <ComposeEmail clientId={cardData?.client} projectId={projectId} projectCardData={() => projectCardData(projectId)}/>
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
