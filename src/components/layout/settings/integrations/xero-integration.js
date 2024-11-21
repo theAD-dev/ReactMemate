@@ -53,9 +53,7 @@ const XeroIntegration = () => {
           const state = queryParams.get("state");
 
           if (code) {
-            await exchangeCodeForToken(code)
-            console.log("Authorization Code:", code);
-
+            exchangeCodeForToken(code)
             // Close the popup and clear the interval
             popup.close();
             clearInterval(timer);
@@ -71,7 +69,7 @@ const XeroIntegration = () => {
         clearInterval(timer);
         console.log("Popup closed before completing login.");
       }
-    }, 1000);
+    }, 500);
   };
 
   return (
