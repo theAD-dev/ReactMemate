@@ -76,3 +76,21 @@ export const emailIntegrationsSet = async (data) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 }
+
+export const getXeroIntegrations = async () => {
+    const endpoint = '/xero/status/';
+    const options = {
+        method: 'GET'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
+export const disconnectXeroIntegrations = async () => {
+    const endpoint = '/xero/disconnect/';
+    const options = {
+        method: 'POST'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}

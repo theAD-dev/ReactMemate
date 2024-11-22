@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import style from "./integration.module.scss";
 import { toast } from "sonner";
+import { Button } from "react-bootstrap";
+import { useMutation } from "@tanstack/react-query";
+import { disconnectXeroIntegrations } from "../../../../APIs/integrations-api";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const CLIENT_ID = "743BAB12B3A24534889C5C803A35E12C";
 // const REDIRECT_URI = "http://localhost:3000/settings/integrations";
 
-const XeroIntegration = () => {
+const XeroIntegration = ({ connected, refetch }) => {
+  console.log('connected: ', connected);
   const REDIRECT_URI = window.location.href;
   const authorizationUrl = `https://login.xero.com/identity/connect/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=openid profile email offline_access accounting.transactions accounting.contacts accounting.settings&state=111`;
 
@@ -26,13 +31,17 @@ const XeroIntegration = () => {
         }
       });
       const data = await response.json();
+      if (data?.error) {
+        toast.error(data?.error);
+        return;
+      }
       toast.success("Xero code has been sent successfully!");
     } catch (error) {
       console.error("Error saving template:", error);
       toast.error("Failed to send the xero code. Please try again.");
-    }  finally {
-        processedCodes.delete(code);
-     }
+    } finally {
+      processedCodes.delete(code);
+    }
   };
 
   const handleButtonClick = () => {
@@ -72,21 +81,29 @@ const XeroIntegration = () => {
     }, 500);
   };
 
+  const mutation = useMutation({
+    mutationFn: (data) => disconnectXeroIntegrations(),
+    onSuccess: () => {
+      refetch();
+      toast.success(`Xero disconnected successfully.`);
+    },
+    onError: (error) => {
+      toast.error(`Failed to disconnect xero. Please try again.`);
+    }
+  });
+
   return (
     <div>
       <div className={style.bottom}>
-        <button onClick={handleButtonClick} className={style.infoButton}>
-          Connect
-        </button>
+        {
+          !connected ?
+            <button onClick={handleButtonClick} className={style.infoButton}>Connect</button>
+            : <Button onClick={() => mutation?.mutate()} className="danger-outline-button">
+              Disconnect
+              {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+            </Button>
+        }
       </div>
-
-      {/* {redirectParams && (
-        <div className={style.result}>
-          <h6>Authorization Code:</h6>
-          <p><strong>Code:</strong> {redirectParams.code}</p>
-          <p><strong>State:</strong> {redirectParams.state}</p>
-        </div>
-      )} */}
     </div>
   );
 };
