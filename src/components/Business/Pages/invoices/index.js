@@ -76,8 +76,9 @@ const InvoicePage = () => {
                             <>
                                 <h6 className={style.selectedCount}>Selected: {selected?.length}</h6>
                                 <div className='filtered-box d-flex align-items-center gap-2'>
+                                    <button className={`outline-button ${style.actionButton}`} onClick={() => { }}>Send to Xero/MYOB <Send color='#1D2939' size={20} /> </button>
                                     <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
-                                    <button className={`${style.filterBox}`} onClick={() => {}}><Printer /></button>
+                                    <button className={`${style.filterBox}`} onClick={() => { }}><Printer /></button>
                                 </div>
                             </>
                         )
