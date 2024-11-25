@@ -63,6 +63,11 @@ input {
   border: 1px solid var(--Gray-300, #d0d5dd) !important;
 }
 
+.outline-button.active-outline-button {
+  border: 1px solid var(--Primary-200, #a3e0ff) !important;
+  background: var(--Primary-50, #ebf8ff) !important;
+}
+
 .text-button,
 .text-button:hover,
 .text-button:focus {
