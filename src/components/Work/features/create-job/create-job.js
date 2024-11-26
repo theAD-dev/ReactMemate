@@ -32,7 +32,7 @@ const CreateJob = ({ visible, setVisible }) => {
     const [projectId, setProjectId] = useState(null);
     // const [projectReference, setProjectReference] = useState(null);
     // const [projectDescription, setProjectDescription] = useState(null);
-    const [repeat, setRepeat] = useState('');
+    const [repeat, setRepeat] = useState('Weekly');
     const [weeks, setWeeks] = useState([]);
     const [months, setMonths] = useState([]);
     const [repeatStart, setRepeatStart] = useState(null);
@@ -120,6 +120,43 @@ const CreateJob = ({ visible, setVisible }) => {
         setErrors((others) => ({ ...others, jobReference: false }));
         setErrors((others) => ({ ...others, description: false }));
     }, [getTemplateByIDQuery?.data]);
+
+    const onSubmit = () => {
+        setErrors({});
+        const payload = {};
+
+        if (!jobReference) setErrors((others) => ({ ...others, jobReference: true }));
+        payload.short_description = jobReference;
+        payload.long_description = description;
+
+        if (!userId) setErrors((others) => ({ ...others, userId: true }));
+        payload.worker = userId;
+
+        if (!type) setErrors((others) => ({ ...others, type: true }));
+        payload.type = type;
+        payload.cost = cost;
+        payload.duration = duration;
+        payload.time_type = time_type;
+        payload.start_date = start ? new Date(start).toISOString().split('T')[0] : null;
+        payload.end_date = end ? new Date(end).toISOString().split('T')[0] : null;
+        payload.project = projectId;
+
+        payload.repeat = {};
+        payload.repeat.type = repeat === "Weekly" ? 1 : 2;
+        if ((weeks.length === 0 && repeat === "Weekly") || (months.length === 0 && repeat === "Monthly")) setErrors((others) => ({ ...others, on: true }));
+        if (repeat === "Weekly") {
+            payload.repeat.on = weeks.toString();
+        } else {
+            payload.repeat.on = months.toString();
+        }
+
+        if (!repeatStart) setErrors((others) => ({ ...others, repeatStart: true }));
+
+
+
+
+    }
+
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
@@ -178,12 +215,15 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 className={clsx(style.inputBox, 'w-100')}
                                                 onChange={(e) => {
                                                     setJobReference(e.target.value);
-                                                    setErrors((others) => ({ ...others, subject: false }));
+                                                    setErrors((others) => ({ ...others, jobReference: false }));
                                                 }}
                                                 placeholder="Enter job reference"
                                             />
                                         </IconField>
                                     </div>
+                                    {errors?.jobReference && (
+                                        <p className="error-message mb-0">{"Job reference is required"}</p>
+                                    )}
                                 </div>
 
                                 <div className='form-group mb-3'>
@@ -256,6 +296,9 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 loading={mobileuserQuery?.isFetching}
                                                 filter
                                             />
+                                            {errors?.userId && (
+                                                <p className="error-message mb-0">{"Worker is required"}</p>
+                                            )}
                                         </div>
                                     </Col>
                                     <Col className='ps-0'>
@@ -521,14 +564,14 @@ const CreateJob = ({ visible, setVisible }) => {
                                     {
                                         repeat === 'Weekly' && <div className='d-flex gap-3 align-items-center'>
                                             {
-                                                ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) =>
+                                                ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) =>
                                                     <button onClick={() => {
                                                         setWeeks((prevWeeks) =>
-                                                            prevWeeks.includes(day)
-                                                                ? prevWeeks.filter((d) => d !== day)
-                                                                : [...prevWeeks, day]
+                                                            prevWeeks.includes(index)
+                                                                ? prevWeeks.filter((d) => d !== index)
+                                                                : [...prevWeeks, index]
                                                         );
-                                                    }} className={clsx('outline-button', { 'active-outline-button': weeks.includes(day) })}>
+                                                    }} className={clsx('outline-button', { 'active-outline-button': weeks.includes(index) })}>
                                                         {day}
                                                     </button>
                                                 )
@@ -541,7 +584,7 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 Array.from({ length: 31 }, (_, i) => i + 1).map((month) => (
                                                     <button onClick={() => {
                                                         setMonths((prevMonths) =>
-                                                            setMonths.includes(month)
+                                                            prevMonths.includes(month)
                                                                 ? prevMonths.filter((m) => m !== month)
                                                                 : [...prevMonths, month]
                                                         );
@@ -552,7 +595,9 @@ const CreateJob = ({ visible, setVisible }) => {
                                             }
                                         </div>
                                     }
-
+                                    {errors?.on && (
+                                        <p className="error-message mb-0">{"Repeats on are required"}</p>
+                                    )}
                                 </div>
                             </Card.Header>
                             <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
@@ -568,6 +613,9 @@ const CreateJob = ({ visible, setVisible }) => {
                                     icon={<Calendar3 color='#667085' size={20} />}
                                     className={clsx(style.inputBox, 'p-0 outline-none')}
                                 />
+                                {errors?.repeatStart && (
+                                    <p className="error-message mb-0">{"Starts is required"}</p>
+                                )}
                             </Card.Header>
                             <Card.Header className={clsx(style.background, 'border-0 d-flex', style.borderBottom)}>
                                 <div className='d-flex flex-column'>
@@ -709,9 +757,9 @@ const CreateJob = ({ visible, setVisible }) => {
                                         </div>
                                         <div className='ms-auto'>
                                             <div className={style.deleteBox}>
-                                                <Trash color='#F04438' size={16}/>
+                                                <Trash color='#F04438' size={16} />
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -723,7 +771,7 @@ const CreateJob = ({ visible, setVisible }) => {
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={() => { }} className='solid-button' style={{ minWidth: '75px' }}>{false ? "Loading..." : "Save"}</Button>
+                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }}>{false ? "Loading..." : "Save"}</Button>
                     </div>
                 </div>
             )}
