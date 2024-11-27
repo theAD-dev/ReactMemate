@@ -16,3 +16,13 @@ export const getListOfJobs = async (page, limit, name = "", order = "", isShowDe
 
     return fetchAPI(url.toString(), options);
 }
+
+export const createNewJob = async (data) => {
+    const endpoint = '/jobs/create/';
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}

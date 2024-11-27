@@ -2,7 +2,7 @@ import { Sidebar } from 'primereact/sidebar';
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Calendar3, ClockHistory, CloudUpload, FilePdf, FilePdfFill, Trash, X } from 'react-bootstrap-icons';
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import style from './create-job.module.scss';
 import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
@@ -19,9 +19,15 @@ import { Calendar } from 'primereact/calendar';
 import { RadioButton } from 'primereact/radiobutton';
 import { Button as PrimeButton } from 'primereact/button';
 import { useDropzone } from 'react-dropzone';
+import { createNewJob } from '../../../../APIs/jobs-api';
+import { toast } from 'sonner';
 
-const CreateJob = ({ visible, setVisible }) => {
+const CreateJob = ({ visible, setVisible, setRefetch }) => {
     const [templateId, setTemplatedId] = useState(null);
+    const [isOpenRepeatSection, setIsOpenRepeatSection] = useState(false);
+    const [isOpenAttachmentsSection, setIsOpenAttachmentsSection] = useState(false);
+    const [isOpenProjectPhotoSection, setIsOpenProjectPhotoSection] = useState(false);
+
     const [jobReference, setJobReference] = useState(null);
     const [description, setDescription] = useState(null);
 
@@ -115,11 +121,27 @@ const CreateJob = ({ visible, setVisible }) => {
     };
 
     useEffect(() => {
-        setJobReference(getTemplateByIDQuery?.data?.title || "");
-        setDescription(getTemplateByIDQuery?.data?.description || "");
-        setErrors((others) => ({ ...others, jobReference: false }));
-        setErrors((others) => ({ ...others, description: false }));
+        if (getTemplateByIDQuery?.data) {
+            setJobReference(getTemplateByIDQuery?.data?.title || "");
+            setDescription(getTemplateByIDQuery?.data?.description || "");
+            setErrors((others) => ({ ...others, jobReference: false }));
+            setErrors((others) => ({ ...others, description: false }));
+        }
     }, [getTemplateByIDQuery?.data]);
+
+    const mutation = useMutation({
+        mutationFn: (data) => createNewJob(data),
+        onSuccess: (response) => {
+            console.log('response: ', response);
+            toast.success(`Job created successfully`);
+            setVisible(false);
+            setRefetch((refetch) => !refetch);
+        },
+        onError: (error) => {
+            console.error('Error creating expense:', error);
+            toast.error('Failed to create job. Please try again.');
+        }
+    });
 
     const onSubmit = () => {
         setErrors({});
@@ -127,6 +149,8 @@ const CreateJob = ({ visible, setVisible }) => {
 
         if (!jobReference) setErrors((others) => ({ ...others, jobReference: true }));
         payload.short_description = jobReference;
+
+        if (!description) setErrors((others) => ({ ...others, description: true }));
         payload.long_description = description;
 
         if (!userId) setErrors((others) => ({ ...others, userId: true }));
@@ -134,23 +158,41 @@ const CreateJob = ({ visible, setVisible }) => {
 
         if (!type) setErrors((others) => ({ ...others, type: true }));
         payload.type = type;
+
+        if (type === '2' && !cost) setErrors((others) => ({ ...others, cost: true }));
         payload.cost = cost;
-        payload.duration = duration;
+
+        if (type !== '2' && !duration) setErrors((others) => ({ ...others, duration: true }));
+        else if (duration)
+            payload.duration = +duration;
+
+        if (!time_type) setErrors((others) => ({ ...others, time_type: true }));
         payload.time_type = time_type;
-        payload.start_date = start ? new Date(start).toISOString().split('T')[0] : null;
-        payload.end_date = end ? new Date(end).toISOString().split('T')[0] : null;
+
+        if (!start) setErrors((others) => ({ ...others, start: true }));
+        else if (start)
+            payload.start_date = new Date(start).toISOString();
+
+        if (time_type !== '1' && !end) setErrors((others) => ({ ...others, end: true }));
+        else if (end)
+            payload.end_date = new Date(end).toISOString();
+
+        if (!projectId) setErrors((others) => ({ ...others, projectId: true }));
         payload.project = projectId;
 
-        payload.repeat = {};
-        payload.repeat.type = repeat === "Weekly" ? 1 : 2;
-        if ((weeks.length === 0 && repeat === "Weekly") || (months.length === 0 && repeat === "Monthly")) setErrors((others) => ({ ...others, on: true }));
-        if (repeat === "Weekly") {
-            payload.repeat.on = weeks.toString();
-        } else {
-            payload.repeat.on = months.toString();
+        if (!Object.values(errors).includes(false)) {
+            mutation.mutate(payload);
         }
+        // payload.repeat = {};
+        // payload.repeat.type = repeat === "Weekly" ? 1 : 2;
+        // if ((weeks.length === 0 && repeat === "Weekly") || (months.length === 0 && repeat === "Monthly")) setErrors((others) => ({ ...others, on: true }));
+        // if (repeat === "Weekly") {
+        //     payload.repeat.on = weeks.toString();
+        // } else {
+        //     payload.repeat.on = months.toString();
+        // }
 
-        if (!repeatStart) setErrors((others) => ({ ...others, repeatStart: true }));
+        // if (!repeatStart) setErrors((others) => ({ ...others, repeatStart: true }));
 
 
 
@@ -215,7 +257,8 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 className={clsx(style.inputBox, 'w-100')}
                                                 onChange={(e) => {
                                                     setJobReference(e.target.value);
-                                                    setErrors((others) => ({ ...others, jobReference: false }));
+                                                    if (e.target.value)
+                                                        setErrors((others) => ({ ...others, jobReference: false }));
                                                 }}
                                                 placeholder="Enter job reference"
                                             />
@@ -238,7 +281,8 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 className={clsx(style.inputBox, 'w-100 outline-none')}
                                                 onChange={(e) => {
                                                     setDescription(e.target.value);
-                                                    setErrors((others) => ({ ...others, description: false }));
+                                                    if (e.target.value)
+                                                        setErrors((others) => ({ ...others, description: false }));
                                                 }}
                                                 style={{
                                                     height: '126px'
@@ -247,6 +291,9 @@ const CreateJob = ({ visible, setVisible }) => {
                                             />
                                         </IconField>
                                     </div>
+                                    {errors?.description && (
+                                        <p className="error-message mb-0">{"Description is required"}</p>
+                                    )}
                                 </div>
 
                             </Card.Header>
@@ -290,6 +337,9 @@ const CreateJob = ({ visible, setVisible }) => {
                                                         setHourlyRate(parseFloat(user?.hourly_rate || 0).toFixed(2))
                                                         setPaymentCycle(paymentCycleObj[user?.payment_cycle] || "")
                                                     }
+
+                                                    if (e.value)
+                                                        setErrors((others) => ({ ...others, userId: false }))
                                                 }}
                                                 value={userId}
                                                 valueTemplate={selectedItemTemplate}
@@ -331,7 +381,11 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 id="fix"
                                                 name="paymentype"
                                                 value="2"
-                                                onChange={(e) => setType(e.target.value)}
+                                                onChange={(e) => {
+                                                    setType(e.target.value);
+                                                    if (e.target.value === "2")
+                                                        setErrors((others) => ({ ...others, type: false }));
+                                                }}
                                                 checked={type === '2'}
                                                 className={style.customRadio}
                                             />
@@ -344,7 +398,11 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 id="hours"
                                                 name="paymentype"
                                                 value="3"
-                                                onChange={(e) => setType(e.target.value)}
+                                                onChange={(e) => {
+                                                    setType(e.target.value);
+                                                    if (e.target.value === "3")
+                                                        setErrors((others) => ({ ...others, type: false }));
+                                                }}
                                                 checked={type === '3'}
                                                 className={style.customRadio}
                                             />
@@ -357,7 +415,11 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 id="timetracker"
                                                 name="paymentype"
                                                 value="4"
-                                                onChange={(e) => setType(e.target.value)}
+                                                onChange={(e) => {
+                                                    setType(e.target.value);
+                                                    if (e.target.value === "4")
+                                                        setErrors((others) => ({ ...others, type: false }));
+                                                }}
                                                 checked={type === '4'}
                                                 className={style.customRadio}
                                             />
@@ -372,15 +434,29 @@ const CreateJob = ({ visible, setVisible }) => {
                                             <label className={clsx(style.lable, 'mt-4 mb-2')}>Payment</label>
                                             <IconField iconPosition="left">
                                                 <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
-                                                <InputText value={cost} onChange={(e) => setCost(e.target.value)} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputBox, "outline-none")} placeholder='20' />
+                                                <InputText value={cost} onChange={(e) => {
+                                                    setCost(e.target.value);
+                                                    if (e.target.value)
+                                                        setErrors((others) => ({ ...others, cost: false }));
+                                                }} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputBox, "outline-none")} placeholder='20' />
                                             </IconField>
+                                            {errors?.cost && (
+                                                <p className="error-message mb-0">{"Payment is required"}</p>
+                                            )}
                                         </>
                                             : <div style={{ width: 'fit-content' }}>
-                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Hours</label>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>{type === '3' ? "Hours" : "Time Estimation"}</label>
                                                 <IconField iconPosition="left">
                                                     <InputIcon><span style={{ position: 'relative', top: '-4px' }}>H</span></InputIcon>
-                                                    <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ paddingLeft: '28px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
+                                                    <InputText value={duration} onChange={(e) => {
+                                                        setDuration(e.target.value);
+                                                        if (e.target.value)
+                                                            setErrors((others) => ({ ...others, duration: false }));
+                                                    }} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ paddingLeft: '28px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
                                                 </IconField>
+                                                {errors?.duration && (
+                                                    <p className="error-message mb-0">{type === '3' ? "Hours is required" : "Time Estimation is required"}</p>
+                                                )}
                                             </div>
                                     }
                                 </div>
@@ -397,7 +473,11 @@ const CreateJob = ({ visible, setVisible }) => {
                                                         id="shift"
                                                         name="timetype"
                                                         value="1"
-                                                        onChange={(e) => set_time_type(e.target.value)}
+                                                        onChange={(e) => {
+                                                            set_time_type(e.target.value)
+                                                            if (e.target.value === "1")
+                                                                setErrors((others) => ({ ...others, time_type: false }));
+                                                        }}
                                                         checked={time_type === '1'}
                                                         className={style.customRadio}
                                                     />
@@ -413,44 +493,69 @@ const CreateJob = ({ visible, setVisible }) => {
                                                 id="timeframe"
                                                 name="timetype"
                                                 value="T"
-                                                onChange={(e) => set_time_type(e.target.value)}
+                                                onChange={(e) => {
+                                                    set_time_type(e.target.value);
+                                                    if (e.target.value === "T")
+                                                        setErrors((others) => ({ ...others, time_type: false }));
+                                                }}
                                                 checked={time_type === 'T'}
                                                 className={style.customRadio}
                                             />
                                             <label htmlFor="timeframe" className={clsx(style.radioLabel, style.timeFrame)}>Time Frame</label>
                                         </div>
                                     </div>
+                                    {errors?.time_type && (
+                                        <p className="error-message mb-0">{"Time type is required"}</p>
+                                    )}
                                 </div>
 
-                                <div className='d-flex gap-3'>
+                                <div className='d-flex gap-2'>
                                     <div className='form-group'>
                                         <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Starts</label>
                                         <Calendar
                                             value={start}
-                                            onChange={(e) => setStart(e.value)}
+                                            onChange={(e) => {
+                                                setStart(e.value)
+                                                if (e.value)
+                                                    setErrors((others) => ({ ...others, start: false }));
+                                            }}
                                             showButtonBar
                                             placeholder='17 Jun 2021'
                                             dateFormat="dd M yy"
                                             showIcon
-                                            style={{ height: '46px', width: '180px', overflow: 'hidden' }}
+                                            style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                             icon={<Calendar3 color='#667085' size={20} />}
                                             className={clsx(style.inputBox, 'p-0 outline-none')}
+                                            hourFormat="24"
+                                            showTime
                                         />
+                                        {errors?.start && (
+                                            <p className="error-message mb-0">{"Start is required"}</p>
+                                        )}
                                     </div>
                                     {
                                         time_type !== '1' && <div className='form-group'>
                                             <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>End</label>
                                             <Calendar
                                                 value={end}
-                                                onChange={(e) => setEnd(e.value)}
+                                                onChange={(e) => {
+                                                    setEnd(e.value);
+                                                    if (e.value)
+                                                        setErrors((others) => ({ ...others, end: false }));
+                                                }}
                                                 showButtonBar
                                                 placeholder='20 Jun 2021'
                                                 dateFormat="dd M yy"
                                                 showIcon
-                                                style={{ height: '46px', width: '180px', overflow: 'hidden' }}
+                                                style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                                 icon={<Calendar3 color='#667085' size={20} />}
                                                 className={clsx(style.inputBox, 'p-0 outline-none')}
+                                                hourFormat="24"
+                                                showTime
                                             />
+                                            {errors?.end && (
+                                                <p className="error-message mb-0">{"End is required"}</p>
+                                            )}
                                         </div>
                                     }
                                     {
@@ -493,11 +598,16 @@ const CreateJob = ({ visible, setVisible }) => {
                                         placeholder="Select project"
                                         onChange={(e) => {
                                             setProjectId(e.value);
+                                            if (e.value)
+                                                setErrors((others) => ({ ...others, projectId: false }));
                                         }}
                                         value={projectId}
                                         loading={projectQuery?.isFetching}
                                         filter
                                     />
+                                    {errors?.projectId && (
+                                        <p className="error-message mb-0">{"Project is required"}</p>
+                                    )}
                                 </div>
                             </Card.Header>
                             {/* <Card.Header className={clsx(style.background, 'border-0')}>
@@ -544,226 +654,270 @@ const CreateJob = ({ visible, setVisible }) => {
                         </Card>
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx(style.borderBottom)}>
-                                <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Set to repeat</h1>
+                                <div className='d-flex justify-content-between'>
+                                    <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Set to repeat</h1>
+                                    <button className='text-button p-0' onClick={() => setIsOpenRepeatSection(!isOpenRepeatSection)}>
+                                        {
+                                            isOpenRepeatSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                            </svg>
+                                        }
+                                    </button>
+                                </div>
                             </Card.Body>
-                            <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
-                                <div className='d-flex align-items-center gap-4 py-1'>
-                                    <div className="flex align-items-center">
-                                        <RadioButton inputId="Weekly" name="repeat" value="Weekly" onChange={(e) => setRepeat(e.value)} checked={repeat === 'Weekly'} />
-                                        <label htmlFor="Weekly" className="ms-2 cursor-pointer">Weekly</label>
-                                    </div>
-                                    <div className="flex align-items-center">
-                                        <RadioButton inputId="Monthly" name="repeat" value="Monthly" onChange={(e) => setRepeat(e.value)} checked={repeat === 'Monthly'} />
-                                        <label htmlFor="Monthly" className="ms-2 cursor-pointer">Monthly</label>
-                                    </div>
-                                </div>
-                            </Card.Header>
-                            <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
-                                <div className='d-flex flex-column'>
-                                    <label className='mb-2'>Repeat on</label>
-                                    {
-                                        repeat === 'Weekly' && <div className='d-flex gap-3 align-items-center'>
+                            {
+                                isOpenRepeatSection && <>
+                                    <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
+                                        <div className='d-flex align-items-center gap-4 py-1'>
+                                            <div className="flex align-items-center">
+                                                <RadioButton inputId="Weekly" name="repeat" value="Weekly" onChange={(e) => setRepeat(e.value)} checked={repeat === 'Weekly'} />
+                                                <label htmlFor="Weekly" className="ms-2 cursor-pointer">Weekly</label>
+                                            </div>
+                                            <div className="flex align-items-center">
+                                                <RadioButton inputId="Monthly" name="repeat" value="Monthly" onChange={(e) => setRepeat(e.value)} checked={repeat === 'Monthly'} />
+                                                <label htmlFor="Monthly" className="ms-2 cursor-pointer">Monthly</label>
+                                            </div>
+                                        </div>
+                                    </Card.Header>
+                                    <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
+                                        <div className='d-flex flex-column'>
+                                            <label className='mb-2'>Repeat on</label>
                                             {
-                                                ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) =>
-                                                    <button onClick={() => {
-                                                        setWeeks((prevWeeks) =>
-                                                            prevWeeks.includes(index)
-                                                                ? prevWeeks.filter((d) => d !== index)
-                                                                : [...prevWeeks, index]
-                                                        );
-                                                    }} className={clsx('outline-button', { 'active-outline-button': weeks.includes(index) })}>
-                                                        {day}
-                                                    </button>
-                                                )
+                                                repeat === 'Weekly' && <div className='d-flex gap-3 align-items-center'>
+                                                    {
+                                                        ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) =>
+                                                            <button onClick={() => {
+                                                                setWeeks((prevWeeks) =>
+                                                                    prevWeeks.includes(index)
+                                                                        ? prevWeeks.filter((d) => d !== index)
+                                                                        : [...prevWeeks, index]
+                                                                );
+                                                            }} className={clsx('outline-button', { 'active-outline-button': weeks.includes(index) })}>
+                                                                {day}
+                                                            </button>
+                                                        )
+                                                    }
+                                                </div>
                                             }
-                                        </div>
-                                    }
-                                    {
-                                        repeat === 'Monthly' && <div className='d-flex gap-2 align-items-center flex-wrap'>
                                             {
-                                                Array.from({ length: 31 }, (_, i) => i + 1).map((month) => (
-                                                    <button onClick={() => {
-                                                        setMonths((prevMonths) =>
-                                                            prevMonths.includes(month)
-                                                                ? prevMonths.filter((m) => m !== month)
-                                                                : [...prevMonths, month]
-                                                        );
-                                                    }} className={clsx('outline-button', { 'active-outline-button': months.includes(month) })}>
-                                                        {month}
-                                                    </button>
-                                                ))
+                                                repeat === 'Monthly' && <div className='d-flex gap-2 align-items-center flex-wrap'>
+                                                    {
+                                                        Array.from({ length: 31 }, (_, i) => i + 1).map((month) => (
+                                                            <button onClick={() => {
+                                                                setMonths((prevMonths) =>
+                                                                    prevMonths.includes(month)
+                                                                        ? prevMonths.filter((m) => m !== month)
+                                                                        : [...prevMonths, month]
+                                                                );
+                                                            }} className={clsx('outline-button', { 'active-outline-button': months.includes(month) })}>
+                                                                {month}
+                                                            </button>
+                                                        ))
+                                                    }
+                                                </div>
                                             }
+                                            {errors?.on && (
+                                                <p className="error-message mb-0">{"Repeats on are required"}</p>
+                                            )}
                                         </div>
-                                    }
-                                    {errors?.on && (
-                                        <p className="error-message mb-0">{"Repeats on are required"}</p>
-                                    )}
-                                </div>
-                            </Card.Header>
-                            <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
-                                <label className='mb-2'>Starts</label>
-                                <Calendar
-                                    value={repeatStart}
-                                    onChange={(e) => setRepeatStart(e.value)}
-                                    showButtonBar
-                                    placeholder='17 Jun 2021'
-                                    dateFormat="dd M yy"
-                                    showIcon
-                                    style={{ height: '46px', width: '180px', overflow: 'hidden' }}
-                                    icon={<Calendar3 color='#667085' size={20} />}
-                                    className={clsx(style.inputBox, 'p-0 outline-none')}
-                                />
-                                {errors?.repeatStart && (
-                                    <p className="error-message mb-0">{"Starts is required"}</p>
-                                )}
-                            </Card.Header>
-                            <Card.Header className={clsx(style.background, 'border-0 d-flex', style.borderBottom)}>
-                                <div className='d-flex flex-column'>
-                                    <label className='mb-1'>Ends</label>
-                                    <div className='d-flex align-items-center gap-4 py-1'>
-                                        <div className="flex align-items-center">
-                                            <RadioButton inputId="On" name="ending" value="On" onChange={(e) => setEnding(e.value)} checked={repeat === 'On'} />
-                                            <label htmlFor="On" className="ms-2 cursor-pointer">On</label>
-                                        </div>
+                                    </Card.Header>
+                                    <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
+                                        <label className='mb-2'>Starts</label>
                                         <Calendar
-                                            value={repeatEnd}
-                                            onChange={(e) => setRepeatEnd(e.value)}
+                                            value={repeatStart}
+                                            onChange={(e) => setRepeatStart(e.value)}
                                             showButtonBar
-                                            placeholder='20 Jun 2021'
+                                            placeholder='17 Jun 2021'
                                             dateFormat="dd M yy"
                                             showIcon
                                             style={{ height: '46px', width: '180px', overflow: 'hidden' }}
                                             icon={<Calendar3 color='#667085' size={20} />}
                                             className={clsx(style.inputBox, 'p-0 outline-none')}
                                         />
-                                        <div className="flex align-items-center">
-                                            <RadioButton inputId="Never" name="ending" value="Never" onChange={(e) => setEnding(e.value)} checked={repeat === 'Never'} />
-                                            <label htmlFor="Never" className="ms-2 cursor-pointer">Never</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='d-flex flex-column ms-3'>
-                                    <label className='mb-1'>Occurrences</label>
-                                    <Dropdown
-                                        options={
-                                            [
-                                                { label: 1, value: 1 },
-                                                { label: 2, value: 2 },
-                                                { label: 3, value: 3 },
-                                                { label: 4, value: 4 },
-                                                { label: 5, value: 5 },
-                                                { label: 6, value: 6 },
-                                                { label: 7, value: 7 },
-                                            ]
-                                        }
-                                        className={clsx(
-                                            style.dropdownSelect,
-                                            "dropdown-height-fixed",
-                                            "outline-none",
-                                            "mb-3"
+                                        {errors?.repeatStart && (
+                                            <p className="error-message mb-0">{"Starts is required"}</p>
                                         )}
-                                        style={{ height: "44px", width: '100%' }}
-                                        placeholder="Select Occurrences"
-                                        onChange={(e) => {
-                                            setProjectId(e.value);
-                                        }}
-                                        value={projectId}
-                                        loading={projectQuery?.isFetching}
-                                        filter
-                                    />
-                                </div>
-                            </Card.Header>
-                            <Card.Header className={clsx(style.background, 'border-0 d-flex flex-column', style.borderBottom)}>
-                                <label className='mb-1'>Set Schedule Ahead</label>
-                                <Dropdown
-                                    options={
-                                        [
-                                            { label: "1 Week", value: 1 },
-                                            { label: "2 Week", value: 2 },
-                                            { label: "3 Week", value: 3 },
-                                            { label: "4 Week", value: 4 },
-                                            { label: "5 Week", value: 5 },
-                                            { label: "6 Week", value: 6 },
-                                            { label: "7 Week", value: 7 },
-                                        ]
-                                    }
-                                    className={clsx(
-                                        style.dropdownSelect,
-                                        "dropdown-height-fixed",
-                                        "outline-none",
-                                        "mb-3"
-                                    )}
-                                    style={{ height: "44px", width: '250px' }}
-                                    placeholder="Select week"
-                                    onChange={(e) => {
-                                        setOccurrences(e.value);
-                                    }}
-                                    value={occurrences}
-                                />
-                            </Card.Header>
-                            <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
-                                <Button className='outline-button'>Cancel</Button>
-                                <Button className='outline-button active-outline-button'>Apply</Button>
-                            </Card.Header>
-                        </Card>
-                        <Card className={clsx(style.border, 'mb-3')}>
-                            <Card.Body className={clsx(style.borderBottom)}>
-                                <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Project Photos</h1>
-                            </Card.Body>
-                            <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
-                                <div className='d-flex align-items-center gap-4 py-1'>
-                                    <div className="flex align-items-center">
-                                        <RadioButton inputId="Before and After" name="projectPhotoDeliver" value="Before and After" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'Before and After'} />
-                                        <label htmlFor="Before and After" className="ms-2 cursor-pointer">Before and After</label>
-                                    </div>
-                                    <div className="flex align-items-center">
-                                        <RadioButton inputId="After" name="projectPhotoDeliver" value="After" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'After'} />
-                                        <label htmlFor="After" className="ms-2 cursor-pointer">After</label>
-                                    </div>
-                                </div>
-                                <div className="flex align-items-center">
-                                    <RadioButton inputId="All" name="projectPhotoDeliver" value="All" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'All'} />
-                                    <label htmlFor="All" className="ms-2 cursor-pointer">All</label>
-                                </div>
-                            </Card.Header>
-                        </Card>
-                        <Card className={clsx(style.border, 'mb-3')}>
-                            <Card.Body className={clsx(style.borderBottom)}>
-                                <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Attachments</h1>
-                            </Card.Body>
-                            <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between')}>
-                                <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '16px' }}>
-                                    <input {...getInputProps()} />
-                                    <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
-                                        <CloudUpload />
-                                    </button>
-                                    <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-                                    <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
-                                </div>
-                            </Card.Header>
-                            <Card.Header className={clsx(style.background, 'border-0 d-flex flex-column', style.borderBottom)}>
-                                <div className='d-flex flex-column gap-3'>
-                                    <div className={style.fileBox}>
-                                        <div className={style.imgBox}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="41" viewBox="0 0 32 41" fill="none">
-                                                <path d="M0 4.5874C0 2.37826 1.79086 0.587402 4 0.587402H20L32 12.5874V36.5874C32 38.7965 30.2091 40.5874 28 40.5874H4C1.79086 40.5874 0 38.7965 0 36.5874V4.5874Z" fill="#D92D20" />
-                                                <path opacity="0.3" d="M20 0.587402L32 12.5874H24C21.7909 12.5874 20 10.7965 20 8.5874V0.587402Z" fill="white" />
-                                            </svg>
-                                            <div className={style.fileType}>PDF</div>
-                                        </div>
-                                        <div className={style.fileNameBox}>
-                                            <p className='mb-0'>Tech design requirements.pdf</p>
-                                            <p className='mb-0'>200 KB – 100% uploaded</p>
-                                        </div>
-                                        <div className='ms-auto'>
-                                            <div className={style.deleteBox}>
-                                                <Trash color='#F04438' size={16} />
+                                    </Card.Header>
+                                    <Card.Header className={clsx(style.background, 'border-0 d-flex', style.borderBottom)}>
+                                        <div className='d-flex flex-column'>
+                                            <label className='mb-1'>Ends</label>
+                                            <div className='d-flex align-items-center gap-4 py-1'>
+                                                <div className="flex align-items-center">
+                                                    <RadioButton inputId="On" name="ending" value="On" onChange={(e) => setEnding(e.value)} checked={repeat === 'On'} />
+                                                    <label htmlFor="On" className="ms-2 cursor-pointer">On</label>
+                                                </div>
+                                                <Calendar
+                                                    value={repeatEnd}
+                                                    onChange={(e) => setRepeatEnd(e.value)}
+                                                    showButtonBar
+                                                    placeholder='20 Jun 2021'
+                                                    dateFormat="dd M yy"
+                                                    showIcon
+                                                    style={{ height: '46px', width: '180px', overflow: 'hidden' }}
+                                                    icon={<Calendar3 color='#667085' size={20} />}
+                                                    className={clsx(style.inputBox, 'p-0 outline-none')}
+                                                />
+                                                <div className="flex align-items-center">
+                                                    <RadioButton inputId="Never" name="ending" value="Never" onChange={(e) => setEnding(e.value)} checked={repeat === 'Never'} />
+                                                    <label htmlFor="Never" className="ms-2 cursor-pointer">Never</label>
+                                                </div>
                                             </div>
-
+                                        </div>
+                                        <div className='d-flex flex-column ms-3'>
+                                            <label className='mb-1'>Occurrences</label>
+                                            <Dropdown
+                                                options={
+                                                    [
+                                                        { label: 1, value: 1 },
+                                                        { label: 2, value: 2 },
+                                                        { label: 3, value: 3 },
+                                                        { label: 4, value: 4 },
+                                                        { label: 5, value: 5 },
+                                                        { label: 6, value: 6 },
+                                                        { label: 7, value: 7 },
+                                                    ]
+                                                }
+                                                className={clsx(
+                                                    style.dropdownSelect,
+                                                    "dropdown-height-fixed",
+                                                    "outline-none",
+                                                    "mb-3"
+                                                )}
+                                                style={{ height: "44px", width: '100%' }}
+                                                placeholder="Select Occurrences"
+                                                onChange={(e) => {
+                                                    setProjectId(e.value);
+                                                }}
+                                                value={projectId}
+                                                loading={projectQuery?.isFetching}
+                                                filter
+                                            />
+                                        </div>
+                                    </Card.Header>
+                                    <Card.Header className={clsx(style.background, 'border-0 d-flex flex-column', style.borderBottom)}>
+                                        <label className='mb-1'>Set Schedule Ahead</label>
+                                        <Dropdown
+                                            options={
+                                                [
+                                                    { label: "1 Week", value: 1 },
+                                                    { label: "2 Week", value: 2 },
+                                                    { label: "3 Week", value: 3 },
+                                                    { label: "4 Week", value: 4 },
+                                                    { label: "5 Week", value: 5 },
+                                                    { label: "6 Week", value: 6 },
+                                                    { label: "7 Week", value: 7 },
+                                                ]
+                                            }
+                                            className={clsx(
+                                                style.dropdownSelect,
+                                                "dropdown-height-fixed",
+                                                "outline-none",
+                                                "mb-3"
+                                            )}
+                                            style={{ height: "44px", width: '250px' }}
+                                            placeholder="Select week"
+                                            onChange={(e) => {
+                                                setOccurrences(e.value);
+                                            }}
+                                            value={occurrences}
+                                        />
+                                    </Card.Header>
+                                    <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
+                                        <Button className='outline-button'>Cancel</Button>
+                                        <Button className='outline-button active-outline-button'>Apply</Button>
+                                    </Card.Header>
+                                </>
+                            }
+                        </Card>
+                        <Card className={clsx(style.border, 'mb-3')}>
+                            <Card.Body className={clsx(style.borderBottom)}>
+                                <div className='d-flex justify-content-between'>
+                                    <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Project Photos</h1>
+                                    <button className='text-button p-0' onClick={() => setIsOpenProjectPhotoSection(!isOpenProjectPhotoSection)}>
+                                        {
+                                            isOpenProjectPhotoSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                            </svg>
+                                        }
+                                    </button>
+                                </div>
+                            </Card.Body>
+                            {
+                                isOpenProjectPhotoSection && <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
+                                    <div className='d-flex align-items-center gap-4 py-1'>
+                                        <div className="flex align-items-center">
+                                            <RadioButton inputId="Before and After" name="projectPhotoDeliver" value="Before and After" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'Before and After'} />
+                                            <label htmlFor="Before and After" className="ms-2 cursor-pointer">Before and After</label>
+                                        </div>
+                                        <div className="flex align-items-center">
+                                            <RadioButton inputId="After" name="projectPhotoDeliver" value="After" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'After'} />
+                                            <label htmlFor="After" className="ms-2 cursor-pointer">After</label>
                                         </div>
                                     </div>
+                                    <div className="flex align-items-center">
+                                        <RadioButton inputId="All" name="projectPhotoDeliver" value="All" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'All'} />
+                                        <label htmlFor="All" className="ms-2 cursor-pointer">All</label>
+                                    </div>
+                                </Card.Header>
+                            }
+                        </Card>
+
+                        <Card className={clsx(style.border, 'mb-3')}>
+                            <Card.Body className={clsx(style.borderBottom)}>
+                                <div className='d-flex justify-content-between'>
+                                    <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Attachments</h1>
+                                    <button className='text-button p-0' onClick={() => setIsOpenAttachmentsSection(!isOpenAttachmentsSection)}>
+                                        {
+                                            isOpenAttachmentsSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                            </svg>
+                                        }
+                                    </button>
                                 </div>
-                            </Card.Header>
+                            </Card.Body>
+                            {
+                                isOpenAttachmentsSection && <>
+                                    <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between')}>
+                                        <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '16px' }}>
+                                            <input {...getInputProps()} />
+                                            <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
+                                                <CloudUpload />
+                                            </button>
+                                            <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
+                                            <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
+                                        </div>
+                                    </Card.Header>
+                                    <Card.Header className={clsx(style.background, 'border-0 d-flex flex-column', style.borderBottom)}>
+                                        <div className='d-flex flex-column gap-3'>
+                                            <div className={style.fileBox}>
+                                                <div className={style.imgBox}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="41" viewBox="0 0 32 41" fill="none">
+                                                        <path d="M0 4.5874C0 2.37826 1.79086 0.587402 4 0.587402H20L32 12.5874V36.5874C32 38.7965 30.2091 40.5874 28 40.5874H4C1.79086 40.5874 0 38.7965 0 36.5874V4.5874Z" fill="#D92D20" />
+                                                        <path opacity="0.3" d="M20 0.587402L32 12.5874H24C21.7909 12.5874 20 10.7965 20 8.5874V0.587402Z" fill="white" />
+                                                    </svg>
+                                                    <div className={style.fileType}>PDF</div>
+                                                </div>
+                                                <div className={style.fileNameBox}>
+                                                    <p className='mb-0'>Tech design requirements.pdf</p>
+                                                    <p className='mb-0'>200 KB – 100% uploaded</p>
+                                                </div>
+                                                <div className='ms-auto'>
+                                                    <div className={style.deleteBox}>
+                                                        <Trash color='#F04438' size={16} />
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Card.Header>
+                                </>
+                            }
                         </Card>
 
 
@@ -771,7 +925,9 @@ const CreateJob = ({ visible, setVisible }) => {
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }}>{false ? "Loading..." : "Save"}</Button>
+                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }}>Save {mutation?.isPending && <ProgressSpinner
+                            style={{ width: "20px", height: "20px", color: "#fff" }}
+                        />}</Button>
                     </div>
                 </div>
             )}

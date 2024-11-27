@@ -21,7 +21,7 @@ const formatDate = (timestamp) => {
   return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, ref) => {
+const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
   const navigate = useNavigate();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -36,7 +36,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
 
   useEffect(() => {
     setPage(1);  // Reset to page 1 whenever searchValue changes
-  }, [searchValue]);
+  }, [searchValue, refetch]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -64,7 +64,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
 
     loadData();
 
-  }, [page, searchValue, tempSort]);
+  }, [page, searchValue, tempSort, refetch]);
 
   useEffect(() => {
     if (jobs.length > 0 && hasMoreData) {

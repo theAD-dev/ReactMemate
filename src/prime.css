@@ -96,7 +96,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 }
 
 .custom-modal .p-dialog-content {
-  padding: 24px 16px;
+  padding: 18px 24px;
   border-top: 1px solid #dedede;
   border-bottom: 1px solid #dedede;
   background: var(--Gray-50, #f9fafb);
@@ -107,7 +107,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 }
 
 .custom-modal .p-dialog-footer {
-  padding: 24px;
+  padding: 16px 24px;
 }
 
 .yellow-rating.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
@@ -499,4 +499,12 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   height: 10px;
   transition-duration: 0.2s;
   background-color: #1ab2ff;
+}
+
+.p-timepicker .p-link {
+  height: 20px;
+}
+
+.p-timepicker span {
+  font-size: 16px;
 }

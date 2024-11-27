@@ -390,20 +390,20 @@ const PublicInvoice = () => {
                 modal={true}
                 header={headerElement}
                 footer={footerContent}
-                className={`${style.modal} custom-modal custom-scroll-integration `}
+                className={`${style.modal} custom-modal custom-scroll-integration pt-0`}
                 onHide={handleClose}
             >
 
                 <BootstrapRow>
                     {
                         step === 1 ? <Col sm={8}>
-                            <h6 className='mb-3'>Personal Details</h6>
+                            <h6 className='mb-2'>Personal Details</h6>
                             <BootstrapRow>
                                 <Col sm={6} className='pe-1'>
-                                    <div className="d-flex flex-column gap-1 mb-3">
+                                    <div className="d-flex flex-column gap-1 mb-2">
                                         <label className={clsx(style.lable)}>First Name</label>
                                         <IconField>
-                                            <InputIcon>{errors.firstname && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
+                                            <InputIcon>{errors.firstname && <img src={exclamationCircle} className='mb-2' alt='exclamationCircle' />}</InputIcon>
                                             <InputText {...register("firstname")} className={clsx(style.inputText, { [style.error]: errors.firstname })} placeholder='Enter first name' />
                                         </IconField>
                                         {errors.firstname && <p className="error-message">{errors.firstname.message}</p>}
@@ -580,7 +580,7 @@ const PublicInvoice = () => {
                                     <span className='font-14' style={{ color: '#1D2939' }}>${parseFloat(invoice?.total).toFixed(2)}</span>
                                 </div>
                                 <Divider />
-                                <div className='d-flex justify-content-between mb-4'>
+                                <div className='d-flex justify-content-between mb-3'>
                                     <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>Amount due</span>
                                     <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>${parseFloat(invoice?.outstanding_amount).toFixed(2)}</span>
                                 </div>
