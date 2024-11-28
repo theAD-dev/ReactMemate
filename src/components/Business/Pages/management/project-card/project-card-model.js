@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
@@ -33,7 +33,6 @@ import InvoiceCreate from './invoice-create/invoice-create';
 import GoogleReviewEmail from './google-review/google-review';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
-  console.log('lo....')
   const navigate = useNavigate();
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -42,7 +41,6 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [editedReference, setEditedReference] = useState('');
   const [expenseJobsMapping, setExpenseJobsMapping] = useState([]);
   const [filteredHistory, setFilteredHistory] = useState([]);
-  console.log('filteredHistory: ', filteredHistory);
   const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
 
   //Real Cost Calculation
@@ -119,7 +117,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     const dayString = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
     const day = date.getDate();
     const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-        month: "short",
+      month: "short",
     }).format(date);
     const year = date.getFullYear();
     const dateString = `${day} ${monthAbbreviation} ${year}`;
@@ -245,14 +243,25 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   const EmailComponent = ({ emailData }) => {
     const [showFullBody, setShowFullBody] = useState(false);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+
+    const emailBodyRef = useRef(null); // Ref to measure the height of the content
 
     const email = parseEmailData(emailData);
 
     // Process email body lines, splitting by paragraph or newlines
-    const bodyLines = email.body.split(/<\/p>\s*<p>|<br\s*\/?>|\n/).map((line, idx) => `<p key=${idx}>${line.trim()}</p>`);
+    const bodyLines = email.body.split(/<\/p>\s*<p>|<br\s*\/?>|\n/).map(
+      (line, idx) => `<p key=${idx}>${line.trim()}</p>`
+    );
 
-    // Limit the number of lines displayed initially
-    const visibleBody = showFullBody ? bodyLines.join("") : bodyLines.slice(0, 3).join("");
+    const visibleBody = bodyLines.join("");
+
+    useEffect(() => {
+      if (emailBodyRef.current) {
+        const bodyHeight = emailBodyRef.current.scrollHeight;
+        setIsOverflowing(bodyHeight > 90); // Check if the content exceeds 100px
+      }
+    }, [visibleBody]);
 
     return (
       <div>
@@ -272,8 +281,15 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           </li>
         </ul>
         <div>
-          <div dangerouslySetInnerHTML={{ __html: visibleBody }} />
-          {bodyLines.length > 3 && (
+          <div
+            ref={emailBodyRef}
+            style={{
+              maxHeight: showFullBody ? "none" : "90px",
+              overflow: "hidden",
+            }}
+            dangerouslySetInnerHTML={{ __html: visibleBody }}
+          />
+          {isOverflowing && (
             <button
               className="text-button font-12 px-0"
               onClick={() => setShowFullBody(!showFullBody)}
@@ -564,8 +580,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
-                    <SendSMS projectCardData={() => projectCardData(projectId)}/>
-                    <ComposeEmail clientId={cardData?.client} projectId={projectId} projectCardData={() => projectCardData(projectId)}/>
+                    <SendSMS projectCardData={() => projectCardData(projectId)} />
+                    <ComposeEmail clientId={cardData?.client} projectId={projectId} projectCardData={() => projectCardData(projectId)} />
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
@@ -672,7 +688,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                   </li>
 
                                 </ul>
-                                <h5 style={{ whiteSpace: "pre-line" }}>{title}</h5>
+                                <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && title || ""}</h5>
                                 {
                                   type === "email" ? <EmailComponent emailData={text} />
                                     :

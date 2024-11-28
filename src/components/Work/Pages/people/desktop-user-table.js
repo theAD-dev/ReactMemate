@@ -115,7 +115,7 @@ const DesktopPeoplesTable = () => {
                 <Column field="role" header="Role" style={{ minWidth: '107px' }}></Column>
                 <Column field="privilege" header="Privilege" body={typeBody} style={{ minWidth: '149px' }} sortable></Column>
                 <Column field="days" header="Days in company" body={daysBody} style={{ minWidth: '150px' }} className='text-center' sortable></Column>
-                <Column field="jobs_complete" header="Jobs complete" style={{ minWidth: '131px', textAlign: 'left' }} sortable></Column>
+                <Column field="jobs_completed" header="Jobs complete" style={{ minWidth: '131px', textAlign: 'left' }} sortable></Column>
                 <Column header="Email" body={emailBodyTemplate} style={{ minWidth: '73px', textAlign: 'center' }}></Column>
                 <Column header="Phone" body={phoneBodyTemplate} style={{ minWidth: '73px', textAlign: 'center' }}></Column>
                 <Column header="Chat" body={<Chat color='#98A2B3' size={20} />} style={{ minWidth: '73px', textAlign: 'center' }}></Column>

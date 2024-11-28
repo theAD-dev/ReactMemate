@@ -32,6 +32,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
     const [description, setDescription] = useState(null);
 
     const [userId, setUserId] = useState(null);
+    const [selectedUserInfo, setSelectedUserInfo] = useState({});
     const [hourlyRate, setHourlyRate] = useState("0.00");
     const [paymentCycle, setPaymentCycle] = useState(null);
 
@@ -303,7 +304,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                             <Card.Header className={clsx(style.background, 'border-0 py-4')}>
                                 <h1 className='font-16 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Assigned to*</h1>
                                 <Row>
-                                    <Col className='d-flex align-items-center'>
+                                    <Col sm={5} className='d-flex align-items-center'>
                                         <div style={{ position: 'relative', textAlign: 'start' }}>
                                             <label className={clsx(style.customLabel)}>Choose User</label>
                                             <Dropdown
@@ -322,7 +323,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                                     "dropdown-height-fixed",
                                                     "outline-none"
                                                 )}
-                                                style={{ height: "44px", width: '100%' }}
+                                                style={{ height: "44px", width: '245px' }}
                                                 placeholder="Select user"
                                                 onChange={(e) => {
                                                     setUserId(e.value);
@@ -334,8 +335,12 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                                         "1": "MONTH"
                                                     }
                                                     if (user) {
-                                                        setHourlyRate(parseFloat(user?.hourly_rate || 0).toFixed(2))
-                                                        setPaymentCycle(paymentCycleObj[user?.payment_cycle] || "")
+                                                        setSelectedUserInfo({
+                                                            hourlyRate: parseFloat(user?.hourly_rate || 0).toFixed(2),
+                                                            paymentCycle: paymentCycleObj[user?.payment_cycle] || "",
+                                                            image: user?.photo || "",
+                                                            name: `${user.first_name} ${user.last_name}`,
+                                                        })
                                                     }
 
                                                     if (e.value)
@@ -351,17 +356,28 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                             )}
                                         </div>
                                     </Col>
-                                    <Col className='ps-0'>
-                                        <div className={clsx(style.chooseUserBox, 'd-flex justify-content-between')}>
-                                            <div className='d-flex flex-column'>
-                                                <label className={clsx(style.customLabel)}>Hourly Rate</label>
-                                                <h1 className='font-16'>${hourlyRate || 0.00} AUD</h1>
-                                            </div>
-                                            <div className='d-flex flex-column'>
-                                                <label className={clsx(style.customLabel)}>Payment cycle </label>
-                                                <h1 className='font-16'>{paymentCycle || "-"}</h1>
-                                            </div>
-                                        </div>
+                                    <Col sm={7}>
+                                        <Row className={clsx(style.chooseUserBox, 'flex-nowrap')}>
+                                            <Col sm={2} className='p-0'>
+                                                <div className='d-flex justify-content-center align-items-center' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
+                                                    {selectedUserInfo?.image && <img src={selectedUserInfo?.image} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />}
+                                                </div>
+                                            </Col>
+                                            <Col sm={5} className='pe-0 ps-0'>
+                                                <label className={clsx(style.customLabel, 'text-nowrap')}>{selectedUserInfo?.name || "-"}</label>
+                                                <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center' }}>Employee</div>
+                                            </Col>
+                                            <Col sm={5} className=''>
+                                                <div className='d-flex align-items-center gap-2 mb-3'>
+                                                    <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
+                                                    <span>{selectedUserInfo?.hourlyRate || "-"} AUD</span>
+                                                </div>
+                                                <div className='d-flex align-items-center gap-2'>
+                                                    <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16}/></div>
+                                                    <span>{selectedUserInfo?.paymentCycle || "-"}</span>
+                                                </div>
+                                            </Col>
+                                        </Row>
                                     </Col>
                                 </Row>
                             </Card.Header>
@@ -855,12 +871,12 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                         </div>
                                         <div className="flex align-items-center">
                                             <RadioButton inputId="After" name="projectPhotoDeliver" value="After" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'After'} />
-                                            <label htmlFor="After" className="ms-2 cursor-pointer">After</label>
+                                            <label htmlFor="After" className="ms-2 cursor-pointer">Photos Of the Process</label>
                                         </div>
-                                    </div>
-                                    <div className="flex align-items-center">
-                                        <RadioButton inputId="All" name="projectPhotoDeliver" value="All" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'All'} />
-                                        <label htmlFor="All" className="ms-2 cursor-pointer">All</label>
+                                        <div className="flex align-items-center">
+                                            <RadioButton inputId="All" name="projectPhotoDeliver" value="All" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'All'} />
+                                            <label htmlFor="All" className="ms-2 cursor-pointer">All</label>
+                                        </div>
                                     </div>
                                 </Card.Header>
                             }
