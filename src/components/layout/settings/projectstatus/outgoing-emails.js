@@ -54,7 +54,7 @@ const OutgoingEmails = () => {
             <div className='contentMenuTab'>
               <ul>
                 <li><Link to="/settings/projectstatus/project-status">Project Status</Link></li>
-                <li className='menuActive'><Link to="/settings/projectstatus/outgoing-emails">Outgoing Emails</Link></li>
+                {/* <li className='menuActive'><Link to="/settings/projectstatus/outgoing-emails">Outgoing Emails</Link></li> */}
               </ul>
             </div>
           </div>
