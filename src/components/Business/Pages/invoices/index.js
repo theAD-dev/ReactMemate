@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { paidExpense, unpaidExpense } from '../../../../APIs/expenses-api';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import InvoiceTable from './invoices-table';
+import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
 
 const InvoicePage = () => {
     const dt = useRef(null);
@@ -45,26 +46,26 @@ const InvoicePage = () => {
         }
     });
 
-    const unpaidMutation = useMutation({
-        mutationFn: (data) => unpaidExpense(data),
-        onSuccess: () => {
-            setRefetch((refetch) => !refetch);
-            setSelected(null);
-            toast.success(`Expenses have been successfully marked as unpaid.`);
-        },
-        onError: (error) => {
-            toast.error(`Failed to mark the expenses as unpaid. Please try again.`);
-        }
-    });
-
     const handlePaidExpense = () => {
         const ids = selected.map(item => item.id);
         paidMutation.mutate({ ids: ids });
     }
 
-    const handleUnPaidExpense = () => {
-        const ids = selected.map(item => item.id);
-        unpaidMutation.mutate({ ids: ids });
+    const sendInvoiceToXeroMutation = useMutation({
+        mutationFn: (data) => sendInvoiceToXeroApi(data),
+        onSuccess: () => {
+            setRefetch((refetch) => !refetch);
+            setSelected(null);
+            toast.success(`Invoice successfully sent to Xero!`);
+        },
+        onError: (error) => {
+            toast.error(`Failed to send the invoice to xero. Please try again.`);
+        }
+    });
+
+    const sendInvoiceToXero = () => {
+        const ids = selected.map(item => item.unique_id);
+        sendInvoiceToXeroMutation.mutate({ ids: ids });
     }
 
     return (
@@ -76,7 +77,14 @@ const InvoicePage = () => {
                             <>
                                 <h6 className={style.selectedCount}>Selected: {selected?.length}</h6>
                                 <div className='filtered-box d-flex align-items-center gap-2'>
-                                    <button className={`outline-button ${style.actionButton}`} onClick={() => { }}>Send to Xero/MYOB <Send color='#1D2939' size={20} /> </button>
+                                    <button className={`outline-button ${style.actionButton}`} onClick={sendInvoiceToXero}>Send to Xero/MYOB
+                                        {
+                                            sendInvoiceToXeroMutation.isPending
+                                                ? <ProgressSpinner
+                                                    style={{ width: "20px", height: "20px" }}
+                                                /> : <Send color='#1D2939' size={20} />
+                                        }
+                                    </button>
                                     <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
                                     <button className={`${style.filterBox}`} onClick={() => { }}><Printer /></button>
                                 </div>

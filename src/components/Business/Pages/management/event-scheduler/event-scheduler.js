@@ -18,6 +18,22 @@ function EventScheduler() {
   const [taskId, setTaskId] = useState(null);
   const [projectId, setProjectId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
+
+  // show project model from invoice 
+  const url = window.location.href;
+  const urlObj = new URL(url);
+  const params = new URLSearchParams(urlObj.search);
+  const unique_id = params.get('unique_id');
+  if (unique_id && !projectId) {
+    setProjectId(unique_id);
+    
+    const reference = params.get('reference');
+    const number = params.get('number');
+    setProjectDetails({ number: number || "", reference, value: unique_id });
+    setViewProjectModel(true);
+  }
+
+
   function viewTaskDetails(id, isjob = false, projectDetails) {
     if (isjob) {
       setProjectId(id);
@@ -177,7 +193,7 @@ function EventScheduler() {
             <path d="M14.6777 12.9299C15.6661 11.5841 16.25 9.92275 16.25 8.125C16.25 3.63769 12.6123 0 8.125 0C3.63769 0 0 3.63769 0 8.125C0 12.6123 3.63769 16.25 8.125 16.25C9.92323 16.25 11.585 15.6658 12.9309 14.6769L12.9299 14.6777C12.9667 14.7277 13.0078 14.7756 13.053 14.8208L17.8661 19.6339C18.3543 20.122 19.1457 20.122 19.6339 19.6339C20.122 19.1457 20.122 18.3543 19.6339 17.8661L14.8208 13.053C14.7756 13.0078 14.7277 12.9667 14.6777 12.9299ZM15 8.125C15 11.922 11.922 15 8.125 15C4.32804 15 1.25 11.922 1.25 8.125C1.25 4.32804 4.32804 1.25 8.125 1.25C11.922 1.25 15 4.32804 15 8.125Z" fill="#98A2B3" />
           </svg>
         </div>
-        <input type="text" placeholder="Search" onChange={handleSearch} className="border search-resource" style={{ borderRadius: '4px', border: '1px solid #D0D5DD', width: '184px',color: '#98A2B3',paddingLeft: '36px', fontSize: '14px', height: '32px' }} />
+        <input type="text" placeholder="Search" onChange={handleSearch} className="border search-resource" style={{ borderRadius: '4px', border: '1px solid #D0D5DD', width: '184px', color: '#98A2B3', paddingLeft: '36px', fontSize: '14px', height: '32px' }} />
       </div>
       <div className="featureName" style={{ position: 'absolute', left: '45%', top: '-5px' }}>
         <h1 className="title">Management</h1>

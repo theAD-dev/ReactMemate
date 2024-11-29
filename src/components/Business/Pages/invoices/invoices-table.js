@@ -19,6 +19,7 @@ import clsx from 'clsx';
 import { fetchduplicateData } from '../../../../APIs/SalesApi';
 import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
 import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
+import { Button } from 'primereact/button';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -91,8 +92,9 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     }, [clients, hasMoreData]);
 
     const InvoiceIDBody = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
+        return <div className={`d-flex align-items-center gap-2 justify-content-between show-on-hover`}>
             <span>{rowData.number}</span>
+            <Button label="Open" onClick={() => navigate(`/management?unique_id=${rowData.unique_id}&reference=${rowData?.reference}&number=${rowData?.number}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
 
@@ -129,6 +131,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
             }
 
             {formatDate(rowData.created)}
+            <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={false} />
         </div>
     }
 
@@ -149,7 +152,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     }
 
     const depositBody = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
+        return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`} style={{ position: 'static' }}>
             <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
                 $ {parseFloat(rowData.deposit || 0).toFixed(2)}
                 <span onClick={() => { setVisible(true); setInvoiceData(rowData) }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
@@ -271,7 +274,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
             >
                 <div className='d-flex flex-column gap-2'>
-                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} />
+                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true}/>
                     <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Files color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
