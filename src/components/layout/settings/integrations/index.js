@@ -167,8 +167,8 @@ const Integrations = () => {
                             <Envelope size={32} color="#667085" />
                           </div>
                           {
-                            <button className={emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
-                              {emailIntegrationsQuery?.data?.outgoing_email ? "Verified" : "Pending"}
+                            <button className={emailIntegrationsQuery?.data?.outgoing_email && emailIntegrationsQuery?.data?.outgoing_email_verified ? style.connected : emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
+                              {emailIntegrationsQuery?.data?.outgoing_email && emailIntegrationsQuery?.data?.outgoing_email_verified ? "Verified" : emailIntegrationsQuery?.data?.outgoing_email ? "Pending" : "Not conneccted"}
                               <span className={style.dots}></span>
                             </button>
                           }
