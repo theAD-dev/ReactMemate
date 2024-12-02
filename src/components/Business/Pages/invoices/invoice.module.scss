@@ -102,15 +102,15 @@
 }
 
 .paidRow td {
-  background-color: #ECFDF3 !important;
+  background-color: #ecfdf3 !important;
 }
 
 .unpaidRow td {
-  background-color: #FEF3F2 !important;
+  background-color: #fef3f2 !important;
 }
 
 .partialPaidRow td {
-  background-color: #FFFAEB !important;
+  background-color: #fffaeb !important;
 }
 
 .fontStanderdSize {
@@ -185,9 +185,9 @@
     line-height: 18px;
     border-radius: 16px;
     padding: 4px 8px;
-    color: var(--Error-700, #B42318) !important;
-    border: 1px solid var(--Error-200, #FECDCA) !important;
-    background: var(--Error-50, #FEF3F2) !important;
+    color: var(--Error-700, #b42318) !important;
+    border: 1px solid var(--Error-200, #fecdca) !important;
+    background: var(--Error-50, #fef3f2) !important;
     svg {
       fill: #d92d20;
     }
@@ -197,7 +197,7 @@
       top: -5px;
       height: 27px;
       position: absolute;
-      border-left: 1px solid #FECDCA;
+      border-left: 1px solid #fecdca;
     }
   }
 }
@@ -245,4 +245,27 @@
 .actionButton {
   font-size: 14px !important;
   padding: 8px 14px !important;
+}
+
+.shakeText {
+  display: inline-block;
+  animation: tilt-n-move-shaking 0.85s infinite;
+}
+
+@keyframes tilt-n-move-shaking {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(3px);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
