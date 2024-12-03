@@ -669,10 +669,10 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                             </Card.Header> */}
                         </Card>
                         <Card className={clsx(style.border, 'mb-3')}>
-                            <Card.Body className={clsx(style.borderBottom)}>
+                            <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenRepeatSection(!isOpenRepeatSection)}>
                                 <div className='d-flex justify-content-between'>
                                     <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Set to repeat</h1>
-                                    <button className='text-button p-0' onClick={() => setIsOpenRepeatSection(!isOpenRepeatSection)}>
+                                    <button className='text-button p-0'>
                                         {
                                             isOpenRepeatSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
@@ -684,7 +684,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                 </div>
                             </Card.Body>
                             {
-                                isOpenRepeatSection && <>
+                                isOpenRepeatSection && <div className={style.openTransition}>
                                     <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
                                         <div className='d-flex align-items-center gap-4 py-1'>
                                             <div className="flex align-items-center">
@@ -844,14 +844,14 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                         <Button className='outline-button'>Cancel</Button>
                                         <Button className='outline-button active-outline-button'>Apply</Button>
                                     </Card.Header>
-                                </>
+                                </div>
                             }
                         </Card>
                         <Card className={clsx(style.border, 'mb-3')}>
-                            <Card.Body className={clsx(style.borderBottom)}>
+                            <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenProjectPhotoSection(!isOpenProjectPhotoSection)}>
                                 <div className='d-flex justify-content-between'>
                                     <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Project Photos</h1>
-                                    <button className='text-button p-0' onClick={() => setIsOpenProjectPhotoSection(!isOpenProjectPhotoSection)}>
+                                    <button className='text-button p-0'>
                                         {
                                             isOpenProjectPhotoSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
@@ -883,10 +883,10 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                         </Card>
 
                         <Card className={clsx(style.border, 'mb-3')}>
-                            <Card.Body className={clsx(style.borderBottom)}>
+                            <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenAttachmentsSection(!isOpenAttachmentsSection)}>
                                 <div className='d-flex justify-content-between'>
                                     <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Attachments</h1>
-                                    <button className='text-button p-0' onClick={() => setIsOpenAttachmentsSection(!isOpenAttachmentsSection)}>
+                                    <button className='text-button p-0'>
                                         {
                                             isOpenAttachmentsSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />

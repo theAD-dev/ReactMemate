@@ -222,3 +222,7 @@
   border-radius: 22px;
   background: var(--Error-100, #fee4e2);
 }
+
+.openTransition {
+  transition: all 0.5s;
+}
