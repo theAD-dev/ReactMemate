@@ -21,33 +21,112 @@ import { Button as PrimeButton } from 'primereact/button';
 import { useDropzone } from 'react-dropzone';
 import { createNewJob } from '../../../../APIs/jobs-api';
 import { toast } from 'sonner';
+import axios from 'axios';
+
+function getFileIcon(fileType) {
+    const fileTypes = {
+        'application/pdf': { name: 'PDF', color: '#D92D20' },
+        'application/vnd.ms-excel': { name: 'Excel', color: '#22A746' },
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': { name: 'Excel', color: '#22A746' },
+        'application/msword': { name: 'Word', color: '#2368E1' },
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': { name: 'Word', color: '#2368E1' },
+        'image/jpeg': { name: 'JPEG', color: '#FFAA00' },
+        'image/png': { name: 'PNG', color: '#00ADEF' },
+        'image/gif': { name: 'GIF', color: '#F64A8A' },
+        'video/mp4': { name: 'MP4', color: '#9C27B0' },
+        'audio/mp3': { name: 'MP3', color: '#4CAF50' },
+        'audio/wav': { name: 'WAV', color: '#795548' },
+        'text/plain': { name: 'Text', color: '#8E8E8E' },
+        'application/zip': { name: 'ZIP', color: '#FFD700' },
+        'application/json': { name: 'JSON', color: '#22A746' },
+        'image/svg+xml': { name: 'SVG', color: '#FF5722' },
+        'application/x-rar-compressed': { name: 'RAR', color: '#F44336' },
+        'application/vnd.ms-powerpoint': { name: 'PPT', color: '#FF9800' },
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation': { name: 'PPT', color: '#FF9800' },
+        'application/vnd.ms-publisher': { name: 'Publisher', color: '#4CAF50' },
+        'application/x-shockwave-flash': { name: 'SWF', color: '#FFEB3B' },
+        'application/x-tar': { name: 'TAR', color: '#FFC107' },
+    };
+
+    const fileData = fileTypes[fileType] || { name: 'Unknown', color: '#000000' };
+
+    return (
+        <div className={style.imgBox}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="41" viewBox="0 0 32 41" fill="none">
+                <path
+                    d="M0 4.5874C0 2.37826 1.79086 0.587402 4 0.587402H20L32 12.5874V36.5874C32 38.7965 30.2091 40.5874 28 40.5874H4C1.79086 40.5874 0 38.7965 0 36.5874V4.5874Z"
+                    fill={fileData.color}
+                />
+                <path
+                    opacity="0.3"
+                    d="M20 0.587402L32 12.5874H24C21.7909 12.5874 20 10.7965 20 8.5874V0.587402Z"
+                    fill="white"
+                />
+            </svg>
+            <div className={style.fileType}>{fileData.name}</div>
+        </div>
+    );
+}
+
+const CircularProgressBar = ({ percentage, size = 100, strokeWidth = 4, color = "#4CAF50", background = "#ddd" }) => {
+    const radius = (size - strokeWidth) / 2;
+    const circumference = 2 * Math.PI * radius;
+    const progressOffset = circumference - (percentage / 100) * circumference;
+
+    return (
+        <svg width={size} height={size}>
+            {/* Background Circle */}
+            <circle
+                cx={size / 2}
+                cy={size / 2}
+                r={radius}
+                fill="none"
+                stroke={background}
+                strokeWidth={strokeWidth}
+            />
+            {/* Progress Circle */}
+            <circle
+                cx={size / 2}
+                cy={size / 2}
+                r={radius}
+                fill="none"
+                stroke={color}
+                strokeWidth={strokeWidth}
+                strokeDasharray={circumference}
+                strokeDashoffset={progressOffset}
+                strokeLinecap="round"
+                style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+            />
+        </svg>
+    );
+};
 
 const CreateJob = ({ visible, setVisible, setRefetch }) => {
-    const [templateId, setTemplatedId] = useState(null);
+    const [templateId, setTemplatedId] = useState("");
     const [isOpenRepeatSection, setIsOpenRepeatSection] = useState(false);
     const [isOpenAttachmentsSection, setIsOpenAttachmentsSection] = useState(false);
     const [isOpenProjectPhotoSection, setIsOpenProjectPhotoSection] = useState(false);
 
-    const [jobReference, setJobReference] = useState(null);
-    const [description, setDescription] = useState(null);
+    const [jobReference, setJobReference] = useState("");
+    const [description, setDescription] = useState("");
 
-    const [userId, setUserId] = useState(null);
+    const [userId, setUserId] = useState("");
     const [selectedUserInfo, setSelectedUserInfo] = useState({});
     const [hourlyRate, setHourlyRate] = useState("0.00");
-    const [paymentCycle, setPaymentCycle] = useState(null);
+    const [paymentCycle, setPaymentCycle] = useState("");
 
-    const [projectId, setProjectId] = useState(null);
+    const [projectId, setProjectId] = useState("");
     // const [projectReference, setProjectReference] = useState(null);
     // const [projectDescription, setProjectDescription] = useState(null);
     const [repeat, setRepeat] = useState('Weekly');
     const [weeks, setWeeks] = useState([]);
     const [months, setMonths] = useState([]);
-    const [repeatStart, setRepeatStart] = useState(null);
+    const [repeatStart, setRepeatStart] = useState("");
     const [ending, setEnding] = useState([]);
-    const [repeatEnd, setRepeatEnd] = useState(null);
-    const [occurrences, setOccurrences] = useState(null);
+    const [repeatEnd, setRepeatEnd] = useState("");
+    const [occurrences, setOccurrences] = useState("");
 
-    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState(null);
+    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("");
 
 
     const [files, setFiles] = useState([]);
@@ -55,14 +134,17 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
         getRootProps,
         getInputProps
     } = useDropzone({
-        maxFiles: 1,
-        accept: {
-            'image/*': []
-        },
         onDrop: acceptedFiles => {
-            setFiles(acceptedFiles.map(file => Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            })));
+            console.log('acceptedFiles: ', acceptedFiles);
+            setFiles((prevFiles) => [
+                ...prevFiles,
+                ...acceptedFiles.map((file) =>
+                    Object.assign(file, {
+                        preview: URL.createObjectURL(file),
+                        progress: 0,
+                    })
+                ),
+            ]);
         }
     });
 
@@ -130,10 +212,59 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
         }
     }, [getTemplateByIDQuery?.data]);
 
+
+    const uploadToS3 = (file, url) => {
+        return axios.put(url, file, {
+            headers: {
+                "Content-Type": file.type,
+            },
+            onUploadProgress: (progressEvent) => {
+                const progress = Math.round(
+                    (progressEvent.loaded / progressEvent.total) * 100
+                );
+                setFiles((prevFiles) =>
+                    prevFiles.map((f) =>
+                        f.name === file.name ? { ...f, progress } : f
+                    )
+                );
+            },
+        });
+    };
+
+    const fileUploadBySignedURL = async (id) => {
+        if (!files.length) return;
+        if (!id) return toast.success(`Job id not found`);
+
+        const accessToken = localStorage.getItem("access_token");
+
+        for (const file of files) {
+            try {
+                // Step 1: Get the signed URL from the backend
+                const response = await axios.post(
+                    `${process.env.REACT_APP_BACKEND_API_URL}/jobs/attachments/url/${id}/`,
+                    { filename: file.name },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+
+                const { url } = response.data;
+
+                // Step 2: Upload the file to S3 using the signed URL
+                await uploadToS3(file, url);
+            } catch (error) {
+                console.error("Error uploading file:", file.name, error);
+            }
+        }
+    }
+
     const mutation = useMutation({
         mutationFn: (data) => createNewJob(data),
-        onSuccess: (response) => {
+        onSuccess: async (response) => {
             console.log('response: ', response);
+            await fileUploadBySignedURL(response.id)
             toast.success(`Job created successfully`);
             setVisible(false);
             setRefetch((refetch) => !refetch);
@@ -373,7 +504,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                                     <span>{selectedUserInfo?.hourlyRate || "-"} AUD</span>
                                                 </div>
                                                 <div className='d-flex align-items-center gap-2'>
-                                                    <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16}/></div>
+                                                    <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
                                                     <span>{selectedUserInfo?.paymentCycle || "-"}</span>
                                                 </div>
                                             </Col>
@@ -668,6 +799,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                 </div>
                             </Card.Header> */}
                         </Card>
+
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenRepeatSection(!isOpenRepeatSection)}>
                                 <div className='d-flex justify-content-between'>
@@ -675,9 +807,9 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                     <button className='text-button p-0'>
                                         {
                                             isOpenRepeatSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
                                             </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
                                             </svg>
                                         }
                                     </button>
@@ -847,6 +979,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                 </div>
                             }
                         </Card>
+
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenProjectPhotoSection(!isOpenProjectPhotoSection)}>
                                 <div className='d-flex justify-content-between'>
@@ -854,9 +987,9 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                     <button className='text-button p-0'>
                                         {
                                             isOpenProjectPhotoSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
                                             </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
                                             </svg>
                                         }
                                     </button>
@@ -889,9 +1022,9 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                     <button className='text-button p-0'>
                                         {
                                             isOpenAttachmentsSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
                                             </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
                                             </svg>
                                         }
                                     </button>
@@ -911,25 +1044,23 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                     </Card.Header>
                                     <Card.Header className={clsx(style.background, 'border-0 d-flex flex-column', style.borderBottom)}>
                                         <div className='d-flex flex-column gap-3'>
-                                            <div className={style.fileBox}>
-                                                <div className={style.imgBox}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="41" viewBox="0 0 32 41" fill="none">
-                                                        <path d="M0 4.5874C0 2.37826 1.79086 0.587402 4 0.587402H20L32 12.5874V36.5874C32 38.7965 30.2091 40.5874 28 40.5874H4C1.79086 40.5874 0 38.7965 0 36.5874V4.5874Z" fill="#D92D20" />
-                                                        <path opacity="0.3" d="M20 0.587402L32 12.5874H24C21.7909 12.5874 20 10.7965 20 8.5874V0.587402Z" fill="white" />
-                                                    </svg>
-                                                    <div className={style.fileType}>PDF</div>
-                                                </div>
-                                                <div className={style.fileNameBox}>
-                                                    <p className='mb-0'>Tech design requirements.pdf</p>
-                                                    <p className='mb-0'>200 KB – 100% uploaded</p>
-                                                </div>
-                                                <div className='ms-auto'>
-                                                    <div className={style.deleteBox}>
-                                                        <Trash color='#F04438' size={16} />
+                                            {
+                                                files?.map((file, index) => (
+                                                    <div key={index} className={style.fileBox}>
+                                                        {getFileIcon(file.type)}
+                                                        <div className={style.fileNameBox}>
+                                                            <p className='mb-0'>{file?.name || ""}</p>
+                                                            <p className='mb-0'>{parseFloat(file?.size / 1024).toFixed(2)} KB - {parseInt(file?.progress) || 0}% uploaded</p>
+                                                        </div>
+                                                        <div className='ms-auto'>
+                                                            <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
+                                                            {/* <div className={style.deleteBox}>
+                                                                <Trash color='#F04438' size={16} />
+                                                            </div> */}
+                                                        </div>
                                                     </div>
-
-                                                </div>
-                                            </div>
+                                                ))
+                                            }
                                         </div>
                                     </Card.Header>
                                 </>
@@ -941,7 +1072,8 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }}>Save {mutation?.isPending && <ProgressSpinner
+                        {/* ()=>fileUploadBySignedURL(128) */}
+                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }}>Create {mutation?.isPending && <ProgressSpinner
                             style={{ width: "20px", height: "20px", color: "#fff" }}
                         />}</Button>
                     </div>
