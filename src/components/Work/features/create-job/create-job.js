@@ -126,7 +126,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
     const [repeatEnd, setRepeatEnd] = useState("");
     const [occurrences, setOccurrences] = useState("");
 
-    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("");
+    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("1");
 
 
     const [files, setFiles] = useState([]);
@@ -276,60 +276,63 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
     });
 
     const onSubmit = () => {
-        setErrors({});
+        // Initialize a temporary errors object
+        const tempErrors = {
+            jobReference: false,
+            description: false,
+            userId: false,
+            type: false,
+            cost: false,
+            duration: false,
+            time_type: false,
+            start: false,
+            end: false,
+            projectId: false
+        };
+    
         const payload = {};
-
-        if (!jobReference) setErrors((others) => ({ ...others, jobReference: true }));
-        payload.short_description = jobReference;
-
-        if (!description) setErrors((others) => ({ ...others, description: true }));
-        payload.long_description = description;
-
-        if (!userId) setErrors((others) => ({ ...others, userId: true }));
-        payload.worker = userId;
-
-        if (!type) setErrors((others) => ({ ...others, type: true }));
-        payload.type = type;
-
-        if (type === '2' && !cost) setErrors((others) => ({ ...others, cost: true }));
-        payload.cost = cost;
-
-        if (type !== '2' && !duration) setErrors((others) => ({ ...others, duration: true }));
-        else if (duration)
-            payload.duration = +duration;
-
-        if (!time_type) setErrors((others) => ({ ...others, time_type: true }));
-        payload.time_type = time_type;
-
-        if (!start) setErrors((others) => ({ ...others, start: true }));
-        else if (start)
-            payload.start_date = new Date(start).toISOString();
-
-        if (time_type !== '1' && !end) setErrors((others) => ({ ...others, end: true }));
-        else if (end)
-            payload.end_date = new Date(end).toISOString();
-
-        if (!projectId) setErrors((others) => ({ ...others, projectId: true }));
-        payload.project = projectId;
-
-        if (!Object.values(errors).includes(false)) {
+    
+        if (!jobReference) tempErrors.jobReference = true;
+        else payload.short_description = jobReference;
+    
+        if (!description) tempErrors.description = true;
+        else payload.long_description = description;
+    
+        if (!userId) tempErrors.userId = true;
+        else payload.worker = userId;
+    
+        if (!type) tempErrors.type = true;
+        else payload.type = type;
+    
+        if (type === '2' && !cost) tempErrors.cost = true;
+        else payload.cost = cost;
+    
+        if (type !== '2' && !duration) tempErrors.duration = true;
+        else if (duration) payload.duration = +duration;
+    
+        if (!time_type) tempErrors.time_type = true;
+        else payload.time_type = time_type;
+    
+        if (!start) tempErrors.start = true;
+        else payload.start_date = new Date(start).toISOString();
+    
+        if (time_type !== '1' && !end) tempErrors.end = true;
+        else if (end) payload.end_date = new Date(end).toISOString();
+    
+        if (!projectId) tempErrors.projectId = true;
+        else payload.project = projectId;
+    
+        payload.project_photos = projectPhotoDeliver;
+    
+        // Batch update errors at the end
+        setErrors(tempErrors);
+    
+        // Check if there are no errors and proceed
+        if (!Object.values(tempErrors).includes(true)) {
             mutation.mutate(payload);
         }
-        // payload.repeat = {};
-        // payload.repeat.type = repeat === "Weekly" ? 1 : 2;
-        // if ((weeks.length === 0 && repeat === "Weekly") || (months.length === 0 && repeat === "Monthly")) setErrors((others) => ({ ...others, on: true }));
-        // if (repeat === "Weekly") {
-        //     payload.repeat.on = weeks.toString();
-        // } else {
-        //     payload.repeat.on = months.toString();
-        // }
-
-        // if (!repeatStart) setErrors((others) => ({ ...others, repeatStart: true }));
-
-
-
-
-    }
+    };
+    
 
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -999,15 +1002,15 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                 isOpenProjectPhotoSection && <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
                                     <div className='d-flex align-items-center gap-4 py-1'>
                                         <div className="flex align-items-center">
-                                            <RadioButton inputId="Before and After" name="projectPhotoDeliver" value="Before and After" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'Before and After'} />
+                                            <RadioButton inputId="Before and After" name="projectPhotoDeliver" value="1" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver == '1'} />
                                             <label htmlFor="Before and After" className="ms-2 cursor-pointer">Before and After</label>
                                         </div>
                                         <div className="flex align-items-center">
-                                            <RadioButton inputId="After" name="projectPhotoDeliver" value="After" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'After'} />
+                                            <RadioButton inputId="After" name="projectPhotoDeliver" value="2" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === '2'} />
                                             <label htmlFor="After" className="ms-2 cursor-pointer">Photos Of the Process</label>
                                         </div>
                                         <div className="flex align-items-center">
-                                            <RadioButton inputId="All" name="projectPhotoDeliver" value="All" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver === 'All'} />
+                                            <RadioButton inputId="All" name="projectPhotoDeliver" value="3" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver == '3'} />
                                             <label htmlFor="All" className="ms-2 cursor-pointer">All</label>
                                         </div>
                                     </div>
