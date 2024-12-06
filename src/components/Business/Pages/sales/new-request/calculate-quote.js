@@ -38,7 +38,7 @@ const CalculateQuote = () => {
                 ...others,
                 xero_tax: "ex",
                 display_discount: true,
-                managers: [{ manager: profileData?.id }],
+                managers: [{ manager: profileData?.desktop_user_id }],
                 client: storedSessionData?.id || "",
                 reference: storedSessionData?.reference || "",
                 description: storedSessionData?.requirements || ""

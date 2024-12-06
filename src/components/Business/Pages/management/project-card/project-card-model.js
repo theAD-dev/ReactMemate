@@ -229,11 +229,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     const lines = text.split("\n");
 
     // Extract and clean the subject
-    const subject = lines.find((line) => line.startsWith("Subject:")).replace("Subject: ", "");
+    const subject = lines.find((line) => line.startsWith("Subject:"))?.replace("Subject: ", "") || "";
 
     // Extract and clean the recipients
-    const rawRecipients = lines.find((line) => line.startsWith("Recipient(s):")).replace("Recipient(s): ", "");
-    const recipients = JSON.parse(rawRecipients.replace(/'/g, '"')); // Replace single quotes with double quotes
+    const rawRecipients = lines.find((line) => line?.startsWith("Recipient(s):"))?.replace("Recipient(s): ", "") || [];
+    const recipients = JSON.parse(rawRecipients?.length && rawRecipients?.replace(/'/g, '"')); // Replace single quotes with double quotes
 
     // Extract the body
     const body = text.split("Body:")[1]?.trim();
@@ -250,11 +250,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     const email = parseEmailData(emailData);
 
     // Process email body lines, splitting by paragraph or newlines
-    const bodyLines = email.body.split(/<\/p>\s*<p>|<br\s*\/?>|\n/).map(
-      (line, idx) => `<p key=${idx}>${line.trim()}</p>`
+    const bodyLines = email.body?.split(/<\/p>\s*<p>|<br\s*\/?>|\n/)?.map(
+      (line, idx) => `<p key=${idx}>${line?.trim()}</p>`
     );
 
-    const visibleBody = bodyLines.join("");
+    const visibleBody = bodyLines?.join("");
 
     useEffect(() => {
       if (emailBodyRef.current) {
@@ -266,14 +266,14 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     return (
       <div>
         <ul className="d-flex flex-column align-items-start">
-          <li className="font-14">
+          <li className="font-12">
             <strong className="font-12">Subject:</strong>&nbsp; {email.subject}
           </li>
           <li>
             <strong className="font-12">Recipients:</strong>&nbsp;
             <ul>
-              {email.recipients.map((recipient, index) => (
-                <li className="font-14" key={index}>
+              {email?.recipients?.length && email?.recipients?.map((recipient, index) => (
+                <li className="font-12" key={index}>
                   {recipient}
                 </li>
               ))}
@@ -284,8 +284,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           <div
             ref={emailBodyRef}
             style={{
-              maxHeight: showFullBody ? "none" : "90px",
-              overflow: "hidden",
+              maxHeight: showFullBody ? "none" : "87px",
+              overflowY: "hidden",
+              overflowX: showFullBody ? "auto": "hidden"
             }}
             dangerouslySetInnerHTML={{ __html: visibleBody }}
           />
@@ -384,7 +385,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         <Modal.Body className='p-0'>
           <div className="ContactModel">
             <Row className="text-left mt-0 projectCardMain">
-              <Col className='orderDiscription'>
+              <Col sm={6} className='orderDiscription'>
                 <strong>Order Description</strong>
                 <div className='customScrollBar'>
                   {
@@ -575,7 +576,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   </Table>
                 </div>
               </Col>
-              <Col className='projectHistoryCol'>
+              <Col sm={6} className='projectHistoryCol'>
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
@@ -688,9 +689,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                   </li>
 
                                 </ul>
-                                <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && title || ""}</h5>
+                                <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && type !== "invoice" && title || ""}</h5>
                                 {
-                                  type === "email" ? <EmailComponent emailData={text} />
+                                  type === "email" || type === "invoice" ? <EmailComponent emailData={text} />
                                     :
                                     <h6 style={{ whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: text }} />
                                 }
