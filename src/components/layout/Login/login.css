@@ -329,7 +329,7 @@ ul.indicators li {
 }
 
 .linkBottom p a {
-    color: var(--Brand-700, #6941C6);
+    color: var(--Brand-700, #158ecc);
     font-size: 14px;
     font-style: normal;
     font-weight: 600;

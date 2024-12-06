@@ -68,7 +68,7 @@
     color: #fff; 
 }
 .requestDemoWrap .step-progress .step.active {
-    background: var(--Colors-Background-bg-quaternary, #7F56D9);
+    background: var(--Colors-Background-bg-quaternary, #158ecc);
 }
 .requestDemoWrap .boxLogin .inputInfo textarea {
     width: 100%;
