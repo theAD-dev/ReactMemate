@@ -1,0 +1,93 @@
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #344054;
+}
+
+.previewSection {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-xl, 16px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-100, #f2f4f7);
+}
+
+.previewBox {
+  gap: 20px;
+  display: flex;
+  background: #fff;
+  align-items: center;
+  margin-bottom: 8px;
+
+  .previewBoxImg1 {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+  }
+
+  .previewBoxImg2 {
+    width: 64px;
+    height: 64px;
+  }
+
+  .previewBoxImg3 {
+    width: 56px;
+    height: 56px;
+  }
+
+  .previewBoxImg4 {
+    width: 32px;
+    height: 32px;
+  }
+
+  .previewBoxImg5 {
+    width: 24px;
+    height: 24px;
+  }
+
+  .previewBoxImg1, 
+  .previewBoxImg2, 
+  .previewBoxImg3, 
+  .previewBoxImg4, 
+  .previewBoxImg5 {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xs, 4px);
+    border: 0.75px solid var(--Gray-900, #ccc);
+  }
+
+  .previewBoxImg2 img, .previewBoxImg3 img, .previewBoxImg4 img, .previewBoxImg5 img {
+    top: 50%;
+    left: 50%;
+    margin: auto;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }  
+}
+
+.previewActions {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.label2 {
+  color: var(--Primary-600, #158ecc);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+}

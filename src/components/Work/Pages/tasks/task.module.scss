@@ -1,0 +1,144 @@
+.active {
+  background: #ebf8ff;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 36px;
+}
+
+.newButton,
+.newButton:hover,
+.newButton:focus {
+  gap: 8px;
+  display: flex;
+  padding: 4px 14px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--Orange-600, #d59346);
+  background: var(--Orange-600, #d59346);
+}
+
+.total {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.08px;
+}
+
+.totalCount {
+  color: #ffc301;
+  text-align: center;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  align-items: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  border-radius: 16px;
+  border: 1px solid #fff0c1;
+  background: #fffaeb;
+  mix-blend-mode: multiply;
+}
+
+/* Jobs table css */
+.shadowRight {
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px -6px 0px 0px);
+}
+
+.clientName {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  font-size: 12px;
+  border: 0.75px solid #ccc;
+  border-radius: 34px;
+  margin-right: 10px;
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
+}
+
+.complete {
+  margin: auto;
+  width: fit-content;
+  color: var(--Success-700, #067647);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid var(--Success-200, #a9efc5);
+  background: var(--Success-50, #ecfdf3);
+}
+
+.pending {
+  margin: auto;
+  width: fit-content;
+  color: var(--Warning-800, #93370d);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  background: var(--Warning-100, #fffaeb);
+  border: 1px solid var(--Warning-300, #fedf89);
+  padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+}
+
+.projectImg {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs, 4px);
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
+}
+
+.projectText {
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  color: var(--Gray-700, #344054);
+}
+
+.projectNumber {
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  color: var(--Gray-400, #98a2b3);
+}
