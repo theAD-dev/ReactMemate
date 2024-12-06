@@ -71,10 +71,23 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
     const autoCompleteRef3 = useRef(null);
     const [showCC, setShowCC] = useState(false);
     const [showBCC, setShowBCC] = useState(false);
+
+    const [emailTemplateId, setEmailTemplatedId] = useState(null);
+    const reset = () => {
+        setFrom([]);
+        setTo([]);
+        setCC([]);
+        setBCC([]);
+        setSubject([]);
+        setText([]);
+        setEmailTemplatedId(null);
+    }
+    
     const handleClose = () => {
         setShow(false);
+        if (!defaultTemplateId) reset();
     }
-    const [emailTemplateId, setEmailTemplatedId] = useState(null);
+   
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
         queryFn: getEmailTemplates,

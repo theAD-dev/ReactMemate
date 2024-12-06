@@ -64,3 +64,13 @@ export const partialPaymentCreate = async (id, data) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const sendInvoiceToXeroApi = async (data) => {
+  const endpoint = `/invoices/to-xero/`;
+  const options = {
+      method: 'PUT',
+      body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}

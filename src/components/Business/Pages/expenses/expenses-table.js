@@ -134,6 +134,16 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
         </div>
     }
 
+    const xeroBody = (rowData) => {
+        return <div className={`d-flex align-items-center justify-content-center`}>
+            {
+                rowData?.xero_status === "in_progress" 
+                ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
+                : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
+            }
+        </div>
+    }
+    
     const StatusBody = (rowData) => {
         if (rowData.paid)
             return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='success-outline-button font-14' style={{ width: '86px', height: '36px' }}>Paid</Button>
@@ -186,7 +196,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='type' header="Interval/Order" style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
                 <Column field='average_pd' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
-                <Column field='total_requests' header="Xero/Myob" style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
+                <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
                 <Column field='department' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>

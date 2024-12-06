@@ -136,7 +136,7 @@ const ProjectStatus = () => {
                         <div className='contentMenuTab'>
                             <ul>
                                 <li className='menuActive'><Link to="/settings/projectstatus/project-status">Project Status</Link></li>
-                                <li><Link to="/settings/projectstatus/outgoing-emails">Outgoing Emails</Link></li>
+                                {/* <li><Link to="/settings/projectstatus/outgoing-emails">Outgoing Emails</Link></li> */}
                             </ul>
                         </div>
                     </div>

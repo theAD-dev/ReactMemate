@@ -9,7 +9,7 @@ function parseTimestamp(timestampStr) {
 function loadData(responses) {
   const events = [];
   const resources = responses?.map((data) => {
-    let color = data?.custom_status?.color;
+    let color = data?.custom_status?.color || "rgb(192, 192, 192)";
     let background = data?.custom_status?.background;
     let font = data?.custom_status?.font;
 

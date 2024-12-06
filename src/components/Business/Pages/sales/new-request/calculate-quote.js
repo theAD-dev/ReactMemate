@@ -38,7 +38,7 @@ const CalculateQuote = () => {
                 ...others,
                 xero_tax: "ex",
                 display_discount: true,
-                managers: [{ manager: profileData?.id }],
+                managers: [{ manager: profileData?.desktop_user_id }],
                 client: storedSessionData?.id || "",
                 reference: storedSessionData?.reference || "",
                 description: storedSessionData?.requirements || ""
@@ -276,15 +276,15 @@ const CalculateQuote = () => {
                             Cancel
                         </a>
                         {
-                            (unique_id && newRequestQuery?.data?.quote_url) ? (
-                                <a href={`${newRequestQuery?.data?.quote_url}`} target='_blank' type="button" className="button-custom text-button px-2">
-                                    Quote PDF
-                                </a>
-                            ) : (
+                            // (unique_id && newRequestQuery?.data?.quote_url) ? (
+                            //     <a href={`${newRequestQuery?.data?.quote_url}`} target='_blank' type="button" className="button-custom text-button px-2">
+                            //         Quote PDF
+                            //     </a>
+                            // ) : (
                                 <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-2">
                                     Quote PDF
                                 </a>
-                            )
+                            // )
                         }
                         {
                             newRequestQuery?.data?.proposal_pdf ? (

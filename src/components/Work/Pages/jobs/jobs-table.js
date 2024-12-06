@@ -21,7 +21,7 @@ const formatDate = (timestamp) => {
   return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, ref) => {
+const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
   const navigate = useNavigate();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -36,7 +36,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
 
   useEffect(() => {
     setPage(1);  // Reset to page 1 whenever searchValue changes
-  }, [searchValue]);
+  }, [searchValue, refetch]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -64,7 +64,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
 
     loadData();
 
-  }, [page, searchValue, tempSort]);
+  }, [page, searchValue, tempSort, refetch]);
 
   useEffect(() => {
     if (jobs.length > 0 && hasMoreData) {
@@ -90,12 +90,12 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected }, 
     if (rowData.type_display === 'Hours')
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentHours}`}>{rowData.type_display}</div>
-        <Repeat color='#158ECC' />
+        {rowData?.is_recurring &&<Repeat color='#158ECC' />}
       </div>
     else
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentFix}`}>{rowData.type_display}</div>
-        <Repeat color='#158ECC' />
+        {rowData?.is_recurring &&<Repeat color='#158ECC' />}
       </div>
   }
 

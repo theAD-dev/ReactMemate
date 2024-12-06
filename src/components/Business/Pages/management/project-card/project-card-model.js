@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import {
-  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink
+  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink,
+  Envelope
 } from "react-bootstrap-icons";
 import { Placeholder, Table } from 'react-bootstrap';
 import AddNote from './add-note';
@@ -32,7 +33,6 @@ import InvoiceCreate from './invoice-create/invoice-create';
 import GoogleReviewEmail from './google-review/google-review';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
-  console.log('lo....')
   const navigate = useNavigate();
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -41,7 +41,6 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [editedReference, setEditedReference] = useState('');
   const [expenseJobsMapping, setExpenseJobsMapping] = useState([]);
   const [filteredHistory, setFilteredHistory] = useState([]);
-  console.log('filteredHistory: ', filteredHistory);
   const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
 
   //Real Cost Calculation
@@ -116,10 +115,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     const dayOptions = { weekday: 'short' };
     const timeString = new Intl.DateTimeFormat('en-US', timeOptions).format(date);
     const dayString = new Intl.DateTimeFormat('en-US', dayOptions).format(date);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+    }).format(date);
     const year = date.getFullYear();
-    const dateString = `${day}.${month}.${year}`;
+    const dateString = `${day} ${monthAbbreviation} ${year}`;
     return `${timeString} | ${dayString} | ${dateString}`;
   };
 
@@ -224,6 +225,85 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     if (projectId && viewShow) projectCardData(projectId);
   }, [projectId, viewShow]);
 
+  const parseEmailData = (text) => {
+    const lines = text.split("\n");
+
+    // Extract and clean the subject
+    const subject = lines.find((line) => line.startsWith("Subject:"))?.replace("Subject: ", "") || "";
+
+    // Extract and clean the recipients
+    const rawRecipients = lines.find((line) => line?.startsWith("Recipient(s):"))?.replace("Recipient(s): ", "") || [];
+    const recipients = JSON.parse(rawRecipients?.length && rawRecipients?.replace(/'/g, '"')); // Replace single quotes with double quotes
+
+    // Extract the body
+    const body = text.split("Body:")[1]?.trim();
+
+    return { subject, recipients, body };
+  };
+
+  const EmailComponent = ({ emailData }) => {
+    const [showFullBody, setShowFullBody] = useState(false);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+
+    const emailBodyRef = useRef(null); // Ref to measure the height of the content
+
+    const email = parseEmailData(emailData);
+
+    // Process email body lines, splitting by paragraph or newlines
+    const bodyLines = email.body?.split(/<\/p>\s*<p>|<br\s*\/?>|\n/)?.map(
+      (line, idx) => `<p key=${idx}>${line?.trim()}</p>`
+    );
+
+    const visibleBody = bodyLines?.join("");
+
+    useEffect(() => {
+      if (emailBodyRef.current) {
+        const bodyHeight = emailBodyRef.current.scrollHeight;
+        setIsOverflowing(bodyHeight > 90); // Check if the content exceeds 100px
+      }
+    }, [visibleBody]);
+
+    return (
+      <div>
+        <ul className="d-flex flex-column align-items-start">
+          <li className="font-12">
+            <strong className="font-12">Subject:</strong>&nbsp; {email.subject}
+          </li>
+          <li>
+            <strong className="font-12">Recipients:</strong>&nbsp;
+            <ul>
+              {email?.recipients?.length && email?.recipients?.map((recipient, index) => (
+                <li className="font-12" key={index}>
+                  {recipient}
+                </li>
+              ))}
+            </ul>
+          </li>
+        </ul>
+        <div>
+          <div
+            ref={emailBodyRef}
+            style={{
+              maxHeight: showFullBody ? "none" : "87px",
+              overflowY: "hidden",
+              overflowX: showFullBody ? "auto": "hidden"
+            }}
+            dangerouslySetInnerHTML={{ __html: visibleBody }}
+          />
+          {isOverflowing && (
+            <button
+              className="text-button font-12 px-0"
+              onClick={() => setShowFullBody(!showFullBody)}
+            >
+              {showFullBody ? "Show Less" : "Load More"}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+
   return (
     <>
       <Modal
@@ -239,15 +319,15 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <ul className='d-flex justify-content-between align-items-center '>
               <li className='me-1 d-flex align-items-center'>
                 <strong className='dollorIcon' style={{
-                  background: ! cardData?.invoice_created ? '#F9FAFB' 
-                  : cardData?.payment_status === 'paid' ? '#F2FDEC' 
-                  : cardData?.payment_status === 'not_paid' ? "#FEF3F2"
-                  : "#FFFAEB"
-                 }}><CurrencyDollar size={13} color={
-                  ! cardData?.invoice_created ? '#667085' 
-                  : cardData?.payment_status === 'paid' ? '#17B26A' 
-                  : cardData?.payment_status === 'not_paid' ? "#F04438"
-                  : "#B54708"
+                  background: !cardData?.invoice_created ? '#F9FAFB'
+                    : cardData?.payment_status === 'paid' ? '#F2FDEC'
+                      : cardData?.payment_status === 'not_paid' ? "#FEF3F2"
+                        : "#FFFAEB"
+                }}><CurrencyDollar size={13} color={
+                  !cardData?.invoice_created ? '#667085'
+                    : cardData?.payment_status === 'paid' ? '#17B26A'
+                      : cardData?.payment_status === 'not_paid' ? "#F04438"
+                        : "#B54708"
                 } /></strong>
                 {
                   isFetching ? (
@@ -305,7 +385,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         <Modal.Body className='p-0'>
           <div className="ContactModel">
             <Row className="text-left mt-0 projectCardMain">
-              <Col className='orderDiscription'>
+              <Col sm={6} className='orderDiscription'>
                 <strong>Order Description</strong>
                 <div className='customScrollBar'>
                   {
@@ -496,13 +576,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   </Table>
                 </div>
               </Col>
-              <Col className='projectHistoryCol'>
+              <Col sm={6} className='projectHistoryCol'>
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
-                    <SendSMS />
-                    <ComposeEmail clientId={cardData?.client} projectId={projectId}/>
+                    <SendSMS projectCardData={() => projectCardData(projectId)} />
+                    <ComposeEmail clientId={cardData?.client} projectId={projectId} projectCardData={() => projectCardData(projectId)} />
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
                     <ProjectCardFilter setFilteredHistoryOptions={setFilteredHistoryOptions} />
@@ -546,8 +626,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileEarmark size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Quote &nbsp;</strong>
-                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
-                                          &nbsp;&nbsp;{projectId && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
+                                          &nbsp;{links?.quote_pdf && <Link to={`${links?.quote_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14} /></Link>}
+                                          &nbsp;&nbsp;{projectId && title === "Quote Created" && <Link to={`/quote/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                         </div>
                                       </>
 
@@ -587,7 +667,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         <div className='d-flex align-items-center'>
                                           <FileText size={16} color="#1AB2FF" />{" "}
                                           <strong>&nbsp; Invoice&nbsp;</strong>
-                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14}/></Link>}
+                                          &nbsp;{links?.invoice_pdf && <Link to={`${links?.invoice_pdf || "#"}`} target='_blank'><FilePdf color='#FF0000' size={14} /></Link>}
                                           &nbsp;&nbsp;{projectId && title === "Invoice Created" && <Link to={`/invoice/${projectId}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>}
                                         </div>
                                       </>
@@ -600,15 +680,21 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                         </>
                                       </>
 
-                                    ) : (
+                                    ) : type === "email" ? (<>
+                                      <Envelope size={16} color="#1AB2FF" />{" "}
+                                      <strong>&nbsp; Email</strong>
+                                    </>) : (
                                       ''
                                     )}
-
                                   </li>
 
                                 </ul>
-                                <h5 style={{ whiteSpace: "pre-line" }}>{title}</h5>
-                                <h6 style={{ whiteSpace: "pre-line" }}>{text}</h6>
+                                <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && type !== "invoice" && title || ""}</h5>
+                                {
+                                  type === "email" || type === "invoice" ? <EmailComponent emailData={text} />
+                                    :
+                                    <h6 style={{ whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: text }} />
+                                }
                                 <p>{formatTimestamp(created)} by {manager}</p>
                               </div>
                             ))

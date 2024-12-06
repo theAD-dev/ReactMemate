@@ -6,7 +6,7 @@ import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
 import { sendComposeEmail } from "../../../../../../APIs/management-api";
 import { toast } from "sonner";
 
-const ComposeEmail = ({ clientId, projectId }) => {
+const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
   const [payload, setPayload] = useState({})
   const [viewShow, setViewShow] = useState(false);
   const handleShow = () => setViewShow(true);
@@ -21,6 +21,7 @@ const ComposeEmail = ({ clientId, projectId }) => {
     mutationFn: (data) => sendComposeEmail(projectId, "", data),
     onSuccess: (response) => {
       setViewShow(false);
+      projectCardData();
       toast.success(`Email send successfully.`);
     },
     onError: (error) => {

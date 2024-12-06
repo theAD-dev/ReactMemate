@@ -18,7 +18,7 @@ import * as yup from "yup";
 import clsx from "clsx";
 import StripeIntegrations from "./stripe-integrations";
 import { useQuery } from "@tanstack/react-query";
-import { getEmailIntegrations, getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations } from "../../../../APIs/integrations-api";
+import { getEmailIntegrations, getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations, getXeroIntegrations } from "../../../../APIs/integrations-api";
 import GoogleIntegrations from "./google-review-integration";
 import TwilioIntegrations from "./twilio-integration";
 import { useLocation } from "react-router-dom";
@@ -53,6 +53,7 @@ const Integrations = () => {
   const googleReviewIntegrationsQuery = useQuery({ queryKey: ['googleReviewIntegrations'], queryFn: getGoogleReviewIntegrations });
   const twilioIntegrationsQuery = useQuery({ queryKey: ['twilioIntegrations'], queryFn: getTwilioIntegrations });
   const emailIntegrationsQuery = useQuery({ queryKey: ['getEmailIntegrations'], queryFn: getEmailIntegrations, retry: 1 });
+  const xeroIntegrationsQuery = useQuery({ queryKey: ['getXeroIntegrations'], queryFn: getXeroIntegrations, retry: 1 });
 
   const integrationsData = [
     {
@@ -166,8 +167,8 @@ const Integrations = () => {
                             <Envelope size={32} color="#667085" />
                           </div>
                           {
-                            <button className={emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
-                              {emailIntegrationsQuery?.data?.outgoing_email ? "Verified" : "Pending"}
+                            <button className={emailIntegrationsQuery?.data?.outgoing_email && emailIntegrationsQuery?.data?.outgoing_email_verified ? style.connected : emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
+                              {emailIntegrationsQuery?.data?.outgoing_email && emailIntegrationsQuery?.data?.outgoing_email_verified ? "Verified" : emailIntegrationsQuery?.data?.outgoing_email ? "Pending" : "Not conneccted"}
                               <span className={style.dots}></span>
                             </button>
                           }
@@ -189,8 +190,8 @@ const Integrations = () => {
                           <img src={xeroLogo} alt="xeroLogo" />
 
                           {
-                            <button className={!emailIntegrationsQuery?.data?.outgoing_email ? style.connected : style.disconnected}>
-                              {!emailIntegrationsQuery?.data?.outgoing_email ? "Connected" : "Disconnected"}
+                            <button className={!xeroIntegrationsQuery?.data?.connected ? style.connected : style.disconnected}>
+                              {!xeroIntegrationsQuery?.data?.connected ? "Connected" : "Disconnected"}
                               <span className={style.dots}></span>
                             </button>
                           }
@@ -199,7 +200,7 @@ const Integrations = () => {
                           <h3>{"Xero"}</h3>
                           <p>{"Connect Xero to directly send expenses and invoices to your Xero account, simplifying your accounting process."}</p>
                         </div>
-                          <XeroIntegration />
+                          <XeroIntegration refetch={xeroIntegrationsQuery?.refetch} connected={xeroIntegrationsQuery?.data?.connected}/>
                       </div>
                     </Col>
 

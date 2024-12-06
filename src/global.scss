@@ -42,8 +42,8 @@ input {
   font-family: "Inter";
   font-weight: 600;
   justify-content: center;
-  border: 1px solid var(--Primary-600, #17b26a);
-  background: var(--Primary-600, #17b26a) !important;
+  border: 1px solid var(--Primary-600, #079455);
+  background: var(--Primary-600, #079455) !important;
 }
 
 .outline-button,
@@ -61,6 +61,11 @@ input {
   background: #fff !important;
   color: var(--Gray-700, #344054) !important;
   border: 1px solid var(--Gray-300, #d0d5dd) !important;
+}
+
+.outline-button.active-outline-button {
+  border: 1px solid var(--Primary-200, #a3e0ff) !important;
+  background: var(--Primary-50, #ebf8ff) !important;
 }
 
 .text-button,
@@ -173,7 +178,7 @@ input {
 
 /* Font size class */
 .font-12, .font-12:hover, .font-12:focus {
-  font-size: 12px;
+  font-size: 12px !important;
 }
 
 .font-14, .font-14:hover, .font-14:focus {

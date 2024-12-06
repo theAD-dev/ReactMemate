@@ -12,7 +12,7 @@ import { TieredMenu } from 'primereact/tieredmenu';
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
-import { paidExpense, unpaidExpense } from '../../../../APIs/expenses-api';
+import { paidExpense, sendExpenseToXeroApi, unpaidExpense } from '../../../../APIs/expenses-api';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
 const ExpensesPage = () => {
@@ -32,6 +32,23 @@ const ExpensesPage = () => {
             console.error('DataTable ref is null');
         }
     };
+
+    const sendExpenseToXeroMutation = useMutation({
+        mutationFn: (data) => sendExpenseToXeroApi(data),
+        onSuccess: () => {
+            setRefetch((refetch) => !refetch);
+            setSelected(null);
+            toast.success(`Expense successfully sent to Xero!`);
+        },
+        onError: (error) => {
+            toast.error(`Failed to send the expense to xero. Please try again.`);
+        }
+    });
+
+    const sendExpenseToXero = () => {
+        const ids = selected.map(item => item.id);
+        sendExpenseToXeroMutation.mutate({ ids: ids });
+    }
 
     const paidMutation = useMutation({
         mutationFn: (data) => paidExpense(data),
@@ -59,14 +76,14 @@ const ExpensesPage = () => {
 
     const handlePaidExpense = () => {
         const ids = selected.map(item => item.id);
-        paidMutation.mutate({ ids: ids});
+        paidMutation.mutate({ ids: ids });
     }
 
     const handleUnPaidExpense = () => {
         const ids = selected.map(item => item.id);
         unpaidMutation.mutate({ ids: ids });
     }
- 
+
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
@@ -78,7 +95,14 @@ const ExpensesPage = () => {
                                 <div className='filtered-box d-flex align-items-center gap-2'>
                                     <button className={`danger-outline-button ${style.actionButton}`} onClick={handleUnPaidExpense}>Mark as Unpaid {unpaidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <XCircle color='#B42318' size={20} />} </button>
                                     <button className={`success-outline-button ${style.actionButton}`} onClick={handlePaidExpense}>Mark as Paid {paidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <CheckCircle color='#067647' size={20} />} </button>
-                                    <button className={`outline-button ${style.actionButton}`} onClick={() => { }}>Send to Xero/MYOB <Send color='#1D2939' size={20} /> </button>
+                                    <button className={`outline-button ${style.actionButton}`} onClick={sendExpenseToXero}>Send to Xero/MYOB
+                                        {
+                                            sendExpenseToXeroMutation.isPending
+                                                ? <ProgressSpinner
+                                                    style={{ width: "20px", height: "20px" }}
+                                                /> : <Send color='#1D2939' size={20} />
+                                        }
+                                    </button>
                                     <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
                                 </div>
                             </>

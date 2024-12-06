@@ -693,6 +693,7 @@ strong.dollorIcon {
   min-width: 89%;
 }
 .projectHistoryCol {
+  border-left: 1px solid #eaecf0;
   padding: 16px 24px;
 }
 .tabModelMenu .col {

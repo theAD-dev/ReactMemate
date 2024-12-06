@@ -15,6 +15,8 @@ import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -112,7 +114,10 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                     <div className='d-flex justify-content-between gap-3 align-items-center'>
                         <div className='d-flex flex-column'>
                             <label>Enter Amount</label>
-                            <InputText value={deposit} onChange={(e) => setDeposit(e.target.value)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
+                            <IconField iconPosition="left">
+                                <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
+                                <InputText value={deposit} onChange={(e) => setDeposit(e.target.value)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px', paddingLeft: '30px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
+                            </IconField>
                             {errors?.deposit && (
                                 <p className="error-message mb-0">{"Payment type is required"}</p>
                             )}
@@ -233,8 +238,8 @@ const InvoiceHistory = ({ history }) => {
                     <Column field="" style={{ width: 'auto' }} body={(rowData, { rowIndex }) => <>#{rowIndex + 1}</>} header="ID"></Column>
                     <Column field="type" style={{ width: '150px' }} header="Reference" body={referenceBody}></Column>
                     <Column field="deposit" style={{ width: '210px', textAlign: 'right' }} body={(rowData) => <>${rowData?.deposit}</>} header="Amount"></Column>
-                    <Column field="manager.name" style={{ width: '210px' }} header="User / Supplier" body={nameBody}></Column>
-                    <Column field="created" style={{ width: '147px' }} header="Date" body={depositDate}></Column>
+                    <Column field="manager.name" style={{ width: '210px' }} header="Manager" body={nameBody}></Column>
+                    <Column field="created" style={{ width: '147px' }} header="Created at" body={depositDate}></Column>
                 </DataTable>
             </Card.Body>
         </Card>

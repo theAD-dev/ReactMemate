@@ -14,6 +14,7 @@ const JobsPage = () => {
     const menu = useRef(null);
     const [total, setTotal] = useState(0);
     const [visible, setVisible] = useState(false);
+    const [refetch, setRefetch] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const [selected, setSelected] = useState([]);
 
@@ -39,7 +40,7 @@ const JobsPage = () => {
                         ) : (
                             <>
                                 <div className='filtered-box'>
-                                    <button className={`${style.filterBox}`} onClick={(e) => {}}><Filter /></button>
+                                    <button className={`${style.filterBox}`} onClick={(e) => { }}><Filter /></button>
                                 </div>
                                 <div className="searchBox" style={{ position: 'relative' }}>
                                     <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
@@ -56,16 +57,17 @@ const JobsPage = () => {
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Jobs</h1>
-                    <Button className={`${style.newButton}`} onClick={()=> setVisible(true)}>New</Button>
+                    <Button className={`${style.newButton}`} onClick={() => setVisible(true)}>New</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Jobs</div>
                 </div>
             </div>
-            <JobsTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} />
+            <JobsTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch}
+                setRefetch={setRefetch} />
             <JobChat />
-            <CreateJob visible={visible} setVisible={setVisible}/>
+            <CreateJob visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
         </PrimeReactProvider>
     )
 }
