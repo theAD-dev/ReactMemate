@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   PlusSlashMinus,
@@ -23,6 +23,48 @@ import ActionsDots from "./actions-dots";
 import { Table } from "react-bootstrap";
 import TableTopBar from "./table-top-bar";
 import { Resizable } from 'react-resizable';
+import { Avatar } from 'primereact/avatar';
+import { AvatarGroup } from 'primereact/avatargroup';
+
+import { OverlayPanel } from 'primereact/overlaypanel';
+        
+
+const CustomAvatarGroup = ({ params }) => {
+  const op = useRef(null);
+
+  const handleAvatarGroupClick = (event) => {
+    op.current.toggle(event);
+  };
+
+  return (
+    <div>
+      <AvatarGroup onClick={handleAvatarGroupClick} style={{ cursor: "pointer" }}>
+        {params?.value?.slice(0, 3).map((data, index) => (
+          <Avatar key={index} image={data?.photo} size="small" shape="circle" />
+        ))}
+        {params?.value?.length > 3 && (
+          <Avatar
+            label={`+${params.value.length - 3}`}
+            shape="circle"
+            size="large"
+          />
+        )}
+      </AvatarGroup>
+
+      <OverlayPanel className="salesOverlay" ref={op}>
+        {params?.value?.map((data, index) => (
+          <div key={index} style={{ padding: "0.5rem", display: "flex", alignItems: "center" }}>
+            <Avatar image={data?.photo} shape="circle" />
+            <div style={{ marginLeft: "0.5rem" }}>
+              <div className="fullnameText">{data?.full_name}</div>
+            </div>
+          </div>
+        ))}
+      </OverlayPanel>
+    </div>
+  );
+};
+
 
 const SalesTables = ({ profileData, salesData, fetchData }) => {
   const [sortField, setSortField] = useState("Quote");
@@ -231,36 +273,9 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       sortable: false,
       headerName: "User",
       width: 56,
-      renderCell: (params) => (
-        <div>
-          <div className="circleImgStyle">
-            {["top-start"].map((placement) => (
-              <OverlayTrigger
-                key={placement}
-                placement={placement}
-                overlay={
-                  <Tooltip id={`tooltip-${placement}`}>
-                    <div className="tooltipBox">{params.row.fullName}</div>
-                  </Tooltip>
-                }
-              >
-                <span variant="light" className="">
-                  {params.value ? (
-                    <>
-                      {params.value}
-                    </>
-                  ) : (
-                    <div className="iconPerson">
-                      <Person size={24} color="#667085" />
-                    </div>
-                  )}
-
-                </span>
-              </OverlayTrigger>
-            ))}
-          </div>
-        </div>
-      ),
+      renderCell: (params) => {
+        return <CustomAvatarGroup params={params} />
+      }
     },
     {
       field: "Contact",
@@ -370,7 +385,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       CalculationPDF: sale.quote_url,
       CalculationURL: sale.unique_url,
       Note: createSalesNote(sale.sales_note, sale.unique_id),
-      User: sale.manager.alias_name,
+      User: sale.managers,
       fullName: sale.manager.full_name,
       Contact: sale.sales_contacts,
       progressName: sale.lead.name,
@@ -436,7 +451,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       CalculationPDF: sale.quote_url,
       CalculationURL: sale.unique_url,
       Note: createSalesNote(sale.sales_note, sale.unique_id),
-      User: sale.manager.alias_name,
+      User: sale.managers,
       fullName: sale.manager.full_name,
       Contact: sale.sales_contacts,
       progressName: sale.lead.name,

@@ -20,10 +20,10 @@
 }
 .tableTopBarSales .styleT3 span.styleT2 {
   border-radius: 16px;
-  border: 1px solid var(--Primary-200, #A3E0FF);
-  background: var(--Primary-50, #EBF8FF);
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
   mix-blend-mode: multiply;
-  color: var(--Primary-500, #1AB2FF);
+  color: var(--Primary-500, #1ab2ff);
   text-align: center;
   font-family: Inter;
   font-size: 12px;
@@ -280,7 +280,6 @@ div#popoverStyleChange {
 .popoverendflex .closebox {
   margin-right: 12px;
 }
-
 
 .salesTableWrap .contactInfo .contactdate {
   color: var(--gray-900, var(--gray-900, #101828));
@@ -2873,4 +2872,20 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   .salesTableWrap table thead tr th:nth-child(2) {
     left: 42px;
   }
+}
+
+.salesOverlay .p-overlaypanel-content {
+  padding: 4px 4px;
+  min-width: 250px;
+}
+
+.salesOverlay .fullnameText {
+  color: var(--Gray-900, #101828);
+
+  /* Text md/Medium */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
 }

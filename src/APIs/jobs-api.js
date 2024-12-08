@@ -26,3 +26,12 @@ export const createNewJob = async (data) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 }
+
+export const getJob = async (id) => {
+    const endpoint = `/jobs/${id}/`;
+    const options = {
+        method: 'GET'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
