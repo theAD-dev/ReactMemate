@@ -71,7 +71,7 @@
 
 .payment {
   display: flex;
-  width: 47px;
+  min-width: 47px;
   padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
   justify-content: center;
   align-items: center;

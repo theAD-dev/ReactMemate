@@ -26,7 +26,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const navigate = useNavigate();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
-  const [show, setShow] = useState({ visible: true, jobId: null });
+  const [show, setShow] = useState({ visible: false, jobId: null });
   const [jobDetails, setJobDetails] = useState({});
   const [jobs, setJobs] = useState([]);
   const [page, setPage] = useState(1);
@@ -133,7 +133,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   }
 
   const nameBody = (rowData) => {
-    const name = `${rowData?.worker.first_name} ${rowData?.worker.last_name}`;
+    const name = `${rowData?.worker?.first_name} ${rowData?.worker?.last_name}`;
     const initials = name.split(' ').map(word => word[0]).join('');
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>
@@ -244,7 +244,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
-      <ViewJob visible={show?.visible} jobId={show?.jobId || 1472} setVisible={(bool) => setShow((others)=> ({...others, visible: bool }) )}/>
+      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others)=> ({...others, visible: bool }) )}/>
     </>
   )
 });
