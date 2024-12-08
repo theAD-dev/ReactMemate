@@ -10,7 +10,7 @@ import {
 import { Placeholder, Table } from 'react-bootstrap';
 import AddNote from './add-note';
 import NewTask from './new-task';
-import SendSMS from './send-sms';
+import SendSMS from './send-sms/send-sms';
 import ComposeEmail from './compose-email/compose-email';
 import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
@@ -581,7 +581,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
-                    <SendSMS projectCardData={() => projectCardData(projectId)} />
+                    <SendSMS projectId={projectId} projectCardData={() => projectCardData(projectId)} />
                     <ComposeEmail clientId={cardData?.client} projectId={projectId} projectCardData={() => projectCardData(projectId)} />
                   </Col>
                   <Col className='d-flex justify-content-center align-items-center filter'  >
@@ -689,9 +689,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                   </li>
 
                                 </ul>
-                                <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && type !== "invoice" && title || ""}</h5>
+                                <h5 style={{ whiteSpace: "pre-line" }}>{type !== "email" && title || ""}</h5>
                                 {
-                                  type === "email" || type === "invoice" ? <EmailComponent emailData={text} />
+                                  type === "email" ? <EmailComponent emailData={text} />
                                     :
                                     <h6 style={{ whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: text }} />
                                 }

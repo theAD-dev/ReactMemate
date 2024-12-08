@@ -10,6 +10,7 @@ import JobDetails from '../../features/job-table-actions/job-details-dialog';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { getListOfJobs } from '../../../../APIs/jobs-api';
+import ViewJob from '../../features/view-job/view-job';
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp * 1000);
@@ -25,6 +26,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const navigate = useNavigate();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [show, setShow] = useState({ visible: false, jobId: null });
   const [jobDetails, setJobDetails] = useState({});
   const [jobs, setJobs] = useState([]);
   const [page, setPage] = useState(1);
@@ -90,13 +92,20 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     if (rowData.type_display === 'Hours')
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentHours}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring &&<Repeat color='#158ECC' />}
+        {rowData?.is_recurring && <Repeat color='#158ECC' />}
       </div>
     else
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentFix}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring &&<Repeat color='#158ECC' />}
+        {rowData?.is_recurring && <Repeat color='#158ECC' />}
       </div>
+  }
+
+  const jobIDTemplate = (rowdata) => {
+    return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
+      <span>{rowdata.number}</span>
+      <Button label="Open" onClick={() => setShow({jobId: rowdata.id, visible: true }) } className='primary-text-button ms-3 show-on-hover-element' text />
+    </div>
   }
 
   const timeBody = (rowdata) => {
@@ -124,7 +133,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   }
 
   const nameBody = (rowData) => {
-    const name = `${rowData?.worker.first_name} ${rowData?.worker.last_name}`;
+    const name = `${rowData?.worker?.first_name} ${rowData?.worker?.last_name}`;
     const initials = name.split(' ').map(word => word[0]).join('');
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>
@@ -154,7 +163,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       case 'd':
         return <div className='d-flex gap-2 align-items-center'>
           <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />
-          <ChatText size={16}/>
+          <ChatText size={16} />
         </div>
       default:
         return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
@@ -219,7 +228,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         rowClassName={rowClassName}
       >
         <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-        <Column field="number" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
+        <Column field="number" header="Job ID" body={jobIDTemplate} style={{ minWidth: '100px' }} frozen sortable></Column>
         <Column field="type_display" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
         <Column field="time_type" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>
         <Column field="start_date" header="Start" body={startDateBody} style={{ minWidth: '122px' }} sortable></Column>
@@ -235,6 +244,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
+      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others)=> ({...others, visible: bool }) )}/>
     </>
   )
 });

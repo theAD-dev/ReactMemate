@@ -214,6 +214,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
 
 
     const uploadToS3 = (file, url) => {
+        console.log('file: ', file);
         return axios.put(url, file, {
             headers: {
                 "Content-Type": file.type,
@@ -263,7 +264,6 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
     const mutation = useMutation({
         mutationFn: (data) => createNewJob(data),
         onSuccess: async (response) => {
-            console.log('response: ', response);
             await fileUploadBySignedURL(response.id)
             toast.success(`Job created successfully`);
             setVisible(false);
