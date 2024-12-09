@@ -1,0 +1,141 @@
+.iconStyle {
+  border-radius: 28px;
+  border: 8px solid var(--Primary-50, #ecfdf3);
+  background: var(--Primary-100, #dcfae6);
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 7px;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerTitle {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.27px;
+}
+
+.customLabel {
+  width: fit-content;
+  height: 24px;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px)
+    var(--spacing-xxs, 2px) 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  position: absolute;
+  top: 11px;
+  left: 14px;
+  z-index: 1;
+}
+
+.dropdownSelect {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.accordion a {
+  color: #475467;
+  /* Body large */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.08px;
+  background-color: #fff;
+}
+
+.accordion.error a {
+  border: 1px solid red !important;
+}
+
+.p-accordion-content {
+  background-color: red;
+}
+
+.uploadBox {
+  display: flex;
+  width: 156px;
+  aspect-ratio: 3 / 2;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl, 16px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.imageBox {
+  display: flex;
+  width: 156px;
+  aspect-ratio: 3 / 2;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl, 16px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.uploadButton {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.uploadText {
+  color: var(--Primary-700, #106b99);
+
+  /* Text sm/Semibold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+  margin-bottom: 0px;
+}
+
+.trashBox {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl, 16px);
+  position: absolute;
+  // right: 350px;
+  top: -5px;
+  right: -5px;
+  z-index: 1;
+  border-radius: 100px;
+  border: 1px solid var(--Error-100, #fee4e2);
+  background: var(--Error-50, #fef3f2);
+}
