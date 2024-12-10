@@ -15,6 +15,7 @@ import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { toast } from 'sonner';
 import { createAndSendInvoiceById } from '../../APIs/management-api';
+import { resendInvoiceEmail } from '../../APIs/invoice-api';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -74,7 +75,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
     const handleClose = () => setShow(false);
     const [emailTemplateId, setEmailTemplatedId] = useState(18);
 
-    useEffect(()=> {
+    useEffect(() => {
         if (isCreated) setEmailTemplatedId(19);
     }, [isCreated, emailTemplateId])
 
@@ -101,7 +102,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
     }, [emailQuery, outgoingEmailTemplateQuery]);
 
     const mutation = useMutation({
-        mutationFn: (data) => createAndSendInvoiceById(projectId, data),
+        mutationFn: (data) => isCreated ? resendInvoiceEmail(projectId, data) : createAndSendInvoiceById(projectId, data),
         onSuccess: (response) => {
             handleClose();
             projectCardData();
@@ -242,7 +243,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
                 <div className={`${style.modalHeader}`}>
                     <div className="w-100 d-flex align-items-center gap-2">
                         <span className={`white-space-nowrap mt-2 mb-2 ${style.headerTitle}`}>
-                            Send a Invoice
+                            {isCreated ? "Resend" : "Send"} a Invoice
                         </span>
                     </div>
                 </div>
@@ -459,16 +460,21 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
             <Modal.Footer className='d-flex justify-content-between'>
                 <Button onClick={handleClose} className='text-button text-danger'>Cancel</Button>
                 <div className="d-flex justify-content-end gap-2">
-                    <Button className="outline-button" onClick={create}>
-                        Create{" "}
-                        {isLoading && (
-                            <ProgressSpinner
-                                style={{ width: "20px", height: "20px", color: "#fff" }}
-                            />
-                        )}
-                    </Button>
+                    {
+                        !isCreated && (
+                            <Button className="outline-button" onClick={create}>
+                                Create{" "}
+                                {isLoading && (
+                                    <ProgressSpinner
+                                        style={{ width: "20px", height: "20px", color: "#fff" }}
+                                    />
+                                )}
+                            </Button>
+                        )
+                    }
+
                     <Button className="solid-button" onClick={onSubmit}>
-                        Create and Send{" "}
+                        {isCreated ? "Resend" : "Create and Send"}{" "}
                         {
                             mutation?.isPending && (
                                 <ProgressSpinner

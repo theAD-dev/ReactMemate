@@ -212,23 +212,31 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
         }
     }, [getTemplateByIDQuery?.data]);
 
-
-    const uploadToS3 = (file, url) => {
-        console.log('file: ', file);
+    const uploadToS3 = async (file, url) => {
         return axios.put(url, file, {
             headers: {
-                "Content-Type": file.type,
+                "Content-Type": "",
             },
             onUploadProgress: (progressEvent) => {
                 const progress = Math.round(
                     (progressEvent.loaded / progressEvent.total) * 100
                 );
-                setFiles((prevFiles) =>
-                    prevFiles.map((f) =>
-                        f.name === file.name ? { ...f, progress } : f
-                    )
-                );
+                setFiles((prevFiles) => {
+                    return prevFiles.map((f) =>
+                        f.name === file.name
+                            ? Object.assign(f, { progress, url })
+                            : f
+                    );
+                });
             },
+        }).catch((err)=> {
+            setFiles((prevFiles) => {
+                return prevFiles.map((f) =>
+                    f.name === file.name
+                        ? Object.assign(f, { progress: 0, url, error: true })
+                        : f
+                );
+            });
         });
     };
 
@@ -264,7 +272,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
     const mutation = useMutation({
         mutationFn: (data) => createNewJob(data),
         onSuccess: async (response) => {
-            await fileUploadBySignedURL(response.id)
+            await fileUploadBySignedURL(response.id);
             toast.success(`Job created successfully`);
             setVisible(false);
             setRefetch((refetch) => !refetch);
@@ -289,50 +297,50 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
             end: false,
             projectId: false
         };
-    
+
         const payload = {};
-    
+
         if (!jobReference) tempErrors.jobReference = true;
         else payload.short_description = jobReference;
-    
+
         if (!description) tempErrors.description = true;
         else payload.long_description = description;
-    
+
         if (!userId) tempErrors.userId = true;
         else payload.worker = userId;
-    
+
         if (!type) tempErrors.type = true;
         else payload.type = type;
-    
+
         if (type === '2' && !cost) tempErrors.cost = true;
         else payload.cost = cost;
-    
+
         if (type !== '2' && !duration) tempErrors.duration = true;
         else if (duration) payload.duration = +duration;
-    
+
         if (!time_type) tempErrors.time_type = true;
         else payload.time_type = time_type;
-    
+
         if (!start) tempErrors.start = true;
         else payload.start_date = new Date(start).toISOString();
-    
+
         if (time_type !== '1' && !end) tempErrors.end = true;
         else if (end) payload.end_date = new Date(end).toISOString();
-    
+
         if (!projectId) tempErrors.projectId = true;
         else payload.project = projectId;
-    
+
         payload.project_photos = projectPhotoDeliver;
-    
+
         // Batch update errors at the end
         setErrors(tempErrors);
-    
+
         // Check if there are no errors and proceed
         if (!Object.values(tempErrors).includes(true)) {
             mutation.mutate(payload);
         }
     };
-    
+
 
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -1075,7 +1083,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
-                        {/* ()=>fileUploadBySignedURL(128) */}
+                        {/*  onSubmit ()=>fileUploadBySignedURL(128) */}
                         <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }}>Create {mutation?.isPending && <ProgressSpinner
                             style={{ width: "20px", height: "20px", color: "#fff" }}
                         />}</Button>
