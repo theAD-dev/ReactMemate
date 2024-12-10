@@ -102,6 +102,8 @@ const CircularProgressBar = ({ percentage, size = 100, strokeWidth = 4, color = 
 };
 
 const CreateJob = ({ visible, setVisible, setRefetch }) => {
+    const accessToken = localStorage.getItem("access_token");
+
     const [templateId, setTemplatedId] = useState("");
     const [isOpenRepeatSection, setIsOpenRepeatSection] = useState(false);
     const [isOpenAttachmentsSection, setIsOpenAttachmentsSection] = useState(false);
@@ -189,6 +191,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
             </div>
         );
     }
+
     const selectedItemTemplate = (option, props) => {
         if (option) {
             return (
@@ -202,6 +205,36 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
 
         return <span>{props.placeholder}</span>;
     };
+
+    const reset = () => {
+        setTemplatedId("");
+        setIsOpenRepeatSection(false);
+        setIsOpenAttachmentsSection(false);
+        setIsOpenProjectPhotoSection(false);
+        setJobReference("");
+        setDescription("");
+        setUserId("");
+        setSelectedUserInfo({});
+        setHourlyRate("0.00");
+        setPaymentCycle("");
+        setProjectId("");
+        setRepeat('Weekly');
+        setWeeks([]);
+        setMonths([]);
+        setRepeatStart("");
+        setEnding([]);
+        setRepeatEnd("");
+        setOccurrences("");
+        setProjectPhotoDeliver("1");
+        setFiles([]);
+        setType('2');
+        setCost(0.00);
+        set_time_type('');
+        setStart("");
+        setEnd("");
+        setDuration("");
+        setErrors({});
+    }
 
     useEffect(() => {
         if (getTemplateByIDQuery?.data) {
@@ -229,7 +262,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                     );
                 });
             },
-        }).catch((err)=> {
+        }).catch((err) => {
             setFiles((prevFiles) => {
                 return prevFiles.map((f) =>
                     f.name === file.name
@@ -240,11 +273,37 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
         });
     };
 
+    const attachmentsUpdateInJob = async (id) => {
+        let attachments = [];
+        for (const file of files) {
+            let obj = {
+                "name": file?.name,
+                "link": file?.url?.split("?")[0] || "",
+                "size": file?.size
+            }
+            attachments.push(obj);
+        }
+
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_BACKEND_API_URL}/jobs/attachments/${id}/`,
+                { attachments: attachments || [] },
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            );
+            console.log('response', response);
+        } catch (err) {
+            console.error("Error uploading file:", err);
+            toast.error(`Failed to update attachments in DB. Please try again.`);
+        }
+    }
+
     const fileUploadBySignedURL = async (id) => {
         if (!files.length) return;
         if (!id) return toast.success(`Job id not found`);
-
-        const accessToken = localStorage.getItem("access_token");
 
         for (const file of files) {
             try {
@@ -265,6 +324,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                 await uploadToS3(file, url);
             } catch (error) {
                 console.error("Error uploading file:", file.name, error);
+                toast.error(`Failed to upload ${file.name}. Please try again.`);
             }
         }
     }
@@ -273,9 +333,11 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
         mutationFn: (data) => createNewJob(data),
         onSuccess: async (response) => {
             await fileUploadBySignedURL(response.id);
+            await attachmentsUpdateInJob(response.id);
             toast.success(`Job created successfully`);
             setVisible(false);
             setRefetch((refetch) => !refetch);
+            reset();
         },
         onError: (error) => {
             console.error('Error creating expense:', error);
