@@ -130,7 +130,7 @@ const Header = ({ onClick }) => {
           <>
             <div className="headerTop business" style={{ whiteSpace: 'nowrap' }}>
               <Container fluid>
-                <Row>
+                <Row className="d-flex flex-nowrap">
                   <Col className="d-flex align-items-center">
                     <div className="company_logo colMinWidth">
                       {profileData && profileData?.organization?.logo ? (
@@ -193,7 +193,7 @@ const Header = ({ onClick }) => {
             <Container fluid className="headerNav" style={{ width: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
               <Row className="flex-nowrap">
                 <Col xs={3} md={3}>
-                  <ul className="left">
+                  <ul className="left d-flex flex-nowrap">
                     <li>
                       <NavLink
                         to="/clients"
@@ -267,7 +267,7 @@ const Header = ({ onClick }) => {
                   </ul>
                 </Col>
                 <Col xs={3} md={3} style={{ textAlign: "right" }}>
-                  <ul className="right">
+                  <ul className="right d-flex flex-nowrap justify-content-end">
                     <li>
                       <NavLink
                         to="/expenses"
@@ -300,7 +300,7 @@ const Header = ({ onClick }) => {
           <>
             <div className="headerTop work">
               <Container fluid className="">
-                <Row>
+                <Row className="d-flex flex-nowrap">
                   <Col className="d-flex align-items-center">
                     <div className="company_logo colMinWidth">
                       {profileData?.organization?.logo ? (
@@ -321,7 +321,7 @@ const Header = ({ onClick }) => {
                   </Col>
                   <Col className="d-flex align-items-center justify-content-center">
                     <nav className="colMinWidth">
-                      <div className="menu-item">
+                      <div className="menu-item" style={{ whiteSpace: 'nowrap' }}>
                         <ul>
                           <li>
                             <NavLink
@@ -362,7 +362,7 @@ const Header = ({ onClick }) => {
             <Container fluid className="headerNav">
               <Row>
                 <Col xs={3} md={3}>
-                  <ul className="left">
+                  <ul className="left d-flex flex-nowrap">
                     <li>
                       <NavLink
                         to="/work/people"
@@ -414,7 +414,7 @@ const Header = ({ onClick }) => {
                   </ul>
                 </Col>
                 <Col xs={3} md={3} style={{ textAlign: "right" }}>
-                  <ul className="right">
+                  <ul className="right d-flex flex-nowrap justify-content-end">
                     <li>
                       <NavLink
                         to="/work/tasks"

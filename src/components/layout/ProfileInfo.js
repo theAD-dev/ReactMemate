@@ -7,7 +7,7 @@ const ProfileInfo = ({ username, userType, aliasName, photo }) => {
   return (
     <>
       <div className="avatar-wrap flexEndbox colMinWidth">
-        <ul>
+        <ul className="d-flex flex-nowrap">
           <li>
             <PlusLg color="#667085" size={20} />
           </li>
@@ -20,7 +20,7 @@ const ProfileInfo = ({ username, userType, aliasName, photo }) => {
         </ul>
         <div className="mr">
           <Link className="avatar-info d-flex align-items-center gap-3" to="/settings/generalinformation">
-            <div>
+            <div style={{ whiteSpace: 'nowrap' }}>
               {username ? username : (
                 <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
                   <Placeholder bg="secondary" size='md' style={{ width: '120px' }} />

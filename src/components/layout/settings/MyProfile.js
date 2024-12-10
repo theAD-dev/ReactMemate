@@ -16,6 +16,7 @@ import {
 } from "react-bootstrap-icons";
 import AvatarImg from "../../../assets/images/img/Avatar.png";
 import FileUploader from "../../../ui/file-uploader/file-uploader";
+import { Spinner } from "react-bootstrap";
 
 const schema = yup.object().shape({
   first_name: yup.string().required("First Name is required"),
@@ -66,8 +67,11 @@ function MyProfile() {
     mutation.mutate({ ...data });
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching data</div>;
+  if (isLoading || error) return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+    <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  </div>;
 
   const handleEditGroup = () => {
     setIsEditingGroup(true);

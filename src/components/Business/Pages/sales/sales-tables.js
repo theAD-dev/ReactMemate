@@ -40,7 +40,9 @@ const CustomAvatarGroup = ({ params }) => {
     <div>
       <AvatarGroup onClick={handleAvatarGroupClick} style={{ cursor: "pointer" }}>
         {params?.value?.slice(0, 3).map((data, index) => (
-          <Avatar key={index} image={data?.photo} size="small" shape="circle" />
+          data?.has_photo
+          ? <Avatar key={index} image={data?.photo} size="small" shape="circle" />
+          : <Avatar key={index} label={data?.alias_name} style={{ fontSize: '12px' }} size="small" shape="circle" />
         ))}
         {params?.value?.length > 3 && (
           <Avatar

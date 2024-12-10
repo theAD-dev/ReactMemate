@@ -12,6 +12,7 @@ import { PencilSquare, Telephone, Building, Link45deg, Upload } from "react-boot
 import AvatarImg from "../../../../assets/images/img/Avatar.png";
 import FileUploader from '../../../../ui/file-uploader/file-uploader';
 import { toast } from 'sonner';
+import { Spinner } from 'react-bootstrap';
 
 const schema = yup.object().shape({
   legal_name: yup.string().required('Company Legal Name is required'),
@@ -61,8 +62,11 @@ function GeneralInformation() {
     mutation.mutate({ ...data });
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching data</div>;
+  if (isLoading || error) return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+    <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  </div>;
 
 
   const handleEditGroup = () => {
