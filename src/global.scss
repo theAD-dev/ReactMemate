@@ -1,5 +1,13 @@
 @use "three-dots";
 
+body {
+  overflow-x: auto;
+}
+
+#root {
+  min-width: 1200px;
+}
+
 .w-fit {
   width: fit-content;
 }

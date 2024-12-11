@@ -1,6 +1,6 @@
 const { app, BrowserWindow, screen } = require('electron/main')
 
-function createWindow () {
+function createWindow() {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
 
@@ -8,11 +8,26 @@ function createWindow () {
     width: width,
     height: height,
     webPreferences: {
-      enableRemoteModule: true
+      contextIsolation: true, // Improves security
+      enableRemoteModule: false, // Remote module is deprecated
+      nodeIntegration: false, // Prevent Node.js access in the renderer
     }
   })
 
-  win.loadURL('http://localhost:3000')
+  win.loadURL('https://dev.memate.com.au/');
+
+  win.webContents.openDevTools();
+
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.insertCSS(`
+      body {
+        overflow-x: auto !important;
+      }
+      #root {
+        min-width: 1200px !important;
+      }
+    `);
+  });
 }
 
 app.whenReady().then(() => {
