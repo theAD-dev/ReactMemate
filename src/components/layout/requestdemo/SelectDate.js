@@ -8,6 +8,7 @@ import LoinLogo from "../../../assets/images/logo.svg";
 import request04 from "../../../assets/images/img/request04.jpg";
 import { useLocation } from 'react-router-dom';
 import { requestDemoCreate } from "../../../APIs/OnboardingApi";
+import { InlineWidget } from "react-calendly";
 
 
 const SelectDate = () => {
@@ -53,7 +54,7 @@ const SelectDate = () => {
 
   return (
     <>
-      <div className='requestDemoWrap'>
+      <div className='requestDemoWrap request-calendly-date'>
         <div className="logohead">
           <img src={LoinLogo} alt="Loin Logo" />
         </div>
@@ -75,9 +76,16 @@ const SelectDate = () => {
                   </div>
                   <div className="formgroup ">
                   
-                    
+                   
                   </div>
-                  <img className="" src={datecal} alt="datecal" />
+      
+                 
+                  <InlineWidget 
+        url="https://calendly.com/memate/memate-demo" 
+        styles={{ height: '700px' }} 
+      />
+
+                 {/* <img className="" src={datecal} alt="datecal" /> */}
                   <button
                     type='button'
                     className="fillbtn flexcenterbox"
