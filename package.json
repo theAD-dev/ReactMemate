@@ -29,6 +29,8 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "column-resizer": "^1.4.0",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
     "date-fns": "^2.25.0",
     "dayjs": "^1.11.10",
     "draft-js": "^0.11.7",
@@ -78,14 +80,20 @@
     "styled-components": "^6.1.2",
     "three-dots": "^0.3.2",
     "use-debounce": "^10.0.2",
+    "wait-on": "^8.0.1",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
   },
+  "main": "public/main.js",
+  "homepage": "./",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "electron:serve": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm run electron:start\"",
+    "electron:build": "npm run build && electron-builder -c.extraMetadata.main=build/main.js",
+    "electron:start": "wait-on tcp:3000 && electron .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
@@ -109,6 +117,8 @@
   },
   "devDependencies": {
     "@types/react-swipeable-views": "^0.13.5",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
     "globals": "^15.9.0",
     "loader-utils": "3.2.1",
     "react-router-dom": "^6.22.1",
