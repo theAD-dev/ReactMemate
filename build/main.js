@@ -16,7 +16,7 @@ function createWindow() {
 
   win.loadURL('https://dev.memate.com.au/');
 
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 
   win.webContents.on('did-finish-load', () => {
     win.webContents.insertCSS(`
