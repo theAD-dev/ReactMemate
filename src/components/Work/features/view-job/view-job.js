@@ -23,7 +23,12 @@ import { getJob } from '../../../../APIs/jobs-api';
 import { toast } from 'sonner';
 
 const ViewJob = ({ visible, setVisible, jobId }) => {
-    const selectedUserInfo = {};
+    let paymentCycleObj = {
+        "7": "WEEK",
+        "14": "TWO_WEEKS",
+        "28": "FOUR_WEEKS",
+        "1": "MONTH"
+    }
     const jobQuery = useQuery({
         queryKey: ["jobRead", jobId],
         queryFn: () => getJob(jobId),
@@ -52,8 +57,8 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
                         <div className={clsx('d-flex justify-content-between align-items-center mb-3')}>
                             <h1 className={style.heading}>Job Details</h1>
                             <div className='d-flex align-items-center gap-2'>
-                                <div className={clsx(style.newJobTag, 'mb-0')}>New Job</div>
-                                <span>Job ID: {jobId}</span>
+                                <div className={clsx(style.newJobTag, 'mb-0 font-14')}>New Job</div>
+                                <span className='font-14'>Job ID: {jobId}</span>
                             </div>
                         </div>
                         <Card className={clsx(style.border, 'mb-3')}>
@@ -64,7 +69,7 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
                                 </div>
                                 <div className='form-group mb-3'>
                                     <label className={clsx(style.customLabel)}>Job Description</label>
-                                    <p className={clsx(style.text)}>{job?.long_description || "-"}</p>
+                                    <p className={clsx(style.text, style.description)}>{job?.long_description || "-"}</p>
                                 </div>
                             </Card.Header>
                         </Card>
@@ -74,22 +79,133 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
                             <Card.Header className={clsx(style.background, 'border-0 py-4')}>
                                 <Row className={clsx(style.chooseUserBox, 'flex-nowrap', 'w-75')}>
                                     <Col sm={2} className='p-0'>
-                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
-                                            {selectedUserInfo?.image && <img src={selectedUserInfo?.image} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />}
+                                        <div className='d-flex justify-content-center align-items-center border' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
+                                            {job?.worker?.has_photo ? <img src={job?.worker?.photo} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />
+                                                : <span className='font-16'>{job?.worker?.alias}</span>
+                                            }
                                         </div>
                                     </Col>
                                     <Col sm={5} className='pe-0 ps-0'>
-                                        <label className={clsx(style.customLabel, 'text-nowrap')}>{selectedUserInfo?.name || "-"}</label>
+                                        <label className={clsx(style.customLabel, 'text-nowrap')}>{job?.worker?.full_name || "-"}</label>
                                         <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center' }}>Employee</div>
                                     </Col>
                                     <Col sm={5} className=''>
                                         <div className='d-flex align-items-center gap-2 mb-3'>
                                             <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
-                                            <span>{selectedUserInfo?.hourlyRate || "-"} AUD</span>
+                                            <span>{job?.worker?.hourly_rate || "-"} AUD</span>
                                         </div>
                                         <div className='d-flex align-items-center gap-2'>
                                             <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
-                                            <span>{selectedUserInfo?.paymentCycle || "-"}</span>
+                                            <span>{paymentCycleObj[job?.worker?.payment_cycle] || "-"}</span>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card.Header>
+                        </Card>
+
+                        <h1 className={clsx(style.heading, 'mb-3')}>Time / Money</h1>
+                        <Card className={clsx(style.border, 'mb-3')}>
+                            <Card.Header className={clsx(style.background, 'border-0 d-flex gap-3')}>
+                                <div className={style.paymentType}>
+                                    <label className={clsx(style.customLabel)}>Payment Type</label>
+                                    {
+                                        job?.type === "2" &&
+                                        <div className={`flex align-items-center ${style.RadioButton}`}>
+                                            <input
+                                                type="radio"
+                                                id="fix"
+                                                value="2"
+                                                checked
+                                                className={style.customRadio}
+                                            />
+                                            <label htmlFor="fix" className={clsx(style.radioLabel, style.fix)}>Fix</label>
+                                        </div>
+                                    }
+                                    {
+                                        job?.type === "3" &&
+                                        <div className={`flex align-items-center ${style.RadioButton}`}>
+                                            <input
+                                                type="radio"
+                                                id="fix"
+                                                value="3"
+                                                checked
+                                                className={style.customRadio}
+                                            />
+                                            <label htmlFor="hours" className={clsx(style.radioLabel, style.hours)}>Hours</label>
+                                        </div>
+                                    }
+                                    {
+                                        job?.type === "4" &&
+                                        <div className={`flex align-items-center ${style.RadioButton}`}>
+                                            <input
+                                                type="radio"
+                                                id="fix"
+                                                value="4"
+                                                checked
+                                                className={style.customRadio}
+                                            />
+                                            <label htmlFor="timetracker" className={clsx(style.radioLabel, style.timetracker)}>Time Tracker</label>
+                                        </div>
+                                    }
+                                </div>
+                                <div className={style.paymentType}>
+                                    <label className={clsx(style.customLabel)}>Time</label>
+                                    {
+                                        job?.time_type === "1" &&
+                                        <div className={`flex align-items-center ${style.RadioButton}`}>
+                                            <input
+                                                type="radio"
+                                                id="shift"
+                                                value="1"
+                                                checked
+                                                className={style.customRadio}
+                                            />
+                                            <label htmlFor="shift" className={clsx(style.radioLabel, style.shift)}>Shift</label>
+                                        </div>
+                                    }
+                                    {
+                                        job?.time_type === "T" &&
+                                        <div className={`flex align-items-center ${style.RadioButton}`}>
+                                            <input
+                                                type="radio"
+                                                id="shift"
+                                                value="T"
+                                                checked
+                                                className={style.customRadio}
+                                            />
+                                            <label htmlFor="timeframe" className={clsx(style.radioLabel, style.timeFrame)}>Time Frame</label>
+                                        </div>
+                                    }
+                                </div>
+                            </Card.Header>
+                        </Card>
+
+                        <h1 className={clsx(style.heading, 'mb-3')}>Link to Project</h1>
+                        <Card className={clsx(style.border, 'mb-3')}>
+                            <Card.Header className={clsx(style.background, 'border-0')}>
+                                <div className='form-group mb-3'>
+                                    <label className={clsx(style.customLabel)}>Project</label>
+                                    <p className={clsx(style.text)}>{job?.project?.number || "-"}</p>
+                                </div>
+                                <div className='form-group mb-3'>
+                                    <label className={clsx(style.customLabel)}>Reference</label>
+                                    <p className={clsx(style.text, style.description)}>{job?.project?.reference || "-"}</p>
+                                </div>
+                                <div className='form-group mb-3'>
+                                    <label className={clsx(style.customLabel)}>Description</label>
+                                    <p className={clsx(style.text, style.description)}>{job?.project?.description || "-"}</p>
+                                </div>
+                                <Row>
+                                    <Col>
+                                        <div className='form-group mb-3'>
+                                            <label className={clsx(style.customLabel)}>Unit</label>
+                                            <p className={clsx(style.text, style.description)}>{paymentCycleObj[job?.worker?.payment_cycle] || "-"}</p>
+                                        </div>
+                                    </Col>
+                                    <Col>
+                                        <div className='form-group mb-3'>
+                                            <label className={clsx(style.customLabel)}>P/H</label>
+                                            <p className={clsx(style.text, style.description)}>{job?.worker?.hourly_rate || "-"}$ AUD</p>
                                         </div>
                                     </Col>
                                 </Row>
