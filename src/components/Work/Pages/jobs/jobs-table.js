@@ -12,7 +12,7 @@ import { Spinner } from 'react-bootstrap';
 import { getListOfJobs } from '../../../../APIs/jobs-api';
 import ViewJob from '../../features/view-job/view-job';
 
-const formatDate = (timestamp) => {
+export const formatDate = (timestamp) => {
   const date = new Date(timestamp * 1000);
   const day = date.getDate();
   const monthAbbreviation = new Intl.DateTimeFormat("en-US", {

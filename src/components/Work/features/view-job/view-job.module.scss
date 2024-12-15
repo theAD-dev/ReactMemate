@@ -198,3 +198,171 @@
     justify-content: center;
   }
 }
+
+.paymentBox {
+  display: flex;
+  padding: 8px 16px;
+  align-items: center;
+  gap: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: #fff;
+}
+
+.dollarBox {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  padding: 6px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 50px;
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.jobGalleri img {
+  border-radius: 8px;
+}
+
+.viewBox {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 6px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 28px;
+  border: 8px solid var(--Success-50, #ecfdf3);
+  background: var(--Success-100, #dcfae6);
+}
+
+.viewHeading {
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.defaultStatus {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #344054;
+  border-radius: 16px;
+  border: 1px solid #eaecf0;
+  background: #f9fafb;
+}
+
+.status {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.open {
+  color: #065b76;
+  border: 1px solid #a9d6ef;
+  background: #ecf7fd;
+}
+
+.Accepted {
+  color: #067611;
+  border: 1px solid #c4efa9;
+  background: #f2fdec;
+}
+
+.CONFIRMED {
+  color: #067647;
+  border: 1px solid #a9efc5;
+  background: #ecfdf3;
+}
+
+.ASSIGN {
+  color: #520676;
+  border: 1px solid #dda9ef;
+  background: #f6ecfd;
+}
+
+.NotConfirmed {
+  color: #b42318;
+  border: 1px solid #fecdca;
+  background: #fef3f2;
+}
+
+.COMPLETED {
+  color: #067647;
+  border: 1px solid #a9efc5;
+  background: #ecfdf3;
+}
+
+.DECLINED {
+  color: #b42318;
+  border: 1px solid #fecdca;
+  background: #fef3f2;
+}
+
+.MANAGER_DECLINED {
+  color: #b54708;
+  border: 1px solid #fedf89;
+  background: #fffaeb;
+}
+
+.finished {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #6941c6;
+  border-radius: 16px;
+  border: 1px solid #e9d7fe;
+  background: #f9fafb;
+}
+
+.assign {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--Error-700, #b42318);
+  border-radius: 16px;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
+}
+
+.modal {
+  width: 800px;
+  border-radius: var(--radius-xs, 4px);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+.modalHeader {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--Gray-700, #344054);
+}
+
+.attachmentBox {
+  width: 246px;
+  height: 48px;
+  display: flex;
+  padding: 13px 12px;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  justify-content: space-between;
+  border-radius: 6px;
+  background: var(--Gray-100, #f2f4f7);
+}
