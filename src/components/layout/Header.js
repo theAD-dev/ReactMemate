@@ -91,6 +91,8 @@ import TaskPage from "../Work/Pages/tasks";
 import NotFoundTemplate from "../../ui/404-template/not-found-template";
 import InvoicePage from "../Business/Pages/invoices";
 import CreateJobTemplate from "./settings/templates/create-job-template";
+import Executive from "../Business/Pages/statistics/executive";
+import SalesConversion from "../Business/Pages/statistics/sales-conversion";
 
 
 
@@ -464,6 +466,8 @@ const Header = ({ onClick }) => {
 
           <Route path="/statistics" element={<StatisticsPage />} />
           <Route path="/statistics/key-results" element={<KeyResultsPage />} />
+          <Route path="/statistics/executive" element={<Executive />} />
+          <Route path="/statistics/sales-conversion" element={<SalesConversion />} />
 
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/sales" element={<ClientLayout />}>

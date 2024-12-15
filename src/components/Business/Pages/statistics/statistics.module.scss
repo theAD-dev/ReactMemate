@@ -121,7 +121,7 @@
     font-weight: 600;
     line-height: 22px;
     letter-spacing: 0.175px;
-    background: #fff;
+    background: transparent;
     border: none !important;
     outline: none !important;
     border-radius: 0px !important;
@@ -290,7 +290,7 @@
     width: 462px;
     height: 14px;
     border-radius: var(--radius-xs, 4px);
-    background: #EAECF0;
+    background: #eaecf0;
   }
 
   .ProgressBarInner {
@@ -305,21 +305,21 @@
     height: 100%;
     position: relative;
     border-radius: var(--radius-xs, 4px);
-    background: linear-gradient(90deg, #93ECFF 0.86%, #2CB932 99.03%);
+    background: linear-gradient(90deg, #93ecff 0.86%, #2cb932 99.03%);
   }
 
   .ProgressBarInner3 {
     height: 100%;
     position: relative;
     border-radius: var(--radius-xs, 4px);
-    background: linear-gradient(90deg, #EDE014 0.98%, #2CB932 99.97%);
+    background: linear-gradient(90deg, #ede014 0.98%, #2cb932 99.97%);
   }
 
   .ProgressBarInner4 {
     height: 100%;
     position: relative;
     border-radius: var(--radius-xs, 4px);
-    background: linear-gradient(90deg, #EDE014 0.86%, #F28C7F 99.03%);
+    background: linear-gradient(90deg, #ede014 0.86%, #f28c7f 99.03%);
   }
 
   .ProgressBarInner::after {
@@ -341,5 +341,34 @@
     font-weight: 700;
     padding-bottom: 20px !important;
     line-height: 18px; /* 150% */
+  }
+}
+
+.rightBoxDiv {
+  text-align: left;
+  padding: 28px 24px;
+  gap: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Gray-25, #fcfcfd);
+
+  .title {
+    color: var(--Gray-600, #475467);
+
+    /* Text sm/Medium */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+  }
+
+  .money {
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px; /* 133.333% */
   }
 }

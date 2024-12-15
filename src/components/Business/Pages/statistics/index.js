@@ -10,7 +10,7 @@ const StatisticsPage = () => {
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                <Link className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/executive"} className='d-flex align-items-center px-2'>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
                 </Link>
@@ -37,7 +37,7 @@ const StatisticsPage = () => {
             </div>
             <div style={{ padding: "72px 128px", marginBottom: '20px', overflow: 'auto', height: 'calc(100vh - 175px)' }}>
                 <div className='d-flex justify-content-center' style={{ gap: '24px' }}>
-                    <Link className={style.box}>
+                    <Link to={"/statistics/executive"} className={style.box}>
                         <div className={style.executiveBox}>
                             <PieChart color='#9E77ED' size={40} />
                         </div>
@@ -46,7 +46,7 @@ const StatisticsPage = () => {
                             Provides analytics that display the overall direction of turnover, along with the proportions of operational profit and expenses.
                         </p>
                     </Link>
-                    <Link className={style.box}>
+                    <Link to={"/statistics/sales-conversion"} className={style.box}>
                         <div className={clsx(style.executiveBox, style.executiveBox2)}>
                             <Speedometer2 color='#17B26A' size={40} />
                         </div>
