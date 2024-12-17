@@ -2,7 +2,7 @@ import React from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import style from './statistics.module.scss';
-import { Clipboard, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 

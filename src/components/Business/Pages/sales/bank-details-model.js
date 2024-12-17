@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { PlusCircle,PlusLg,ExclamationOctagon } from "react-bootstrap-icons";
+import { PlusLg, ExclamationOctagon } from "react-bootstrap-icons";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import NewQuoteImg from "../../../../assets/images/img/newQuote.png";

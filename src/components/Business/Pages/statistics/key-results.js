@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import style from './statistics.module.scss';
@@ -6,10 +6,8 @@ import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import { CircularProgressbar } from 'react-circular-progressbar';
 
 const KeyResultsPage = () => {
-    const [date, setDate] = useState(null);
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>

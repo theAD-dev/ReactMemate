@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
 import { Chart } from 'primereact/chart';
-import { Divider } from 'primereact/divider';
+import { Divider } from '@mui/material';
 
 const SalesConversion = () => {
     const [chartData, setChartData] = useState({});
@@ -282,9 +282,177 @@ const SalesConversion = () => {
 
                     </Col>
                 </Row>
+
+                <Card className='border-0 mt-3'>
+                    <Card.Body>
+                        <div className='d-flex justify-content-between align-items-end mb-4'>
+                            <div className='left text-start'>
+                                <h1 style={{ color: '#101828', fontSize: '18px', fontWeight: 600 }}>Lead Source</h1>
+                                <h6 style={{ color: '#475467', fontSize: '14px' }}>Leads are sourced from multiple channels like Instagram, Facebook, LinkedIn, and more, offering insight into the most effective platforms.</h6>
+                            </div>
+                        </div>
+                        <Divider />
+                        <div className='d-flex flex-column w-100'>
+                            <Row>
+                                <Col xs={12}>
+                                    <StackedBarDemo />
+                                </Col>
+                            </Row>
+                        </div>
+                    </Card.Body>
+                </Card>
             </div>
         </>
     )
+}
+
+function StackedBarDemo() {
+    const [chartData, setChartData] = useState({});
+    const [chartOptions, setChartOptions] = useState({});
+
+    useEffect(() => {
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue("--text-color");
+        const textColorSecondary = documentStyle.getPropertyValue("--text-color-secondary");
+        const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
+
+        // Data for each category
+        const data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Google / Website',
+                    backgroundColor: '#75E0A7',
+                    data: [120, 150, 180, 130, 140, 170, 190, 220, 240, 200, 210, 230],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                },
+                {
+                    type: 'bar',
+                    label: 'Email',
+                    backgroundColor: '#EAECF0',
+                    data: [80, 100, 90, 120, 110, 130, 100, 140, 150, 130, 120, 100],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                },
+                {
+                    type: 'bar',
+                    label: 'Instagram',
+                    backgroundColor: '#D57DBF',
+                    data: [70, 60, 80, 90, 100, 110, 120, 100, 80, 90, 60, 70],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                },
+                {
+                    type: 'bar',
+                    label: 'Facebook',
+                    backgroundColor: '#1877F2',
+                    data: [50, 40, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                },
+                {
+                    type: 'bar',
+                    label: 'Previous Customer',
+                    backgroundColor: '#EF8636',
+                    data: [60, 70, 90, 80, 100, 110, 130, 120, 140, 150, 170, 160],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                },
+                {
+                    type: 'bar',
+                    label: 'Recommendation / Word of Mouth',
+                    backgroundColor: '#75E0A7',
+                    data: [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                },
+                {
+                    type: 'bar',
+                    label: 'Offline',
+                    backgroundColor: '#F97066',
+                    data: [30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                },
+                {
+                    type: 'bar',
+                    label: 'Promo Campaign',
+                    backgroundColor: '#FF92E4',
+                    data: [40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150],
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                    borderColor: "#fff"
+                }
+            ]
+        };
+
+        const options = {
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            layout: {
+                padding: {
+                    bottom: 20,
+                    left: 10
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'right',
+                    align: 'start',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        color: textColor,
+                        boxHeight: 4,
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder
+                    }
+                },
+                y: {
+                    stacked: true,
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder
+                    }
+                }
+            }
+        };
+
+        setChartData(data);
+        setChartOptions(options);
+    }, []);
+
+    return (
+        <Chart type="bar" data={chartData} options={chartOptions} />
+    );
 }
 
 export default SalesConversion
