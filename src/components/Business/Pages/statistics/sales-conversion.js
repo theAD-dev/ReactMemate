@@ -291,8 +291,8 @@ const SalesConversion = () => {
                                 <h6 style={{ color: '#475467', fontSize: '14px' }}>Leads are sourced from multiple channels like Instagram, Facebook, LinkedIn, and more, offering insight into the most effective platforms.</h6>
                             </div>
                         </div>
-                        <Divider />
-                        <div className='d-flex flex-column w-100'>
+                        <Divider className='mt-0'/>
+                        <div className='d-flex flex-column w-100 mt-3'>
                             <Row>
                                 <Col xs={12}>
                                     <StackedBarDemo />
