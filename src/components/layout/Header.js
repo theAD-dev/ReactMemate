@@ -93,6 +93,7 @@ import InvoicePage from "../Business/Pages/invoices";
 import CreateJobTemplate from "./settings/templates/create-job-template";
 import Executive from "../Business/Pages/statistics/executive";
 import SalesConversion from "../Business/Pages/statistics/sales-conversion";
+import Overview from "../Business/Pages/statistics/overview";
 
 
 
@@ -468,6 +469,7 @@ const Header = ({ onClick }) => {
           <Route path="/statistics/key-results" element={<KeyResultsPage />} />
           <Route path="/statistics/executive" element={<Executive />} />
           <Route path="/statistics/sales-conversion" element={<SalesConversion />} />
+          <Route path="/statistics/overview" element={<Overview />} />
 
           <Route path="/sales" element={<Sales profileData={profileData} />} />
           <Route path="/sales" element={<ClientLayout />}>

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
 import { Chart } from 'primereact/chart';
 
-const Executive = () => {
+const Overview = () => {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
 
@@ -162,7 +162,7 @@ const Executive = () => {
     return (
         <>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                <Link to={"/statistics/executive"} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
+                <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
                 </Link>
@@ -170,7 +170,7 @@ const Executive = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                <Link to={"/statistics/overview"} className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/overview"} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
@@ -188,101 +188,10 @@ const Executive = () => {
                 </Link>
             </div>
             <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: 'calc(100vh - 175px)', background: '#F8F9FC' }}>
-                <h2 className={clsx(style.keyResultsTitle)}>Executive</h2>
-                <Button className={clsx(style.button, "outline-button mx-auto")}>
-                    <CalendarIcon color='#475467' size={16} />
-                    2024
-                </Button>
-
-                <div className='d-flex justify-content-center gap-0' style={{ marginTop: '16px', borderBottom: "1px solid var(--Gray-200, #EAECF0)", background: '#F8F9FC' }}>
-                    <Button className={clsx(style.monthName)}>Jan</Button>
-                    <Button className={clsx(style.monthName)}>Feb</Button>
-                    <Button className={clsx(style.monthName)}>Mar</Button>
-                    <Button className={clsx(style.monthName, style.activeButton)}>Apr</Button>
-                    <Button className={clsx(style.monthName)}>May</Button>
-                    <Button className={clsx(style.monthName)}>Jun</Button>
-                    <Button className={clsx(style.monthName)}>Jul</Button>
-                    <Button className={clsx(style.monthName)}>Aug</Button>
-                    <Button className={clsx(style.monthName)}>Sep</Button>
-                    <Button disabled className={clsx(style.monthName)}>Oct</Button>
-                    <Button disabled className={clsx(style.monthName)}>Nov</Button>
-                    <Button disabled className={clsx(style.monthName)}>Dec</Button>
-                </div>
-
-                <Row>
-                    <Col xs={8}>
-                        <Card className='mt-3 border-0'>
-                            <CardBody className='ps-3 pe-1'>
-                                <Chart type="line" data={chartData} options={chartOptions} />
-                            </CardBody>
-                        </Card>
-                    </Col>
-                    <Col xs={4} className='pt-3'>
-                        <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#FCFCFD' }}>
-                            <div className='d-flex gap-1 align-items-center mb-2'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                                    <circle cx="4" cy="4" r="4" fill="#475467" />
-                                </svg>
-                                <span className={style.title}>Total Income</span>
-                            </div>
-                            <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$10,206.20</span>
-                                <Button className='text-button p-0'>View  Invioces</Button>
-                            </div>
-                        </div>
-                        <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#F6FEF9' }}>
-                            <div className='d-flex gap-1 align-items-center mb-2'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                                    <circle cx="4" cy="4" r="4" fill="#17B26A" />
-                                </svg>
-                                <span className={style.title}>Operational Profit</span>
-                            </div>
-                            <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$3,256.21</span>
-                            </div>
-                        </div>
-                        <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#FFFBFA' }}>
-                            <div className='d-flex gap-1 align-items-center mb-2'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                                    <circle cx="4" cy="4" r="4" fill="#F04438" />
-                                </svg>
-                                <span className={style.title}>Cost of Sale</span>
-                            </div>
-                            <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$ 5,594.31</span>
-                                <Button className='text-button p-0'>View Sales</Button>
-                            </div>
-                        </div>
-                        <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#FFFCF5' }}>
-                            <div className='d-flex gap-1 align-items-center mb-2'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                                    <circle cx="4" cy="4" r="4" fill="#F79009" />
-                                </svg>
-                                <span className={style.title}>Labor</span>
-                            </div>
-                            <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$ 1,754.46</span>
-                                <Button className='text-button p-0'>View People</Button>
-                            </div>
-                        </div>
-                        <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#F2FAFF' }}>
-                            <div className='d-flex gap-1 align-items-center mb-2'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                                    <circle cx="4" cy="4" r="4" fill="#1AB2FF" />
-                                </svg>
-                                <span className={style.title}>Operating Expense</span>
-                            </div>
-                            <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$ 2,685.62</span>
-                                <Button className='text-button p-0'>View Expenses</Button>
-                            </div>
-                        </div>
-
-                    </Col>
-                </Row>
+                <h2 className={clsx(style.keyResultsTitle)}>Reports Overview</h2>
             </div>
         </>
     )
 }
 
-export default Executive
+export default Overview

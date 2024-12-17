@@ -164,7 +164,7 @@ const SalesConversion = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/overview"} className='d-flex align-items-center px-2'>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>

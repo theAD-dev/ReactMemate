@@ -11,7 +11,7 @@ const KeyResultsPage = () => {
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                <Link  to={"/statistics/executive"} className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/executive"} className='d-flex align-items-center px-2'>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
                 </Link>
@@ -19,7 +19,7 @@ const KeyResultsPage = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/overview"} className='d-flex align-items-center px-2'>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
