@@ -48,7 +48,8 @@ const CustomAvatarGroup = ({ params }) => {
           <Avatar
             label={`+${params.value.length - 3}`}
             shape="circle"
-            size="large"
+            size="small"
+            style={{ fontSize: '14px' }}
           />
         )}
       </AvatarGroup>

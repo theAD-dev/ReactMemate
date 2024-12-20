@@ -4,8 +4,43 @@ import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
+import { Chart as ChartJS, registerables } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import { Chart } from 'primereact/chart';
 import { Divider } from '@mui/material';
+
+const verticalLinePlugin = {
+    id: 'verticalLine',
+    afterDraw: (chart) => {
+        const tooltip = chart.tooltip;
+        const ctx = chart.ctx;
+        const chartArea = chart.chartArea;
+
+        // Only proceed if the tooltip is active and has data
+        if (tooltip._active && tooltip._active.length > 0) {
+            const activePoint = tooltip._active[0];
+            const xPos = activePoint.element.x;
+
+            // Save the current canvas state to avoid conflicts
+            ctx.save();
+            
+            // Set the line style properties
+            ctx.lineWidth = 2; // Single line with width of 2
+            ctx.strokeStyle = '#1AB2FF'; // Blue color
+
+            // Draw the vertical line at the xPos of the active point
+            ctx.beginPath();
+            ctx.moveTo(xPos, chartArea.top);
+            ctx.lineTo(xPos, chartArea.bottom);
+            ctx.stroke();
+
+            // Restore the canvas state to avoid drawing multiple lines
+            ctx.restore();
+        }
+    }
+};
+
+ChartJS.register(...registerables, annotationPlugin, verticalLinePlugin);
 
 const SalesConversion = () => {
     const [chartData, setChartData] = useState({});
@@ -127,6 +162,39 @@ const SalesConversion = () => {
                     },
                     color: '#475467',
                     padding: 0
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: '#fff',  // Tooltip background color
+                    titleColor: '#667085',
+                    bodyColor: '#667085',
+                    borderColor: '#fff',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const datasetIndex = tooltipItem.datasetIndex;
+                            const datasetLabel = tooltipItem.dataset.label;
+                            const value = tooltipItem.raw;
+                            return `${datasetLabel}: $${value}`;  // Display dataset label and value
+                        },
+                        footer: function(tooltipItems) {
+                            return `Hover over the chart to see values`; // Optional footer
+                        },
+                    },
+                },
+                interaction: {
+                    mode: 'index',  // To show tooltip for all datasets at the hover point
+                    intersect: false,  // Tooltip will display even if the cursor isn't over a data point
+                },
+                elements: {
+                    line: {
+                        borderWidth: 2,  // Set line thickness
+                    },
+                    point: {
+                        radius: 4,  // Set point radius
+                    },
                 }
             },
             scales: {

@@ -10,6 +10,7 @@ import {
   GeoAlt,
 } from "react-bootstrap-icons";
 import SubscriptionModal from "../SubscriptionModal";
+import { Divider } from "@mui/material";
 
 const Subscription = () => {
   const [activeTab, setActiveTab] = useState("subscription");
@@ -40,13 +41,13 @@ const Subscription = () => {
                 </ul>
               </div>
             </div>
-            <div className={`content_wrap_main`}>
+            <div className={`content_wrap_main pt-4`}>
               <div className="content_wrapper">
-              <div className= {`listwrapper ${styles.listsubscription}`}>
+                <div className={`listwrapper ${styles.listsubscription}`}>
                   <div className="topHeadStyle">
-                    <div className="">
+                    <div className="border-bottom mb-4">
                       <h2>Subscription</h2>
-                      <p>
+                      <p className="font-14">
                         Here, you can manage your subscription, adding or
                         removing users and features as needed.
                       </p>
@@ -58,17 +59,16 @@ const Subscription = () => {
                       <div className="progressSubsstart actibeSubscription">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                          <img src={ThemeImages.buildingCheck} alt="buildingCheck"/>
-                         
+                            <img src={ThemeImages.buildingCheck} alt="buildingCheck" />
                           </div>
                           <div className="progressSubsIn">
-                            <h4>Business Subscription </h4>
+                            <div className="d-flex justify-content-between mb-1">
+                              <h4>Business Subscription </h4>
+                              <div className="subscriptionPrice active">$14</div>
+                            </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
-                                <div
-                                  className="progress-bar bg-businessBar"
-                                  style={{ width: "100%" }}
-                                ></div>
+                                <div className="progress-bar bg-businessBar" style={{ width: "100%" }}></div>
                               </div>
                               <span className={styles.textGradient}>ON</span>
                             </div>
@@ -79,11 +79,13 @@ const Subscription = () => {
                       <div className="progressSubsstart marginTopSpance ">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                          <img src={ThemeImages.buildingssubs} alt="buildingssubs"/>
-                        
+                            <img src={ThemeImages.buildingssubs} alt="buildingssubs" />
                           </div>
                           <div className="progressSubsIn">
-                            <h4>Company Users </h4>
+                            <div className="d-flex justify-content-between mb-1">
+                              <h4>Company Users</h4>
+                              <div className="subscriptionPrice active">$23</div>
+                            </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
@@ -94,24 +96,27 @@ const Subscription = () => {
                               <span>1/2</span>
                             </div>
                             <div className="progressButton">
-                              <button className="paynow">
-                                Purchase Company Users
-                              </button>
-                              <button className="close">Remove Users</button>
+                              <button className="paynow">Add or Remove Users</button>
                             </div>
                           </div>
                         </div>
                       </div>
                     </li>
+
+                    <p className="border-bottom py-2 mb-4 font-16">Add-ons</p>
+
                     <li>
                       <div className="progressSubsstart ">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                          <img src={ThemeImages.hddNetwork} alt="hddNetwork"/>
-                          
+                            <img src={ThemeImages.hddNetwork} alt="hddNetwork" />
                           </div>
                           <div className="progressSubsIn">
-                            <h4>Work Subscription</h4>
+                            <div className="d-flex justify-content-between mb-1">
+                              <h4>Work Subscription</h4>
+                              <div className="subscriptionPrice">$0</div>
+                            </div>
+
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
@@ -130,15 +135,21 @@ const Subscription = () => {
                         </div>
                       </div>
                     </li>
+
+                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
                     <li>
                       <div className="progressSubsstart ">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                          <img src={ThemeImages.appIndicator} alt="appIndicator"/>
-                          
+                            <img src={ThemeImages.appIndicator} alt="appIndicator" />
                           </div>
                           <div className="progressSubsIn">
-                            <h4>Mobile App Users</h4>
+                            <div className="d-flex justify-content-between mb-1">
+                              <h4>Mobile App Users</h4>
+                              <div className="subscriptionPrice">$0</div>
+                            </div>
+
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
@@ -150,21 +161,28 @@ const Subscription = () => {
                             </div>
                             <div className="progressButton">
                               <button className="paynow">
-                                Purchase Mobile App Users
+                                Add or Remove Users
                               </button>
                             </div>
                           </div>
                         </div>
                       </div>
                     </li>
+
+                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
                     <li>
-                      <div className="progressSubsstart ">
+                      <div className="progressSubsstart mb-4">
                         <div className="progressSubsWrap">
                           <div className="progressSubsIcon">
-                          <img src={ThemeImages.geoAlt} alt="geoAlt"/>
+                            <img src={ThemeImages.geoAlt} alt="geoAlt" />
                           </div>
                           <div className="progressSubsIn">
-                            <h4>Locations</h4>
+                            <div className="d-flex justify-content-between mb-1">
+                              <h4>Locations</h4>
+                              <div className="subscriptionPrice active">$56</div>
+                            </div>
+
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
@@ -175,15 +193,14 @@ const Subscription = () => {
                               <span>1/1</span>
                             </div>
                             <div className="progressButton">
-                              <SubscriptionModal />
-                              <button className="close">
-                                Remove Locations
-                              </button>
+                              <button className="paynow">Purchase Locations</button>
+                              <button className="close">Remove Locations</button>
                             </div>
                           </div>
                         </div>
                       </div>
                     </li>
+
                     <button className="closeSubscription">
                       Cancel Subscription
                     </button>
@@ -191,28 +208,33 @@ const Subscription = () => {
                 </div>
                 <div className="rightText">
                   <div className="editwrapper">
+                    <div className="repaymentStatusBox w-100 mb-4">
+                      <p className="repaymentStatusBox-text-1">Current  repayments</p>
+                      <p className="repaymentStatusBox-text-2">$3,454</p>
+                      <p className="repaymentStatusBox-text-3">/month</p>
+                    </div>
                     <p>
                       <strong>Business Subscription</strong> allows you to use
                       the following features: Sales, Project Management,
                       Invoices, Expense Statistics, Order Management, as well as
                       managing Clients and Suppliers
                     </p>
-                    <br></br>{" "}
-                    <p>
+                    <Divider className="mb-2"/>
+                    <p className="mb-5">
                       <strong>Company Users</strong> can operate the desktop
                       account for the company and can be assigned different
                       roles, such as Admin, General Manager, Manager, Sales
                       Manager, or Accounts.
                     </p>
-                    <br></br>{" "}
-                    <p>
+                 
+                    <p className="pt-5">
                       <strong>Work Subscription</strong> enables you to utilise
                       the application to assign jobs to contractors, employees,
                       or shift workers. You can manage jobs assigned to your app
                       users, track time through the application, and allow users
                       to participate in projects remotely.
                     </p>
-                    <br></br>{" "}
+                    <br></br><br/>{" "}
                     <p>
                       <strong>Mobile users:</strong> Mobile application users
                       can communicate with independent contractors and shift
@@ -220,7 +242,7 @@ const Subscription = () => {
                       for individuals who do not require access to the Company
                       Management Desktop system.
                     </p>
-                    <br></br>{" "}
+                    <br></br><br/>{" "}
                     <p>
                       <strong>Locations:</strong> Additional features for
                       Companies with multiple branches/Locations. It allows you

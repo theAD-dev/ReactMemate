@@ -18,25 +18,9 @@ import {
   ListUl,
   Headset,
 } from "react-bootstrap-icons";
-import { fetchProfile } from "../../../APIs/ProfileApi";
 import LogoutButton from "../Login/logout-button";
 const Sidebar = ({ activeTab, setActiveTab }) => {
-  const [profileData, setProfileData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchProfile();
-        setProfileData(data);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-
+  const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   return (
     <>
       <div className="settings-menu">

@@ -10,7 +10,6 @@ import homeboxImg02 from "../assets/images/img/homeboxImg02.png";
 import homeboxImg03 from "../assets/images/img/homeboxImg03.png";
 import homeboxImg04 from "../assets/images/img/homeboxImg04.png";
 import { fetchHomePage } from "../APIs/HomeApi";
-import { fetchProfile } from "../APIs/ProfileApi";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Link } from 'react-router-dom';
@@ -22,7 +21,7 @@ import AccountingContact from './layout/modals/accounting-contact';
 
 const Home = () => {
     const [selectedOption, setSelectedOption] = useState('');
-    const [profileData, setProfileData] = useState(null);
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [homeData, setHomeData] = useState({
         expense: {},
         invoices_due: {},
@@ -40,26 +39,6 @@ const Home = () => {
                 console.error('Error fetching data:', error);
             }
         };
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-                const profileData = window.localStorage.getItem('profileData');
-                if (profileData) {
-                    setProfileData(JSON.parse(profileData));
-                } else {
-                    const data = await fetchProfile();
-                    const parsedData = data;
-                    setProfileData(parsedData);
-                }
-            } catch (error) {
-                console.error("Error fetching profile:", error);
-            }
-        };
-
         fetchData();
     }, []);
 
