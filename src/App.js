@@ -37,8 +37,9 @@ function App() {
         <Route path="/companyname" element={<CompanyName />} />
         <Route path="/selectdate" element={<SelectDate />} />
         <Route path="/allset" element={<AllSet />} />
+
         <Route path="/onboarding" element={<Create />} />
-        <Route path="/verify-mail" element={<Verifymail />} />
+        <Route path="/verify-mail/:uuid" element={<Verifymail />} />
         <Route path="/company-name" element={<Companyname />} />
         <Route path="/regional-settings" element={<Regionalsettings />} />
         <Route path="/discover-memate" element={<Discovermemate />} />

@@ -14,15 +14,15 @@ const CompanyName = () => {
   const [company_name, setCompanyname] = useState('');
   const [firstcmError, setFirstcmError] = useState('');
   const handleStepOne = () => {
-      // Validation
-      if (company_name.trim() === '') {
-        setFirstcmError('company name is required');
-        return;
-      } else if (company_name.trim().length !== company_name.length) {
-        setCompanyname('company name cannot be spaces only');
-        return;
-      }
-    navigate("/regional-settings", { state: { company_name, uuid} });
+    // Validation
+    if (company_name.trim() === '') {
+      setFirstcmError('company name is required');
+      return;
+    } else if (company_name.trim().length !== company_name.length) {
+      setCompanyname('company name cannot be spaces only');
+      return;
+    }
+    navigate("/regional-settings", { state: { company_name, uuid } });
   };
   return (
     <>
@@ -36,9 +36,9 @@ const CompanyName = () => {
             <div className="loginPage">
               <div className="boxinfo">
                 <div className="boxLogin">
-                <h2>
-                    Define Your <br></br><span>Business</span> Profile 
-                    </h2>
+                  <h2>
+                    Define Your <br></br><span>Business</span> Profile
+                  </h2>
                   <div className="step-progress">
                     <div className="step " ></div>
                     <div className="step" ></div>
@@ -47,9 +47,9 @@ const CompanyName = () => {
                     <div className="step" ></div>
                   </div>
                   <div className="formgroup">
-                  <label>Company Legal Name</label>
-                  <div className={`inputInfo ${firstcmError ? 'error-border' : ''}`}>
-                    <input
+                    <label>Company Legal Name</label>
+                    <div className={`inputInfo ${firstcmError ? 'error-border' : ''}`}>
+                      <input
                         type="text"
                         name="company_name"
                         value={company_name}
@@ -58,7 +58,7 @@ const CompanyName = () => {
                           setCompanyname(e.target.value);
                         }}
                       />
-                       {firstcmError && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      {firstcmError && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                     </div>
                     {firstcmError && <p className="error-message">{firstcmError}</p>}
                   </div>
@@ -70,7 +70,7 @@ const CompanyName = () => {
                     Next Step
                     <img src={arrowRight} alt="Arrow Right" />
                   </button>
-            
+
                 </div>
               </div>
               <div className="sliderRight SinglBgRight" style={{

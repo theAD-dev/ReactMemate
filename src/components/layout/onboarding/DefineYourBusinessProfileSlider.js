@@ -10,9 +10,9 @@ import login_slider3 from "../../../assets/images/img/emailSlider03.jpg";
 const DefineYourBusinessProfileSlider = () => {
   const fadeImages = [
     {
-        url: login_slider2,
-        caption: "Elevating Australian Enterprises with Innovative Solutions for Unmatched Growth.",
-      },
+      url: login_slider2,
+      caption: "Elevating Australian Enterprises with Innovative Solutions for Unmatched Growth.",
+    },
     {
       url: login_slider1,
       caption: "Empowering Australian Businesses with Cutting-Edge Systems for a Competitive Edge.",
@@ -27,9 +27,9 @@ const DefineYourBusinessProfileSlider = () => {
   const properties = {
     prevArrow: <div>{<ChevronLeft size={20} color="#fff" />}</div>,
     nextArrow: <div>{<ChevronRight size={20} color="#fff" />}</div>,
-    autoplay: true, 
+    autoplay: true,
     infinite: true,
-    indicators: true 
+    indicators: true
   };
 
   return (

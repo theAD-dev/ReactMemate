@@ -11,9 +11,11 @@ import {
 } from "react-bootstrap-icons";
 import SubscriptionModal from "../SubscriptionModal";
 import { Divider } from "@mui/material";
+import AddRemoveCompanyUser from "./features/add-remove-company-user";
 
 const Subscription = () => {
   const [activeTab, setActiveTab] = useState("subscription");
+  const [visible, setVisible] = useState(true);
 
   return (
     <>
@@ -255,6 +257,7 @@ const Subscription = () => {
           </div>
         </div>
       </div>
+      <AddRemoveCompanyUser visible={visible} setVisible={setVisible} />
     </>
   );
 };

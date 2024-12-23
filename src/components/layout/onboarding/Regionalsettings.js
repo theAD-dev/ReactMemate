@@ -12,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 
 const Regionalsettings = () => {
   const location = useLocation();
-  const { company_name ,uuid} = location.state;
+  const { company_name, uuid } = location.state;
   const navigate = useNavigate();
   const [selectedCountry, setSelectedCountry] = useState({ label: 'Australia', value: 'Australia' }); // Default country
   const [selectedTimezone, setSelectedTimezone] = useState(null);
@@ -23,9 +23,9 @@ const Regionalsettings = () => {
   const [counteryData, setCounteryData] = useState({
     "name": company_name,
     "country": countrydata,
-    "timezone": timezondata 
+    "timezone": timezondata
   });
-  
+
 
   console.log('counteryData: ', counteryData);
 
@@ -42,35 +42,35 @@ const Regionalsettings = () => {
         console.error('Error fetching countries:', error);
       }
     };
-  
+
     fetchCountriesAndTimezones();
   }, []);
-  
+
 
   useEffect(() => {
     // Fetch timezones for the default country on component load
     getTimezonesForCountry(selectedCountry.value);
   }, [selectedCountry]); // Run effect whenever selectedCountry changes
-  
+
   const getTimezonesForCountry = async (countryName) => {
     try {
       const response = await axios.get(process.env.PUBLIC_URL + '/timezones.json');
       const country = response.data.find(country => country.name === countryName);
       if (country) {
         const timezonesArray = Object.entries(country.timezones).map(([timezone, value]) => ({
-          label: timezone +" "+value,
-          value: timezone +" "+value
+          label: timezone + " " + value,
+          value: timezone + " " + value
         }));
         const keyArr = Object.keys(country.timezones)
-  
+
         const timeArr = []
-        keyArr.map((item)=>{
-          timeArr.push(item+" "+country.timezones[item])
+        keyArr.map((item) => {
+          timeArr.push(item + " " + country.timezones[item])
         })
-  
-  
+
+
         // const timeArr = country.timezones.
-        if (timezonesArray!=null) {
+        if (timezonesArray != null) {
           setTimezones(timezonesArray);
         } else {
           console.warn('Timezones data is not an array:', country.timezones);
@@ -97,14 +97,14 @@ const Regionalsettings = () => {
     getTimezonesForCountry(selectedOption.value);
   };
 
-// Handle timezone selection
-const handleTimezoneChange = (selectedOption) => {
-  setSelectedTimezone(selectedOption);
-  setCounteryData({
-    ...counteryData,
-    timezone: selectedOption.value,
-  });
-};
+  // Handle timezone selection
+  const handleTimezoneChange = (selectedOption) => {
+    setSelectedTimezone(selectedOption);
+    setCounteryData({
+      ...counteryData,
+      timezone: selectedOption.value,
+    });
+  };
 
   const handleSubmittime = (e) => {
     OnboardingtimeZone(counteryData, uuid)
@@ -143,7 +143,7 @@ const handleTimezoneChange = (selectedOption) => {
                   <div className="formgroup timezoneWrapGroup">
                     <label>Country</label>
                     <div className={`inputInfo`}>
-                    <Select
+                      <Select
                         className='removeBorder'
                         value={selectedCountry}
                         onChange={handleCountryChange}
@@ -155,12 +155,12 @@ const handleTimezoneChange = (selectedOption) => {
                     <label>Timezone</label>
                     <div className={`inputInfo`}>
                       {selectedCountry && (
-                       <Select
-                       className='removeBorder'
-                       value={selectedTimezone}
-                       onChange={handleTimezoneChange}
-                       options={timezones}
-                     />
+                        <Select
+                          className='removeBorder'
+                          value={selectedTimezone}
+                          onChange={handleTimezoneChange}
+                          options={timezones}
+                        />
                       )}
                     </div>
                   </div>
