@@ -40,9 +40,9 @@ function App() {
 
         <Route path="/onboarding" element={<Create />} />
         <Route path="/verify-mail/:uuid" element={<Verifymail />} />
-        <Route path="/company-name" element={<Companyname />} />
-        <Route path="/regional-settings" element={<Regionalsettings />} />
-        <Route path="/discover-memate" element={<Discovermemate />} />
+        <Route path="/company-name/:uuid" element={<Companyname />} />
+        <Route path="/regional-settings/:uuid" element={<Regionalsettings />} />
+        <Route path="/discover-memate/:uuid" element={<Discovermemate />} />
         <Route path="/resend-email" element={<ResendEmail />} />
         <Route path="/demo" element={<Demo />} />
         <Route path="/ui/components" element={<Components />} />

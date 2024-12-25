@@ -1,122 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
-import Select from 'react-select';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import "./org.css";
 import LoinLogo from "../../../assets/images/logo.svg";
 import RegionalSettings from "../../../assets/images/img/emailSlider03.jpg";
-import { OnboardingtimeZone } from "../../../APIs/OnboardingApi";
+import { OnboardingCreateOrganisation } from "../../../APIs/OnboardingApi";
 import { useLocation } from 'react-router-dom';
+import timezones from './timezones.json';
+import { Dropdown } from 'primereact/dropdown';
 
 const Regionalsettings = () => {
-  const location = useLocation();
-  const { company_name, uuid } = location.state;
   const navigate = useNavigate();
-  const [selectedCountry, setSelectedCountry] = useState({ label: 'Australia', value: 'Australia' }); // Default country
-  const [selectedTimezone, setSelectedTimezone] = useState(null);
-  const [countries, setCountries] = useState([]);
-  const [timezones, setTimezones] = useState([]);
-  const countrydata = selectedCountry.label;
-  const timezondata = selectedTimezone ? selectedTimezone.label : '';
-  const [counteryData, setCounteryData] = useState({
-    "name": company_name,
-    "country": countrydata,
-    "timezone": timezondata
-  });
+  const { uuid } = useParams();
+  const email = new URLSearchParams(useLocation().search).get("email");
+  const first_name = new URLSearchParams(useLocation().search).get("first_name");
+  const last_name = new URLSearchParams(useLocation().search).get("last_name");
+  const company_name = new URLSearchParams(useLocation().search).get("company_name");
+  const [timezonesOptions, setTimezonesOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-
-  console.log('counteryData: ', counteryData);
-
-  useEffect(() => {
-    const fetchCountriesAndTimezones = async () => {
-      try {
-        const response = await axios.get(process.env.PUBLIC_URL + '/timezones.json');
-        const countryOptions = response.data.map(country => ({
-          label: country.name,
-          value: country.name,
-        }));
-        setCountries(countryOptions);
-      } catch (error) {
-        console.error('Error fetching countries:', error);
-      }
-    };
-
-    fetchCountriesAndTimezones();
-  }, []);
+  const [country, setCountry] = useState("");
+  const [timezone, setTimezone] = useState("");
 
 
   useEffect(() => {
-    // Fetch timezones for the default country on component load
-    getTimezonesForCountry(selectedCountry.value);
-  }, [selectedCountry]); // Run effect whenever selectedCountry changes
+    if (!company_name) {
+      navigate(`/company-name/${uuid}?email=${email}&first_name=${first_name}&last_name=${last_name}`);
+    }
+  }, [company_name, email, first_name, last_name, uuid]);
 
-  const getTimezonesForCountry = async (countryName) => {
+  useEffect(() => {
+    if (country) {
+      const findData = timezones.find((timezone) => timezone.name === country);
+      setTimezonesOptions(Object.keys(findData?.timezones || {}));
+    }
+  }, [country]);
+
+  const handleNext = async () => {
+    setError("");
+    if (!country || !timezone) {
+      setError("Please select both country and timezone.");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const response = await axios.get(process.env.PUBLIC_URL + '/timezones.json');
-      const country = response.data.find(country => country.name === countryName);
-      if (country) {
-        const timezonesArray = Object.entries(country.timezones).map(([timezone, value]) => ({
-          label: timezone + " " + value,
-          value: timezone + " " + value
-        }));
-        const keyArr = Object.keys(country.timezones)
-
-        const timeArr = []
-        keyArr.map((item) => {
-          timeArr.push(item + " " + country.timezones[item])
-        })
-
-
-        // const timeArr = country.timezones.
-        if (timezonesArray != null) {
-          setTimezones(timezonesArray);
-        } else {
-          console.warn('Timezones data is not an array:', country.timezones);
-          setTimezones(country.timezones);
-        }
-      } else {
-        console.warn('Country not found:', countryName);
-        setTimezones([]);
-      }
+      const data = { name: company_name, country, timezone };
+      const response = await OnboardingCreateOrganisation(uuid, data);
+      navigate(`/discover-memate/${uuid}`);
     } catch (error) {
-      console.error('Error fetching timezones:', error);
-      setTimezones([]); // Reset timezones on error
+      setError(error.message || "Failed to proceed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
-
-  const handleCountryChange = (selectedOption) => {
-
-    // setSelectedTimezone()
-    setSelectedCountry(selectedOption);
-    setCounteryData({
-      ...counteryData,
-      country: selectedOption.value,
-    });
-    getTimezonesForCountry(selectedOption.value);
-  };
-
-  // Handle timezone selection
-  const handleTimezoneChange = (selectedOption) => {
-    setSelectedTimezone(selectedOption);
-    setCounteryData({
-      ...counteryData,
-      timezone: selectedOption.value,
-    });
-  };
-
-  const handleSubmittime = (e) => {
-    OnboardingtimeZone(counteryData, uuid)
-      .then(() => {
-        navigate("/discover-memate", { state: { uuid } });
-      })
-      .catch((error) => {
-        console.error("Error submitting form:", error);
-      });
-  };
-
-
 
   return (
     <>
@@ -135,42 +74,41 @@ const Regionalsettings = () => {
                   </h2>
                   <div className="step-progress">
                     <div className="step"></div>
+                    <div className="step"></div>
+                    <div className="step"></div>
                     <div className="step active"></div>
-                    <div className="step"></div>
-                    <div className="step"></div>
                     <div className="step"></div>
                   </div>
                   <div className="formgroup timezoneWrapGroup">
                     <label>Country</label>
-                    <div className={`inputInfo`}>
-                      <Select
-                        className='removeBorder'
-                        value={selectedCountry}
-                        onChange={handleCountryChange}
-                        options={countries}
-                      />
-                    </div>
+                    <Dropdown
+                      value={country}
+                      options={timezones.map((timezone) => ({ value: timezone.name, label: timezone.name }))}
+                      placeholder="Select country"
+                      className='w-100 rounded'
+                      onChange={(e) => setCountry(e.value)}
+                      filter
+                    />
                   </div>
                   <div className="formgroup removeBorder1">
                     <label>Timezone</label>
-                    <div className={`inputInfo`}>
-                      {selectedCountry && (
-                        <Select
-                          className='removeBorder'
-                          value={selectedTimezone}
-                          onChange={handleTimezoneChange}
-                          options={timezones}
-                        />
-                      )}
-                    </div>
+                    <Dropdown
+                      value={timezone}
+                      options={timezonesOptions.map((option) => ({ value: option, label: option }))}
+                      placeholder="Select timezone"
+                      className='w-100'
+                      onChange={(e) => setTimezone(e.value)}
+                    />
                   </div>
+                  {error && <p className="error-message">{error}</p>}
                   <button
                     type='button'
                     className="fillbtn flexcenterbox"
-                    onClick={handleSubmittime}
+                    onClick={handleNext}
+                    disabled={loading}
                   >
-                    Next Step
-                    <img src={arrowRight} alt="Arrow Right" />
+                    {loading ? "Processing..." : "Next Step"}
+                    {!loading && <img src={arrowRight} alt="Arrow Right" />}
                   </button>
                 </div>
               </div>

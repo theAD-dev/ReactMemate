@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import "./org.css"
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
@@ -8,21 +8,22 @@ import BusinessProfile from "../../../assets/images/img/emailSlider02.png";
 import { useLocation } from 'react-router-dom';
 
 const CompanyName = () => {
-  const location = useLocation();
-  const { uuid } = location.state;
   const navigate = useNavigate();
+  const { uuid } = useParams();
+  const email = new URLSearchParams(useLocation().search).get("email");
+  const first_name = new URLSearchParams(useLocation().search).get("first_name");
+  const last_name = new URLSearchParams(useLocation().search).get("last_name");
+
+  if (!uuid || !email || !first_name || !last_name) navigate('/onboarding');
+
   const [company_name, setCompanyname] = useState('');
   const [firstcmError, setFirstcmError] = useState('');
   const handleStepOne = () => {
-    // Validation
     if (company_name.trim() === '') {
-      setFirstcmError('company name is required');
-      return;
-    } else if (company_name.trim().length !== company_name.length) {
-      setCompanyname('company name cannot be spaces only');
+      setFirstcmError('Company name is required');
       return;
     }
-    navigate("/regional-settings", { state: { company_name, uuid } });
+    navigate(`/regional-settings/${uuid}?email=${email}&first_name=${first_name}&last_name=${last_name}&company_name=${company_name}`)
   };
   return (
     <>
@@ -40,11 +41,11 @@ const CompanyName = () => {
                     Define Your <br></br><span>Business</span> Profile
                   </h2>
                   <div className="step-progress">
-                    <div className="step " ></div>
-                    <div className="step" ></div>
+                    <div className="step"></div>
+                    <div className="step"></div>
                     <div className="step active" ></div>
-                    <div className="step" ></div>
-                    <div className="step" ></div>
+                    <div className="step"></div>
+                    <div className="step"></div>
                   </div>
                   <div className="formgroup">
                     <label>Company Legal Name</label>

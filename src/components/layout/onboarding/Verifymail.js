@@ -5,16 +5,19 @@ import mail01 from "../../../assets/images/icon/mail-01.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 import login_slider1 from "../../../assets/images/img/emailSlider01.png";
 import VerificationInput from 'react-verification-input';
-import { OnboardingCode } from "../../../APIs/OnboardingApi";
+import { OnboardingCode, OnboardingCreateApi } from "../../../APIs/OnboardingApi";
 import { ClockHistory, ArrowLeftShort } from "react-bootstrap-icons";
 import "./org.css";
+import { Button } from 'react-bootstrap';
 
 const Verifymail = () => {
   const navigate = useNavigate();
   const { uuid } = useParams();
   const email = new URLSearchParams(useLocation().search).get("email");
+  const first_name = new URLSearchParams(useLocation().search).get("first_name");
+  const last_name = new URLSearchParams(useLocation().search).get("last_name");
 
-  if (!uuid || !email) navigate('/onboarding');
+  if (!uuid || !email || !first_name || !last_name) navigate('/onboarding');
 
   const [otpCode, setOtpCode] = useState('');
   const [codeError, setCodeError] = useState(null);
@@ -43,13 +46,26 @@ const Verifymail = () => {
       if (typeof response === "string" && response.includes("code")) {
         setCodeError(JSON.parse(response).otpCode);
       } else {
-        navigate("/company-name", { state: { uuid } });
+        navigate(`/company-name/${uuid}?email=${email}&first_name=${first_name}&last_name=${last_name}`)
       }
     } catch (error) {
       console.error("API error:", error);
       setCodeError("An error occurred while verifying the OTP. Please try again later.");
     }
   };
+
+  const resendOTP = async () => {
+    try {
+      const response = await OnboardingCreateApi({ email, first_name, last_name });
+      if (response?.uuid) {
+        setTimer(60);
+        setIsTimerActive(true);
+      }
+    } catch (error) {
+      console.error("API error:", error);
+      setCodeError("An error occurred while verifying the OTP. Please try again later.");
+    }
+  }
 
   return (
     <div className='requestDemoWrap veryfymail'>
@@ -67,7 +83,7 @@ const Verifymail = () => {
                 </div>
                 <h2>Verify your <span>email</span> address</h2>
                 <p className='emailDis'>
-                  You haven't confirmed your email address <strong>{email}</strong> yet. To complete registration, please click on the confirmation link in the email we sent you. Afterwards, you will be able to continue.
+                  You haven't confirmed your email address <strong>{email}</strong> yet. To complete the registration, please enter the verification code we sent to your email. Once verified, you will be able to continue.
                 </p>
                 <VerificationInput
                   length={6}
@@ -94,9 +110,9 @@ const Verifymail = () => {
                 {!isTimerActive && (
                   <div className='linkBottom'>
                     <p>Didn’t receive the email? <Link to="/resend-email">Click to resend</Link></p>
-                    <Link className="backToLogin" to="/login">
+                    <Button onClick={resendOTP}>
                       <ArrowLeftShort color='#475467' size={20} /> Back to log in
-                    </Link>
+                    </Button>
                   </div>
                 )}
               </div>

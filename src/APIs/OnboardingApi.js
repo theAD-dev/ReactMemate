@@ -14,6 +14,17 @@ export const OnboardingCreateApi = async (data) => {
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options, false);
 };
 
+export const onboardingNextStep = async (uuid) => {
+  const endpoint = `/onboarding/next-step/${uuid}/`;
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options, false);
+};
+
 export const OnboardingCode = async (otpCode, uuid) => {
   const endpoint = `/onboarding/verify/user/${uuid}/`;
   const options = {
@@ -26,48 +37,28 @@ export const OnboardingCode = async (otpCode, uuid) => {
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options, false);
 };
 
-export const OnboardingtimeZone = async (counteryData, uuid) => {
-  console.log('counteryData: ', counteryData);
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  const raw = JSON.stringify(counteryData);
-
-  const requestOptions = {
+export const OnboardingCreateOrganisation = async (uuid, data) => {
+  const endpoint = `/onboarding/create/organization/${uuid}/`;
+  const options = {
     method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow"
+    body: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
-
-  fetch(`${API_BASE_URL}/onboarding/organization/${uuid}/`, requestOptions)
-    .then((response) => {
-      return response.text();
-    })
-    .then((result) => console.log(result))
-    .catch((error) => console.error(error));
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options, false);
 };
 
-
-
-export const OnboardingSubscription = async (subscriptionData, uuid) => {
-  // let uuidSubData = JSON.parse(uuid);
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  const raw = JSON.stringify(subscriptionData);
-  const requestOptions = {
+export const OnboardingCreateSubscription = async (uuid, data) => {
+  const endpoint = `/onboarding/create/subscription/${uuid}/`;
+  const options = {
     method: "POST",
-    headers: myHeaders,
-    body: raw,
-    redirect: "follow"
+    body: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
-
-  fetch(`${API_BASE_URL}/onboarding/subscription/${uuid}/`, requestOptions)
-    .then((response) => {
-      console.log('response: ', response);
-      return response.text();
-    })
-    .then((result) => console.log(result))
-    .catch((error) => console.error(error));
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options, false);
 };
 
 
@@ -100,19 +91,4 @@ export const requestDemoCreate = async (mainData) => {
 
 
 
-export const onboardingNextStep = async (uuid) => {
-  try {
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow"
-    };
-
-    const response = await fetch(`${API_BASE_URL}/onboarding/next_step/${uuid}/`, requestOptions);
-    const result = await response.text();
-    return result;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
 

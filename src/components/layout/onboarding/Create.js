@@ -58,7 +58,9 @@ const Create = () => {
     try {
       const response = await OnboardingCreateApi(formData);
       if (response?.uuid) {
-        navigate(`/verify-mail/${response?.uuid}?email=${formData.email}`);
+        const { step } = await onboardingNextStep(response?.uuid);
+        if (step === 1) navigate(`/verify-mail/${response?.uuid}?email=${formData.email}&first_name=${formData.first_name}&last_name=${formData.last_name}`);
+        else if (step === 2) navigate(`/company-name/${response?.uuid}?email=${formData.email}&first_name=${formData.first_name}&last_name=${formData.last_name}`)
       } else {
         toast.error("Something went wrong");
       }
