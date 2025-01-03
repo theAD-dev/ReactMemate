@@ -19,8 +19,9 @@ const Discovermemate = () => {
   const stripe = useStripe();
   const elements = useElements();
 
+  if (!uuid) navigate('/onboarding');
+
   const [name, setName] = useState("");
-  const [coupon, setCoupon] = useState("");
   const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
@@ -37,7 +38,7 @@ const Discovermemate = () => {
     } else {
       console.log("PaymentMethod:", paymentMethod);
       OnboardingCreateSubscription(uuid, { payment_method: paymentMethod.id })
-        .then(() => navigate("/login"))
+        .then(() => navigate(`/create-password/${uuid}`))
         .catch((err) => {
           console.error("Error submitting form:", err);
           setError(err.message);
@@ -87,18 +88,6 @@ const Discovermemate = () => {
                   />
                 </div>
 
-                <div className="formgroup">
-                  <label>Coupon</label>
-                  <div className={`inputInfo ${coupon ? "successBorder" : ""}`}>
-                    <input
-                      type="text"
-                      placeholder="Add Coupon"
-                      value={coupon}
-                      onChange={(e) => setCoupon(e.target.value)}
-                    />
-                    <img className="ExclamationCircle" src={exclamationCircle} alt="Error" />
-                  </div>
-                </div>
                 {error && <p className="error-message">{error}</p>}
                 <button
                   type="submit"

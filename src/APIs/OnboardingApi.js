@@ -61,6 +61,18 @@ export const OnboardingCreateSubscription = async (uuid, data) => {
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options, false);
 };
 
+export const OnboardingCreatePassword = async (uuid, data) => {
+  const endpoint = `/onboarding/create/password/${uuid}/`;
+  const options = {
+    method: "POST",
+    body: data,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options, false);
+};
+
 
 export const requestDemoCreate = async (mainData) => {
   const myHeaders = new Headers();

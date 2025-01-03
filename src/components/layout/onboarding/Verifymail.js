@@ -5,7 +5,7 @@ import mail01 from "../../../assets/images/icon/mail-01.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 import login_slider1 from "../../../assets/images/img/emailSlider01.png";
 import VerificationInput from 'react-verification-input';
-import { OnboardingCode, OnboardingCreateApi } from "../../../APIs/OnboardingApi";
+import { OnboardingCode, OnboardingCreateApi, onboardingNextStep } from "../../../APIs/OnboardingApi";
 import { ClockHistory, ArrowLeftShort } from "react-bootstrap-icons";
 import "./org.css";
 import { Button } from 'react-bootstrap';
@@ -14,10 +14,8 @@ const Verifymail = () => {
   const navigate = useNavigate();
   const { uuid } = useParams();
   const email = new URLSearchParams(useLocation().search).get("email");
-  const first_name = new URLSearchParams(useLocation().search).get("first_name");
-  const last_name = new URLSearchParams(useLocation().search).get("last_name");
 
-  if (!uuid || !email || !first_name || !last_name) navigate('/onboarding');
+  if (!uuid) navigate('/onboarding');
 
   const [otpCode, setOtpCode] = useState('');
   const [codeError, setCodeError] = useState(null);
@@ -46,7 +44,7 @@ const Verifymail = () => {
       if (typeof response === "string" && response.includes("code")) {
         setCodeError(JSON.parse(response).otpCode);
       } else {
-        navigate(`/company-name/${uuid}?email=${email}&first_name=${first_name}&last_name=${last_name}`)
+        navigate(`/company-name/${uuid}?email=${email}`)
       }
     } catch (error) {
       console.error("API error:", error);
@@ -56,11 +54,11 @@ const Verifymail = () => {
 
   const resendOTP = async () => {
     try {
-      const response = await OnboardingCreateApi({ email, first_name, last_name });
-      if (response?.uuid) {
-        setTimer(60);
-        setIsTimerActive(true);
-      }
+      const { step } = await onboardingNextStep(uuid);
+      if (step === 1) navigate(`/verify-mail/${uuid}?email=${email}`);
+      else if (step === 2) navigate(`/company-name/${uuid}?email=${email}`);
+      else if (step === 3) navigate(`/discover-memate/${uuid}`);
+      else if (step === 4) navigate(`/create-password/${uuid}`);
     } catch (error) {
       console.error("API error:", error);
       setCodeError("An error occurred while verifying the OTP. Please try again later.");
@@ -109,10 +107,10 @@ const Verifymail = () => {
                 </div>
                 {!isTimerActive && (
                   <div className='linkBottom'>
-                    <p>Didn’t receive the email? <Link to="/resend-email">Click to resend</Link></p>
-                    <Button onClick={resendOTP}>
+                    <p>Didn’t receive the email? <a className='cursor-pointer' style={{ color: '#158ECC' }} onClick={resendOTP}>Click to resend</a></p>
+                    <Link to={"/login"}>
                       <ArrowLeftShort color='#475467' size={20} /> Back to log in
-                    </Button>
+                    </Link>
                   </div>
                 )}
               </div>

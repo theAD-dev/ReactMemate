@@ -56,13 +56,31 @@ const Create = () => {
 
     setLoading(true);
     try {
-      const response = await OnboardingCreateApi(formData);
-      if (response?.uuid) {
-        const { step } = await onboardingNextStep(response?.uuid);
-        if (step === 1) navigate(`/verify-mail/${response?.uuid}?email=${formData.email}&first_name=${formData.first_name}&last_name=${formData.last_name}`);
-        else if (step === 2) navigate(`/company-name/${response?.uuid}?email=${formData.email}&first_name=${formData.first_name}&last_name=${formData.last_name}`)
+      let response = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/onboarding/create/user/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.status === 201) {
+        response = await response.json();
+        navigate(`/verify-mail/${response?.uuid}?email=${formData.email}`);
       } else {
-        toast.error("Something went wrong");
+        response = await response.json();
+        if (response?.uuid) {
+          const { step } = await onboardingNextStep(response?.uuid);
+          if (step === 1) navigate(`/verify-mail/${response?.uuid}?email=${formData.email}`);
+          else if (step === 2) navigate(`/company-name/${response?.uuid}?email=${formData.email}`)
+          else if (step === 3) navigate(`/discover-memate/${response?.uuid}`);
+          else if (step === 4) navigate(`/create-password/${response?.uuid}`);
+          else {
+            toast.error("Something went wrong");
+          }
+        } else {
+          toast.error("Something went wrong");
+        }
       }
     } catch (error) {
       console.error("Error creating user:", error);

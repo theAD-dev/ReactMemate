@@ -11,10 +11,8 @@ const CompanyName = () => {
   const navigate = useNavigate();
   const { uuid } = useParams();
   const email = new URLSearchParams(useLocation().search).get("email");
-  const first_name = new URLSearchParams(useLocation().search).get("first_name");
-  const last_name = new URLSearchParams(useLocation().search).get("last_name");
 
-  if (!uuid || !email || !first_name || !last_name) navigate('/onboarding');
+  if (!uuid) navigate('/onboarding');
 
   const [company_name, setCompanyname] = useState('');
   const [firstcmError, setFirstcmError] = useState('');
@@ -23,7 +21,7 @@ const CompanyName = () => {
       setFirstcmError('Company name is required');
       return;
     }
-    navigate(`/regional-settings/${uuid}?email=${email}&first_name=${first_name}&last_name=${last_name}&company_name=${company_name}`)
+    navigate(`/regional-settings/${uuid}?email=${email}&company_name=${company_name}`)
   };
   return (
     <>

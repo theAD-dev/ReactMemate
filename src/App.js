@@ -22,6 +22,7 @@ import Components from '../src/ui/memate-select';
 import QuotationEmail from './components/layout/browser-web/quotation-email';
 import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
 import StripeContainer from './ui/strip-payment/strip-payment';
+import PasswordCreate from './components/layout/onboarding/password-create';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/company-name/:uuid" element={<Companyname />} />
         <Route path="/regional-settings/:uuid" element={<Regionalsettings />} />
         <Route path="/discover-memate/:uuid" element={<Discovermemate />} />
+        <Route path="/create-password/:uuid" element={<PasswordCreate />} />
         <Route path="/resend-email" element={<ResendEmail />} />
         <Route path="/demo" element={<Demo />} />
         <Route path="/ui/components" element={<Components />} />

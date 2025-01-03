@@ -13,8 +13,6 @@ const Regionalsettings = () => {
   const navigate = useNavigate();
   const { uuid } = useParams();
   const email = new URLSearchParams(useLocation().search).get("email");
-  const first_name = new URLSearchParams(useLocation().search).get("first_name");
-  const last_name = new URLSearchParams(useLocation().search).get("last_name");
   const company_name = new URLSearchParams(useLocation().search).get("company_name");
   const [timezonesOptions, setTimezonesOptions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -26,9 +24,9 @@ const Regionalsettings = () => {
 
   useEffect(() => {
     if (!company_name) {
-      navigate(`/company-name/${uuid}?email=${email}&first_name=${first_name}&last_name=${last_name}`);
+      navigate(`/company-name/${uuid}?email=${email}`);
     }
-  }, [company_name, email, first_name, last_name, uuid]);
+  }, [company_name, email, uuid]);
 
   useEffect(() => {
     if (country) {
