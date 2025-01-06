@@ -12,10 +12,15 @@ import {
 import SubscriptionModal from "../SubscriptionModal";
 import { Divider } from "@mui/material";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
+import { useQuery } from "@tanstack/react-query";
+import { getSubscriptions } from "../../../../APIs/settings-subscription-api";
 
 const Subscription = () => {
   const [activeTab, setActiveTab] = useState("subscription");
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
+
+  const subscriptionQuery = useQuery({ queryKey: ['subscription'], queryFn: getSubscriptions });
+  console.log('subscriptionQuery: ', subscriptionQuery?.data);
 
   return (
     <>
@@ -66,13 +71,13 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Business Subscription </h4>
-                              <div className="subscriptionPrice active">$14</div>
+                              <div className="subscriptionPrice active">${subscriptionQuery?.data?.business?.amount || "0.00"}</div>
                             </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
-                                <div className="progress-bar bg-businessBar" style={{ width: "100%" }}></div>
+                                <div className="progress-bar bg-businessBar" style={{ width: `${((subscriptionQuery?.data?.business?.total_users || 0) / (subscriptionQuery?.data?.business?.max_users || 0)) * 100}%` }}></div>
                               </div>
-                              <span className={styles.textGradient}>ON</span>
+                              <span className={styles.textGradient}>{ subscriptionQuery?.data?.business? "ON" : "OFF" }</span>
                             </div>
                           </div>
                         </div>
@@ -116,17 +121,17 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Work Subscription</h4>
-                              <div className="subscriptionPrice">$0</div>
+                              <div className="subscriptionPrice">${subscriptionQuery?.data?.work?.amount || "0.00"}</div>
                             </div>
 
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-WorkBar"
-                                  style={{ width: "5%" }}
+                                  style={{ width: `${((subscriptionQuery?.data?.work?.total_workers || 0) / (subscriptionQuery?.data?.work?.max_workers || 0)) * 100}%` }}
                                 ></div>
                               </div>
-                              <span>OFF</span>
+                              <span>{subscriptionQuery?.data?.work?.total_workers ? "ON" :"OFF"}</span>
                             </div>
                             <div className="progressButton">
                               <button className="paynow">
@@ -182,17 +187,17 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Locations</h4>
-                              <div className="subscriptionPrice active">$56</div>
+                              <div className="subscriptionPrice active">${subscriptionQuery?.data?.location?.amount || "0.00"}</div>
                             </div>
 
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-locationsBar"
-                                  style={{ width: "100%" }}
+                                  style={{ width:  `${((subscriptionQuery?.data?.location?.total_locations || 0) / (subscriptionQuery?.data?.location?.max_locations || 0)) * 100}%` }}
                                 ></div>
                               </div>
-                              <span>1/1</span>
+                              <span>{subscriptionQuery?.data?.location?.total_locations || 0}/{subscriptionQuery?.data?.location?.max_locations || 0}</span>
                             </div>
                             <div className="progressButton">
                               <button className="paynow">Purchase Locations</button>
@@ -212,7 +217,7 @@ const Subscription = () => {
                   <div className="editwrapper">
                     <div className="repaymentStatusBox w-100 mb-4">
                       <p className="repaymentStatusBox-text-1">Current  repayments</p>
-                      <p className="repaymentStatusBox-text-2">$3,454</p>
+                      <p className="repaymentStatusBox-text-2">${subscriptionQuery?.data?.total_amount || "0.00"}</p>
                       <p className="repaymentStatusBox-text-3">/month</p>
                     </div>
                     <p>
@@ -221,14 +226,14 @@ const Subscription = () => {
                       Invoices, Expense Statistics, Order Management, as well as
                       managing Clients and Suppliers
                     </p>
-                    <Divider className="mb-2"/>
+                    <Divider className="mb-2" />
                     <p className="mb-5">
                       <strong>Company Users</strong> can operate the desktop
                       account for the company and can be assigned different
                       roles, such as Admin, General Manager, Manager, Sales
                       Manager, or Accounts.
                     </p>
-                 
+
                     <p className="pt-5">
                       <strong>Work Subscription</strong> enables you to utilise
                       the application to assign jobs to contractors, employees,
@@ -236,7 +241,7 @@ const Subscription = () => {
                       users, track time through the application, and allow users
                       to participate in projects remotely.
                     </p>
-                    <br></br><br/>{" "}
+                    <br></br><br />{" "}
                     <p>
                       <strong>Mobile users:</strong> Mobile application users
                       can communicate with independent contractors and shift
@@ -244,7 +249,7 @@ const Subscription = () => {
                       for individuals who do not require access to the Company
                       Management Desktop system.
                     </p>
-                    <br></br><br/>{" "}
+                    <br></br><br />{" "}
                     <p>
                       <strong>Locations:</strong> Additional features for
                       Companies with multiple branches/Locations. It allows you

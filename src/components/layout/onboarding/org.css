@@ -324,20 +324,20 @@
   line-height: 24px;
 }
 
-.password-strength {
+.onboardingWrap .password-strength {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
 
-.progress-container {
+.onboardingWrap .progress-container {
   display: flex;
   width: 100%;
   max-width: 300px;
   margin: 10px 0;
 }
 
-.progress-bar {
+.onboardingWrap .progress-bar {
   flex: 1;
   height: 8px;
   background-color: #e0e0e0;
@@ -346,11 +346,11 @@
   transition: background-color 0.3s ease-in-out;
 }
 
-.progress-bar.green {
+.onboardingWrap .progress-bar.green {
   background-color: #4caf50;
 }
 
-.strength-text {
+.onboardingWrap .strength-text {
   color: var(--Gray-600, #475467);
 
   /* Body small */
