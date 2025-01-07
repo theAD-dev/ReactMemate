@@ -14,13 +14,16 @@ import { Divider } from "@mui/material";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
 import { useQuery } from "@tanstack/react-query";
 import { getSubscriptions } from "../../../../APIs/settings-subscription-api";
+import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
 
 const Subscription = () => {
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
 
   const subscriptionQuery = useQuery({ queryKey: ['subscription'], queryFn: getSubscriptions });
-  console.log('subscriptionQuery: ', subscriptionQuery?.data);
+  const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
+  const activeUser = desktopUsersQuery?.data?.users?.filter((user) => user.is_active) || 0;
+  const mobileUsersQuery = useQuery({ queryKey: ['mobile-users'], queryFn: getMobileUserList });
 
   return (
     <>
@@ -91,19 +94,19 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Company Users</h4>
-                              <div className="subscriptionPrice active">$23</div>
+                              <div className="subscriptionPrice active">$</div>
                             </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-companyBar"
-                                  style={{ width: "40%" }}
+                                  style={{ width: `${(activeUser?.length/(desktopUsersQuery?.data?.limits?.total))*100}%` }}
                                 ></div>
                               </div>
-                              <span>1/2</span>
+                              <span>{activeUser?.length}/{desktopUsersQuery?.data?.limits?.total}</span>
                             </div>
                             <div className="progressButton">
-                              <button className="paynow">Add or Remove Users</button>
+                              <button className="paynow" onClick={()=> setVisible(true)}>Add or Remove Users</button>
                             </div>
                           </div>
                         </div>
@@ -134,7 +137,7 @@ const Subscription = () => {
                               <span>{subscriptionQuery?.data?.work?.total_workers ? "ON" :"OFF"}</span>
                             </div>
                             <div className="progressButton">
-                              <button className="paynow">
+                              <button className="paynow" disabled>
                                 Active Work Subscription
                               </button>
                             </div>
@@ -161,10 +164,10 @@ const Subscription = () => {
                               <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-appBar"
-                                  style={{ width: "1%" }}
+                                  style={{ width: `${(mobileUsersQuery?.data?.limits?.number/mobileUsersQuery?.data?.limits?.total) * 100}%` }}
                                 ></div>
                               </div>
-                              <span>0/0</span>
+                              <span>{mobileUsersQuery?.data?.limits?.number}/{mobileUsersQuery?.data?.limits?.total}</span>
                             </div>
                             <div className="progressButton">
                               <button className="paynow">
@@ -199,9 +202,10 @@ const Subscription = () => {
                               </div>
                               <span>{subscriptionQuery?.data?.location?.total_locations || 0}/{subscriptionQuery?.data?.location?.max_locations || 0}</span>
                             </div>
+
                             <div className="progressButton">
-                              <button className="paynow">Purchase Locations</button>
-                              <button className="close">Remove Locations</button>
+                              <button className="paynow" disabled>Purchase Locations</button>
+                              <button className="close" disabled>Remove Locations</button>
                             </div>
                           </div>
                         </div>
@@ -262,7 +266,7 @@ const Subscription = () => {
           </div>
         </div>
       </div>
-      <AddRemoveCompanyUser visible={visible} setVisible={setVisible} />
+      <AddRemoveCompanyUser users={activeUser} refeatch={desktopUsersQuery?.refetch} total={desktopUsersQuery?.data?.limits?.total} visible={visible} setVisible={setVisible} price={subscriptionQuery?.data?.total_amount}/>
     </>
   );
 };

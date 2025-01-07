@@ -36,7 +36,7 @@
 }
 
 .addRemoveBox {
-    width: 262px;
+  width: 294px;
   display: flex;
   padding: 12px 16px;
   flex-direction: column;
@@ -102,4 +102,50 @@
   border-right: 1px solid var(--Gray-300, #d0d5dd);
   border-bottom: 1px solid var(--Gray-300, #d0d5dd);
   background: #fff;
+}
+
+.currentPricing {
+  display: flex;
+  padding: 12px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 0 0;
+  border-radius: 6px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: #fff;
+  height: fit-content;
+}
+
+.priceBoxText {
+  color: var(--Gray-700, #344054);
+
+  /* Body large bold */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.08px;
+}
+
+.priceBoxPrice {
+  color: var(--Gray-400, #98a2b3);
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 34px; /* 106.25% */
+  letter-spacing: -0.8px;
+}
+
+.slashText {
+  color: var(--Gray-700, #344054);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
 }

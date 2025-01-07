@@ -1689,3 +1689,8 @@ td.butactionOrg p {
   letter-spacing: 0.175px;
   margin-bottom: 6px;
 }
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
