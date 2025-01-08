@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { Building, Buildings, Person } from "react-bootstrap-icons";
+import { Building, Buildings, Envelope, Person } from "react-bootstrap-icons";
 import { Tag } from "primereact/tag";
 import { Badge } from "primereact/badge";
 import { useMutation } from "@tanstack/react-query";
@@ -60,6 +60,13 @@ const AddRemoveMobileUser = ({ users, refeatch, total, price, visible, setVisibl
         </div>
     }
 
+    const emailBody = (data) => {
+        return <div className="d-flex gap-2 align-items-center">
+            <Envelope size={24} color="#667085" />
+            <span>{data?.email}</span>
+        </div>
+    }
+
     const ActionsBody = (data) => {
         return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2">
             Remove
@@ -114,7 +121,7 @@ const AddRemoveMobileUser = ({ users, refeatch, total, price, visible, setVisibl
             <div className="mt-4">
                 <DataTable value={users} showGridlines scrollHeight={"350px"}>
                     <Column field="name" style={{ width: '80px' }} body={nameBody} header="Name"></Column>
-                    <Column field="email" style={{ width: '100px' }} header="Email"></Column>
+                    <Column field="email" style={{ width: '100px' }} body={emailBody} header="Email"></Column>
                     <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>
                 </DataTable>
             </div>

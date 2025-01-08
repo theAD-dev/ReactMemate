@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { Building, Buildings, Person } from "react-bootstrap-icons";
+import { Building, Buildings, Envelope, Person } from "react-bootstrap-icons";
 import { Tag } from "primereact/tag";
 import { Badge } from "primereact/badge";
 import { useMutation } from "@tanstack/react-query";
@@ -43,7 +43,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
 
   const footerContent = (
     <div className="d-flex justify-content-end align-items-center gap-3">
-      <Button type='button' className='outline-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={()=> setVisible(false)}>Close</Button>
+      <Button type='button' className='outline-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={() => setVisible(false)}>Close</Button>
       <Button type='button' className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }}>Save</Button>
     </div>
   );
@@ -78,6 +78,13 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
       Remove
       {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
     </Button>
+  }
+
+  const emailBody = (data) => {
+    return <div className="d-flex gap-2 align-items-center">
+      <Envelope size={24} color="#667085" />
+      <span>{data?.email}</span>
+    </div>
   }
 
   return (
@@ -128,7 +135,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
       <div className="mt-4">
         <DataTable value={users} showGridlines>
           <Column field="name" style={{ width: '80px' }} body={nameBody} header="Name"></Column>
-          <Column field="email" style={{ width: '100px' }} header="Email"></Column>
+          <Column field="email" style={{ width: '100px' }} body={emailBody} header="Email"></Column>
           <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>
         </DataTable>
       </div>
