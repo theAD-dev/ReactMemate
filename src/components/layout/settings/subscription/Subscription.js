@@ -15,10 +15,12 @@ import AddRemoveCompanyUser from "./features/add-remove-company-user";
 import { useQuery } from "@tanstack/react-query";
 import { getSubscriptions } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
+import AddRemoveMobileUser from "./features/add-remove-mobile-user";
 
 const Subscription = () => {
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
+  const [mobileUserVisible, setMobileUserVisible] = useState(false);
 
   const subscriptionQuery = useQuery({ queryKey: ['subscription'], queryFn: getSubscriptions });
   const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
@@ -170,7 +172,7 @@ const Subscription = () => {
                               <span>{mobileUsersQuery?.data?.limits?.number}/{mobileUsersQuery?.data?.limits?.total}</span>
                             </div>
                             <div className="progressButton">
-                              <button className="paynow">
+                              <button className="paynow" onClick={()=> setMobileUserVisible(true)}>
                                 Add or Remove Users
                               </button>
                             </div>
@@ -267,6 +269,7 @@ const Subscription = () => {
         </div>
       </div>
       <AddRemoveCompanyUser users={activeUser} refeatch={desktopUsersQuery?.refetch} total={desktopUsersQuery?.data?.limits?.total} visible={visible} setVisible={setVisible} price={subscriptionQuery?.data?.total_amount}/>
+      <AddRemoveMobileUser refeatch={mobileUsersQuery?.refetch} total={mobileUsersQuery?.data?.limits?.total} price={subscriptionQuery?.data?.total_amount} visible={mobileUserVisible} setVisible={setMobileUserVisible} users={mobileUsersQuery?.data?.users} />
     </>
   );
 };
