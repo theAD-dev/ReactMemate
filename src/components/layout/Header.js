@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -20,83 +20,109 @@ import clipboardTick from "../../assets/images/icon/clipboard-tick.svg";
 import Briefcase from "../../assets/images/icon/briefcase.svg";
 import statusUp from "../../assets/images/icon/status-up.svg";
 import Profile3user from "../../assets/images/icon/profile-3user.svg";
-import { Work } from "../Work/Pages/Work";
-import ProfileInfo from "./ProfileInfo";
-import Sales from "../Business/Pages/sales/sales-page";
-import Management from "../Business/Pages/management/management-page";
-import SelectOption from "./SelectOption";
-import Profile from "./Login/profile";
-import ExpensesPage from "../Business/Pages/expenses";
-import Home from "../Home";
-
-import GeneralInformation from "../layout/settings/generalinformation/GeneralInformation";
-import BankDetails from "../layout/settings/generalinformation/BankDetails";
-import RegionLanguage from "../layout/settings/generalinformation/RegionLanguage";
-import MyProfile from "./settings/MyProfile";
-import Subscription from "./settings/subscription/Subscription";
-import Bills from "../layout/settings/subscription/Bills";
-import BillingInfo from "../layout/settings/subscription/BillingInfo";
-import Users from "../layout/settings/users/Users";
-import MobileApp from "../layout/settings/users/MobileApp";
-import ExistingClients from "../Business/Pages/sales/new-request/existing-clients";
-import SelectClientType from "../Business/Pages/sales/new-request/select-client";
-import Departments from "../layout/settings/calculators/Departments";
-import JobTemplates from "./settings/templates/job-templates";
-import EmailTemplates from "./settings/templates/email-templates";
-import EmailSignatures from "./settings/templates/EmailSignatures";
-import ProposalTemplates from "./settings/templates/proposal-templates";
-import CompanyEthos from "./settings/companyethos/CompanyEthos";
-import Integrations from "./settings/integrations";
-import RecurringQuotes from "./settings/quotesjobs/RecurringQuotes ";
-import RecurringJobs from "./settings/quotesjobs/RecurringJobs";
-import TermsandConditions from "./settings/termsandconditions/TermsandConditions";
-import TermsConditionsInvoice from "./settings/termsandconditions/TermsConditionsInvoice";
-import CustomersDiscountCategory from "./settings/customerssettings/CustomersDiscountCategory";
-import DepartmentTurnoverPlan from "./settings/accounting/DepartmentTurnoverPlan";
-import ExpensesAccount from "./settings/accounting/ExpensesAccount";
-import DashboardNotifications from "./settings/notifications/DashboardNotifications";
-import AppNotifications from "./settings/notifications/AppNotifications";
-import EmailNotifications from "./settings/notifications/EmailNotifications";
-import DemoTable from "../Business/Pages/management/project-card/DemoTable";
-import Dashboard from "../Work/Pages/Dashboard";
-import News from "../Work/Pages/News";
-import ProjectStatus from "./settings/projectstatus/ProjectStatus";
-import OutgoingEmails from "./settings/projectstatus/outgoing-emails";
-import NewClient from "../Business/Pages/sales/new-request/new-client";
-import ClientLayout from "../Business/Pages/sales/new-request";
-import IndividualClientInformation from "../Business/Pages/sales/new-request/individual-client-information";
-import BusinessClientInformation from "../Business/Pages/sales/new-request/business-client-information";
-import ScopeOfWorkComponent from "../Business/Pages/sales/new-request/scope-of-work";
-import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
-import { Placeholder } from "react-bootstrap";
-import JobsPage from "../Work/Pages/jobs";
-import PeoplePage from "../Work/Pages/people";
-import OrderPage from "../Business/Pages/orders";
-import ClientPage from "../Business/Pages/clients"
-import ApprovalPage from "../Work/Pages/approval";
-import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
-import SupplierPage from "../Business/Pages/suppliers";
-import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
-import EditTemplates from "./settings/templates/edit-template";
-import EditEmail from "./settings/templates/edit-email";
-import EditSignatures from "./settings/templates/edit-signatures";
-import EditProposal from "./settings/templates/edit-proposal";
-import StatisticsPage from "../Business/Pages/statistics";
-import CustomersIndustries from "./settings/customerssettings/Industries";
-import CreateEmailTemplate from "./settings/templates/create-email-template";
-import KeyResultsPage from "../Business/Pages/statistics/key-results";
-import CreateProposalTemplate from "./settings/templates/create-proposal-template";
-import Location from "./settings/locations";
-import TaskPage from "../Work/Pages/tasks";
-import NotFoundTemplate from "../../ui/404-template/not-found-template";
-import InvoicePage from "../Business/Pages/invoices";
-import CreateJobTemplate from "./settings/templates/create-job-template";
-import Executive from "../Business/Pages/statistics/executive";
-import SalesConversion from "../Business/Pages/statistics/sales-conversion";
-import Overview from "../Business/Pages/statistics/overview";
+import NProgress from 'nprogress';
+import { Placeholder, Spinner } from "react-bootstrap";
 
 
+function SuspenseLoader() {
+  useEffect(() => {
+    NProgress.start();
 
+    return () => {
+      NProgress.done();
+    };
+  }, []);
+
+  return (
+    <div className="d-flex justify-content-center align-items-center" style={{ position: 'fixed', top: '0px', left: '0px', width: '100%', height: '100%' }}>
+      <div className="shadow-lg" style={{ width: '60px', height: '60px', background: 'white', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    </div>
+  );
+}
+
+const Loader = (Component) => (props) =>
+(
+  <Suspense fallback={<SuspenseLoader />}>
+    <Component {...props} />
+  </Suspense>
+);
+
+const Work = Loader(lazy(() => import("../Work/Pages/Work")));
+const ProfileInfo = Loader(lazy(() => import("./ProfileInfo")));
+const Sales = Loader(lazy(() => import("../Business/Pages/sales/sales-page")));
+const Management = Loader(lazy(() => import("../Business/Pages/management/management-page")));
+const SelectOption = Loader(lazy(() => import("./SelectOption")));
+const Profile = Loader(lazy(() => import("./Login/profile")));
+const ExpensesPage = Loader(lazy(() => import("../Business/Pages/expenses")));
+const Home = Loader(lazy(() => import("../Home")));
+const GeneralInformation = Loader(lazy(() => import("../layout/settings/generalinformation/GeneralInformation")));
+const BankDetails = Loader(lazy(() => import("../layout/settings/generalinformation/BankDetails")));
+const RegionLanguage = Loader(lazy(() => import("../layout/settings/generalinformation/RegionLanguage")));
+const MyProfile = Loader(lazy(() => import("./settings/MyProfile")));
+const Subscription = Loader(lazy(() => import("./settings/subscription/Subscription")));
+const Bills = Loader(lazy(() => import("../layout/settings/subscription/Bills")));
+const BillingInfo = Loader(lazy(() => import("../layout/settings/subscription/BillingInfo")));
+const Users = Loader(lazy(() => import("../layout/settings/users/Users")));
+const MobileApp = Loader(lazy(() => import("../layout/settings/users/MobileApp")));
+const ExistingClients = Loader(lazy(() => import("../Business/Pages/sales/new-request/existing-clients")));
+const SelectClientType = Loader(lazy(() => import("../Business/Pages/sales/new-request/select-client")));
+const Departments = Loader(lazy(() => import("../layout/settings/calculators/Departments")));
+const JobTemplates = Loader(lazy(() => import("./settings/templates/job-templates")));
+const EmailTemplates = Loader(lazy(() => import("./settings/templates/email-templates")));
+const EmailSignatures = Loader(lazy(() => import("./settings/templates/EmailSignatures")));
+const ProposalTemplates = Loader(lazy(() => import("./settings/templates/proposal-templates")));
+const CompanyEthos = Loader(lazy(() => import("./settings/companyethos/CompanyEthos")));
+const Integrations = Loader(lazy(() => import("./settings/integrations")));
+const RecurringQuotes = Loader(lazy(() => import("./settings/quotesjobs/RecurringQuotes")));
+const RecurringJobs = Loader(lazy(() => import("./settings/quotesjobs/RecurringJobs")));
+const TermsandConditions = Loader(lazy(() => import("./settings/termsandconditions/TermsandConditions")));
+const TermsConditionsInvoice = Loader(lazy(() => import("./settings/termsandconditions/TermsConditionsInvoice")));
+const CustomersDiscountCategory = Loader(lazy(() => import("./settings/customerssettings/CustomersDiscountCategory")));
+const DepartmentTurnoverPlan = Loader(lazy(() => import("./settings/accounting/DepartmentTurnoverPlan")));
+const ExpensesAccount = Loader(lazy(() => import("./settings/accounting/ExpensesAccount")));
+const DashboardNotifications = Loader(lazy(() => import("./settings/notifications/DashboardNotifications")));
+const AppNotifications = Loader(lazy(() => import("./settings/notifications/AppNotifications")));
+const EmailNotifications = Loader(lazy(() => import("./settings/notifications/EmailNotifications")));
+const DemoTable = Loader(lazy(() => import("../Business/Pages/management/project-card/DemoTable")));
+const Dashboard = Loader(lazy(() => import("../Work/Pages/Dashboard")));
+const News = Loader(lazy(() => import("../Work/Pages/News")));
+const ProjectStatus = Loader(lazy(() => import("./settings/projectstatus/ProjectStatus")));
+const OutgoingEmails = Loader(lazy(() => import("./settings/projectstatus/outgoing-emails")));
+const NewClient = Loader(lazy(() => import("../Business/Pages/sales/new-request/new-client")));
+const ClientLayout = Loader(lazy(() => import("../Business/Pages/sales/new-request")));
+const IndividualClientInformation = Loader(lazy(() => import("../Business/Pages/sales/new-request/individual-client-information")));
+const BusinessClientInformation = Loader(lazy(() => import("../Business/Pages/sales/new-request/business-client-information")));
+const ScopeOfWorkComponent = Loader(lazy(() => import("../Business/Pages/sales/new-request/scope-of-work")));
+const CalculateQuote = Loader(lazy(() => import("../Business/Pages/sales/new-request/calculate-quote")));
+const JobsPage = Loader(lazy(() => import("../Work/Pages/jobs")));
+const PeoplePage = Loader(lazy(() => import("../Work/Pages/people")));
+const OrderPage = Loader(lazy(() => import("../Business/Pages/orders")));
+const ClientPage = Loader(lazy(() => import("../Business/Pages/clients")));
+const ApprovalPage = Loader(lazy(() => import("../Work/Pages/approval")));
+const ClientOrderHistory = Loader(lazy(() => import("../Business/Pages/clients/client-order-history")));
+const SupplierPage = Loader(lazy(() => import("../Business/Pages/suppliers")));
+const SupplierHistoryPage = Loader(lazy(() => import("../Business/Pages/suppliers/suppliers-history")));
+const EditTemplates = Loader(lazy(() => import("./settings/templates/edit-template")));
+const EditEmail = Loader(lazy(() => import("./settings/templates/edit-email")));
+const EditSignatures = Loader(lazy(() => import("./settings/templates/edit-signatures")));
+const EditProposal = Loader(lazy(() => import("./settings/templates/edit-proposal")));
+const StatisticsPage = Loader(lazy(() => import("../Business/Pages/statistics")));
+const CustomersIndustries = Loader(lazy(() => import("./settings/customerssettings/Industries")));
+const CreateEmailTemplate = Loader(lazy(() => import("./settings/templates/create-email-template")));
+const KeyResultsPage = Loader(lazy(() => import("../Business/Pages/statistics/key-results")));
+const CreateProposalTemplate = Loader(lazy(() => import("./settings/templates/create-proposal-template")));
+const Location = Loader(lazy(() => import("./settings/locations")));
+const TaskPage = Loader(lazy(() => import("../Work/Pages/tasks")));
+const NotFoundTemplate = Loader(lazy(() => import("../../ui/404-template/not-found-template")));
+const InvoicePage = Loader(lazy(() => import("../Business/Pages/invoices")));
+const CreateJobTemplate = Loader(lazy(() => import("./settings/templates/create-job-template")));
+const Executive = Loader(lazy(() => import("../Business/Pages/statistics/executive")));
+const SalesConversion = Loader(lazy(() => import("../Business/Pages/statistics/sales-conversion")));
+const Overview = Loader(lazy(() => import("../Business/Pages/statistics/overview")));
 
 
 const Header = ({ onClick }) => {
