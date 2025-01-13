@@ -11,27 +11,29 @@ import clsx from "clsx";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { toast } from "sonner";
-import { deleteDesktopUser } from "../../../../../APIs/settings-user-api";
+import { deleteDesktopUser, updateUserPrice } from "../../../../../APIs/settings-user-api";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisible }) => {
   const [state, setState] = useState(users?.length || 0);
-  const percentage = (users.length / total) * 100;
+  const [max, setMax] = useState(total || 0)
+  const percentage = (users?.length / max) * 100;
 
   useEffect(() => {
-    setState(users?.length)
-  }, [users]);
+    setState(users?.length);
+    setMax(total);
+  }, [users, total]);
 
   const minusUser = () => {
-    if (state == users?.length) {
+    if (max == users?.length) {
       toast.error("You are reducing the number of seats by 1, Remove 1 users to continue.")
     } else {
-      setState((prev) => prev - 1);
+      setMax((prev) => prev - 1);
     }
   }
 
   const plusUser = () => {
-    setState((prev) => prev + 1);
+    setMax((prev) => prev + 1);
   }
 
   const headerElement = (
@@ -41,10 +43,29 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
     </div>
   );
 
+  const mutation = useMutation({
+    mutationFn: (data) => updateUserPrice(data),
+    onSuccess: () => {
+      toast.success(`Company user subscription updated successfully`);
+      window.location.reload();
+    },
+    onError: (error) => {
+      toast.error(`Failed to update subscription. Please try again.`);
+    }
+  });
+
+  const saveBusinessSubscription = () => {
+    let obj = {
+      max_users: max,
+      total_users: state,
+    }
+    mutation.mutate(obj);
+  }
+
   const footerContent = (
     <div className="d-flex justify-content-end align-items-center gap-3">
       <Button type='button' className='outline-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={() => setVisible(false)}>Close</Button>
-      <Button type='button' className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }}>Save</Button>
+      <Button type='button' className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={saveBusinessSubscription}>Save</Button>
     </div>
   );
 
@@ -52,10 +73,24 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
     return <div className='d-flex align-items-center justify-content-between show-on-hover'>
       <div className='d-flex gap-2 justify-content-center align-items-center'>
         <div style={{ overflow: 'hidden', width: '24px', height: '24px' }} className={`d-flex justify-content-center align-items-center ${style.userImg} ${data.is_business ? "" : "rounded-circle"}`}>
-          {data.photo ? <img src={data.photo} alt='clientImg' className='w-100' /> : data.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
+          {
+            data?.photo ?
+              <img src={data.photo} alt='clientImg' className='w-100' /> :
+              <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.757812" y="0.5" width="31" height="31" rx="15.5" stroke="#98A2B3" strokeDasharray="2 2" />
+                <path d="M16.2578 16C18.7431 16 20.7578 13.9853 20.7578 11.5C20.7578 9.01472 18.7431 7 16.2578 7C13.7725 7 11.7578 9.01472 11.7578 11.5C11.7578 13.9853 13.7725 16 16.2578 16ZM19.2578 11.5C19.2578 13.1569 17.9147 14.5 16.2578 14.5C14.601 14.5 13.2578 13.1569 13.2578 11.5C13.2578 9.84315 14.601 8.5 16.2578 8.5C17.9147 8.5 19.2578 9.84315 19.2578 11.5Z" fill="#667085" />
+                <path d="M25.2578 23.5C25.2578 25 23.7578 25 23.7578 25H8.75781C8.75781 25 7.25781 25 7.25781 23.5C7.25781 22 8.75781 17.5 16.2578 17.5C23.7578 17.5 25.2578 22 25.2578 23.5ZM23.7578 23.4948C23.7556 23.1246 23.5271 22.0157 22.5096 20.9982C21.5313 20.0198 19.6915 19 16.2578 19C12.8241 19 10.9843 20.0198 10.006 20.9982C8.98844 22.0157 8.75995 23.1246 8.75781 23.4948H23.7578Z" fill="#667085" />
+              </svg>
+          }
         </div>
         <div className='d-flex flex-column gap-1'>
-          <div className={`${style.ellipsis}`}>{data.first_name} {data.last_name}</div>
+          {
+            data.first_name ?
+              <div className={`${style.ellipsis}`}>{data.first_name} {data.last_name}</div> :
+              <svg width="79" height="12" viewBox="0 0 79 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.257812" width="78.0098" height="12" rx="6" fill="#F2F4F7" />
+              </svg>
+          }
         </div>
       </div>
     </div>
@@ -74,6 +109,8 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
   });
 
   const ActionsBody = (data) => {
+    if (!data?.id) return "";
+
     return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2" onClick={() => { deleteMutation.mutate(data?.id) }}>
       Remove
       {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
@@ -83,7 +120,13 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
   const emailBody = (data) => {
     return <div className="d-flex gap-2 align-items-center">
       <Envelope size={24} color="#667085" />
-      <span>{data?.email}</span>
+      {
+        data?.email ?
+          <span>{data?.email}</span> :
+          <svg width="199" height="12" viewBox="0 0 199 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.257812" width="198.729" height="12" rx="6" fill="#F2F4F7" />
+          </svg>
+      }
     </div>
   }
 
@@ -93,7 +136,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
         <div className={clsx(style.addRemoveBox)}>
           <label className={style.addRemoveBoxLabel}>Available Seats</label>
           <div className="d-flex justify-content-between w-100">
-            <h1 className={style.addRemoveBoxNumber}>{total}</h1>
+            <h1 className={style.addRemoveBoxNumber}>{max}</h1>
 
             <div className={style.addRemoveButtonBox}>
               <div className={style.addRemoveButtonLeft} onClick={minusUser}>
@@ -119,7 +162,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
                   style={{ width: `${percentage}%`, background: (percentage > 50 && percentage < 90) ? "#FEDF89" : percentage > 90 ? "#FDA29B" : "#48C1FF" }}
                 ></div>
               </div>
-              <span>{state || "0"}/{total || "0"}</span>
+              <span>{state || "0"}/{max || "0"}</span>
             </div>
 
           </div>
@@ -127,13 +170,13 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
 
         <div className={style.currentPricing}>
           <p className={style.priceBoxText}>Current Pricing</p>
-          <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${price}</span><span className={style.slashText}>/month</span></div>
+          <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * max).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
         </div>
 
       </div>
 
       <div className="mt-4">
-        <DataTable value={users} showGridlines>
+        <DataTable scrollable scrollHeight={"350px"} className={style.userTable} value={[...users || [], ...Array.from({ length: max - state }, (_, index) => { return {} })]} showGridlines>
           <Column field="name" style={{ width: '80px' }} body={nameBody} header="Name"></Column>
           <Column field="email" style={{ width: '100px' }} body={emailBody} header="Email"></Column>
           <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>

@@ -119,7 +119,7 @@ const AddRemoveMobileUser = ({ users, refeatch, total, price, visible, setVisibl
             </div>
 
             <div className="mt-4">
-                <DataTable value={users} showGridlines scrollHeight={"350px"}>
+                <DataTable value={users} showGridlines scrollable scrollHeight={"350px"}>
                     <Column field="name" style={{ width: '80px' }} body={nameBody} header="Name"></Column>
                     <Column field="email" style={{ width: '100px' }} body={emailBody} header="Email"></Column>
                     <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>

@@ -96,7 +96,7 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Company Users</h4>
-                              <div className="subscriptionPrice active">$</div>
+                              <div className="subscriptionPrice active">${parseFloat(parseFloat(subscriptionQuery?.data?.business?.amount || "0.00") * parseInt(activeUser?.length)).toFixed(2)}</div>
                             </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
@@ -268,7 +268,7 @@ const Subscription = () => {
           </div>
         </div>
       </div>
-      <AddRemoveCompanyUser users={activeUser} refeatch={desktopUsersQuery?.refetch} total={desktopUsersQuery?.data?.limits?.total} visible={visible} setVisible={setVisible} price={subscriptionQuery?.data?.total_amount}/>
+      <AddRemoveCompanyUser users={activeUser} refeatch={desktopUsersQuery?.refetch} total={desktopUsersQuery?.data?.limits?.total} visible={visible} setVisible={setVisible} price={parseFloat(subscriptionQuery?.data?.business?.amount || 0)}/>
       <AddRemoveMobileUser refeatch={mobileUsersQuery?.refetch} total={mobileUsersQuery?.data?.limits?.total} price={subscriptionQuery?.data?.total_amount} visible={mobileUserVisible} setVisible={setMobileUserVisible} users={mobileUsersQuery?.data?.users} />
     </>
   );
