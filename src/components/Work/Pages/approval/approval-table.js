@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import { Chip } from 'primereact/chip';
 import { Button } from 'primereact/button';
 import { Link, Link45deg, Person, Repeat } from 'react-bootstrap-icons';
+import { Column } from 'primereact/column';
+import { ColumnGroup } from 'primereact/columngroup';
+import { Row } from 'primereact/row';
 
 import style from './approval.module.scss';
 import { Tag } from 'primereact/tag';
@@ -194,34 +196,76 @@ const ApprovalTable = () => {
     }
 
     const header = (
-        <div className="flex align-items-center justify-content-end" style={{ }}>
-            <p style={{ color: '#344054', fontWeight: 400 }} className='m-0 font-14'>This week Approved</p>
+        <div className="flex align-items-center justify-content-end" style={{}}>
+            <p style={{ color: '#344054', fontWeight: 400 }} className='m-0 font-14'>This week to Approved</p>
         </div>
     );
 
+    const header2 = (
+        <div className="flex align-items-center justify-content-end" style={{}}>
+            <p style={{ color: '#344054', fontWeight: 400 }} className='m-0 font-14'>Approved - Not Invoiced </p>
+        </div>
+    );
+
+    const footerGroup = (
+        <ColumnGroup>
+            <Row className='w-100'>
+                <Column footer="" colSpan={10} footerStyle={{ textAlign: 'right' }} />
+                <Column footer={"Total= $ 13,423"} />
+                <Column colSpan={4} />
+            </Row>
+        </ColumnGroup>
+    );
+
     return (
-        <DataTable value={approvals} header={header} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns
-            showGridlines size={'large'} scrollHeight="600px" className="border" selection={selectedApprovals}
-            onSelectionChange={(e) => setSelectedApprovals(e.value)}
-        >
-            <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-            <Column field="jobId" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
-            <Column field="paymentType" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
-            <Column field="time" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
-            <Column field="start" header="Submitted" style={{ minWidth: '122px' }} sortable></Column>
-            <Column field="jobReference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
-            <Column field="client" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
-            <Column field="linkTo" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
+        <>
+            <DataTable value={approvals} header={header} footerColumnGroup={footerGroup} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns
+                showGridlines size={'large'} scrollHeight="calc(50vh - 150px)" className="border-0" selection={selectedApprovals}
+                onSelectionChange={(e) => setSelectedApprovals(e.value)}
+            >
+                <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
+                <Column field="jobId" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field="paymentType" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
+                <Column field="time" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
+                <Column field="start" header="Submitted" style={{ minWidth: '122px' }} sortable></Column>
+                <Column field="jobReference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
+                <Column field="client" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
+                <Column field="linkTo" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
 
-            <Column field="name" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
-            <Column field="bonus" header="Variations" style={{ minWidth: '88px', textAlign: 'end' }} sortable></Column>
-            <Column field="total" header="Total" style={{ minWidth: '105px' }} sortable></Column>
-            <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
+                <Column field="name" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
+                <Column field="bonus" header="Variations" style={{ minWidth: '88px', textAlign: 'end' }} sortable></Column>
+                <Column field="total" header="Total" style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
 
-            <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-            <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+                <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
 
-        </DataTable>
+            </DataTable>
+
+            <DataTable value={approvals} header={header2} footerColumnGroup={footerGroup} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns
+                showGridlines size={'large'} scrollHeight="calc(50vh - 150px)" className="border-0s" selection={selectedApprovals}
+                onSelectionChange={(e) => setSelectedApprovals(e.value)}
+            >
+                <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
+                <Column field="jobId" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field="paymentType" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
+                <Column field="time" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
+                <Column field="start" header="Submitted" style={{ minWidth: '122px' }} sortable></Column>
+                <Column field="jobReference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
+                <Column field="client" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
+                <Column field="linkTo" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
+
+                <Column field="name" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
+                <Column field="bonus" header="Variations" style={{ minWidth: '88px', textAlign: 'end' }} sortable></Column>
+                <Column field="total" header="Total" style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
+
+                <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+
+            </DataTable>
+        </>
+
     )
 }
 
