@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/7061.375d4bb8.chunk.js","mappings":"oJAAA,MAKA,EALaA,KAETC,EAAAA,EAAAA,KAAA,OAAAC,SAAK,Q","sources":["components/Work/Pages/News.js"],"sourcesContent":["const News = () => {\n  return (\n    <div>News</div>\n  )\n}\nexport default News"],"names":["News","_jsx","children"],"sourceRoot":""}
