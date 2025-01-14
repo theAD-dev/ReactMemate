@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmemateapp=self.webpackChunkmemateapp||[]).push([[595,9343],{60595:(e,a,s)=>{s.r(a),s.d(a,{Work:()=>t});s(65043);var r=s(49343),d=s(70579);const t=()=>(0,d.jsx)("div",{children:(0,d.jsx)(r.default,{})})},49343:(e,a,s)=>{s.r(a),s.d(a,{default:()=>d});var r=s(70579);const d=()=>(0,r.jsx)("div",{children:"Profile"})}}]);
+//# sourceMappingURL=595.44708a1b.chunk.js.map
