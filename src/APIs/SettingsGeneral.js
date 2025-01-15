@@ -30,8 +30,8 @@ const fetchAPI = async (endpoint, options = {}) => {
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
-    } 
-    
+    }
+
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       return await response.json();
@@ -40,20 +40,38 @@ const fetchAPI = async (endpoint, options = {}) => {
       const text = await response.text();
       return { message: 'Non-JSON response', body: text };
     }
-    
+
   } catch (error) {
     console.error('Fetch API error:', error);
     throw error;
   }
 };
 
+export const getBillingPersonalInfo = async () => {
+  const endpoint = `/settings/subscriptions/tax-id/`;
+  const options = {
+    method: 'GET'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const getPaymentMethodInfo = async () => {
+  const endpoint = `/settings/payment-method/`;
+  const options = {
+    method: 'GET'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const createProjectStatus = async (data) => {
   console.log('data: ', data);
-  if(data.id) delete data.id;
-  if(data.isNew) delete data.isNew;
-  if(data.isChanged) delete data.isChanged;
-  if(data.value) delete data.value;
-  
+  if (data.id) delete data.id;
+  if (data.isNew) delete data.isNew;
+  if (data.isChanged) delete data.isChanged;
+  if (data.value) delete data.value;
+
   const endpoint = `/settings/project-statuses/new/`;
   const options = {
     method: 'POST',

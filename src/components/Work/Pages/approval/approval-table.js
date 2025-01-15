@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { DataTable } from 'primereact/datatable';
 import { Chip } from 'primereact/chip';
-import { Button } from 'primereact/button';
-import { Link, Link45deg, Person, Repeat } from 'react-bootstrap-icons';
+import { Link45deg, Person, Repeat } from 'react-bootstrap-icons';
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
@@ -210,8 +209,8 @@ const ApprovalTable = () => {
     const footerGroup = (
         <ColumnGroup>
             <Row className='w-100'>
-                <Column footer="" colSpan={10} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={"Total= $ 13,423"} />
+                <Column footer="Total= $ 13,423" colSpan={11} footerStyle={{ textAlign: 'right' }} />
+                <Column footer={""} />
                 <Column colSpan={4} />
             </Row>
         </ColumnGroup>

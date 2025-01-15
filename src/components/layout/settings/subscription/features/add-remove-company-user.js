@@ -14,7 +14,9 @@ import { toast } from "sonner";
 import { deleteDesktopUser, updateUserPrice } from "../../../../../APIs/settings-user-api";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisible }) => {
+const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisible, additionalUser }) => {
+  const [additional, setAdditional] = useState(additionalUser || 0);
+  const [add, setAdd] = useState(0);
   const [state, setState] = useState(users?.length || 0);
   const [max, setMax] = useState(total || 0)
   const percentage = (users?.length / max) * 100;
@@ -23,6 +25,10 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
     setState(users?.length);
     setMax(total);
   }, [users, total]);
+
+  useEffect(() => {
+    if (additionalUser) setAdditional(additionalUser);
+  }, [additionalUser])
 
   const minusUser = () => {
     if (max == users?.length) {
@@ -33,7 +39,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
   }
 
   const plusUser = () => {
-    setMax((prev) => prev + 1);
+    setAdd((prev) => prev + 1);
   }
 
   const headerElement = (
@@ -134,9 +140,9 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
     <Dialog visible={visible} modal header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={() => { setVisible(false); }}>
       <div className="d-flex gap-4 justify-content-between">
         <div className={clsx(style.addRemoveBox)}>
-          <label className={style.addRemoveBoxLabel}>Available Seats</label>
+          <label className={style.addRemoveBoxLabel}>Additional Seats</label>
           <div className="d-flex justify-content-between w-100">
-            <h1 className={style.addRemoveBoxNumber}>{max}</h1>
+            <h1 className={style.addRemoveBoxNumber}>{additional + add}</h1>
 
             <div className={style.addRemoveButtonBox}>
               <div className={style.addRemoveButtonLeft} onClick={minusUser}>
@@ -168,10 +174,17 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
           </div>
         </div>
 
-        <div className={style.currentPricing}>
-          <p className={style.priceBoxText}>Current Pricing</p>
-          <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * max).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
+        <div className="d-flex flex-column w-100 gap-2">
+          <div className={style.currentPricing}>
+            <p className={style.priceBoxText}>Current Pricing</p>
+            <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * max).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
+          </div>
+          <div className={style.currentPricing}>
+            <p className={style.priceBoxText}>Additional Pricing</p>
+            <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * add).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
+          </div>
         </div>
+
 
       </div>
 

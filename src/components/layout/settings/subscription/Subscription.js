@@ -80,9 +80,9 @@ const Subscription = () => {
                             </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
-                                <div className="progress-bar bg-businessBar" style={{ width: `${((subscriptionQuery?.data?.business?.total_users || 0) / (subscriptionQuery?.data?.business?.max_users || 0)) * 100}%` }}></div>
+                                <div className="progress-bar bg-businessBar" style={{ width: `${subscriptionQuery?.data?.business ? 100 : 0}%` }}></div>
                               </div>
-                              <span className={styles.textGradient}>{ subscriptionQuery?.data?.business? "ON" : "OFF" }</span>
+                              <span className={styles.textGradient}>{ subscriptionQuery?.data?.business ? "ON" : "OFF" }</span>
                             </div>
                           </div>
                         </div>
@@ -96,16 +96,16 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Company Users</h4>
-                              <div className="subscriptionPrice active">${parseFloat(parseFloat(subscriptionQuery?.data?.business?.amount || "0.00") * parseInt(activeUser?.length)).toFixed(2)}</div>
+                              <div className="subscriptionPrice active">${parseFloat(parseFloat(subscriptionQuery?.data?.business_user_cost || 0) * parseInt((subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0))).toFixed(2)}</div>
                             </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
                                 <div
                                   className="progress-bar bg-companyBar"
-                                  style={{ width: `${(activeUser?.length/(desktopUsersQuery?.data?.limits?.total))*100}%` }}
+                                  style={{ width: `${((subscriptionQuery?.data?.business?.total_users || 0)/(subscriptionQuery?.data?.business?.max_users || 0)) * 100}%` }}
                                 ></div>
                               </div>
-                              <span>{activeUser?.length}/{desktopUsersQuery?.data?.limits?.total}</span>
+                              <span>{subscriptionQuery?.data?.business?.total_users || 0}/{subscriptionQuery?.data?.business?.max_users || 0}</span>
                             </div>
                             <div className="progressButton">
                               <button className="paynow" onClick={()=> setVisible(true)}>Add or Remove Users</button>
@@ -268,7 +268,7 @@ const Subscription = () => {
           </div>
         </div>
       </div>
-      <AddRemoveCompanyUser users={activeUser} refeatch={desktopUsersQuery?.refetch} total={desktopUsersQuery?.data?.limits?.total} visible={visible} setVisible={setVisible} price={parseFloat(subscriptionQuery?.data?.business?.amount || 0)}/>
+      <AddRemoveCompanyUser users={activeUser} refeatch={desktopUsersQuery?.refetch} total={subscriptionQuery?.data?.business?.max_users || 0} visible={visible} setVisible={setVisible} price={parseFloat(subscriptionQuery?.data?.business_user_cost || 0)} additionalUser={(subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0)}/>
       <AddRemoveMobileUser refeatch={mobileUsersQuery?.refetch} total={mobileUsersQuery?.data?.limits?.total} price={subscriptionQuery?.data?.total_amount} visible={mobileUserVisible} setVisible={setMobileUserVisible} users={mobileUsersQuery?.data?.users} />
     </>
   );
