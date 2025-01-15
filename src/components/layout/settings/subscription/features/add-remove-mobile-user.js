@@ -13,7 +13,7 @@ import { Column } from "primereact/column";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-const AddRemoveMobileUser = ({ users, refeatch, total, price, visible, setVisible }) => {
+const AddRemoveMobileUser = ({ users, refetch, total, price, visible, setVisible }) => {
     const [state, setState] = useState(users?.length || 0);
     const percentage = (users?.length / total) * 100;
 

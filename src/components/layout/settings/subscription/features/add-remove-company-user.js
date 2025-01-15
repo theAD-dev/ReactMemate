@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { Building, Buildings, Envelope, Person } from "react-bootstrap-icons";
-import { Tag } from "primereact/tag";
-import { Badge } from "primereact/badge";
+import { Buildings, Envelope } from "react-bootstrap-icons";
 import { useMutation } from "@tanstack/react-query";
-
 import style from './add-remove-company-user.module.scss';
 import clsx from "clsx";
 import { DataTable } from "primereact/datatable";
@@ -14,27 +11,25 @@ import { toast } from "sonner";
 import { deleteDesktopUser, updateUserPrice } from "../../../../../APIs/settings-user-api";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisible, additionalUser }) => {
-  const [additional, setAdditional] = useState(additionalUser || 0);
+const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visible, setVisible, additionalUser }) => {
   const [add, setAdd] = useState(0);
   const [state, setState] = useState(users?.length || 0);
   const [max, setMax] = useState(total || 0)
   const percentage = (users?.length / max) * 100;
+  const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
 
   useEffect(() => {
     setState(users?.length);
     setMax(total);
   }, [users, total]);
 
-  useEffect(() => {
-    if (additionalUser) setAdditional(additionalUser);
-  }, [additionalUser])
-
   const minusUser = () => {
-    if (max == users?.length) {
+    if ((defaultUser + (additionalUser + add)) === users?.length) {
       toast.error("You are reducing the number of seats by 1, Remove 1 users to continue.")
     } else {
-      setMax((prev) => prev - 1);
+      if (additionalUser + add > 0) {
+        setAdd((prev) => prev - 1);
+      }
     }
   }
 
@@ -62,8 +57,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
 
   const saveBusinessSubscription = () => {
     let obj = {
-      max_users: max,
-      total_users: state,
+      max_users: defaultUser + (additionalUser + add),
     }
     mutation.mutate(obj);
   }
@@ -71,7 +65,10 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
   const footerContent = (
     <div className="d-flex justify-content-end align-items-center gap-3">
       <Button type='button' className='outline-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={() => setVisible(false)}>Close</Button>
-      <Button type='button' className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={saveBusinessSubscription}>Save</Button>
+      <Button type='button' disabled={add === 0} className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={saveBusinessSubscription}>
+        Update
+        {mutation?.isPending && <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />}
+      </Button>
     </div>
   );
 
@@ -105,7 +102,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
   const deleteMutation = useMutation({
     mutationFn: (data) => deleteDesktopUser(data),
     onSuccess: () => {
-      refeatch();
+      refetch();
       toast.success(`User deleted successfully`);
       deleteMutation.reset();
     },
@@ -116,6 +113,7 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
 
   const ActionsBody = (data) => {
     if (!data?.id) return "";
+    if (profileData.email === data?.email) return "-";
 
     return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2" onClick={() => { deleteMutation.mutate(data?.id) }}>
       Remove
@@ -136,23 +134,27 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
     </div>
   }
 
+  useEffect(() => {
+    setAdd(0);
+  }, [visible])
+
   return (
     <Dialog visible={visible} modal header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={() => { setVisible(false); }}>
       <div className="d-flex gap-4 justify-content-between">
         <div className={clsx(style.addRemoveBox)}>
           <label className={style.addRemoveBoxLabel}>Additional Seats</label>
           <div className="d-flex justify-content-between w-100">
-            <h1 className={style.addRemoveBoxNumber}>{additional + add}</h1>
+            <h1 className={style.addRemoveBoxNumber}>{additionalUser + add}</h1>
 
             <div className={style.addRemoveButtonBox}>
               <div className={style.addRemoveButtonLeft} onClick={minusUser}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.75781 10C2.75781 9.65482 3.03763 9.375 3.38281 9.375H17.1328C17.478 9.375 17.7578 9.65482 17.7578 10C17.7578 10.3452 17.478 10.625 17.1328 10.625H3.38281C3.03763 10.625 2.75781 10.3452 2.75781 10Z" fill="#344054" />
+                  <path fillRule="evenodd" clipRule="evenodd" d="M2.75781 10C2.75781 9.65482 3.03763 9.375 3.38281 9.375H17.1328C17.478 9.375 17.7578 9.65482 17.7578 10C17.7578 10.3452 17.478 10.625 17.1328 10.625H3.38281C3.03763 10.625 2.75781 10.3452 2.75781 10Z" fill="#344054" />
                 </svg>
               </div>
               <div className={style.addRemoveButtonRight} onClick={plusUser}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M10.2578 2.5C10.603 2.5 10.8828 2.77982 10.8828 3.125V9.375H17.1328C17.478 9.375 17.7578 9.65482 17.7578 10C17.7578 10.3452 17.478 10.625 17.1328 10.625H10.8828V16.875C10.8828 17.2202 10.603 17.5 10.2578 17.5C9.91263 17.5 9.63281 17.2202 9.63281 16.875V10.625H3.38281C3.03763 10.625 2.75781 10.3452 2.75781 10C2.75781 9.65482 3.03763 9.375 3.38281 9.375H9.63281V3.125C9.63281 2.77982 9.91263 2.5 10.2578 2.5Z" fill="#344054" />
+                  <path fillRule="evenodd" clipRule="evenodd" d="M10.2578 2.5C10.603 2.5 10.8828 2.77982 10.8828 3.125V9.375H17.1328C17.478 9.375 17.7578 9.65482 17.7578 10C17.7578 10.3452 17.478 10.625 17.1328 10.625H10.8828V16.875C10.8828 17.2202 10.603 17.5 10.2578 17.5C9.91263 17.5 9.63281 17.2202 9.63281 16.875V10.625H3.38281C3.03763 10.625 2.75781 10.3452 2.75781 10C2.75781 9.65482 3.03763 9.375 3.38281 9.375H9.63281V3.125C9.63281 2.77982 9.91263 2.5 10.2578 2.5Z" fill="#344054" />
                 </svg>
               </div>
             </div>
@@ -177,11 +179,13 @@ const AddRemoveCompanyUser = ({ users, refeatch, total, price, visible, setVisib
         <div className="d-flex flex-column w-100 gap-2">
           <div className={style.currentPricing}>
             <p className={style.priceBoxText}>Current Pricing</p>
-            <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * max).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
+            <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * additionalUser).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
           </div>
           <div className={style.currentPricing}>
-            <p className={style.priceBoxText}>Additional Pricing</p>
-            <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * add).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
+            <p className={style.priceBoxText}>Updated Price</p>
+            <div className="d-flex align-items-center">
+              <span className={style.priceBoxPrice}>${(additionalUser + add > 0) && add !== 0 ? parseFloat(price * (additionalUser + add)).toFixed(2) : parseFloat(0).toFixed(2)}</span>
+              <span className={style.slashText}>/month</span></div>
           </div>
         </div>
 

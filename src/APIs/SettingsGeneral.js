@@ -56,10 +56,30 @@ export const getBillingPersonalInfo = async () => {
   return fetchAPI(url.toString(), options);
 }
 
+export const updateBillingPersonalInfo = async (data) => {
+  const endpoint = `/settings/subscriptions/tax-id/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const getPaymentMethodInfo = async () => {
-  const endpoint = `/settings/payment-method/`;
+  const endpoint = `/settings/subscriptions/payment-method/`;
   const options = {
     method: 'GET'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const updatePaymentMethodInfo = async (data) => {
+  const endpoint = `/settings/subscriptions/payment-method/`;
+  const options = {
+    method: 'PUT',
+    body: data
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);

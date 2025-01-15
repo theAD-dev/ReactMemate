@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "./../Sidebar";
-import { ExclamationCircle, CheckLg } from "react-bootstrap-icons";
-import { getBillingPersonalInfo, getPaymentMethodInfo } from "../../../../APIs/SettingsGeneral";
-import AddpaymentModal from "./../AddpaymentModal";
+import { ExclamationCircle } from "react-bootstrap-icons";
+import { getBillingPersonalInfo, getPaymentMethodInfo, updateBillingPersonalInfo } from "../../../../APIs/SettingsGeneral";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { InputText } from "primereact/inputtext";
+import { toast } from "sonner";
+import { ProgressSpinner } from "primereact/progressspinner";
+import ChangePaymentMethod from "./features/change-payment-method";
 
 const BillingInfo = () => {
   const [activeTab, setActiveTab] = useState("subscription");
   const [generalData, setGeneralData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const billingInfoQuery = useQuery({
     queryKey: ['getBillingPersonalInfo'],
@@ -25,8 +28,24 @@ const BillingInfo = () => {
     retry: 1,
   });
 
-  const updateBillingPersonalInfo = () => {
-    setIsEdit(false);
+  const mutation = useMutation({
+    mutationFn: (data) => updateBillingPersonalInfo(data),
+    onSuccess: () => {
+      toast.success(`Payment Info updated successfully`);
+      billingInfoQuery.refetch();
+      setIsEdit(false);
+    },
+    onError: (error) => {
+      toast.error(`Failed to update Payment Info. Please try again.`);
+    }
+  });
+
+  const updateBillingPaymentInfo = () => {
+    if (!generalData?.payment_name) return toast.error("Business name is required.")
+    if (!generalData?.abn) return toast.error("ABN number is not valid");
+    if (generalData?.abn?.length < 11) return toast.error("Enter 11 digit ABN number.");
+
+    mutation.mutate(generalData);
   }
 
   const handleInfoDetails = (e) => {
@@ -36,6 +55,12 @@ const BillingInfo = () => {
       [name]: value
     }));
   };
+
+  useEffect(() => {
+    if (billingInfoQuery?.data) {
+      setGeneralData(billingInfoQuery?.data)
+    }
+  }, [billingInfoQuery?.data])
 
   return (
     <>
@@ -82,9 +107,11 @@ const BillingInfo = () => {
                     <Card className="border-0 rounded p-0">
                       <Card.Body>
                         <div className="d-flex justify-content-between mb-4">
-                          <h1 className="font-18 m-0">Personal Info</h1>
+                          <h1 className="font-18 m-0">Payment Info</h1>
                           {
-                            isEdit ? <button onClick={updateBillingPersonalInfo} className="text-button">Save</button>
+                            isEdit ? <button onClick={updateBillingPaymentInfo} className="text-button">
+                              {mutation?.isPending ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} /> : "Save"}
+                            </button>
                               : <button onClick={() => setIsEdit(true)} className="text-button">Edit</button>
                           }
 
@@ -96,8 +123,8 @@ const BillingInfo = () => {
                               <div className="form-group">
                                 <label className="lable">Business Name</label>
                                 {
-                                  isEdit ? <InputText className="border py-2" name="abn" onChange={handleInfoDetails} />
-                                    : <p className="mb-0 font-16 font-600">{billingInfoQuery?.data?.abn || "theAd" || "-"}</p>
+                                  isEdit ? <InputText value={generalData?.payment_name} className="border py-2" name="payment_name" onChange={handleInfoDetails} placeholder="Business name" />
+                                    : <p className="mb-0 font-16 font-600">{billingInfoQuery?.data?.payment_name || "-"}</p>
                                 }
                               </div>
                             </Col>
@@ -105,7 +132,7 @@ const BillingInfo = () => {
                               <div className="form-group">
                                 <label className="lable mb-1">Australian Business Number</label>
                                 {
-                                  isEdit ? <InputText className="border py-2" name="abn" onChange={handleInfoDetails} />
+                                  isEdit ? <InputText value={generalData?.abn} className="border py-2" name="abn" onChange={handleInfoDetails} placeholder="ABN" />
                                     : <p className="mb-0 font-16 font-600">{billingInfoQuery?.data?.abn || "-"}</p>
                                 }
                               </div>
@@ -119,7 +146,7 @@ const BillingInfo = () => {
                   <Col xs={5}>
                     <Card className="border-0 rounded">
                       <Card.Body>
-                        <h1 className="font-18">Payment Method o</h1>
+                        <h1 className="font-18 mt-0">Payment Method</h1>
                         <div className="bg-grey p-3 mb-4 d-flex align-items-center justify-content-between">
                           <div className="d-flex align-items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="46" height="32" viewBox="0 0 46 32" fill="none">
@@ -132,7 +159,7 @@ const BillingInfo = () => {
                               <p className="mb-0 color-475467 font-14">Expiry {paymentMethodInfoQuery?.data?.exp_month > 9 ? paymentMethodInfoQuery?.data?.exp_month : "0" + paymentMethodInfoQuery?.data?.exp_month}/{paymentMethodInfoQuery?.data?.exp_year || "-"}</p>
                             </div>
                           </div>
-                          <Button className="text-button bg-transparent">Change</Button>
+                          <Button className="text-button bg-transparent" onClick={() => setVisible(true)}>Change</Button>
                         </div>
                       </Card.Body>
                     </Card>
@@ -143,6 +170,7 @@ const BillingInfo = () => {
           </div>
         </div>
       </div>
+      <ChangePaymentMethod visible={visible} setVisible={setVisible} refetch={() => paymentMethodInfoQuery.refetch()}/>
     </>
   );
 };

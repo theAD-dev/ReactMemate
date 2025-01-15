@@ -80,7 +80,7 @@ const Discovermemate = () => {
                   </div>
                 </div>
                 <label>Card</label>
-                <div className="border rounded" style={{ padding: '13px 15px'}}>
+                <div className="border rounded" style={{ padding: '13px 15px' }}>
                   <CardElement
                     options={{
                       hidePostalCode: true
