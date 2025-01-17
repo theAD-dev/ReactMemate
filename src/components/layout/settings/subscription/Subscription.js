@@ -262,7 +262,7 @@ const Subscription = () => {
         </div>
       </div>
       <AddRemoveCompanyUser users={activeUser} defaultUser={subscriptionQuery?.data?.default_business_users || 0} refetch={desktopUsersQuery?.refetch} total={subscriptionQuery?.data?.business?.max_users || 0} visible={visible} setVisible={setVisible} price={parseFloat(subscriptionQuery?.data?.business_user_cost || 0)} additionalUser={(subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0)} />
-      <AddRemoveMobileUser refetch={mobileUsersQuery?.refetch} total={mobileUsersQuery?.data?.limits?.total} price={subscriptionQuery?.data?.total_amount} visible={mobileUserVisible} setVisible={setMobileUserVisible} users={mobileUsersQuery?.data?.users} />
+      <AddRemoveMobileUser users={mobileUsersQuery?.data?.users} defaultUser={subscriptionQuery?.data?.default_work_users || 0} refetch={mobileUsersQuery?.refetch} total={subscriptionQuery?.data?.work?.max_workers} price={parseFloat(subscriptionQuery?.data?.work_user_cost || 0)} visible={mobileUserVisible} setVisible={setMobileUserVisible} additionalUser={(subscriptionQuery?.data?.work?.max_workers || 0) - (subscriptionQuery?.data?.default_work_users || 0)} />
     </>
   );
 };

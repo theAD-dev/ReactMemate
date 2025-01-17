@@ -14,7 +14,7 @@ const BillingInfo = () => {
   const [activeTab, setActiveTab] = useState("subscription");
   const [generalData, setGeneralData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const billingInfoQuery = useQuery({
     queryKey: ['getBillingPersonalInfo'],
