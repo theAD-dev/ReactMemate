@@ -51,7 +51,7 @@ export const deleteDesktopUser = async (id) => {
     const endpoint = `/desktop-users/active/${id}/`;
     const options = {
         method: 'PUT',
-        body: {is_active: false}
+        body: { is_active: false }
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
@@ -61,7 +61,7 @@ export const restoreDesktopUser = async (id) => {
     const endpoint = `/desktop-users/active/${id}/`;
     const options = {
         method: 'PUT',
-        body: {is_active: true}
+        body: { is_active: true }
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
@@ -90,6 +90,26 @@ export const updateMobileUserPrice = async (data) => {
     const options = {
         method: 'PUT',
         body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
+export const deleteMobileUser = async (id) => {
+    const endpoint = `/mobile-users/active/${id}/`;
+    const options = {
+        method: 'PUT',
+        body: { is_active: false }
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
+export const restoreMobileUser = async (id) => {
+    const endpoint = `/mobile-users/active/${id}/`;
+    const options = {
+        method: 'PUT',
+        body: { is_active: true }
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);

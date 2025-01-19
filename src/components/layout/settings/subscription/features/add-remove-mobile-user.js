@@ -10,7 +10,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { updateMobileUserPrice } from "../../../../../APIs/settings-user-api";
+import { deleteMobileUser, updateMobileUserPrice } from "../../../../../APIs/settings-user-api";
 
 const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visible, setVisible, additionalUser }) => {
     const [add, setAdd] = useState(0);
@@ -138,10 +138,23 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
         </div>
     }
 
+    const deleteMutation = useMutation({
+        mutationFn: (data) => deleteMobileUser(data),
+        onSuccess: () => {
+            refetch();
+            toast.success(`User deleted successfully`);
+            deleteMutation.reset();
+        },
+        onError: (error) => {
+            toast.error(`Failed to delete user. Please try again.`);
+        }
+    });
+
     const ActionsBody = (data) => {
         if (!data?.id) return "";
-        return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2">
+        return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2" onClick={() => { deleteMutation.mutate(data?.id) }}>
             Remove
+            {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
         </Button>
     }
 

@@ -33,19 +33,12 @@ const schema = yup
     })
     .required();
 
-const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) => {
+const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, refetch }) => {
     const [show, setShow] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const { control, register, reset, handleSubmit, setValue, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
-    });
-
-    const readDesktopUserQuery = useQuery({
-        queryKey: ["readDesktopUser", id],
-        queryFn: () => getDesktopUser(id),
-        enabled: !!id,
-        retry: 0,
     });
 
     const handleClose = () => {
@@ -80,7 +73,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
         let URL = `${process.env.REACT_APP_BACKEND_API_URL}/settings/mobile-users/create/`;
         if (id) {
             method = "PUT"
-            URL = `${process.env.REACT_APP_BACKEND_API_URL}/desktop-users/update/${id}/`
+            URL = `${process.env.REACT_APP_BACKEND_API_URL}/mobile-users/update/${id}/`
         }
         const accessToken = localStorage.getItem("access_token");
         try {
@@ -113,33 +106,6 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
             setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (readDesktopUserQuery?.data && id) {
-            reset({
-                "firstName": readDesktopUserQuery?.data?.['first_name'],
-                "lastName": readDesktopUserQuery?.data?.['last_name'],
-                "email": readDesktopUserQuery?.data?.['email'],
-                "group": readDesktopUserQuery?.data?.['group'],
-                "payment_cycle": readDesktopUserQuery?.data?.['payment_cycle'],
-                "hourly_rate": readDesktopUserQuery?.data?.['hourly_rate'],
-            });
-
-            if (readDesktopUserQuery?.data?.photo) {
-                setPhoto(readDesktopUserQuery?.data?.photo);
-            }
-        } else {
-            setPhoto('');
-            reset({
-                "firstName": "",
-                "lastName": "",
-                "email": "",
-                "group": "",
-                "payment_cycle": "7",
-                "hourly_rate": ""
-            });
-        }
-    }, [readDesktopUserQuery?.data]);
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -212,7 +178,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                         </Row>
 
                         <Col sm={6}>
-                            {readDesktopUserQuery?.isFetching ?
+                            {false ?
                                 <>
                                     <Skeleton width="20%" className='mb-2'></Skeleton>
                                     <Skeleton width="100%" height='3rem' className='mb-4'></Skeleton>
@@ -225,7 +191,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                             }
                         </Col>
                         <Col sm={6}>
-                            {readDesktopUserQuery?.isFetching ?
+                            {false ?
                                 <>
                                     <Skeleton width="20%" className='mb-2'></Skeleton>
                                     <Skeleton width="100%" height='3rem' className='mb-4'></Skeleton>
@@ -240,7 +206,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                         </Col>
 
                         <Col sm={6}>
-                            {readDesktopUserQuery?.isFetching ?
+                            {false ?
                                 <>
                                     <Skeleton width="20%" className='mb-2'></Skeleton>
                                     <Skeleton width="100%" height='3rem' className='mb-4'></Skeleton>
@@ -261,7 +227,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                         </Col>
 
                         <Col sm={6}>
-                            {readDesktopUserQuery?.isFetching ?
+                            {false ?
                                 <>
                                     <Skeleton width="20%" className='mb-2'></Skeleton>
                                     <Skeleton width="100%" height='3rem' className='mb-4'></Skeleton>
@@ -285,7 +251,6 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                                                 className={clsx(style.dropdownSelect, 'dropdown-height-fixed', "outline-none")}
                                                 placeholder="Select payment cycle"
                                                 value={field.value}
-                                                disabled
                                                 style={{ height: '46px' }}
                                                 onChange={(e) => field.onChange(e.value)}
                                             />
@@ -296,7 +261,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                             }
                         </Col>
                         <Col sm={6}>
-                            {readDesktopUserQuery?.isFetching ?
+                            {false ?
                                 <>
                                     <Skeleton width="20%" className='mb-2'></Skeleton>
                                     <Skeleton width="100%" height='3rem' className='mb-4'></Skeleton>
@@ -313,7 +278,7 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
                             }
                         </Col>
                         <Col sm={6}>
-                            {readDesktopUserQuery?.isFetching ?
+                            {false ?
                                 <>
                                     <Skeleton width="20%" className='mb-2'></Skeleton>
                                     <Skeleton width="100%" height='3rem' className='mb-4'></Skeleton>
@@ -331,6 +296,6 @@ const CreateMobileUser = ({ visible, setVisible, id = null, setId, refetch }) =>
             </div>
         </Dialog>
     );
-};
+});
 
 export default CreateMobileUser;

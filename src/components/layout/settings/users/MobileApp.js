@@ -6,14 +6,16 @@ import React, { useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { useQuery } from '@tanstack/react-query';
-import { getMobileUserList } from '../../../../APIs/settings-user-api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../../../APIs/settings-user-api';
 import { Spinner } from 'react-bootstrap';
 import clsx from 'clsx';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import CreateMobileUser from './features/create-mobile-user';
+import { toast } from 'sonner';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
-const MobileApp = () => {
+const MobileApp = React.memo(() => {
     const [activeTab, setActiveTab] = useState('desktop');
     const [visible, setVisible] = useState(false);
 
@@ -39,6 +41,30 @@ const MobileApp = () => {
         </div>
     }
 
+    const deleteMutation = useMutation({
+        mutationFn: (data) => deleteMobileUser(data),
+        onSuccess: () => {
+            mobileUsersQuery.refetch();
+            toast.success(`User disconnected successfully`);
+            deleteMutation.reset();
+        },
+        onError: (error) => {
+            toast.error(`Failed to disconnect user. Please try again.`);
+        }
+    });
+
+    const restoreMutation = useMutation({
+        mutationFn: (data) => restoreMobileUser(data),
+        onSuccess: () => {
+            mobileUsersQuery.refetch();
+            toast.success(`User re-connected successfully`);
+            deleteMutation.reset();
+        },
+        onError: (error) => {
+            toast.error(`Failed to re-connected user. Please try again.`);
+        }
+    });
+
     const ActionBody = (data) => {
         const ref = useRef(null);
         const [isOpen, setOpen] = useState(false);
@@ -57,15 +83,21 @@ const MobileApp = () => {
                 <div className='d-flex flex-column gap-2'>
                     {
                         (data.status === "invited" || data.status === "connected") && <>
-                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
-                                <span style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>Disconnect User</span>
+                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' style={{ width: 'fit-content ' }} onClick={() => { deleteMutation.mutate(data?.id) }}>
+                                <span className='d-flex align-items-center gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
+                                    Disconnect User
+                                    {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                                </span>
                             </div>
                         </>
                     }
                     {
                         (data.status === "disconnected") && <>
-                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'>
-                                <span style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>Reconnect User </span>
+                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' style={{ width: 'fit-content ' }} onClick={() => { restoreMutation.mutate(data?.id) }}>
+                                <span className='d-flex align-items-center gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
+                                    Reconnect User
+                                    {restoreMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                                </span>
                             </div>
                         </>
                     }
@@ -87,7 +119,7 @@ const MobileApp = () => {
                                     <li><Link to="/settings/users/desktop">Desktop</Link></li>
                                     <li className='menuActive'><Link to="/settings/users/mobile-app">Mobile App</Link></li>
                                 </ul>
-                                <Button onClick={()=> setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                                <Button onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
                             </div>
                         </div>
                         <div className={`content_wrap_main ${style.contentwrapmain}`}>
@@ -121,9 +153,9 @@ const MobileApp = () => {
                     </Spinner>
                 </div>
             }
-            <CreateMobileUser visible={visible} setVisible={setVisible} refetch={mobileUsersQuery.refetch()} />
+            {visible && <CreateMobileUser visible={visible} setVisible={setVisible} refetch={() => mobileUsersQuery.refetch()} />}
         </>
     );
-}
+});
 
 export default MobileApp;
