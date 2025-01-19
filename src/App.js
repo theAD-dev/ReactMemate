@@ -23,12 +23,14 @@ import QuotationEmail from './components/layout/browser-web/quotation-email';
 import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
 import StripeContainer from './ui/strip-payment/strip-payment';
 import PasswordCreate from './components/layout/onboarding/password-create';
+import Suspended from './components/layout/suspended';
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="*" element={<Login />} />
+        <Route path='/suspended' element={<Suspended/> }/>
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/check-mail" element={<CheckMail />} />
         <Route path="/password-reset" element={<PasswordReset />} />

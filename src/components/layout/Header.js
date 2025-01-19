@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { fetchProfile } from "../../APIs/ProfileApi";
-import { useLocation, NavLink, Outlet, Routes, Route } from "react-router-dom";
+import { useLocation, NavLink, Outlet, Routes, Route, useNavigate } from "react-router-dom";
 import "./header.css";
 import Logo from "../../assets/images/logo.svg";
 import ClientsIcon from "../../assets/images/icon/profile-2user.svg";
@@ -126,8 +126,13 @@ const Loader = (Component) => (props) =>
 
 const Header = ({ onClick }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
   const [menuswitch, SetMenuSwitch] = useState(true);
+  
+  const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+  const isSuspended = profileDataLocal?.is_suspended ? true :  false;
+  if (isSuspended) navigate("/suspended");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -195,14 +200,17 @@ const Header = ({ onClick }) => {
                               <img src={Logo} alt="Logo" />
                             </a>
                           </li>
-                          <li>
-                            <NavLink
-                              to="/work/dashboard"
-                              className={"managementMain1"}
-                            >
-                              Work
-                            </NavLink>
-                          </li>
+                          {
+                            profileData?.has_work_subscription &&
+                            <li>
+                              <NavLink
+                                to="/work/dashboard"
+                                className={"managementMain1"}
+                              >
+                                Work
+                              </NavLink>
+                            </li>
+                          }
                         </ul>
                       </div>
                     </nav>
@@ -364,14 +372,17 @@ const Header = ({ onClick }) => {
                               <img src={Logo} alt="Logo" />
                             </a>
                           </li>
-                          <li>
-                            <NavLink
-                              to="/work/dashboard"
-                              className={`managementMain1 menuActive`}
-                            >
-                              Work
-                            </NavLink>
-                          </li>
+                          {
+                            profileData?.has_work_subscription &&
+                            <li>
+                              <NavLink
+                                to="/work/dashboard"
+                                className={`managementMain1 menuActive`}
+                              >
+                                Work
+                              </NavLink>
+                            </li>
+                          }
                         </ul>
                       </div>
                     </nav>
@@ -472,8 +483,6 @@ const Header = ({ onClick }) => {
             </Container>
           </>
         }
-
-
       </div>
       <div className="main-wrapper">
         <Routes>

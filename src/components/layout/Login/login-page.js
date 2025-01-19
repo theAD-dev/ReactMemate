@@ -141,7 +141,7 @@ const Login = () => {
                     {isLoading ? "Logging in..." : "Login"}
                   </p>
                 </div>
-                <div className="copywrite">© Memate 2024</div>
+                <div className="copywrite">© Memate {new Date().getFullYear()}</div>
               </div>
               <div
                 className="sliderRight SinglBgRight"
