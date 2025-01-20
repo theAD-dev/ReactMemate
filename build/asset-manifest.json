@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.f2da68d9.css",
-    "main.js": "/static/js/main.59d498c6.js",
+    "main.css": "/static/css/main.50520149.css",
+    "main.js": "/static/js/main.b915aba1.js",
     "static/js/692.2280fcce.chunk.js": "/static/js/692.2280fcce.chunk.js",
     "static/js/351.12735450.chunk.js": "/static/js/351.12735450.chunk.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
@@ -95,6 +95,7 @@
     "static/media/Background pattern decorative.svg": "/static/media/Background pattern decorative.312bd4409fa613ab7fba.svg",
     "static/media/phonecallgra.svg": "/static/media/phonecallgra.20daa5d6965e95d0209bd3a0ffd66365.svg",
     "static/media/clipboard-tick.svg": "/static/media/clipboard-tick.cb69675cc6c63ae0c3af7e980f606225.svg",
+    "static/media/suspended-mask.svg": "/static/media/suspended-mask.504e9f76b31ca320a844.svg",
     "static/media/suppliersIcon.svg": "/static/media/suppliersIcon.24ecdd425df9711554321a51ce5464e5.svg",
     "static/media/briefcase.svg": "/static/media/briefcase.71e57ac9a15a715842801447e4dfb47b.svg",
     "static/media/addNoteModeIcon.svg": "/static/media/addNoteModeIcon.43bdc8582f3ef769329a44f15a05fe67.svg",
@@ -120,8 +121,8 @@
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.f2da68d9.css.map": "/static/css/main.f2da68d9.css.map",
-    "main.59d498c6.js.map": "/static/js/main.59d498c6.js.map",
+    "main.50520149.css.map": "/static/css/main.50520149.css.map",
+    "main.b915aba1.js.map": "/static/js/main.b915aba1.js.map",
     "692.2280fcce.chunk.js.map": "/static/js/692.2280fcce.chunk.js.map",
     "351.12735450.chunk.js.map": "/static/js/351.12735450.chunk.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
@@ -140,7 +141,7 @@
     "reactPlayerPreview.40333d14.chunk.js.map": "/static/js/reactPlayerPreview.40333d14.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f2da68d9.css",
-    "static/js/main.59d498c6.js"
+    "static/css/main.50520149.css",
+    "static/js/main.b915aba1.js"
   ]
 }
