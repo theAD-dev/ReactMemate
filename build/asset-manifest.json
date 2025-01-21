@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.50520149.css",
-    "main.js": "/static/js/main.b915aba1.js",
+    "main.js": "/static/js/main.84ceb4e4.js",
     "static/js/692.2280fcce.chunk.js": "/static/js/692.2280fcce.chunk.js",
     "static/js/351.12735450.chunk.js": "/static/js/351.12735450.chunk.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
@@ -40,6 +40,7 @@
     "static/media/forgetyourpass.jpg": "/static/media/forgetyourpass.38863195291bb4a70113.jpg",
     "static/media/request04.jpg": "/static/media/request04.f2e3f91d879208103c9d.jpg",
     "static/media/twilio-logo.png": "/static/media/twilio-logo.c9f32aa9e92765a4deb7.png",
+    "static/media/Experts-cuate.svg": "/static/media/Experts-cuate.ad81effb3b39c6e68f3382cbf8be4cb2.svg",
     "static/media/lender-panel02.png": "/static/media/lender-panel02.6e6f53144e0e9ae79658.png",
     "static/media/lender-panel03.png": "/static/media/lender-panel03.97ed72079a5a57bde24b.png",
     "static/media/newQuote.png": "/static/media/newQuote.9cbe4c1c556f514b424a.png",
@@ -122,7 +123,7 @@
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
     "main.50520149.css.map": "/static/css/main.50520149.css.map",
-    "main.b915aba1.js.map": "/static/js/main.b915aba1.js.map",
+    "main.84ceb4e4.js.map": "/static/js/main.84ceb4e4.js.map",
     "692.2280fcce.chunk.js.map": "/static/js/692.2280fcce.chunk.js.map",
     "351.12735450.chunk.js.map": "/static/js/351.12735450.chunk.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
@@ -142,6 +143,6 @@
   },
   "entrypoints": [
     "static/css/main.50520149.css",
-    "static/js/main.b915aba1.js"
+    "static/js/main.84ceb4e4.js"
   ]
 }
