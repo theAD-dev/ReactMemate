@@ -11,6 +11,8 @@ import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings
 import AddRemoveMobileUser from "./features/add-remove-mobile-user";
 
 const Subscription = () => {
+  const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+  const hasWorkSubscription = profileDataLocal?.has_work_subscription || false;
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
   const [mobileUserVisible, setMobileUserVisible] = useState(false);
@@ -132,9 +134,14 @@ const Subscription = () => {
                               <span>{subscriptionQuery?.data?.work ? "ON" : "OFF"}</span>
                             </div>
                             <div className="progressButton">
-                              <button className="paynow" disabled>
-                                Active Work Subscription
-                              </button>
+                              {
+                                hasWorkSubscription ? <button className="close">
+                                  Cancel Subscription
+                                </button>
+                                  : <button className="paynow">
+                                    Active Work Subscription
+                                  </button>
+                              }
                             </div>
                           </div>
                         </div>

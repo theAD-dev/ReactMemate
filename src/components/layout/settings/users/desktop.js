@@ -118,7 +118,7 @@ const Desktop = ({ visible, setVisible }) => {
                     </div>
                 </div>
                 <div className={`content_wrap_main ${style.contentwrapmain}`}>
-                    <div className='content_wrapper'>
+                    <div className='content_wrapper border-top'>
                         <div className="listwrapper">
                             <div className="topHeadStyle pb-4">
                                 <div className={style.userHead}>
