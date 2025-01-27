@@ -9,6 +9,7 @@ import { InputText } from "primereact/inputtext";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
 import ChangePaymentMethod from "./features/change-payment-method";
+import { Skeleton } from "primereact/skeleton";
 
 const BillingInfo = () => {
   const [activeTab, setActiveTab] = useState("subscription");
@@ -124,7 +125,13 @@ const BillingInfo = () => {
                                 <label className="lable">Business Name</label>
                                 {
                                   isEdit ? <InputText value={generalData?.payment_name} className="border py-2" name="payment_name" onChange={handleInfoDetails} placeholder="Business name" />
-                                    : <p className="mb-0 font-16 font-600">{billingInfoQuery?.data?.payment_name || "-"}</p>
+                                    : <p className="mb-0 font-16 font-600">
+                                      {
+                                        billingInfoQuery?.isFetching
+                                          ? <Skeleton width="6rem" className="mb-2 mt-1"></Skeleton>
+                                          : (billingInfoQuery?.data?.payment_name || "-")
+                                      }
+                                    </p>
                                 }
                               </div>
                             </Col>
@@ -133,7 +140,13 @@ const BillingInfo = () => {
                                 <label className="lable mb-1">Australian Business Number</label>
                                 {
                                   isEdit ? <InputText value={generalData?.abn} className="border py-2" name="abn" onChange={handleInfoDetails} placeholder="ABN" />
-                                    : <p className="mb-0 font-16 font-600">{billingInfoQuery?.data?.abn || "-"}</p>
+                                    : <p className="mb-0 font-16 font-600">
+                                      {
+                                        billingInfoQuery?.isFetching
+                                          ? <Skeleton width="10rem" className="mb-2 mt-1"></Skeleton>
+                                          : (billingInfoQuery?.data?.abn || "-")
+                                      }
+                                    </p>
                                 }
                               </div>
                             </Col>
@@ -152,11 +165,19 @@ const BillingInfo = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="46" height="32" viewBox="0 0 46 32" fill="none">
                               <path d="M0.5 4C0.5 2.067 2.067 0.5 4 0.5H42C43.933 0.5 45.5 2.067 45.5 4V28C45.5 29.933 43.933 31.5 42 31.5H4C2.067 31.5 0.5 29.933 0.5 28V4Z" fill="white" />
                               <path d="M0.5 4C0.5 2.067 2.067 0.5 4 0.5H42C43.933 0.5 45.5 2.067 45.5 4V28C45.5 29.933 43.933 31.5 42 31.5H4C2.067 31.5 0.5 29.933 0.5 28V4Z" stroke="#EAECF0" />
-                              <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3321 21.1444H11.5858L9.52638 13.0565C9.42863 12.6845 9.22108 12.3556 8.91579 12.2006C8.15389 11.811 7.31432 11.501 6.39844 11.3446V11.0332H10.8225C11.4331 11.0332 11.8911 11.501 11.9674 12.0442L13.0359 17.8782L15.7809 11.0332H18.4509L14.3321 21.1444ZM19.9774 21.1444H17.3837L19.5195 11.0332H22.1131L19.9774 21.1444ZM25.4687 13.8343C25.545 13.2898 26.003 12.9784 26.5372 12.9784C27.3768 12.9002 28.2914 13.0566 29.0546 13.4448L29.5125 11.2678C28.7493 10.9564 27.9097 10.8 27.1478 10.8C24.6305 10.8 22.7987 12.2006 22.7987 14.1444C22.7987 15.6231 24.0962 16.3995 25.0121 16.8673C26.003 17.3337 26.3846 17.6451 26.3083 18.1114C26.3083 18.811 25.545 19.1224 24.7831 19.1224C23.8672 19.1224 22.9514 18.8892 22.1131 18.4997L21.6552 20.678C22.5711 21.0662 23.5619 21.2226 24.4778 21.2226C27.3005 21.2994 29.0546 19.9002 29.0546 17.8001C29.0546 15.1553 25.4687 15.0003 25.4687 13.8343ZM38.1318 21.1444L36.0724 11.0332H33.8603C33.4024 11.0332 32.9444 11.3446 32.7918 11.811L28.9783 21.1444H31.6483L32.1812 19.667H35.4618L35.7671 21.1444H38.1318ZM34.2419 13.7562L35.0038 17.5669H32.8681L34.2419 13.7562Z" fill="#172B85" />
+                              <path fillRule="evenodd" clipRule="evenodd" d="M14.3321 21.1444H11.5858L9.52638 13.0565C9.42863 12.6845 9.22108 12.3556 8.91579 12.2006C8.15389 11.811 7.31432 11.501 6.39844 11.3446V11.0332H10.8225C11.4331 11.0332 11.8911 11.501 11.9674 12.0442L13.0359 17.8782L15.7809 11.0332H18.4509L14.3321 21.1444ZM19.9774 21.1444H17.3837L19.5195 11.0332H22.1131L19.9774 21.1444ZM25.4687 13.8343C25.545 13.2898 26.003 12.9784 26.5372 12.9784C27.3768 12.9002 28.2914 13.0566 29.0546 13.4448L29.5125 11.2678C28.7493 10.9564 27.9097 10.8 27.1478 10.8C24.6305 10.8 22.7987 12.2006 22.7987 14.1444C22.7987 15.6231 24.0962 16.3995 25.0121 16.8673C26.003 17.3337 26.3846 17.6451 26.3083 18.1114C26.3083 18.811 25.545 19.1224 24.7831 19.1224C23.8672 19.1224 22.9514 18.8892 22.1131 18.4997L21.6552 20.678C22.5711 21.0662 23.5619 21.2226 24.4778 21.2226C27.3005 21.2994 29.0546 19.9002 29.0546 17.8001C29.0546 15.1553 25.4687 15.0003 25.4687 13.8343ZM38.1318 21.1444L36.0724 11.0332H33.8603C33.4024 11.0332 32.9444 11.3446 32.7918 11.811L28.9783 21.1444H31.6483L32.1812 19.667H35.4618L35.7671 21.1444H38.1318ZM34.2419 13.7562L35.0038 17.5669H32.8681L34.2419 13.7562Z" fill="#172B85" />
                             </svg>
                             <div className="d-flex flex-column">
-                              <p className="mb-0 font-500 color-344054 font-14"><span className="text-capitalize">{paymentMethodInfoQuery?.data?.card_brand || "-"}</span> ending in {paymentMethodInfoQuery?.data?.last4 || "-"}</p>
-                              <p className="mb-0 color-475467 font-14">Expiry {paymentMethodInfoQuery?.data?.exp_month > 9 ? paymentMethodInfoQuery?.data?.exp_month : "0" + paymentMethodInfoQuery?.data?.exp_month}/{paymentMethodInfoQuery?.data?.exp_year || "-"}</p>
+                              {
+                                paymentMethodInfoQuery?.isFetching
+                                  ? <Skeleton width="10rem" className="mb-1"></Skeleton>
+                                  : <p className="mb-0 font-500 color-344054 font-14"><span className="text-capitalize">{paymentMethodInfoQuery?.data?.card_brand || "-"}</span> ending in {paymentMethodInfoQuery?.data?.last4 || "-"}</p>
+                              }
+                              {
+                                paymentMethodInfoQuery?.isFetching
+                                  ? <Skeleton width="10rem" className=""></Skeleton>
+                                  : <p className="mb-0 color-475467 font-14">Expiry {paymentMethodInfoQuery?.data?.exp_month > 9 ? paymentMethodInfoQuery?.data?.exp_month : "0" + paymentMethodInfoQuery?.data?.exp_month}/{paymentMethodInfoQuery?.data?.exp_year || "-"}</p>
+                              }
                             </div>
                           </div>
                           <Button className="text-button bg-transparent" onClick={() => setVisible(true)}>Change</Button>
@@ -170,7 +191,7 @@ const BillingInfo = () => {
           </div>
         </div>
       </div>
-      <ChangePaymentMethod visible={visible} setVisible={setVisible} refetch={() => paymentMethodInfoQuery.refetch()}/>
+      <ChangePaymentMethod visible={visible} setVisible={setVisible} refetch={() => paymentMethodInfoQuery.refetch()} />
     </>
   );
 };

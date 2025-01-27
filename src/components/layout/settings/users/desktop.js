@@ -1,6 +1,6 @@
 import { Building, Person } from 'react-bootstrap-icons';
 import style from './users.module.scss';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -13,7 +13,6 @@ import { Plus } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { ControlledMenu, useClick } from '@szhsin/react-menu';
 
 const Desktop = ({ visible, setVisible }) => {
     const navigate = useNavigate();

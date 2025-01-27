@@ -78,9 +78,9 @@ function loadData() {
   }
 }
 
-function initDaypilot(elementId) {
-  const isDaypilotLoaded = typeof window !== undefined && Boolean(window.DayPilot);
-  if (!isDaypilotLoaded) return;
+function initDayPilot(elementId) {
+  const isDayPilotLoaded = typeof window !== undefined && Boolean(window.DayPilot);
+  if (!isDayPilotLoaded) return;
 
   DP = window.DayPilot;
 
@@ -128,7 +128,7 @@ function initDaypilot(elementId) {
 
 export function initJobScheduler(elementId, response) {
   try {
-    initDaypilot(elementId);
+    initDayPilot(elementId);
   } catch (error) {
     console.log(error);
   }

@@ -9,3 +9,30 @@ export const getSubscriptions = async () => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 }
+
+export const activeWorkSubscription = async () => {
+    const endpoint = `/settings/subscriptions/work/activate/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
+export const cancelWorkSubscription = async () => {
+    const endpoint = `/settings/subscriptions/work/cancel/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
+
+export const getSubscriptionsBills = async ({ limit, offset }) => {
+    const endpoint = `/settings/subscriptions/bills?limit=${limit}&offset=${offset}`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}

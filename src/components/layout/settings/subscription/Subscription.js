@@ -5,22 +5,48 @@ import styles from "./subscription.module.scss";
 import ThemeImages from '../../../../assets/imgconstant';
 import { Divider } from "@mui/material";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
-import { useQuery } from "@tanstack/react-query";
-import { getSubscriptions } from "../../../../APIs/settings-subscription-api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { activeWorkSubscription, cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
 import AddRemoveMobileUser from "./features/add-remove-mobile-user";
+import { toast } from "sonner";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const Subscription = () => {
   const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
-  const hasWorkSubscription = profileDataLocal?.has_work_subscription || false;
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
   const [mobileUserVisible, setMobileUserVisible] = useState(false);
-
+  
   const subscriptionQuery = useQuery({ queryKey: ['subscription'], queryFn: getSubscriptions });
   const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
   const activeUser = desktopUsersQuery?.data?.users?.filter((user) => user.is_active) || 0;
   const mobileUsersQuery = useQuery({ queryKey: ['mobile-users'], queryFn: getMobileUserList });
+  
+  const hasWorkSubscription = subscriptionQuery?.work?.status || true;
+  const activeWorkMutation = useMutation({
+    mutationFn: activeWorkSubscription,
+    onSuccess: () => {
+      toast.success("Work subscription activated successfully!");
+      subscriptionQuery.refetch();
+    },
+    onError: (error) => {
+      console.error("Error activating work subscription:", error);
+      toast.error("Failed to active work subscription. Please try again.");
+    },
+  });
+
+  const cancelWorkMutation = useMutation({
+    mutationFn: cancelWorkSubscription,
+    onSuccess: () => {
+      toast.success("Work subscription canceled successfully!");
+      subscriptionQuery.refetch();
+    },
+    onError: (error) => {
+      console.error("Error canceling work subscription:", error);
+      toast.error("Failed to cancel work subscription. Please try again.");
+    },
+  });
 
   return (
     <>
@@ -131,15 +157,20 @@ const Subscription = () => {
                                   style={{ width: `${subscriptionQuery?.data?.work ? 100 : 0}%` }}
                                 ></div>
                               </div>
-                              <span>{subscriptionQuery?.data?.work ? "ON" : "OFF"}</span>
+                              <span>{hasWorkSubscription ? "ON" : "OFF"}</span>
                             </div>
                             <div className="progressButton">
                               {
-                                hasWorkSubscription ? <button className="close">
-                                  Cancel Subscription
-                                </button>
-                                  : <button className="paynow">
+                                hasWorkSubscription ?
+                                  <button className="close" disabled={cancelWorkMutation.isPending} onClick={() => cancelWorkMutation.mutate()}>
+                                    Cancel Subscription
+                                    {cancelWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
+                                  </button>
+                                  : <button className="paynow" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
                                     Active Work Subscription
+                                    {
+                                      activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>
+                                    }
                                   </button>
                               }
                             </div>

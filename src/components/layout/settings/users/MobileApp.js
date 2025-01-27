@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import Sidebar from '../Sidebar';
-import { Building, PlusLg, Person, Plus, Send, Files, FileEarmarkSpreadsheet, ThreeDotsVertical } from 'react-bootstrap-icons';
+import { Building, Person, Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
 import style from './users.module.scss';
 import React, { useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
@@ -133,7 +133,7 @@ const MobileApp = React.memo(() => {
                             <div className='content_wrapper'>
                                 <div className="listwrapper border-top">
                                     {
-                                        !hasWorkSubscription ? <>
+                                        hasWorkSubscription ? <>
                                             <div className="topHeadStyle pb-4">
                                                 <div className={style.userHead}>
                                                     <h2>Mobile App Users</h2>
