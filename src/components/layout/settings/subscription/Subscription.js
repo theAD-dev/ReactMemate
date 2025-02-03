@@ -17,18 +17,19 @@ const Subscription = () => {
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
   const [mobileUserVisible, setMobileUserVisible] = useState(false);
-  
+
   const subscriptionQuery = useQuery({ queryKey: ['subscription'], queryFn: getSubscriptions });
   const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
   const activeUser = desktopUsersQuery?.data?.users?.filter((user) => user.is_active) || 0;
   const mobileUsersQuery = useQuery({ queryKey: ['mobile-users'], queryFn: getMobileUserList });
-  
-  const hasWorkSubscription = subscriptionQuery?.work?.status || true;
+
+  const hasWorkSubscription = subscriptionQuery?.data?.work !== null ? true : false;
+
   const activeWorkMutation = useMutation({
     mutationFn: activeWorkSubscription,
     onSuccess: () => {
       toast.success("Work subscription activated successfully!");
-      subscriptionQuery.refetch();
+      window.location.reload();
     },
     onError: (error) => {
       console.error("Error activating work subscription:", error);
@@ -40,7 +41,7 @@ const Subscription = () => {
     mutationFn: cancelWorkSubscription,
     onSuccess: () => {
       toast.success("Work subscription canceled successfully!");
-      subscriptionQuery.refetch();
+      window.location.reload();
     },
     onError: (error) => {
       console.error("Error canceling work subscription:", error);

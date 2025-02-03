@@ -6,6 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getSubscriptionsBills } from '../../../../APIs/settings-subscription-api';
 import { Spinner } from 'react-bootstrap';
 
+function formatDate(timestampMs) {
+  const date = new Date(+timestampMs * 1000);
+  return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+}
+
 const Bills = () => {
   const [activeTab, setActiveTab] = useState('subscription');
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,11 +57,10 @@ const Bills = () => {
                 <table className="table">
                   <thead>
                     <tr>
-                      <th>Sale ID</th>
-                      <th>Date</th>
+                      <th className='text-nowrap'>Sale ID</th>
+                      <th>Invoice Date</th>
                       <th>Product</th>
                       <th>Transaction</th>
-                      <th>Tax Amount</th>
                       <th>Status</th>
                       <th>Method</th>
                       <th>Invoice</th>
@@ -67,12 +71,11 @@ const Bills = () => {
                       results.map((bill) => (
                         <tr key={bill.id}>
                           <td>{bill.id}</td>
-                          <td>{new Date(bill.period_start).toLocaleDateString()}</td>
-                          <td>{bill.price.product_name}</td>
-                          <td>{bill.price.amount} {bill.price.currency}</td>
-                          <td>{bill.price.tax || '-'}</td>
+                          <td>{formatDate(bill.invoice_date)}</td>
+                          <td>{bill?.product}</td>
+                          <td>$ {parseFloat(bill?.amount).toFixed(2)}</td>
                           <td className="billsStatus">
-                            <span>{bill.status === 'p' ? 'Pending' : 'Complete'}</span>
+                            <span className={bill.status}>{bill.status === 'p' ? 'Paid' : 'Failed'}</span>
                           </td>
                           <td style={{ color: '#344054' }}>
                             <div className="CreditCard2FrontIcon">
@@ -81,7 +84,7 @@ const Bills = () => {
                             </div>
                           </td>
                           <td className="textCenter">
-                            <a href={bill.invoice} target="_blank" rel="noopener noreferrer">
+                            <a href={bill.invoice_pdf} target="_blank" rel="noopener noreferrer">
                               <FilePdf color="#FF0000" size={16} />
                             </a>
                           </td>

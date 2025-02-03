@@ -1,3 +1,11 @@
+.jobScheduler {
+  height: auto !important;
+}
+
+#job-scheduler {
+  height: calc(100vh - 172px) !important;
+}
+
 #job-scheduler .scheduler_default_tree_image_no_children {
   background-image: none !important;
 }
@@ -19,7 +27,7 @@
   }
 
   .job-resource {
-    padding: 0px 12px 0px 15px;
+    padding: 0px 5px 0px 15px;
 
     .left-box {
       gap: 12px;
@@ -30,6 +38,10 @@
       .avatar-name {
         font-size: 16px;
         color: #344054;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 165px;
       }
     }
 
@@ -75,6 +87,200 @@
 
   .scheduler_default_tree_image_collapse,
   .scheduler_default_tree_image_expand {
-    right: -50px !important;
+    right: -25px !important;
   }
+}
+
+.job-reference-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.job-item-section {
+  width: 305px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#job-scheduler {
+  .defaultStatus {
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 18px;
+    font-weight: 500;
+    color: #344054;
+    border-radius: 16px;
+    border: 1px solid #eaecf0;
+    background: #f9fafb;
+  }
+
+  .status {
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 18px;
+    font-weight: 500;
+    border-radius: 16px;
+  }
+
+  .status.open {
+    color: #065b76;
+    border: 1px solid #a9d6ef;
+    background: #ecf7fd;
+  }
+
+  .status.Accepted {
+    color: #067611;
+    border: 1px solid #c4efa9;
+    background: #f2fdec;
+  }
+
+  .status.CONFIRMED {
+    color: #067647;
+    border: 1px solid #a9efc5;
+    background: #ecfdf3;
+  }
+
+  .status.ASSIGN {
+    color: #520676;
+    border: 1px solid #dda9ef;
+    background: #f6ecfd;
+  }
+
+  .status.NotConfirmed {
+    color: #b42318;
+    border: 1px solid #fecdca;
+    background: #fef3f2;
+  }
+
+  .status.COMPLETED {
+    color: #067647;
+    border: 1px solid #a9efc5;
+    background: #ecfdf3;
+  }
+
+  .status.DECLINED {
+    color: #b42318;
+    border: 1px solid #fecdca;
+    background: #fef3f2;
+  }
+
+  .status.MANAGER_DECLINED {
+    color: #b54708;
+    border: 1px solid #fedf89;
+    background: #fffaeb;
+  }
+
+  .status.finished {
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 18px;
+    font-weight: 500;
+    color: #6941c6;
+    border-radius: 16px;
+    border: 1px solid #e9d7fe;
+    background: #f9fafb;
+  }
+
+  .status.assign {
+    font-size: 12px;
+    padding: 2px 6px;
+    line-height: 18px;
+    font-weight: 500;
+    color: var(--Error-700, #b42318);
+    border-radius: 16px;
+    border: 1px solid var(--Error-200, #fecdca);
+    background: var(--Error-50, #fef3f2);
+  }
+}
+
+.jobEvent {
+  text-align: start;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+#job-scheduler .scheduler_default_event_inner {
+  border-radius: 4px !important;
+}
+
+#job-scheduler .scheduler_default_event_float_inner::after {
+  top: 8px !important;
+}
+
+/* Open */
+.jobEvent.open .scheduler_default_event_inner {
+  color: #065b76 !important;
+  background-color: #ecf7fd !important;
+}
+
+/* Assign */
+.jobEvent.ASSIGN .scheduler_default_event_inner {
+  color: #520676 !important;
+  background-color: #f6ecfd !important;
+}
+
+/* Not Confirmed */
+.jobEvent.NotConfirmed .scheduler_default_event_inner {
+  color: #b42318 !important;
+  background-color: #fef3f2 !important;
+}
+
+/* Confirmed */
+.jobEvent.CONFIRMED .scheduler_default_event_inner {
+  color: #067647 !important;
+  background-color: #ecfdf3 !important;
+}
+
+/* Completed */
+.jobEvent.COMPLETED .scheduler_default_event_inner {
+  color: #067647 !important;
+  background-color: #ecfdf3 !important;
+}
+
+/* Canceled (Manager Declined) */
+.jobEvent.MANAGER_DECLINED .scheduler_default_event_inner {
+  color: #b54708 !important;
+  background-color: #fffaeb !important;
+}
+
+/* Accepted */
+.jobEvent.Accepted .scheduler_default_event_inner {
+  color: #067611 !important;
+  background-color: #f2fdec !important;
+}
+
+/* Declined */
+.jobEvent.DECLINED .scheduler_default_event_inner {
+  color: #b42318 !important;
+  background-color: #fef3f2 !important;
+}
+
+/* Default */
+.jobEvent.defaultStatus .scheduler_default_event_inner {
+  color: #000000 !important;
+  background-color: #f5f5f5 !important;
+}
+
+.createJobButton {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: #fff;
+}
+
+.job-resource-head {
+  border-top: 1px solid #dedede;
 }

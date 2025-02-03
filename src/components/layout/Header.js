@@ -474,7 +474,7 @@ const Header = ({ onClick }) => {
                         }
                       >
                         <img src={bookSquare} alt="bookSquare" />
-                        News
+                        Chat
                       </NavLink>
                     </li>
                   </ul>

@@ -101,7 +101,7 @@ const CircularProgressBar = ({ percentage, size = 100, strokeWidth = 4, color = 
     );
 };
 
-const CreateJob = ({ visible, setVisible, setRefetch }) => {
+const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     const accessToken = localStorage.getItem("access_token");
 
     const [templateId, setTemplatedId] = useState("");
@@ -113,6 +113,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
     const [description, setDescription] = useState("");
 
     const [userId, setUserId] = useState("");
+    console.log('userId: ', userId);
     const [selectedUserInfo, setSelectedUserInfo] = useState({});
     const [hourlyRate, setHourlyRate] = useState("0.00");
     const [paymentCycle, setPaymentCycle] = useState("");
@@ -403,6 +404,31 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
         }
     };
 
+    const workerDetailsSet = (id) => {
+        let user = mobileuserQuery?.data?.users?.find(user => user.id === id)
+        let paymentCycleObj = {
+            "7": "WEEK",
+            "14": "TWO_WEEKS",
+            "28": "FOUR_WEEKS",
+            "1": "MONTH"
+        }
+        if (user) {
+            setSelectedUserInfo({
+                hourlyRate: parseFloat(user?.hourly_rate || 0).toFixed(2),
+                paymentCycle: paymentCycleObj[user?.payment_cycle] || "",
+                image: user?.photo || "",
+                name: `${user.first_name} ${user.last_name}`,
+            })
+        }
+
+    }
+
+    useEffect(()=> {
+        if (workerId) {
+            setUserId(+workerId);
+            workerDetailsSet(+workerId);
+        }
+    }, [workerId])
 
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -531,22 +557,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                                 placeholder="Select user"
                                                 onChange={(e) => {
                                                     setUserId(e.value);
-                                                    let user = mobileuserQuery?.data?.users?.find(user => user.id === e.value)
-                                                    let paymentCycleObj = {
-                                                        "7": "WEEK",
-                                                        "14": "TWO_WEEKS",
-                                                        "28": "FOUR_WEEKS",
-                                                        "1": "MONTH"
-                                                    }
-                                                    if (user) {
-                                                        setSelectedUserInfo({
-                                                            hourlyRate: parseFloat(user?.hourly_rate || 0).toFixed(2),
-                                                            paymentCycle: paymentCycleObj[user?.payment_cycle] || "",
-                                                            image: user?.photo || "",
-                                                            name: `${user.first_name} ${user.last_name}`,
-                                                        })
-                                                    }
-
+                                                    workerDetailsSet(e.value);
                                                     if (e.value)
                                                         setErrors((others) => ({ ...others, userId: false }))
                                                 }}
@@ -554,6 +565,7 @@ const CreateJob = ({ visible, setVisible, setRefetch }) => {
                                                 valueTemplate={selectedItemTemplate}
                                                 loading={mobileuserQuery?.isFetching}
                                                 filter
+                                                disabled={!!workerId}
                                             />
                                             {errors?.userId && (
                                                 <p className="error-message mb-0">{"Worker is required"}</p>

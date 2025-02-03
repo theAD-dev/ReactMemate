@@ -1,10 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Spinner } from 'react-bootstrap';
-import { initJobScheduler } from './job-scheduler-calendar';
+import { initJobScheduler, reInitializeJobScheduler } from './job-scheduler-calendar';
 import './job-scheduler-calendar.scss';
+import { getJobDashboardData } from '../../../../APIs/jobs-api';
+
+import style from './job-scheduler-calendar.scss';
+import CreateJob from '../create-job/create-job';
 
 const CALENDAR_ID = "job-scheduler";
 const JobSchedulerCalendarModule = () => {
+    const [visible, setVisible] = useState(false);
+    const [workerId, setWorkerId] = useState("");
 
     useEffect(() => {
         const daypilotScript = document.createElement("script");
@@ -18,7 +24,8 @@ const JobSchedulerCalendarModule = () => {
 
         const handleLoad = async () => {
             try {
-                initJobScheduler(CALENDAR_ID);
+                const data = await getJobDashboardData()
+                initJobScheduler(CALENDAR_ID, data);
             } catch (error) {
                 console.error("Error initializing DayPilot:", error);
             }
@@ -37,9 +44,35 @@ const JobSchedulerCalendarModule = () => {
             }
         };
     }, []);
+
+    const refetchAndReInit = async () => {
+        try {
+            const data = await getJobDashboardData()
+            reInitializeJobScheduler(data);
+            setWorkerId("");
+        } catch (error) {
+            console.error("Error initializing DayPilot:", error);
+        }
+    }
+
+    useEffect(() => {
+        const handleClick = (e) => {
+            if (!(e.target instanceof HTMLSelectElement)) {
+                if (e.target.closest('.createJobButton')) {
+                    const workerId = e.target.getAttribute('workerId');
+                    setVisible(true);
+                    setWorkerId(workerId);
+                }
+            }
+        };
+        document.addEventListener('click', handleClick);
+        return () => {
+            document.removeEventListener('click', handleClick);
+        };
+    }, []);
     return (
         <React.Fragment>
-            <div className="topbar" style={{ padding: '0px 20px', position: 'relative' }}>
+            <div className="topbar" style={{ padding: '0px 20px', position: 'relative', borderBottom: '1px solid #f2f2f2' }}>
                 <div className="searchBox" style={{ position: 'relative' }}>
                     <div style={{ position: 'absolute', top: '5px', left: '8px' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -55,13 +88,15 @@ const JobSchedulerCalendarModule = () => {
 
                 </div>
             </div>
-            <div id={CALENDAR_ID}>
+            <div id={CALENDAR_ID} className={style.jobScheduler}>
                 <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
                     <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>
                 </div>
             </div>
+
+            <CreateJob visible={visible} setVisible={setVisible} setRefetch={refetchAndReInit} workerId={workerId}/>
         </React.Fragment>
     )
 }

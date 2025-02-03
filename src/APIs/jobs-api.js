@@ -35,3 +35,12 @@ export const getJob = async (id) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 }
+
+export const getJobDashboardData = async () => {
+    const endpoint = `/dashboard/`;
+    const options = {
+        method: 'GET'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+}
