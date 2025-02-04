@@ -22,9 +22,11 @@ const MobileApp = React.memo(() => {
 
     const [activeTab, setActiveTab] = useState('desktop');
     const [visible, setVisible] = useState(false);
+    const [isShowDeleted, setIsShowDeleted] = useState(false);
 
     const mobileUsersQuery = useQuery({ queryKey: ['mobile-users'], queryFn: getMobileUserList });
-    const mobileUsers = mobileUsersQuery?.data?.users || [];
+    const mobileUsers = isShowDeleted ? mobileUsersQuery?.data?.users?.filter((user) => user.status === 'disconnected') : mobileUsersQuery?.data?.users?.filter((user) => user.status !== 'disconnected') || [];
+
 
     const nameBody = (data) => {
         return <div className='d-flex align-items-center justify-content-between'>
@@ -63,12 +65,20 @@ const MobileApp = React.memo(() => {
             mobileUsersQuery.refetch();
             toast.success(`User re-connected successfully`);
             deleteMutation.reset();
+            setIsShowDeleted(false);
         },
         onError: (error) => {
             toast.error(`Failed to re-connected user. Please try again.`);
         }
     });
 
+    const restoreUser = (id) => {
+        if (parseInt(mobileUsersQuery?.data?.limits?.total) > parseInt(mobileUsersQuery?.data?.limits?.number)) {
+            restoreMutation.mutate(id)
+        } else {
+            toast.error(`You have reached the maximum number of users allowed.`);
+        }
+    }
     const ActionBody = (data) => {
         const ref = useRef(null);
         const [isOpen, setOpen] = useState(false);
@@ -87,7 +97,7 @@ const MobileApp = React.memo(() => {
                 <div className='d-flex flex-column gap-2'>
                     {
                         (data.status === "invited" || data.status === "connected") && <>
-                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' style={{ width: 'fit-content ' }} onClick={() => { deleteMutation.mutate(data?.id) }}>
+                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2 w-100' style={{ width: 'fit-content ' }} onClick={() => { deleteMutation.mutate(data?.id) }}>
                                 <span className='d-flex align-items-center gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
                                     Disconnect User
                                     {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
@@ -97,7 +107,7 @@ const MobileApp = React.memo(() => {
                     }
                     {
                         (data.status === "disconnected") && <>
-                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' style={{ width: 'fit-content ' }} onClick={() => { restoreMutation.mutate(data?.id) }}>
+                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2 w-100' style={{ width: 'fit-content ' }} onClick={() => restoreUser(data.id)}>
                                 <span className='d-flex align-items-center gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
                                     Reconnect User
                                     {restoreMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
@@ -125,7 +135,8 @@ const MobileApp = React.memo(() => {
                                 </ul>
                                 {
                                     hasWorkSubscription &&
-                                    <Button onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                                    <Button
+                                        disabled={parseInt(mobileUsersQuery?.data?.limits?.total) === parseInt(mobileUsersQuery?.data?.limits?.number)} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
                                 }
                             </div>
                         </div>
@@ -139,7 +150,7 @@ const MobileApp = React.memo(() => {
                                                     <h2>Mobile App Users</h2>
                                                     <p>{mobileUsersQuery?.data?.limits?.number || 0} / {mobileUsersQuery?.data?.limits?.total || 0} <span>Buy More</span></p>
                                                 </div>
-                                                <Button className={style.showDeleteBut}>Show Disconnected</Button>
+                                                <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={style.showDeleteBut}>{!isShowDeleted ? "Show" : "Hide"} Disconnected</Button>
                                             </div>
                                             <DataTable value={mobileUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                                 <Column field="name" style={{ width: 'auto' }} body={nameBody} header="Name"></Column>

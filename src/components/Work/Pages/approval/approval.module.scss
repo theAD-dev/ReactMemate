@@ -174,3 +174,8 @@
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
 }
+
+.shadowLeft {
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px 0px 0px -6px);
+}

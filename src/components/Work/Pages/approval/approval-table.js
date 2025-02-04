@@ -194,6 +194,10 @@ const ApprovalTable = () => {
         return <Tag value={rowData.total} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>
     }
 
+    const thisWeekTotalBody = (rowData) => {
+        return <span style={{ fontWeight: 'bold' }}>{rowData.total}</span>
+    }
+
     const header = (
         <div className="flex align-items-center justify-content-end" style={{}}>
             <p style={{ color: '#344054', fontWeight: 400 }} className='m-0 font-14'>This week to Approved</p>
@@ -209,9 +213,9 @@ const ApprovalTable = () => {
     const footerGroup = (
         <ColumnGroup>
             <Row className='w-100'>
-                <Column footer="Total= $ 13,423" colSpan={11} footerStyle={{ textAlign: 'right' }} />
+                <Column footer="Total= $ 4,130.44" colSpan={12} footerStyle={{ textAlign: 'right' }} />
                 <Column footer={""} />
-                <Column colSpan={4} />
+                {/* <Column colSpan={1} /> */}
             </Row>
         </ColumnGroup>
     );
@@ -232,12 +236,11 @@ const ApprovalTable = () => {
                 <Column field="linkTo" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
 
                 <Column field="name" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
-                <Column field="bonus" header="Variations" style={{ minWidth: '88px', textAlign: 'end' }} sortable></Column>
-                <Column field="total" header="Total" style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="timeAssigned" header="Assigned time" style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
 
-                <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+                <Column field="total" header="Total" body={thisWeekTotalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
 
             </DataTable>
 
@@ -255,12 +258,11 @@ const ApprovalTable = () => {
                 <Column field="linkTo" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
 
                 <Column field="name" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
-                <Column field="bonus" header="Variations" style={{ minWidth: '88px', textAlign: 'end' }} sortable></Column>
-                <Column field="total" header="Total" style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="timeAssigned" header="Assigned time" style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
 
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
 
             </DataTable>
         </>

@@ -244,8 +244,8 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
                                                 {...field}
                                                 options={[
                                                     { value: "7", label: "WEEK" },
-                                                    { value: "14", label: "TWO_WEEKS" },
-                                                    { value: "28", label: "FOUR_WEEKS" },
+                                                    { value: "14", label: "TWO_WEEKS", disabled: true },
+                                                    { value: "28", label: "FOUR_WEEKS", disabled: true },
                                                     { value: "1", label: "MONTH" },
                                                 ]}
                                                 className={clsx(style.dropdownSelect, 'dropdown-height-fixed', "outline-none")}

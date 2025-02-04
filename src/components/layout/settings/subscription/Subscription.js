@@ -20,8 +20,9 @@ const Subscription = () => {
 
   const subscriptionQuery = useQuery({ queryKey: ['subscription'], queryFn: getSubscriptions });
   const desktopUsersQuery = useQuery({ queryKey: ['desktop-users-list'], queryFn: getDesktopUserList });
-  const activeUser = desktopUsersQuery?.data?.users?.filter((user) => user.is_active) || 0;
+  const activeUser = desktopUsersQuery?.data?.users?.filter((user) => user.is_active) || [];
   const mobileUsersQuery = useQuery({ queryKey: ['mobile-users'], queryFn: getMobileUserList });
+  const activeMobileUser = mobileUsersQuery?.data?.users?.filter((user) => user.status !== 'disconnected') || [];
 
   const hasWorkSubscription = subscriptionQuery?.data?.work !== null ? true : false;
 
@@ -163,11 +164,11 @@ const Subscription = () => {
                             <div className="progressButton">
                               {
                                 hasWorkSubscription ?
-                                  <button className="close" disabled={cancelWorkMutation.isPending} onClick={() => cancelWorkMutation.mutate()}>
+                                  <button className="close d-flex gap-1 align-items-center" disabled={cancelWorkMutation.isPending} onClick={() => cancelWorkMutation.mutate()}>
                                     Cancel Subscription
                                     {cancelWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
                                   </button>
-                                  : <button className="paynow" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
+                                  : <button className="paynow d-flex gap-1 align-items-center" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
                                     Active Work Subscription
                                     {
                                       activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>
@@ -191,7 +192,7 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Mobile App Users</h4>
-                              <div className="subscriptionPrice">${parseFloat(parseFloat(subscriptionQuery?.data?.work_user_cost || 0) * parseInt((subscriptionQuery?.data?.work?.max_workers || 0) - (subscriptionQuery?.data?.default_work_users || 0))).toFixed(2)}</div>
+                              <div className="subscriptionPrice">${parseFloat(parseFloat(subscriptionQuery?.data?.work_user_cost || 0) * parseInt((subscriptionQuery?.data?.work?.max_workers || 0) - (hasWorkSubscription && subscriptionQuery?.data?.default_work_users || 0))).toFixed(2)}</div>
                             </div>
 
                             <div className="progressWrapMain">
@@ -204,7 +205,7 @@ const Subscription = () => {
                               <span>{subscriptionQuery?.data?.work?.total_workers || 0}/{subscriptionQuery?.data?.work?.max_workers || 0}</span>
                             </div>
                             <div className="progressButton">
-                              <button className="paynow" onClick={() => setMobileUserVisible(true)}>
+                              <button disabled={!hasWorkSubscription} className="paynow" onClick={() => setMobileUserVisible(true)}>
                                 Add or Remove Users
                               </button>
                             </div>
@@ -301,7 +302,7 @@ const Subscription = () => {
         </div>
       </div>
       <AddRemoveCompanyUser users={activeUser} defaultUser={subscriptionQuery?.data?.default_business_users || 0} refetch={desktopUsersQuery?.refetch} total={subscriptionQuery?.data?.business?.max_users || 0} visible={visible} setVisible={setVisible} price={parseFloat(subscriptionQuery?.data?.business_user_cost || 0)} additionalUser={(subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0)} />
-      <AddRemoveMobileUser users={mobileUsersQuery?.data?.users} defaultUser={subscriptionQuery?.data?.default_work_users || 0} refetch={mobileUsersQuery?.refetch} total={subscriptionQuery?.data?.work?.max_workers} price={parseFloat(subscriptionQuery?.data?.work_user_cost || 0)} visible={mobileUserVisible} setVisible={setMobileUserVisible} additionalUser={(subscriptionQuery?.data?.work?.max_workers || 0) - (subscriptionQuery?.data?.default_work_users || 0)} />
+      <AddRemoveMobileUser users={activeMobileUser} defaultUser={subscriptionQuery?.data?.default_work_users || 0} refetch={mobileUsersQuery?.refetch} total={subscriptionQuery?.data?.work?.max_workers} price={parseFloat(subscriptionQuery?.data?.work_user_cost || 0)} visible={mobileUserVisible} setVisible={setMobileUserVisible} additionalUser={(subscriptionQuery?.data?.work?.max_workers || 0) - (subscriptionQuery?.data?.default_work_users || 0)} />
     </>
   );
 };
