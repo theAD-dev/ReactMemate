@@ -24,8 +24,8 @@ const PeoplesTable = () => {
             setLoading(true);
             try {
                 const users = await getTeamMobileUser();
-                console.log('users: ', users?.users || []);
-                setPeoples(users?.users || []);
+                const activeUsers = users?.users.filter((user) => user.status !== 'disconnected');
+                setPeoples(activeUsers || []);
             } catch (err) {
                 console.log(err);
             } finally {

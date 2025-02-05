@@ -65,7 +65,7 @@ function loadData(data) {
     })) || []
 
     childResource.push({
-      id: worker.id+"-"+index,
+      id: worker.id + "-" + index,
       minHeight: 56,
       html: `<div class="d-flex align-items-center justify-content-end" style="width: 360px">
         <button class="createJobButton" workerId="${worker.id}">
@@ -149,6 +149,22 @@ function initDayPilot(elementId, data) {
     infiniteScrollingEnabled: true,
     infiniteScrollingStepDays: 100,
     heightSpec: "Parent100Pct",
+    dynamicLoading: true,
+    onScroll: async (args) => {
+      args.async = true;
+
+      const start = args.viewport.start;
+      console.log('start: ', start);
+      const end = args.viewport.end;
+      console.log('end: ', end);
+      const resources = args.viewport.resources.join(",");
+      console.log('resources: ', resources);
+      // const { data } = await DayPilot.Http.get(`/api/events?start=${start}&end=${end}&resources=${resources}`);
+      // args.events = data;
+
+      args.loaded();
+
+    },
   });
 
   dp.init();

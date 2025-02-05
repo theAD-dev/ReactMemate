@@ -4,6 +4,7 @@ import { Column } from 'primereact/column';
 import { Envelope, GeoAlt, Globe } from 'react-bootstrap-icons';
 import { Button } from 'primereact/button';
 import { Link, useNavigate } from 'react-router-dom';
+import { OverlayPanel } from "primereact/overlaypanel";
 
 import style from './suppliers.module.scss';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
@@ -14,7 +15,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [suppliers, setSuppliers] = useState([]);
-    
+
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: null, sortOrder: null });
     const [hasMoreData, setHasMoreData] = useState(true);
@@ -82,16 +83,44 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
         </div>
     }
 
-    const servicesBodyTemplate = (rowData) => {
-        let services = rowData?.services?.includes(",")
-            ? rowData?.services?.split(",")
-            : rowData?.services?.split(" ") || [];
-        return <div className='d-flex align-items-center gap-2'>
-            {
-                services?.length ? (services.map((service, index) => <div key={`${rowData.id}-service-${index}`} className={style.serviceTag}>{service}</div>)) : "-"
-            }
-        </div>
-    }
+
+
+    const ServicesBodyTemplate = (rowData) => {
+        const op = useRef(null);
+        const handleServiceClick = (event) => {
+            if (op.current) op.current.toggle(event);
+        };
+
+        let services = rowData?.services?.split(",") || [];
+
+        const displayedServices = services.slice(0, 5);
+        const hiddenServices = services.slice(5);
+        const hiddenCount = services.length - 5;
+
+        return (
+            <div className='d-flex align-items-center gap-2'>
+                {displayedServices.map((service, index) => (
+                    <div key={`${rowData.id}-service-${index}`} className={style.serviceTag}>{service}</div>
+                ))}
+                {hiddenCount > 0 && (
+                    <div
+                        className={style.serviceTag}
+                        onClick={handleServiceClick}
+                        style={{ cursor: "pointer", border: '1px solid #dedede' }}
+                    >
+                        +{hiddenCount}
+                    </div>
+                )}
+                <OverlayPanel ref={op} className="servicesOverlay">
+                    <div className="flex flex-column">
+                        {hiddenServices.map((service, index) => (
+                            <div key={`${rowData.id}-service-full-${index}`} className={style.serviceTag}>{service}</div>
+                        ))}
+                    </div>
+                </OverlayPanel>
+            </div>
+        );
+    };
 
     const emailBodyTemplate = (rowData) => {
         return <div className='d-flex align-items-center justify-content-center'>
@@ -171,7 +200,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             <Column selectionMode="multiple" headerClassName='border-end-0 ps-4' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="id" header="Supplier ID" body={supplierIdBodyTemplate} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
             <Column field="name" header="Supplier A→Z" body={nameBodyTemplate} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '254px' }} frozen sortable></Column>
-            <Column field="services" header="Supplier Services" body={servicesBodyTemplate} style={{ minWidth: '469px' }}></Column>
+            <Column field="services" header="Supplier Services" body={ServicesBodyTemplate} style={{ minWidth: '469px' }}></Column>
             <Column field="email" header="Email" body={emailBodyTemplate} style={{ minWidth: '68px' }}></Column>
             <Column header="Address" body={addressesBody} style={{ minWidth: '313px' }}></Column>
             <Column header="State" body={addressesStateBodyTemplate} style={{ minWidth: '60px', textAlign: 'center' }}></Column>

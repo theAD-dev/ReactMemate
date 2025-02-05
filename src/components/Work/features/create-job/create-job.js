@@ -113,7 +113,6 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     const [description, setDescription] = useState("");
 
     const [userId, setUserId] = useState("");
-    console.log('userId: ', userId);
     const [selectedUserInfo, setSelectedUserInfo] = useState({});
     const [hourlyRate, setHourlyRate] = useState("0.00");
     const [paymentCycle, setPaymentCycle] = useState("");
@@ -129,7 +128,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     const [repeatEnd, setRepeatEnd] = useState("");
     const [occurrences, setOccurrences] = useState("");
 
-    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("1");
+    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("");
 
 
     const [files, setFiles] = useState([]);
@@ -226,7 +225,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         setEnding([]);
         setRepeatEnd("");
         setOccurrences("");
-        setProjectPhotoDeliver("1");
+        setProjectPhotoDeliver("");
         setFiles([]);
         setType('2');
         setCost(0.00);
@@ -366,8 +365,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         if (!jobReference) tempErrors.jobReference = true;
         else payload.short_description = jobReference;
 
-        if (!description) tempErrors.description = true;
-        else payload.long_description = description;
+        if (description) payload.long_description = description;
 
         if (!userId) tempErrors.userId = true;
         else payload.worker = userId;
@@ -390,8 +388,8 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         if (time_type !== '1' && !end) tempErrors.end = true;
         else if (end) payload.end_date = new Date(end).toISOString();
 
-        if (!projectId) tempErrors.projectId = true;
-        else payload.project = projectId;
+        // if (!projectId) tempErrors.projectId = true;
+        if (projectId) payload.project = projectId;
 
         payload.project_photos = projectPhotoDeliver;
 
@@ -540,7 +538,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                             <Dropdown
                                                 options={
                                                     (mobileuserQuery &&
-                                                        mobileuserQuery.data?.users?.map((user) => ({
+                                                        mobileuserQuery.data?.users?.filter((user) => user.status !== 'disconnected')?.map((user) => ({
                                                             value: user.id,
                                                             label: `${user.first_name} ${user.last_name}`,
                                                             image: user?.photo

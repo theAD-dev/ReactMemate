@@ -27,8 +27,7 @@ const DesktopPeoplesTable = () => {
             setLoading(true);
             try {
                 const users = await getTeamDesktopUser();
-                let activeUsers = users?.users?.filter((user) => user.is_active) || 0;
-                console.log('users: ', activeUsers || []);
+                let activeUsers = users?.users?.filter((user) => user.is_active);
                 setPeoples(activeUsers || []);
             } catch (err) {
                 console.log(err);

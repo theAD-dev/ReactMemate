@@ -213,9 +213,8 @@ const ApprovalTable = () => {
     const footerGroup = (
         <ColumnGroup>
             <Row className='w-100'>
-                <Column footer="Total= $ 4,130.44" colSpan={12} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={""} />
-                {/* <Column colSpan={1} /> */}
+                <Column colSpan={12} />
+                <Column footer="Total= $ 4,130.44" footerStyle={{ position: 'sticky', right: 0 }} />
             </Row>
         </ColumnGroup>
     );
@@ -240,7 +239,7 @@ const ApprovalTable = () => {
                 <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
 
                 <Column field="total" header="Total" body={thisWeekTotalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
+                <Column field="status" header="Actions" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
 
             </DataTable>
 
@@ -262,7 +261,7 @@ const ApprovalTable = () => {
                 <Column field="realTime" header="Real Time" style={{ minWidth: '88px' }}></Column>
 
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
+                <Column field="status" header="Actions" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
 
             </DataTable>
         </>
