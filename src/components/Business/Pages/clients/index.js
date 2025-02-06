@@ -69,7 +69,7 @@ const ClientPage = () => {
                     }
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '10px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Clients</h1>
                     <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
                 </div>

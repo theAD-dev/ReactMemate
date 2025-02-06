@@ -164,7 +164,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <Column field="id" header="Client ID" body={clientIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
             <Column field="name" header="Client A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
             <Column field="category.name" header="Category" style={{ minWidth: '94px' }}></Column>
-            <Column field="days_in_company" header="Days in company" body={daysBody} style={{ minWidth: '56px' }} className='text-center'></Column>
+            <Column field="days_in_company" header="Days" body={daysBody} style={{ minWidth: '56px' }} className='text-center'></Column>
             <Column field='jobsdone' header="Jobs" body={JobBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
             <Column field='total_turnover' header="Total turnover" body={totalTurnoverBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
             <Column field='average_pd' header="Average P/D" body={averagePD} style={{ minWidth: '114px', textAlign: 'center' }} sortable></Column>

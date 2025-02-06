@@ -178,8 +178,8 @@
 }
 
 .menuActive.clients {
+    color: #5C83EA !important;
     background: linear-gradient(135deg, rgba(114, 237, 242, 0.10) 0%, rgba(81, 81, 229, 0.10) 100%);
-    color: #222;
 }
 
 .clients:hover {
