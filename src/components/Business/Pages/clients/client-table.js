@@ -120,7 +120,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <span style={{ color: '#98A2B3', fontSize: '14px' }}>{address?.address || defaultAddress || "-"}</span>
             {(address?.address || defaultAddress) &&
                 <Link to={`http://maps.google.com/?q=${address?.address || defaultAddress}`} target='_blank' className={`${style.location} show-on-hover-element`}>
-                    <GeoAlt />
+                    <GeoAlt color='#1AB2FF'/>
                 </Link>
             }
         </div>

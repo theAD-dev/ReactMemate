@@ -33,14 +33,13 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
 
         const formData = createFormData(data, photo);
         const onSuccess = (response) => {
-            console.log('response: ', response);
             toast.success(`New client created successfully`);
             setVisible(false);
             refetch((prev) => !prev);
         };
 
-        const onError = () => {
-            toast.error('Failed to create new client. Please try again.');
+        const onError = (message) => {
+            toast.error(message || 'Failed to create new client. Please try again.');
         };
 
         setIsPending(true);
@@ -105,14 +104,15 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
                 body: formData,
             });
             if (response.ok) {
-                console.log('response: ', response);
                 toast.success(`New client created successfully`);
                 setVisible(false);
                 refetch((prev) => !prev);
             } else {
-                toast.error('Failed to create new client. Please try again.');
+                const error = await response.json();
+                toast.error(error || 'Failed to create new client. Please try again.');
             }
         } catch (err) {
+            console.log('Error in creating new business client: ', err);
             toast.error(`Failed to create new client. Please try again.`);
         } finally {
             setIsPending(false);
