@@ -2628,13 +2628,14 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 
 .salesTableWrap table thead tr th:nth-child(3) {
   position: sticky;
-  left: 130px;
+  left: 192px;
+  width: 270px;
   z-index: 5;
   border-right: 1px solid var(--color10) !important;
 }
 .salesTableWrap table thead tr th:nth-child(4) {
   position: sticky;
-  left: 333px;
+  left: 457px;
   border-left: 0 !important;
   border-right: 1px solid var(--color10) !important;
   z-index: 8;
@@ -2664,7 +2665,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 .salesTableWrap table thead tr th:nth-child(2) {
   position: sticky;
-  left: 40px;
+  left: 48px;
   z-index: 8;
   border-right: 0px solid var(--color10) !important;
   padding-left: 0px !important;
@@ -2787,7 +2788,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   }
   .salesTableWrap table thead tr th:nth-child(3) {
     position: sticky;
-    left: 126px;
+    left: 192px;
+    width: 270px;
     z-index: 5;
     border-right: 0px solid var(--color10) !important;
   }
@@ -2801,7 +2803,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   .salesTableWrap .salesTableWrap table thead tr th:nth-child(2),
   .salesTableWrap table tbody tr td:nth-child(2) {
     position: sticky;
-    left: 42px;
+    left: 48px;
 
     z-index: 8;
     border-right: 0px solid var(--color10) !important;
@@ -2830,18 +2832,19 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   .salesTableWrap .salesTableWrap table thead tr th:nth-child(3),
   .salesTableWrap table tbody tr td:nth-child(3) {
     position: sticky;
-    left: 126px;
+    left: 192px;
+    width: 270px;
     z-index: 5;
     border-right: 0px solid var(--color10) !important;
   }
 
   .salesTableWrap table thead tr th:nth-child(4) {
-    left: 401px;
+    left: 457px;
   }
   .salesTableWrap .salesTableWrap table thead tr th:nth-child(4),
   .salesTableWrap table tbody tr td:nth-child(4) {
     position: sticky;
-    left: 401px;
+    left: 457px;
     border-left: 0 !important;
     border-right: 0px solid var(--color10) !important;
     z-index: 8;
@@ -2870,7 +2873,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
     z-index: 0;
   }
   .salesTableWrap table thead tr th:nth-child(2) {
-    left: 42px;
+    left: 48px;
   }
 }
 
