@@ -51,7 +51,8 @@ export const handleApiRequest = async (url, method, formData, onSuccess, onError
         if (response.ok) {
             onSuccess(response);
         } else {
-            onError();
+            const message = await response.json();
+            onError(message);
         }
     } catch (error) {
         console.error("API request error:", error);

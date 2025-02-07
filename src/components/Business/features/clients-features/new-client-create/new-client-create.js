@@ -33,14 +33,13 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
 
         const formData = createFormData(data, photo);
         const onSuccess = (response) => {
-            console.log('response: ', response);
             toast.success(`New client created successfully`);
             setVisible(false);
             refetch((prev) => !prev);
         };
 
-        const onError = () => {
-            toast.error('Failed to create new client. Please try again.');
+        const onError = (message) => {
+            toast.error(message || 'Failed to create new client. Please try again.');
         };
 
         setIsPending(true);
