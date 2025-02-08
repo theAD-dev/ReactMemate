@@ -78,7 +78,7 @@ const ForgotPassword = () => {
             </div>
           </div>
           <div className="copywrite">
-            © Memate 2024
+            © Memate {new Date().getFullYear()}
           </div>
         </div>
         <div className="sliderRight SinglBgRight" style={{

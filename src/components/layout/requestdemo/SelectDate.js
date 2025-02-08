@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import datecal from "../../../assets/images/datecal.png";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import "./requestademo.css"
 import LoinLogo from "../../../assets/images/logo.svg";
@@ -13,17 +12,10 @@ import { InlineWidget } from "react-calendly";
 
 const SelectDate = () => {
   const location = useLocation();
-  const { first_name, last_name, country, phone, email, company_name, company_description, company_size, is_agree_marketing } = location.state;
+  const { first_name, last_name, country, phone, email, company_name, company_description, company_size } = location.state;
   const navigate = useNavigate();
-  const [date, setDate] = useState('');
 
   const handleStepOne = () => {
-    // if (date.trim() === '') {
-    //   setDate('Select Date');
-    //   return;
-    // }
-
-    // Create an object containing all the data
     const mainData = {
       first_name: first_name,
       last_name: last_name,
@@ -58,7 +50,7 @@ const SelectDate = () => {
         <div className="logohead">
           <img src={LoinLogo} alt="Loin Logo" />
         </div>
-        <div className="copywrite">© Memate 2024</div>
+        <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
           <form>
             <div className="loginPage">

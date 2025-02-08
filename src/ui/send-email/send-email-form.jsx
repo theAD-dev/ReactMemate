@@ -104,7 +104,8 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
         }
 
         if (emailTemplateQuery?.data) {
-            setEmailTemplatedId(17);
+            const activeTemplateId = emailTemplateQuery?.data?.find((template) => template.type === 'Quote');
+            if (activeTemplateId?.id) setEmailTemplatedId(activeTemplateId?.id);
         }
 
     }, [emailQuery, outgoingEmailTemplateQuery])

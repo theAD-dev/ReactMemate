@@ -98,7 +98,7 @@ const BillingInfo = () => {
                         <ExclamationCircle color="#344054" size={20} />
                       </span>
                       <strong> Next Payment </strong> Your next monthly payment
-                      100$ will be charged on Nov 27, 2023.
+                      $xxx is scheduled.
                     </h2>
                   </div>
                 </div>
@@ -107,12 +107,15 @@ const BillingInfo = () => {
                   <Col xs={7}>
                     <Card className="border-0 rounded p-0">
                       <Card.Body>
-                        <div className="d-flex justify-content-between mb-4">
+                        <div className="d-flex justify-content-between mb-2">
                           <h1 className="font-18 m-0">Payment Info</h1>
                           {
-                            isEdit ? <button onClick={updateBillingPaymentInfo} className="text-button">
+                            isEdit ? <div className="d-flex align-items-center gap-3"> 
+                            <button onClick={() => setIsEdit(false)} className="text-button p-0" style={{ fontSize: '13px'}}>Cancel</button>
+                            <button onClick={updateBillingPaymentInfo} className="text-button p-0">
                               {mutation?.isPending ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} /> : "Save"}
                             </button>
+                            </div>
                               : <button onClick={() => setIsEdit(true)} className="text-button">Edit</button>
                           }
 
@@ -122,7 +125,7 @@ const BillingInfo = () => {
                           <Row>
                             <Col sm={6}>
                               <div className="form-group">
-                                <label className="lable">Business Name</label>
+                                <label className="lable d-block">Business Name</label>
                                 {
                                   isEdit ? <InputText value={generalData?.payment_name} className="border py-2" name="payment_name" onChange={handleInfoDetails} placeholder="Business name" />
                                     : <p className="mb-0 font-16 font-600">
@@ -137,7 +140,7 @@ const BillingInfo = () => {
                             </Col>
                             <Col sm={6}>
                               <div className="form-group">
-                                <label className="lable mb-1">Australian Business Number</label>
+                                <label className="lable d-block mb-1">Australian Business Number</label>
                                 {
                                   isEdit ? <InputText value={generalData?.abn} className="border py-2" name="abn" onChange={handleInfoDetails} placeholder="ABN" />
                                     : <p className="mb-0 font-16 font-600">

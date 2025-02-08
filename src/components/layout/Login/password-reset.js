@@ -36,7 +36,7 @@ const PasswordReset = () => {
                   Continue <img src={arrowRight} alt="Arrow Right" />
                 </button>
                 <div className="linkBottom1">
-                  <Link className="backToLogin" to="/login">
+                  <Link className="backToLogin" to="/login" style={{ color: '#475467', fontWeight: '600', fontSize: '14px' }}>
                     <ArrowLeftShort color="#475467" size={20} />
                     Back to log in
                   </Link>
@@ -44,7 +44,7 @@ const PasswordReset = () => {
               </form>
             </div>
           </div>
-          <div className="copywrite">© Memate 2024</div>
+          <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         </div>
         <div
           className="sliderRight SinglBgRight"

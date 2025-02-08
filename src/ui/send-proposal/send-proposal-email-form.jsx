@@ -104,7 +104,8 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         }
 
         if (!emailTemplateId && emailTemplateQuery?.data) {
-            setEmailTemplatedId(20);
+            const activeTemplateId = emailTemplateQuery?.data?.find((template) => template.type === 'Proposal');
+            if (activeTemplateId?.id) setEmailTemplatedId(activeTemplateId.id);
         }
 
     }, [emailQuery, outgoingEmailTemplateQuery])

@@ -1430,6 +1430,13 @@ table.indexCalname tbody tr td:nth-child(9) {
   border: 1px solid var(--Primary-300, #76d1ff);
   background: var(--Base-White, #fff);
 }
+
+.DepartmentQuote input[type="text"]::placeholder,
+.DepartmentQuote textarea::placeholder {
+  font-size: 14px !important;
+  color: #98a2b3;
+}
+
 .DepartmentQuote textarea:focus {
   border-radius: var(--radius-xs, 4px) !important;
   border: 1px solid var(--Primary-300, #76d1ff) !important;

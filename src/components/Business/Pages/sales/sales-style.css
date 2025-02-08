@@ -2629,13 +2629,13 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .salesTableWrap table thead tr th:nth-child(3) {
   position: sticky;
   left: 192px;
-  width: 270px;
+  min-width: 270px;
   z-index: 5;
   border-right: 1px solid var(--color10) !important;
 }
 .salesTableWrap table thead tr th:nth-child(4) {
   position: sticky;
-  left: 457px;
+  left: 462px;
   border-left: 0 !important;
   border-right: 1px solid var(--color10) !important;
   z-index: 8;
@@ -2665,6 +2665,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 .salesTableWrap table thead tr th:nth-child(2) {
   position: sticky;
+  min-width: 144px;
   left: 48px;
   z-index: 8;
   border-right: 0px solid var(--color10) !important;
@@ -2833,18 +2834,18 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   .salesTableWrap table tbody tr td:nth-child(3) {
     position: sticky;
     left: 192px;
-    width: 270px;
+    min-width: 270px;
     z-index: 5;
     border-right: 0px solid var(--color10) !important;
   }
 
   .salesTableWrap table thead tr th:nth-child(4) {
-    left: 457px;
+    left: 462px;
   }
   .salesTableWrap .salesTableWrap table thead tr th:nth-child(4),
   .salesTableWrap table tbody tr td:nth-child(4) {
     position: sticky;
-    left: 457px;
+    left: 462px;
     border-left: 0 !important;
     border-right: 0px solid var(--color10) !important;
     z-index: 8;

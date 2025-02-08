@@ -22,7 +22,7 @@ const ResendEmail = () => {
         <div className="logohead">
           <img src={LoinLogo} alt="Loin Logo" />
         </div>
-        <div className="copywrite">© Memate 2024</div>
+        <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1 onboardingWrap'>
           <form>
             <div className="loginPage">
@@ -61,7 +61,9 @@ const ResendEmail = () => {
                   </button>
 
                   <div className={`linkBottom `}>
-                    <Link className="backToLogin" to="/login"><ArrowLeftShort color='#475467' size={20} />Back to log in</Link>
+                    <Link className="backToLogin" to="/login" style={{ color: '#475467', fontWeight: '600', fontSize: '14px' }}>
+                      <ArrowLeftShort color='#475467' size={20} />Back to log in
+                    </Link>
                   </div>
 
                 </div>

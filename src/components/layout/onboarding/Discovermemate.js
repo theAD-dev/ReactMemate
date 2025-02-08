@@ -23,6 +23,7 @@ const Discovermemate = () => {
 
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,11 +38,14 @@ const Discovermemate = () => {
       setError(error.message);
     } else {
       console.log("PaymentMethod:", paymentMethod);
+      setLoading(true);
       OnboardingCreateSubscription(uuid, { payment_method: paymentMethod.id })
         .then(() => navigate(`/create-password/${uuid}`))
         .catch((err) => {
           console.error("Error submitting form:", err);
           setError(err.message);
+        }).finally(() => {
+          setLoading(false);
         });
     }
   };
@@ -51,7 +55,7 @@ const Discovermemate = () => {
       <div className="logohead">
         <img src={LoinLogo} alt="Logo" />
       </div>
-      <div className="copywrite">© Memate 2024</div>
+      <div className="copywrite">© Memate {new Date().getFullYear()}</div>
       <div className="OnboardingStep1">
         <form onSubmit={handleSubmit}>
           <div className="loginPage">
@@ -91,9 +95,11 @@ const Discovermemate = () => {
                 {error && <p className="error-message">{error}</p>}
                 <button
                   type="submit"
+                  disabled={loading}
                   className="fillbtn flexcenterbox"
                 >
-                  Next Step <img src={arrowRight} alt="Arrow Right" />
+                  {loading ? "Processing..." : "Next Step"}
+                  {!loading && <img src={arrowRight} alt="Arrow Right" />}
                 </button>
               </div>
             </div>

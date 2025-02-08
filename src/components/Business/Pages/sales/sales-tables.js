@@ -138,10 +138,10 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
   const [columns, setColumns] = useState([
     {
       field: "Quote",
-      width: 70,
+      width: 144,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Quote")}>
-          <span>Quote</span>
+          <span className="ps-3">Quote</span>
           {sortField === "Quote" && (
             <span>
               {sortDirection === "asc" ? (
@@ -167,7 +167,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
 
     {
       field: "Client",
-      width: 200,
+      width: 270,
       headerName: (
         <div className="styleColor1" onClick={() => toggleSort("Client")}>
           <span>Client</span>
