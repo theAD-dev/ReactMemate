@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import envelopeIcon from "../../../assets/images/icon/envelope.svg";
-import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeftShort, CheckCircleFill } from "react-bootstrap-icons";
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import "./org.css";
 import createPasswordImg from "../../../assets/images/create-password.png";
 import LoinLogo from "../../../assets/images/logo.svg";
-import { ArrowLeftShort, Check2Circle, CheckCircleFill } from "react-bootstrap-icons";
 import { OnboardingCreatePassword } from '../../../APIs/OnboardingApi';
 
 const PasswordCreate = () => {
@@ -16,8 +15,8 @@ const PasswordCreate = () => {
     const [password, setPassword] = useState('');
     const [confirmedPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    console.log('passwordError: ', passwordError);
     const [strength, setStrength] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const validatePassword = (password) => {
         const uppercase = /[A-Z]/.test(password);
@@ -56,9 +55,6 @@ const PasswordCreate = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const { length, uppercase, specialChar } = validationResult;
-        console.log('specialChar: ', specialChar);
-        console.log('uppercase: ', uppercase);
-        console.log('length: ', length);
 
         if (!length || !uppercase || !specialChar) {
             setPasswordError('Password does not meet the criteria.');
@@ -70,12 +66,15 @@ const PasswordCreate = () => {
             return;
         }
 
+        setLoading(true);
         OnboardingCreatePassword(uuid, { password: confirmedPassword })
-        .then(() => navigate(`/login`))
-        .catch((err) => {
-          console.error("Error submitting form:", err);
-          setPasswordError(err.message);
-        });
+            .then(() => navigate(`/login`))
+            .catch((err) => {
+                console.error("Error submitting form:", err);
+                setPasswordError(err.message);
+            }).finally(()=> {
+                setLoading(false);
+            });
     };
 
     return (
@@ -83,7 +82,7 @@ const PasswordCreate = () => {
             <div className="logohead">
                 <img src={LoinLogo} alt="Loin Logo" />
             </div>
-            <div className="copywrite">© Memate 2024</div>
+            <div className="copywrite">© Memate {new Date().getFullYear()}</div>
             <div className='OnboardingStep1 onboardingWrap'>
                 <form onSubmit={handleSubmit}>
                     <div className="loginPage">
@@ -131,15 +130,15 @@ const PasswordCreate = () => {
                                 {passwordError && <p className="error-message"> {passwordError} </p>}
 
                                 <div className="password-criteria mt-4">
-                                    <p className='font-14 mb-1' style={{ color: validationResult.length ? 'green' : '#475467' }}>{ validationResult.length ? <CheckCircleFill color='green'/> : <CheckCircleFill color='#D0D5DD'/> } Must be at least 8 characters</p>
-                                    <p className='font-14 mb-1' style={{ color: validationResult.uppercase ? 'green' : '#475467' }}>{ validationResult.uppercase ? <CheckCircleFill color='green'/> : <CheckCircleFill color='#D0D5DD'/> } One uppercase character</p>
-                                    <p className='font-14 mb-1' style={{ color: validationResult.specialChar ? 'green' : '#475467' }}>{ validationResult.specialChar ? <CheckCircleFill color='green'/> : <CheckCircleFill color='#D0D5DD'/> } Must contain one special character</p>
+                                    <p className='font-14 mb-1' style={{ color: validationResult.length ? 'green' : '#475467' }}>{validationResult.length ? <CheckCircleFill color='green' /> : <CheckCircleFill color='#D0D5DD' />} Must be at least 8 characters</p>
+                                    <p className='font-14 mb-1' style={{ color: validationResult.uppercase ? 'green' : '#475467' }}>{validationResult.uppercase ? <CheckCircleFill color='green' /> : <CheckCircleFill color='#D0D5DD' />} One uppercase character</p>
+                                    <p className='font-14 mb-1' style={{ color: validationResult.specialChar ? 'green' : '#475467' }}>{validationResult.specialChar ? <CheckCircleFill color='green' /> : <CheckCircleFill color='#D0D5DD' />} Must contain one special character</p>
                                 </div>
-                                <button type='submit' className="fillbtn flexcenterbox" style={{ borderRadius: '30px' }}>
-                                    Save Password
+                                <button type='submit' disabled={loading} className="fillbtn flexcenterbox" style={{ borderRadius: '30px' }}>
+                                    {loading ? "Processing..." : "Save Password"}
                                 </button>
                                 <div className={`linkBottom`}>
-                                    <Link className="backToLogin" to="/login">
+                                    <Link className="backToLogin" to="/login" style={{ color: '#475467', fontWeight: '600', fontSize: '14px' }}>
                                         <ArrowLeftShort color='#475467' size={20} />Back to log in
                                     </Link>
                                 </div>

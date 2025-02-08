@@ -22,6 +22,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
   industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
+  abn: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^\d{11}$/, "ABN must be an 11-digit number").notRequired(),
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
@@ -176,9 +177,10 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 <PhoneInput
                   defaultCountry='au'
                   value={typeof field.value === 'string' ? field.value : ''}
-                  className='phoneInput'
+                  className='phoneInput rounded'
                   containerClass={styles.countrySelector}
                   onChange={field.onChange}
+                  style={{ border: `1px solid ${errors.phone ? 'red' : '#dedede'}`}}
                 />
               )}
             />

@@ -214,6 +214,7 @@ const CalculateQuote = () => {
                         value="Standard"
                         checked={quoteType === 'Standard'}
                         onChange={(e) => setQuoteType(e.target.value)}
+                        disabled={true}
                     />
                     <CustomRadioButton
                         label="Recurring"
@@ -221,6 +222,7 @@ const CalculateQuote = () => {
                         value="Recurring"
                         checked={quoteType === 'Recurring'}
                         onChange={(e) => setQuoteType(e.target.value)}
+                        disabled={true}
                     />
                     <CustomRadioButton
                         label="Subscription"
@@ -228,6 +230,7 @@ const CalculateQuote = () => {
                         value="Subscription"
                         checked={quoteType === 'Subscription'}
                         onChange={(e) => setQuoteType(e.target.value)}
+                        disabled={true}
                     />
                     <CustomRadioButton
                         label="Retainer"
@@ -235,6 +238,7 @@ const CalculateQuote = () => {
                         value="Retainer"
                         checked={quoteType === 'Retainer'}
                         onChange={(e) => setQuoteType(e.target.value)}
+                        disabled={true}
                     />
                 </div>
             </div>

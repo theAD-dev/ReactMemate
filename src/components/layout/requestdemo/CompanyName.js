@@ -54,7 +54,7 @@ const CompanyName = () => {
         <div className="logohead">
           <img src={LoinLogo} alt="Loin Logo" />
         </div>
-        <div className="copywrite">© Memate 2024</div>
+        <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
           <form>
             <div className="loginPage">

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import mail01 from "../../../assets/images/icon/mail-01.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 import login_slider1 from "../../../assets/images/img/emailSlider01.png";
 import VerificationInput from 'react-verification-input';
-import { OnboardingCode, OnboardingCreateApi, onboardingNextStep } from "../../../APIs/OnboardingApi";
+import { OnboardingCode, onboardingNextStep } from "../../../APIs/OnboardingApi";
 import { ClockHistory, ArrowLeftShort } from "react-bootstrap-icons";
 import "./org.css";
-import { Button } from 'react-bootstrap';
 
 const Verifymail = () => {
   const navigate = useNavigate();
@@ -21,6 +21,9 @@ const Verifymail = () => {
   const [codeError, setCodeError] = useState(null);
   const [timer, setTimer] = useState(60);
   const [isTimerActive, setIsTimerActive] = useState(true);
+  const [isResendLoading, setIsResendLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     if (timer > 0 && isTimerActive) {
@@ -40,6 +43,7 @@ const Verifymail = () => {
     }
 
     try {
+      setIsLoading(true);
       const response = await OnboardingCode(otpCode, uuid);
       if (typeof response === "string" && response.includes("code")) {
         setCodeError(JSON.parse(response).otpCode);
@@ -49,16 +53,23 @@ const Verifymail = () => {
     } catch (error) {
       console.error("API error:", error);
       setCodeError("An error occurred while verifying the OTP. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const resendOTP = async () => {
     try {
+      setIsResendLoading(true);
       const { step } = await onboardingNextStep(uuid);
-      if (step === 1) navigate(`/verify-mail/${uuid}?email=${email}`);
-      else if (step === 2) navigate(`/company-name/${uuid}?email=${email}`);
-      else if (step === 3) navigate(`/discover-memate/${uuid}`);
-      else if (step === 4) navigate(`/create-password/${uuid}`);
+      setTimer(60);
+      setIsResendLoading(false);
+      setIsTimerActive(true);
+      if (step === 1) return navigate(`/verify-mail/${uuid}?email=${email}`);
+      else if (step === 2) return navigate(`/company-name/${uuid}?email=${email}`);
+      else if (step === 3) return navigate(`/discover-memate/${uuid}`);
+      else if (step === 4) return navigate(`/create-password/${uuid}`);
+
     } catch (error) {
       console.error("API error:", error);
       setCodeError("An error occurred while verifying the OTP. Please try again later.");
@@ -70,7 +81,7 @@ const Verifymail = () => {
       <div className="logohead">
         <img src={LoinLogo} alt="Logo" />
       </div>
-      <div className="copywrite">© Memate 2024</div>
+      <div className="copywrite">© Memate {new Date().getFullYear()}</div>
       <div className='OnboardingStep1 onboardingWrap'>
         <form onSubmit={CodeSubmit}>
           <div className="loginPage">
@@ -90,9 +101,9 @@ const Verifymail = () => {
                   onChange={setOtpCode}
                 />
                 {codeError && <p className="error-message">{codeError}</p>}
-                <button type='submit' className="fillbtn flexcenterbox">
-                  Submit OTP
-                  <img src={arrowRight} alt="Arrow Right" />
+                <button type='submit' disabled={isLoading} className="fillbtn flexcenterbox">
+                  {isLoading ? "Loading..." : "Submit OTP"}
+                  {!isLoading && <img src={arrowRight} alt="Arrow Right" />}
                 </button>
                 <div className='resendTimer'>
                   <div className='Timercount'>
@@ -106,9 +117,12 @@ const Verifymail = () => {
                   </div>
                 </div>
                 {!isTimerActive && (
-                  <div className='linkBottom'>
-                    <p>Didn’t receive the email? <a className='cursor-pointer' style={{ color: '#158ECC' }} onClick={resendOTP}>Click to resend</a></p>
-                    <Link to={"/login"}>
+                  <div className='linkBottom d-flex flex-column align-items-center'>
+                    <p className='mb-1 d-flex align-items-center justify-content-center gap-1 w-fit'>Didn’t receive the email?
+                      <button className='cursor-pointer border-0 px-0' disabled={isResendLoading} style={{ color: '#106B99', background: '#fff', fontWeight: '600' }} onClick={resendOTP}>Click to resend</button>
+                      {isResendLoading && <ProgressSpinner style={{ width: '12px', height: '12px' }} />}
+                    </p>
+                    <Link to={"/login"} style={{ color: '#475467', fontWeight: '600', fontSize: '14px' }}>
                       <ArrowLeftShort color='#475467' size={20} /> Back to log in
                     </Link>
                   </div>

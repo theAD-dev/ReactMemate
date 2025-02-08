@@ -61,7 +61,7 @@ const Integrations = () => {
       title: "Google Calendar",
       method: "googlecalendar",
       content: `Connect your company's Google Calendar to automatically send booking notifications to your clients.`,
-      status: true,
+      status: false,
       isConnected: false,
       img: googleCalLogo,
     },
@@ -70,7 +70,7 @@ const Integrations = () => {
       title: "Google Analytic Widgets",
       method: "googleanalytic",
       content: `Add Google Analytics to monitor your website's online performance effortlessly.`,
-      status: true,
+      status: false,
       isConnected: false,
       img: googleAnalyticLogo,
     },
@@ -190,8 +190,8 @@ const Integrations = () => {
                           <img src={xeroLogo} alt="xeroLogo" />
 
                           {
-                            <button className={!xeroIntegrationsQuery?.data?.connected ? style.connected : style.disconnected}>
-                              {!xeroIntegrationsQuery?.data?.connected ? "Connected" : "Disconnected"}
+                            <button className={xeroIntegrationsQuery?.data?.connected ? style.connected : style.disconnected}>
+                              {xeroIntegrationsQuery?.data?.connected ? "Connected" : "Disconnected"}
                               <span className={style.dots}></span>
                             </button>
                           }
@@ -227,7 +227,7 @@ const Integrations = () => {
                                 <Button className="danger-outline-button">Disconnect</Button>
                               </>
                             ) : (
-                              <button className={style.infoButton} onClick={() => {
+                              <button disabled className={style.infoButton} onClick={() => {
                                 item.method === "stripe" ? setStripeVisible(true) : item.method === "googlereview" ? setGoogleVisible(true) : setVisible(true);
                               }}>
                                 Connect

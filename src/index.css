@@ -438,8 +438,15 @@ button {
   margin-bottom: 0;
 }
 
+.inputInfo {
+  width: 100%;
+  position: relative;
+}
+
 .inputInfo img.ExclamationCircle {
+  position: absolute;
   margin-right: 0;
+  right: 8px;
   opacity: 0;
 }
 
@@ -448,8 +455,15 @@ button {
 }
 
 .inputInfo.error-border {
+  border-radius: 4px;
   border: 1px solid #fda29b !important;
 }
+
+.inputInfo.error-border input {
+  border: none !important;
+  padding-right: 10px;
+}
+
 .inputInfo.successBorder {
   border: 1px solid #d6bbfb !important;
 }

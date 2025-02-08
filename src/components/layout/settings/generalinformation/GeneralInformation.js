@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
@@ -13,11 +13,16 @@ import AvatarImg from "../../../../assets/images/img/Avatar.png";
 import FileUploader from '../../../../ui/file-uploader/file-uploader';
 import { toast } from 'sonner';
 import { Spinner } from 'react-bootstrap';
+import { PhoneInput } from 'react-international-phone';
 
 const schema = yup.object().shape({
   legal_name: yup.string().required('Company Legal Name is required'),
   trading_name: yup.string(),
-  abn: yup.string(),
+  abn: yup.string()
+    .nullable()
+    .transform((value) => (value === "" ? null : value))
+    .matches(/^\d{11}$/, "ABN must be an 11-digit number")
+    .notRequired(),
   main_email: yup.string().email('Invalid email').required('Main Company Email is required'),
   main_phone: yup.string(),
   address: yup.string(),
@@ -33,9 +38,11 @@ function GeneralInformation() {
   const [activeTab, setActiveTab] = useState('generalinformation');
   const [isEditingGroup, setIsEditingGroup] = useState(false);
   const [photo, setPhoto] = useState({});
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, control, formState: { errors }, reset, watch, setValue } = useForm({
     resolver: yupResolver(schema),
   });
+
+  console.log(watch('main_phone'))
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['generalInfo'],
@@ -59,8 +66,13 @@ function GeneralInformation() {
   });
 
   const onSubmit = (data) => {
+    if (data.abn == null) data.abn = "";
     mutation.mutate({ ...data });
   };
+
+  useEffect(()=> {
+    if(data?.main_phone) setValue('main_phone', data.main_phone);
+  }, [data]);
 
   if (isLoading || error) return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
     <Spinner animation="border" role="status">
@@ -68,13 +80,9 @@ function GeneralInformation() {
     </Spinner>
   </div>;
 
-
   const handleEditGroup = () => {
     setIsEditingGroup(true);
-
   };
-
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -102,7 +110,7 @@ function GeneralInformation() {
                       {!isEditingGroup ? (
                         <></>
                       ) : (
-                        <p>Lorem Ipsum dolores</p>
+                        <p>Provide key details about your company</p>
                       )}
                     </div>
 
@@ -118,7 +126,7 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data?.legal_name} </strong>
                         ) : (
-                          <>
+                          <div>
                             <div className={`inputInfo ${errors?.legal_name ? 'error-border' : ''}`}>
                               <input
                                 {...register("legal_name")}
@@ -128,7 +136,7 @@ function GeneralInformation() {
                               {errors?.legal_name && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                             </div>
                             {errors?.legal_name && <p className="error-message">{errors?.legal_name?.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -146,7 +154,7 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data.trading_name} </strong>
                         ) : (
-                          <>
+                          <div>
                             <div className={`inputInfo ${errors.trading_name ? 'error-border' : ''}`}>
                               <input
                                 {...register("trading_name")}
@@ -156,7 +164,7 @@ function GeneralInformation() {
                               {errors.trading_name && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                             </div>
                             {errors.trading_name && <p className="error-message">{errors.trading_name.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -174,7 +182,7 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data.abn} </strong>
                         ) : (
-                          <>
+                          <div>
                             <div className={`inputInfo ${errors.abn ? 'error-border' : ''}`}>
                               <input
                                 {...register("abn")}
@@ -184,7 +192,7 @@ function GeneralInformation() {
                               {errors.abn && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                             </div>
                             {errors.abn && <p className="error-message">{errors.abn.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -202,7 +210,7 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data.main_email} <Link45deg color="#158ECC" size={20} /></strong>
                         ) : (
-                          <>
+                          <div>
                             <div className={`inputInfo ${errors.main_email ? 'error-border' : ''}`}>
                               <input
                                 {...register("main_email")}
@@ -212,7 +220,7 @@ function GeneralInformation() {
                               {errors.main_email && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                             </div>
                             {errors.main_email && <p className="error-message">{errors.main_email.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -230,17 +238,23 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data.main_phone} <Telephone color="#158ECC" size={20} /></strong>
                         ) : (
-                          <>
-                            <div className={`inputInfo ${errors.main_phone ? 'error-border' : ''}`}>
-                              <input
-                                {...register("main_phone")}
-                                placeholder='Enter Phone Number'
-                                defaultValue={data.main_phone}
-                              />
-                              {errors.main_phone && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
+                          <div>
+                            <Controller
+                              name="main_phone"
+                              control={control}
+                              render={({ field }) => (
+                                <PhoneInput
+                                  className='phoneInput'
+                                  defaultCountry='au'
+                                  value={field.value || ''}
+                                  placeholder='Enter Phone Number'
+                                  style={{ width: '315px' }}
+                                  onChange={(phone) => field.onChange(phone)}
+                                />
+                              )}
+                            />
                             {errors.main_phone && <p className="error-message">{errors.main_phone.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -258,7 +272,7 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data.address}</strong>
                         ) : (
-                          <>
+                          <div>
                             <div className={`inputInfo ${errors.address ? 'error-border' : ''}`}>
                               <input
                                 {...register("address")}
@@ -268,7 +282,7 @@ function GeneralInformation() {
                               {errors.address && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                             </div>
                             {errors.address && <p className="error-message">{errors.address.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -286,7 +300,7 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data.state}</strong>
                         ) : (
-                          <>
+                          <div>
                             <div className={`inputInfo ${errors.state ? 'error-border' : ''}`}>
                               <input
                                 {...register("state")}
@@ -296,7 +310,7 @@ function GeneralInformation() {
                               {errors.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                             </div>
                             {errors.state && <p className="error-message">{errors.state.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -314,7 +328,7 @@ function GeneralInformation() {
                         {!isEditingGroup ? (
                           <strong>{data.postcode}</strong>
                         ) : (
-                          <>
+                          <div>
                             <div className={`inputInfo ${errors.postcode ? 'error-border' : ''}`}>
                               <input
                                 {...register("postcode")}
@@ -324,7 +338,7 @@ function GeneralInformation() {
                               {errors.postcode && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                             </div>
                             {errors.postcode && <p className="error-message">{errors.postcode.message}</p>}
-                          </>
+                          </div>
                         )}
                       </div>
                       {!isEditingGroup ? (
@@ -379,9 +393,9 @@ function GeneralInformation() {
             </div>
             {isEditingGroup && (
               <div className='updateButtonGeneral'>
-                <button className="cancel" >Cancel</button>
-                <button type="submit" className="save mr-3" disabled={mutation.isLoading}>
-                  {mutation.isLoading ? 'Updating...' : 'Update'}
+                <button className="cancel" type='button' onClick={() => setIsEditingGroup(false)}>Cancel</button>
+                <button type="submit" className="save mr-3" disabled={mutation.isPending}>
+                  {mutation.isPending ? 'Updating...' : 'Update'}
                 </button>
 
               </div>

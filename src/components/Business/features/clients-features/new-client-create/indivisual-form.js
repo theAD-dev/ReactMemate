@@ -13,7 +13,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from 'primereact/dropdown';
 
 import styles from './new-client-create.module.scss';
-import { Exclamation, Person } from 'react-bootstrap-icons';
+import { Person } from 'react-bootstrap-icons';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { getCities, getClientCategories, getCountries, getStates } from '../../../../../APIs/ClientsApi';

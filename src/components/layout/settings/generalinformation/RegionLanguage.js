@@ -1,146 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import styles from "./general.module.scss";
-import Select from "react-select";
 import { PencilSquare } from "react-bootstrap-icons";
 import Sidebar from ".././Sidebar";
+import timezones from './timezones.json';
+import { Dropdown } from "primereact/dropdown";
 
 const RegionLanguage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const [selectedTimezone, setSelectedTimezone] = useState(null);
-  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [activeTab, setActiveTab] = useState("generalinformation");
-  const [countries, setCountries] = useState([]);
-  const [timezones, setTimezones] = useState([]);
-  const [currency, setCurrency] = useState([]);
-  const [countryData, setCountryData] = useState({
-    name: "",
-    country: "",
-    timezone: "",
-    currency: "",
-  });
+  const [timezonesOptions, setTimezonesOptions] = useState([]);
 
-  useEffect(() => {
-    const fetchCountriesAndTimezones = async () => {
-      try {
-        const response = await axios.get(
-          process.env.PUBLIC_URL + "/timezones.json"
-        );
-        const countryOptions = response.data.map((country) => ({
-          label: country.name,
-          value: country.name,
-        }));
-        setCountries(countryOptions);
-      } catch (error) {
-        console.error("Error fetching countries:", error);
-      }
-    };
-
-    fetchCountriesAndTimezones();
-  }, []);
-
-  useEffect(() => {
-    if (selectedCountry) {
-      getTimezonesForCountry(selectedCountry.value);
-    }
-  }, [selectedCountry]);
-
-  const getTimezonesForCountry = async (countryName) => {
-    try {
-      const response = await axios.get(
-        process.env.PUBLIC_URL + "/timezones.json"
-      );
-      const country = response.data.find(
-        (country) => country.name === countryName
-      );
-      console.log("country-time: ", country);
-      if (country) {
-        const timezonesArray = Object.entries(country.timezones).map(
-          ([timezone, value]) => ({
-            label: `${timezone} ${value}`,
-            value: `${timezone} ${value}`,
-          })
-        );
-        setTimezones(timezonesArray);
-        console.log("timezonesArray: ", timezonesArray);
-      } else {
-        console.warn("Country not found:", countryName);
-        setTimezones([]);
-      }
-    } catch (error) {
-      console.error("Error fetching timezones:", error);
-      setTimezones([]);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedCountry) {
-      getCurrencyForCountry(selectedCountry.value);
-    }
-  }, [selectedCountry]);
-
-  const getCurrencyForCountry = async (countryName) => {
-    try {
-      const response = await axios.get(
-        process.env.PUBLIC_URL + "/currency.json"
-      );
-      const country = response.data.find(
-        (country) => country.country === countryName
-      );
-
-      if (country) {
-        const currencyArray = [
-          {
-            label: `${country.currency_code} (${country.country})`,
-            value: `${country.currency_code} (${country.country})`,
-            currency_code: country.currency_code,
-          },
-        ];
-
-        setCurrency(currencyArray);
-      } else {
-        console.warn("Country not found:", countryName);
-        setCurrency([]);
-      }
-    } catch (error) {
-      console.error("Error fetching currency:", error);
-      setCurrency([]);
-    }
-  };
-
-  const handleCountryChange = (selectedOption) => {
-    setSelectedCountry(selectedOption);
-    setCountryData({
-      ...countryData,
-      country: selectedOption.value,
-    });
-  };
-
-  const handleTimezoneChange = (selectedOption) => {
-    setSelectedTimezone(selectedOption);
-    setCountryData({
-      ...countryData,
-      timezone: selectedOption.value,
-    });
-  };
-  const handleCurrencyChange = (selectedOption) => {
-    setSelectedCurrency(selectedOption);
-    setCountryData({
-      ...countryData,
-      currency: selectedOption.value,
-    });
-  };
+  const [country, setCountry] = useState(null);
+  const [timezone, setTimezone] = useState(null);
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
 
   const handleUpdate = () => {
-    // Implement update functionality here
-    setIsEditing(false); // Assuming editing is done after update
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    if (country) {
+      const findData = timezones.find((timezone) => timezone.name === country);
+      setTimezonesOptions(Object.keys(findData?.timezones || {}));
+    }
+  }, [country]);
 
   return (
     <div className="settings-wrap">
@@ -173,11 +61,11 @@ const RegionLanguage = () => {
             className={`content_wrap_main ${isEditing ? "isEditingwrap" : ""}`}
           >
             <div className="content_wrapper">
-            <div className= {`listwrapper ${styles.listwrapp}`}>
+              <div className={`listwrapper ${styles.listwrapp}`}>
                 <div className="topHeadStyle">
                   <div className="">
                     <h2>Region & Language</h2>
-                    {isEditing && <p>Lorem Ipsum dolores</p>}
+                    {isEditing && <p>Select your Country, Timezone, and Currency to ensure accurate localization and a seamless experience.</p>}
                   </div>
                   {!isEditing && (
                     <Link to="#" onClick={() => setIsEditing(true)}>
@@ -192,14 +80,14 @@ const RegionLanguage = () => {
                     {!isEditing ? (
                       <strong>Country</strong>
                     ) : (
-                      <div className="selectInputWidth">
-                        <Select
-                          className="removeBorder"
-                          value={selectedCountry}
-                          onChange={handleCountryChange}
-                          options={countries}
-                        />
-                      </div>
+                      <Dropdown
+                        value={country}
+                        options={timezones.map((timezone) => ({ value: timezone.name, label: timezone.name }))}
+                        placeholder="Select country"
+                        className='w-100 rounded'
+                        onChange={(e) => setCountry(e.value)}
+                        filter
+                      />
                     )}
                   </li>
                   <li>
@@ -207,14 +95,13 @@ const RegionLanguage = () => {
                     {!isEditing ? (
                       <strong>Timezone</strong>
                     ) : (
-                      <div className="selectInputWidth">
-                        <Select
-                          className="removeBorder"
-                          value={selectedTimezone}
-                          onChange={handleTimezoneChange}
-                          options={timezones}
-                        />
-                      </div>
+                      <Dropdown
+                        value={timezone}
+                        options={timezonesOptions.map((option) => ({ value: option, label: option }))}
+                        placeholder="Select timezone"
+                        className='w-100'
+                        onChange={(e) => setTimezone(e.value)}
+                      />
                     )}
                   </li>
                   <li>
@@ -222,14 +109,7 @@ const RegionLanguage = () => {
                     {!isEditing ? (
                       <strong>Currency</strong>
                     ) : (
-                      <div className="selectInputWidth">
-                        <Select
-                          className="removeBorder"
-                          value={selectedCurrency}
-                          onChange={handleCurrencyChange}
-                          options={currency}
-                        />
-                      </div>
+                      <></>
                     )}
                   </li>
                 </ul>
