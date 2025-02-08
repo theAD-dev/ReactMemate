@@ -108,9 +108,10 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                 <PhoneInput
                                     defaultCountry='au'
                                     value={field.value}
-                                    className='phoneInput'
+                                    className='phoneInput rounded'
                                     containerClass={styles.countrySelector}
                                     onChange={field.onChange}
+                                    style={{ border: `1px solid ${errors.phone ? 'red' : '#dedede'}`}}
                                 />
                             )}
                         />
