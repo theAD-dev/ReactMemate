@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Building, ChevronDown, ChevronLeft, Envelope, InfoSquare, Person, Upload } from 'react-bootstrap-icons';
+import React, { useRef, useState } from 'react';
+import { Building, ChevronLeft, InfoSquare, Person } from 'react-bootstrap-icons';
 import { NavLink, useParams, useNavigate, Link } from 'react-router-dom';
 import { nanoid } from 'nanoid';
-import { Col, Row, Button } from 'react-bootstrap';
-import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+import { Row, Button } from 'react-bootstrap';
 import { toast } from 'sonner';
 import BusinessForm from '../../../features/clients-features/new-client-create/business-form';
 
@@ -120,7 +119,7 @@ const BusinessClientInformation = () => {
               </ul>
             </div>
 
-            <div className='formgroupboxs businessFormInQuote' style={{ paddingTop: '24px' }}>
+            <div className='formgroupboxs businessFormInQuote' style={{ padding: "24px 10px 0px 10px" }}>
               <Row className='text-left pt-3 rounded px-2' style={{ background: '#fff' }}>
                 <h2 style={{ marginBottom: '16px' }}>Company Details</h2>
 

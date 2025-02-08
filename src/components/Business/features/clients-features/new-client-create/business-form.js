@@ -324,9 +324,10 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                         <PhoneInput
                           defaultCountry='au'
                           value={field.value || ""}
-                          className='phoneInput'
+                          className='phoneInput rounded'
                           containerClass={styles.countrySelector}
                           onChange={(phone) => field.onChange(phone)}
+                          style={{ border: `1px solid ${errors.contact_persons?.[index]?.phone ? 'red' : '#dedede'}`}}
                         />
                       )}
                     />
