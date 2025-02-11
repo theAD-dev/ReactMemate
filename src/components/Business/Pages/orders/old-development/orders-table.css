@@ -1,0 +1,267 @@
+.labourCircleStyle,.csCircleStyle,.oeCircleStyle,.RealCostCircleStyle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.piCircleStyle span {
+  border-radius: 16px;
+  mix-blend-mode: multiply;
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  padding: 2px 8px;
+  margin-left: 10px;
+}
+.labourCircleStyle span {
+  border: 1px solid var(--Warning-200, #FEDF89);
+  background: var(--Warning-50, #FFFAEB);
+  color: var(--Warning-700, #B54708);
+}
+
+.RealCostCircleStyle span {
+  border: 1px solid var(--Warning-200, #A4E3E1);
+  background: var(--Warning-50, #EDFFFE);
+  color: var(--Warning-700, #0D8A86);
+}
+
+.csCircleStyle span {
+      border: 1px solid var(--Error-200, #FECDCA);
+      background: var(--Error-50, #FEF3F2);
+      color: var(--Warning-700, #B42318);
+}
+.oeCircleStyle span {
+  border: 1px solid var(--Error-200, #A3E0FF);
+  background: var(--Error-50, #EBF8FF);
+  color: var(--Warning-700, #106B99);
+}
+.OrdersTableWrap .styleColor1 strong {
+  color: #667085;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  text-wrap: nowrap;
+}
+.OrdersTableWrap .styleColor1 p {
+  color: var(--colorG6);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  margin: 0;
+  text-wrap: nowrap;
+}
+.OrdersTableWrap table tbody tr td:nth-child(2) {
+  padding-left: 7px !important;
+}
+.OrdersTableWrap .clientTdFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.OrdersTableWrap table thead tr th:first-child, .OrdersTableWrap table tbody tr td:first-child {
+  position: sticky;
+  left: 0;
+  width: 40px;
+  z-index: 8;
+  border-right: 0;
+  text-align: left;
+  padding: 0px 6px 0 16px !important;
+}
+.OrdersTableWrap .styleColor1 {
+  text-align: left;
+}
+.OrdersTableWrap table thead tr th:nth-child(2) {
+  position: sticky;
+  left: 40px;
+  z-index: 8;
+  border-right: 0px solid var(--color10) !important;
+  padding-left: 7px !important;
+}
+.OrdersTableWrap .userImgStyle img {
+  border: 0px solid #d7d7d7;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  float: left;
+  padding: 2px;
+}
+.OrdersTableWrap .leftStyle span {
+  padding-right: 10px;
+  display: inline-block;
+  min-width: 125px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.OrdersTableWrap .styleColor2 {
+  color: var(--colorG1);
+}
+
+.OrdersTableWrap .innerFlex {
+  align-items: center;
+  display: flex;
+  text-align: left;
+}
+.OrdersTableWrap .styleColor2 {
+  color: var(--colorG4);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: .14px;
+  line-height: 22px;
+}
+.OrdersTableWrap .disPlayInline li {
+  display: inline-block;
+  cursor: pointer;
+}
+.OrdersTableWrap .disPlayInline li:nth-child(2) {
+  padding: 0 12px;
+}
+.OrdersTableWrap .reference {
+  padding-right: 10px;
+  display: inline-block;
+  min-width: 125px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  float: left;
+}
+.OrdersTableWrap table thead tr th:nth-child(2) {
+  position: sticky;
+  left: 40px;
+  z-index: 8;
+  border-right: 1px solid var(--color10) !important;
+  padding-left: 7px !important;
+}
+.OrdersTableWrap table thead tr th {
+  white-space: nowrap;
+}
+.OrdersTableWrap table thead tr th:nth-child(3) {
+  position: sticky;
+  left: 118px;
+  z-index: 5;
+  border-right: 1px solid var(--color10) !important;
+}
+.OrdersTableWrap .statusInfo a {
+  border-radius: 16px;
+  mix-blend-mode: multiply;
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  padding: 2px 8px;
+}
+.OrdersTableWrap .statusInfo {
+  white-space: nowrap;
+  display: inline;
+  background: transparent;
+}
+.OrdersTableWrap .statusInfo.In.progress a {
+  color: var(--Warning-700, #B54708);
+  border: 1px solid var(--Warning-200, #FEDF89);
+  background: var(--Warning-50, #FFFAEB);
+}
+.OrdersTableWrap .budgetColor,.OrdersTableWrap .totalInvoice {
+  color: var(--Gray-500, #667085);
+  text-align: right;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+
+
+
+
+
+  @media only screen and (max-width: 1600px) and (min-width: 1280px)  {
+    .OrdersTableWrap .mainStyleMin {
+      width: 221px;
+    }
+    .OrdersTableWrap table thead tr th:nth-child(3) {
+      position: sticky;
+      left: 131px;
+      z-index: 5;
+      border-right: 0px solid var(--color10) !important;
+  }
+    .OrdersTableWrap .table-responsive {
+      overflow-x: auto;
+  }
+  .OrdersTableWrap .select-menu {
+    position: relative;
+    width: 200px;
+  }
+   .OrdersTableWrap table thead tr th:nth-child(2), .OrdersTableWrap table tbody tr td:nth-child(2) 
+  {
+      position: sticky;
+      left: 42px;
+      z-index: 8;
+      border-right: 0px solid var(--color10) !important;
+      padding-left: 0px !important;
+  }
+  .OrdersTableWrap table tbody tr td:nth-child(2):before
+  {
+      position: absolute;
+      background: var(--color10);
+      content: "";
+      right: 0;
+      width: 1px;
+      height: 100%;
+      top: 0;
+  }
+  .OrdersTableWrap table thead tr th:nth-child(2):before
+  {
+      position: absolute;
+      background: var(--color10);
+      content: "";
+      right: 0;
+      width: 1px;
+      height: 100%;
+      top: 0;
+      z-index: 0;
+  } 
+  
+  .OrdersTableWrap table thead tr th:nth-child(3) {
+  left: 406px;
+  }
+  .OrdersTableWrap table thead tr th:nth-child(3), .OrdersTableWrap table tbody tr td:nth-child(3) {
+    position: sticky;
+    left: 167px;
+    border-left: 0  !important;
+    border-right: 0px solid var(--color10) !important;
+    z-index: 8;
+}
+  .OrdersTableWrap tr td {
+    white-space: nowrap !important;
+  }
+  .OrdersTableWrap table tbody tr td:nth-child(3)::after,.OrdersTableWrap table thead tr th:nth-child(3)::after {
+    position: absolute;
+    background: var(--color10);
+    content: "";
+    right: 0;
+    width: 1px;
+    height: 100%;
+    top: 0;
+    box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10);
+    z-index: 0;
+  } 
+  .OrdersTableWrap table thead tr th:nth-child(2) {
+    left: 42px;
+  }
+  }

@@ -1,0 +1,363 @@
+.onboardingWrap .sliderRightOrg {
+  height: 100vh;
+}
+.SubtractIconPlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.onboardingWrap .linkBottom.hide {
+  opacity: 0;
+}
+.onboardingWrap .linkBottom.show {
+  opacity: 1;
+}
+.onboardingWrap .step-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 43px;
+}
+
+.onboardingWrap .step-progress .step {
+  border-radius: var(--radius-full, 9999px);
+  background: var(--Colors-Background-bg-quaternary, #eaecf0);
+  height: 8px;
+  width: 66.5px;
+  margin: 0 8px;
+}
+.onboardingWrap .step-progress .step.active {
+  background: var(--Colors-Background-bg-quaternary, #7f56d9);
+}
+.onboardingWrap .CuRegional select,
+.DiscoverMemate select {
+  width: 100%;
+  border: 0;
+  color: var(--Gray-400, #98a2b3);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.veryfymail a.backToLogin {
+  margin-top: 0;
+}
+.onboardingWrap .colgridpaymentwrap {
+  display: flex;
+  align-items: flex-end;
+}
+.colgridpaymentwrap .middle {
+  margin: 0 18px;
+}
+.onboardingWrap .BusinessPlanBox {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  padding: 40px;
+  width: 617px;
+  margin: 0 auto;
+}
+.onboardingWrap .BusinessPlanwrap {
+  height: 100vh;
+  background: var(--Gray-100, #f2f4f7);
+  padding-left: 41px;
+  padding-right: 62px;
+  display: flex;
+  align-items: center;
+}
+.onboardingWrap .BusinessPlanBox .headPlan {
+  text-align: center;
+}
+.onboardingWrap .BusinessPlanBox .headPlan h1 {
+  color: var(--Gray-900, #101828);
+  text-align: center;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 60px;
+  letter-spacing: -0.96px;
+}
+.onboardingWrap .BusinessPlanBox .headPlan h3 {
+  color: var(--Gray-900, #101828);
+  text-align: center;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
+  margin: 0;
+}
+.onboardingWrap .BusinessPlanBox .headPlan p {
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+}
+.onboardingWrap .BusinessPlanBox .listPlan ul li {
+  color: var(--Gray-600, #475467);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 6.3px 0;
+}
+.onboardingWrap .BusinessPlanBox .listPlan ul {
+  width: 50%;
+}
+
+.onboardingWrap .BusinessPlanBox .listPlan {
+  display: flex;
+  justify-content: space-between;
+  margin: 25px 0;
+}
+.onboardingWrap .BusinessPlanBox p {
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.onboardingWrap .BusinessPlanBox p strong {
+  font-weight: 500;
+}
+.onboardingWrap .css-1u9des2-indicatorSeparator {
+  width: 0px;
+}
+.onboardingWrap .BusinessPlanBox .listPlan ul li img {
+  float: left;
+  width: 25px;
+  margin-right: 12px;
+}
+.hideinputfild {
+  display: none;
+}
+.veryfymail .linkBottom p {
+  color: var(--Gray-600, #475467);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+.onboardingWrap input.vi {
+  opacity: 0;
+}
+.onboardingWrap .vi__character {
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  color: var(--Gray-300, #d0d5dd);
+  text-align: center;
+  font-family: Inter;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 60px;
+  letter-spacing: -0.96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.onboardingWrap .vi__character--filled {
+  border-radius: 4px;
+  border: 2px solid var(--Primary-600, #158ecc);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #f4ebff;
+  color: var(--Primary-600, #158ecc);
+  text-align: center;
+  font-family: Inter;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 60px;
+  letter-spacing: -0.96px;
+}
+.onboardingWrap form p.emailDis {
+  margin: 8px 0px 36px !important;
+}
+.onboardingWrap .vi__container {
+  margin: 0 auto;
+}
+.onboardingWrap .timezoneWrapGroup .css-b62m3t-container,
+.onboardingWrap .timezoneWrapGroup .css-b62m3t-container {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+.verifyEmailb {
+  text-align: center;
+}
+.onboardingWrap .timezoneWrapGroup .css-13cymwt-control,
+.onboardingWrap .timezoneWrapGroup .css-13cymwt-control {
+  width: 100% !important;
+  border: 0;
+}
+.onboardingWrap .timezoneWrapGroup .inputInfo {
+  border-radius: 4px;
+  padding: 5px 0px;
+  border: 1px solid var(--colorG5);
+  background: var(--color2);
+  box-shadow: none !important;
+  height: 44px !important;
+}
+.onboardingWrap .removeBorder1 .inputInfo {
+  height: 44px !important;
+  padding: 5px 0px;
+}
+.onboardingWrap .SinglBgRight {
+  height: 100vh;
+  background-position: center center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.onboardingWrap .SinglBgRight:before {
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.4) -14.5%,
+      rgba(0, 0, 0, 0) 23.66%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100vh;
+}
+.onboardingWrap .SinglBgRight p {
+  color: var(--Base-White, #fff);
+  text-align: center;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 38px;
+  z-index: 999;
+  width: 616px;
+}
+.onboardingWrap .removeBorder:first-child div {
+  border: 0;
+  color: var(--Gray-400, #98a2b3);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.onboardingWrap .removeBorder {
+  width: 100%;
+}
+.onboardingWrap .Timercount {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid #eaecf0;
+  background: #fbfcfd;
+  width: 157px;
+  height: 85px;
+  vertical-align: middle;
+  display: inline-block;
+  padding: 2px 0;
+  margin-top: 37px;
+  position: relative;
+}
+.onboardingWrap .Timercount span {
+  position: absolute;
+  border: 0.75px solid #10182829;
+  padding: 7px;
+  left: 0;
+  right: 0;
+  top: -21px;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border-radius: 62px;
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
+  padding: 5px;
+}
+.onboardingWrap .Timercount .text {
+  margin-top: 0px !important;
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  margin-bottom: 0;
+}
+.onboardingWrap .inputInfo.verifyEmail {
+  border: 0;
+  padding: 0;
+}
+.onboardingWrap button.fillbtn.flexcenterbox:disabled {
+  opacity: 0.5;
+}
+.onboardingWrap .boxLogin h2 {
+  color: var(--colorG1);
+  margin-bottom: 32px;
+  margin-top: 0;
+  line-height: 44px;
+  font-size: 30px;
+}
+.onboardingWrap .boxinfo .boxLogin {
+  width: 380px;
+  margin: 0 auto;
+}
+.onboardingWrap .Timercount .timer {
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.onboardingWrap .password-strength {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.onboardingWrap .progress-container {
+  display: flex;
+  width: 100%;
+  max-width: 300px;
+  margin: 10px 0;
+}
+
+.onboardingWrap .progress-bar {
+  flex: 1;
+  height: 8px;
+  background-color: #e0e0e0;
+  margin: 0 5px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.onboardingWrap .progress-bar.green {
+  background-color: #4caf50;
+}
+
+.onboardingWrap .strength-text {
+  color: var(--Gray-600, #475467);
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+}

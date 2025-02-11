@@ -1,0 +1,413 @@
+.loginPage {
+    background: var(--color2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.boxinfo,
+.sliderRight {
+    width: 50%;
+    position: relative;
+}
+
+.boxLogin {
+    background: #ffffffb0;
+}
+
+.boxinfo .boxLogin {
+    width: 341px;
+    margin: 0 auto;
+}
+
+.PasswordStrengthBar div {
+    padding: 3px 0;
+    border-radius: 7px;
+}
+
+.lockIconStyle h2 {
+    margin-bottom: 9px;
+    margin-top: 30px;
+}
+
+ul.activeListPassword li.active {
+    color: #079455;
+}
+
+.lockIconStyle {
+    text-align: center;
+    margin-bottom: 23px;
+}
+
+.boxLogin h2 {
+    color: var(--colorG1);
+    margin-bottom: 46px;
+    margin-top: 0;
+    line-height: 44px;
+    font-size: 36px;
+}
+.lockIconStyle p {
+    color: var(--Gray-600, #475467);
+    text-align: center;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+}
+.PasswordStrengthBar p {
+    color: var(--Gray-600, #475467) !important;
+    font-family: Inter;
+    font-size: 12px !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.12px;
+}
+.boxLogin h2 span {
+    color: var(--color1);
+    display: inline-block;
+    margin: 0;
+    font-size: 36px;
+}
+
+.logohead {
+    text-align: left;
+    margin-bottom: 32px;
+    position: absolute;
+    top: 32px;
+    left: 32px;
+}
+
+.loading {
+    display: none;
+}
+
+.copywrite {
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
+    color: var(--colorG3);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.boxLogin .fillbtn {
+    border-radius: 4px;
+    border: 1px solid var(--color1);
+    background: var(--color1);
+    padding: 12px 18px;
+    color: var(--color2);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 41px;
+}
+
+.inputInfo img {
+    margin-right: 9px;
+}
+
+.forgotPage .boxLogin h2, .forgotPage .boxLogin h2 span {
+    font-size: 30px;
+    margin-bottom: 11px;
+}
+
+.boxLogin .fillbtn:hover {
+    border-radius: 4px;
+    border: 1px solid var(--color1);
+    background: var(--color1);
+    padding: 12px 18px;
+    color: var(--color2);
+    width: 100%;
+    opacity: .98;
+}
+
+.boxLogin .fillbtn img {
+    margin-left: 12px;
+}
+.boxLogin .textbtn {
+    color: var(--color1);
+    letter-spacing: 0.175px;
+}
+
+.boxLogin .textbtn:hover {
+    color: var(--color1);
+    background: transparent;
+    letter-spacing: 0.175px;
+}
+
+.boxLogin .textbtn {
+    color: var(--color1);
+    letter-spacing: 0.175px;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 24px;
+    margin-top: 20px;
+    border: 0;
+    background: transparent;
+    display: block;
+}
+
+.boxLogin label {
+    color: var(--colorG3);
+    letter-spacing: 0.14px;
+    margin-bottom: 6px;
+}
+
+.inputInfo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.boxLogin .inputInfo {
+    border-radius: 4px;
+    padding: 5px 14px;
+    border: 1px solid var(--colorG5);
+    background: var(--color2);
+    box-shadow: none !important;
+}
+
+.boxLogin input {
+    letter-spacing: -0.08px;
+    padding: 4px 0 4px;
+    width: 100%;
+    color: #101828;
+}
+
+.boxLogin label {
+    margin-top: 16px;
+    display: block;
+}
+
+.loginSliderImages {
+    width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
+
+.loginSliderImages:before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) -14.5%, rgba(0, 0, 0, 0.00) 23.66%), linear-gradient(180deg, rgba(0, 0, 0, 0.00) 70.94%, rgba(0, 0, 0, 0.40) 100%);
+}
+
+.react-slideshow-container+ul.indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    position: absolute;
+    bottom: 75px;
+    z-index: 9999999;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.react-slideshow-container .nav:last-of-type {
+    right: 40% !important;
+}
+
+.react-slideshow-container .nav:first-of-type {
+    left: 40% !important;
+}
+
+.react-slideshow-container+ul.indicators .each-slideshow-indicator:before {
+    width: 10px !important;
+    height: 10px !important;
+    background: #ffffff !important;
+}
+
+ul.indicators li {
+    margin: 0 4px !important;
+}
+
+.react-slideshow-container+ul.indicators .each-slideshow-indicator {
+    opacity: 1 !important;
+}
+
+.react-slideshow-container+ul.indicators .each-slideshow-indicator:hover,
+.react-slideshow-container+ul.indicators .each-slideshow-indicator.active {
+    opacity: 1 !important;
+    outline: 0;
+}
+
+.react-slideshow-container+ul.indicators .each-slideshow-indicator.active:before {
+    background: #9E77ED !important;
+}
+
+.react-slideshow-container .nav {
+    z-index: 999999999999999;
+    position: absolute;
+    cursor: pointer;
+    bottom: 70px;
+}
+
+.boxinfo {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background: url(../../../assets/images/background-pattern-decorative.png);
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.loginSliderImages p {
+    position: absolute;
+    color: var(--Base-White, #FFF);
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 38px;
+    width: 616px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    bottom: 132px;
+}
+
+.indicator {
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+.envolpicon {
+    border-radius: 12px;
+    border: 1px solid var(--Gray-200, #EAECF0);
+    background: var(--Base-White, #FFF);
+    display: flex;
+    width: 56px;
+    height: 56px;
+    padding: 14px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+}
+
+.checkMail .boxLogin h2 {
+    margin: 0;
+}
+
+.checkMail form label {
+    color: var(--Gray-600, #475467);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400 !important;
+    line-height: 24px;
+    letter-spacing: 0.08px;
+    margin-bottom: 52px !important;
+}
+
+.checkMail form label strong {
+    color: var(--Gray-600, #475467);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600 !important;
+    line-height: 24px;
+    letter-spacing: 0.08px;
+}
+
+.checkMail .boxLogin {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.linkBottom {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.linkBottom p a {
+    color: var(--Brand-700, #158ecc);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.175px;
+}
+
+.linkBottom p {
+    color: var(--Gray-600, #475467);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+}
+
+.checkMail a.backToLogin {
+    color: var(--Gray-600, #475467);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.175px;
+}
+
+.setNewPass .boxLogin h2,
+.passwordReset h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.setNewPass .boxLogin p,
+.passwordReset p {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.conditonList {
+    margin-top: 26px;
+}
+
+.conditonList li {
+    display: flex;
+    align-items: center;
+    color: var(--Gray-600, #475467);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    letter-spacing: 0.14px;
+    padding: 4px 0;
+}
+
+.conditonList li svg {
+    margin-right: 9px;
+}
+
+a.backToLogin {
+    color: var(--Gray-600, #475467);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    display: inline-block;
+    margin-top: 50px;
+}
+ul.activeListPassword {
+    margin-top: 28px;
+}
+ul.activeListPassword li {
+    padding: 7px 0;
+    display: flex;
+    align-items: center;
+}
+ul.activeListPassword li.active svg {
+    fill: #75E0A7;
+}

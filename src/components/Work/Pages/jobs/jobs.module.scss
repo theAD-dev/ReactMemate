@@ -1,0 +1,257 @@
+.active {
+  background: #ebf8ff;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+
+.newButton,
+.newButton:hover,
+.newButton:focus {
+  gap: 8px;
+  display: flex;
+  padding: 4px 14px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--Orange-600, #d59346);
+  background: var(--Orange-600, #d59346);
+}
+
+.total {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.08px;
+}
+
+.totalCount {
+  color: #ffc301;
+  text-align: center;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+  align-items: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  border-radius: 16px;
+  border: 1px solid #fff0c1;
+  background: #fffaeb;
+  mix-blend-mode: multiply;
+}
+
+/* Jobs table css */
+.shadowRight {
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px -6px 0px 0px);
+}
+
+.payment {
+  display: flex;
+  min-width: 47px;
+  padding: var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-xs, 4px);
+}
+
+.paymentHours {
+  color: var(--Orange-700, #ac7535);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--Orange-300, #ffd19b);
+  background: var(--Orange-25, #fff7ee);
+}
+
+.paymentFix {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Gray-25, #fcfcfd);
+}
+
+.time {
+  color: var(--Primary-700, #106b99);
+  text-align: center;
+
+  /* Text xs/Medium */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px)
+    var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+  align-items: center;
+  gap: var(--spacing-xs, 4px);
+  border-radius: 16px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+  mix-blend-mode: multiply;
+}
+
+.time.tracker {
+  color: var(--Success-700, #067647);
+  text-align: center;
+
+  /* Text xs/Medium */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px; /* 150% */
+  border-radius: 16px;
+  border: 1px solid var(--Success-200, #a9efc5);
+  background: var(--Success-50, #ecfdf3);
+  mix-blend-mode: multiply;
+}
+
+.clientImg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 0.75px solid #ccc;
+  border-radius: 34px;
+  margin-right: 10px;
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
+}
+
+.clientName {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  font-size: 12px;
+  border: 0.75px solid #ccc;
+  border-radius: 34px;
+  margin-right: 10px;
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
+}
+
+.inProgress {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--Warning-700, #b54708);
+  border-radius: 16px;
+  border: 1px solid var(--Warning-200, #fedf89);
+  background: var(--Warning-50, #fffaeb);
+  // mix-blend-mode: multiply;
+}
+
+.defaultStatus {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #344054;
+  border-radius: 16px;
+  border: 1px solid #eaecf0;
+  background: #f9fafb;
+}
+
+.status {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.open {
+  color: #065b76;
+  border: 1px solid #a9d6ef;
+  background: #ecf7fd;
+}
+
+.Accepted {
+  color: #067611;
+  border: 1px solid #c4efa9;
+  background: #f2fdec;
+}
+
+.CONFIRMED {
+  color: #067647;
+  border: 1px solid #A9EFC5;
+  background: #ECFDF3;
+}
+
+.ASSIGN {
+  color: #520676;
+  border: 1px solid #DDA9EF;
+  background: #F6ECFD;
+}
+
+.NotConfirmed {
+  color: #B42318;
+  border: 1px solid #FECDCA;
+  background: #FEF3F2;
+}
+
+.COMPLETED {
+  color: #067647;
+  border: 1px solid #A9EFC5;
+  background: #ECFDF3;
+}
+
+.DECLINED {
+  color: #B42318;
+  border: 1px solid #FECDCA;
+  background: #FEF3F2;
+}
+
+.MANAGER_DECLINED {
+  color: #B54708;
+  border: 1px solid #FEDF89;
+  background: #FFFAEB;
+}
+
+.finished {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #6941c6;
+  border-radius: 16px;
+  border: 1px solid #e9d7fe;
+  background: #f9fafb;
+}
+
+.assign {
+  font-size: 12px;
+  padding: 2px 6px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--Error-700, #b42318);
+  border-radius: 16px;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
+}

@@ -1,0 +1,374 @@
+.borderTopbar {
+  gap: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #eaecf0 !important;
+  background: var(--Gray-25, #fcfcfd);
+}
+
+.topbartext {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+
+.box {
+  width: 378px;
+  height: 230px;
+  text-align: left;
+  padding: var(--spacing-3xl, 24px);
+  gap: var(--spacing-xl, 16px);
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Gray-25, #fcfcfd);
+  margin-bottom: 24px;
+}
+
+.executiveBox {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4ebff;
+  border-radius: 50%;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+}
+
+.executiveBox2 {
+  background: #dcfae6 !important;
+}
+
+.executiveBox3 {
+  background: #fee4e2 !important;
+}
+
+.executiveBox4 {
+  background: #f2f4f7 !important;
+}
+
+.executiveBox5 {
+  background: #f2f4f7 !important;
+}
+
+.executiveBox6 {
+  background: #fef0c7 !important;
+}
+
+.boxTitle {
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+}
+
+.boxSubtitle {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: left;
+  letter-spacing: 0.14px;
+}
+
+.activeTab {
+  border-radius: var(--radius-sm, 6px) !important;
+  background: var(--Gray-100, #f2f4f7) !important;
+}
+
+.keyResults {
+  .keyResultsTitle {
+    color: var(--Gray-800, #1d2939);
+    text-align: center;
+    font-family: Inter;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.39px;
+  }
+
+  .button {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 10px 14px;
+    margin-top: 16px;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--Gray-300, #d0d5dd);
+    background: var(--Base-White, #fff);
+  }
+
+  .monthName {
+    color: var(--Gray-500, #667085);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: 0.175px;
+    background: transparent;
+    border: none !important;
+    outline: none !important;
+    border-radius: 0px !important;
+    padding-bottom: 12px;
+  }
+
+  .monthName.activeButton {
+    border-bottom: 2px solid var(--Primary-700, #106b99) !important;
+  }
+
+  .chartBox {
+    width: 279px;
+    height: 279px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+  }
+
+  .rightBox {
+    min-width: 636px;
+  }
+
+  .firstBox,
+  .secondBox {
+    gap: 24px;
+    height: 130px;
+    display: flex;
+    padding: 16px;
+    background: #fff;
+    align-items: center;
+    margin-bottom: 16px;
+    justify-content: space-between;
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    margin: 32px 0px;
+    background: #eaecf0;
+  }
+
+  .chartTextBox {
+    gap: 32px;
+    display: flex;
+    width: 891px;
+    height: 40px;
+    padding: var(--spacing-md, 8px) var(--spacing-3xl, 24px);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4xl, 32px);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--Gray-200, #eaecf0);
+    margin-bottom: 16px;
+    background-color: #fff;
+  }
+
+  .chartTextLable {
+    color: var(--Gray-800, #1d2939);
+
+    /* Body large bold */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 150% */
+    letter-spacing: 0.08px;
+  }
+
+  .boxlable {
+    color: var(--Gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+    letter-spacing: -0.154px;
+  }
+
+  .uptoDate {
+    color: #1ab2ff;
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 34px; /* 106.25% */
+    letter-spacing: -0.8px;
+  }
+
+  .target {
+    color: var(--Gray-600, #475467);
+
+    /* Title Screen */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 34px; /* 113.333% */
+    letter-spacing: -0.75px;
+  }
+
+  .daysComplete {
+    color: var(--Orange-500, #ffb258);
+    font-family: Inter;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 34px; /* 106.25% */
+    letter-spacing: -0.8px;
+  }
+
+  .daysTotal {
+    color: var(--Gray-600, #475467);
+
+    /* Title Screen */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 34px; /* 113.333% */
+    letter-spacing: -0.75px;
+  }
+
+  .circularProgressDiv {
+    width: 97px;
+    height: 97px;
+    height: 97px;
+    display: flex;
+    font-size: 22px;
+    font-weight: 600;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dedede;
+    padding: 0px 25.5px 0px 26.5px;
+    color: var(--Gray-800, #1d2939);
+  }
+
+  .chartProgressText {
+    color: var(--Gray-700, #344054);
+
+    /* Body large */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.08px;
+  }
+
+  .text1 {
+    /* Body large bold */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 150% */
+    letter-spacing: 0.08px;
+  }
+
+  .ProgressBar {
+    width: 462px;
+    height: 14px;
+    border-radius: var(--radius-xs, 4px);
+    background: #eaecf0;
+  }
+
+  .ProgressBarInner {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #21b4da 9.67%, #93ecff 80.73%),
+      linear-gradient(90deg, #18c5f2 9.67%, #344054 80.73%);
+  }
+
+  .ProgressBarInner2 {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #93ecff 0.86%, #2cb932 99.03%);
+  }
+
+  .ProgressBarInner3 {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #ede014 0.98%, #2cb932 99.97%);
+  }
+
+  .ProgressBarInner4 {
+    height: 100%;
+    position: relative;
+    border-radius: var(--radius-xs, 4px);
+    background: linear-gradient(90deg, #ede014 0.86%, #f28c7f 99.03%);
+  }
+
+  .ProgressBarInner::after {
+    content: "130,59%";
+    top: -5px;
+    right: 0px;
+    width: fit-content;
+    height: 18px;
+    position: absolute;
+    padding: 4px 6px;
+    border-radius: var(--radius-xl, 12px);
+    border: 1px solid var(--Gray-100, #f2f4f7);
+    background: var(--Base-White, #fff);
+    color: var(--Gray-500, #667085);
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    padding-bottom: 20px !important;
+    line-height: 18px; /* 150% */
+  }
+}
+
+.rightBoxDiv {
+  text-align: left;
+  padding: 28px 24px;
+  gap: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Gray-25, #fcfcfd);
+
+  .title {
+    color: var(--Gray-600, #475467);
+
+    /* Text sm/Medium */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+  }
+
+  .money {
+    color: var(--Gray-900, #101828);
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px; /* 133.333% */
+  }
+}

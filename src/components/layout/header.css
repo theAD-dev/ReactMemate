@@ -1,0 +1,430 @@
+.menu-item ul li {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.menu-item ul li:nth-child(2) {
+    margin: 0 40px;
+}
+
+.headerTop {
+    padding: 12px 13px;
+    position: relative;
+    z-index: 999;
+}
+
+.SelectOptionHead .css-13cymwt-control,
+.css-t3ipsp-control,
+.SelectOptionHead .css-13cymwt-control:focus {
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+.menu-item ul li a,
+.headerNav ul li a {
+    /* border-bottom: 2px solid var(--color2); */
+    padding: 9px 15px;
+    color: var(--colorG1);
+    text-align: center;
+    border-radius: 6px;
+}
+.company_logo {
+    display: flex;
+    align-items: center;
+    color: var(--colorG1);
+    text-align: center;
+    letter-spacing: -0.16px;
+    border-radius: var(--radius-xs, 4px);
+    border: 0.5px solid var(--Gray-100, #F2F4F7);
+   
+}
+.avatar-wrap:hover .userImageBox {
+    border-radius: 200px;
+    border: 1px solid var(--Primary-200, #A3E0FF);
+    background: linear-gradient(180deg, #F9FAFB 0%, #E4F6FF 100%), #FFF;
+    color: var(--Primary-600, #158ECC);
+    text-align: center;
+    font-feature-settings: 'clig' off, 'liga' off;
+    letter-spacing: 0.25px;
+}
+.company_logo img {
+    height: 40px;
+}
+
+.avatar-info {
+    text-align: left;
+    color: var(--colorG1);
+}
+.avatar-wrap:hover .avatar-info span {
+    color: var(--Primary-600, #158ECC);
+}
+.avatar-wrap:hover .avatar-info  {
+    color: var(--Primary-600, #0A4766);
+}
+.avatar-info span {
+    display: block;
+    color: var(--colorG3);
+    font-weight: 400;
+}
+
+.company_logo span:before {
+    position: absolute;
+    content: "";
+    background: var(--colorG2);
+    width: 1px;
+    height: 38px;
+    top: -5px;
+    left: 16px;
+}
+
+.company_logo span:after {
+    position: absolute;
+    content: "";
+    background: var(--colorG2);
+    width: 1px;
+    height: 38px;
+    top: -5px;
+    right: -16px;
+}
+
+.SelectOptionHead {
+    margin-left: 16px;
+    min-width: 196px;
+}
+
+.company_logo span {
+    position: relative;
+    padding-left: 32px;
+}
+
+.SelectOptionHead .css-1dimb5e-singleValue span {
+    display: inline-block;
+    width: 131px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    color: #101828;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.SelectOptionHead .css-1u9des2-indicatorSeparator {
+    display: none;
+}
+
+/* Header main */
+.headerNav {
+    padding: 4px 21px;
+}
+
+.headerNav ul li {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 2px;
+}
+.headerNav ul li a {
+    padding: 10px 20px;
+    border-radius: 6px;
+}
+
+.business .menuActive.managementMain {
+    background: #F2FAFF;
+    color: #158ECC;
+}
+.work .menuActive.managementMain1 {
+    background: #F2FAFF;
+    color: #158ECC;
+}
+
+.managementMain:hover {
+    background: #e6f4fd;
+    color: #158ECC;
+}
+
+.menuActive.sales {
+    color: #6FBAFF;
+    background: linear-gradient(135deg, #89f7fe1a, #66a6ff1a);
+}
+
+.sales:hover {
+    color: #6FBAFF;
+    background: linear-gradient(135deg, #89f7fe1a, #66a6ff1a);
+}
+
+.management.menuActive {
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+    color: #FE8890;
+}
+
+.management:hover {
+    color: #FE8890;
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+}
+
+.managementMain1.work {
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+    color: #FE8890;
+}
+
+/* .work:hover {
+    color: #FE8890;
+    background: linear-gradient(135deg, rgba(255, 211, 165, 0.10) 0%, rgba(253, 101, 133, 0.10) 100%);
+} */
+
+.menuActive.sales {
+    color: #6FBAFF;
+}
+
+.menuActive.clients {
+    color: #5C83EA !important;
+    background: linear-gradient(135deg, rgba(114, 237, 242, 0.10) 0%, rgba(81, 81, 229, 0.10) 100%);
+}
+
+.clients:hover {
+    background: linear-gradient(135deg, rgba(114, 237, 242, 0.10) 0%, rgba(81, 81, 229, 0.10) 100%);
+    /* color: #5C83EA; */
+    color: #222;
+}
+
+.menuActive.expense {
+    background: linear-gradient(135deg, rgba(247, 79, 172, 0.10) 0%, rgba(252, 178, 79, 0.10) 100%), #FFF;
+    color: #F96A94;
+}
+
+.expense:hover {
+    background: linear-gradient(135deg, rgba(247, 79, 172, 0.10) 0%, rgba(252, 178, 79, 0.10) 100%), #FFF;
+    color: #F96A94;
+}
+
+.menuActive.invoices {
+    background: linear-gradient(0deg, rgba(132, 250, 176, 0.10) 0%, rgba(172, 203, 238, 0.10) 100%);
+    color: #4fc182;
+}
+
+.invoices:hover {
+    background: linear-gradient(0deg, rgba(132, 250, 176, 0.10) 0%, rgba(172, 203, 238, 0.10) 100%);
+    color: #A8D1E7;
+}
+
+.menuActive.orders {
+    background: linear-gradient(45deg, rgba(74, 135, 154, 0.10) 0%, rgba(197, 237, 245, 0.10) 100%), #FFF;
+    color: #508C9E;
+}
+
+.orders:hover {
+    background: linear-gradient(45deg, rgba(74, 135, 154, 0.10) 0%, rgba(197, 237, 245, 0.10) 100%), #FFF;
+    color: #508C9E;
+}
+
+.menuActive.statistics {
+    color: #FF8508;
+    background: linear-gradient(45deg, rgba(255, 122, 0, 0.10) 0%, rgba(255, 212, 57, 0.10) 100%), #FFF;
+}
+
+.statistics:hover {
+    background: linear-gradient(45deg, rgba(255, 122, 0, 0.10) 0%, rgba(255, 212, 57, 0.10) 100%), #FFF;
+    color: #FF8508;
+}
+
+.menuActive.suppliers {
+    color: #8149d5;
+    background: linear-gradient(0deg, rgba(155, 35, 234, 0.10) 0%, rgba(95, 114, 189, 0.10) 100%);
+}
+
+.suppliers:hover {
+    background: linear-gradient(0deg, rgba(155, 35, 234, 0.10) 0%, rgba(95, 114, 189, 0.10) 100%);
+    color: #8149d5;
+}
+.tasks:hover {
+    color: #D16CB6;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.menuActive.tasks{
+    color: #D16CB6;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.news:hover {
+    color: #344054;
+    background: linear-gradient(45deg, rgba(255, 157, 228, 0.10) 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.news:hover {
+    color: #9890E3;
+    background: linear-gradient(45deg, #8fefff54 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.menuActive.news {
+    color: #9890E3;
+    background: linear-gradient(45deg, #8fefff54 0%, rgba(255, 234, 246, 0.10) 100%);
+}
+.approval:hover {
+    color: #78997C;
+    background: linear-gradient(0deg, rgba(158, 194, 162, 0.10) 0%, rgba(192, 227, 189, 0.10) 100%);
+}
+.menuActive.approval{
+    color: #78997C;
+    background: linear-gradient(0deg, rgba(158, 194, 162, 0.10) 0%, rgba(192, 227, 189, 0.10) 100%);
+}
+.dashboard:hover {
+    color: #6DA7BD;
+    background: linear-gradient(270deg, rgba(116, 235, 213, 0.10) 0%, rgba(159, 172, 230, 0.10) 100%);
+}
+.menuActive.dashboard{
+    color: #6DA7BD;
+    background: linear-gradient(270deg, rgba(116, 235, 213, 0.10) 0%, rgba(159, 172, 230, 0.10) 100%);
+}
+.jobs:hover {
+    color: #FFB800;
+    background: linear-gradient(45deg, rgba(255, 184, 0, 0.10) 0%, rgba(255, 245, 0, 0.10) 100%);
+}
+.menuActive.jobs{
+    color: #FFB800;
+    background: linear-gradient(45deg, rgba(255, 184, 0, 0.10) 0%, rgba(255, 245, 0, 0.10) 100%);
+}
+.people:hover {
+    color: #A66DAA;
+   background: linear-gradient(135deg, rgba(255, 245, 195, 0.10) 0%, rgba(148, 82, 165, 0.10) 100%);
+}
+.menuActive.people{
+    color: #A66DAA;
+    background: linear-gradient(135deg, rgba(255, 245, 195, 0.10) 0%, rgba(148, 82, 165, 0.10) 100%);
+}
+.headerNav ul.left li:first-child {
+    padding-left: 0;
+}
+
+.headerNav ul.right li:last-child {
+    padding-right: 0;
+}
+
+.headerNav ul li a {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item {
+    text-align: center;
+}
+
+.headerNav ul li a img {
+    margin-right: 12px;
+}
+
+.avatar-wrap ul li {
+    display: inline-block;
+    list-style: none;
+    margin: 0 12px;
+}
+
+.avatar-wrap ul:before {
+    position: absolute;
+    content: "";
+    background: var(--colorG2);
+    width: 1px;
+    height: 38px;
+    top: -5px;
+    right: -10px;
+}
+
+.avatar-wrap ul {
+    margin-right: 32px;
+    position: relative;
+}
+
+.userImageBox {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 200px;
+    border: 1px solid var(--Gray-200, #EAECF0);
+    background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%), #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    color: var(--Gray-600, #475467);
+    text-align: center;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+
+.userImageBox:hover {
+    border-radius: 200px;
+    border: 1px solid var(--Primary-200, #E9D7FE);
+    background: linear-gradient(180deg, #F9FAFB 0%, #EDEAFC 100%), #FFF;
+    color: var(--Primary-600, #158ECC);
+    text-align: center;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+}
+.HeaderLocationWrapper {
+    border-radius: 4px;
+    border: 1px solid var(--Gray-100, #F2F4F7);
+    background: var(--Gray-25, #FCFCFD);
+    padding: 2px 9px;
+    height: 40px;
+}
+.HeaderLocationWrapper h6 {
+    color: var(--Gray-800, #1D2939);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: -0.16px;
+    margin: 0;
+}
+.HeaderLocationWrapper .css-1fdsijx-ValueContainer {
+    padding: 0;
+}
+.HeaderLocationWrapper .css-13cymwt-control,.HeaderLocationWrapper .css-t3ipsp-control {
+    background-color: hsl(0deg 0% 100% / 0%) !important;
+    border-width: 0px!important;
+}
+.HeaderLocationWrapper .css-1xc3v61-indicatorContainer {
+    padding: 0;
+    margin-top: -18px;
+}
+.HeaderLocationWrapper .css-qbdosj-Input {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.HeaderLocationWrapper .css-13cymwt-control {
+    min-height: auto!important;
+}
+.HeaderLocationWrapper .css-t3ipsp-control{
+    padding: 0;
+    margin: 0;
+    min-height: auto!important;
+}
+.HeaderLocationWrapper .css-15lsz6c-indicatorContainer{
+    padding: 0;
+    margin: 0;
+    min-height: auto!important;
+    margin-top: -18px;
+}
+.HeaderLocationWrapper:hover {
+    border-radius: 4px;
+    border: 1px solid var(--Primary-50, #EBF8FF);
+    background: var(--Primary-25, #F2FAFF);
+}
+.HeaderLocationWrapper:hover .css-1hb7zxy-IndicatorsContainer svg {
+    fill: #48C1FF;
+}
+
+@media (min-width: 1280px) and (max-width: 1500px) {
+    .headerNav ul li a img {
+        margin-right: 7px;
+    }
+
+}

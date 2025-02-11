@@ -12,8 +12,8 @@
 
 
 # production
-/src
-/public
+# /src
+# /public
 
 
 # misc
@@ -26,3 +26,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+dist
+.vscode
+.env

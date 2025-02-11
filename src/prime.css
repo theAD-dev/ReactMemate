@@ -1,0 +1,514 @@
+/* Override prime */
+.status .p-chip-text,
+.type .p-chip-text,
+.custom .p-chip-text {
+  margin: 0px;
+}
+
+.shadowRight {
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px -6px 0px 0px);
+}
+
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  color: #475467;
+  width: 10px;
+}
+
+th.headerRightAligh .p-column-header-content {
+  justify-content: flex-end;
+}
+
+.p-datatable.p-datatable-lg .p-datatable-header {
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+}
+
+table.p-datatable-table {
+  border-collapse: separate !important;
+}
+
+.p-checkbox .p-checkbox-box .p-checkbox-icon {
+  color: #158ecc;
+}
+
+.p-checkbox.p-highlight .p-checkbox-box {
+  border: 1px solid #1ab2ff;
+  background: #ebf8ff;
+}
+
+.primary-text-button {
+  color: #1ab2ff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0px;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.show-on-hover .show-on-hover-element,
+table.p-datatable-table .show-on-hover .p-checkbox {
+  visibility: hidden;
+}
+
+.show-on-hover:hover .show-on-hover-element,
+table.p-datatable-table .show-on-hover:hover .p-checkbox {
+  visibility: visible;
+}
+
+table.p-datatable-table tr:hover .show-on-hover-element,
+table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
+  visibility: visible;
+  fill: #1ab2ff;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight .show-on-hover .p-checkbox {
+  visibility: visible;
+}
+
+.p-datatable
+  .p-datatable-tbody
+  > tr.p-highlight
+  .show-on-hover-element:not(.not-show-checked) {
+  fill: #1ab2ff;
+  visibility: visible;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight td {
+  background-color: #ebf8ff !important;
+}
+
+.p-datatable tr.p-datatable-emptymessage:hover td {
+  background-color: #fff;
+}
+
+.custom-modal .p-dialog-header-icons {
+  margin-top: 8px;
+}
+
+.custom-modal .p-dialog-header {
+  padding: 16px 24px 12px 24px;
+}
+
+.custom-modal .p-dialog-content {
+  padding: 18px 24px;
+  border-top: 1px solid #dedede;
+  border-bottom: 1px solid #dedede;
+  background: var(--Gray-50, #f9fafb);
+}
+
+.p-0.custom-modal .p-dialog-content {
+  padding: 0px !important;
+}
+
+.custom-modal .p-dialog-footer {
+  padding: 16px 24px;
+}
+
+.yellow-rating.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
+  color: #ffcb45;
+}
+
+.p-component-overlay {
+  background-color: transparent;
+}
+
+.p-datatable-tbody tr td {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  padding: 9.5px 17px;
+  border-bottom: 1px solid var(--Gray-200, #eaecf0);
+}
+
+.p-confirm-popup button {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 4px;
+}
+
+.p-confirm-popup-content {
+  font-family: Inter;
+}
+
+.p-confirm-popup-footer {
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+  border-radius: 24px !important;
+}
+
+.paddingLeftHide {
+  padding-left: 0 !important;
+}
+
+.custom-chipsInput .p-chips-multiple-container {
+  width: 100%;
+  padding: 5px 14px;
+  box-shadow: none !important;
+  outline: none !important;
+  border-radius: 4px;
+  border: 1px solid var(--Border, #d0d5dd) !important;
+}
+
+.custom-chipsInput .p-chips-multiple-container .p-chips-token {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  /* 142.857% */
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px)
+    var(--spacing-xxs, 2px) 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
+
+.custom-chipsInput.p-chips
+  .p-chips-multiple-container
+  .p-chips-token
+  .p-chips-token-icon {
+  fill: #98a2b3;
+  size: 12px;
+  width: 12px;
+}
+
+.p-dropdown-filter.p-inputtext {
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+}
+
+.p-tieredmenu .p-menuitem-content {
+  background: transparent;
+}
+
+.p-tieredmenu
+  .p-menuitem:not(.p-highlight):not(.p-disabled)
+  > .p-menuitem-content:hover {
+  color: var(--Primary-700, #106b99);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.p-tieredmenu .p-menuitem > .p-menuitem-content .p-menuitem-link {
+  display: flex;
+  padding-left: 10px;
+  align-items: center;
+  gap: var(--spacing-lg, 12px);
+}
+
+/* Accordion customize start */
+
+.p-accordion-tab {
+  border: 1px solid #eaecf0;
+  border-radius: var(--radius-xs, 4px);
+}
+
+.main-accordion-header {
+  position: relative;
+}
+
+.main-accordion-header .expandIcon {
+  right: 10px;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f4f7;
+  border-radius: 22px;
+}
+
+.p-accordion-header.p-highlight .active-header-text {
+  color: #106b99 !important;
+}
+
+.p-accordion-header.p-highlight .editItem,
+.p-accordion-header:hover .editItem {
+  visibility: visible !important;
+}
+
+.main-accordion-header .collapseIcon {
+  right: 10px;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #bae8ff;
+  border-radius: 22px;
+}
+
+.p-accordion-tab .main-accordion-header,
+.p-accordion-tab .main-accordion-header:hover,
+.p-accordion-tab .p-accordion-content,
+.p-accordion-tab .p-accordion-content:hover {
+  border: 1px solid #fff;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.innnerAccordian .p-accordion-content {
+  padding: 0px;
+}
+
+.p-accordion .p-accordion-tab {
+  margin-bottom: 8px;
+}
+
+/* Accordion customize end */
+
+.p-component.p-editor-container {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.p-editor-toolbar.ql-toolbar.ql-snow {
+  border-radius: 4px 4px 0px 0px !important;
+  border-right: 1px solid #d0d5dd !important;
+  border-bottom: 1px solid #d0d5dd !important;
+  border-left: 1px solid #d0d5dd !important;
+  border-top: 0px solid #fff !important;
+  background: var(--Gray-25, #fcfcfd) !important;
+}
+
+.p-editor-content.ql-container.ql-snow {
+  font-family: Inter !important;
+  border-radius: var(--radius-xs, 4px) var(--radius-xs, 4px) 0px 0px !important;
+  border-top: 1px solid #d0d5dd !important;
+  border-right: 1px solid #d0d5dd !important;
+  border-left: 1px solid #d0d5dd !important;
+  border-bottom: 0px solid #d0d5dd !important;
+  background: var(--Base-White, #fff) !important;
+}
+
+.ql-editor > * {
+  font-size: 16px !important;
+  font-family: Inter !important;
+}
+
+.ql-editor.ql-blank::before {
+  color: var(--Gray-400, #98a2b3) !important;
+  font-size: 16px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 24px !important;
+  font-family: Inter !important;
+}
+
+.ql-formats button {
+  margin-right: 20px;
+}
+
+.p-autocomplete .p-autocomplete-multiple-container .p-autocomplete-token {
+  padding: 0px !important;
+  color: #475467 !important;
+  background: transparent !important;
+  border: 0px solid #d0d5dd !important;
+}
+
+.p-tooltip-text {
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px; /* 150% */
+
+  padding: 6px 10px !important;
+  background: #fff;
+}
+
+.p-tooltip.p-tooltip-top .p-tooltip-arrow {
+  border-top-color: #fff;
+}
+
+.customSelectButton .p-button.p-component {
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
+
+.customSelectButton .p-button.p-component:first-child {
+  border-right: 0px solid #d0d5dd;
+}
+
+.customSelectButton .p-button.p-component.p-highlight {
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.customSelectButton .p-button.p-component .p-button-label {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.customSelectButton .p-button.p-component.p-highlight .p-button-label {
+  color: var(--Primary-500, #1ab2ff);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.p-datepicker {
+  padding: 16px 24px !important;
+}
+
+.p-datepicker table td.p-datepicker-today > span {
+  color: #fff !important;
+  background: var(--Primary-500, #1ab2ff) !important;
+}
+
+.p-datepicker-calendar td,
+.p-datepicker-calendar th {
+  border: none !important;
+  padding: 8px 6px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  background: #fff !important;
+}
+
+.p-datepicker table td > span {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: box-shadow 0.2s;
+  border: 1px solid transparent;
+}
+
+.p-datepicker-buttonbar {
+  padding: 5px 0px 0px 0px !important;
+}
+
+.p-datepicker-header {
+  padding: 0px 0px 5px 0px !important;
+}
+
+.p-datepicker-buttonbar .p-button {
+  color: var(--Gray-800, #1d2939);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 8px 14px 0px 14px !important;
+}
+
+.p-yearpicker,
+.p-monthpicker {
+  justify-content: space-around;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 344px !important;
+}
+
+.p-yearpicker span {
+  max-width: 140px !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.p-monthpicker span {
+  max-width: 100px;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.p-calendar .p-button-icon-only {
+  background: #fff;
+  padding: 0px !important;
+  border: none !important;
+  border-radius: 4px !important;
+}
+
+.fixedMenu,
+.szh-menu-container {
+  z-index: 10000;
+}
+.fixedMenu .szh-menu-container .szh-menu {
+  top: 50% !important;
+  left: 50% !important;
+  z-index: 100000;
+  position: fixed !important;
+  transform: translate(-50%, -50%);
+}
+
+.p-dropdown-panel {
+  z-index: 3100 !important;
+}
+
+.p-autocomplete-panel {
+  z-index: 2000 !important;
+}
+
+.p-selectbutton .p-button.p-highlight {
+  color: #1ab2ff;
+  border-color: #d0d5dd;
+  background: var(--Primary-25, #f2faff);
+}
+
+.p-button {
+  outline: none;
+  box-shadow: none;
+}
+
+.p-radiobutton .p-radiobutton-box {
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+}
+
+.p-radiobutton.p-highlight .p-radiobutton-box {
+  border-color: #1ab2ff !important;
+  background: #EBF8FF !important;
+}
+
+.p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
+  width: 10px;
+  height: 10px;
+  transition-duration: 0.2s;
+  background-color: #1ab2ff;
+}
+
+.p-timepicker .p-link {
+  height: 20px;
+}
+
+.p-timepicker span {
+  font-size: 16px;
+}
+
+.p-overlaypanel .p-overlaypanel-content {
+  padding: 12px;
+}
