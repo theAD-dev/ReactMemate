@@ -59,6 +59,7 @@
   display: flex;
   align-items: center;
   font-family: "Inter";
+  border-radius: 40px;
 }
 .salesTableWrap
   .flatpickr-day.selected.startRange

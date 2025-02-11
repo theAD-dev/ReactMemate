@@ -17,7 +17,7 @@ import { useMutation } from '@tanstack/react-query';
 import { CloseButton } from 'react-bootstrap';
 import { bringBack } from '../../../../../APIs/ClientsApi';
 
-const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
+const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending, setVisible }, ref) => {
   const navigate = useNavigate();
   const [isDuplicating, setIsDuplicating] = useState(null);
   const [isBringBack, setIsBringBack] = useState(null);

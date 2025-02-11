@@ -38,11 +38,9 @@ function GeneralInformation() {
   const [activeTab, setActiveTab] = useState('generalinformation');
   const [isEditingGroup, setIsEditingGroup] = useState(false);
   const [photo, setPhoto] = useState({});
-  const { register, handleSubmit, control, formState: { errors }, reset, watch, setValue } = useForm({
+  const { register, handleSubmit, control, formState: { errors }, reset, setValue } = useForm({
     resolver: yupResolver(schema),
   });
-
-  console.log(watch('main_phone'))
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['generalInfo'],
@@ -54,8 +52,6 @@ function GeneralInformation() {
       console.error('Error fetching data:', error);
     },
   });
-
-
 
   const mutation = useMutation({
     mutationFn: (data) => updateGeneralInformation(data, photo),
@@ -403,12 +399,6 @@ function GeneralInformation() {
           </div>
         </div>
       </div>
-
-
-      {/* 
-        {mutation.isError && <div>Error updating data</div>}
-        {mutation.isSuccess && <div>Data updated successfully</div>} */}
-
     </form>
   );
 }

@@ -28,6 +28,10 @@ const Departments = () => {
     const [subDepartment, setSubDepartment] = useState(null);
     const [activeCalculations, setActiveCalculations] = useState({});
 
+    const [AccordionActiveTab, setAccordionActiveTab] = useState(0);
+    console.log('AccordionActiveTab: ', AccordionActiveTab);
+    const [AccordionActiveTab2, setAccordionActiveTab2] = useState(null);
+
     const departmentQuery = useQuery({
         queryKey: ['departments'],
         queryFn: () => getDepartments(1),
@@ -60,7 +64,7 @@ const Departments = () => {
         setEditDepartment(data);
     }
 
-    const createSubDepartment = (e, parent) => {
+    const createSubDepartmentOpen = (e, parent) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -90,13 +94,14 @@ const Departments = () => {
                             </div>
                         </div>
                         <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
-                            <DeleteConfirmationModal title={"Deparment"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
-                            <Button className={style.create} onClick={(e) => createSubDepartment(e, department.id)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
+                            <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
+                            <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
                         </div>
                     </span>
                 }
             >
                 <Accordion
+                    activeIndex={AccordionActiveTab2}
                     className='innnerAccordian'
                     expandIcon={<div className={clsx(style.innerExpandIcon)}>
                         <ChevronUp size={16} color='#344054' />
@@ -106,7 +111,7 @@ const Departments = () => {
                     </div>}
                     onTabOpen={(e) => {
                         const subindexId = department.subindexes[e.index].id;
-                        getCalculator(subindexId);  // Fetch sub-department on tab open
+                        getCalculator(subindexId);
                     }}
                     onTabClose={(e) => {
                         return false;
@@ -127,7 +132,7 @@ const Departments = () => {
                                         </div>
 
                                         <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
-                                            <DeleteConfirmationModal title={"Sub Deparment"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
+                                            <DeleteConfirmationModal title={"Sub Department"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
                                             <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
                                         </div>
                                     </span>
@@ -173,10 +178,11 @@ const Departments = () => {
                                 <div className="listwrapper">
                                     <div className={`topHeadStyle pb-4 ${style.topHeadBorder}`}>
                                         <h2>Departments</h2>
-                                        <button onClick={() => setVisible(true)}>Create Deparment <PlusLg color="#000000" size={20} className='mb-1 ms-1' /></button>
+                                        <button onClick={() => setVisible(true)}>Create Department <PlusLg color="#000000" size={20} className='mb-1 ms-1' /></button>
                                     </div>
                                     <div>
                                         <Accordion
+                                            activeIndex={AccordionActiveTab}
                                             expandIcon={<div className='expandIcon'>
                                                 <ChevronUp size={16} color='#344054' />
                                             </div>}
@@ -878,7 +884,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
                     </div>
                 </div>
                 <span className={`white-space-nowrap ${style.headerTitle}`}>
-                    {editDepartment?.id ? "Edit Deparment" : "Create Deparment"}
+                    {editDepartment?.id ? "Edit Department" : "Create Department"}
                 </span>
             </div>
         </div>
@@ -955,7 +961,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
                     </div>
                 </div>
                 <span className={`white-space-nowrap ${style.headerTitle}`}>
-                    {editSubDepartment?.id ? "Edit Sub Deparment" : "Create Sub Deparment"}
+                    {editSubDepartment?.id ? "Edit Sub Department" : "Create Sub Department"}
                 </span>
             </div>
         </div>

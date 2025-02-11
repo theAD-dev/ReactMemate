@@ -1,6 +1,6 @@
 .filterBox {
   display: flex;
-  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  padding: var(--spacing-sm, 2px) var(--spacing-md, 2px);
   justify-content: center;
   align-items: center;
   gap: var(--spacing-md, 8px);
@@ -8,18 +8,23 @@
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: #fff;
   height: 32px;
-  width: 36px;
+  width: 32px;
+  border-radius: 50%;
 }
 
 .newButton,
 .newButton:hover,
 .newButton:focus {
   gap: 8px;
+  width: 59px;
+  height: 28px;
   display: flex;
+  font-size: 14px;
   padding: 4px 14px;
   border-radius: 4px;
   align-items: center;
   justify-content: center;
+  border-radius: 40px;
   border: 1px solid var(--Primary-600, #158ecc);
   background: var(--Primary-600, #158ecc);
 }
@@ -105,4 +110,12 @@
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: var(--Base-White, #fff);
+}
+
+.serviceName {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 }

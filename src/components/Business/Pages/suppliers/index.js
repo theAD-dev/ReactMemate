@@ -40,7 +40,7 @@ const SupplierPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter /></button>
+                                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -56,7 +56,7 @@ const SupplierPage = () => {
                     }
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '10px' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Suppliers</h1>
                     <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
                 </div>

@@ -20,6 +20,7 @@ import { fetchduplicateData } from '../../../../APIs/SalesApi';
 import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
 import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
 import { Button } from 'primereact/button';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -107,9 +108,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
     const customerNameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
-            <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData.is_business ? "" : "rounded-circle"}`}>
-                {rowData?.client?.photo ? <img src={rowData?.client?.photo} alt='clientImg' className='w-100' /> : rowData?.client?.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
-            </div>
+            <ImageAvatar has_photo={rowData?.client?.has_photo} photo={rowData?.client?.photo} is_business={rowData?.client?.is_business} />
             <div className='d-flex flex-column gap-1'>
                 <div className={`${style.ellipsis}`}>{rowData.client?.name}</div>
                 {rowData.deleted ?

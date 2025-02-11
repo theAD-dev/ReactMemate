@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { CheckCircle, Download, Eye, EyeSlash, Filter, Printer, Send, XCircle } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
+import { Download, Eye, EyeSlash, Filter, Printer, Send } from 'react-bootstrap-icons';
 import { useDebounce } from 'primereact/hooks';
 
 import style from './invoice.module.scss';

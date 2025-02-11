@@ -415,7 +415,7 @@ const TableTopBar = ({
                     <li>
                       {profileData && profileData.bank_detail && profileData.bank_detail.account_number ? (
                         <NavLink className="tabActive" to="/sales/newquote/selectyourclient">
-                          New <PlusLg color="#fff" size={16} />
+                          New
                         </NavLink>
                       ) : (
                         <BankDetailsModel />

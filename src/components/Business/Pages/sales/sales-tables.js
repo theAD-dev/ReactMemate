@@ -27,6 +27,7 @@ import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
 
 import { OverlayPanel } from 'primereact/overlaypanel';
+import ImageAvatar from "../../../../ui/image-with-fallback/image-avatar";
         
 
 const CustomAvatarGroup = ({ params }) => {
@@ -187,11 +188,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
         <div className="userImgStyle">
           <div className="innerFlex styleColor2 d-flex justify-content-between">
             <div className="leftStyle d-flex align-items-center">
-              <img className={params.row.hasPhoto ? "truePhotoStyle" : "falsePhotoStyle"}
-                src={params.row.photo}
-                alt={params.row.photo}
-                style={{ marginRight: "5px" }}
-              />
+              <ImageAvatar has_photo={params.row.hasPhoto} photo={params.row?.photo} is_business={params.row?.is_business} />
               <span>{params.value}</span>
             </div>
 
@@ -381,6 +378,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       created: sale.created,
       Client: sale.client.name,
       photo: sale.client.photo,
+      is_business: sale.client.is_business,
       hasPhoto: sale.client.has_photo,
       Reference: sale.reference,
       Status: sale.status,
@@ -448,6 +446,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       created: sale.created,
       Client: sale.client.name,
       photo: sale.client.photo,
+      is_business: sale.client.is_business,
       Reference: sale.reference,
       Status: sale.status,
       Calculation: sale.calculation,

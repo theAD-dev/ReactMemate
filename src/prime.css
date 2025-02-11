@@ -508,3 +508,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 .p-timepicker span {
   font-size: 16px;
 }
+
+.p-overlaypanel .p-overlaypanel-content {
+  padding: 12px;
+}

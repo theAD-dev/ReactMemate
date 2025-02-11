@@ -2,8 +2,9 @@ import React from "react";
 import { Placeholder } from "react-bootstrap";
 import { QuestionCircle, Search, PlusLg } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
+import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
 
-const ProfileInfo = ({ username, userType, aliasName, photo }) => {
+const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
   return (
     <>
       <div className="avatar-wrap flexEndbox colMinWidth">
@@ -35,8 +36,8 @@ const ProfileInfo = ({ username, userType, aliasName, photo }) => {
               </span>
             </div>
             {
-              photo ? <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <img src={photo} id="my-profile-img" alt="profile" />
+              has_photo ? <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <FallbackImage has_photo={has_photo} photo={photo} is_business={false} />
               </div>
                 : <div className="userImageBox">{aliasName}</div>
             }

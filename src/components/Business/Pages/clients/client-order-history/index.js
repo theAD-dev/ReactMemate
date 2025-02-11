@@ -76,7 +76,7 @@ const ClientOrderHistory = () => {
                         <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
                     </div>
                 </div>
-                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} />
+                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} setVisible={setVisible}/>
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (

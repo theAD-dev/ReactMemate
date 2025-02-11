@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, GeoAlt, Globe, Person } from 'react-bootstrap-icons';
+import { GeoAlt, Globe } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
 
 import style from './clients.module.scss';
@@ -10,11 +10,12 @@ import { getListOfClients } from '../../../../APIs/ClientsApi';
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 
 const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted, refetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
-    const [clients, setCients] = useState([]);
+    const [clients, setClients] = useState([]);
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
@@ -36,10 +37,10 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
 
             const data = await getListOfClients(page, limit, searchValue, order, isShowDeleted);
             setTotalClients(() => (data?.count || 0))
-            if (page === 1) setCients(data.results);
+            if (page === 1) setClients(data.results);
             else {
                 if (data?.results?.length > 0)
-                    setCients(prev => {
+                    setClients(prev => {
                         const existingClientIds = new Set(prev.map(client => client.id));
                         const newClients = data.results.filter(client => !existingClientIds.has(client.id));
                         return [...prev, ...newClients];
@@ -77,9 +78,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     }
     const nameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
-            <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData.is_business ? "" : "rounded-circle"}`}>
-                {rowData.photo ? <img src={rowData.photo} alt='clientImg' className='w-100' /> : rowData.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
-            </div>
+            <ImageAvatar has_photo={rowData.has_photo} photo={rowData.photo} is_business={rowData.is_business} />
             <div className='d-flex flex-column gap-1'>
             <div className={`${style.ellipsis}`}>{rowData.name}</div>
             {rowData.deleted ?

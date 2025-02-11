@@ -14,6 +14,7 @@ import { Spinner } from 'react-bootstrap';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import { Badge } from 'primereact/badge';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -96,9 +97,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
 
     const nameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
-            <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData.is_business ? "" : "rounded-circle"}`}>
-                {rowData.supplier?.photo ? <img src={rowData.supplier?.photo} alt='clientImg' className='w-100' /> : rowData.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
-            </div>
+            <ImageAvatar has_photo={rowData?.supplier?.has_photo} photo={rowData?.supplier?.photo} is_business={true} />
             <div className='d-flex flex-column gap-1'>
                 <div className={`${style.ellipsis}`}>{rowData.supplier?.name}</div>
                 {rowData.deleted ?

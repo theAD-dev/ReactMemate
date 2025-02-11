@@ -10,6 +10,8 @@ import style from './suppliers.module.scss';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { getListOfSuppliers } from '../../../../APIs/SuppliersApi';
 import { Spinner } from 'react-bootstrap';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import { Tag } from 'primereact/tag';
 
 export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers }, ref) => {
     const navigate = useNavigate();
@@ -68,22 +70,18 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     }, [suppliers, hasMoreData]);
 
     const supplierIdBodyTemplate = (rowData) => {
-        return <div className='d-flex align-items-center gap-2 show-on-hover'>
+        return <div className='d-flex align-items-center'>
             <span>{rowData.number}</span>
-            <Button label="Open" onClick={() => navigate(`/suppliers/${rowData.id}/history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
 
     const nameBodyTemplate = (rowData) => {
-        return <div className='d-flex align-items-center'>
-            <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.nameBgBox}`}>
-                <img src={rowData.photo} alt='supplierImg' className='w-100' />
-            </div>
+        return <div className='d-flex align-items-center gap-1 show-on-hover'>
+            <ImageAvatar has_photo={rowData.has_photo} photo={rowData.photo} is_business={true} />
             <div className={`${style.ellipsis}`}>{rowData.name}</div>
+            <Button label="Open" onClick={() => navigate(`/suppliers/${rowData.id}/history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
-
-
 
     const ServicesBodyTemplate = (rowData) => {
         const op = useRef(null);
@@ -100,13 +98,15 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
         return (
             <div className='d-flex align-items-center gap-2'>
                 {displayedServices.map((service, index) => (
-                    <div key={`${rowData.id}-service-${index}`} className={style.serviceTag}>{service}</div>
+                    <div key={`${rowData.id}-service-${index}`} className={style.serviceTag}>
+                        <span className={style.serviceName} title={service}>{service}</span>
+                    </div>
                 ))}
                 {hiddenCount > 0 && (
                     <div
                         className={style.serviceTag}
                         onClick={handleServiceClick}
-                        style={{ cursor: "pointer", border: '1px solid #dedede' }}
+                        style={{ color: '#106B99', cursor: "pointer", border: '1px solid #76D1FF', background: '#F2FAFF' }}
                     >
                         +{hiddenCount}
                     </div>
@@ -164,6 +164,10 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
         return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-"
     }
 
+    const totalSpentBody = (rowData) => {
+        return <Tag value={`$ ${rowData.total_spent}`} style={{ height: '22px', minWidth: '26px', borderRadius: '20px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
+    }
+
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
@@ -205,7 +209,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             <Column header="Address" body={addressesBody} style={{ minWidth: '313px' }}></Column>
             <Column header="State" body={addressesStateBodyTemplate} style={{ minWidth: '60px', textAlign: 'center' }}></Column>
             <Column header="Post Code" body={addressesPostCodeBodyTemplate} style={{ minWidth: '88px', textAlign: 'center' }}></Column>
-            <Column field='total_spent' header="Total Spent" style={{ minWidth: '111px' }} sortable></Column>
+            <Column field='total_spent' body={totalSpentBody} header="Total Spent" style={{ minWidth: '111px' }} sortable></Column>
             <Column field="website" header="Website" body={websiteBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
         </DataTable>
     )
