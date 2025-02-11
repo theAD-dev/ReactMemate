@@ -1,0 +1,31 @@
+<svg width="720" height="769" viewBox="0 0 720 769" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_10630_557863" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="-24" y="0" width="769" height="769">
+<rect width="768" height="768" transform="translate(-23.7221 0.294922)" fill="url(#paint0_radial_10630_557863)"/>
+</mask>
+<g mask="url(#mask0_10630_557863)">
+<circle cx="360.278" cy="384.295" r="47.5" stroke="#EAECF0"/>
+<circle cx="360.278" cy="384.295" r="95.5" stroke="#EAECF0"/>
+<circle cx="360.278" cy="384.295" r="143.5" stroke="#EAECF0"/>
+<circle cx="360.278" cy="384.295" r="191.5" stroke="#EAECF0"/>
+<circle cx="360.278" cy="384.295" r="239.5" stroke="#EAECF0"/>
+<circle cx="360.278" cy="384.295" r="287.5" stroke="#EAECF0"/>
+<circle cx="360.278" cy="384.295" r="335.5" stroke="#EAECF0"/>
+<circle cx="360.278" cy="384.295" r="383.5" stroke="#EAECF0"/>
+</g>
+<g filter="url(#filter0_b_10630_557863)">
+<rect x="295" y="319.5" width="130" height="130" rx="65" fill="#FDA29B"/>
+<path d="M360 354.75C364.694 354.75 368.5 358.556 368.5 363.25V380.25H351.5V363.25C351.5 358.556 355.306 354.75 360 354.75ZM372.75 380.25V363.25C372.75 356.208 367.042 350.5 360 350.5C352.958 350.5 347.25 356.208 347.25 363.25V380.25C342.556 380.25 338.75 384.056 338.75 388.75V410C338.75 414.694 342.556 418.5 347.25 418.5H372.75C377.444 418.5 381.25 414.694 381.25 410V388.75C381.25 384.056 377.444 380.25 372.75 380.25ZM347.25 384.5H372.75C375.097 384.5 377 386.403 377 388.75V410C377 412.347 375.097 414.25 372.75 414.25H347.25C344.903 414.25 343 412.347 343 410V388.75C343 386.403 344.903 384.5 347.25 384.5Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_b_10630_557863" x="287" y="311.5" width="146" height="146" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="4"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_10630_557863"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_10630_557863" result="shape"/>
+</filter>
+<radialGradient id="paint0_radial_10630_557863" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(384 384) rotate(90) scale(384 384)">
+<stop/>
+<stop offset="1" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>
