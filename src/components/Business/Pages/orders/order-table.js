@@ -13,6 +13,7 @@ import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-t
 import { Spinner } from 'react-bootstrap';
 import { Dialog } from "primereact/dialog";
 import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
   const navigate = useNavigate();
@@ -93,9 +94,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
   const customerBody = (rowData) => {
     return <div className='d-flex align-items-center'>
-      <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.orderImg} ${rowData.is_business ? "" : "rounded-circle"}`}>
-        {rowData.client.has_photo ? <img src={rowData.client.photo} alt='clientImg' className='w-100' /> : rowData.client.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
-      </div>
+      <ImageAvatar has_photo={rowData?.client?.has_photo} photo={rowData?.client?.photo} is_business={rowData?.client?.is_business} />
       <div className='d-flex flex-column gap-1'>
         <div className={`${style.ellipsis}`}>{rowData.client.name}</div>
         {rowData.deleted ?

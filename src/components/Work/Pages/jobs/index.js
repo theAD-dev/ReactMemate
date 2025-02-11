@@ -40,7 +40,7 @@ const JobsPage = () => {
                         ) : (
                             <>
                                 <div className='filtered-box'>
-                                    <button className={`${style.filterBox}`} onClick={(e) => { }}><Filter /></button>
+                                    <button className={`${style.filterBox}`} onClick={(e) => { }}><Filter size={20} /></button>
                                 </div>
                                 <div className="searchBox" style={{ position: 'relative' }}>
                                     <div style={{ position: 'absolute', top: '2px', left: '6px' }}>

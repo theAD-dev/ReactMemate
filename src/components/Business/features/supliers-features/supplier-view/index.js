@@ -8,6 +8,7 @@ import style from './supplier-view.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png'
 import DeleteSupplier from '../supplier-delete';
 import SupplierEdit from '../supplier-edit';
+import { FallbackImage } from '../../../../../ui/image-with-fallback/image-avatar';
 
 const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
     const { id } = useParams();
@@ -27,9 +28,7 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                 <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '24px' }}>
                     <div className="d-flex align-items-center gap-2">
                         <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
-                            {
-                                data.photo ? <img src={data.photo} alt='profile-photo' /> : <Building color='#667085' size={26} />
-                            }
+                            <FallbackImage has_photo={data.has_photo} photo={data.photo} is_business={true} size={26} />
                         </div>
                         <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{data?.name}</span>
                     </div>
@@ -89,7 +88,7 @@ const ViewSection = ({ data }) => {
                             window.location.href = `mailto:${data?.email}`;
                         }}
                     >
-                        <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
+                        <div className='d-flex align-items-center' style={{ color: '#1AB2FF', fontSize: '16px', }}>
                             <div className='ellipsis-width' title={data?.email}>{data?.email || "-"}&nbsp;</div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
                                 <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
@@ -104,7 +103,7 @@ const ViewSection = ({ data }) => {
                     <Link to={`${data?.website}`}
                         target="_blank"
                     >
-                        <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
+                        <div className='d-flex align-items-center' style={{ color: '#1AB2FF', fontSize: '16px', }}>
                             <div className='ellipsis-width' title={data?.website}>{data?.website || "-"}&nbsp;</div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
                                 <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
@@ -156,7 +155,7 @@ const ViewSection = ({ data }) => {
                                     window.location.href = `mailto:${contact?.email}`;
                                 }}
                             >
-                                <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
+                                <div className='d-flex align-items-center' style={{ color: '#1AB2FF', fontSize: '16px', }}>
                                     <div className='ellipsis-width' title={contact?.email}>{contact?.email || "-"}&nbsp;</div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
                                         <path d="M6.3335 14.1666L14.6668 5.83331M14.6668 5.83331H6.3335M14.6668 5.83331V14.1666" stroke="#106B99" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />

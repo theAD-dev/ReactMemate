@@ -13,7 +13,7 @@ const ApprovalPage = () => {
             <div className="topbar" style={{ padding: '4px 46px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>
-                        <button className={`${style.filterBox}`}><Filter /></button>
+                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
                     </div>
                     <div className="searchBox" style={{ position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '2px', left: '6px' }}>

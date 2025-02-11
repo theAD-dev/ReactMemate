@@ -96,6 +96,7 @@ import SalesConversion from "../Business/Pages/statistics/sales-conversion";
 import Overview from "../Business/Pages/statistics/overview";
 import { ProgressSpinner } from "primereact/progressspinner";
 import NProgress from 'nprogress';
+import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
 
 function SuspenseLoader() {
   useEffect(() => {
@@ -168,10 +169,7 @@ const Header = ({ onClick }) => {
                     <div className="company_logo colMinWidth">
                       {profileData && profileData?.organization?.logo ? (
                         <div className="d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', overflow: 'hidden', borderRadius: '4px', border: '0.5px solid #F2F4F7' }}>
-                          <img
-                            src={profileData.organization.logo}
-                            alt="Company Logo"
-                          />
+                          <FallbackImage photo={profileData.organization.logo} is_business={true} has_photo={true} />
                         </div>
                       ) : (
                         <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
@@ -221,6 +219,7 @@ const Header = ({ onClick }) => {
                       userType={profileData?.type || ""}
                       aliasName={profileData?.alias_name || ""}
                       photo={profileData?.photo || ""}
+                      has_photo={profileData?.has_photo}
                     />
                   </Col>
                 </Row>
@@ -340,10 +339,7 @@ const Header = ({ onClick }) => {
                   <Col className="d-flex align-items-center">
                     <div className="company_logo colMinWidth">
                       {profileData?.organization?.logo ? (
-                        <img
-                          src={profileData.organization.logo}
-                          alt="Company Logo"
-                        />
+                        <FallbackImage photo={profileData.organization.logo} is_business={true} has_photo={true} />
                       ) : (
                         <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
                           <Placeholder bg="secondary" style={{ height: '30px', width: '40px' }} size='lg' />
@@ -393,6 +389,7 @@ const Header = ({ onClick }) => {
                       userType={profileData?.type || ""}
                       aliasName={profileData?.alias_name || ""}
                       photo={profileData?.photo || ""}
+                      has_photo={profileData?.has_photo}
                     />
                   </Col>
                 </Row>

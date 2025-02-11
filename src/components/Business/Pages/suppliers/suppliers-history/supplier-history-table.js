@@ -144,6 +144,8 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
     </div>
   }
 
+  const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
+  
   return (
     <DataTable ref={ref} value={expenses} scrollable selectionMode={'checkbox'} removableSort
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
