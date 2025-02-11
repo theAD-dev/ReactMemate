@@ -1,0 +1,4 @@
+REACT_APP_BACKEND_API_URL=https://app.memate.com.au/api/v1
+REACT_APP_URL=https://app.memate.com.au
+
+REACT_APP_STRIPE_PUBLISH_KEY=pk_live_51KGzf3BrpZbmIWreM2EqPPXT1fl5FCl0hd5RX0NGjmNKWkMrz4m3ydFDhFSqV2TGXOYcl3AOdhBEzXILYRajp1LI00MOA7DM31
