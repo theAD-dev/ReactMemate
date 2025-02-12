@@ -24,7 +24,7 @@ const schema = yup
         firstname: yup.string().required("First name is required"),
         lastname: yup.string().required("Last name is required"),
         email: yup.string().email("Invalid email address").required("Email is required"),
-        phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+        // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
 
         payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
         category: yup.number().typeError("Enter a valid category").required('Category is required'),
@@ -161,7 +161,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                 <Dropdown
                                     {...field}
                                     options={[
-                                        { value: 1, label: 'Default - 0.00%' },
+                                        // { value: 1, label: 'Default - 0.00%' },
                                         ...(categoriesQuery && categoriesQuery.data?.map((category) => ({
                                             value: category.id,
                                             label: `${category.name} - ${category.value}%`
