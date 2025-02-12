@@ -1523,3 +1523,13 @@ input:focus::-webkit-input-placeholder {
   background: #dedede;
   border-radius: 4px;
 }
+
+.react-international-phone-country-selector-dropdown__list-item {
+  display: flex !important;
+  justify-content: start !important;
+  align-items: center !important;
+}
+
+.react-international-phone-country-selector-dropdown {
+  margin-top: 5px !important;
+}

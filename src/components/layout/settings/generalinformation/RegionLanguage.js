@@ -78,7 +78,7 @@ const RegionLanguage = () => {
                   <li>
                     <span>Country</span>
                     {!isEditing ? (
-                      <strong>Country</strong>
+                      <strong></strong>
                     ) : (
                       <Dropdown
                         value={country}
@@ -93,7 +93,7 @@ const RegionLanguage = () => {
                   <li>
                     <span>Timezone</span>
                     {!isEditing ? (
-                      <strong>Timezone</strong>
+                      <strong></strong>
                     ) : (
                       <Dropdown
                         value={timezone}
@@ -107,7 +107,7 @@ const RegionLanguage = () => {
                   <li>
                     <span>Currency</span>
                     {!isEditing ? (
-                      <strong>Currency</strong>
+                      <strong></strong>
                     ) : (
                       <></>
                     )}

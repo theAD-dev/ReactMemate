@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
@@ -17,6 +17,7 @@ import {
 import AvatarImg from "../../../assets/images/img/Avatar.png";
 import FileUploader from "../../../ui/file-uploader/file-uploader";
 import { Spinner } from "react-bootstrap";
+import { PhoneInput } from "react-international-phone";
 
 const schema = yup.object().shape({
   first_name: yup.string().required("First Name is required"),
@@ -38,6 +39,8 @@ function MyProfile() {
     handleSubmit,
     formState: { errors },
     reset,
+    control,
+    setValue
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -52,6 +55,10 @@ function MyProfile() {
       console.error("Error fetching data:", error);
     },
   });
+
+  useEffect(() => {
+    if (data?.phone) setValue('phone', data.phone);
+  }, [data]);
 
   const mutation = useMutation({
     mutationFn: (data) => updateProfile(data, photo),
@@ -290,10 +297,19 @@ function MyProfile() {
                               className={`inputInfo ${errors.phone ? "error-border" : ""
                                 }`}
                             >
-                              <input
-                                {...register("phone")}
-                                placeholder="Enter Phone Number"
-                                defaultValue={data.phone}
+                              <Controller
+                                name="phone"
+                                control={control}
+                                render={({ field }) => (
+                                  <PhoneInput
+                                    className='phoneInput'
+                                    defaultCountry='au'
+                                    value={field.value || ''}
+                                    placeholder='Enter Phone Number'
+                                    style={{ width: '315px' }}
+                                    onChange={(phone) => field.onChange(phone)}
+                                  />
+                                )}
                               />
                               {errors.phone && (
                                 <img

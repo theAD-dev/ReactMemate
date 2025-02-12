@@ -11,6 +11,7 @@ import SupplierCreate from '../../features/supliers-features/supplier-create';
 
 const SupplierPage = () => {
     const dt = useRef(null);
+    const [refetch, setRefetch] = useState(false);
     const [totalSuppliers, setTotalSuppliers] = useState(0);
     const [visible, setVisible] = useState(false);
     const [selectedSuppliers, setSelectedSuppliers] = useState(null);
@@ -65,8 +66,8 @@ const SupplierPage = () => {
                     <div className={`${style.totalCount}`}>{totalSuppliers} Suppliers</div>
                 </div>
             </div>
-            <SupplierTable ref={dt} searchValue={debouncedValue} setTotalSuppliers={setTotalSuppliers} selectedSuppliers={selectedSuppliers} setSelectedSuppliers={setSelectedSuppliers} />
-            <SupplierCreate visible={visible} setVisible={setVisible} />
+            <SupplierTable ref={dt} searchValue={debouncedValue} setTotalSuppliers={setTotalSuppliers} selectedSuppliers={selectedSuppliers} setSelectedSuppliers={setSelectedSuppliers} refetch={refetch} />
+            <SupplierCreate visible={visible} setVisible={setVisible} refetch={setRefetch} />
         </PrimeReactProvider>
     )
 }
