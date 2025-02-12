@@ -25,7 +25,7 @@ const ApprovalPage = () => {
                     </div>
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '48%', top: '6px' }}>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <h1 className="title p-0 mt-1">Approval</h1>
                 </div>
 
