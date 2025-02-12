@@ -118,10 +118,9 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
     </div>
   }
 
-  const dueDate = (rowData) => {
-
+  const PaidDate = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
-      {formatDate(rowData.due_date)}
+      {formatDate(rowData.date)}
     </div>
   }
 
@@ -161,11 +160,11 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
       <Column field="number" header="Expense ID" frozen sortable style={{ minWidth: '122px', color: '#667085' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
       <Column field="created" body={CreatedBody} header="Date Input" style={{ minWidth: '122px' }} sortable></Column>
-      <Column field='due_date' body={dueDate} header="Date Payed" style={{ minWidth: '122px' }} sortable></Column>
+      <Column field='date' body={PaidDate} header="Date Payed" style={{ minWidth: '122px' }} sortable></Column>
       <Column field="reference" header="Reference" style={{ minWidth: '606px' }}></Column>
       <Column field='gst' body={gstbody} header="GST" style={{ minWidth: '107px' }} bodyClassName={"text-end"} sortable></Column>
       <Column field='total' header="Total" body={TotalBody} bodyClassName={"text-end"} style={{ minWidth: '111px' }} sortable></Column>
-      <Column field='order.number' header="Interval/Order" style={{ minWidth: '130px' }}></Column>
+      <Column field='type' header="Interval/Order" style={{ minWidth: '130px' }}></Column>
       <Column field="department" header="Department" style={{ minWidth: '217px' }}></Column>
       <Column field='account_code.code' header="Account Code" body={accountCodeBodyTemplate} style={{ minWidth: '214px' }}></Column>
       <Column field='paid' body={StatusBody} header="Status" bodyClassName={"text-center"} style={{ minWidth: '123px' }}></Column>

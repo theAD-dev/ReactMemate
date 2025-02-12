@@ -116,8 +116,8 @@ const InvoicePage = () => {
                     }
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%', top: '6px' }}>
-                    <h1 className="title p-0 mt-1" style={{ marginRight: '16px' }}>Invoices</h1>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                    <h1 className="title p-0">Invoices</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                 </div>
