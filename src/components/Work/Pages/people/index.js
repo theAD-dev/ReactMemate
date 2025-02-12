@@ -27,7 +27,7 @@ const PeoplePage = () => {
                     </div>
                 </div>
 
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '49%', top: '12px' }}>
+                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <h1 className="title p-0" style={{ marginRight: '0px' }}>Team</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>

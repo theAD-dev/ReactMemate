@@ -69,7 +69,7 @@ const ClientOrderHistory = () => {
                         }
                     </div>
 
-                    <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '47%' }}>
+                    <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                         <h1 onClick={() => { setVisible(true) }} className={`${style.clientName} m-0 p-0 cursor-pointer`} title={clientDetails?.data?.name}>{clientDetails?.data?.name || ""}</h1>
                     </div>
                     <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>

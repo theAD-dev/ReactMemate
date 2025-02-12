@@ -130,9 +130,9 @@ const Header = ({ onClick }) => {
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
   const [menuswitch, SetMenuSwitch] = useState(true);
-  
+
   const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
-  const isSuspended = profileDataLocal?.is_suspended ? true :  false;
+  const isSuspended = profileDataLocal?.is_suspended ? true : false;
   if (isSuspended) navigate("/suspended");
 
   useEffect(() => {
@@ -178,7 +178,7 @@ const Header = ({ onClick }) => {
                       )}
                     </div>
                     <div className="SelectOptionHead">
-                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.trading_name || ""} />
+                      <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
                     </div>
                   </Col>
                   <Col className="d-flex align-items-center justify-content-center">
@@ -339,13 +339,14 @@ const Header = ({ onClick }) => {
                   <Col className="d-flex align-items-center">
                     <div className="company_logo colMinWidth">
                       {profileData?.organization?.logo ? (
-                        <FallbackImage photo={profileData.organization.logo} is_business={true} has_photo={true} />
+                        <div className="d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', overflow: 'hidden', borderRadius: '4px', border: '0.5px solid #F2F4F7' }}>
+                          <FallbackImage photo={profileData.organization.logo} is_business={true} has_photo={true} />
+                        </div>
                       ) : (
                         <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
                           <Placeholder bg="secondary" style={{ height: '30px', width: '40px' }} size='lg' />
                         </Placeholder>
                       )}
-                      <span>{profileData?.organization?.name || ""}</span>
                     </div>
                     <div className="SelectOptionHead">
                       <SelectOption currentLocation={profileData?.location} locations={profileData?.organization?.locations || []} profileUserName={profileData?.organization?.name || ""} />
