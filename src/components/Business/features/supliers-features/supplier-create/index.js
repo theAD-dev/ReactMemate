@@ -9,7 +9,7 @@ import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from
 import styles from './supplier-create.module.scss';
 import SupplierForm from '../../../shared/ui/supliers-ui/supplier-form';
 
-const SupplierCreate = ({ visible, setVisible }) => {
+const SupplierCreate = ({ visible, setVisible, refetch }) => {
   const formRef = useRef(null);
   const [isPending, setIsPending] = useState(false);
   const [photo, setPhoto] = useState(null);
@@ -66,6 +66,7 @@ const SupplierCreate = ({ visible, setVisible }) => {
         console.log('response: ', response);
         toast.success(`New supplier created successfully`);
         setVisible(false);
+        refetch((prev) => !prev);
       } else {
         toast.error('Failed to create new supplier. Please try again.');
       }

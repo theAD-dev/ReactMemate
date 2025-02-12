@@ -13,7 +13,7 @@ import { Spinner } from 'react-bootstrap';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { Tag } from 'primereact/tag';
 
-export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers }, ref) => {
+export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers, refetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const [suppliers, setSuppliers] = useState([]);
@@ -26,7 +26,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue]);
+    }, [searchValue, refetch]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -52,7 +52,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
 
         loadData();
 
-    }, [page, searchValue, sort]);
+    }, [page, searchValue, sort, refetch]);
 
     useEffect(() => {
         if (suppliers.length > 0 && hasMoreData) {

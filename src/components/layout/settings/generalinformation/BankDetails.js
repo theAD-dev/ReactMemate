@@ -36,6 +36,7 @@ const BankDetails = () => {
     handleSubmit,
     setValue,
     formState: { errors },
+    watch
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -113,7 +114,7 @@ const BankDetails = () => {
                         {loading ? (
                           <Skeleton width="100%" height="2rem" />
                         ) : !isEditing ? (
-                          <strong>{errors[field] ? "Invalid" : field}</strong>
+                          <strong>{watch(field) || ""}</strong>
                         ) : (
                           <div>
                             <input type="text" {...register(field)} />

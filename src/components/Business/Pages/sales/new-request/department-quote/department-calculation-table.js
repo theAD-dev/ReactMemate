@@ -406,7 +406,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     };
 
     useEffect(() => {
-        if (data && data.length) {
+        if (data && data.length && subItem) {
             if (data.length) {
                 data.forEach((item) => {
                     item.label = subItemLabel;
@@ -435,13 +435,15 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     [`_${subItem}_`]: filteredData,
                 }));
             }
+
+            setSubItem("");
         }
 
-        if (data?.length === 0) {
+        if (subItem && data?.length === 0) {
             console.log('data.length: ', data.length);
             toast.error(`No calculation found inside ${subItemLabel}`)
         }
-    }, [data]);
+    }, [data, rows, subItem]);
 
     const calculateSummary = (taxType) => {
         let budget = 0;

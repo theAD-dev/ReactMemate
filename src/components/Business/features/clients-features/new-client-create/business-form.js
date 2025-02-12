@@ -23,7 +23,7 @@ const schema = yup.object({
   name: yup.string().required('Company name is required'),
   industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
   abn: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^\d{11}$/, "ABN must be an 11-digit number").notRequired(),
-  phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+  // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
@@ -252,7 +252,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 <Dropdown
                   {...field}
                   options={[
-                    { value: 1, label: 'Default - 0.00%' },
+                    // { value: 1, label: 'Default - 0.00%' },
                     ...(categoriesQuery && categoriesQuery.data?.map((category) => ({
                       value: category.id,
                       label: `${category.name} - ${category.value}%`

@@ -51,9 +51,9 @@ const SelectClientType = () => {
             </ul>
           </div>
           <div className="formgroupWrap1">
-            <ul className="mt-4">
+            <ul className="mt-4" style={{ opacity: '.6', cursor: 'not-allowed' }}>
               <li>
-                <NavLink className="ActiveClient" to="#">
+                <NavLink className="ActiveClient" to="#" style={{ cursor: 'not-allowed' }}>
                   <span>
                     <HouseDoor color="#667085" size={24} />
                   </span>{" "}

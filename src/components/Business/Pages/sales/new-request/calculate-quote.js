@@ -214,7 +214,7 @@ const CalculateQuote = () => {
                         value="Standard"
                         checked={quoteType === 'Standard'}
                         onChange={(e) => setQuoteType(e.target.value)}
-                        disabled={true}
+                        disabled={false}
                     />
                     <CustomRadioButton
                         label="Recurring"
@@ -301,7 +301,7 @@ const CalculateQuote = () => {
                                     </a>
                                 </div>
                             ) : (
-                                <button type="button" className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
+                                <button type="button" disabled={!unique_id} className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
                                     Create Proposal
                                 </button>
                             )
