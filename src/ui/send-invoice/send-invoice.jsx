@@ -73,11 +73,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
     const [showCC, setShowCC] = useState(false);
     const [showBCC, setShowBCC] = useState(false);
     const handleClose = () => setShow(false);
-    const [emailTemplateId, setEmailTemplatedId] = useState(18);
-
-    useEffect(() => {
-        if (isCreated) setEmailTemplatedId(19);
-    }, [isCreated, emailTemplateId])
+    const [emailTemplateId, setEmailTemplatedId] = useState(null);
 
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
@@ -231,6 +227,16 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save,
         setErrors((others) => ({ ...others, subject: false }));
         setErrors((others) => ({ ...others, text: false }));
     }, [emailQuery?.data?.body]);
+
+    useEffect(() => {
+        if (emailTemplateQuery?.data) {
+            const activeTemplateId = isCreated ?
+                emailTemplateQuery?.data?.find((template) => template.type === 'Resend Invoice')
+                : emailTemplateQuery?.data?.find((template) => template.type === 'Invoice');
+            setEmailTemplatedId(activeTemplateId?.id);
+        }
+    }, [emailTemplateQuery?.data, isCreated]);
+
     return (
         <Modal
             show={show}

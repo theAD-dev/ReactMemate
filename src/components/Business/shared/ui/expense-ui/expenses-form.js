@@ -39,8 +39,8 @@ const schema = yup
         amount: yup.string().required("Amount is required"),
         nogst: yup.boolean().required("NOGST must be a boolean"),
         gst: yup.boolean().required("GST must be a boolean"),
-        account_code: yup.string().required("Account Code is required"),
-        department: yup.number().required("Department is required"),
+        // account_code: yup.string().required("Account Code is required"),
+        // department: yup.number().required("Department is required"),
     })
     .required();
 
@@ -214,6 +214,9 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         }
     }, [projectId])
 
+    useEffect(() => {
+        if (!id) setValue('gst-calculation', 'in');
+    }, []);
 
     return (
         <form ref={ref} onSubmit={handleSubmit(handleFormSubmit)} >

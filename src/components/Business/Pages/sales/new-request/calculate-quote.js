@@ -187,7 +187,7 @@ const CalculateQuote = () => {
 
         if (action === "quote-pdf-open") {
             if (result?.quote_url) {
-                return navigate(`${result?.quote_url}`);
+                window.location.href = result.quote_url;
             } else {
                 toast.error('Quote PDF not found.');
             }

@@ -28,7 +28,7 @@ import { AvatarGroup } from 'primereact/avatargroup';
 
 import { OverlayPanel } from 'primereact/overlaypanel';
 import ImageAvatar from "../../../../ui/image-with-fallback/image-avatar";
-        
+
 
 const CustomAvatarGroup = ({ params }) => {
   const op = useRef(null);
@@ -41,9 +41,7 @@ const CustomAvatarGroup = ({ params }) => {
     <div>
       <AvatarGroup onClick={handleAvatarGroupClick} style={{ cursor: "pointer" }}>
         {params?.value?.slice(0, 3).map((data, index) => (
-          data?.has_photo
-          ? <Avatar key={index} image={data?.photo} size="small" shape="circle" />
-          : <Avatar key={index} label={data?.alias_name} style={{ fontSize: '12px' }} size="small" shape="circle" />
+          <ImageAvatar has_photo={data.has_photo} photo={data.photo} is_business={false} />
         ))}
         {params?.value?.length > 3 && (
           <Avatar

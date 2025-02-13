@@ -6,6 +6,7 @@ import nodata from "../../../../../assets/images/img/nodata.png";
 import nodatabg from "../../../../../assets/images/img/nodataBg.png";
 import { Col, Placeholder, Row } from 'react-bootstrap';
 import { useDebounce } from 'use-debounce';
+import ImageAvatar from '../../../../../ui/image-with-fallback/image-avatar';
 
 const ExistingClients = () => {
   const [text, setText] = useState('');
@@ -30,7 +31,11 @@ const ExistingClients = () => {
         setItemList(data);
         setPage(1);
       } else {
-        setItemList((prevItems) => [...prevItems, ...data]);
+        setItemList((prevItems) => {
+          const existingIds = new Set(prevItems.map(item => item.id));
+          const newItems = data.filter(item => !existingIds.has(item.id));
+          return [...prevItems, ...newItems];
+        });
         setPage((prevPage) => prevPage + 1);
       }
 
@@ -108,19 +113,7 @@ const ExistingClients = () => {
                   <li key={item.id}>
                     <Link to={item.is_business ? `/sales/newquote/selectyourclient/client-information/scope-of-work/${item.id}` : `/sales/newquote/selectyourclient/client-information/scope-of-work/${item.id}`}
                       className='d-flex align-items-center w-100'>
-                      <div className='icon1'>
-                        {item.photo ? (
-                          <img
-                            src={item.photo}
-                            alt={item.name}
-                            style={{ marginRight: "5px" }}
-                          />
-                        ) : (
-                          <div className='icon'>
-                            <Building size={13.71} color="#667085" style={{ marginBottom: '8px', marginLeft: '2px' }} />
-                          </div>
-                        )}
-                      </div>
+                      <ImageAvatar has_photo={item.has_photo} photo={item.photo} is_business={item.is_business} />
                       <span className='name'>{item.name}</span>
                     </Link>
                   </li>

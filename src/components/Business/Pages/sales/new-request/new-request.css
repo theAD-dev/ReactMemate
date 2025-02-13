@@ -1595,15 +1595,6 @@ ul.client li .name {
   margin-left: 8px;
 }
 
-ul.client li div img, ul.client li div .icon {
-  border: 0.75px solid #10182869;
-  border-radius: 4px;
-  height: 32px;
-  padding: 5.86px;
-  width: 32px;
-  box-sizing: border-box;
-  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
-}
 ul.client {
   overflow: auto;
   height: calc(100% - 100px);
