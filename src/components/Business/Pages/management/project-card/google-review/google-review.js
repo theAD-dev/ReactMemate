@@ -34,7 +34,7 @@ const GoogleReviewEmail = ({ clientId, projectId }) => {
     return (
         <>
             <Button className='googleBut googleActive' onClick={handleShow}>Google Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
-            <SendDynamicEmailForm show={viewShow} mutation={mutation} isLoading={false} setShow={setViewShow} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} defaultTemplateId={21} />
+            <SendDynamicEmailForm show={viewShow} mutation={mutation} isLoading={false} setShow={setViewShow} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} defaultTemplateId={'Google Review'} />
         </>
     );
 };

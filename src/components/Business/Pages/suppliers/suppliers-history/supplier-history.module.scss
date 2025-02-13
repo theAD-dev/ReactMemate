@@ -54,6 +54,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .boxBorderCorner{
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Gray-300, #D0D5DD);
@@ -68,6 +69,7 @@
   line-height: 18px; 
   display: inline-block;
 }
+
 .boxBorderRound{
   border-radius: 16px;
   border: 1px solid var(--Gray-200, #EAECF0);

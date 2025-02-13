@@ -68,7 +68,7 @@
     justify-content: space-between;
     align-items: self-end;
     .addUserBut {
-      border-radius: var(--radius-xs, 4px);
+      border-radius: var(--radius-xs, 40px);
       border: 1px solid var(--Gray-300, #d0d5dd);
       background: var(--Base-White, #fff);
       padding: 8px 18px;
@@ -88,7 +88,7 @@
     font-style: normal !important;
     font-weight: 600 !important;
     line-height: 20px !important;
-    border-radius: var(--radius-xs, 4px) !important;
+    border-radius: 40px !important;
     border: 1px solid var(--Error-300, #fda29b) !important;
     background: #fff !important;
     padding: var(--spacing-md, 8px) 14px !important;
@@ -102,7 +102,7 @@
     font-style: normal !important;
     font-weight: 600 !important;
     line-height: 20px !important;
-    border-radius: var(--radius-xs, 4px) !important;
+    border-radius: 40px !important;
     border: 1px solid var(--Error-300, #fda29b) !important;
     background: #fff !important;
     padding: var(--spacing-md, 8px) 14px !important;

@@ -187,7 +187,7 @@ const CalculateQuote = () => {
 
         if (action === "quote-pdf-open") {
             if (result?.quote_url) {
-                return navigate(`${result?.quote_url}`);
+                window.location.href = result.quote_url;
             } else {
                 toast.error('Quote PDF not found.');
             }
@@ -203,7 +203,7 @@ const CalculateQuote = () => {
             <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative' }}>
                 <NavLink to={""}>
                     <button className='back-button' style={{ padding: "10px 16px" }} onClick={() => { navigate(-1) }}>
-                        <ChevronLeft color="#000000" size={20} /> &nbsp;Go Back
+                        <ChevronLeft color="#000000" size={17} /> &nbsp;Go Back
                     </button>
                 </NavLink>
                 <h2 className='m-0' style={{ fontSize: '22px', fontWeight: '600', position: 'absolute', left: '42.5%' }}><PlusSlashMinus color="#1D2939" size={16} />&nbsp; Calculate a Quote</h2>
