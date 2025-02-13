@@ -94,36 +94,7 @@ import CreateJobTemplate from "./settings/templates/create-job-template";
 import Executive from "../Business/Pages/statistics/executive";
 import SalesConversion from "../Business/Pages/statistics/sales-conversion";
 import Overview from "../Business/Pages/statistics/overview";
-import { ProgressSpinner } from "primereact/progressspinner";
-import NProgress from 'nprogress';
 import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
-
-function SuspenseLoader() {
-  useEffect(() => {
-    NProgress.start();
-
-    return () => {
-      NProgress.done();
-    };
-  }, []);
-
-  return (
-    <div className="d-flex justify-content-center align-items-center" style={{ position: 'fixed', top: '0px', left: '0px', width: '100%', height: '100%' }}>
-      <div className="shadow-lg" style={{ width: '60px', height: '60px', background: 'white', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }}>
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    </div>
-  );
-}
-
-const Loader = (Component) => (props) =>
-(
-  <Suspense fallback={<SuspenseLoader />}>
-    <Component {...props} />
-  </Suspense>
-);
 
 const Header = ({ onClick }) => {
   const location = useLocation();
