@@ -133,7 +133,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
   const StatusBody = (rowData) => {
 
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-      <div className={`styleGrey01 exstatus paid${rowData.paid}`}>
+      <div className={`styleGrey01 ${style.status} ${rowData.paid ? style.active : style.inactive}`}>
         {rowData.paid === true ? (
           <><span className="dots"></span> Paid </>
         ) : (

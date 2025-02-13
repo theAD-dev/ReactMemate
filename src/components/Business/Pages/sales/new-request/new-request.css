@@ -25,16 +25,7 @@
   line-height: 24px;
   padding: 0 10px;
 }
-.iconOutStyle {
-  background: #fef3f2;
-}
-.iconinStyle {
-  background: #fee4e2;
-}
-.iconinnerStyle {
-  border: 1px solid #ecfdf3;
-  background: #fee4e2;
-}
+
 .newQuotePage {
   background: #f7f9fc;
   height: calc(100vh - 122px);
@@ -1604,15 +1595,6 @@ ul.client li .name {
   margin-left: 8px;
 }
 
-ul.client li div img, ul.client li div .icon {
-  border: 0.75px solid #10182869;
-  border-radius: 4px;
-  height: 32px;
-  padding: 5.86px;
-  width: 32px;
-  box-sizing: border-box;
-  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
-}
 ul.client {
   overflow: auto;
   height: calc(100% - 100px);
@@ -1680,7 +1662,7 @@ ul.client {
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border-radius: 4px;
+  border-radius: 40px;
   border: 1px solid var(--Primary-600, #158ecc);
   background: var(--Primary-600, #158ecc);
 }
@@ -1699,7 +1681,7 @@ ul.client {
   font-style: normal;
   font-weight: 600;
   line-height: 24px; /* 150% */
-  border-radius: 4px;
+  border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: #fff;
 }
@@ -1777,8 +1759,8 @@ ul.client {
   padding: 8px 14px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  border-radius: 4px;
+  gap: 4px;
+  border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: var(--Base-White, #fff);
 }
@@ -1816,7 +1798,7 @@ ul.client {
 .calculation-quote-bottom .submit-button-light,
 .calculation-quote-bottom .submit-button-light:hover {
   color: #106b99 !important;
-  border-radius: 4px;
+  border-radius: 40px;
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-50, #ebf8ff);
 }

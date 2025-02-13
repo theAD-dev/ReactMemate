@@ -82,22 +82,24 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
         setText([]);
         setEmailTemplatedId(null);
     }
-    
+
     const handleClose = () => {
         setShow(false);
         if (!defaultTemplateId) reset();
     }
-   
+
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
         queryFn: getEmailTemplates,
         enabled: !!show,
     });
+
     const outgoingEmailTemplateQuery = useQuery({
         queryKey: ["getOutgoingEmail"],
         queryFn: getOutgoingEmail,
         enabled: !!show,
     });
+
     const emailQuery = useQuery({
         queryKey: ["emailQuery", emailTemplateId],
         queryFn: () => getEmail(emailTemplateId),
@@ -112,11 +114,11 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
         }
 
         if (!emailTemplateId && emailTemplateQuery?.data && defaultTemplateId) {
-            setEmailTemplatedId(defaultTemplateId);
+            const activeTemplateId = emailTemplateQuery?.data?.find((template) => template.type === defaultTemplateId);
+            if (activeTemplateId) setEmailTemplatedId(activeTemplateId?.id);
         }
 
     }, [emailQuery, outgoingEmailTemplateQuery]);
-
 
     const onSubmit = async () => {
         let errorCount = 0;
