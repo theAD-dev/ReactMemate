@@ -79,7 +79,9 @@ const Integrations = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const openTwilioParam = params.get('openTwilio');
+    const emailParam = params.get('openEmail');
     setTwilioVisible(openTwilioParam === 'true');
+    setEmailVisible(emailParam === 'true');
   }, [location]);
   return (
     <>
@@ -200,7 +202,7 @@ const Integrations = () => {
                           <h3>{"Xero"}</h3>
                           <p>{"Connect Xero to directly send expenses and invoices to your Xero account, simplifying your accounting process."}</p>
                         </div>
-                          <XeroIntegration refetch={xeroIntegrationsQuery?.refetch} connected={xeroIntegrationsQuery?.data?.connected}/>
+                        <XeroIntegration refetch={xeroIntegrationsQuery?.refetch} connected={xeroIntegrationsQuery?.data?.connected} />
                       </div>
                     </Col>
 

@@ -85,6 +85,25 @@ export const updatePaymentMethodInfo = async (data) => {
   return fetchAPI(url.toString(), options);
 }
 
+export const getReginalAndLanguage = async () => {
+  const endpoint = `/settings/organization/region-language/`;
+  const options = {
+    method: 'GET'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
+export const updateReginalAndLanguage = async (data) => {
+  const endpoint = `/settings/organization/region-language/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 export const createProjectStatus = async (data) => {
   console.log('data: ', data);
   if (data.id) delete data.id;

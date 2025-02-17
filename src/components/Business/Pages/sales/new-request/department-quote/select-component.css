@@ -54,8 +54,8 @@
 li.szh-menu__item {
   border-radius: var(--radius-sm, 6px);
   background: var(--Primary-50, #ffffff);
-  padding: 10px 10px 10px var(--spacing-md, 8px);
-  width: 95%;
+  padding: 10px 0px 10px var(--spacing-md, 10px);
+  width: 100%;
   margin: 0 auto;
   color: var(--Gray-900, #101828);
   font-family: Inter;
@@ -266,13 +266,19 @@ li.szh-menu__item:hover {
 }
 
 ul.szh-menu {
-  width: 221px;
+  width: 230px;
+  max-height: 300px !important;
+  overflow-y: auto !important;
 }
 
 .szh-menu__submenu {
-  width: 200px;
+  width: 220px;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
   text-align: left;
+}
+
+.szh-menu__submenu > .szh-menu__item::after {
+  right: .5rem !important;
 }

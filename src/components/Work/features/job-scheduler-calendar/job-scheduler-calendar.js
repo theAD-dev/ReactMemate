@@ -1,3 +1,5 @@
+import { fetchAPI } from "../../../../APIs/base-api";
+
 let dp, DP, expandRow;
 
 const getStatusLabel = (status) => {
@@ -152,18 +154,36 @@ function initDayPilot(elementId, data) {
     dynamicLoading: true,
     onScroll: async (args) => {
       args.async = true;
+      const start = args.viewport.start.value;
+      const end = args.viewport.end.value;
 
-      const start = args.viewport.start;
-      console.log('start: ', start);
-      const end = args.viewport.end;
-      console.log('end: ', end);
-      const resources = args.viewport.resources.join(",");
-      console.log('resources: ', resources);
-      // const { data } = await DayPilot.Http.get(`/api/events?start=${start}&end=${end}&resources=${resources}`);
-      // args.events = data;
+      const response = await fetchAPI(`${process.env.REACT_APP_BACKEND_API_URL}/dashboard/${start}/${end}/`, {
+        method: 'GET',
+      });
+
+      let eventsArray = [];
+      response?.forEach((worker) => {
+        worker?.jobs?.forEach((job) => {
+          if (job.start_date && job.end_date) {
+            const event = {
+              id: job.id,
+              start: job?.time_type === 'T' ? parseTimestamp(1000 * job.start_date).toISOString() : parseTimestamp(1000 * job.end_date).toISOString(),
+              end: job?.time_type === 'T' ? parseTimestamp(1000 * job.end_date).toISOString() : parseTimestamp(1000 * job.start_date).toISOString(),
+              resource: job.id,
+              text: job?.reference || 'No Reference',
+              cssClass: `childEvent jobEvent ${getStatusLabel(job?.status).className}`,
+              backColor: `${getStatusLabel(job?.status).backColor}`,
+            };
+
+            eventsArray.push(event);
+          }
+        });
+      });
+
+      args.events = eventsArray;
+      console.log('eventsArray: ', eventsArray);
 
       args.loaded();
-
     },
   });
 

@@ -356,9 +356,9 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       headerName: "Actions",
       width: 72,
       className: "ActionBtn",
-      renderCell: (params) => (
-        <ActionsDots saleUniqueId={params.row.saleUniqueId} refreshData={refreshData} />
-      ),
+      renderCell: (params) => {
+        return <ActionsDots saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} />
+      },
     },
   ]);
 
@@ -375,6 +375,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       Quote: sale.number,
       created: sale.created,
       Client: sale.client.name,
+      clientId: sale.client.id,
       photo: sale.client.photo,
       is_business: sale.client.is_business,
       hasPhoto: sale.client.has_photo,
@@ -443,6 +444,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       Quote: sale.number,
       created: sale.created,
       Client: sale.client.name,
+      clientId: sale.client.id,
       photo: sale.client.photo,
       is_business: sale.client.is_business,
       Reference: sale.reference,

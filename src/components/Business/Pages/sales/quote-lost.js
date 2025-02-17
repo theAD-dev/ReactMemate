@@ -74,7 +74,7 @@ const QuoteWon = ({ salesData, saleUniqueId, LostQuote, quoteType, onRemoveRow }
 
   return (
     <>
-      <Button onClick={handleOpen} className={`quoteLost message ${message.type} ${LostQuote === 'Draft'}`}>
+      <Button onClick={handleOpen} className={`quoteLost message ${message.type}`}>
         <XCircle color="#D92D20" size={16} />
       </Button>
       <Modal

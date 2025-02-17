@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { ThreeDotsVertical, Layers ,Tag,ClockHistory,Send} from "react-bootstrap-icons";
+import React, { useState, useEffect } from 'react';
+import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send } from "react-bootstrap-icons";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -7,87 +7,66 @@ import Popover from "@mui/material/Popover";
 import CloseIcon from "@mui/icons-material/Close";
 import { fetchduplicateData } from "../../../../APIs/SalesApi";
 import { fetchhistoryData } from "../../../../APIs/SalesApi";
+import { ProgressSpinner } from 'primereact/progressspinner';
+import SendInvoiceEmailForm from '../../../../ui/send-invoice/send-invoice';
+import { useQuery } from '@tanstack/react-query';
+import { getClientById } from '../../../../APIs/ClientsApi';
 
-// Define separate components for each option
-const ResendPopover = ({ onClose }) => {
-  return (
-    <div style={{ padding: '10px' }}>
-      Resend Popover Content
-      <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '5px', right: '5px' }} onClick={onClose} />
-    </div>
-  );
-};
 
-const HistoryPopover = ({ onClose, historyData }) => {
-  return (
-    <div style={{ padding: '10px' }}>
-     {historyData}
-      <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '5px', right: '5px' }} onClick={onClose} />
-    </div>
-  );
-};
-
-const LabelPopover = ({ onClose }) => {
-  return (
-    <div style={{ padding: '10px' }}>
-      Label Popover Content
-      <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '5px', right: '5px' }} onClick={onClose} />
-    </div>
-  );
-};
-
-const ActionsDots = ({ saleUniqueId,refreshData }) => {
+const ActionsDots = ({ saleUniqueId, clientId, refreshData }) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [duplicateData, setDuplicateData] = useState([]);
-    const [historyData, setHistoryData] = useState([]);
-  
+  const [loading, setLoading] = useState(null);
+  const [payload, setPayload] = useState({});
+  const [isVisibleResendEmail, setIsVisibleResendEmail] = useState(false);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = await fetchhistoryData(saleUniqueId);
-  //       setHistoryData(data);
-  //     } catch (error) {
-  //       console.error('Error fetching history data:', error);
-  //       // Handle error, set default or empty value for historyData
-  //       setHistoryData([]);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
+  const clientQuery = useQuery({
+    queryKey: ['id', clientId],
+    queryFn: () => getClientById(clientId),
+    enabled: !!clientId && isVisibleResendEmail,
+    retry: 1,
+  });
 
   const handleClick = async (event, option) => {
     if (option.label === "Replicate") {
       try {
-        console.log('replicate....')
+        setLoading(4);
         const data = await fetchduplicateData(saleUniqueId);
-        // setDuplicateData(data);
         refreshData()
         handleClose()
       } catch (error) {
         console.error('Error fetching duplicate data:', error);
-        // Handle error, set default or empty value for duplicateData
-        setDuplicateData([]);
+      } finally {
+        setLoading(null);
       }
-    } else {
-      setAnchorEl(event.currentTarget);
-      setSelectedOption(option);
-     
+    } else if (option.label === 'Resend') {
+      setIsVisibleResendEmail(true);
+      setAnchorEl(null);
     }
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    setSelectedOption(null);
   };
 
   const options = [
-    { label: "Resend",  icon: <Send color="#344054" size={20} />, component: <ResendPopover onClose={handleClose} /> },
-    { label: "History", icon: <ClockHistory color="#344054" size={20}/>, component: <HistoryPopover onClose={handleClose} historyData={historyData}/> },
-    { label: "Label", icon: <Tag color="#344054" size={20}/>, component: <LabelPopover onClose={handleClose} /> },
-    { label: "Replicate", icon: <Layers color="#344054" size={20} /> },
+    {
+      label: "Resend",
+      icon: loading === 1 ? (
+        <ProgressSpinner style={{ width: "20px", height: "20px" }} />
+      ) : (
+        <Send color="#344054" size={20} />
+      )
+    },
+    { label: "History", icon: <ClockHistory color="#344054" size={20} /> },
+    { label: "Label", icon: <Tag color="#344054" size={20} /> },
+    {
+      label: "Replicate",
+      icon: loading === 4 ? (
+        <ProgressSpinner style={{ width: "20px", height: "20px", position: 'absolute', right: '15px', top: '10px' }} />
+      ) : (
+        <Layers color="#344054" size={20} />
+      )
+    },
   ];
 
   return (
@@ -122,23 +101,7 @@ const ActionsDots = ({ saleUniqueId,refreshData }) => {
           </MenuItem>
         ))}
       </Menu>
-      {selectedOption && selectedOption.label && (
-        <Popover
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'center',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'center',
-            horizontal: 'center',
-          }}
-        >
-          {selectedOption.component}
-        </Popover>
-      )}
+      <SendInvoiceEmailForm projectId={saleUniqueId} show={isVisibleResendEmail} create={() => { }} isLoading={false} setShow={setIsVisibleResendEmail} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={refreshData} isCreated={true} />
     </>
   );
 };
