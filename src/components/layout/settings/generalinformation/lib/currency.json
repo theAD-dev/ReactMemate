@@ -1,0 +1,120 @@
+[
+  {
+    "name": 1,
+    "fullname": "Australia",
+    "code": "AU",
+    "currency": {
+      "name": "Australian Dollar",
+      "code": "AUD",
+      "symbol": "A$"
+    }
+  },
+  {
+    "name": "United States",
+    "code": "US",
+    "currency": {
+      "name": "United States Dollar",
+      "code": "USD",
+      "symbol": "$"
+    }
+  },
+  {
+    "name": "India",
+    "code": "IN",
+    "currency": {
+      "name": "Indian Rupee",
+      "code": "INR",
+      "symbol": "₹"
+    }
+  },
+  {
+    "name": "United Kingdom",
+    "code": "GB",
+    "currency": {
+      "name": "Pound Sterling",
+      "code": "GBP",
+      "symbol": "£"
+    }
+  },
+  {
+    "name": "Japan",
+    "code": "JP",
+    "currency": {
+      "name": "Japanese Yen",
+      "code": "JPY",
+      "symbol": "¥"
+    }
+  },
+  {
+    "name": "Eurozone",
+    "code": "EU",
+    "currency": {
+      "name": "Euro",
+      "code": "EUR",
+      "symbol": "€"
+    }
+  },
+  {
+    "name": "Canada",
+    "code": "CA",
+    "currency": {
+      "name": "Canadian Dollar",
+      "code": "CAD",
+      "symbol": "C$"
+    }
+  },
+  {
+    "name": "China",
+    "code": "CN",
+    "currency": {
+      "name": "Chinese Yuan",
+      "code": "CNY",
+      "symbol": "¥"
+    }
+  },
+  {
+    "name": "Switzerland",
+    "code": "CH",
+    "currency": {
+      "name": "Swiss Franc",
+      "code": "CHF",
+      "symbol": "CHF"
+    }
+  },
+  {
+    "name": "Russia",
+    "code": "RU",
+    "currency": {
+      "name": "Russian Ruble",
+      "code": "RUB",
+      "symbol": "₽"
+    }
+  },
+  {
+    "name": "Brazil",
+    "code": "BR",
+    "currency": {
+      "name": "Brazilian Real",
+      "code": "BRL",
+      "symbol": "R$"
+    }
+  },
+  {
+    "name": "South Africa",
+    "code": "ZA",
+    "currency": {
+      "name": "South African Rand",
+      "code": "ZAR",
+      "symbol": "R"
+    }
+  },
+  {
+    "name": "Mexico",
+    "code": "MX",
+    "currency": {
+      "name": "Mexican Peso",
+      "code": "MXN",
+      "symbol": "$"
+    }
+  }
+]

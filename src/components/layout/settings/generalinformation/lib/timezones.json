@@ -1,6 +1,7 @@
 [
   {
-    "name": "Australia",
+    "name": 1,
+    "fullname": "Australia",
     "region": "Oceania",
     "timezones": {
       "Antarctica/Macquarie": "+10:00",

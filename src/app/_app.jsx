@@ -1,35 +1,29 @@
+import { Toaster } from "sonner";
 import { PrimeReactProvider } from "primereact/api";
-import { createBrowserRouter, RouterProvider, } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ReactQueryProvider } from "./providers/query-client-provider";
 import { ErrorBoundary } from "react-error-boundary";
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from "react-helmet-async";
 
+import "./global.scss";
 import routes from "./router";
-import './global.scss';
-import '@/shared/styles/bootstrap.scss';
-import '@/shared/styles/prime.scss';
 import { AuthProvider } from "./providers/auth-provider";
-import { UnknownError } from "@/pages/error/unknown/unknown-error";
-import { Toaster } from 'sonner'
 
 const App = () => {
-  useDisableScreenshots()
+  useDisableScreenshots();
   useDisableRightClickAndDevTools();
   const content = createBrowserRouter(routes);
   const isRecording = useScreenRecordingDetector();
 
   return (
-    <ErrorBoundary FallbackComponent={UnknownError} onReset={() => window.location.replace('/')}>
+    <ErrorBoundary
+      FallbackComponent={<>Error</>}
+      onReset={() => window.location.replace("/")}
+    >
       <HelmetProvider>
         <PrimeReactProvider>
           <ReactQueryProvider>
             <AuthProvider>
-              {/* Conditional rendering based on isRecording */}
-              {isRecording && (
-                <div className="recording-warning">
-                  <p>Screen recording detected. Some features may be restricted.</p>
-                </div>
-              )}
               <Toaster
                 className="snackbar"
                 position="top-right"
@@ -39,17 +33,15 @@ const App = () => {
                 visibleToasts={2}
                 toastOptions={{
                   classNames: {
-                    success: 'snack-bar-success',
-                    error: 'snack-bar-error',
-                    closeButton: 'snack-bar-action-button',
-                    content: 'snackbar-content',
-                    title: 'snackbar-title',
+                    success: "snack-bar-success",
+                    error: "snack-bar-error",
+                    closeButton: "snack-bar-action-button",
+                    content: "snackbar-content",
+                    title: "snackbar-title",
                   },
                 }}
               />
-              <div className={isRecording ? "blur-content" : ""}>
-                <RouterProvider router={content} />
-              </div>
+              <RouterProvider router={content} />
             </AuthProvider>
           </ReactQueryProvider>
         </PrimeReactProvider>

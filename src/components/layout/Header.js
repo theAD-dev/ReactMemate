@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import { fetchProfile } from "../../APIs/ProfileApi";
 import { useLocation, NavLink, Outlet, Routes, Route, useNavigate } from "react-router-dom";
 import "./header.css";
+import style from './header.module.scss';
 import Logo from "../../assets/images/logo.svg";
 import ClientsIcon from "../../assets/images/icon/profile-2user.svg";
 import SuppliersIcon from "../../assets/images/icon/suppliersIcon.svg";
@@ -95,10 +96,13 @@ import Executive from "../Business/Pages/statistics/executive";
 import SalesConversion from "../Business/Pages/statistics/sales-conversion";
 import Overview from "../Business/Pages/statistics/overview";
 import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
+import { formatDate } from "../../shared/lib/date-format";
+import { XCircle, XCircleFill } from "react-bootstrap-icons";
 
 const Header = ({ onClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isVisibleTrial, setIsVisibleTrial] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [menuswitch, SetMenuSwitch] = useState(true);
 
@@ -110,6 +114,7 @@ const Header = ({ onClick }) => {
     const fetchData = async () => {
       try {
         const data = await fetchProfile();
+        setIsVisibleTrial(data?.is_trial || false)
         setProfileData(data);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -130,6 +135,13 @@ const Header = ({ onClick }) => {
 
   return (
     <>
+      {
+        isVisibleTrial && <div className={style.trialNote}>
+          <small>Your trial will end soon on {formatDate(profileDataLocal?.trial_end)}</small>
+          <XCircle color="#fff" size={14} style={{ position: 'absolute', right: '15px', cursor: 'pointer' }} onClick={() => setIsVisibleTrial(false)}/>
+        </div>
+      }
+
       <div className="headerNav1">
         {menuswitch ?
           <>

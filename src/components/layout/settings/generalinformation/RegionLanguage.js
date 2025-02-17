@@ -3,19 +3,41 @@ import { Link } from "react-router-dom";
 import styles from "./general.module.scss";
 import { PencilSquare } from "react-bootstrap-icons";
 import Sidebar from ".././Sidebar";
-import timezones from './timezones.json';
+import timezones from './lib/timezones.json';
+import currency from './lib/currency.json';
 import { Dropdown } from "primereact/dropdown";
+import { getCountries } from "../../../../APIs/ClientsApi";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getReginalAndLanguage, updateReginalAndLanguage } from "../../../../APIs/SettingsGeneral";
+import { toast } from "sonner";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const RegionLanguage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("generalinformation");
   const [timezonesOptions, setTimezonesOptions] = useState([]);
+  const [currencyOptions, setCurrencyOptions] = useState([]);
 
   const [country, setCountry] = useState(null);
   const [timezone, setTimezone] = useState(null);
   const [selectedCurrency, setSelectedCurrency] = useState(null);
+  const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
+  const reginalAndLanguageQuery = useQuery({ queryKey: ['getReginalAndLanguage'], queryFn: getReginalAndLanguage, enabled: true, staleTime: 1000 });
 
-  const handleUpdate = () => {
+  const mutation = useMutation({
+    mutationFn: (data) => updateReginalAndLanguage(data),
+    onSuccess: () => {
+      reginalAndLanguageQuery.refetch();
+      toast.success(`Reginal and language updated successfully`);
+    },
+  });
+
+  const handleUpdate = async () => {
+    await mutation.mutateAsync({
+      country: country,
+      timezone,
+      currency: selectedCurrency
+    })
     setIsEditing(false);
   };
 
@@ -27,8 +49,21 @@ const RegionLanguage = () => {
     if (country) {
       const findData = timezones.find((timezone) => timezone.name === country);
       setTimezonesOptions(Object.keys(findData?.timezones || {}));
+
+      const findCurrency = currency.find((data) => data.name === country);
+      setCurrencyOptions([findCurrency]);
+      setSelectedCurrency(`${findCurrency?.currency?.code}`);
     }
   }, [country]);
+
+  useEffect(() => {
+    if (reginalAndLanguageQuery?.data) {
+      setCountry(reginalAndLanguageQuery?.data?.country);
+      setTimezone(reginalAndLanguageQuery?.data?.timezone);
+    }
+  }, [reginalAndLanguageQuery?.data]);
+
+
 
   return (
     <div className="settings-wrap">
@@ -78,11 +113,14 @@ const RegionLanguage = () => {
                   <li>
                     <span>Country</span>
                     {!isEditing ? (
-                      <strong></strong>
+                      <strong>{reginalAndLanguageQuery?.data?.country === 1 && 'Australia' }</strong>
                     ) : (
                       <Dropdown
                         value={country}
-                        options={timezones.map((timezone) => ({ value: timezone.name, label: timezone.name }))}
+                        options={(countriesQuery && countriesQuery.data?.map((country) => ({
+                          value: country.id,
+                          label: country.name
+                        }))) || []}
                         placeholder="Select country"
                         className='w-100 rounded'
                         onChange={(e) => setCountry(e.value)}
@@ -93,7 +131,7 @@ const RegionLanguage = () => {
                   <li>
                     <span>Timezone</span>
                     {!isEditing ? (
-                      <strong></strong>
+                      <strong>{reginalAndLanguageQuery?.data?.timezone}</strong>
                     ) : (
                       <Dropdown
                         value={timezone}
@@ -107,9 +145,9 @@ const RegionLanguage = () => {
                   <li>
                     <span>Currency</span>
                     {!isEditing ? (
-                      <strong></strong>
+                      <strong>{reginalAndLanguageQuery?.data?.currency}</strong>
                     ) : (
-                      <></>
+                      <span>{currencyOptions[0]?.currency?.code}</span>
                     )}
                   </li>
                 </ul>
@@ -122,7 +160,8 @@ const RegionLanguage = () => {
                 Cancel
               </button>
               <button className="save" onClick={handleUpdate}>
-                Save
+                Save {" "}
+                {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
               </button>
             </div>
           )}

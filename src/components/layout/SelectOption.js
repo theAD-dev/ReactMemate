@@ -32,8 +32,8 @@ const SelectOption = ({ currentLocation, locations, profileUserName }) => {
           textAlign: 'left'
         }}>
           <div style={{ lineHeight: '18px' }}>
-            <span style={{ color: '#1D2939', fontSize: '16px', fontWeight: 400, display: 'block' }}>{profileUserName || "Company"}</span>
-            <span style={{ color: '#667085', fontSize: '12px', fontWeight: 400 }}>{selectedLocation?.name || "Location"}</span>
+            <span style={{ color: '#1D2939', fontSize: '16px', fontWeight: 400, maxWidth: '120px' }} className="ellipsis-width">{profileUserName || "Company"}</span>
+            <span style={{ color: '#667085', fontSize: '12px', fontWeight: 400, maxWidth: '120px' }} className="ellipsis-width">{selectedLocation?.name || "Location"}</span>
           </div>
           <span><ChevronExpand color="#98A2B3" size={15} /></span>
         </MenuButton>}

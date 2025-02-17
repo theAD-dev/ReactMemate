@@ -57,7 +57,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, save, isLoading, create, projectId, projectCardData, isCreated }) => {
+const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoading, create, projectId, projectCardData, isCreated }) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
