@@ -198,7 +198,7 @@ const QuotationEmail = () => {
                                 <p className='mb-2 mt-2'> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
                             </div>
                             <div className={style.right}>
-                                <img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' />
+                                <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ width: '100px' }}/>
                             </div>
                         </div>
 

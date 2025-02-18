@@ -47,16 +47,16 @@ const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
       </span>
 
       {isOpen && (
-        <div className="dropdown-menuF">
-          <button className='all p-0 w-100 text-left d-flex justify-content-between align-items-center' onClick={handleSelectAll}>
-            <span className='border-0'>All</span>
+        <div className="dropdown-menuF px-0">
+          <button className='all p-0 ps-2 pe-2 mx-2 text-left d-flex justify-content-between align-items-center rounded' style={{ background: '#F9FAFB', width: '94%' }} onClick={handleSelectAll}>
+            <span className='border-0' style={{ background: 'transparent' }}>All</span>
             {
               OPTIONS.length === tempSelectedOptions?.length && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M16.6666 5L7.49992 14.1667L3.33325 10" stroke="#1AB2FF" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             }
           </button>
-          <ul>
+          <ul className='ps-3'>
             {OPTIONS.map(({ icon, label, value }) => (
               <li
                 key={label}
@@ -81,7 +81,8 @@ const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
               </li>
             ))}
           </ul>
-          <div className="dropdown-buttonsF">
+          <hr/>
+          <div className="dropdown-buttonsF pb-2 px-3">
             <button className='cancel' onClick={handleClearSelection}>Cancel</button>
             <button className='apply' onClick={handleApply}>Apply</button>
           </div>

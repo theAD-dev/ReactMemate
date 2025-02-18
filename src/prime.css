@@ -491,7 +491,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 
 .p-radiobutton.p-highlight .p-radiobutton-box {
   border-color: #1ab2ff !important;
-  background: #EBF8FF !important;
+  background: #ebf8ff !important;
 }
 
 .p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
@@ -511,4 +511,21 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 
 .p-overlaypanel .p-overlaypanel-content {
   padding: 12px;
+}
+
+.p-editor-container .p-editor-content .ql-editor {
+  min-height: 320px;
+}
+
+.p-editor-content.ql-container.ql-snow.ql-disabled,
+.p-editor-content.ql-container.ql-snow.ql-disabled .ql-editor {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0px !important;
+}
+
+.ql-toolbar .ql-picker.ql-size .ql-picker-options,
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  bottom: 100% !important;
+  top: unset !important;
 }

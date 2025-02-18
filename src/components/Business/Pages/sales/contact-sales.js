@@ -18,7 +18,7 @@ const formatDate = (timestamp) => {
   return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const ContactSales = ({ saleUniqueId, type, refreshData }) => {
+const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
   const [popoverVisible, setPopoverVisible] = React.useState(null);
 
   const handlePopoverClick = (index) => {
@@ -115,7 +115,7 @@ const ContactSales = ({ saleUniqueId, type, refreshData }) => {
               <span className="contactButList">
                 <div className="contactButListIn1">
                   <div className="contactButListIn2">
-                    <ContactAdd saleUniqueIdold={saleUniqueId} contactRefresh={contactRefresh} />
+                    <ContactAdd step={type.length} created={created} type={type} saleUniqueIdold={saleUniqueId} contactRefresh={contactRefresh} />
                   </div>
                 </div>
               </span>

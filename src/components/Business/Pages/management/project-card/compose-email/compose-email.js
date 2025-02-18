@@ -46,7 +46,7 @@ const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
 
   return (
     <>
-      <div className="linkByttonStyle" onClick={handleShow}>Compose Email</div>
+      <div className="linkByttonStyle py-2 ps-0" onClick={handleShow}>Compose Email</div>
       <SendDynamicEmailForm show={viewShow} isLoading={false} mutation={mutation} setShow={setViewShow} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} isComposeEmail={true} />
     </>
   );

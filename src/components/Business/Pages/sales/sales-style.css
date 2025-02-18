@@ -248,13 +248,18 @@ div#popoverStyleChange {
     0px 8px 8px -4px rgba(16, 24, 40, 0.03);
 }
 #placeholderColor {
-  color: var(--Gray-400, #98a2b3);
+  color: #475467;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
 }
+
+#placeholderColor::placeholder {
+  color: var(--Gray-400, #98a2b3);
+}
+
 .popoverHeadflex {
   display: flex;
   justify-content: space-between;
@@ -2273,18 +2278,21 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin-top: 16px;
   margin-bottom: 3px;
 }
+
 .salesTableWrap
   .datepickerField
   .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 16.5px 14px;
   padding-right: 0;
-  color: var(--Gray-400, #98a2b3);
+  color: #475467;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
   font-family: Inter;
 }
+
+
 .salesTableWrap .SalesContact textarea.form-control {
   min-height: calc(1.5em + 0.75rem + calc(var(--bs-border-width) * 2));
   color: var(--Gray-500, #667085);
@@ -2714,7 +2722,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   white-space: nowrap;
 }
 .salesTableWrap .SalesContact.modal-header {
-  padding: 16px 24px 12px;
+  padding: 16px 24px 12px !important;
   align-items: center;
 }
 
@@ -2748,13 +2756,18 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   border-color: #d0d5dd;
 }
 .SalesContact textarea.form-control {
-  color: var(--Gray-400, #98a2b3);
+  color: #475467;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
 }
+
+.SalesContact textarea.form-control::placeholder {
+  color: var(--Gray-400, #98a2b3);
+}
+
 .SalesContact .popoverbottom .closebox {
   margin-right: 12px;
 }

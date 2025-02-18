@@ -10,7 +10,7 @@ const ApprovalPage = () => {
     const handleSearch = (e) => { }
     return (
         <PrimeReactProvider className='approval-page'>
-            <div className="topbar" style={{ padding: '4px 46px', position: 'relative', height: '48px' }}>
+            <div className="topbar" style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>
                         <button className={`${style.filterBox}`}><Filter size={20}/></button>

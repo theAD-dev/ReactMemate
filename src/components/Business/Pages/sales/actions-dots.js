@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send } from "react-bootstrap-icons";
+import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash } from "react-bootstrap-icons";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -13,7 +13,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getClientById } from '../../../../APIs/ClientsApi';
 
 
-const ActionsDots = ({ saleUniqueId, clientId, refreshData }) => {
+const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(null);
   const [payload, setPayload] = useState({});
@@ -67,6 +67,7 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData }) => {
         <Layers color="#344054" size={20} />
       )
     },
+    status === "Draft" && {label: "Delete", icon: <Trash color="#344054" size={20} />}
   ];
 
   return (

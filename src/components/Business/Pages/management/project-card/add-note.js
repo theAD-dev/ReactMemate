@@ -41,7 +41,7 @@ const AddNote = ({ projectId, projectCardData }) => {
   return (
     <>
       {/* View modal trigger */}
-      <div className="linkByttonStyle" onClick={handleShow}>
+      <div className="linkByttonStyle py-2 border-right" onClick={handleShow}>
         Add Note
       </div>
 

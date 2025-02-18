@@ -15,6 +15,7 @@ const Option = ({ percentage, label, gradient, onSelect, isActive }) => {
         name="radio-group"
         type="radio"
         checked={isActive} // Set checked based on isActive prop
+        onChange={() => {}}
       />
       <em className="radio-custom-label"></em>
       <div className="progressWrapper">

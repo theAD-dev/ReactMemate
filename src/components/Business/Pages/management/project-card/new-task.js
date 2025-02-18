@@ -9,7 +9,7 @@ const NewTask = ({ project, reInitilize, projectCardData }) => {
     
     return (
         <>
-            <div className="linkByttonStyle" onClick={handleShow}>
+            <div className="linkByttonStyle py-2 border-right pe-5" onClick={handleShow}>
                 New Task
             </div>
             <CreateTask show={viewShow} setShow={setViewShow} project={project} reInitilize={reInitilize} projectCardData={projectCardData} />
