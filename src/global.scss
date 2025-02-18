@@ -185,19 +185,27 @@ input {
 }
 
 /* Font size class */
-.font-12, .font-12:hover, .font-12:focus {
+.font-12,
+.font-12:hover,
+.font-12:focus {
   font-size: 12px !important;
 }
 
-.font-14, .font-14:hover, .font-14:focus {
+.font-14,
+.font-14:hover,
+.font-14:focus {
   font-size: 14px;
 }
 
-.font-16, .font-16:hover, .font-16:focus {
+.font-16,
+.font-16:hover,
+.font-16:focus {
   font-size: 16px;
 }
 
-.font-18, .font-18:hover, .font-18:focus {
+.font-18,
+.font-18:hover,
+.font-18:focus {
   font-size: 18px !important;
 }
 
@@ -274,6 +282,33 @@ input {
   background: transparent !important;
 }
 
-.text-dark { 
+.text-dark {
   color: #667085 !important;
+}
+
+.vibrate {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  // background-color: #1AB2FF;
+  transform: scale(1);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 1);
+  animation: anim-vibrate 2s infinite;
+
+  @keyframes anim-vibrate {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(26, 178, 255, 0.7);
+    }
+
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0.6rem rgba(26, 178, 255, 0);
+    }
+
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(26, 178, 255, 0);
+    }
+  }
 }

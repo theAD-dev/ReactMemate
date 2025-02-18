@@ -14,6 +14,7 @@ import { Spinner } from 'react-bootstrap';
 import { Dialog } from "primereact/dialog";
 import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import { formatDate } from '../../../../shared/lib/date-format';
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
   const navigate = useNavigate();
@@ -75,22 +76,15 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     };
   }, [orders, hasMoreData]);
 
-  const orderBody = (rowdata) => {
+  const orderBody = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-      <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
-        {rowdata.number}
+      <div className={`d-flex flex-column`}>
+        {rowData.number}
+        <span style={{ color: '#98A2B3' }} className='font-12'>{formatDate(rowData.created)}</span>
       </div>
       {/* <Button label="Open" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text /> */}
     </div>
   }
-
-  // const calculationBody = (rowData) => {
-  //   return <div className='d-flex align-items-center justify-content-center gap-4'>
-  //   <Link to={"#"}><div><PlusSlashMinus color='#FDB022' size={16}/></div></Link>
-  //   <Link to={rowData.quote_url}><FilePdf color='#FF0000' size={16}/></Link>
-  //   <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16}/></Link>
-  // </div>
-  // }
 
   const customerBody = (rowData) => {
     return <div className='d-flex align-items-center'>
@@ -103,10 +97,10 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     </div>
   }
 
-  const totalInvocide = (rowData) => {
+  const totalInvoice = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center`}>
-        $ {(rowData.total).toFixed(2)}
+        ${(rowData.total).toFixed(2)}
       </div>
     </div>
   }
@@ -115,17 +109,16 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     return (
       <div className='d-flex align-items-center'>
         <div className={`d-flex justify-content-center align-items-center`}>
-       
-            {rowData.status === "In progress" ? (
-            <><span className={style.statusComplete}> Complete </span></>
+          {rowData.status === "In progress" ? (
+            <span className={style.statusComplete}> Complete </span>
           ) : (
-            <>In Complete <span className="dots"></span></>
+            <span className={style.lostProfit}>In Complete <span className="dots"></span></span>
           )}
         </div>
       </div>
     );
   };
-  
+
   const reaclCost = (rowData) => {
     const realCost = (rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense) / rowData.total * 100;
 
@@ -258,7 +251,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const OperatingExpenseBody = (rowData) => {
     const oeCast = (rowData.real_cost + rowData.labor_expenses + rowData.cost_of_sale) / rowData.total * 100;
     return <div onClick={setVisible}
-      className={`d-flex justify-content-center align-items-center  ${style.piCircleStyle} ${style.operCircleStyle}` }
+      className={`d-flex justify-content-center align-items-center  ${style.piCircleStyle} ${style.operCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
@@ -342,59 +335,59 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
   return (
     <>
-    <DataTable ref={ref} value={orders} scrollable selectionMode={'checkbox'}
-      columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-      scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedOrder}
-      onSelectionChange={(e) => setSelectedOrder(e.value)}
-      loading={loading}
-      loadingIcon={loadingIconTemplate}
-      emptyMessage={NoDataFoundTemplate}
-      sortField={sort?.sortField}
-      sortOrder={sort?.sortOrder}
-      onSort={onSort}
-      rowClassName={rowClassName}
-    >
-      <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-      <Column field="number" header="Order #" body={orderBody} style={{ minWidth: '205px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
-      <Column field="client.name" header="Customer" body={customerBody} style={{ minWidth: '186px' }}   sortable></Column>
-      <Column field="reference" header="Order Reference" style={{ minWidth: '221px' }} ></Column>
-      <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
-      <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
-      <Column field="budget" header="Budget" style={{ minWidth: '110px' }} className='text-end' ></Column>
-      <Column field="realcost" header="Real Cost" body={reaclCost} style={{ minWidth: '113px', textAlign: 'right' }} ></Column>
-      <Column field="labor_expenses" header="Labour" body={labourBody} style={{ minWidth: '149px', textAlign: 'right' }} sortable></Column>
-      <Column field="cost_of_sale" header="Cost of Sale" body={costofSaleBody} style={{ minWidth: '146x', textAlign: 'center' }} sortable></Column>
-      <Column field="operating_expense" header="Operating Expense" body={OperatingExpenseBody} style={{ minWidth: '152x', textAlign: 'center' }} sortable></Column>
-      <Column field="total" body={totalInvocide} header="Total Invoice" style={{ minWidth: '101x', textAlign: 'center' }} ></Column>
-      <Column field='profit' header="operationalprofit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '150px' }} sortable></Column>
-    </DataTable>
+      <DataTable ref={ref} value={orders} scrollable selectionMode={'checkbox'}
+        columnResizeMode="expand" resizableColumns showGridlines size={'large'}
+        scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedOrder}
+        onSelectionChange={(e) => setSelectedOrder(e.value)}
+        loading={loading}
+        loadingIcon={loadingIconTemplate}
+        emptyMessage={NoDataFoundTemplate}
+        sortField={sort?.sortField}
+        sortOrder={sort?.sortOrder}
+        onSort={onSort}
+        rowClassName={rowClassName}
+      >
+        <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
+        <Column field="number" header="Order #" body={orderBody} style={{ minWidth: '155px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
+        <Column field="client.name" header="Customer" body={customerBody} style={{ minWidth: '224px' }} sortable></Column>
+        <Column field="reference" header="Order Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '400px' }}>{rowData.reference}</div>} style={{ minWidth: '400px' }} ></Column>
+        <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
+        <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
+        <Column field="budget" header="Budget" style={{ minWidth: '110px' }} className='text-end' ></Column>
+        <Column field="realcost" header="Real Cost" body={reaclCost} style={{ minWidth: '113px', textAlign: 'right' }} ></Column>
+        <Column field="labor_expenses" header="Labour" body={labourBody} style={{ minWidth: '149px', textAlign: 'right' }} sortable></Column>
+        <Column field="cost_of_sale" header="Cost of Sale" body={costofSaleBody} style={{ minWidth: '146x', textAlign: 'center' }} sortable></Column>
+        <Column field="operating_expense" header="Operating Expense" body={OperatingExpenseBody} style={{ minWidth: '152x', textAlign: 'center' }} sortable></Column>
+        <Column field="total" body={totalInvoice} header="Total Invoice" style={{ minWidth: '101x', textAlign: 'center' }} ></Column>
+        <Column field='profit' header="operationalprofit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '150px' }} sortable></Column>
+      </DataTable>
 
 
 
 
-    <Dialog
-visible={visible}
-modal={true}
-header={headerElementg}
-className={`${style.modal} ${style.exploreModel} custom-modal custom-scroll-integration `}
-onHide={handleClose}>
-<div className="d-flex flex-column">
-<h2>Explore Operating Expense</h2>
-<ul>
-  <li>
-    <h3>Yearly based expenses total amount: <strong>$51894.66</strong></h3>
-  </li>
-  <li>
-    <h3>Monthly based expenses total amount:  <strong>$6893.32</strong></h3>
-  </li>
-  <li>
-    <h3>Number of invoices:  <strong>6</strong></h3>
-  </li>
-  <li>
-    <h3>One month:  <strong>$51894.66 / 12 + $6893.32 = 11217.88;$11217.88 / 6 = $1869.65</strong></h3>
-  </li>
-</ul>
-</div>
+      <Dialog
+        visible={visible}
+        modal={true}
+        header={headerElementg}
+        className={`${style.modal} ${style.exploreModel} custom-modal custom-scroll-integration `}
+        onHide={handleClose}>
+        <div className="d-flex flex-column">
+          <h2>Explore Operating Expense</h2>
+          <ul>
+            <li>
+              <h3>Yearly based expenses total amount: <strong>$51894.66</strong></h3>
+            </li>
+            <li>
+              <h3>Monthly based expenses total amount:  <strong>$6893.32</strong></h3>
+            </li>
+            <li>
+              <h3>Number of invoices:  <strong>6</strong></h3>
+            </li>
+            <li>
+              <h3>One month:  <strong>$51894.66 / 12 + $6893.32 = 11217.88;$11217.88 / 6 = $1869.65</strong></h3>
+            </li>
+          </ul>
+        </div>
 
 
 
@@ -403,8 +396,8 @@ onHide={handleClose}>
 
 
 
-</Dialog>
-</>
-) 
+      </Dialog>
+    </>
+  )
 })
 export default OrdersTable

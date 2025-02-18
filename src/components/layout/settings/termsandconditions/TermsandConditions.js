@@ -10,6 +10,7 @@ import { Editor } from "primereact/editor";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from 'sonner';
 import { Placeholder } from "react-bootstrap";
+import { renderHeader } from '../../../../shared/ui/editor/editor-header-template';
 
 const TermsandConditions = () => {
     const [activeTab, setActiveTab] = useState('terms-and-conditions');
@@ -52,10 +53,11 @@ const TermsandConditions = () => {
     const handleEditClick = () => setEdit(true);
 
     const handleSaveClick = () => {
-        updateMutation.mutate(terms); 
+        updateMutation.mutate(terms);
     };
 
     const handleCancelClick = () => setEdit(false);
+    const headerTemplate = renderHeader();
 
     return (
         <div className='settings-wrap'>
@@ -84,7 +86,7 @@ const TermsandConditions = () => {
                                         <p>Please fill in your company Terms and Conditions for Subcontractors, which they will follow while using the MeMate Application.</p>
                                     </div>
                                     {!edit && (
-                                        <button onClick={handleEditClick}>
+                                        <button onClick={handleEditClick} className='text-nowrap'>
                                             Edit &nbsp; <PencilSquare color="#344054" size={20} />
                                         </button>
                                     )}
@@ -92,38 +94,42 @@ const TermsandConditions = () => {
 
                                 <div>
                                     {isLoading ? (
-                                          <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                          <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
+                                        <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                            <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
                                         </Placeholder>
-                                   
+
                                     ) : edit ? (
                                         <>
                                             <Row className={style.qlEditorText}>
                                                 <Col sm={12}>
                                                     <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
                                                         <label className={clsx(style.label)}>Message</label>
-                                                        <Editor 
-                                                            value={terms.terms_invoice} 
+                                                        <Editor
+                                                            value={terms.terms_application}
                                                             onTextChange={(e) => setTerms(prevTerms => ({
                                                                 ...prevTerms,
-                                                                terms_invoice: e.htmlValue
-                                                              }))}
+                                                                terms_application: e.htmlValue
+                                                            }))}
+                                                            style={{ minHeight: '320px', fontSize: '14px', color: '#475467' }}
+                                                            headerTemplate={headerTemplate}
                                                         />
                                                     </div>
                                                 </Col>
                                             </Row>
-                                            <div className='d-flex justify-content-end mt-4'>
+                                            <div className='d-flex justify-content-end mt-4 mb-4'>
                                                 <Button className='outline-button me-2' onClick={handleCancelClick}>
-                                                    Cancel &nbsp; 
+                                                    Cancel
                                                 </Button>
                                                 <Button className='solid-button' onClick={handleSaveClick}>
-                                                    Save &nbsp; 
+                                                    Save
                                                 </Button>
                                             </div>
                                         </>
                                     ) : (
-                                        <div className={style.editPara} dangerouslySetInnerHTML={{ __html: terms.terms_invoice
-                                        }} />
+                                        <Editor readOnly showHeader={false} modules={{}}
+                                            style={{ border: "none", fontSize: "14px", color: '#475467' }}
+                                            value={terms.terms_application}
+                                        />
                                     )}
                                 </div>
                             </div>

@@ -41,7 +41,7 @@ const CustomAvatarGroup = ({ params }) => {
     <div>
       <AvatarGroup onClick={handleAvatarGroupClick} style={{ cursor: "pointer" }}>
         {params?.value?.slice(0, 3).map((data, index) => (
-          <ImageAvatar has_photo={data.has_photo} photo={data.photo} is_business={false} />
+          <ImageAvatar key={`${data.email}-${index}`} has_photo={data.has_photo} photo={data.photo} is_business={false} />
         ))}
         {params?.value?.length > 3 && (
           <Avatar
@@ -282,7 +282,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       width: 183,
       renderCell: (params) => (
         <div>
-          <ContactSales type={params.value} saleUniqueId={params.row.saleUniqueId} refreshData={refreshData} />
+          <ContactSales type={params.value} saleUniqueId={params.row.saleUniqueId} refreshData={refreshData} created={params.row.created}/>
         </div>
       ),
     },
@@ -357,7 +357,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       width: 72,
       className: "ActionBtn",
       renderCell: (params) => {
-        return <ActionsDots saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} />
+        return <ActionsDots saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status}/>
       },
     },
   ]);

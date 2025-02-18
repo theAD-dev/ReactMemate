@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Modal from 'react-bootstrap/Modal';
-import { PlusLg , Envelope, Telephone, Calendar, ChevronDown } from "react-bootstrap-icons";
+import { PlusLg, Envelope, Telephone, Calendar, ChevronDown } from "react-bootstrap-icons";
 import Typography from '@mui/material/Typography';
 import Form from 'react-bootstrap/Form';
 import dayjs from 'dayjs';
@@ -13,14 +13,14 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 import saleContact from "../../../../assets/images/icon/sale-01.svg";
 import { fetchContacts } from '../../../../APIs/SalesApi';
 
-const ContactAdd = ({saleUniqueIdold, contactRefresh}) => {
-  
+const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) => {
+
   const [radioValue, setRadioValue] = useState('email');
   const [value, setValue] = useState(dayjs());
   const [note, setNote] = useState('');
   const [show, setShow] = useState(false);
   const [validationError, setValidationError] = useState('');
-  
+
   const handleClose = () => {
     setShow(false);
     setValidationError('');
@@ -73,14 +73,18 @@ const ContactAdd = ({saleUniqueIdold, contactRefresh}) => {
     return true;
   };
 
-  return (
-   <>
-     <Button variant="ContactAdd" onClick={handleShow}>
-       <PlusLg color="#1AB2FF" size={16} />
-     </Button>
+  const isShowPulseEffect = step === 0 ?
+    (Date.now() - created * 1000 >= 259200000)
+    : (Date.now() - type[step - 1].date * 1000 >= 259200000);
 
-     <Modal show={show} aria-labelledby="contained-modal-title-vcenter"
-      centered className='SalesContact salesTableWrap' onHide={handleClose} animation={false}>
+  return (
+    <>
+      <Button variant="ContactAdd" onClick={handleShow}>
+        <PlusLg color="#1AB2FF" className={`${isShowPulseEffect ? 'vibrate' : ''}`} size={16} style={{ width: '16px', height: '16px' }} />
+      </Button>
+
+      <Modal show={show} aria-labelledby="contained-modal-title-vcenter"
+        centered className='SalesContact salesTableWrap' onHide={handleClose} animation={false}>
         <Modal.Header className='SalesContact mb-0 pb-0 border-0' closeButton>
           <div className='modelHeader d-flex justify-content-between align-items-start'>
             <span>
@@ -157,7 +161,7 @@ const ContactAdd = ({saleUniqueIdold, contactRefresh}) => {
           </div>
         </Modal.Body>
       </Modal>
-   </>
+    </>
   )
 }
 

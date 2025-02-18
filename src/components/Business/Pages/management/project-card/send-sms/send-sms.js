@@ -71,7 +71,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
   return (
     <>
       {/* View modal trigger */}
-      <div className="linkByttonStyle" onClick={handleShow}>
+      <div className="linkByttonStyle py-2 border-right text-center ps-0" onClick={handleShow}>
         Send SMS
       </div>
 

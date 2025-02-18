@@ -578,7 +578,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               </Col>
               <Col sm={6} className='projectHistoryCol'>
                 <Row>
-                  <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
+                  <Col className='tabModelMenu d-flex justify-content-between align-items-center p-0' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
                     <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS projectId={projectId} projectCardData={() => projectCardData(projectId)} />
