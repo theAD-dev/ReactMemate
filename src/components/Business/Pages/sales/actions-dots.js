@@ -11,9 +11,11 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import SendInvoiceEmailForm from '../../../../ui/send-invoice/send-invoice';
 import { useQuery } from '@tanstack/react-query';
 import { getClientById } from '../../../../APIs/ClientsApi';
+import { useNavigate } from 'react-router-dom';
 
 
 const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(null);
   const [payload, setPayload] = useState({});
@@ -41,6 +43,8 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
     } else if (option.label === 'Resend') {
       setIsVisibleResendEmail(true);
       setAnchorEl(null);
+    } else if (option.label === 'Label') {
+      window.open(`/api/v1/sales/${saleUniqueId}/label/`, '_blank');
     }
   };
 
@@ -67,7 +71,7 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
         <Layers color="#344054" size={20} />
       )
     },
-    status === "Draft" && {label: "Delete", icon: <Trash color="#344054" size={20} />}
+    status === "Draft" && { label: "Delete", icon: <Trash color="#344054" size={20} /> }
   ];
 
   return (

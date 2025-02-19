@@ -10,9 +10,11 @@ import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote
 import { Button, Spinner } from 'react-bootstrap';
 import SendQuote from '../../../features/sales-features/send-quote/send-quote';
 import CreateProposal from '../../../features/sales-features/create-proposal/create-proposal';
+import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
+    const { trialHeight } = useTrialHeight();
     const [contactPersons, setContactPersons] = useState([]);
     const [showQuoteModal, setShowQuoteModal] = useState(false);
     const [showProposalModal, setShowProposalModal] = useState(false);
@@ -243,7 +245,7 @@ const CalculateQuote = () => {
                 </div>
             </div>
 
-            <div className='w-100' style={{ overflow: 'auto', height: 'calc(100% - 208px)', padding: '16px 32px' }}>
+            <div className='w-100' style={{ overflow: 'auto', height: `calc(100% - 208px - ${trialHeight}px)`, padding: '16px 32px' }}>
                 <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems} setContactPersons={setContactPersons} />
             </div>
 

@@ -21,6 +21,7 @@ import InvoicePartialPayment from '../../features/invoice-features/invoice-parti
 import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
 import { Button } from 'primereact/button';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -137,7 +138,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const totalBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
             <div className={`text-dark`}>
-                $ {parseFloat((rowData?.amount) || 0).toFixed(2)}
+                ${formatAUD(rowData?.amount)}
             </div>
         </div>
     }
@@ -145,7 +146,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const ToBePaidBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={`text-dark`}>
-                $ {parseFloat((rowData?.to_be_paid) || 0).toFixed(2)}
+                ${formatAUD(rowData?.to_be_paid)}
             </div>
         </div>
     }
@@ -153,7 +154,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const depositBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`} style={{ position: 'static' }}>
             <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
-                $ {parseFloat(rowData.deposit || 0).toFixed(2)}
+                ${formatAUD(rowData.deposit)}
                 <span onClick={() => { setVisible(true); setInvoiceData(rowData) }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
             </div>
         </div>
@@ -162,9 +163,9 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     const xeroBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-center`}>
             {
-                rowData?.xero_status === "in_progress" 
-                ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
-                : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
+                rowData?.xero_status === "in_progress"
+                    ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
+                    : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
             }
         </div>
     }
@@ -277,7 +278,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
             >
                 <div className='d-flex flex-column gap-2'>
-                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true}/>
+                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
                     <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
                         <Files color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>

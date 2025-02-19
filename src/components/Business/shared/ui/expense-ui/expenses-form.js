@@ -21,6 +21,7 @@ import { getDepartments } from '../../../../../APIs/CalApi';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tooltip } from 'primereact/tooltip';
 import { Checkbox } from 'primereact/checkbox';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 function debounce(fn, delay) {
     let timeoutId;
@@ -357,28 +358,28 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </div>
                 </Col>
             </Row>
-            <Row className={`mb-4 ${styles.expTotalRow}`}>
-                <Col>
+            <Row className={`${styles.expTotalRow}`}>
+                <Col className='mb-4'>
                     <div className={styles.CalItem}>
                         <div>
                             <span>Subtotal</span>
-                            <strong>$ {watch('subtotal') || "0.00"}</strong>
+                            <strong>${formatAUD(watch('subtotal') || "0.00")}</strong>
                         </div>
                     </div>
                 </Col>
-                <Col>
+                <Col className='mb-4'>
                     <div className={styles.CalItem}>
                         <div>
                             <span>Tax</span>
-                            <strong>$ {watch('tax') || "0.00"}</strong>
+                            <strong>${formatAUD(watch('tax') || "0.00")}</strong>
                         </div>
                     </div>
                 </Col>
-                <Col>
+                <Col className='mb-4'>
                     <div className={`${styles.CalItemActive} ${styles.CalItem}`}>
                         <div>
                             <span>Total</span>
-                            <strong>$ {watch('totalAmount') || "0.00"}</strong>
+                            <strong className='text-nowrap'>${formatAUD(watch('totalAmount') || "0.00")}</strong>
                         </div>
                     </div>
                 </Col>

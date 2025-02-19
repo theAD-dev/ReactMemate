@@ -1,25 +1,21 @@
 import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import style from '../users.module.scss';
-import { CloudUpload, Envelope, FileText, PencilSquare, Person, PersonAdd, PersonPlus, PlusCircle, QuestionCircle } from 'react-bootstrap-icons';
-import React, { useEffect, useState } from 'react';
+import { Envelope, FileText, PencilSquare, Person, PersonAdd, PlusCircle, QuestionCircle } from 'react-bootstrap-icons';
+import React, { useState } from 'react';
 import { InputText } from "primereact/inputtext";
 import { Card, Col, Row } from 'react-bootstrap';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Dialog } from 'primereact/dialog';
-import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { createLocation, deleteLocation, updateLocation } from '../../../../../APIs/location-api';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
-import { getDesktopUser } from '../../../../../APIs/settings-user-api';
 import { Skeleton } from 'primereact/skeleton';
 
 const schema = yup
@@ -55,7 +51,6 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
     };
 
     const onSubmit = async (data) => {
-        console.log('data: ', data);
         const formData = new FormData();
 
         formData.append("first_name", data.firstName);
@@ -87,7 +82,6 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
                 body: formData,
             });
 
-            const data = await response.json();
             setIsLoading(false);
             if (response.ok) {
                 handleClose();
@@ -95,6 +89,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
                 refetch();
                 return "success";
             } else {
+                const data = await response.json();
                 toast.error(`Failed to create the user. Please try again.`);
                 return "error";
             }
@@ -154,8 +149,8 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
                             <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} shape="round" />
                         </Col>
 
-                        <Row className='mb-3'>
-                            <Col>
+                        <Row className='mb-3 pe-0'>
+                            <Col className='pe-0'>
                                 <Card className={clsx(style.leftBoxParent, style.active)}>
                                     <Card.Body className='d-flex align-items-center gap-3 py-2'>
                                         <div className={style.leftbox}>
@@ -165,8 +160,8 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
                                     </Card.Body>
                                 </Card>
                             </Col>
-                            <Col>
-                            <Card className={clsx(style.leftBoxParent)}>
+                            <Col className='pe-0 ps-4'>
+                                <Card className={clsx(style.leftBoxParent)}>
                                     <Card.Body className='d-flex align-items-center gap-3 py-2'>
                                         <div className={style.leftbox}>
                                             <PersonAdd color='#667085' size={24} />
@@ -246,7 +241,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
                                                     { value: "7", label: "WEEK" },
                                                     { value: "14", label: "TWO_WEEKS", disabled: true },
                                                     { value: "28", label: "FOUR_WEEKS", disabled: true },
-                                                    { value: "1", label: "MONTH" },
+                                                    { value: "1", label: "MONTH", disabled: true },
                                                 ]}
                                                 className={clsx(style.dropdownSelect, 'dropdown-height-fixed', "outline-none")}
                                                 placeholder="Select payment cycle"

@@ -20,122 +20,121 @@ const ExpensesAccount = () => {
     const [departments, setDepartments] = useState([]);
 
     const createIndex = () => {
-      setShowModal(true);
+        setShowModal(true);
     };
-    
+
     const handleClose = () => {
-      setShowModal(false);
+        setShowModal(false);
     };
 
     const handleSave = () => {
-      if (dname.trim()) {
-        setDepartments([...departments, dname]);
-        setDname('');
-        setShowModal(false);
-      }
+        if (dname.trim()) {
+            setDepartments([...departments, dname]);
+            setDname('');
+            setShowModal(false);
+        }
     };
 
     return (
         <>
-        <div className='settings-wrap'>
-        <div className="settings-wrapper">
-            <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-            <div className="settings-content setModalelBoots">
-                <div className='headSticky'>
-                <h1>Accounting</h1>
-                <div className='contentMenuTab'>
-                <ul>
-                       <li className='menuActive'><Link to="/settings/accounting/expenses">Expenses</Link></li>
-                        <li><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
-                    </ul>
-                </div>
-                </div>
-                <div className={`content_wrap_main`}>
-                <div className='content_wrapper'>
-                    <div className="listwrapper">
-                    <div className="topHeadStyle pb-4">
-                        <h2>Expenses</h2>
-                        <button onClick={() => createIndex()}>Create New Template <PlusLg color="#000000" size={20} /></button>
-                    </div>
-                    <div>
-                        {departments.map((department, index) => (
-                            <Accordion key={index}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls={`panel${index}-content`}
-                                    id={`panel${index}-header`}
-                                >
-                                    <Typography>{department}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Typography>
-                                        Content
-                                        <button > Create Sub Department<PlusLg color="#000000" size={20} /></button>
-                                       
-                                    </Typography>
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
-                    </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-        </div>
-        <Modal
-                        show={showModal}
-                        onHide={handleClose}
-                        centered 
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description">
-                        <Box className="modelStyleBoxstatus" sx={{ width: 659 }}>
-                            <Typography id="modal-modal-title" className={``} variant="h6" component="h2">
-                                <>
-                                    <div className='modelHeader modelHeaderBillig d-flex justify-content-between align-items-start'>
-                                        <span className='modelHeadFlex'>
-                                            <div className='iconOutStyle'>
-                                                <div className='iconinStyle'>
-                                                    <div className='iconinnerStyle'>
-                                                        <PlusLg color="#17B26A" size={24} />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <h2>Create Index</h2>
-                                        </span>
-                                        <IconButton
-                                            edge="end"
-                                            color="inherit"
-                                            onClick={handleClose}
-                                            aria-label="close">
-                                            <CloseIcon color="#667085" size={24} />
-                                        </IconButton>
+            <div className='settings-wrap'>
+                <div className="settings-wrapper">
+                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+                    <div className="settings-content setModalelBoots">
+                        <div className='headSticky'>
+                            <h1>Accounting</h1>
+                            <div className='contentMenuTab'>
+                                <ul>
+                                    <li className='menuActive'><Link to="/settings/accounting/expenses">Expenses</Link></li>
+                                    <li><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className={`content_wrap_main`}>
+                            <div className='content_wrapper'>
+                                <div className="listwrapper">
+                                    <div className="topHeadStyle pb-4">
+                                        <h2>Expenses</h2>
+                                        <button onClick={() => createIndex()}>Create New Template <PlusLg color="#000000" size={20} /></button>
                                     </div>
-                                    <div className='stepBoxStyle stepBoxStylePayment'>
-                                    <div className="formgroup">
-                                            <label>Department name</label>
-                                            <div className={`inputInfo`}>
-                                                <input
-                                                type="text"
-                                                name="dname"
-                                                value={dname}
-                                                placeholder="Department name"
-                                                onChange={(e) => setDname(e.target.value)}
-                                                />
+                                    <div>
+                                        {departments.map((department, index) => (
+                                            <Accordion key={index}>
+                                                <AccordionSummary
+                                                    expandIcon={<ExpandMoreIcon />}
+                                                    aria-controls={`panel${index}-content`}
+                                                    id={`panel${index}-header`}
+                                                >
+                                                    <Typography>{department}</Typography>
+                                                </AccordionSummary>
+                                                <AccordionDetails>
+                                                    <Typography>
+                                                        Content
+                                                        <button > Create Sub Department<PlusLg color="#000000" size={20} /></button>
+
+                                                    </Typography>
+                                                </AccordionDetails>
+                                            </Accordion>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <Modal
+                show={showModal}
+                onHide={handleClose}
+                centered
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description">
+                <Box className="modelStyleBoxstatus" sx={{ width: 659 }}>
+                    <Typography id="modal-modal-title" className={``} variant="h6" component="h2">
+                        <>
+                            <div className='modelHeader modelHeaderBillig d-flex justify-content-between align-items-start'>
+                                <span className='modelHeadFlex'>
+                                    <div className='iconOutStyle'>
+                                        <div className='iconinStyle'>
+                                            <div className='iconinnerStyle'>
+                                                <PlusLg color="#17B26A" size={24} />
                                             </div>
                                         </div>
                                     </div>
-                                    <div className='footerButton'>
-                                        <button className='Cancel' onClick={handleClose}>Cancel</button>
-                                        <Button className='save' onClick={handleSave}>Save</Button>
+                                    <h2>Create Index</h2>
+                                </span>
+                                <IconButton
+                                    edge="end"
+                                    color="inherit"
+                                    onClick={handleClose}
+                                    aria-label="close">
+                                    <CloseIcon color="#667085" size={24} />
+                                </IconButton>
+                            </div>
+                            <div className='stepBoxStyle stepBoxStylePayment'>
+                                <div className="formgroup">
+                                    <label>Department name</label>
+                                    <div className={`inputInfo`}>
+                                        <input
+                                            type="text"
+                                            name="dname"
+                                            value={dname}
+                                            placeholder="Department name"
+                                            onChange={(e) => setDname(e.target.value)}
+                                        />
                                     </div>
-                                </>
-                            </Typography>
-                        </Box>
-                    </Modal>
+                                </div>
+                            </div>
+                            <div className='footerButton'>
+                                <button className='Cancel' onClick={handleClose}>Cancel</button>
+                                <Button className='save' onClick={handleSave}>Save</Button>
+                            </div>
+                        </>
+                    </Typography>
+                </Box>
+            </Modal>
         </>
     );
 }
 
 export default ExpensesAccount;
- 

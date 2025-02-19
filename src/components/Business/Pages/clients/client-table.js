@@ -11,9 +11,12 @@ import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import { formatAUD } from '../../../../shared/lib/format-aud';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted, refetch }, ref) => {
     const navigate = useNavigate();
+    const { trialHeight } = useTrialHeight();
     const observerRef = useRef(null);
     const [clients, setClients] = useState([]);
     const [page, setPage] = useState(1);
@@ -76,15 +79,16 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <Button label="Open" onClick={() => navigate(`/clients/${rowData.id}/order-history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>
     }
+
     const nameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
             <ImageAvatar has_photo={rowData.has_photo} photo={rowData.photo} is_business={rowData.is_business} />
             <div className='d-flex flex-column gap-1'>
-            <div className={`${style.ellipsis}`}>{rowData.name}</div>
-            {rowData.deleted ?
+                <div className={`${style.ellipsis}`}>{rowData.name}</div>
+                {rowData.deleted ?
                     <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
             </div>
-            
+
         </div>
     }
 
@@ -97,19 +101,19 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     }
 
     const totalTurnoverBody = (rowData) => {
-        return <span style={{ color: '#667085' }}>${rowData.total_turnover}</span>
+        return <span style={{ color: '#667085' }}>${formatAUD(rowData.total_turnover)}</span>
     }
 
     const averagePD = (rowData) => {
-        return <Tag value={`$${rowData.average_pd}`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #ABEFC6', background: '#ECFDF3', color: '#067647', fontSize: '12px', fontWeight: 500 }}></Tag>
+        return <Tag value={`$${formatAUD(rowData.average_pd)}`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #ABEFC6', background: '#ECFDF3', color: '#067647', fontSize: '12px', fontWeight: 500 }}></Tag>
     }
-    
+
     const projectBody = (rowData) => {
         return <Tag value={rowData.total_requests} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #EAECF0', background: '#F9FAFB', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
     }
 
     const orderFrequencyBody = (rowData) => {
-        return <Tag value={`${rowData.order_frequency} p/m`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #A3E0FF', background: '#F2FAFF', color: '#1AB2FF', fontSize: '12px', fontWeight: 500 }}></Tag>
+        return <Tag value={`${formatAUD(rowData.order_frequency)} p/m`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #A3E0FF', background: '#F2FAFF', color: '#1AB2FF', fontSize: '12px', fontWeight: 500 }}></Tag>
     }
 
     const addressesBody = (rowData) => {
@@ -119,7 +123,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <span style={{ color: '#98A2B3', fontSize: '14px' }}>{address?.address || defaultAddress || "-"}</span>
             {(address?.address || defaultAddress) &&
                 <Link to={`http://maps.google.com/?q=${address?.address || defaultAddress}`} target='_blank' className={`${style.location} show-on-hover-element`}>
-                    <GeoAlt color='#1AB2FF'/>
+                    <GeoAlt color='#1AB2FF' />
                 </Link>
             }
         </div>
@@ -138,7 +142,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     }
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
-    
+
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
 
@@ -149,7 +153,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     return (
         <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
             columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-            scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedClients}
+            scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selectedClients}
             onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
             loadingIcon={loadingIconTemplate}

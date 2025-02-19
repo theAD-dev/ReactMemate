@@ -183,7 +183,7 @@ const CustomersIndustries = () => {
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                     <div className="settings-content setModalelBoots">
                         <div className='headSticky'>
-                            <h1>Templates</h1>
+                            <h1>Customers Settings</h1>
                             <div className='contentMenuTab'>
                                 <ul>
                                     <li className='menuActive'><Link to="/settings/customerssettings/industries">Industries</Link></li>

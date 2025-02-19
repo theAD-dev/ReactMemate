@@ -23,6 +23,7 @@ import exclamationCircle from "../../../../../assets/images/icon/exclamation-cir
 import { ProgressSpinner } from 'primereact/progressspinner';
 import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
 import { Divider } from 'primereact/divider';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 const schema = yup.object().shape({
     firstname: yup.string().required('First name is required'),
@@ -118,13 +119,13 @@ const PublicInvoice = () => {
         </div>
     );
     const unitPriceBody = (rowData) => (
-        <>$ {rowData?.unit_price}</>
+        <>${formatAUD(rowData?.unit_price)}</>
     );
     const discountBody = (rowData) => (
-        <> {rowData?.discount} %</>
+        <>{rowData?.discount} %</>
     );
     const TotalBody = (rowData) => (
-        <> ${rowData?.total} </>
+        <> ${formatAUD(rowData?.total)} </>
     );
 
     const CounterBody = (rowData, { rowIndex }) => <span>{rowIndex + 1}</span>;
@@ -311,23 +312,23 @@ const PublicInvoice = () => {
                             <Col sm={4}>
                                 <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', color: '#1D2939' }}>Subtotal</div>
-                                    <div style={{ fontSize: '18px', color: '#1D2939' }}>${invoice?.subtotal}</div>
+                                    <div style={{ fontSize: '18px', color: '#1D2939' }}>${formatAUD(invoice?.subtotal)}</div>
                                 </div>
                                 <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', }}>Tax (10%)</div>
-                                    <div style={{ fontSize: '18px', }}>${invoice?.gst}</div>
+                                    <div style={{ fontSize: '18px', }}>${formatAUD(invoice?.gst)}</div>
                                 </div>
                                 <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', }}>Deposit</div>
-                                    <div style={{ fontSize: '18px', }}>${invoice?.deposit}</div>
+                                    <div style={{ fontSize: '18px', }}>${formatAUD(invoice?.deposit)}</div>
                                 </div>
                                 <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', }}>Total</div>
-                                    <div style={{ fontSize: '18px' }}>${invoice?.total}</div>
+                                    <div style={{ fontSize: '18px' }}>${formatAUD(invoice?.total)}</div>
                                 </div>
                                 <div className='py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', fontWeight: 600 }}>Amount due</div>
-                                    <div style={{ fontSize: '18px', fontWeight: 600 }}>${parseFloat(invoice?.outstanding_amount).toFixed(2)}</div>
+                                    <div style={{ fontSize: '18px', fontWeight: 600 }}>${formatAUD(invoice?.outstanding_amount)}</div>
                                 </div>
                                 <div className='py-2 w-100 d-flex justify-content-end gap-3'>
                                     <svg width="206" height="29" viewBox="0 0 206 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -562,27 +563,27 @@ const PublicInvoice = () => {
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
                                     <span className='font-14' style={{ color: '#1D2939' }}>Subtotal</span>
-                                    <span className='font-14' style={{ color: '#1D2939' }}>${parseFloat(invoice?.subtotal).toFixed(2)}</span>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.subtotal)}</span>
                                 </div>
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
                                     <span className='font-14' style={{ color: '#1D2939' }}>Tax (0%)</span>
-                                    <span className='font-14' style={{ color: '#1D2939' }}>${parseFloat(invoice?.gst).toFixed(2)}</span>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.gst)}</span>
                                 </div>
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
                                     <span className='font-14' style={{ color: '#1D2939' }}>Deposit</span>
-                                    <span className='font-14' style={{ color: '#1D2939' }}>${parseFloat(invoice?.deposit).toFixed(2)}</span>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.deposit)}</span>
                                 </div>
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
                                     <span className='font-14' style={{ color: '#1D2939' }}>Total</span>
-                                    <span className='font-14' style={{ color: '#1D2939' }}>${parseFloat(invoice?.total).toFixed(2)}</span>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.total)}</span>
                                 </div>
                                 <Divider />
                                 <div className='d-flex justify-content-between mb-3'>
                                     <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>Amount due</span>
-                                    <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>${parseFloat(invoice?.outstanding_amount).toFixed(2)}</span>
+                                    <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>${formatAUD(invoice?.outstanding_amount)}</span>
                                 </div>
                             </Card.Body>
                         </Card>

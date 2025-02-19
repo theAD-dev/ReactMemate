@@ -31,6 +31,7 @@ import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import InvoiceCreate from './invoice-create/invoice-create';
 import GoogleReviewEmail from './google-review/google-review';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   const navigate = useNavigate();
@@ -286,7 +287,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             style={{
               maxHeight: showFullBody ? "none" : "87px",
               overflowY: "hidden",
-              overflowX: showFullBody ? "auto": "hidden"
+              overflowX: showFullBody ? "auto" : "hidden"
             }}
             dangerouslySetInnerHTML={{ __html: visibleBody }}
           />
@@ -546,9 +547,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                             <tr key={data.number || `je-${index}`}>
                               <td>{data?.number || "-"}</td>
                               <td>
-                                {data?.type === 'job'
-                                  ? data?.reference || "-"
-                                  : data?.invoice_reference || "-"}
+                                <div className='ellipsis-width'>
+                                  {data?.type === 'job'
+                                    ? data?.reference || "-"
+                                    : data?.invoice_reference || "-"}
+                                </div>
                               </td>
                               <td>
                                 {
@@ -557,7 +560,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                     : (<img src={data?.supplier?.photo || placeholderUser} alt='supplier' style={{ width: '24px', height: '24px', borderRadius: '50%', }} />)
                                 }
                               </td>
-                              <td>${data?.total || "-"}</td>
+                              <td>${formatAUD(data?.total) || "-"}</td>
                               <td className='status'>
                                 {data?.type === 'job'
                                   ? <span>{data?.status || "-"}</span>
@@ -569,7 +572,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                           ))
                         ) : (
                           <tr>
-                            <td colSpan={5} className='noDataAvilable'> No history available</td>
+                            <td colSpan={5} className='noDataAvilable text-center'> No history available</td>
                           </tr>
                         )}
                     </tbody>
@@ -730,29 +733,29 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               <Col className='proBuget projectColBg'>
                 <div>
                   <h5>Budget</h5>
-                  <p>${cardData?.budget}</p>
+                  <p>${formatAUD(cardData?.budget)}</p>
                 </div>
               </Col>
               <Col className='proRealCost projectColBg'>
                 <div>
                   <h5>Real Cost</h5>
-                  <p>${formattedRealCost}</p>
+                  <p>${formatAUD(formattedRealCost)}</p>
                 </div>
               </Col>
               <Col className='proCostSale projectColBg'>
                 <div>
                   <h5>Cost Of Sale</h5>
-                  <p>${cardData?.cost_of_sale}</p>
+                  <p>${formatAUD(cardData?.cost_of_sale)}</p>
                 </div>
               </Col>
               <Col className='proLabour projectColBg'>
                 <div>
                   <h5>Labour</h5>
-                  <p>${cardData?.labor_expenses}</p>
+                  <p>${formatAUD(cardData?.labor_expenses)}</p>
                 </div>
               </Col>
               <Col className='proProfit projectColBg'>
-                <span>Operational Profit <InfoCircle size={16} color='#1D2939' /></span><strong>${cardData?.operating_expense}</strong>
+                <span>Operational Profit <InfoCircle size={16} color='#1D2939' /></span><strong>${formatAUD(cardData?.operating_expense)}</strong>
               </Col>
             </Row>
             <Row className='projectCardactionBut'>

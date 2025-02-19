@@ -162,7 +162,7 @@ const formattedRealCost = RealCost.toFixed(2);
                         cardData.jobs.map(({ id, number, reference, status, total }) => (
                           <tr>
                             <td>{number.substring(4)}</td>
-                            <td>{reference}</td>
+                            <td><div className='ellipsis-width'>{reference}</div></td>
                             <td> <Github size={24} color='#101828' /></td>
                             <td>${total}</td>
                             <td className={status}>
@@ -176,7 +176,7 @@ const formattedRealCost = RealCost.toFixed(2);
                         ))
                       ) : (
                         <tr>
-                          <td colSpan={5} className='noDataAvilable'> No history available</td>
+                          <td colSpan={5} className='noDataAvilable text-center'> No history available</td>
                         </tr>
                       )}
                     </tbody>
