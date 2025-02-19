@@ -12,6 +12,7 @@ import { getListOfSuppliers } from '../../../../APIs/SuppliersApi';
 import { Spinner } from 'react-bootstrap';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { Tag } from 'primereact/tag';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers, refetch }, ref) => {
     const navigate = useNavigate();
@@ -165,7 +166,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     }
 
     const totalSpentBody = (rowData) => {
-        return <Tag value={`$ ${rowData.total_spent}`} style={{ height: '22px', minWidth: '26px', borderRadius: '20px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
+        return <Tag value={`$${formatAUD(rowData.total_spent)}`} style={{ height: '22px', minWidth: '26px', borderRadius: '20px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
     }
 
     const loadingIconTemplate = () => {

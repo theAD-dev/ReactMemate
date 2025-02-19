@@ -94,9 +94,9 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
   useEffect(() => {
     if (defaultValues?.addresses?.length) {
       if (addressIndex < defaultValues.addresses.length) {
-        const address = defaultValues.addresses[addressIndex];
-        const newCountryId = address.country;
-        const newStateId = address.state;
+        const address = defaultValues?.addresses[addressIndex];
+        const newCountryId = address?.country;
+        const newStateId = address?.state;
 
         if (newCountryId !== countryId) {
           setCountryId(newCountryId);

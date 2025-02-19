@@ -12,10 +12,10 @@ import googleReview from "../../../assets/images/icon/checbold.svg";
 import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
 import clsx from 'clsx';
+import { formatAUD } from '../../../shared/lib/format-aud';
 
 const QuotationEmail = () => {
     const { id } = useParams();
-
     const [quote, setQuote] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [updateDis, setUpdateDis] = useState('');
@@ -61,7 +61,7 @@ const QuotationEmail = () => {
                 return;
             }
             setActionLoading(prev => ({ ...prev, changes: true }));
-            await quotationChanges(id, { note: updateDis });
+            await quotationChanges(id, { changes: updateDis });
             toast.success("Quotation changes request has been sent");
             setVisible(false);
         } catch (error) {
@@ -101,13 +101,13 @@ const QuotationEmail = () => {
         </div>
     );
     const unitPriceBody = (rowData) => (
-        <>$ {rowData?.unit_price}</>
+        <>${formatAUD(rowData?.unit_price)}</>
     );
     const discountBody = (rowData) => (
-        <> {rowData?.discount} %</>
+        <>{rowData?.discount}%</>
     );
     const TotalBody = (rowData) => (
-        <> ${rowData?.total} </>
+        <>${formatAUD(rowData?.total)} </>
     );
 
     const noteBody = () => (
@@ -148,17 +148,17 @@ const QuotationEmail = () => {
             <Row>
                 <Column colSpan={4} />
                 <Column footer="Subtotal" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${quote?.subtotal}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
+                <Column footer={`\$${formatAUD(quote?.subtotal)}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column colSpan={4} />
                 <Column footer="GST (10%)" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${quote?.gst}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
+                <Column footer={`\$${formatAUD(quote?.gst)}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column colSpan={4} />
                 <Column footer="Total" className={`${style.footerBoldText} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${quote?.total}`} className={`${style.footerBoldText} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
+                <Column footer={`\$${formatAUD(quote?.total)}`} className={`${style.footerBoldText} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column
@@ -198,7 +198,9 @@ const QuotationEmail = () => {
                                 <p className='mb-2 mt-2'> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
                             </div>
                             <div className={style.right}>
-                                <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ width: '100px' }}/>
+                                {
+                                    quote?.organization?.logo && <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ width: '100px' }} />
+                                }
                             </div>
                         </div>
 
@@ -260,8 +262,6 @@ const QuotationEmail = () => {
 
                 {
                     (quote?.status === 'Sent' || quote?.status === 'Saved') && <div className={style.quotationfooter}>
-
-
                         <div className={style.contanerfooter}>
                             <div className={style.left}>
                                 <button

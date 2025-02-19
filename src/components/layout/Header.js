@@ -98,10 +98,12 @@ import Overview from "../Business/Pages/statistics/overview";
 import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
 import { formatDate } from "../../shared/lib/date-format";
 import { XCircle, XCircleFill } from "react-bootstrap-icons";
+import { useTrialHeight } from "../../app/providers/trial-height-provider";
 
 const Header = ({ onClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { setTrialHeight } = useTrialHeight();
   const [isVisibleTrial, setIsVisibleTrial] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [menuswitch, SetMenuSwitch] = useState(true);
@@ -133,12 +135,16 @@ const Header = ({ onClick }) => {
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    setTrialHeight(isVisibleTrial ? 30 : 0);
+  }, [isVisibleTrial]);
+
   return (
     <>
       {
         isVisibleTrial && <div className={style.trialNote}>
           <small>Your trial will end soon on {formatDate(profileDataLocal?.trial_end)}</small>
-          <XCircle color="#fff" size={14} style={{ position: 'absolute', right: '15px', cursor: 'pointer' }} onClick={() => setIsVisibleTrial(false)}/>
+          <XCircle color="#fff" size={14} style={{ position: 'absolute', right: '15px', cursor: 'pointer' }} onClick={() => setIsVisibleTrial(false)} />
         </div>
       }
 

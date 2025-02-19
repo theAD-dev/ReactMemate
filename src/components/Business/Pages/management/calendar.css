@@ -361,7 +361,7 @@ ul.eventStyleCal {
   padding: 9px 19px 9px 0 !important;
   border-radius: 10px !important;
   box-shadow: 0px 3px 5px 0px rgba(16, 24, 40, 0.1),
-0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
+    0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
   border: 0 !important;
   display: block !important;
 }
@@ -1007,20 +1007,20 @@ strong.dollorIcon {
 .projectCardactionBut .actionLeftSide button.declineAction {
   color: #b42318;
   display: flex;
-    align-items: center;
+  align-items: center;
 }
 .projectCardactionBut .actionLeftSide button svg {
- margin-right: 5px;
+  margin-right: 5px;
 }
 .projectCardactionBut .actionLeftSide button.duplicateAction {
   color: #106b99;
   display: flex;
-    align-items: center;
+  align-items: center;
 }
 .projectCardactionBut .actionLeftSide button.sendBackAction {
   color: #475467;
   display: flex;
-    align-items: center;
+  align-items: center;
 }
 .projectCardactionBut .actionLeftSide button.duplicateAction {
   padding: 0 32px;
@@ -1428,7 +1428,7 @@ strong.dollorIcon {
   letter-spacing: -0.08px;
 }
 .projectCardactionBut .actionRightSide button.InvoiceAction:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #d7f2ee;
   background: #fff;
 }
@@ -1439,7 +1439,7 @@ strong.dollorIcon {
   color: #60938E;
 } */
 .projectCardButWrap button.expense:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #fcbed9;
   background: #fff;
   color: var(--Gray-700, #344054);
@@ -1451,7 +1451,7 @@ strong.dollorIcon {
   color: #F96A94;
 } */
 .projectCardButWrap button.createJob:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #ffb800;
   background: #fff;
   color: var(--Gray-700, #344054);
@@ -1463,7 +1463,7 @@ background: linear-gradient(45deg, rgba(255, 184, 0, 0.10) 0%, rgba(255, 245, 0,
 color: #FFC501;
 } */
 .projectCardButWrap button.googleBut:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #d9e8ff;
   background: #fff;
   color: var(--Gray-700, #344054);
@@ -1475,19 +1475,21 @@ color: #FFC501;
 color: #4285F4;
 } */
 .projectCardButWrap button.schedule:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #6da7bd;
   background: rgba(255, 255, 255, 0.1);
   color: var(--Gray-700, #344054);
 }
- .projectCardButWrap .dateSelectdTaskBar {
-  border-radius: var(--radius-xs, 4px);
+
+.projectCardButWrap .dateSelectdTaskBar {
+  border-radius: 40px;
   border: 1px solid #6da7bd;
   background: rgba(109, 167, 189, 0.05);
-color: #6DA7BD;
-} 
+  color: #6da7bd;
+}
+
 .projectCardButWrap button.calenBut:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #4285f4;
   background: #fff;
   color: var(--Gray-700, #344054);
@@ -1499,11 +1501,12 @@ background: #F0F5FF;
 color: #4285F4;
 } */
 .projectCardButWrap button.createPo:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #4285f4;
   background: #fff;
   color: var(--Gray-700, #344054);
 }
+
 /* .projectCardButWrap button.poActive {
   border-radius: var(--radius-xs, 4px);
 border: 1px solid #D9E8FF;
@@ -1512,7 +1515,7 @@ color: #4285F4;
 } */
 
 .projectCardButWrap button.filebut {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: var(--Base-White, #fff);
   padding: 10px 18px;
@@ -1525,8 +1528,9 @@ color: #4285F4;
   font-weight: 600;
   line-height: 24px;
 }
+
 .projectCardButWrap button.filebut:hover {
-  border-radius: var(--radius-xs, 4px);
+  border-radius: 40px;
   border: 1px solid #4285f4;
   background: #fff;
   color: var(--Gray-700, #344054);
@@ -1572,5 +1576,5 @@ color: #4285F4;
 }
 
 .border-right {
-  border-right: 1px solid #D0D5DD !important;
+  border-right: 1px solid #d0d5dd !important;
 }

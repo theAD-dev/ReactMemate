@@ -17,6 +17,7 @@ import { InputText } from 'primereact/inputtext';
 import { toast } from 'sonner';
 import DeleteConfirmationModal from './delete-confirmation-modal';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -390,7 +391,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                                     <div className='d-flex flex-column'>
                                         <label className='mb-2'>Unit Price</label>
                                         <div className='d-flex gap-2 align-items-center'>
-                                            <strong>$ {calculateUnitPrice(tempCalculator)}</strong>
+                                            <strong>${calculateUnitPrice(tempCalculator)}</strong>
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF', marginTop: '30px' }}>
@@ -452,7 +453,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <Row>
                             <Col>
                                 <label>Cost</label>
-                                <strong>$ {parseFloat((calculator?.cost || 0)).toFixed(2)}</strong>
+                                <strong>${formatAUD(parseFloat((calculator?.cost || 0)).toFixed(2))}</strong>
                             </Col>
                             <Col>
                                 <label>Margin/Markup</label>
@@ -460,7 +461,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
                             <Col>
                                 <label>Unit Price</label>
-                                <strong>$ {calculateUnitPrice(calculator)}</strong>
+                                <strong>${formatAUD(calculateUnitPrice(calculator))}</strong>
                             </Col>
                             <Col>
                                 <label>Quantity/Hours</label>
@@ -468,7 +469,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
                             <Col>
                                 <label>Sub Total:</label>
-                                <strong>$ {parseFloat(calculator.total || 0).toFixed(2)}</strong>
+                                <strong>${formatAUD(parseFloat(calculator.total || 0).toFixed(2))}</strong>
                             </Col>
                         </Row>
                         <div className='d-flex justify-content-between align-items-center mt-4'>
@@ -701,17 +702,17 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
                     <li>
                         <div className={`${style.boxcal}`}>
                             <h6>Budget</h6>
-                            <strong>{formatMoney(+summary.budget)}</strong>
+                            <strong>{formatAUD(+summary.budget)}</strong>
                         </div>
                         <div className={`${style.profit} ${style.boxcal}`}>
                             <h6>Operational Profit</h6>
-                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
+                            <strong>{formatAUD(+summary.operationalProfit)}</strong>
                         </div>
                     </li>
                     <li>
                         <div className={`${style.boxcal}`}>
                             <h6>Total</h6>
-                            <strong>{formatMoney(+summary.total)}</strong>
+                            <strong>{formatAUD(+summary.total)}</strong>
                         </div>
                     </li>
                 </ul>

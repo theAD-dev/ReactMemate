@@ -1,23 +1,21 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, InfoCircle, Person } from 'react-bootstrap-icons';
+import { InfoCircle } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
 import { CircularProgressbar } from 'react-circular-progressbar';
-import { Chip } from 'primereact/chip';
 import style from './order.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getListOfOrder } from '../../../../APIs/OrdersApi';
-import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
 import { Dialog } from "primereact/dialog";
 import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { formatDate } from '../../../../shared/lib/date-format';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
-  const navigate = useNavigate();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -100,7 +98,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const totalInvoice = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center`}>
-        ${(rowData.total).toFixed(2)}
+        ${formatAUD(rowData.total)}
       </div>
     </div>
   }
@@ -159,7 +157,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           }}
 
         /></div>
-      <span>${rowData.real_cost}</span>
+      <span>${formatAUD(rowData.real_cost)}</span>
     </div>
   }
 
@@ -202,7 +200,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           }}
 
         /></div>
-      <span>${rowData.labor_expenses}</span>
+      <span>${formatAUD(rowData.labor_expenses)}</span>
     </div>
   }
 
@@ -244,7 +242,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           }}
 
         /></div>
-      <span>${rowData.cost_of_sale}</span>
+      <span>${formatAUD(rowData.cost_of_sale)}</span>
     </div>
   }
 
@@ -286,7 +284,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           }}
 
         /></div>
-      <span>${rowData.operating_expense}</span>
+      <span>${formatAUD(rowData.operating_expense)}</span>
     </div>
   }
 
@@ -294,13 +292,13 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     const status = rowData.status;
     switch (status) {
       case 'In progress':
-        return <Tag className={`profit ${style.inProgressProfit} rounded`} value={`$ ${rowData.profit}`} />
+        return <Tag className={`profit ${style.inProgressProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
       case 'Complete':
-        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${rowData.profit}`} />
+        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
       case 'Lost':
-        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${rowData.profit}`} />
+        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
       default:
-        return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$ ${rowData.profit}`} />;
+        return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
     }
   }
 
@@ -353,17 +351,14 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         <Column field="reference" header="Order Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '400px' }}>{rowData.reference}</div>} style={{ minWidth: '400px' }} ></Column>
         <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
-        <Column field="budget" header="Budget" style={{ minWidth: '110px' }} className='text-end' ></Column>
+        <Column field="budget" header="Budget" body={(rowData) => `$${formatAUD(rowData.budget)}` } style={{ minWidth: '110px' }} className='text-end' ></Column>
         <Column field="realcost" header="Real Cost" body={reaclCost} style={{ minWidth: '113px', textAlign: 'right' }} ></Column>
         <Column field="labor_expenses" header="Labour" body={labourBody} style={{ minWidth: '149px', textAlign: 'right' }} sortable></Column>
         <Column field="cost_of_sale" header="Cost of Sale" body={costofSaleBody} style={{ minWidth: '146x', textAlign: 'center' }} sortable></Column>
         <Column field="operating_expense" header="Operating Expense" body={OperatingExpenseBody} style={{ minWidth: '152x', textAlign: 'center' }} sortable></Column>
         <Column field="total" body={totalInvoice} header="Total Invoice" style={{ minWidth: '101x', textAlign: 'center' }} ></Column>
-        <Column field='profit' header="operationalprofit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '150px' }} sortable></Column>
+        <Column field='profit' header="Operational Profit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '150px' }} sortable></Column>
       </DataTable>
-
-
-
 
       <Dialog
         visible={visible}

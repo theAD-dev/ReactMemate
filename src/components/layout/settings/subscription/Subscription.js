@@ -11,6 +11,7 @@ import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings
 import AddRemoveMobileUser from "./features/add-remove-mobile-user";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { formatAUD } from "../../../../shared/lib/format-aud";
 
 const Subscription = () => {
   const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
@@ -99,7 +100,7 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Business Subscription </h4>
-                              <div className="subscriptionPrice active">${subscriptionQuery?.data?.business?.amount || "0.00"}</div>
+                              <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.business?.amount || "0.00")}</div>
                             </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
@@ -119,7 +120,7 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Company Users</h4>
-                              <div className="subscriptionPrice active">${parseFloat(parseFloat(subscriptionQuery?.data?.business_user_cost || 0) * parseInt((subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0))).toFixed(2)}</div>
+                              <div className="subscriptionPrice active">${formatAUD(parseFloat(parseFloat(subscriptionQuery?.data?.business_user_cost || 0) * parseInt((subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0))).toFixed(2))}</div>
                             </div>
                             <div className="progressWrapMain">
                               <div className="progressWrapSubs">
@@ -149,7 +150,7 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Work Subscription</h4>
-                              <div className="subscriptionPrice">${subscriptionQuery?.data?.work?.amount || "0.00"}</div>
+                              <div className="subscriptionPrice">${formatAUD(subscriptionQuery?.data?.work?.amount || "0.00")}</div>
                             </div>
 
                             <div className="progressWrapMain">
@@ -192,7 +193,7 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Mobile App Users</h4>
-                              <div className="subscriptionPrice">${parseFloat(parseFloat(subscriptionQuery?.data?.work_user_cost || 0) * parseInt((subscriptionQuery?.data?.work?.max_workers || 0) - (hasWorkSubscription && subscriptionQuery?.data?.default_work_users || 0))).toFixed(2)}</div>
+                              <div className="subscriptionPrice">${formatAUD(parseFloat(parseFloat(subscriptionQuery?.data?.work_user_cost || 0) * parseInt((subscriptionQuery?.data?.work?.max_workers || 0) - (hasWorkSubscription && subscriptionQuery?.data?.default_work_users || 0))).toFixed(2))}</div>
                             </div>
 
                             <div className="progressWrapMain">
@@ -225,7 +226,7 @@ const Subscription = () => {
                           <div className="progressSubsIn">
                             <div className="d-flex justify-content-between mb-1">
                               <h4>Locations</h4>
-                              <div className="subscriptionPrice active">${subscriptionQuery?.data?.location?.amount || "0.00"}</div>
+                              <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.location?.amount || "0.00")}</div>
                             </div>
 
                             <div className="progressWrapMain">
@@ -256,7 +257,7 @@ const Subscription = () => {
                   <div className="editwrapper">
                     <div className="repaymentStatusBox w-100 mb-4">
                       <p className="repaymentStatusBox-text-1">Current  repayments</p>
-                      <p className="repaymentStatusBox-text-2">${subscriptionQuery?.data?.total_amount || "0.00"}</p>
+                      <p className="repaymentStatusBox-text-2">${formatAUD(subscriptionQuery?.data?.total_amount || "0.00")}</p>
                       <p className="repaymentStatusBox-text-3">/month</p>
                     </div>
                     <p>

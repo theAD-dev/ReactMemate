@@ -11,6 +11,7 @@ import { Column } from "primereact/column";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { deleteMobileUser, updateMobileUserPrice } from "../../../../../APIs/settings-user-api";
+import { formatAUD } from "../../../../../shared/lib/format-aud";
 
 const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visible, setVisible, additionalUser }) => {
     const [add, setAdd] = useState(0);
@@ -203,12 +204,12 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
                 <div className="d-flex flex-column w-100 gap-2">
                     <div className={style.currentPricing}>
                         <p className={style.priceBoxText}>Current Pricing</p>
-                        <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${parseFloat(price * additionalUser).toFixed(2)}</span><span className={style.slashText}>/month</span></div>
+                        <div className="d-flex align-items-center"><span className={style.priceBoxPrice}>${formatAUD(parseFloat(price * additionalUser).toFixed(2))}</span><span className={style.slashText}>/month</span></div>
                     </div>
                     <div className={style.currentPricing}>
                         <p className={style.priceBoxText}>Updated Price</p>
                         <div className="d-flex align-items-center">
-                            <span className={style.priceBoxPrice}>${(additionalUser + add > 0) && add !== 0 ? parseFloat(price * (additionalUser + add)).toFixed(2) : parseFloat(0).toFixed(2)}</span>
+                            <span className={style.priceBoxPrice}>${formatAUD((additionalUser + add > 0) && add !== 0 ? parseFloat(price * (additionalUser + add)).toFixed(2) : parseFloat(0).toFixed(2))}</span>
                             <span className={style.slashText}>/month</span></div>
                     </div>
                 </div>

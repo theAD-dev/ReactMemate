@@ -15,7 +15,9 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
   const [photo, setPhoto] = useState(null);
   const [defaultValues, setDefaultValues] = useState({
     contact_persons: [{}],
-    addresses: [{}],
+    addresses: [{
+      country: 1
+    }],
   });
 
   const FormSubmit = async (data) => {

@@ -15,6 +15,7 @@ import ExpensesEdit from '../../features/expenses-features/expenses-edit/expense
 import { Badge } from 'primereact/badge';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -115,7 +116,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
     const totalBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={` ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
-                $ {(rowData.total).toFixed(2)}
+                ${formatAUD(rowData.total)}
                 {/* <span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span> */}
             </div>
         </div>

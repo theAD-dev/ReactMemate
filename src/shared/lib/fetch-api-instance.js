@@ -1,3 +1,5 @@
+const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
+
 /**
  * A generic fetch function with timeout and error handling.
  * @param {string} endpoint - The API endpoint.
@@ -6,7 +8,8 @@
  * @param {number} [timeout=30000] - Timeout duration in milliseconds (default: 30s).
  * @returns {Promise<any>} - The API response.
  */
-export const fetchInstance = async (endpoint, options = {}, isRequiredLoggedin = true, timeout = 30000) => {
+export const fetchInstance = async (path, options = {}, isRequiredLoggedin = true, timeout = 30000) => {
+    const endpoint = new URL(`${API_BASE_URL}${path}`);
     const { method = 'GET', headers = {}, body } = options;
     const accessToken = localStorage.getItem("access_token");
     const isFormData = body instanceof FormData;
