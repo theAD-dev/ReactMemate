@@ -1,20 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Dialog } from "primereact/dialog";
 import { Editor } from "primereact/editor";
 import { Dropdown } from "primereact/dropdown";
 import { AutoComplete } from "primereact/autocomplete";
 import { InputText } from "primereact/inputtext";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import style from "./send-email.module.scss";
 import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 import clsx from 'clsx';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import { toast } from 'sonner';
-import { createAndSendInvoiceById } from '../../APIs/management-api';
 
 const renderHeader = () => (
     <span className="ql-formats">

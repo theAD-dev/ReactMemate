@@ -355,7 +355,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       width: 72,
       className: "ActionBtn",
       renderCell: (params) => {
-        return <ActionsDots saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status}/>
+        return <ActionsDots key={params.row.saleUniqueId} saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status}/>
       },
     },
   ]);

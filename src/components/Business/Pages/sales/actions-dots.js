@@ -5,26 +5,14 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import { fetchduplicateData } from "../../../../APIs/SalesApi";
 import { ProgressSpinner } from 'primereact/progressspinner';
-import SendInvoiceEmailForm from '../../../../ui/send-invoice/send-invoice';
-import { useQuery } from '@tanstack/react-query';
-import { getClientById } from '../../../../APIs/ClientsApi';
-import { useNavigate } from 'react-router-dom';
 import { useSaleQuotationDeleteMutations } from '../../../../entities/sales/models/delete-sale-quotation.mutation';
+import ResendQuoteEmail from '../../features/sales-features/resend-quote/resend-quote';
 
 
 const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [payload, setPayload] = useState({});
   const [isVisibleResendEmail, setIsVisibleResendEmail] = useState(false);
-
-  const clientQuery = useQuery({
-    queryKey: ['id', clientId],
-    queryFn: () => getClientById(clientId),
-    enabled: !!clientId && isVisibleResendEmail,
-    retry: 1,
-  });
 
   const deleteMutations = useSaleQuotationDeleteMutations();
 
@@ -111,13 +99,13 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
         }}
       >
         {options.map((option) => (
-          <MenuItem className='LmenuList d-flex justify-content-between' key={option.label} onClick={(event) => handleClick(event, option)}>
+          <MenuItem className='LmenuList d-flex justify-content-between' key={saleUniqueId+option.label} onClick={(event) => handleClick(event, option)}>
             {option.label}
             {option.icon}
           </MenuItem>
         ))}
       </Menu>
-      <SendInvoiceEmailForm projectId={saleUniqueId} show={isVisibleResendEmail} create={() => { }} isLoading={false} setShow={setIsVisibleResendEmail} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={refreshData} isCreated={true} />
+      <ResendQuoteEmail projectId={saleUniqueId} clientId={clientId} viewShow={isVisibleResendEmail} setViewShow={setIsVisibleResendEmail} projectCardData={refreshData} />
     </>
   );
 };
