@@ -7,7 +7,7 @@ import { Button, Col, Row } from 'react-bootstrap';
 import clsx from 'clsx';
 import { getInvoiceTermsapp, updateTermsapp } from "../../../../APIs/terms-and-condition";
 import { Editor } from "primereact/editor";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from 'sonner';
 import { Placeholder } from "react-bootstrap";
 import { renderHeader } from '../../../../shared/ui/editor/editor-header-template';
