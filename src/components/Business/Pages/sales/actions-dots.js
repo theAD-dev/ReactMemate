@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash } from "react-bootstrap-icons";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
-import Popover from "@mui/material/Popover";
-import CloseIcon from "@mui/icons-material/Close";
 import { fetchduplicateData } from "../../../../APIs/SalesApi";
-import { fetchhistoryData } from "../../../../APIs/SalesApi";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import SendInvoiceEmailForm from '../../../../ui/send-invoice/send-invoice';
 import { useQuery } from '@tanstack/react-query';
 import { getClientById } from '../../../../APIs/ClientsApi';
 import { useNavigate } from 'react-router-dom';
+import { useSaleQuotationDeleteMutations } from '../../../../entities/sales/models/delete-sale-quotation.mutation';
 
 
 const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
@@ -27,6 +25,8 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
     enabled: !!clientId && isVisibleResendEmail,
     retry: 1,
   });
+
+  const deleteMutations = useSaleQuotationDeleteMutations();
 
   const handleClick = async (event, option) => {
     if (option.label === "Replicate") {
@@ -45,6 +45,11 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
       setAnchorEl(null);
     } else if (option.label === 'Label') {
       window.open(`/api/v1/sales/${saleUniqueId}/label/`, '_blank');
+    } else if (option.label === 'Delete' && saleUniqueId) {
+      setLoading(5);
+      await deleteMutations.mutateAsync(saleUniqueId);
+      setLoading(null);
+      refreshData();
     }
   };
 
@@ -71,7 +76,13 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
         <Layers color="#344054" size={20} />
       )
     },
-    status === "Draft" && { label: "Delete", icon: <Trash color="#344054" size={20} /> }
+    status === "Draft" && {
+      label: "Delete", icon: loading === 5 ? (
+        <ProgressSpinner style={{ width: "20px", height: "20px", position: 'absolute', right: '15px', top: '10px' }} />
+      ) : (
+        <Trash color="#344054" size={20} />
+      )
+    }
   ];
 
   return (

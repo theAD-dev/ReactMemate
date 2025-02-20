@@ -7,8 +7,6 @@ import {
   Check,
   ChevronLeft, ArrowDown, ArrowUp, Person,
 } from "react-bootstrap-icons";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
 import Progress from "./progress";
 import ContactSales from "./contact-sales";
 import SalesNote from "./sales-note";
