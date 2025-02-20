@@ -71,6 +71,10 @@ const ScopeOfWorkComponent = () => {
         setFiles(prevFiles => prevFiles.filter(file => file.id !== id));
     };
 
+    const saveAsDraft = () => {
+        
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="newQuotePage existingClients borderSkyColor">
@@ -155,7 +159,7 @@ const ScopeOfWorkComponent = () => {
                             </Link>
 
                             <div className='d-flex' style={{ gap: '12px' }}>
-                                <button type="button" className="cancel-button">
+                                <button type="button" onClick={saveAsDraft} className="cancel-button">
                                     Save Draft
                                 </button>
 

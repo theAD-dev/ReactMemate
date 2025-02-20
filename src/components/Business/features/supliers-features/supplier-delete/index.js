@@ -1,15 +1,17 @@
 import React from 'react'
-import { Button, Spinner } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { toast } from 'sonner';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { deleteSupplier } from '../../../../../APIs/SuppliersApi';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const DeleteSupplier = ({ id }) => {
   const navigate = useNavigate();
   const deleteMutation = useMutation({
-    mutationFn: (data) => toast.error('DElETE API is under construction...'),
+    mutationFn: (data) => deleteSupplier(id),
     onSuccess: () => {
       toast.success(`Supplier deleted successfully`);
       navigate('/suppliers');
@@ -43,9 +45,7 @@ const DeleteSupplier = ({ id }) => {
       <Button type='button' onClick={handleDeleteClient} className='outline-button'>
         {
           deleteMutation.isPending ? (
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
+            <ProgressSpinner style={{ width: '20px', height: '20px' }} />
           ) : <Trash color='#344054' size={20} />
         }
       </Button>

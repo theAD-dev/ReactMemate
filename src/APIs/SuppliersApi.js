@@ -91,3 +91,12 @@ export const supplierstReadApi = async (id) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 }
+
+export const deleteSupplier = async (id) => {
+  const endpoint = `/suppliers/${id}/`;
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
