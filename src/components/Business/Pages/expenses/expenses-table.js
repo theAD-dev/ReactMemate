@@ -1,21 +1,17 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, Plus, Person } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
-
 import style from './expenses.module.scss';
-import { useNavigate } from 'react-router-dom';
-
 import { getListOfExpensens } from "../../../../APIs/expenses-api";
 import { Button } from 'primereact/button';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
-import { Badge } from 'primereact/badge';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -28,8 +24,8 @@ const formatDate = (timestamp) => {
 };
 
 const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
-    const navigate = useNavigate();
     const observerRef = useRef(null);
+    const { trialHeight } = useTrialHeight();
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
@@ -178,11 +174,11 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
         <>
             <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-                scrollHeight={"calc(100vh - 175px)"} className="border" selection={selected}
+                scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={NoDataFoundTemplate}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}

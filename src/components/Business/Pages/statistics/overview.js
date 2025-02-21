@@ -3,10 +3,10 @@ import style from './statistics.module.scss';
 import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
-import { Chart } from 'primereact/chart';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const Overview = () => {
+    const { trialHeight } = useTrialHeight();
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
 
@@ -187,7 +187,7 @@ const Overview = () => {
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
             </div>
-            <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: 'calc(100vh - 175px)', background: '#F8F9FC' }}>
+            <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)`, background: '#F8F9FC' }}>
                 <h2 className={clsx(style.keyResultsTitle)}>Reports Overview</h2>
             </div>
         </>

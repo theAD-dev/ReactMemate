@@ -18,6 +18,7 @@ import AvatarImg from "../../../assets/images/img/Avatar.png";
 import FileUploader from "../../../ui/file-uploader/file-uploader";
 import { Spinner } from "react-bootstrap";
 import { PhoneInput } from "react-international-phone";
+import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 
 const schema = yup.object().shape({
   first_name: yup.string().required("First Name is required"),
@@ -30,6 +31,7 @@ const schema = yup.object().shape({
 });
 
 function MyProfile() {
+  const { trialHeight } = useTrialHeight();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditingGroup, setIsEditingGroup] = useState(false);
@@ -93,10 +95,7 @@ function MyProfile() {
             <div className="headSticky">
               <h1>My Profile </h1>
             </div>
-            <div
-              className={`content_wrap_main ${isEditingGroup ? "isEditingwrap" : ""
-                }`}
-            >
+            <div className={`content_wrap_main ${isEditingGroup ? "isEditingwrap" : ""}`} style={{ paddingBottom: `${trialHeight}px` }}>
               <div className="content_wrapper">
                 <div className="listwrapper">
                   <div className="topHeadStyle">

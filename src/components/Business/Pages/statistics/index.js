@@ -5,8 +5,10 @@ import style from './statistics.module.scss';
 import { ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const StatisticsPage = () => {
+    const { trialHeight } = useTrialHeight();
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
@@ -35,7 +37,7 @@ const StatisticsPage = () => {
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
             </div>
-            <div style={{ padding: "72px 128px", marginBottom: '20px', overflow: 'auto', height: 'calc(100vh - 175px)' }}>
+            <div style={{ padding: "72px 128px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)` }}>
                 <div className='d-flex justify-content-center' style={{ gap: '24px' }}>
                     <Link to={"/statistics/executive"} className={style.box}>
                         <div className={style.executiveBox}>

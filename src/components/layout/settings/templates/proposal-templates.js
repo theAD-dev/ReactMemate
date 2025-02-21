@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
-import { Tooltip } from 'primereact/tooltip';
-import { PlusLg, PencilSquare, InfoCircle } from "react-bootstrap-icons";
+import { PlusLg } from "react-bootstrap-icons";
 import style from './job-template.module.scss';
 import clsx from 'clsx';
 import { getProposalsTemplates } from '../../../../APIs/email-template';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Spinner } from 'react-bootstrap';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const ProposalTemplates = () => {
+    const { trialHeight } = useTrialHeight();
     const [activeTab, setActiveTab] = useState('job-templates');
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplates"],
@@ -35,7 +36,7 @@ const ProposalTemplates = () => {
                             <Button className='outline-button' style={{ position: 'absolute', right: 0, bottom: '16px' }}>Create New Template <PlusLg color='#344054' size={20} /></Button>
                         </Link>
                     </div>
-                    <div className={`content_wrap_main mt-0`}>
+                    <div className={`content_wrap_main mt-0`} style={{ paddingBottom: `${trialHeight}px` }}>
                         <div className='content_wrapper'>
                             <div className='listwrapper' style={{ height: 'calc(100vh - 229px)' }}>
                                 {

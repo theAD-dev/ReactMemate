@@ -15,8 +15,10 @@ import CreateMobileUser from './features/create-mobile-user';
 import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const MobileApp = React.memo(() => {
+    const { trialHeight } = useTrialHeight();
     const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const hasWorkSubscription = profileDataLocal?.has_work_subscription || false;
 
@@ -140,7 +142,7 @@ const MobileApp = React.memo(() => {
                                 }
                             </div>
                         </div>
-                        <div className={`content_wrap_main ${style.contentwrapmain}`}>
+                        <div className={`content_wrap_main ${style.contentwrapmain}`} style={{ paddingBottom: `${trialHeight}px` }}>
                             <div className='content_wrapper'>
                                 <div className="listwrapper border-top">
                                     {

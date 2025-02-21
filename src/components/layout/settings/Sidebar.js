@@ -19,13 +19,15 @@ import {
   Headset,
 } from "react-bootstrap-icons";
 import LogoutButton from "../Login/logout-button";
+import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 const Sidebar = ({ activeTab, setActiveTab }) => {
+  const { trialHeight } = useTrialHeight();
   const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   return (
     <>
       <div className="settings-menu">
         <div className="menuList">
-          <div className="topList">
+          <div className="topList" style={{ height: `calc(100vh - 320px - ${trialHeight}px)` }}>
             <h2>General</h2>
             <ul>
               <li>
@@ -223,10 +225,10 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
           </div>
           <div className="logoutBottomS pt-2" style={{ borderTop: '.5px solid #dedede', height: '200px' }}>
             <div className="userNameList ps-2">
-            <button className="btn d-flex align-items-center gap-3 mb-2 px-0">
-              <Headset size={16} color="#667085"/>
-              <p className="mb-0">Support</p>
-            </button>
+              <button className="btn d-flex align-items-center gap-3 mb-2 px-0">
+                <Headset size={16} color="#667085" />
+                <p className="mb-0">Support</p>
+              </button>
             </div>
             <div className="userNameList ps-2">
               {profileData && (

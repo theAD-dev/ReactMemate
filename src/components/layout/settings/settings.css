@@ -75,7 +75,6 @@
 }
 
 .settings-menu .menuList .topList {
-  height: calc(100vh - 320px);
   overflow: auto;
 }
 .settings-menu .menuList .topList::-webkit-scrollbar {

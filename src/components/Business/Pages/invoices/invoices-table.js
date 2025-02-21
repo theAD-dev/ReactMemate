@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Building, Person, FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Send, Files, FileEarmarkSpreadsheet, Trash, Plus, PlusLg, ListUl, Coin, Calendar3Event, CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
+import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event } from 'react-bootstrap-icons';
 import { Tag } from 'primereact/tag';
 
 import style from './invoice.module.scss';
@@ -22,6 +22,7 @@ import ResendInvoiceEmail from '../../features/invoice-features/resend-email/res
 import { Button } from 'primereact/button';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -36,6 +37,7 @@ const formatDate = (timestamp) => {
 const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
     const observerRef = useRef(null);
     const navigate = useNavigate();
+    const { trialHeight } = useTrialHeight();
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
@@ -319,11 +321,11 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         <>
             <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-                scrollHeight={"calc(100vh - 175px)"} className="border" selection={selected}
+                scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={NoDataFoundTemplate}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}

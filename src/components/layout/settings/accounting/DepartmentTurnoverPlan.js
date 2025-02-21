@@ -14,12 +14,14 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Link } from 'react-router-dom';
 import { useAccountingTargetUpdateMutations } from '../../../../entities/setting/accounting/department-turnover-plan/models/update-accounting-target.mutation';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const schema = yup.object().shape({
     target: yup.number().typeError('Target must be a number').required('Target is required').positive('Target must be positive'),
 });
 
 const DepartmentTurnoverPlan = () => {
+    const { trialHeight } = useTrialHeight();
     const [activeTab, setActiveTab] = useState('industries');
     const [selectedData, setSelectedData] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -89,7 +91,7 @@ const DepartmentTurnoverPlan = () => {
                                 </ul>
                             </div>
                         </div>
-                        <div className={`content_wrap_main w-100 ${style.tablePrimeBar}`}>
+                        <div className={`content_wrap_main w-100 ${style.tablePrimeBar}`} style={{ paddingBottom: `${trialHeight}px` }}>
                             <div className='content_wrapper w-100'>
                                 <div className="listwrapper">
                                     <div className="topHeadStyle pb-4">

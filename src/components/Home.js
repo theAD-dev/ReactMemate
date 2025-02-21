@@ -91,7 +91,7 @@ const Home = () => {
 
                                 </label>
                                 <div className='boxItemBut'>
-                                    <Button variant="link">Connected</Button>
+                                    <Link to={"/settings/integrations?openEmail=true"}><Button variant="link">Connected</Button></Link>
                                 </div>
                             </div>
                         </Col>
@@ -139,7 +139,7 @@ const Home = () => {
 
                                 </label>
                                 <div className='boxItemBut'>
-                                    <Button variant="link">Add Members</Button>
+                                    <Link to={"/settings/users/desktop"}><Button variant="link">Add Members</Button></Link>
                                 </div>
                             </div>
                         </Col>
@@ -165,7 +165,7 @@ const Home = () => {
                                     </div>
                                 </label>
                                 <div className='boxItemBut'>
-                                    <Link to="/sales/newquote/selectyourclient/step1"><Button variant="link">Create New Request</Button></Link>
+                                    <Link to="/sales/newquote/selectyourclient"><Button variant="link">Create New Request</Button></Link>
                                 </div>
                             </div>
                         </Col>
@@ -264,7 +264,7 @@ const Home = () => {
                                 </div>
                                 <h3>Active Quotes</h3>
                                 <div className='countNoBox activeQouteH'>
-                                    <Link to="/tasks">
+                                    <Link to="/sales">
                                         <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div></Link>
                                     <span> <CountUp start={0} end={homeData.active_quotes.cnt} duration={5} /></span></div>
                                 <h4>{formatCurrency(homeData.active_quotes.sum)}</h4>

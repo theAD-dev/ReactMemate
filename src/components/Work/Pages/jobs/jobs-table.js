@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import { getListOfJobs } from '../../../../APIs/jobs-api';
 import ViewJob from '../../features/view-job/view-job';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 export const formatDate = (timestamp) => {
   const date = new Date(timestamp * 1000);
@@ -24,6 +25,7 @@ export const formatDate = (timestamp) => {
 
 const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
   const navigate = useNavigate();
+  const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [show, setShow] = useState({ visible: false, jobId: null });
@@ -217,11 +219,11 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     <>
       <DataTable ref={ref} value={jobs} scrollable selectionMode={'checkbox'}
         columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-        scrollHeight={"calc(100vh - 175px)"} className="border" selection={selected}
+        scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
         onSelectionChange={(e) => setSelected(e.value)}
         loading={loading}
         loadingIcon={loadingIconTemplate}
-        emptyMessage={NoDataFoundTemplate}
+        emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
         sortField={sort?.sortField}
         sortOrder={sort?.sortOrder}
         onSort={onSort}

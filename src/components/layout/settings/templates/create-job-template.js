@@ -1,11 +1,11 @@
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import Sidebar from '../Sidebar';
-import { Calendar3, ChevronLeft, ClockHistory, PencilSquare } from "react-bootstrap-icons";
+import { ChevronLeft, ClockHistory, PencilSquare } from "react-bootstrap-icons";
 import style from './job-template.module.scss';
 import clsx from 'clsx';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Button, Spinner } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { createJobTemplate, deleteJobTemplate, getJobTemplate, updateJobTemplate } from '../../../../APIs/email-template';
 import { InputText } from 'primereact/inputtext';
 import { IconField } from 'primereact/iconfield';
@@ -13,7 +13,7 @@ import { InputIcon } from 'primereact/inputicon';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Editor } from 'primereact/editor';
 import { toast } from 'sonner';
-import { Calendar } from 'primereact/calendar';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -56,10 +56,10 @@ const renderHeader = () => (
 const header = renderHeader();
 
 const CreateJobTemplate = () => {
+    const { trialHeight } = useTrialHeight();
     const navigate = useNavigate();
     const { id } = useParams();
     console.log('id: ', id);
-    const [searchParams] = useSearchParams();
     const editorRef = useRef(null);
     const subjectRef = useRef(null);
     const [name, setName] = useState("");
@@ -164,7 +164,7 @@ const CreateJobTemplate = () => {
                             </ul>
                         </div>
                     </div>
-                    <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB' }}>
+                    <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
                         <div className='content_wrapper d-block px-3' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
                             <a href='/settings/templates/job-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
                                 <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>

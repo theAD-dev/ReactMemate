@@ -11,6 +11,7 @@ import {
   SettingsBankInformation,
   updateBankInformation,
 } from "../../../../APIs/SettingsGeneral";
+import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 
 const schema = yup.object().shape({
   bank_name: yup.string().required("Bank name is required"),
@@ -25,6 +26,7 @@ const schema = yup.object().shape({
 });
 
 const BankDetails = () => {
+  const { trialHeight } = useTrialHeight();
   const [activeTab, setActiveTab] = useState("generalinformation");
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -92,13 +94,13 @@ const BankDetails = () => {
               </ul>
             </div>
           </div>
-          <div className={`content_wrap_main pb-0 ${isEditing ? "isEditingwrap" : ""}`}>
+          <div className={`content_wrap_main pb-0 ${isEditing ? "isEditingwrap" : ""}`} style={{ paddingBottom: `${trialHeight}px` }}>
             <div className="content_wrapper pb-0 h-100">
               <div className={`listwrapper ${styles.listwrapp} pb-0`}>
                 <div className="topHeadStyle">
                   <div>
-                  <h2>Bank Details</h2>
-                  {isEditing && <p>Provide accurate bank account details to ensure smooth transactions and payments.</p>}
+                    <h2>Bank Details</h2>
+                    {isEditing && <p>Provide accurate bank account details to ensure smooth transactions and payments.</p>}
                   </div>
                   {!isEditing && (
                     <Link to="#" onClick={() => setIsEditing(true)}>

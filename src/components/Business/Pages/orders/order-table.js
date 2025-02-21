@@ -13,9 +13,11 @@ import exploreOperatingimg from "../../../../assets/images/icon/exploreOperating
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { formatDate } from '../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
   const observerRef = useRef(null);
+  const { trialHeight } = useTrialHeight();
   const [visible, setVisible] = useState(false);
   const [orders, setOrders] = useState([]);
 
@@ -340,11 +342,11 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     <>
       <DataTable ref={ref} value={orders} scrollable selectionMode={'checkbox'}
         columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-        scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedOrder}
+        scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selectedOrder}
         onSelectionChange={(e) => setSelectedOrder(e.value)}
         loading={loading}
         loadingIcon={loadingIconTemplate}
-        emptyMessage={NoDataFoundTemplate}
+        emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
         sortField={sort?.sortField}
         sortOrder={sort?.sortOrder}
         onSort={onSort}

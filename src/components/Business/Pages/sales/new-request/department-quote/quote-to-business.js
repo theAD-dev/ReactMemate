@@ -57,7 +57,7 @@ const QuoteToBusiness = ({ isLoading, data }) => {
 
                     </Col>
                     <Col sm={12}>
-                        <button onClick={() => setIsEdit(!isEdit)} className='btn p-0' style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Change contact</button>
+                        {/* <button onClick={() => setIsEdit(!isEdit)} className='btn p-0' style={{ color: '#158ECC', fontSize: '14px', fontWeight: '600' }}>Change contact</button> */}
                     </Col>
                 </Row>
             }

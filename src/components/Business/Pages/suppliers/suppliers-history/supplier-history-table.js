@@ -152,7 +152,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
       onSelectionChange={(e) => setSelected(e.value)}
       loading={loading}
       loadingIcon={loadingIconTemplate}
-      emptyMessage={NoDataFoundTemplate}
+      emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
       sortField={sort?.sortField}
       sortOrder={sort?.sortOrder}
       onSort={onSort}

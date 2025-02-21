@@ -13,8 +13,10 @@ import { Plus } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const Desktop = ({ visible, setVisible }) => {
+    const { trialHeight } = useTrialHeight();
     const navigate = useNavigate();
     const [id, setId] = useState(null);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
@@ -116,7 +118,7 @@ const Desktop = ({ visible, setVisible }) => {
                         <Button disabled={desktopUsersQuery?.data?.limits?.total <= activeUserCount?.length} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
                     </div>
                 </div>
-                <div className={`content_wrap_main ${style.contentwrapmain}`}>
+                <div className={`content_wrap_main ${style.contentwrapmain}`} style={{ paddingBottom: `${trialHeight}px` }}>
                     <div className='content_wrapper border-top'>
                         <div className="listwrapper">
                             <div className="topHeadStyle pb-4">

@@ -11,7 +11,7 @@ const TableFilterDropdown = ({ salesData }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]);
-  
+
   const fullNames = [...new Set(salesData.map(item => item.manager.full_name))];
   const statuses = Array.from(new Set(salesData.map(item => item.status)));
   const clientNames = Array.from(new Set(salesData.map(item => item.client.name)));
@@ -86,23 +86,23 @@ const TableFilterDropdown = ({ salesData }) => {
       <>
         {Object.entries(groupedItems).map(([group, items]) => (
           <div key={group}>
-             {items.length > 0 && (
-            <div className="tags-input-container">
-              <ul className= {group}>
-                {items.map((item, index) => (
-                  <li className='mainWrapperTags tag-item-wrap' key={index}>{item}<Button variant="link" size="sm" style={{ marginLeft: '5px' }} onClick={() => handleRemoveTag(item)}><X color="#F96969" size={15} /></Button></li>
-                ))}
-              </ul>
-              <Button
+            {items.length > 0 && (
+              <div className="tags-input-container">
+                <ul className={group}>
+                  {items.map((item, index) => (
+                    <li className='mainWrapperTags tag-item-wrap' key={index}>{item}<Button variant="link" size="sm" style={{ marginLeft: '5px' }} onClick={() => handleRemoveTag(item)}><X color="#F96969" size={15} /></Button></li>
+                  ))}
+                </ul>
+                <Button
 
-                    variant="link"
-                    size="sm"
-                    style={{ marginLeft: '5px' }} 
-                  >
-                    <X color="#F96969" size={20} />
-                  </Button>
-            </div>
-             )}
+                  variant="link"
+                  size="sm"
+                  style={{ marginLeft: '5px' }}
+                >
+                  <X color="#F96969" size={20} />
+                </Button>
+              </div>
+            )}
           </div>
         ))}
       </>
@@ -116,133 +116,133 @@ const TableFilterDropdown = ({ salesData }) => {
   const newLocal = "d-flex justify-content-between align-items-center";
   return (
     <>
-     <button onClick={handleButtonClick}>
+      <button onClick={handleButtonClick}>
         {buttonClicked ? 'Hide Data' : 'Show Data'}
       </button>
-     {buttonClicked && (
-      <Tabs
-        id="controlled-tab-example"
-        activeKey={key}
-        onSelect={(k) => setKey(k)}
-        className="mb-3"
-      >
-        <Tab eventKey="FullName" title="Full Names">
-          <ul>
-            {fullNamesArray.map((itemName, index) => (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    value={itemName}
-                    checked={selectedItems.includes(itemName)}
-                    onChange={() => handleCheckboxChange(itemName)}
-                  />
-                  {itemName}
-                </label>
-              </li>
-            ))}
-               <Row className={newLocal}>
-              <Col className="pr-2">
-                <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
-                Cancel
-              </Button>
-              </Col>
+      {buttonClicked && (
+        <Tabs
+          id="controlled-tab-example"
+          activeKey={key}
+          onSelect={(k) => setKey(k)}
+          className="mb-3"
+        >
+          <Tab eventKey="FullName" title="Full Names">
+            <ul>
+              {fullNamesArray.map((itemName, index) => (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value={itemName}
+                      checked={selectedItems.includes(itemName)}
+                      onChange={() => handleCheckboxChange(itemName)}
+                    />
+                    {itemName}
+                  </label>
+                </li>
+              ))}
+              <Row className={newLocal}>
+                <Col className="pr-2">
+                  <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
+                    Cancel
+                  </Button>
+                </Col>
                 <Col>
-              <Button variant="tabContent tabApply" onClick={applyFilters}>
-                Apply
-              </Button>
-              </Col>
+                  <Button variant="tabContent tabApply" onClick={applyFilters}>
+                    Apply
+                  </Button>
+                </Col>
               </Row>
-          </ul>
-        </Tab>
-        <Tab eventKey="Status" title="Status">
-          <ul>
-            {StatusesArray.map((itemName, index) => (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    value={itemName}
-                    checked={selectedItems.includes(itemName)}
-                    onChange={() => handleCheckboxChange(itemName)}
-                  />
-                  {itemName} ({getStatusCount(itemName)})
-                </label>
-              </li>
-            ))}
+            </ul>
+          </Tab>
+          <Tab eventKey="Status" title="Status">
+            <ul>
+              {StatusesArray.map((itemName, index) => (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value={itemName}
+                      checked={selectedItems.includes(itemName)}
+                      onChange={() => handleCheckboxChange(itemName)}
+                    />
+                    {itemName} ({getStatusCount(itemName)})
+                  </label>
+                </li>
+              ))}
               <Row className="d-flex justify-content-between align-items-center">
-              <Col className="pr-2">
-                <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
-                Cancel
-              </Button>
-              </Col>
+                <Col className="pr-2">
+                  <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
+                    Cancel
+                  </Button>
+                </Col>
                 <Col>
-              <Button variant="tabContent tabApply" onClick={applyFilters}>
-                Apply
-              </Button>
-              </Col>
+                  <Button variant="tabContent tabApply" onClick={applyFilters}>
+                    Apply
+                  </Button>
+                </Col>
               </Row>
-          </ul>
-        </Tab>
-        <Tab eventKey="ClientNames" title="Client Names">
-          <ul>
-            {ClientNamesArray.map((itemName, index) => (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    value={itemName}
-                    checked={selectedItems.includes(itemName)}
-                    onChange={() => handleCheckboxChange(itemName)}
-                  />
-                  {itemName}
-                </label>
-              </li>
-            ))}
+            </ul>
+          </Tab>
+          <Tab eventKey="ClientNames" title="Client Names">
+            <ul>
+              {ClientNamesArray.map((itemName, index) => (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value={itemName}
+                      checked={selectedItems.includes(itemName)}
+                      onChange={() => handleCheckboxChange(itemName)}
+                    />
+                    {itemName}
+                  </label>
+                </li>
+              ))}
               <Row className="d-flex justify-content-between align-items-center">
-              <Col className="pr-2">
-                <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
-                Cancel
-              </Button>
-              </Col>
+                <Col className="pr-2">
+                  <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
+                    Cancel
+                  </Button>
+                </Col>
                 <Col>
-              <Button variant="tabContent tabApply" onClick={applyFilters}>
-                Apply
-              </Button>
-              </Col>
+                  <Button variant="tabContent tabApply" onClick={applyFilters}>
+                    Apply
+                  </Button>
+                </Col>
               </Row>
-          </ul>
-        </Tab>
-        <Tab eventKey="UserNames" title="User Names">
-          <ul>
-            {UserNamesArray.map((itemName, index) => (
-              <li key={index}>
-                <label>
-                  <input
-                    type="checkbox"
-                    value={itemName}
-                    checked={selectedItems.includes(itemName)}
-                    onChange={() => handleCheckboxChange(itemName)}/>
-                  {itemName}
-                </label>
-              </li>
-            ))}
+            </ul>
+          </Tab>
+          <Tab eventKey="UserNames" title="User Names">
+            <ul>
+              {UserNamesArray.map((itemName, index) => (
+                <li key={index}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      value={itemName}
+                      checked={selectedItems.includes(itemName)}
+                      onChange={() => handleCheckboxChange(itemName)} />
+                    {itemName}
+                  </label>
+                </li>
+              ))}
               <Row className="d-flex justify-content-between align-items-center">
-              <Col className="pr-2">
-                <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
-                Cancel
-              </Button>
-              </Col>
+                <Col className="pr-2">
+                  <Button variant="tabContent tabCancel" onClick={clearSelectedTags}>
+                    Cancel
+                  </Button>
+                </Col>
                 <Col>
-              <Button variant="tabContent tabApply" onClick={applyFilters}>
-                Apply
-              </Button>
-              </Col>
+                  <Button variant="tabContent tabApply" onClick={applyFilters}>
+                    Apply
+                  </Button>
+                </Col>
               </Row>
-          </ul>
-        </Tab>
-      </Tabs>
- )}
+            </ul>
+          </Tab>
+        </Tabs>
+      )}
       {/* Display selected items as tags */}
       {filteredItems.length > 0 && renderGroupedItems()}
     </>

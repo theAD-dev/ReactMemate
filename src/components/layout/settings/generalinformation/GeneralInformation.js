@@ -14,6 +14,7 @@ import FileUploader from '../../../../ui/file-uploader/file-uploader';
 import { toast } from 'sonner';
 import { Spinner } from 'react-bootstrap';
 import { PhoneInput } from 'react-international-phone';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const schema = yup.object().shape({
   legal_name: yup.string().required('Company Legal Name is required'),
@@ -34,6 +35,7 @@ const schema = yup.object().shape({
 
 function GeneralInformation() {
   const navigate = useNavigate();
+  const { trialHeight } = useTrialHeight();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('generalinformation');
   const [isEditingGroup, setIsEditingGroup] = useState(false);
@@ -66,8 +68,8 @@ function GeneralInformation() {
     mutation.mutate({ ...data });
   };
 
-  useEffect(()=> {
-    if(data?.main_phone) setValue('main_phone', data.main_phone);
+  useEffect(() => {
+    if (data?.main_phone) setValue('main_phone', data.main_phone);
   }, [data]);
 
   if (isLoading || error) return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
@@ -97,7 +99,7 @@ function GeneralInformation() {
                 </ul>
               </div>
             </div>
-            <div className={`content_wrap_main ${isEditingGroup ? 'isEditingwrap' : ''}`}>
+            <div className={`content_wrap_main ${isEditingGroup ? 'isEditingwrap' : ''}`} style={{ paddingBottom: `${trialHeight}px` }}>
               <div className='content_wrapper'>
                 <div className="listwrapper">
                   <div className="topHeadStyle">

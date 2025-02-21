@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { People, InfoSquare, ChevronLeft, Building, CardList, Search } from "react-bootstrap-icons";
+import { People, InfoSquare, ChevronLeft, CardList, Search } from "react-bootstrap-icons";
 import { NavLink, Link } from "react-router-dom";
 import { newQuoteClientList } from "../../../../../APIs/NewQuoteApis";
 import nodata from "../../../../../assets/images/img/nodata.png";
@@ -7,11 +7,13 @@ import nodatabg from "../../../../../assets/images/img/nodataBg.png";
 import { Col, Placeholder, Row } from 'react-bootstrap';
 import { useDebounce } from 'use-debounce';
 import ImageAvatar from '../../../../../ui/image-with-fallback/image-avatar';
+import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 
 const ExistingClients = () => {
+  const { trialHeight } = useTrialHeight();
+
   const [text, setText] = useState('');
   const [value] = useDebounce(text, 500);
-
   const [itemList, setItemList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
@@ -76,7 +78,7 @@ const ExistingClients = () => {
 
   return (
     <div className="newQuotePage existingClients overflowScroll">
-      <div style={{ height: 'calc(100vh - 249px)' }}>
+      <div style={{ height: `calc(100vh - 249px - ${trialHeight}px)` }}>
         <div className="newQuoteBack">
           <NavLink to="/sales/newquote/selectyourclient">
             <button>

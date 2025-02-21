@@ -7,18 +7,20 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { getIndustriesList, newIndustries,readIndustry ,updateIndustry,deleteIndustry} from '../../../../APIs/industrieslist-api';
+import { getIndustriesList, newIndustries, readIndustry, updateIndustry, deleteIndustry } from '../../../../APIs/industrieslist-api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const CustomersIndustries = () => {
+    const { trialHeight } = useTrialHeight();
     const [activeTab, setActiveTab] = useState('industries');
     const [selectedIndustryId, setSelectedIndustryId] = useState(null);
 
-    
+
     const { data: industriesList, refetch } = useQuery({
         queryKey: ['industriesList'],
         queryFn: getIndustriesList,
@@ -43,7 +45,7 @@ const CustomersIndustries = () => {
     };
 
     useEffect(() => {
- 
+
         if (selectedIndustryId) {
             fetchIndustry(selectedIndustryId);
         }
@@ -55,13 +57,13 @@ const CustomersIndustries = () => {
         queryFn: () => readIndustryQuery(selectedIndustryId),
         enabled: !!selectedIndustryId,
         onSuccess: (data) => {
-            setValue('name', data.name); 
+            setValue('name', data.name);
         }
     });
 
 
 
-    
+
     const handleEditClick = (industryId) => {
         setSelectedIndustryId(industryId);
         setVisible2(true);
@@ -71,7 +73,7 @@ const CustomersIndustries = () => {
     const mutation = useMutation({
         mutationFn: (data) => newIndustries(data),
         onSuccess: () => {
-            refetch();  
+            refetch();
             handleClose();
         },
     });
@@ -95,27 +97,27 @@ const CustomersIndustries = () => {
             if (!id) {
                 throw new Error('Industry ID is missing');
             }
-            return await deleteIndustry(id); 
+            return await deleteIndustry(id);
         },
         onSuccess: () => {
-            refetch();  
+            refetch();
             handleClose();
         },
     });
-    
-    
-    
+
+
+
     const onSubmit = (data) => {
         if (selectedIndustryId) {
-            updateIndustryMutation.mutate({ id: selectedIndustryId, data }); 
+            updateIndustryMutation.mutate({ id: selectedIndustryId, data });
         } else {
             mutation.mutate(data);
         }
         handleClose();
     };
-    
-    
- 
+
+
+
 
     const [visible2, setVisible2] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -160,8 +162,8 @@ const CustomersIndustries = () => {
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
             <Button className='outline-button' onClick={() => deleteIndustryMutation.mutate(selectedIndustryId)}>
-            Delete
-        </Button>
+                Delete
+            </Button>
             <Button className='solid-button' style={{ width: '132px' }} onClick={handleSubmit(onSubmit)}>Save Details</Button>
         </div>
     );
@@ -191,8 +193,8 @@ const CustomersIndustries = () => {
                                 </ul>
                             </div>
                         </div>
-                    
-                        <div className={`content_wrap_main ${style.tablePrimeBar}`}>
+
+                        <div className={`content_wrap_main ${style.tablePrimeBar}`} style={{ paddingBottom: `${trialHeight}px` }}>
                             <div className='content_wrapper'>
                                 <div className="listwrapper">
                                     <div className="topHeadStyle pb-4">
@@ -207,7 +209,7 @@ const CustomersIndustries = () => {
                                     <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
                                         <div className="d-flex flex-column">
                                             <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Industry name</p>
-                                            <InputText {...register('name')}  className={style.inputBox} />
+                                            <InputText {...register('name')} className={style.inputBox} />
                                             {errors.name && <small className="p-error">{errors.name.message}</small>}
                                         </div>
                                     </Dialog>

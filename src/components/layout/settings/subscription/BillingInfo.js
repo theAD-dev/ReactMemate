@@ -10,8 +10,10 @@ import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
 import ChangePaymentMethod from "./features/change-payment-method";
 import { Skeleton } from "primereact/skeleton";
+import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 
 const BillingInfo = () => {
+  const { trialHeight } = useTrialHeight();
   const [activeTab, setActiveTab] = useState("subscription");
   const [generalData, setGeneralData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
@@ -89,7 +91,7 @@ const BillingInfo = () => {
                 </ul>
               </div>
             </div>
-            <div className={`content_wrap_main bg-grey p-4`}>
+            <div className={`content_wrap_main bg-grey p-4`} style={{ paddingBottom: `${trialHeight}px` }}>
               <div className="content_wrapper1">
                 <div className="topHeadStyle rounded mb-3">
                   <div className="pt-3 ps-4">
@@ -110,11 +112,11 @@ const BillingInfo = () => {
                         <div className="d-flex justify-content-between mb-2">
                           <h1 className="font-18 m-0">Payment Info</h1>
                           {
-                            isEdit ? <div className="d-flex align-items-center gap-3"> 
-                            <button onClick={() => setIsEdit(false)} className="text-button p-0" style={{ fontSize: '13px'}}>Cancel</button>
-                            <button onClick={updateBillingPaymentInfo} className="text-button p-0">
-                              {mutation?.isPending ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} /> : "Save"}
-                            </button>
+                            isEdit ? <div className="d-flex align-items-center gap-3">
+                              <button onClick={() => setIsEdit(false)} className="text-button p-0" style={{ fontSize: '13px' }}>Cancel</button>
+                              <button onClick={updateBillingPaymentInfo} className="text-button p-0">
+                                {mutation?.isPending ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} /> : "Save"}
+                              </button>
                             </div>
                               : <button onClick={() => setIsEdit(true)} className="text-button">Edit</button>
                           }

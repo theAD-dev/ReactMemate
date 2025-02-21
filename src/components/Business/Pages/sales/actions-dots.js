@@ -20,7 +20,7 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
     if (option.label === "Replicate") {
       try {
         setLoading(4);
-        const data = await fetchduplicateData(saleUniqueId);
+        await fetchduplicateData(saleUniqueId);
         refreshData()
         handleClose()
       } catch (error) {

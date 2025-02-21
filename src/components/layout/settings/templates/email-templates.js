@@ -2,14 +2,16 @@ import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar';
 import { Tooltip } from 'primereact/tooltip';
-import { PlusLg, PencilSquare, InfoCircle } from "react-bootstrap-icons";
+import { PlusLg, InfoCircle } from "react-bootstrap-icons";
 import style from './job-template.module.scss';
 import clsx from 'clsx';
 import { getEmailTemplates } from '../../../../APIs/email-template';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Spinner } from 'react-bootstrap';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const EmailTemplates = () => {
+    const { trialHeight } = useTrialHeight();
     const [activeTab, setActiveTab] = useState('job-templates');
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
@@ -34,7 +36,7 @@ const EmailTemplates = () => {
                             <Button className='outline-button' style={{ position: 'absolute', right: 0, bottom: '16px' }}>Create New Template <PlusLg color='#344054' size={20} /></Button>
                         </Link>
                     </div>
-                    <div className={`content_wrap_main mt-0`}>
+                    <div className={`content_wrap_main mt-0`} style={{ paddingBottom: `${trialHeight}px` }}>
                         <div className='content_wrapper'>
                             <div className='listwrapper' style={{ height: 'calc(100vh - 229px)' }}>
                                 {
@@ -43,7 +45,7 @@ const EmailTemplates = () => {
                                             <Tooltip position='top' className={style.customTooltip} target={`.info-${index}`} />
                                             <h2 className={clsx(style.heading)}>
                                                 {email?.name}
-                                                { email.type !== 'Custom' &&  <InfoCircle color='#667085' className={`ms-2 info-${index}`} data-pr-tooltip="This is a default email template." /> }
+                                                {email.type !== 'Custom' && <InfoCircle color='#667085' className={`ms-2 info-${index}`} data-pr-tooltip="This is a default email template." />}
                                             </h2>
                                             <Link to={`/settings/templates/email-templates/${email.id}?isCustom=${email.type === 'Custom'}`}>
                                                 <Button className={clsx(style.editPencil, 'text-button p-0')} style={{ color: '#1AB2FF', visibility: 'hidden' }}>edit</Button>
