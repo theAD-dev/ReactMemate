@@ -13,12 +13,14 @@ import { Spinner } from 'react-bootstrap';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { Tag } from 'primereact/tag';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers, refetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
-    const [suppliers, setSuppliers] = useState([]);
+    const { trialHeight } = useTrialHeight();
 
+    const [suppliers, setSuppliers] = useState([]);
     const [page, setPage] = useState(1);
     const [sort, setSort] = useState({ sortField: null, sortOrder: null });
     const [hasMoreData, setHasMoreData] = useState(true);
@@ -193,11 +195,11 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             columnResizeMode="expand" resizableColumns
             onColumnResizeEnd={onResizeColumn}
             showGridlines size={'large'}
-            scrollHeight={"calc(100vh - 175px)"} className="border" selection={selectedSuppliers}
+            scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selectedSuppliers}
             onSelectionChange={(e) => setSelectedSuppliers(e.value)}
             loading={loading}
             loadingIcon={loadingIconTemplate}
-            emptyMessage={NoDataFoundTemplate}
+            emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
             sortField={sort?.sortField}
             sortOrder={sort?.sortOrder}
             onSort={onSort}

@@ -246,7 +246,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
       scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
       loading={isPending}
-      emptyMessage={NoDataFoundTemplate}
+      emptyMessage={<NoDataFoundTemplate isDataExist={!!clientOrders.length}/>}
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
       <Column field="number" header="Project ID" frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>

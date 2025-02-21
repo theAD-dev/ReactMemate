@@ -157,7 +157,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             onSelectionChange={(e) => setSelectedClients(e.value)}
             loading={loading}
             loadingIcon={loadingIconTemplate}
-            emptyMessage={NoDataFoundTemplate}
+            emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted} />}
             sortField={sort?.sortField}
             sortOrder={sort?.sortOrder}
             onSort={onSort}

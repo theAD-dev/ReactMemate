@@ -13,8 +13,10 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const CustomersDiscountCategory = () => {
+     const { trialHeight } = useTrialHeight();
     const [activeTab, setActiveTab] = useState('industries');
     const [selectedIndustryId, setSelectedIndustryId] = useState(null);
     
@@ -170,7 +172,7 @@ const CustomersDiscountCategory = () => {
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                     <div className="settings-content setModalelBoots">
                         <div className='headSticky'>
-                            <h1>Templates</h1>
+                            <h1>Customers Settings</h1>
                             <div className='contentMenuTab'>
                                 <ul>
                                     <li><Link to="/settings/customerssettings/industries">Industries</Link></li>
@@ -178,7 +180,7 @@ const CustomersDiscountCategory = () => {
                                 </ul>
                             </div>
                         </div>
-                        <div className={`content_wrap_main ${style.tablePrimeBar}`}>
+                        <div className={`content_wrap_main ${style.tablePrimeBar}`} style={{ paddingBottom: `${trialHeight}px` }}>
                             <div className='content_wrapper'>
                                 <div className="listwrapper">
                                     <div className="topHeadStyle pb-4">

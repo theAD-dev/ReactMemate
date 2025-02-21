@@ -8,6 +8,7 @@ import { Row } from 'primereact/row';
 
 import style from './approval.module.scss';
 import { Tag } from 'primereact/tag';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 export const CustomerService = {
     getData() {
@@ -122,6 +123,7 @@ export const CustomerService = {
 }
 
 const ApprovalTable = () => {
+    const { trialHeight } = useTrialHeight();
     const [approvals, setApprovals] = useState([]);
     const [selectedApprovals, setSelectedApprovals] = useState(null);
 
@@ -244,7 +246,7 @@ const ApprovalTable = () => {
             </DataTable>
 
             <DataTable value={approvals} header={header2} footerColumnGroup={footerGroup} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns
-                showGridlines size={'large'} scrollHeight="calc(50vh - 150px)" className="border-0s" selection={selectedApprovals}
+                showGridlines size={'large'} scrollHeight={`calc(50vh - 150px - ${trialHeight}px)`} className="border-0s" selection={selectedApprovals}
                 onSelectionChange={(e) => setSelectedApprovals(e.value)}
             >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>

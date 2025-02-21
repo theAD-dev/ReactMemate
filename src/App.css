@@ -34,7 +34,7 @@
 .table-responsive {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    overflow-x: hidden;
+    overflow-x: auto !important;
 }
 .slide-up {
     transition: transform 0.9s ease-in-out;

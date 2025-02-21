@@ -6,8 +6,10 @@ import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const KeyResultsPage = () => {
+    const { trialHeight } = useTrialHeight();
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
@@ -36,7 +38,7 @@ const KeyResultsPage = () => {
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
             </div>
-            <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: 'calc(100vh - 175px)' }}>
+            <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)` }}>
                 <h2 className={clsx(style.keyResultsTitle)}>Key Results</h2>
                 <Button className={clsx(style.button, "outline-button mx-auto")}>
                     <CalendarIcon color='#475467' size={16} />

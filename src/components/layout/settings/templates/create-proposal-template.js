@@ -13,6 +13,7 @@ import { InputIcon } from 'primereact/inputicon';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Editor } from 'primereact/editor';
 import { toast } from 'sonner';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -35,15 +36,13 @@ const renderHeader = () => (
 const header = renderHeader();
 
 const CreateProposalTemplate = () => {
+    const { trialHeight } = useTrialHeight();
     const [activeTab, setActiveTab] = useState('job-templates');
     const navigate = useNavigate();
     const { id } = useParams();
-    const [searchParams] = useSearchParams();
 
     const [name, setName] = useState("");
     const [sections, setSections] = useState([{ title: "", description: "", delete: false }]);
-
-    const isCustom = searchParams.get('isCustom');
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -140,7 +139,7 @@ const CreateProposalTemplate = () => {
 
     const handleDeleteSection = (index) => {
         setSections((prevSections) =>
-            prevSections.map((section, i) => 
+            prevSections.map((section, i) =>
                 i === index ? { ...section, delete: true } : section
             )
         );
@@ -169,7 +168,7 @@ const CreateProposalTemplate = () => {
                             </ul>
                         </div>
                     </div>
-                    <div className={`content_wrap_main mt-0 ${style.createProposal}`} style={{ background: '#F9FAFB' }}>
+                    <div className={`content_wrap_main mt-0 ${style.createProposal}`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
                         <div className='content_wrapper d-block px-3' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
                             <a href='/settings/templates/proposal-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
                                 <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
@@ -257,7 +256,7 @@ const CreateProposalTemplate = () => {
                     </div>
 
                     <div className={style.bottom}>
-                        { id ? (
+                        {id ? (
                             <Button onClick={handleDelete} className='danger-outline-button'>
                                 Delete Template {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>

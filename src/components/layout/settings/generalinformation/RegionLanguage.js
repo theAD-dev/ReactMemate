@@ -11,8 +11,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getReginalAndLanguage, updateReginalAndLanguage } from "../../../../APIs/SettingsGeneral";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 
 const RegionLanguage = () => {
+  const { trialHeight } = useTrialHeight();
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("generalinformation");
   const [timezonesOptions, setTimezonesOptions] = useState([]);
@@ -93,7 +95,7 @@ const RegionLanguage = () => {
             </div>
           </div>
           <div
-            className={`content_wrap_main ${isEditing ? "isEditingwrap" : ""}`}
+            className={`content_wrap_main ${isEditing ? "isEditingwrap" : ""}`} style={{ paddingBottom: `${trialHeight}px` }}
           >
             <div className="content_wrapper">
               <div className={`listwrapper ${styles.listwrapp}`}>
@@ -113,7 +115,7 @@ const RegionLanguage = () => {
                   <li>
                     <span>Country</span>
                     {!isEditing ? (
-                      <strong>{reginalAndLanguageQuery?.data?.country === 1 && 'Australia' }</strong>
+                      <strong>{reginalAndLanguageQuery?.data?.country === 1 && 'Australia'}</strong>
                     ) : (
                       <Dropdown
                         value={country}

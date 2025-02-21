@@ -14,8 +14,10 @@ import GoogleMap from "../../../../assets/images/icon/google_maps_ico.png";
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const Location = () => {
+    const { trialHeight } = useTrialHeight();
     const [visible, setVisible] = useState(false);
     const [desktopsUsersOptions, setDesktopUserOptions] = useState([]);
     const [activeTab, setActiveTab] = useState('locations');
@@ -121,7 +123,7 @@ const Location = () => {
                             <Button onClick={handleCreateLocation} disabled={locationsQuery?.data?.locations?.length >= locationsQuery?.data?.limits?.total} style={{ position: 'absolute', right: 0, bottom: '4px' }} className={style.addUserBut}>Add <Plus size={20} color="#000" /></Button>
                         </div>
                     </div>
-                    <div className={`content_wrap_main ${style.contentwrapmain}`}>
+                    <div className={`content_wrap_main ${style.contentwrapmain}`} style={{ paddingBottom: `${trialHeight}px` }}>
                         <div className='content_wrapper'>
                             <div className="listwrapper">
                                 <div className="topHeadStyle w-100 pb-4 mb-4 border-bottom">

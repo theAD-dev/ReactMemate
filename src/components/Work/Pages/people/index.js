@@ -7,8 +7,10 @@ import { Button } from 'react-bootstrap';
 import PeoplesTable from './peoples-table';
 import style from './people.module.scss';
 import DesktopPeoplesTable from './desktop-user-table';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const PeoplePage = () => {
+    const { trialHeight } = useTrialHeight();
     const handleSearch = (e) => { }
     return (
         <PrimeReactProvider className='peoples-page'>
@@ -33,7 +35,7 @@ const PeoplePage = () => {
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                 </div>
             </div>
-            <div style={{ maxHeight: "calc(100vh - 175px)", overflow: 'auto' }}>
+            <div style={{ maxHeight: `calc(100vh - 175px - ${trialHeight}px)`, overflow: 'auto' }}>
                 <DesktopPeoplesTable />
                 <PeoplesTable />
             </div>

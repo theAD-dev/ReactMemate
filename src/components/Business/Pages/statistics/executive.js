@@ -7,6 +7,7 @@ import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { Chart } from 'primereact/chart';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const verticalLinePlugin = {
     id: 'verticalLine',
@@ -42,6 +43,7 @@ const verticalLinePlugin = {
 ChartJS.register(...registerables, annotationPlugin, verticalLinePlugin);
 
 const Executive = () => {
+    const { trialHeight } = useTrialHeight();
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
 
@@ -255,7 +257,7 @@ const Executive = () => {
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
             </div>
-            <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: 'calc(100vh - 175px)', background: '#F8F9FC' }}>
+            <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)`, background: '#F8F9FC' }}>
                 <h2 className={clsx(style.keyResultsTitle)}>Executive</h2>
                 <Button className={clsx(style.button, "outline-button mx-auto")}>
                     <CalendarIcon color='#475467' size={16} />

@@ -234,6 +234,7 @@
 .salesTableWrap .select-menu .select-btn span {
   padding-left: 9px;
   color: #667085;
+  white-space: nowrap;
 }
 /* .salesTableWrap .popupcrossInfo {
   position: absolute !important;
@@ -2292,7 +2293,6 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-family: Inter;
 }
 
-
 .salesTableWrap .SalesContact textarea.form-control {
   min-height: calc(1.5em + 0.75rem + calc(var(--bs-border-width) * 2));
   color: var(--Gray-500, #667085);
@@ -2635,78 +2635,6 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   border: 1px solid var(--Gray-300, #d0d5dd) !important;
 }
 
-.salesTableWrap table thead tr th:nth-child(3) {
-  position: sticky;
-  left: 192px;
-  min-width: 270px;
-  z-index: 5;
-  border-right: 1px solid var(--color10) !important;
-}
-.salesTableWrap table thead tr th:nth-child(4) {
-  position: sticky;
-  left: 462px;
-  border-left: 0 !important;
-  border-right: 1px solid var(--color10) !important;
-  z-index: 8;
-}
-.salesTableWrap table tbody tr td:nth-child(4):before,
-.salesTableWrap table thead tr th:nth-child(4):before {
-  position: absolute;
-  background: var(--color10);
-  content: "";
-  left: -1px;
-  width: 0px;
-  height: 100%;
-  top: 0;
-  z-index: 0;
-}
-.salesTableWrap table tbody tr td:nth-child(4)::after,
-.salesTableWrap table thead tr th:nth-child(4)::after {
-  position: absolute;
-  background: var(--color10);
-  content: "";
-  right: -1px;
-  width: 1px;
-  height: 100%;
-  top: 0;
-  /* box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.10); */
-  z-index: 0;
-}
-.salesTableWrap table thead tr th:nth-child(2) {
-  position: sticky;
-  min-width: 144px;
-  left: 48px;
-  z-index: 8;
-  border-right: 0px solid var(--color10) !important;
-  padding-left: 0px !important;
-}
-.salesTableWrap table tbody tr td:nth-child(2):before {
-  position: absolute;
-  background: var(--color10);
-  content: "";
-  right: 0;
-  width: 1px;
-  height: 100%;
-  top: 0;
-}
-.salesTableWrap table tbody tr td:nth-child(4):before,
-.salesTableWrap table thead tr th:nth-child(4):before {
-  left: 0px;
-  width: 0px;
-}
-.salesTableWrap table thead tr th:nth-child(4) {
-  border-right: 0px solid var(--color10) !important;
-}
-.salesTableWrap table thead tr th:nth-child(2):before {
-  position: absolute;
-  background: var(--color10);
-  content: "";
-  right: 0;
-  width: 1px;
-  height: 100%;
-  top: 0;
-  z-index: 0;
-}
 .styleActionBtn .message.true {
   pointer-events: none;
   opacity: 0;
@@ -2784,30 +2712,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   .salesTableWrap .mainStyleMin {
     width: 221px;
   }
-  .salesTableWrap table tbody tr td:nth-child(4):before,
-  .salesTableWrap table thead tr th:nth-child(4):before {
-    left: 0px;
-    width: 1px;
-  }
-  .salesTableWrap table tbody tr td:nth-child(4)::after,
-  .salesTableWrap table thead tr th:nth-child(4)::after {
-    position: absolute;
-    background: var(--color10);
-    content: "";
-    right: 0;
-    width: 1px;
-    height: 100%;
-    top: 0;
-    box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.1);
-    z-index: 0;
-  }
-  .salesTableWrap table thead tr th:nth-child(3) {
-    position: sticky;
-    left: 192px;
-    width: 270px;
-    z-index: 5;
-    border-right: 0px solid var(--color10) !important;
-  }
+
   .salesTableWrap .table-responsive {
     overflow-x: auto;
   }
@@ -2815,81 +2720,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
     position: relative;
     width: 200px;
   }
-  .salesTableWrap .salesTableWrap table thead tr th:nth-child(2),
-  .salesTableWrap table tbody tr td:nth-child(2) {
-    position: sticky;
-    left: 48px;
-
-    z-index: 8;
-    border-right: 0px solid var(--color10) !important;
-    padding-left: 0px !important;
-  }
-  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(2):before {
-    position: absolute;
-    background: var(--color10);
-    content: "";
-    right: 0;
-    width: 1px;
-    height: 100%;
-    top: 0;
-  }
-  .salesTableWrap .salesTableWrap table thead tr th:nth-child(2):before {
-    position: absolute;
-    background: var(--color10);
-    content: "";
-    right: 0;
-    width: 1px;
-    height: 100%;
-    top: 0;
-    z-index: 0;
-  }
-
-  .salesTableWrap .salesTableWrap table thead tr th:nth-child(3),
-  .salesTableWrap table tbody tr td:nth-child(3) {
-    position: sticky;
-    left: 192px;
-    min-width: 270px;
-    z-index: 5;
-    border-right: 0px solid var(--color10) !important;
-  }
-
-  .salesTableWrap table thead tr th:nth-child(4) {
-    left: 462px;
-  }
-  .salesTableWrap .salesTableWrap table thead tr th:nth-child(4),
-  .salesTableWrap table tbody tr td:nth-child(4) {
-    position: sticky;
-    left: 462px;
-    border-left: 0 !important;
-    border-right: 0px solid var(--color10) !important;
-    z-index: 8;
-  }
-  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(4):before,
-  .salesTableWrap table thead tr th:nth-child(4):before {
-    position: absolute;
-    background: var(--color10);
-    content: "";
-    left: 0;
-    width: 1px;
-    height: 100%;
-    top: 0;
-    z-index: 0;
-  }
-  .salesTableWrap .salesTableWrap table tbody tr td:nth-child(4)::after,
-  .salesTableWrap table thead tr th:nth-child(4)::after {
-    position: absolute;
-    background: var(--color10);
-    content: "";
-    right: 0;
-    width: 1px;
-    height: 100%;
-    top: 0;
-    box-shadow: 2px 0px 4px 0px rgba(0, 0, 0, 0.1);
-    z-index: 0;
-  }
-  .salesTableWrap table thead tr th:nth-child(2) {
-    left: 48px;
-  }
+  
 }
 
 .salesOverlay .p-overlaypanel-content {
@@ -2906,4 +2737,52 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+}
+
+.salesTableWrap table tbody tr td:nth-child(4),
+.salesTableWrap table thead tr th:nth-child(4) {
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px -6px 0px 0px);
+}
+
+.salesTableWrap table {
+  border-spacing: 0 !important;
+  border-collapse: separate !important;
+}
+
+.salesTableWrap table tbody tr td,
+.salesTableWrap table tbody tr th {
+  border-right: 0.5px solid #eaecf0 !important;
+  border-left: 0.5px solid #eaecf0 !important;
+}
+
+.salesTableWrap table thead tr th:nth-child(4),
+.salesTableWrap table tbody tr td:nth-child(4) {
+  position: sticky;
+  left: 463px;
+  z-index: 8;
+  min-width: 254px;
+}
+
+.salesTableWrap table thead tr th:nth-child(3),
+.salesTableWrap table tbody tr td:nth-child(3) {
+  position: sticky;
+  left: 193px;
+  min-width: 270px;
+  z-index: 5;
+}
+
+.salesTableWrap table thead tr th:nth-child(2),
+.salesTableWrap table tbody tr td:nth-child(2) {
+  position: sticky;
+  min-width: 144px;
+  left: 49px;
+  z-index: 8;
+  padding-left: 0px !important;
+  border-left: 0px !important;
+}
+
+.salesTableWrap table thead tr th:first-child,
+.salesTableWrap table tbody tr td:first-child {
+  border-right: 0px !important;
 }

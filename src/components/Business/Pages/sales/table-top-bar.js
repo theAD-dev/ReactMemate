@@ -149,26 +149,28 @@ const TableTopBar = ({
 
 
   const handleDataApply = (data) => {
-    const startDate = data.startDate
-      ? data.startDate.toISOString().split("T")[0]
-      : "";
-    const endDate = data.endDate
-      ? data.endDate.toISOString().split("T")[0]
-      : "";
-    let item = [`${startDate} - ${endDate}`];
-    setFilteredItems((prev) => {
-      return [...prev, item];
-    });
-    setSelectedRange(item);
+    const formatDate = (date) => date ? new Date(date).toLocaleDateString("en-CA") : "";
+
+    const startDate = formatDate(data.startDate);
+    const endDate = formatDate(data.endDate);
+    const newRange = `${startDate} - ${endDate}`;
+    setFilteredItems((prev) => [...prev, newRange]);
+    setSelectedRange(newRange);
 
     setButtonClicked(false);
+
+    // Filter rows based on the created timestamp
     const filteredRows = rows[0].filter((item) => {
+      const itemDate = new Date(parseInt(item.created) * 1000) // Convert UNIX timestamp to Date
+        .toLocaleDateString("en-CA"); // Convert to YYYY-MM-DD
+
       return (
         selectedItems.includes(item.client.name) ||
         selectedItems.includes(item.status) ||
-        selectedRange.includes(`${item.startDate} - ${item.endDate}`)
+        (itemDate >= startDate && itemDate <= endDate) // Correctly filter by date range
       );
     });
+
     onRowsFilterChange(filteredRows);
   };
 
@@ -286,6 +288,8 @@ const TableTopBar = ({
   };
 
   const handleRemovegroup = (groupName) => {
+    console.log('groupName: ', groupName, selectedItems, selectedRange);
+
     onRowsFilterChange(salesData);
     setSelectedItems((prevSelectedItems) =>
       prevSelectedItems.filter((item) => {
@@ -327,14 +331,17 @@ const TableTopBar = ({
                   {items.map((item, index) => (
                     <li className="mainWrapperTags tag-item-wrap" key={index}>
                       {item}
-                      <Button
-                        variant="link"
-                        size="sm"
-                        style={{ marginLeft: "5px" }}
-                        onClick={() => handleRemoveTag(item)}
-                      >
-                        <X color="#F96969" size={15} />
-                      </Button>
+
+                      {
+                        items.length > 1 && <Button
+                          variant="link"
+                          size="sm"
+                          style={{ marginLeft: "5px" }}
+                          onClick={() => handleRemoveTag(item)}
+                        >
+                          <X color="#F96969" size={15} />
+                        </Button>
+                      }
                     </li>
                   ))}
                   <Button
@@ -375,7 +382,7 @@ const TableTopBar = ({
 
   return (
     <>
-      <div className={`${selectClass} flexbetween paddingLR tableTopBar tableTopBarSales`}>
+      <div className={`${selectClass} flexbetween paddingLR tableTopBar tableTopBarSales`} style={{ borderBottom: '1px solid #f2f2f2' }}>
         {selectedRow.length === 0 ? (
           <Container fluid>
             <Row style={{ display: "flex", alignItems: "center" }}>
@@ -552,6 +559,7 @@ const TableTopBar = ({
           </Container>
         )}
       </div>
+
       {buttonClicked && (
         <Tabs
           id="controlled-tab-example"

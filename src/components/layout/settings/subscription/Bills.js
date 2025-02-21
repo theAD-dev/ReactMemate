@@ -5,6 +5,7 @@ import { FilePdf, CreditCard2Front } from "react-bootstrap-icons";
 import { useQuery } from '@tanstack/react-query';
 import { getSubscriptionsBills } from '../../../../APIs/settings-subscription-api';
 import { Spinner } from 'react-bootstrap';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 function formatDate(timestampMs) {
   const date = new Date(+timestampMs * 1000);
@@ -12,6 +13,7 @@ function formatDate(timestampMs) {
 }
 
 const Bills = () => {
+  const { trialHeight } = useTrialHeight();
   const [activeTab, setActiveTab] = useState('subscription');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -48,7 +50,7 @@ const Bills = () => {
               </ul>
             </div>
           </div>
-          <div className="content_wrap_main bg-grey p-4">
+          <div className="content_wrap_main bg-grey p-4" style={{ paddingBottom: `${trialHeight}px` }}>
             <div className="content_wrapper">
               <div className="subscriptionBill">
                 <div className="topHeadStyle">

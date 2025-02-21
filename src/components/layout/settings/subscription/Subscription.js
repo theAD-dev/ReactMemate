@@ -12,8 +12,10 @@ import AddRemoveMobileUser from "./features/add-remove-mobile-user";
 import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { formatAUD } from "../../../../shared/lib/format-aud";
+import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 
 const Subscription = () => {
+  const { trialHeight } = useTrialHeight();
   const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
@@ -77,7 +79,7 @@ const Subscription = () => {
                 </ul>
               </div>
             </div>
-            <div className={`content_wrap_main pt-4`}>
+            <div className={`content_wrap_main pt-4`} style={{ paddingBottom: `${trialHeight}px` }}>
               <div className="content_wrapper">
                 <div className={`listwrapper ${styles.listsubscription}`}>
                   <div className="topHeadStyle">

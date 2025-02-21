@@ -8,19 +8,29 @@ import { Button } from 'react-bootstrap';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 
-const NoDataFoundTemplate = () => {
+const NoDataFoundTemplate = ({ isDataExist = true }) => {
     return (
         <div className={clsx(style.noDataBox)}>
             <div className='position-relative d-flex flex-column'>
                 <img src={NodataImg} alt='no-data' />
-                <img className={clsx(style.searchImg)} src={SearchIcon} alt='search' />
             </div>
-            <h2 className={clsx(style.title)}>There is no results</h2>
-            <p className={clsx(style.subTitle)}>
-                The user you are looking for doesn't exist. <br />Here are some helpful links:
-            </p>
-            <Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button>
-            <Link to={"#"}><span className={clsx(style.supportext)}>Support</span></Link>
+            {
+                isDataExist ? (
+                    <>
+                        <h2 className={clsx(style.title)}>There is no results</h2>
+                        <p className={clsx(style.subTitle)}>
+                            The user you are looking for doesn't exist. <br />Here are some helpful links:
+                        </p>
+                        <Link to={"/"}><Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button></Link>
+                        <Link to={"#"}><span className={clsx(style.supportext)}>Support</span></Link>
+                    </>
+                ) : (
+                    <>
+                        <h2 className={clsx(style.title)}>No historical records yet.</h2>
+                    </>
+                )
+            }
+
         </div>
     )
 }

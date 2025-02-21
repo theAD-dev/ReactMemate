@@ -11,6 +11,7 @@ import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-t
 import clsx from 'clsx';
 import { FileText } from 'react-bootstrap-icons';
 import ViewTaskModal from '../../features/task/view-task/view-task';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -24,6 +25,7 @@ const formatDate = (timestamp) => {
 
 const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
     const navigate = useNavigate();
+    const { trialHeight } = useTrialHeight();
     const observerRef = useRef(null);
     const [visible, setVisible] = useState(false);
     const [taskId, setTaskId] = useState(null);
@@ -148,11 +150,11 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <>
             <DataTable ref={ref} value={tasks} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-                scrollHeight={"calc(100vh - 175px)"} className="border" selection={selected}
+                scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={NoDataFoundTemplate}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}

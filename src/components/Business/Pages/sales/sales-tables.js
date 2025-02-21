@@ -5,14 +5,11 @@ import {
   FilePdf,
   Link45deg,
   Check,
-  ChevronLeft, ArrowDown, ArrowUp, Person,
+  ArrowDown, ArrowUp
 } from "react-bootstrap-icons";
 import Progress from "./progress";
 import ContactSales from "./contact-sales";
 import SalesNote from "./sales-note";
-import NodataImg from "../../../../assets/images/img/NodataImg.png";
-import nodataBg from "../../../../assets/images/nodataBg.png";
-import SearchIcon from "../../../../assets/images/icon/searchIcon.png";
 import Button from "react-bootstrap/Button";
 import QuoteLost from "./quote-lost";
 import QuoteWon from "./quote-won";
@@ -26,6 +23,8 @@ import { AvatarGroup } from 'primereact/avatargroup';
 
 import { OverlayPanel } from 'primereact/overlaypanel';
 import ImageAvatar from "../../../../ui/image-with-fallback/image-avatar";
+import NoDataFoundTemplate from "../../../../ui/no-data-template/no-data-found-template";
+import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 
 
 const CustomAvatarGroup = ({ params }) => {
@@ -66,7 +65,8 @@ const CustomAvatarGroup = ({ params }) => {
 };
 
 
-const SalesTables = ({ profileData, salesData, fetchData }) => {
+const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
+  const { trialHeight } = useTrialHeight();
   const [sortField, setSortField] = useState("Quote");
   const [sortDirection, setSortDirection] = useState("asc");
   const [salesDataState, setSalesDataState] = useState([]);
@@ -280,7 +280,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       width: 183,
       renderCell: (params) => (
         <div>
-          <ContactSales type={params.value} saleUniqueId={params.row.saleUniqueId} refreshData={refreshData} created={params.row.created}/>
+          <ContactSales type={params.value} saleUniqueId={params.row.saleUniqueId} refreshData={refreshData} created={params.row.created} />
         </div>
       ),
     },
@@ -355,7 +355,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
       width: 72,
       className: "ActionBtn",
       renderCell: (params) => {
-        return <ActionsDots saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status}/>
+        return <ActionsDots key={params.row.saleUniqueId} saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status} />
       },
     },
   ]);
@@ -470,7 +470,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
   return (
     <div className="salesTableWrap">
       <TableTopBar profileData={profileData} salesData={salesData} rowsfilter={rowsfilter} removeRowMulti={removeRow} selectedUniqueIds={selected1UniqueIds()} onRowsFilterChange={handleRowsFilterChange} rows={sortedSalesData} setSelectedRows={setSelectedRows} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
-      <Table responsive>
+      {!isLoading && <Table responsive style={{ marginBottom: `${trialHeight}px` }}>
         <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
           <tr>
             <th>
@@ -503,36 +503,8 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
         <tbody>
           {rows.length === 0 ? (
             <tr className="nodataTableRow">
-              <td colSpan={columns.length} style={{ textAlign: "center" }}>
-                <div style={{ textAlign: "center", marginTop: "20px" }}>
-                  <div
-                    className="Nodata"
-                    style={{ background: `url(${nodataBg})` }}
-                  >
-                    <div className="image">
-                      <img src={NodataImg} alt="NodataImg" />
-                      <img
-                        className="SearchIcon"
-                        src={SearchIcon}
-                        alt="SearchIcon"
-                      />
-                    </div>
-                    <h2>There is no results</h2>
-                    <p>
-                      The user you are looking for doesn't exist. Here are some
-                      helpful links:
-                    </p>
-                    <Button className="gobackButton mb-4 mt-4" variant="link">
-                      {" "}
-                      <ChevronLeft color="#000" size={20} />
-                      Go back
-                    </Button>
-                    <Button className="gobackSupport mt-4" variant="link">
-                      {" "}
-                      Support
-                    </Button>
-                  </div>
-                </div>
+              <td colSpan={columns.length} style={{ textAlign: "center", overflow: 'auto' }}>
+                <NoDataFoundTemplate isDataExist={!!salesData.length} />
               </td>
             </tr>
           ) : (
@@ -560,7 +532,7 @@ const SalesTables = ({ profileData, salesData, fetchData }) => {
             ))
           )}
         </tbody>
-      </Table>
+      </Table>}
     </div>
   );
 };

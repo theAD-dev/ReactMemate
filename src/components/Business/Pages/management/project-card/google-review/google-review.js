@@ -1,5 +1,4 @@
 import { useState } from "react";
-import SendEmailForm from "../../../../../../ui/send-email/send-email-form";
 import { getClientById } from "../../../../../../APIs/ClientsApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
