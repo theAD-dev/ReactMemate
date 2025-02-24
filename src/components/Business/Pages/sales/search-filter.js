@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Search } from 'react-bootstrap-icons';
 
 const SearchFilter = ({ rows, onRowsFilterChange1 }) => {
-  console.log('rows: ', rows);
   const [query, setQuery] = useState('');
   const [key, setKey] = useState(null);
 

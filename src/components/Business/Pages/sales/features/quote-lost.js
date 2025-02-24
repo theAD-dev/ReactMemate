@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import SalesIcon from "../../../../assets/images/icon/SalesIcon.svg";
-import ArchiveIcon from "../../../../assets/images/icon/archive.svg"
-import { markLost } from "../../../../APIs/SalesApi";
+import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
+import ArchiveIcon from "../../../../../assets/images/icon/archive.svg"
+import { markLost } from "../../../../../APIs/SalesApi";
 
 const QuoteWon = ({ salesData, saleUniqueId, LostQuote, quoteType, onRemoveRow }) => {
   const [open, setOpen] = React.useState(false);

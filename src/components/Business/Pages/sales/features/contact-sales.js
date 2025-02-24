@@ -2,10 +2,10 @@ import React from 'react';
 import { Envelope, Telephone, Calendar, X } from "react-bootstrap-icons";
 import { Button, ButtonToolbar, OverlayTrigger, Popover } from 'react-bootstrap';
 import ContactAdd from "./contact-add";
-import phonecallgra from "../../../../assets/images/icon/phonecallgra.svg";
-import mailgradi from "../../../../assets/images/icon/mailgradi.svg";
-import calendargradi from "../../../../assets/images/icon/calendargradi.svg";
-import styles from './sales.module.scss';
+import phonecallgra from "../../../../../assets/images/icon/phonecallgra.svg";
+import mailgradi from "../../../../../assets/images/icon/mailgradi.svg";
+import calendargradi from "../../../../../assets/images/icon/calendargradi.svg";
+import styles from '../sales.module.scss';
 
 // Format Date
 const formatDate = (timestamp) => {
@@ -41,7 +41,7 @@ const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
     <>
       <div className="innerTableStyle">
         <ul>
-          {type && type.length && type.map((item, index) => (
+          {type?.map((item, index) => (
             <li key={index}>
               <ButtonToolbar key={index}>
                 <OverlayTrigger

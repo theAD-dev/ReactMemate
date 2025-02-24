@@ -10,8 +10,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import saleContact from "../../../../assets/images/icon/sale-01.svg";
-import { fetchContacts } from '../../../../APIs/SalesApi';
+import saleContact from "../../../../../assets/images/icon/sale-01.svg";
+import { fetchContacts } from '../../../../../APIs/SalesApi';
 
 const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) => {
 
