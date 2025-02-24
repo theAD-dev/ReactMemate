@@ -3,10 +3,10 @@ import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash } from "react
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
-import { fetchduplicateData } from "../../../../APIs/SalesApi";
+import { fetchduplicateData } from "../../../../../APIs/SalesApi";
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { useSaleQuotationDeleteMutations } from '../../../../entities/sales/models/delete-sale-quotation.mutation';
-import ResendQuoteEmail from '../../features/sales-features/resend-quote/resend-quote';
+import { useSaleQuotationDeleteMutations } from '../../../../../entities/sales/models/delete-sale-quotation.mutation';
+import ResendQuoteEmail from '../../../features/sales-features/resend-quote/resend-quote';
 
 
 const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {

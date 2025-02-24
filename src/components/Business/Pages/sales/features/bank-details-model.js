@@ -6,8 +6,8 @@ import Modal from '@mui/material/Modal';
 import { PlusLg, ExclamationOctagon } from "react-bootstrap-icons";
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import NewQuoteImg from "../../../../assets/images/img/newQuote.png";
-import "./new-request/new-request.css";
+import NewQuoteImg from "../../../../../assets/images/img/newQuote.png";
+import "../new-request/new-request.css";
 import { useNavigate } from 'react-router-dom';
 
 const BankDetailsModel = () => {

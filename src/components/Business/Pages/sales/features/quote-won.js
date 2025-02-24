@@ -6,10 +6,10 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import SalesIcon from "../../../../assets/images/icon/SalesIcon.svg";
-import ManagementIcon from "../../../../assets/images/icon/ManagementIcon.svg";
-import { markWon } from "../../../../APIs/SalesApi";
-import ConfettiComponent from '../../../layout/ConfettiComponent';
+import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
+import ManagementIcon from "../../../../../assets/images/icon/ManagementIcon.svg";
+import { markWon } from "../../../../../APIs/SalesApi";
+import ConfettiComponent from '../../../../layout/ConfettiComponent';
 
 
 const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {

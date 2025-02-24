@@ -7,8 +7,8 @@ import Form from 'react-bootstrap/Form';
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { fetchSales } from "../../../../APIs/SalesApi";
-import { fetchSalesNotes } from "../../../../APIs/SalesApi";
+import { fetchSales } from "../../../../../APIs/SalesApi";
+import { fetchSalesNotes } from "../../../../../APIs/SalesApi";
 
 const SalesNote = ( props ) => {
     const [anchorEl, setAnchorEl] = useState(null);

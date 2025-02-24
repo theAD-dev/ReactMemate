@@ -6,13 +6,13 @@ import {
   Link45deg,
   Check,
 } from "react-bootstrap-icons";
-import Progress from "./progress";
-import ContactSales from "./contact-sales";
-import SalesNote from "./sales-note";
+import Progress from "./features/progress";
+import ContactSales from "./features/contact-sales";
+import SalesNote from "./features/sales-note";
 import Button from "react-bootstrap/Button";
-import QuoteLost from "./quote-lost";
-import QuoteWon from "./quote-won";
-import ActionsDots from "./actions-dots";
+import QuoteLost from "./features/quote-lost";
+import QuoteWon from "./features/quote-won";
+import ActionsDots from "./features/actions-dots";
 
 import { Table } from "react-bootstrap";
 import TableTopBar from "./table-top-bar";
@@ -123,7 +123,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   }
 
   const handleSelectAllCheckboxChange = () => {
-    const allRowIds = salesData && salesData.length && salesData.map((sale) => sale.id);
+    const allRowIds = salesData && salesData.length && salesData.map((sale) => sale.id) || [];
     if (selectedRows.length === allRowIds.length) {
       setSelectedRows([]);
     } else {
@@ -335,7 +335,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
     } else {
       updatedSelectedRows.push(rowId);
     }
-    setSelectedRows(updatedSelectedRows);
+    setSelectedRows(updatedSelectedRows || []);
   };
 
   // Define selected1UniqueIds as a function that returns the selected unique IDs
@@ -373,7 +373,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
                 <label className="customCheckBox">
                   <input
                     type="checkbox"
-                    checked={selectedRows.length === salesData.length}
+                    checked={selectedRows.length && (selectedRows.length === salesData.length)}
                     onChange={handleSelectAllCheckboxChange}
                   />
                   <span className="checkmark">
