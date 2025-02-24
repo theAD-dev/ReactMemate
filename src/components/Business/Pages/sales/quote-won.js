@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CheckCircle, Check2Circle } from "react-bootstrap-icons";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,29 +8,23 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import SalesIcon from "../../../../assets/images/icon/SalesIcon.svg";
 import ManagementIcon from "../../../../assets/images/icon/ManagementIcon.svg";
-import ProgressLogo from "../../../../assets/images/progressLogo.png";
-import { fetchWon, markWon } from "../../../../APIs/SalesApi";
+import { markWon } from "../../../../APIs/SalesApi";
 import ConfettiComponent from '../../../layout/ConfettiComponent';
 
 
-const QuoteWon = ({ salesData, saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
+const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
   const [open, setOpen] = React.useState(false);
   const [confetti, setConfetti] = useState(false);
   const handleOpen = () => setOpen(true);
   const [message, setMessage] = useState({ content: '', type: 'success' });
-  const [totalWonQuote, setTotalWonQuote] = useState(sessionStorage.getItem('totalWonQuote') || 0);
-
 
   const handleMoveToManagementWon = async () => {
     try {
       if (saleUniqueId) {
         const success = await markWon([saleUniqueId]);
-        if (success.status === 'wn') {
+        if (success.length) {
           onRemoveRow()
           setMessage({ content: 'Successfully moved to Management!', type: 'success' });
-          const newTotalWonQuote = parseInt(totalWonQuote, 10) + 1;
-          setTotalWonQuote(newTotalWonQuote);
-          sessionStorage.setItem('totalWonQuote', newTotalWonQuote);
         } else {
           setMessage({ content: 'Failed to move to Management. Please try again.', type: 'error' });
         }
@@ -49,24 +43,8 @@ const QuoteWon = ({ salesData, saleUniqueId, wonQuote, quoteType, onRemoveRow })
     }, 1000);
   };
 
-  useEffect(() => {
-    if (saleUniqueId) {
-
-    }
-  }, [saleUniqueId]);
-
-  useEffect(() => {
-
-    setTotalWonQuote(wonQuote);
-    sessionStorage.setItem('totalWonQuote', wonQuote);
-
-
-  }, [wonQuote]);
-
-
   return (
     <>
-
       <Button
         onClick={handleOpen}
         className={`message quoteWon ${message.type} ${wonQuote === 'Draft'}`}

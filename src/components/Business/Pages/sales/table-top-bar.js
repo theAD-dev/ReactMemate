@@ -27,23 +27,25 @@ import { fetchMultipleData } from "../../../../APIs/SalesApi";
 import { fetchMultipleLost } from "../../../../APIs/SalesApi";
 import ConfettiComponent from "../../../layout/ConfettiComponent";
 import BankDetailsModel from "./bank-details-model";
+import { mapSalesData } from "./sales-tables";
 
 
 const TableTopBar = ({
-  rows,
-  rowsfilter,
-  onRowsFilterChange,
-  selectedUniqueIds,
+  profileData,
   salesData,
   removeRowMulti,
-  selectedRowCount,
-  selectClass,
-  selectedRow,
+  selectedUniqueIds,
+  onRowsFilterChange,
+  rows,
   setSelectedRows,
-  profileData
+  selectedRow,
+  selectedRowCount,
 }) => {
   const [totalAmount, setTotalAmount] = useState(0);
-  const [totalFAmount, setTotalFAmount] = useState(0);
+  const [filter, setFilters] = useState({});
+  const [filterState, setFilterState] = useState({});
+
+
   const [selectedItems, setSelectedItems] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]);
@@ -84,6 +86,7 @@ const TableTopBar = ({
       });
     }
   };
+
   const handleMoveToLost = async () => {
     try {
       if (selectedUniqueIds) {
@@ -114,39 +117,18 @@ const TableTopBar = ({
     }
   };
 
-  const formattedAmount = totalAmount.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  const formattedFAmount = totalFAmount.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-
-  useEffect(() => {
-    if (rowsfilter) {
-      const calculatedFilterAmount = rowsfilter.reduce(
-        (total, sale) => total + sale.amountData,
-        0
-      );
-      setTotalFAmount(calculatedFilterAmount);
+  const startFilter = (state) => {
+    let filteredRows = mapSalesData(salesData);
+    if (state?.dateRange) {
+      const [startDate, endDate] = state.dateRange;
+      filteredRows = rows.filter((item) => {
+        const itemDate = new Date(parseInt(item.created) * 1000).toLocaleDateString("en-CA");
+        return (itemDate >= startDate && itemDate <= endDate);
+      });
     }
-  }, [rowsfilter]);
 
-
-  useEffect(() => {
-    if (salesData) {
-      const calculatedTotalAmount = salesData.reduce(
-        (total, sale) => total + sale.amount,
-        0
-      );
-      setTotalAmount(calculatedTotalAmount);
-    }
-  }, [salesData]);
-
-
-
+    onRowsFilterChange(filteredRows);
+  };
 
   const handleDataApply = (data) => {
     const formatDate = (date) => date ? new Date(date).toLocaleDateString("en-CA") : "";
@@ -154,29 +136,39 @@ const TableTopBar = ({
     const startDate = formatDate(data.startDate);
     const endDate = formatDate(data.endDate);
     const newRange = `${startDate} - ${endDate}`;
-    setFilteredItems((prev) => [...prev, newRange]);
-    setSelectedRange(newRange);
+    setFilters({ ...filter, dateRange: [newRange] });
 
+    let state = { ...filterState };
+    state.dateRange = [startDate, endDate];
+    setFilterState(state);
+    startFilter(state);
     setButtonClicked(false);
-
-    // Filter rows based on the created timestamp
-    const filteredRows = rows[0].filter((item) => {
-      const itemDate = new Date(parseInt(item.created) * 1000) // Convert UNIX timestamp to Date
-        .toLocaleDateString("en-CA"); // Convert to YYYY-MM-DD
-
-      return (
-        selectedItems.includes(item.client.name) ||
-        selectedItems.includes(item.status) ||
-        (itemDate >= startDate && itemDate <= endDate) // Correctly filter by date range
-      );
-    });
-
-    onRowsFilterChange(filteredRows);
   };
 
+  const handleRemoveGroup = (groupName) => {
+    const newFilters = { ...filter };
+    delete newFilters[groupName];
+    setFilters(newFilters);
+
+    const newFilterState = { ...filterState };
+    delete newFilterState[groupName];
+    setFilterState(newFilterState);
+    startFilter(newFilterState);
+  };
+
+  const formattedAmount = totalAmount.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   useEffect(() => {
-    renderGroupedItems();
-  }, [selectedRange]);
+    if (rows.length) {
+      const calculatedFilterAmount = rows.reduce((total, sale) => total + sale.amountData, 0);
+      setTotalAmount(calculatedFilterAmount);
+    }
+  }, [rows]);
+
+
 
   const fullNames = [
     ...new Set(salesData && salesData.map((item) => item.manager.full_name)),
@@ -224,24 +216,7 @@ const TableTopBar = ({
     });
   };
 
-  const applyFilters = () => {
-    setFilteredItems(selectedItems);
-    setButtonClicked(false);
-    const filteredRows = rows[0].filter((item) => {
-      return (
-        selectedItems.includes(item.client.name) ||
-        selectedItems.includes(item.status)
-      );
-    });
-    onRowsFilterChange(filteredRows);
-    setButtonClicked(!buttonClicked);
-  };
 
-  const clearSelectedTags = () => {
-    setSelectedItems([]);
-
-    setButtonClicked(false);
-  };
 
   const [key, setKey] = useState(fullNamesJson);
 
@@ -287,23 +262,7 @@ const TableTopBar = ({
     onRowsFilterChange(salesData);
   };
 
-  const handleRemovegroup = (groupName) => {
-    console.log('groupName: ', groupName, selectedItems, selectedRange);
 
-    onRowsFilterChange(salesData);
-    setSelectedItems((prevSelectedItems) =>
-      prevSelectedItems.filter((item) => {
-        const groupItems = groupSelectedItems()[groupName];
-        return !groupItems.includes(item);
-      })
-    );
-
-    setSelectedRange((prevSelectedRange) =>
-      prevSelectedRange.filter(
-        (item) => !groupSelectedItems()[groupName].includes(item)
-      )
-    );
-  };
 
   const [searchValue, setSearchValue] = useState("");
   // Event handler for input change
@@ -318,48 +277,6 @@ const TableTopBar = ({
     itemName.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-
-  const renderGroupedItems = () => {
-    const groupedItems = groupSelectedItems();
-    return (
-      <div className="mainTagsWrapper">
-        {Object.entries(groupedItems).map(([group, items]) => (
-          <div key={group}>
-            {items.length > 0 && (
-              <div className="tags-input-container">
-                <ul className={group}>
-                  {items.map((item, index) => (
-                    <li className="mainWrapperTags tag-item-wrap" key={index}>
-                      {item}
-
-                      {
-                        items.length > 1 && <Button
-                          variant="link"
-                          size="sm"
-                          style={{ marginLeft: "5px" }}
-                          onClick={() => handleRemoveTag(item)}
-                        >
-                          <X color="#F96969" size={15} />
-                        </Button>
-                      }
-                    </li>
-                  ))}
-                  <Button
-                    variant="link"
-                    size="sm"
-                    style={{ marginLeft: "0px" }}
-                    onClick={() => handleRemovegroup(group)}
-                  >
-                    <X color="#F96969" size={20} />
-                  </Button>
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
 
   // When Click outside then close dropdown
   useEffect(() => {
@@ -382,7 +299,7 @@ const TableTopBar = ({
 
   return (
     <>
-      <div className={`${selectClass} flexbetween paddingLR tableTopBar tableTopBarSales`} style={{ borderBottom: '1px solid #f2f2f2' }}>
+      <div className={`${selectedRowCount ? "selected-row" : ""} flexbetween paddingLR tableTopBar tableTopBarSales`} style={{ borderBottom: '1px solid #f2f2f2' }}>
         {selectedRow.length === 0 ? (
           <Container fluid>
             <Row style={{ display: "flex", alignItems: "center" }}>
@@ -393,11 +310,10 @@ const TableTopBar = ({
                   alignItems: "center",
                 }}
               >
-                <div className="filterDropDown">
+                <div className="filterDropDown" onClick={handleButtonClick}>
                   <Button
                     ref={filterDropdownRef}
                     variant="link"
-                    onClick={handleButtonClick}
                   >
                     {buttonClicked ? (
                       <Filter color="#344054" size={20} />
@@ -409,7 +325,7 @@ const TableTopBar = ({
                 <div className="filterSearch">
                   <SearchFilter
                     onRowsFilterChange1={onRowsFilterChange}
-                    rowsFilter={rows}
+                    rows={mapSalesData(salesData)}
                   />
                 </div>
               </Col>
@@ -436,17 +352,16 @@ const TableTopBar = ({
                   <p className="flexEndStyle styleT3">
                     Total{" "}
                     <span className="styleT2">
-
-                      {rowsfilter.length ? (
-                        <> {rowsfilter.length}</>
+                      {rows.length ? (
+                        <> {rows.length}</>
                       ) : (
                         <>{salesData.length} </>
                       )}
 
-                      Sales</span>{" "}
+                      {" "}Sales</span>
                     <strong className="styleT1">
-                      ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
-                        <>{formattedFAmount}</>
+                      ${formattedAmount !== null && formattedAmount !== undefined && formattedAmount > 0 ? (
+                        <>{formattedAmount}</>
                       ) : (
                         <>{formattedAmount}</>
                       )}
@@ -471,7 +386,7 @@ const TableTopBar = ({
                   alignItems: "center",
                 }}
               >
-                <span className="styleT4">Selected:{selectedRowCount}</span>
+                <span className="styleT4">Selected: {selectedRowCount}</span>
                 <ul className="filterBtn">
                   <li>
                     <Button variant="lostFilter" onClick={handleMoveToLost}>
@@ -509,40 +424,23 @@ const TableTopBar = ({
                   </li>
                 </ul>
               </Col>
-              <Col>
-                <div className="centerTabSales">
-                  <ul>
-                    <li>
-                      <NavLink to="/sales">Sales</NavLink>
-                    </li>
-                    <li>
-                      {profileData && profileData.bank_detail && profileData.bank_detail.account_number ? (
-                        <NavLink className="tabActive" to="/sales/newquote/selectyourclient">
-                          New <PlusLg color="#fff" size={16} />
-                        </NavLink>
-                      ) : (
-                        <BankDetailsModel />
-                      )}
-                    </li>
-                  </ul>
-                </div>
-              </Col>
+              <Col></Col>
               <Col style={{ textAlign: "right" }}>
                 {salesData && salesData.length > 0 ? (
                   <p className="flexEndStyle styleT3">
                     Total{" "}
                     <span className="styleT2">
 
-                      {rowsfilter.length ? (
-                        <> {rowsfilter.length}</>
+                      {rows.length ? (
+                        <> {rows.length}</>
                       ) : (
                         <>{salesData.length} </>
                       )}
 
-                      Sales</span>{" "}
+                      {" "} Sales</span>
                     <strong className="styleT1">
-                      ${formattedFAmount !== null && formattedFAmount !== undefined && formattedFAmount > 0 ? (
-                        <>{formattedFAmount}</>
+                      ${formattedAmount !== null && formattedAmount !== undefined && formattedAmount > 0 ? (
+                        <>{formattedAmount}</>
                       ) : (
                         <>{formattedAmount}</>
                       )}
@@ -576,10 +474,11 @@ const TableTopBar = ({
             }
           >
             <ul>
-              <DateRangePicker salesData={salesData} onDataApply={handleDataApply} />
+              <DateRangePicker onDataApply={handleDataApply} />
             </ul>
           </Tab>
-          <Tab
+
+          {/* <Tab
             eventKey="Progress"
             title={
               <>
@@ -822,10 +721,48 @@ const TableTopBar = ({
                 </Col>
               </Row>
             </ul>
-          </Tab>
+          </Tab> */}
         </Tabs>
       )}
-      {filteredItems.length > 0 && renderGroupedItems()}
+      {
+        Object.keys(filter).length > 0 &&
+        <div className="mainTagsWrapper">
+          {Object.entries(filter).map(([group, items]) => (
+            <div key={group}>
+              {items.length > 0 && (
+                <div className="tags-input-container">
+                  <ul className={group}>
+                    {items.map((item, index) => (
+                      <li className="mainWrapperTags tag-item-wrap" key={index}>
+                        {item}
+
+                        {
+                          items.length > 1 && <Button
+                            variant="link"
+                            size="sm"
+                            style={{ marginLeft: "5px" }}
+                            onClick={() => handleRemoveTag(item)}
+                          >
+                            <X color="#F96969" size={15} />
+                          </Button>
+                        }
+                      </li>
+                    ))}
+                    <Button
+                      variant="link"
+                      size="sm"
+                      style={{ marginLeft: "0px" }}
+                      onClick={() => handleRemoveGroup(group)}
+                    >
+                      <X color="#F96969" size={20} />
+                    </Button>
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      }
     </>
   );
 };

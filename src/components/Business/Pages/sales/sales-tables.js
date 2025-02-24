@@ -5,7 +5,6 @@ import {
   FilePdf,
   Link45deg,
   Check,
-  ArrowDown, ArrowUp
 } from "react-bootstrap-icons";
 import Progress from "./progress";
 import ContactSales from "./contact-sales";
@@ -64,90 +63,82 @@ const CustomAvatarGroup = ({ params }) => {
   );
 };
 
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp * 1000);
+  const day = date.getDate();
+  const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+  }).format(date);
+  const year = date.getFullYear();
+  return `${day} ${monthAbbreviation} ${year}`;
+};
+
+const createSalesNote = (noteData, saleUniqueId) => (
+  <>
+    <SalesNote noteData={noteData} saleUniqueId={saleUniqueId} />
+  </>
+);
+
+export const mapSalesData = (salesData) => {
+  return salesData.map((sale) => ({
+    unique_id: sale.unique_id,
+    id: sale.id,
+    Quote: sale.number,
+    created: sale.created,
+    Client: sale.client.name,
+    clientId: sale.client.id,
+    photo: sale.client.photo,
+    is_business: sale.client.is_business,
+    hasPhoto: sale.client.has_photo,
+    Reference: sale.reference,
+    Status: sale.status,
+    Calculation: sale.calculation,
+    CalculationPDF: sale.quote_url,
+    CalculationURL: sale.unique_url,
+    Note: createSalesNote(sale.sales_note, sale.unique_id),
+    User: sale.managers,
+    fullName: sale.manager.full_name,
+    Contact: sale.sales_contacts,
+    progressName: sale.lead.name,
+    progressPercentage: sale.lead.percentage,
+    saleUniqueId: sale.unique_id,
+    wonQuote: (sale.number, sale.status),
+    LostQuote: (sale.number, sale.status),
+    amountData: sale.amount,
+    Actions: "Actions",
+  }));
+}
 
 const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   const { trialHeight } = useTrialHeight();
-  const [sortField, setSortField] = useState("Quote");
-  const [sortDirection, setSortDirection] = useState("asc");
-  const [salesDataState, setSalesDataState] = useState([]);
   const [rows, setRows] = useState([]);
-  // Formate Date
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    const day = date.getDate();
-    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-      month: "short",
-    }).format(date);
-    const year = date.getFullYear();
-    return `${day} ${monthAbbreviation} ${year}`;
-  };
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  const toggleSort = (field) => {
-    setSortField(field);
-    setSortDirection((prevDirection) =>
-      prevDirection === "asc" ? "desc" : "asc"
-    );
-  };
-
-  const sortedSalesData = [salesData && salesData].sort((a, b) => {
-    const aValue = a[sortField];
-    const bValue = b[sortField];
-
-    if (aValue === undefined || bValue === undefined) {
-      return 0;
-    }
-
-    if (sortDirection === "asc") {
-      return aValue.localeCompare(bValue, undefined, { numeric: true });
-    } else {
-      return bValue.localeCompare(aValue, undefined, { numeric: true });
-    }
-  });
-
-  const removeRow = () => {
-    fetchData()
+  const removeRow = async () => {
+    await fetchData()
   };
 
   const refreshData = () => {
     fetchData()
   }
 
-  const createSalesNote = (noteData, saleUniqueId) => (
-    <>
-      <SalesNote noteData={noteData} saleUniqueId={saleUniqueId} />
-    </>
-  );
-
-  const [selectedRows, setSelectedRows] = useState([]);
-
   const handleSelectAllCheckboxChange = () => {
     const allRowIds = salesData && salesData.length && salesData.map((sale) => sale.id);
     if (selectedRows.length === allRowIds.length) {
-
       setSelectedRows([]);
     } else {
-
       setSelectedRows(allRowIds);
     }
   };
 
   const selectedRowsCount = selectedRows.length;
-  const [columns, setColumns] = useState([
+  const columns = [
     {
       field: "Quote",
       width: 144,
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("Quote")}>
+        <div className="styleColor1">
           <span className="ps-3">Quote</span>
-          {sortField === "Quote" && (
-            <span>
-              {sortDirection === "asc" ? (
-                <ArrowUp size={16} color="#475467" />
-              ) : (
-                <ArrowDown size={16} color="#475467" />
-              )}
-            </span>
-          )}
         </div>
       ),
 
@@ -161,22 +152,12 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
         </div>
       ),
     },
-
     {
       field: "Client",
       width: 270,
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("Client")}>
+        <div className="styleColor1">
           <span>Client</span>
-          {sortField === "Client" && (
-            <span>
-              {sortDirection === "asc" ? (
-                <ArrowUp size={16} color="#475467" />
-              ) : (
-                <ArrowDown size={16} color="#475467" />
-              )}
-            </span>
-          )}
         </div>
       ),
 
@@ -187,7 +168,6 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
               <ImageAvatar has_photo={params.row.hasPhoto} photo={params.row?.photo} is_business={params.row?.is_business} />
               <span>{params.value}</span>
             </div>
-
           </div>
         </div>
       ),
@@ -210,17 +190,8 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       field: "Status",
       sortable: false,
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("Status")}>
+        <div className="styleColor1">
           <span>Status</span>
-          {sortField === "Status" && (
-            <span>
-              {sortDirection === "asc" ? (
-                <ArrowUp size={16} color="#475467" />
-              ) : (
-                <ArrowDown size={16} color="#475467" />
-              )}
-            </span>
-          )}
         </div>
       ),
       width: 118,
@@ -287,17 +258,8 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
     {
       field: "Progress",
       headerName: (
-        <div className="styleColor1" onClick={() => toggleSort("Progress")}>
+        <div className="styleColor1">
           <span>Progress</span>
-          {sortField === "Progress" && (
-            <span>
-              {sortDirection === "asc" ? (
-                <ArrowUp size={16} color="#475467" />
-              ) : (
-                <ArrowDown size={16} color="#475467" />
-              )}
-            </span>
-          )}
         </div>
       ),
 
@@ -306,7 +268,9 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
         <div style={{ width: "100%" }}>
           <Progress
             progressName1={params.row.progressName}
-            progressPercentage1={params.row.progressPercentage} salesUniqId1={params.row.saleUniqueId} onRemoveRow={removeRow}
+            progressPercentage1={params.row.progressPercentage}
+            salesUniqId1={params.row.saleUniqueId}
+            refreshData={refreshData}
           />
         </div>
       ),
@@ -329,7 +293,6 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
               status={params.row.status}
               onRemoveRow={removeRow}
               fetchData1={setRows}
-              salesData={salesDataState}
               quoteType="lost"
             />
             <QuoteWon
@@ -341,7 +304,6 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
               status={params.row.status}
               onRemoveRow={removeRow}
               fetchData1={setRows}
-              salesData={salesDataState}
               quoteType="won"
             />
           </div>
@@ -358,67 +320,19 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
         return <ActionsDots key={params.row.saleUniqueId} saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status} />
       },
     },
-  ]);
+  ];
 
   useEffect(() => {
-    setSalesDataState([...salesData]);
-  }, [salesData]);
-
-  useEffect(() => {
-
-    const rows = salesData.map((sale) => ({
-      isSelected: selectedRows.includes(sale.id),
-      unique_id: sale.unique_id,
-      id: sale.id,
-      Quote: sale.number,
-      created: sale.created,
-      Client: sale.client.name,
-      clientId: sale.client.id,
-      photo: sale.client.photo,
-      is_business: sale.client.is_business,
-      hasPhoto: sale.client.has_photo,
-      Reference: sale.reference,
-      Status: sale.status,
-      Calculation: sale.calculation,
-      CalculationPDF: sale.quote_url,
-      CalculationURL: sale.unique_url,
-      Note: createSalesNote(sale.sales_note, sale.unique_id),
-      User: sale.managers,
-      fullName: sale.manager.full_name,
-      Contact: sale.sales_contacts,
-      progressName: sale.lead.name,
-      progressPercentage: sale.lead.percentage,
-      saleUniqueId: sale.unique_id,
-      wonQuote: (sale.number, sale.status),
-      LostQuote: (sale.number, sale.status),
-      amountData: sale.amount,
-      Actions: "Actions",
-    }));
+    const rows = mapSalesData(salesData);
     setRows(rows)
   }, [salesData, selectedRows])
-
-
-
-  const onResize = (index) => (event, { size }) => {
-    setColumns((prevColumns) => {
-      const nextColumns = [...prevColumns];
-      nextColumns[index] = {
-        ...nextColumns[index],
-        width: size.width,
-      };
-      return nextColumns;
-    });
-  };
 
 
   const handleCheckboxChange = (rowId) => {
     const updatedSelectedRows = [...selectedRows];
     if (updatedSelectedRows.includes(rowId)) {
-      // Row is already selected, remove it
       updatedSelectedRows.splice(updatedSelectedRows.indexOf(rowId), 1);
-
     } else {
-      // Row is not selected, add it
       updatedSelectedRows.push(rowId);
     }
     setSelectedRows(updatedSelectedRows);
@@ -433,106 +347,88 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
     return selectedUniqueIds;
   };
 
-  const isSelected = selectedRows.length > 0;
-  const [rowsfilter, setRowsFilter] = useState([]);
   const handleRowsFilterChange = (filteredRows) => {
-    const rows = filteredRows.map((sale) => ({
-      isSelected: selectedRows.includes(sale.id),
-      id: sale.id,
-      Quote: sale.number,
-      created: sale.created,
-      Client: sale.client.name,
-      clientId: sale.client.id,
-      photo: sale.client.photo,
-      is_business: sale.client.is_business,
-      Reference: sale.reference,
-      Status: sale.status,
-      Calculation: sale.calculation,
-      CalculationPDF: sale.quote_url,
-      CalculationURL: sale.unique_url,
-      Note: createSalesNote(sale.sales_note, sale.unique_id),
-      User: sale.managers,
-      fullName: sale.manager.full_name,
-      Contact: sale.sales_contacts,
-      progressName: sale.lead.name,
-      progressPercentage: sale.lead.percentage,
-      saleUniqueId: sale.unique_id,
-      wonQuote: (sale.number, sale.status),
-      LostQuote: (sale.number, sale.status),
-      amountData: sale.amount,
-      Actions: "Actions",
-    }));
-    setRows(rows);
-    setRowsFilter(rows);
+    setRows(filteredRows);
   };
-
 
   return (
     <div className="salesTableWrap">
-      <TableTopBar profileData={profileData} salesData={salesData} rowsfilter={rowsfilter} removeRowMulti={removeRow} selectedUniqueIds={selected1UniqueIds()} onRowsFilterChange={handleRowsFilterChange} rows={sortedSalesData} setSelectedRows={setSelectedRows} selectedRow={selectedRows} selectClass={isSelected ? "selected-row" : ""} selectedRowCount={selectedRowsCount} />
-      {!isLoading && <Table responsive style={{ marginBottom: `${trialHeight}px` }}>
-        <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
-          <tr>
-            <th>
-              <label className="customCheckBox">
-                <input
-                  type="checkbox"
-                  checked={selectedRows.length === salesData.length}
-                  onChange={handleSelectAllCheckboxChange}
-                />
-                <span className="checkmark">
-                  <Check color="#1AB2FF" size={20} />
-                </span>
-              </label>
-            </th>
-            {columns.map((column, index) => (
-              <th key={column.field} style={{ width: column.width }}>
-                <Resizable
-                  width={column.width || 100} // Provide a default width if undefined
-                  height={0}
-                  onResize={onResize(index)}
-                >
-                  <div>
-                    {column.headerName}
-                  </div>
-                </Resizable>
+      <TableTopBar
+        profileData={profileData}
+        salesData={salesData}
+        removeRowMulti={removeRow}
+        selectedUniqueIds={selected1UniqueIds()}
+        onRowsFilterChange={handleRowsFilterChange}
+        rows={rows}
+        setSelectedRows={setSelectedRows}
+        selectedRow={selectedRows}
+        selectedRowCount={selectedRowsCount}
+      />
+
+      {!isLoading &&
+        <Table responsive style={{ marginBottom: `${trialHeight}px` }}>
+          <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
+            <tr>
+              <th>
+                <label className="customCheckBox">
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.length === salesData.length}
+                    onChange={handleSelectAllCheckboxChange}
+                  />
+                  <span className="checkmark">
+                    <Check color="#1AB2FF" size={20} />
+                  </span>
+                </label>
               </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.length === 0 ? (
-            <tr className="nodataTableRow">
-              <td colSpan={columns.length} style={{ textAlign: "center", overflow: 'auto' }}>
-                <NoDataFoundTemplate isDataExist={!!salesData.length} />
-              </td>
+              {columns.map((column, index) => (
+                <th key={column.field} style={{ width: column.width }}>
+                  <Resizable
+                    width={column.width || 100} // Provide a default width if undefined
+                    height={0}
+
+                  >
+                    <div>
+                      {column.headerName}
+                    </div>
+                  </Resizable>
+                </th>
+              ))}
             </tr>
-          ) : (
-            rows.map((row) => (
-              <tr data-saleuniqueid={row.saleUniqueId}
-                key={row.id} className={row.isSelected ? "selected-row" : ""}>
-                <td>
-                  <label className="customCheckBox">
-                    <input
-                      type="checkbox"
-                      checked={selectedRows.includes(row.id)}
-                      onChange={() => handleCheckboxChange(row.id)}
-                    />
-                    <span className="checkmark">
-                      <Check color="#1AB2FF" size={20} />
-                    </span>
-                  </label>
+          </thead>
+          <tbody>
+            {rows.length === 0 ? (
+              <tr className="nodataTableRow">
+                <td colSpan={columns.length} style={{ textAlign: "center", overflow: 'auto' }}>
+                  <NoDataFoundTemplate isDataExist={!!salesData.length} />
                 </td>
-                {columns.map((column) => (
-                  <td key={column.field}>
-                    {column.renderCell({ value: row[column.field], row })}
-                  </td>
-                ))}
               </tr>
-            ))
-          )}
-        </tbody>
-      </Table>}
+            ) : (
+              rows.map((row) => (
+                <tr data-saleuniqueid={row.saleUniqueId}
+                  key={row.id} className={selectedRows.includes(row.id) ? "selected-row" : ""}>
+                  <td>
+                    <label className="customCheckBox">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(row.id)}
+                        onChange={() => handleCheckboxChange(row.id)}
+                      />
+                      <span className="checkmark">
+                        <Check color="#1AB2FF" size={20} />
+                      </span>
+                    </label>
+                  </td>
+                  {columns.map((column) => (
+                    <td key={column.field + row.id}>
+                      {column.renderCell({ value: row[column.field], row })}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </Table>}
     </div>
   );
 };

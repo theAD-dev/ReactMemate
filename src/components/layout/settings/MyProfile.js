@@ -16,9 +16,10 @@ import {
 } from "react-bootstrap-icons";
 import AvatarImg from "../../../assets/images/img/Avatar.png";
 import FileUploader from "../../../ui/file-uploader/file-uploader";
-import { Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { PhoneInput } from "react-international-phone";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
+import ChangePassword from "../../../features/settings/profile/change-passowrd/change-password";
 
 const schema = yup.object().shape({
   first_name: yup.string().required("First Name is required"),
@@ -64,7 +65,6 @@ function MyProfile() {
 
   const mutation = useMutation({
     mutationFn: (data) => updateProfile(data, photo),
-
     onSuccess: () => {
       window.location.reload();
       setIsEditingGroup(false);
@@ -379,13 +379,20 @@ function MyProfile() {
                         </div>
                       )}
                     </li>
+                    {
+                      !isEditingGroup && (
+                        <li>
+                          <ChangePassword />
+                        </li>
+                      )
+                    }
                   </ul>
                 </div>
               </div>
             </div>
             {isEditingGroup && (
               <div className="updateButtonGeneral">
-                <button className="cancel">Cancel</button>
+                <button type="button" onClick={() => setIsEditingGroup(false)} className="cancel">Cancel</button>
                 <button
                   type="submit"
                   className="save mr-3"

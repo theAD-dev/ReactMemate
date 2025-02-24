@@ -32,11 +32,11 @@ const BookkeepingContact = ({ onAdd }) => {
 
   return (
     <>
-    
-        <div onClick={handleOpen} className={`styleGrey01 popupModalStyle`}>
+
+      <div onClick={handleOpen} className={`styleGrey01 popupModalStyle`}>
         Learn More
-        </div>
-     
+      </div>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -44,10 +44,10 @@ const BookkeepingContact = ({ onAdd }) => {
         aria-describedby="modal-modal-description">
         <Box className="modelStyleBoxstatus contactFinanceWrap" sx={{ width: 1408 }}>
           <Typography id="modal-modal-title" className={``} variant="h6" component="h2">
-        
+
             <>
               <div className='modelHeader modelHeaderBillig '>
-               
+
                 <IconButton
                   edge="end"
                   color="inherit"
@@ -56,141 +56,141 @@ const BookkeepingContact = ({ onAdd }) => {
                   <CloseIcon color="#667085" size={24} />
                 </IconButton>
               </div>
-              <Row className="justify-content-md-center align-items-md-center">
-        <Col sm={6}>
-          <div className='leftFormWrap'>
-          <h3>Contact our book keeping team</h3>
-          <Row>
-          <Col sm={6}>
-                    <div className="formgroup mb-2 mt-3">
-                    <label>First Name</label>
-                    <div className={`inputInfo `}>
-                    <input
-                        type="text"
-                        name="fname"
-                        value={fname}
-                        placeholder='Enter first name'
-                        onChange={(e) => {
-                          setFname(e.target.value);
-                        }}
-                      />
-                    </div>
+              <Row className="justify-content-md-center">
+                <Col sm={6}>
+                  <div className='leftFormWrap'>
+                    <h3>Contact our book keeping team</h3>
+                    <Row>
+                      <Col sm={6}>
+                        <div className="formgroup mb-2 ">
+                          <label>First Name</label>
+                          <div className={`inputInfo `}>
+                            <input
+                              type="text"
+                              name="fname"
+                              value={fname}
+                              placeholder='Enter first name'
+                              onChange={(e) => {
+                                setFname(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col sm={6}>
+                        <div className="formgroup mb-2 ">
+                          <label>Last Name</label>
+                          <div className={`inputInfo `}>
+                            <input
+                              type="text"
+                              name="fname"
+                              value={lname}
+                              placeholder='Enter last name'
+                              onChange={(e) => {
+                                setLname(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col sm={6}>
+                        <div className="formgroup mb-2 ">
+                          <label>Work Email</label>
+                          <div className={`inputInfo `}>
+                            <input
+                              type="text"
+                              name="email"
+                              value={email}
+                              placeholder='Enter work email'
+                              onChange={(e) => {
+                                setEmail(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col sm={6}>
+                        <div className="formgroup mb-2 ">
+                          <label>Job Title</label>
+                          <div className={`inputInfo `}>
+                            <input
+                              type="text"
+                              name="jobTitle"
+                              value={jobTitle}
+                              placeholder='Enter job title '
+                              onChange={(e) => {
+                                setJobTitle(e.target.value);
+                              }}
+
+                            />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col sm={12}>
+                        <div className="formgroup mb-2 ">
+                          <label>Phone (Optional)</label>
+                          <div className={`inputInfo `}>
+                            <input
+                              type="text"
+                              name="pnumber"
+                              value={pnumber}
+                              placeholder='+1 (555) 000-0000'
+                              onChange={(e) => {
+                                setPnumber(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </Col>
+                      <Col sm={12}>
+                        <div className="formgroup mb-2 ">
+                          <label>How can our team help you?</label>
+                          <div className={`inputInfo `}>
+                            <textarea
+                              type="text"
+                              name="help"
+                              value={help}
+                              placeholder={`Enter the detailed quote for the client contract here. Include all relevant information such as project scope, deliverables, timelines, costs, payment terms, and any special conditions. Ensure the quote is clear, comprehensive, and aligns with the client's requirements and expectations.`}
+                              onChange={(e) => {
+                                setHelp(e.target.value);
+                              }}
+                            />
+                          </div>
+
+                        </div>
+                      </Col>
+                      <Row className='formBottom'>
+                        <Col sm={12}>
+                          <p>By clicking submit, I acknowledge memate.com</p>
+                          <NavLink className="" to="#"> Privacy Policy</NavLink>
+                          <button>Submit</button>
+                        </Col>
+                      </Row>
+                    </Row>
                   </div>
-                    </Col>
-          <Col sm={6}>
-                    <div className="formgroup mb-2 mt-3">
-                    <label>Last Name</label>
-                    <div className={`inputInfo `}>
-                    <input
-                        type="text"
-                        name="fname"
-                        value={lname}
-                        placeholder='Enter last name'
-                        onChange={(e) => {
-                          setLname(e.target.value);
-                        }}
-                      />
-                    </div>
+                </Col>
+                <Col sm={6} className='rightText'>
+                  <h2>Need a Booking Service? </h2>
+                  <p>We partner with the top booking professionals in the country to ensure all your transactions are accurately recorded and properly allocated.</p>
+                  <ul>
+                    <li><img src={ClockHistoryCircle} alt="ClockHistoryCircle" />
+                      <span><h5>Save Time</h5>
+                        Reduce the effort and attention needed for processing paperwork.</span></li>
+                    <li><img src={LockZapCircle} alt="LockZapCircle" /><span>
+                      <h5>Enhance Security and Accountability </h5>
+                      Ensure every transaction is properly allocated and accounted for.</span></li>
+                    <li><img src={ZapCircle} alt="ZapCircle" /><span>
+                      <h5>Ease Your Burdens</h5>
+                      Offload your bookkeeping and accounting tasks with cost-effective solutions.</span></li>
+                  </ul>
+                  <div className='bgShade mt-4 mb-4'>
+                    <p>“I believe the strength of their company lies in its bookkeeping, as it provides a clear and accountable way to manage daily operations, ensure compliance, and control every transaction.”</p>
+                    <strong>Robert Sanasi</strong>
+                    <span>Vice President ICMS</span>
                   </div>
-                    </Col>
-          <Col sm={6}>
-                    <div className="formgroup mb-2 mt-3">
-                    <label>Work Email</label>
-                    <div className={`inputInfo `}>
-                    <input
-                        type="text"
-                        name="email"
-                        value={email}
-                        placeholder='Enter work email'
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                        }}
-                      />
-                    </div>
-                  </div>
-                    </Col>
-          <Col sm={6}>
-                    <div className="formgroup mb-2 mt-3">
-                    <label>Job Title</label>
-                    <div className={`inputInfo `}>
-                    <input
-                        type="text"
-                        name="jobTitle"
-                        value={jobTitle}
-                        placeholder='Enter job title '
-                        onChange={(e) => {
-                          setJobTitle(e.target.value);
-                        }}
-                        
-                      />
-                    </div>
-                  </div>
-                    </Col>
-                    <Col sm={12}>
-                    <div className="formgroup mb-2 mt-3">
-                    <label>Phone (Optional)</label>
-                    <div className={`inputInfo `}>
-                    <input
-                        type="text"
-                        name="pnumber"
-                        value={pnumber}
-                        placeholder='+1 (555) 000-0000'
-                        onChange={(e) => {
-                          setPnumber(e.target.value);
-                        }}
-                      />
-                    </div>
-                  </div>
-                    </Col>
-                    <Col sm={12}>
-                    <div className="formgroup mb-2 mt-3">
-                    <label>How can our team help you?</label>
-                    <div className={`inputInfo `}>
-                    <textarea
-                    type="text"
-                    name="help"
-                    value={help}
-                    placeholder={`Enter the detailed quote for the client contract here. Include all relevant information such as project scope, deliverables, timelines, costs, payment terms, and any special conditions. Ensure the quote is clear, comprehensive, and aligns with the client's requirements and expectations.`}
-                    onChange={(e) => {
-                      setHelp(e.target.value);
-                    }}
-                  /> 
-                    </div>
-                  
-                  </div>
-                    </Col>
-                    <Row className='formBottom'>
-        <Col sm={12}>
-         <p>By clicking submit, I acknowledge memate.com</p>
-         <NavLink className="" to="#"> Privacy Policy</NavLink>
-         <button>Submit</button>
-        </Col>
-      </Row>
-          </Row>
-          </div>
-        </Col>
-        <Col sm={6} className='rightText'>
-          <h2>Need a Booking Service? </h2>
-          <p>We partner with the top booking professionals in the country to ensure all your transactions are accurately recorded and properly allocated.</p>
-          <ul>
-            <li><img src={ClockHistoryCircle} alt="ClockHistoryCircle"/>
-            <span><h5>Save Time</h5>
-            Reduce the effort and attention needed for processing paperwork.</span></li>
-            <li><img src={LockZapCircle} alt="LockZapCircle" /><span>
-                <h5>Enhance Security and Accountability </h5>
-                Ensure every transaction is properly allocated and accounted for.</span></li>
-            <li><img src={ZapCircle} alt="ZapCircle" /><span>
-                <h5>Ease Your Burdens</h5>
-                Offload your bookkeeping and accounting tasks with cost-effective solutions.</span></li>
-          </ul>
-          <div className='bgShade mt-4 mb-4'>
-            <p>“I believe the strength of their company lies in its bookkeeping, as it provides a clear and accountable way to manage daily operations, ensure compliance, and control every transaction.”</p>
-            <strong>Robert Sanasi</strong>
-            <span>Vice President ICMS</span>
-          </div>
-          <div className='centerimgTag'><img src={LenderPanel} alt="LenderPanel" /></div>
-        </Col>
-      </Row>
+                  <div className='centerimgTag'><img src={LenderPanel} alt="LenderPanel" /></div>
+                </Col>
+              </Row>
             </>
           </Typography>
         </Box>

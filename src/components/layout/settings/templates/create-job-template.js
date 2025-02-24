@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import Sidebar from '../Sidebar';
 import { ChevronLeft, ClockHistory, PencilSquare } from "react-bootstrap-icons";
