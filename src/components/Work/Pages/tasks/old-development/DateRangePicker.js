@@ -10,8 +10,8 @@ const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
   const [isApplying, setIsApplying] = useState(false);
   const [formattedCurrentDate, setFormattedCurrentDate] = useState("");
 
-  useEffect(()=> {
-    if(dateRange) {
+  useEffect(() => {
+    if (dateRange) {
       setSelectedDates([dateRange?.startDate, dateRange?.endDate]);
       setStartDate(dateRange?.startDate);
       setEndDate(dateRange?.endDate);
@@ -66,8 +66,8 @@ const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
     dateFormat: "Y-m-d",
     mode: "range",
     locale: {
-      firstDayOfWeek: 1 
-  },
+      firstDayOfWeek: 1
+    },
     inline: true,
     // onDayCreate: function (dObj, dStr, fp, dayElem) {
     //   if (Math.random() < 0.15)

@@ -7,6 +7,10 @@ import * as yup from 'yup';
 import { Col, Row } from 'react-bootstrap';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { v4 as uuidv4 } from 'uuid';
+import { useMutation } from '@tanstack/react-query';
+import { draftSalesRequest } from '../../../../../APIs/SalesApi';
+import { toast } from 'sonner';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const schema = yup
     .object({
@@ -71,8 +75,25 @@ const ScopeOfWorkComponent = () => {
         setFiles(prevFiles => prevFiles.filter(file => file.id !== id));
     };
 
+
+    const mutation = useMutation({
+        mutationFn: (data) => draftSalesRequest(data),
+        onSuccess: (response) => {
+            navigate('/sales');
+            toast.success(`New request created as draft successfully.`);
+        },
+        onError: (error) => {
+            console.error('Error creating draft new request:', error);
+            toast.error(`Failed to create new request. Please try again.`);
+        }
+    });
+
     const saveAsDraft = () => {
-        
+        mutation.mutate({
+            reference: defaultValues.reference,
+            description: defaultValues.requirements,
+            action: 'draft'
+        });
     }
 
     return (
@@ -160,7 +181,8 @@ const ScopeOfWorkComponent = () => {
 
                             <div className='d-flex' style={{ gap: '12px' }}>
                                 <button type="button" onClick={saveAsDraft} className="cancel-button">
-                                    Save Draft
+                                    Save Draft {" "}
+                                    {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}
                                 </button>
 
                                 <button type="submit" className="submit-button">

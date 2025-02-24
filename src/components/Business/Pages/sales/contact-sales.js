@@ -41,7 +41,7 @@ const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
     <>
       <div className="innerTableStyle">
         <ul>
-          {type.map((item, index) => (
+          {type && type.length && type.map((item, index) => (
             <li key={index}>
               <ButtonToolbar key={index}>
                 <OverlayTrigger
@@ -110,7 +110,7 @@ const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
               </ButtonToolbar>
             </li>
           ))}
-          {type.length < 3 && (
+          {type && type.length < 3 && (
             <li>
               <span className="contactButList">
                 <div className="contactButListIn1">

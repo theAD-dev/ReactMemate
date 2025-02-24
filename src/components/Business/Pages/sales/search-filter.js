@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import { Search } from 'react-bootstrap-icons';
 
-const SearchFilter = ({ rowsFilter,onRowsFilterChange1 }) => {
+const SearchFilter = ({ rows, onRowsFilterChange1 }) => {
+  console.log('rows: ', rows);
   const [query, setQuery] = useState('');
   const [key, setKey] = useState(null);
 
-// Search Filter
-const filterRows = (searchQuery) => {
-  setQuery(searchQuery);
-  const filteredRows = rowsFilter[0].filter((item) => {
-    return item.client.name.toLowerCase().includes(searchQuery.toLowerCase());
-  });
-  
-  onRowsFilterChange1(filteredRows);
-  if (searchQuery === '') {
-    setKey(null);
-  }
-};
+  // Search Filter
+  const filterRows = (searchQuery) => {
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    setQuery(searchQuery);
 
-const handleInputChange = (event) => {
-  setQuery(event.target.value);
-  if (event.target.value === '') {
-    setKey(null);
-  }
-};
+    if (!trimmedQuery) {
+      setKey(null);
+      onRowsFilterChange1(rows ?? []); // Reset to original rows if search is empty
+      return;
+    }
+
+    const filteredRows = (rows ?? []).filter((item) =>
+      item?.Client?.toLowerCase().includes(trimmedQuery)
+    );
+
+    onRowsFilterChange1(filteredRows);
+  };
+
+  const handleInputChange = (event) => {
+    setQuery(event.target.value);
+    if (event.target.value === '') {
+      setKey(null);
+    }
+  };
 
   return (
     <div key={key}>

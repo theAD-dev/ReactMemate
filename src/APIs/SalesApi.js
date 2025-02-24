@@ -1,6 +1,16 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
+export const draftSalesRequest = async (data) => {
+  const endpoint = `/sales/new-request/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+}
+
 // Sale Table Api
 export const fetchSales = async () => {
   const myHeaders = new Headers();
@@ -61,7 +71,7 @@ export const markWon = async (ids) => {
   const endpoint = `/sales/status/won/`;
   const options = {
     method: 'PUT',
-    body: {ids: ids}
+    body: { ids: ids }
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
@@ -71,7 +81,7 @@ export const markLost = async (ids) => {
   const endpoint = `/sales/status/lost/`;
   const options = {
     method: 'PUT',
-    body: {ids: ids}
+    body: { ids: ids }
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);

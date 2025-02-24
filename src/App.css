@@ -269,6 +269,11 @@ span.lightColorStyle {
     position: sticky !important;
     left: 0;
 }
+
+.MuiModal-root {
+    overflow: auto;
+}
+
 .css-9cbj60-MuiDataGrid-root .MuiDataGrid-iconSeparator {
     display: none;
 }

@@ -15,7 +15,7 @@ const Option = ({ percentage, label, gradient, onSelect, isActive }) => {
         name="radio-group"
         type="radio"
         checked={isActive} // Set checked based on isActive prop
-        onChange={() => {}}
+        onChange={() => { }}
       />
       <em className="radio-custom-label"></em>
       <div className="progressWrapper">
@@ -39,13 +39,7 @@ const Option = ({ percentage, label, gradient, onSelect, isActive }) => {
   );
 };
 
-const Progress = ({progressName1,progressPercentage1,salesUniqId1,onRemoveRow}) => {
-
-  // Refress Data Function
-  const dataUpdate = () => {
-    onRemoveRow()
-  };
-
+const Progress = ({ progressName1, progressPercentage1, salesUniqId1, refreshData }) => {
   const [selectedOption, setSelectedOption] = useState({
     text: progressName1,
     percentage: progressPercentage1,
@@ -59,7 +53,6 @@ const Progress = ({progressName1,progressPercentage1,salesUniqId1,onRemoveRow}) 
     // Close any open dropdowns
     const openDropdowns = document.querySelectorAll(".options.active");
     openDropdowns.forEach((dropdown) => dropdown.classList.remove("active"));
-    dataUpdate()
     // Open or close the current dropdown
     setDropdownOpen((prevState) => !prevState);
   };
@@ -68,7 +61,7 @@ const Progress = ({progressName1,progressPercentage1,salesUniqId1,onRemoveRow}) 
     try {
       const saleUniqueId = salesUniqId1;
       const newUpdatedLead = option.percentage;
-  
+
       await fetchSaleslead(saleUniqueId, newUpdatedLead);
       setSelectedOption({
         text: option.label,
@@ -76,16 +69,16 @@ const Progress = ({progressName1,progressPercentage1,salesUniqId1,onRemoveRow}) 
         background: option.gradient,
       });
       setUpdatedLead(newUpdatedLead);
-     dataUpdate() // Refress Data
+      refreshData();
       setDropdownOpen(false);
     } catch (error) {
       console.error('Error updating sales lead:', error);
     }
   };
-  
-  
+
+
   const isActive = (percentage) => {
-    return percentage === updatedLead; 
+    return percentage === updatedLead;
   };
 
   const options = [
@@ -119,7 +112,7 @@ const Progress = ({progressName1,progressPercentage1,salesUniqId1,onRemoveRow}) 
   return (
     <div className="select-menu">
       <div className="select-btn" onClick={toggleOptions}>
-      <CircleProgressBar
+        <CircleProgressBar
           percentage={selectedOption.percentage}
           selectlabel={selectedOption.text}
         />
@@ -128,13 +121,13 @@ const Progress = ({progressName1,progressPercentage1,salesUniqId1,onRemoveRow}) 
       <ul className={`options ${dropdownOpen ? "active" : ""}`}>
         {options.map((option) => (
           <Option
-          key={option.percentage}
+            key={option.percentage}
             percentage={option.percentage}
             label={option.label}
             gradient={option.gradient}
             onSelect={() => selectOption(option)}
             isActive={isActive(option.percentage)}// Pass percentage to isActive
-        />
+          />
         ))}
       </ul>
     </div>
