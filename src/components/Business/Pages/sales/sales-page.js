@@ -35,9 +35,8 @@ const Sales = () => {
           </Spinner>
         </div>
       }
-      {
-        !isLoading && <SalesTables profileData={profileData} salesData={salesData} fetchData={fetchData} />
-      }
+      
+      <SalesTables profileData={profileData} salesData={salesData} fetchData={fetchData} isLoading={isLoading} />
     </>
   );
 };

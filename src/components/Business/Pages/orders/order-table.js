@@ -352,7 +352,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         onSort={onSort}
         rowClassName={rowClassName}
       >
-        <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
+        <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem', zIndex: 1 }} frozen></Column>
         <Column field="number" header="Order #" body={orderBody} style={{ minWidth: '155px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
         <Column field="client.name" header="Customer" body={customerBody} style={{ minWidth: '224px' }} sortable></Column>
         <Column field="reference" header="Order Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '400px' }}>{rowData.reference}</div>} style={{ minWidth: '400px' }} ></Column>

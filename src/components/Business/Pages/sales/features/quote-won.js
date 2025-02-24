@@ -10,6 +10,7 @@ import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
 import ManagementIcon from "../../../../../assets/images/icon/ManagementIcon.svg";
 import { markWon } from "../../../../../APIs/SalesApi";
 import ConfettiComponent from '../../../../layout/ConfettiComponent';
+import { toast } from 'sonner';
 
 
 const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
@@ -24,13 +25,13 @@ const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
         const success = await markWon([saleUniqueId]);
         if (success.length) {
           onRemoveRow()
-          setMessage({ content: 'Successfully moved to Management!', type: 'success' });
+          toast.success("Successfully moved to Management!");
         } else {
-          setMessage({ content: 'Failed to move to Management. Please try again.', type: 'error' });
+          toast.error("Failed to move to Management. Please try again.");
         }
       }
     } catch (error) {
-      setMessage({ content: 'An error occurred. Please try again.', type: 'error' });
+      toast.error("An error occurred. Please try again.");
     }
     handleClose();
     setConfetti(true);
