@@ -1,9 +1,7 @@
 import React from 'react'
 import clsx from 'clsx';
-
 import style from './no-data-found-template.module.scss';
 import NodataImg from "../../assets/images/img/NodataImg.png";
-import SearchIcon from "../../assets/images/icon/searchIcon.png";
 import { Button } from 'react-bootstrap';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';

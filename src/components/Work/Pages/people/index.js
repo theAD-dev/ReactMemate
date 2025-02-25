@@ -2,7 +2,6 @@ import React from 'react'
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Filter } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
 
 import PeoplesTable from './peoples-table';
 import style from './people.module.scss';

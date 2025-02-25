@@ -7,11 +7,13 @@ import { fetchduplicateData } from "../../../../../APIs/SalesApi";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useSaleQuotationDeleteMutations } from '../../../../../entities/sales/models/delete-sale-quotation.mutation';
 import ResendQuoteEmail from '../../../features/sales-features/resend-quote/resend-quote';
+import SaleHistory from '../../../features/sales-features/sales-history/sale-history';
 
 
-const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
+const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(null);
+  const [history, setHistory] = useState(null);
   const [isVisibleResendEmail, setIsVisibleResendEmail] = useState(false);
 
   const deleteMutations = useSaleQuotationDeleteMutations();
@@ -38,6 +40,9 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
       await deleteMutations.mutateAsync(saleUniqueId);
       setLoading(null);
       refreshData();
+    } else if (option.label === 'History') {
+      setHistory(salesHistory);
+      setAnchorEl(null);
     }
   };
 
@@ -64,13 +69,9 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
         <Layers color="#344054" size={20} />
       )
     },
-    status === "Draft" && {
-      label: "Delete", icon: loading === 5 ? (
-        <ProgressSpinner style={{ width: "20px", height: "20px", position: 'absolute', right: '15px', top: '10px' }} />
-      ) : (
-        <Trash color="#344054" size={20} />
-      )
-    }
+    ...(status === "Draft"
+      ? [{ label: "Delete", icon: loading === 5 ? <ProgressSpinner /> : <Trash size={20} /> }]
+      : [])
   ];
 
   return (
@@ -99,13 +100,14 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status }) => {
         }}
       >
         {options.map((option) => (
-          <MenuItem className='LmenuList d-flex justify-content-between' key={saleUniqueId+option.label} onClick={(event) => handleClick(event, option)}>
+          <MenuItem className='LmenuList d-flex justify-content-between' key={saleUniqueId + option.label} onClick={(event) => handleClick(event, option)}>
             {option.label}
             {option.icon}
           </MenuItem>
         ))}
       </Menu>
       <ResendQuoteEmail projectId={saleUniqueId} clientId={clientId} viewShow={isVisibleResendEmail} setViewShow={setIsVisibleResendEmail} projectCardData={refreshData} />
+      {history && <SaleHistory history={history} setHistory={setHistory} />}
     </>
   );
 };

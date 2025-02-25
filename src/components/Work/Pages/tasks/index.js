@@ -10,7 +10,6 @@ import CreateTask from '../../features/task/create-task/create-task';
 
 const TaskPage = () => {
     const dt = useRef(null);
-    const menu = useRef(null);
     const [total, setTotal] = useState(0);
     const [visible, setVisible] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);

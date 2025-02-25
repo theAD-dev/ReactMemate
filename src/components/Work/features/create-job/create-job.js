@@ -1,7 +1,7 @@
 import { Sidebar } from 'primereact/sidebar';
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Calendar3, ClockHistory, CloudUpload, FilePdf, FilePdfFill, Trash, X } from 'react-bootstrap-icons';
+import { Calendar3, ClockHistory, CloudUpload, X } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import style from './create-job.module.scss';

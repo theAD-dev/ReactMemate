@@ -157,9 +157,9 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             <Row>
               {
                 clientQuery?.data?.is_business ?
-                  <QuoteToBusiness isLoading={clientQuery?.isLoading} data={clientQuery?.data} />
+                  <QuoteToBusiness isLoading={clientQuery?.isLoading} data={clientQuery?.data} setPayload={setPayload} />
                   :
-                  <QuoteToClient isLoading={clientQuery?.isLoading} data={clientQuery?.data} />
+                  <QuoteToClient isLoading={clientQuery?.isLoading} data={clientQuery?.data} setPayload={setPayload} />
               }
             </Row>
           </Col>

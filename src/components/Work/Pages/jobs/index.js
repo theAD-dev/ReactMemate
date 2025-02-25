@@ -11,7 +11,6 @@ import CreateJob from '../../features/create-job/create-job';
 
 const JobsPage = () => {
     const dt = useRef(null);
-    const menu = useRef(null);
     const [total, setTotal] = useState(0);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
