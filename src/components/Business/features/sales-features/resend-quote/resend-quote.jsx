@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getClientById } from "../../../../../APIs/ClientsApi";
-import { sendComposeEmail } from "../../../../../APIs/management-api";
+import { resendQuoteEmail } from "../../../../../APIs/management-api";
 import SendDynamicEmailForm from "../../../../../ui/send-email-2/send-email";
 
 const ResendQuoteEmail = ({ viewShow, setViewShow, clientId, projectId, projectCardData }) => {
@@ -16,7 +16,7 @@ const ResendQuoteEmail = ({ viewShow, setViewShow, clientId, projectId, projectC
     });
 
     const mutation = useMutation({
-        mutationFn: (data) => sendComposeEmail(projectId, "", data),
+        mutationFn: (data) => resendQuoteEmail(projectId, data),
         onSuccess: (response) => {
             setViewShow(false);
             projectCardData();
