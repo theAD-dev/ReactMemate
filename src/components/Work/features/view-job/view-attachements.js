@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
+import { InfoCircle } from "react-bootstrap-icons";
+import { Link } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import style from './view-job.module.scss';
-import { InfoCircle } from "react-bootstrap-icons";
-import { Link } from 'react-router-dom';
 
 const ViewAttachements = ({ show, setShow, attachments }) => {
     const headerElement = (
@@ -41,7 +41,7 @@ const ViewAttachements = ({ show, setShow, attachments }) => {
                 }
             </div>
         </Dialog>
-    )
-}
+    );
+};
 
-export default ViewAttachements
+export default ViewAttachements;

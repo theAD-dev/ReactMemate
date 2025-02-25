@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import styles from "./general.module.scss";
 import { PencilSquare } from "react-bootstrap-icons";
-import Sidebar from ".././Sidebar";
-import timezones from './lib/timezones.json';
-import currency from './lib/currency.json';
-import { Dropdown } from "primereact/dropdown";
-import { getCountries } from "../../../../APIs/ClientsApi";
+import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getReginalAndLanguage, updateReginalAndLanguage } from "../../../../APIs/SettingsGeneral";
-import { toast } from "sonner";
+import { Dropdown } from "primereact/dropdown";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { toast } from "sonner";
+import styles from "./general.module.scss";
+import Sidebar from ".././Sidebar";
+import currency from './lib/currency.json';
+import timezones from './lib/timezones.json';
+import { getCountries } from "../../../../APIs/ClientsApi";
+import { getReginalAndLanguage, updateReginalAndLanguage } from "../../../../APIs/SettingsGeneral";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
+
+
 
 const RegionLanguage = () => {
   const { trialHeight } = useTrialHeight();
@@ -39,7 +41,7 @@ const RegionLanguage = () => {
       country: country,
       timezone,
       currency: selectedCurrency
-    })
+    });
     setIsEditing(false);
   };
 

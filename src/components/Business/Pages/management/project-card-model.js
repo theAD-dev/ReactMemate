@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Table } from 'react-bootstrap';
 import {
   X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink
 } from "react-bootstrap-icons";
-import { Table } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
 import AddNote from './AddNote';
-import NewTask from './NewTask';
-import SendSMS from './SendSMS';
 import ComposeEmail from './ComposeEmail';
-import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
-import ExpenseIcon from "../../../../assets/images/icon/ExpenseIcon.svg";
-import CreatePoIcon from "../../../../assets/images/icon/createPoIcon.svg";
-import Briefcase from "../../../../assets/images/icon/briefcase.svg";
-import GoogleReview from "../../../../assets/images/icon/googleReviewIcon.svg";
-import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
-import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
-import ProjectCardFilter from './ProjectCardFilter';
 import FilesModel from './FilesModel';
+import NewTask from './NewTask';
+import ProjectCardFilter from './ProjectCardFilter';
 import ScheduleUpdate from './ScheduleUpdate';
-import { ProjectCardApi, cardScheduleUpdateApi } from "../../../../APIs/management-api";
 import SelectStatus from './select-status';
+import SendSMS from './SendSMS';
+import { ProjectCardApi, cardScheduleUpdateApi } from "../../../../APIs/management-api";
+import Briefcase from "../../../../assets/images/icon/briefcase.svg";
+import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
+import CreatePoIcon from "../../../../assets/images/icon/createPoIcon.svg";
+import ExpenseIcon from "../../../../assets/images/icon/ExpenseIcon.svg";
+import GoogleReview from "../../../../assets/images/icon/googleReviewIcon.svg";
+import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
+import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
+
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   const [cardData, setCardData] = useState(null);
@@ -68,7 +69,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
       } catch (error) {
         console.error('Error fetching project card data:', error);
       }
-    }
+    };
 
     if (projectId && viewShow) projectCardData(projectId);
   }, [projectId, viewShow]);

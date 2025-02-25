@@ -28,6 +28,6 @@ const CompanyEthos = () => {
        
         </>
     );
-}
+};
 
 export default CompanyEthos;

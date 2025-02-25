@@ -1,11 +1,10 @@
-import React from 'react'
-import { toast } from 'sonner';
+import React from 'react';
+import { Button, Spinner } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Spinner } from 'react-bootstrap';
 import { useMutation } from '@tanstack/react-query';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
-
+import { toast } from 'sonner';
 import { deleteMergeQuote } from '../../../../../../APIs/CalApi';
 
 const DeleteMerge = ({ id, alias, refetch, setMerges }) => {
@@ -29,9 +28,9 @@ const DeleteMerge = ({ id, alias, refetch, setMerges }) => {
       setMerges((merges) => {
         let updatedMerges = merges.filter((merge) => merge.alias !== alias);
         return updatedMerges;
-      })
+      });
     }
-  }
+  };
   const reject = () => { };
 
   const deleteMergeItem = (event) => {
@@ -43,7 +42,7 @@ const DeleteMerge = ({ id, alias, refetch, setMerges }) => {
       accept,
       reject,
     });
-  }
+  };
 
   return (
     <React.Fragment>
@@ -56,7 +55,7 @@ const DeleteMerge = ({ id, alias, refetch, setMerges }) => {
         ) : <Trash onClick={deleteMergeItem} color="#98A2B3" size={16} className='cursor-pointer' />
       }
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default DeleteMerge
+export default DeleteMerge;

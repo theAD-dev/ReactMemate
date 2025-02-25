@@ -1,15 +1,15 @@
-import clsx from 'clsx';
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Tag } from 'primereact/tag';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-
-import style from './supplier-history.module.scss';
-import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
+import { Spinner } from 'react-bootstrap';
 import { ArrowLeftCircle, FilePdf, Files, FileText, InfoCircle, Link45deg, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
+import clsx from 'clsx';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Tag } from 'primereact/tag';
+import style from './supplier-history.module.scss';
 import { getSupplierHistory } from '../../../../../APIs/SuppliersApi';
+import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
+
 
 const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, isShowDeleted }, ref) => {
   const { id } = useParams();
@@ -71,26 +71,26 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
   }, [expenses, hasMoreData]);
 
   const accountCodeBodyTemplate = (rowData) => {
-    return <>{rowData?.account_code?.code}: {rowData?.account_code?.name}</>
-  }
+    return <>{rowData?.account_code?.code}: {rowData?.account_code?.name}</>;
+  };
 
   const loadingIconTemplate = () => {
     return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
       <Spinner animation="border" role="status">
         <span className="visually-hidden">Loading...</span>
       </Spinner>
-    </div>
-  }
+    </div>;
+  };
 
   const onResizeColumn = (event) => {
     console.log('event: ', event);
-  }
+  };
 
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
 
     setPage(1);  // Reset to page 1 whenever searchValue changes
-    setTempSort({ sortField, sortOrder })
+    setTempSort({ sortField, sortOrder });
   };
 
   // Formate Date
@@ -108,27 +108,27 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
 
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
       {formatDate(rowData.created)}
-    </div>
-  }
+    </div>;
+  };
 
   const TotalBody = (rowData) => {
 
     return <div className={` show-on-hover ${style.boxBorderRound}`}>
       $ {(rowData.total).toFixed(2)}
-    </div>
-  }
+    </div>;
+  };
 
   const PaidDate = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
       {formatDate(rowData.date)}
-    </div>
-  }
+    </div>;
+  };
 
   const gstbody = (rowData) => {
     return <div className={` show-on-hover ${style.boxBorderCorner}`} >
       $ {rowData.gst}
-    </div>
-  }
+    </div>;
+  };
 
   const StatusBody = (rowData) => {
 
@@ -140,8 +140,8 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
           <>Not Paid <span className="dots"></span></>
         )}
       </div>
-    </div>
-  }
+    </div>;
+  };
 
   const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
   
@@ -169,7 +169,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
       <Column field='account_code.code' header="Account Code" body={accountCodeBodyTemplate} style={{ minWidth: '214px' }}></Column>
       <Column field='paid' body={StatusBody} header="Status" bodyClassName={"text-center"} style={{ minWidth: '123px' }}></Column>
     </DataTable>
-  )
-})
+  );
+});
 
-export default SupplierHistoryTable
+export default SupplierHistoryTable;

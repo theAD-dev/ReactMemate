@@ -12,10 +12,10 @@ export const getListOfTasks = async (page, limit, name = "", order = "", isShowD
     url.searchParams.append("offset", offset);
     if (name) url.searchParams.append("name", name);
     if (order) url.searchParams.append("ordering", order);
-    if (isShowDeleted) url.searchParams.append('deleted', 1)
+    if (isShowDeleted) url.searchParams.append('deleted', 1);
 
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getTask = async (id) => {
     const endpoint = `/tasks/${id}`;
@@ -24,7 +24,7 @@ export const getTask = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const createNewTask = async (data) => {
     const endpoint = '/tasks/new/';
@@ -34,7 +34,7 @@ export const createNewTask = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateTask = async (id, data) => {
     const endpoint = `/tasks/update/${id}`;
@@ -44,7 +44,7 @@ export const updateTask = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getUserList = async () => {
     const endpoint = `/references/all-users/`;
@@ -53,4 +53,4 @@ export const getUserList = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};

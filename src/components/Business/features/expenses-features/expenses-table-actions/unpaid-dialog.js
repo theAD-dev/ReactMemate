@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import style from './dialog.module.scss';
-import { Chip } from "primereact/chip";
-import warningIcon from '../../../../../assets/images/Jobs/Featured icon.svg';
-import { Badge } from "primereact/badge";
 import { useMutation } from "@tanstack/react-query";
-import { unpaidExpense } from "../../../../../APIs/expenses-api";
+import { Badge } from "primereact/badge";
+import { Button } from 'primereact/button';
+import { Chip } from "primereact/chip";
+import { Dialog } from 'primereact/dialog';
 import { toast } from "sonner";
+import style from './dialog.module.scss';
+import { unpaidExpense } from "../../../../../APIs/expenses-api";
+import warningIcon from '../../../../../assets/images/Jobs/Featured icon.svg';
 
 export default function UnPaidDialog({ visible, setVisible, details, setRefetch }) {
     const unpaidMutation = useMutation({
@@ -25,7 +25,7 @@ export default function UnPaidDialog({ visible, setVisible, details, setRefetch 
     const handleUnPaidExpense = () => {
         const id = details?.id;
         unpaidMutation.mutate({ ids: [id]});
-    }
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -54,5 +54,5 @@ export default function UnPaidDialog({ visible, setVisible, details, setRefetch 
                 </div>
             </Dialog>
         </>
-    )
+    );
 }

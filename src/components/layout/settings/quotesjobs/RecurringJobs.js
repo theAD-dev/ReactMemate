@@ -1,17 +1,18 @@
-import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
-import Sidebar from '../Sidebar';
 import { PlusLg } from "react-bootstrap-icons";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Sidebar from '../Sidebar';
+
 
 const RecurringJobs = () => {
     const [activeTab, setActiveTab] = useState('recurring-quotes');
@@ -135,6 +136,6 @@ const RecurringJobs = () => {
                     </Modal>
         </>
     );
-}
+};
 
 export default RecurringJobs;

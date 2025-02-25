@@ -25,5 +25,5 @@ const CircleProgressBar = ({percentage,selectlabel}) => {
     );
   };
   
-  export default CircleProgressBar
+  export default CircleProgressBar;
   

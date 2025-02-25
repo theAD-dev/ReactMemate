@@ -2,9 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./requestademo.css"
-import LoinLogo from "../../../assets/images/logo.svg";
+import "./requestademo.css";
 import request04 from "../../../assets/images/img/request04.jpg";
+import LoinLogo from "../../../assets/images/logo.svg";
 import { useLocation } from 'react-router-dom';
 import { requestDemoCreate } from "../../../APIs/OnboardingApi";
 import { InlineWidget } from "react-calendly";

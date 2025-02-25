@@ -1,14 +1,13 @@
-import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
-import { Building, StarFill, X } from 'react-bootstrap-icons';
 import { Button, Row, Col } from 'react-bootstrap';
+import { Building, StarFill, X } from 'react-bootstrap-icons';
 import { Link, useParams } from 'react-router-dom';
-
-import style from './supplier-view.module.scss';
-import mapicon from '../../../../../assets/images/google_maps_ico.png'
+import clsx from 'clsx';
+import mapicon from '../../../../../assets/images/google_maps_ico.png';
+import { FallbackImage } from '../../../../../ui/image-with-fallback/image-avatar';
 import DeleteSupplier from '../supplier-delete';
 import SupplierEdit from '../supplier-edit';
-import { FallbackImage } from '../../../../../ui/image-with-fallback/image-avatar';
+import style from './supplier-view.module.scss';
 
 const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
     const { id } = useParams();
@@ -64,8 +63,8 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const ViewSection = ({ data }) => {
     console.log('view: ', data);
@@ -238,7 +237,7 @@ const ViewSection = ({ data }) => {
         {data?.addresses?.length === 0 && <div className={clsx(style.box)}>-</div>}
 
 
-    </>
-}
+    </>;
+};
 
-export default SupplierView
+export default SupplierView;

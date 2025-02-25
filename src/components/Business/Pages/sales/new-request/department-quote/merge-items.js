@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, InputGroup, ListGroup, Modal } from 'react-bootstrap';
 import { QuestionCircle } from 'react-bootstrap-icons';
-import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
 import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
+import Form from 'react-bootstrap/Form';
+import { toast } from 'sonner';
+import * as yup from 'yup';
 import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
+import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
 
 // Validation schema
 const schema = yup
@@ -26,7 +26,7 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
     const [defaultValues, setDefaultValues] = useState({
         title: '',
         description: ''
-    })
+    });
     const { register, reset, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema), defaultValues
     });
@@ -51,10 +51,10 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
                 acc.push({ calculator: value.calculator });
                 return acc;
             }, [])
-        }
+        };
         mutation.mutate(payload);
 
-        let key = Object.keys(selectItems)?.join("-")
+        let key = Object.keys(selectItems)?.join("-");
 
         const total = Object.values(selectItems)
             .map(item => item.total)
@@ -84,7 +84,7 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
     };
     const handleOpen = () => {
         if (Object.keys(selectItems)?.length > 1) setShow(true);
-    }
+    };
     const handleClose = () => setShow(false);
 
     return (
@@ -181,12 +181,12 @@ export const EditMergeItems = ({ id, setMergeItems, romanNo, items, title, descr
             updatedItems[id] = {
                 ...updatedItems[id],
                 title: data.title, description: data.description,
-            }
+            };
             return updatedItems;
-        })
+        });
         setShow(false);
         reset();
-    }
+    };
     const handleClose = () => setShow(false);
     return (
         <>
@@ -263,8 +263,8 @@ export const EditMergeItems = ({ id, setMergeItems, romanNo, items, title, descr
                 </Modal.Body>
             </Modal>
         </>
-    )
-}
+    );
+};
 
 
 function romanize(num) {

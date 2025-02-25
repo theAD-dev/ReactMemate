@@ -1,20 +1,21 @@
-import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
+import React, { useRef, useState } from 'react';
+
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { ChevronLeft, Download, Filter } from 'react-bootstrap-icons';
-import { Button } from 'primereact/button';
-import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Sidebar } from 'primereact/sidebar';
+import { useQuery } from '@tanstack/react-query';
+import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
-
-import style from './client-order-history.module.scss';
-import ClientOrderHistoryTable from './client-order-history-table';
-import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
-import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
-import BusinessClientView from '../../../features/clients-features/business-client-view/business-client-view';
-import SidebarClientLoading from '../../../features/clients-features/sidebar-client-loading/sidebar-client-loading';
+import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
+import ClientOrderHistoryTable from './client-order-history-table';
+import style from './client-order-history.module.scss';
+import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
+import BusinessClientView from '../../../features/clients-features/business-client-view/business-client-view';
+import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
+import SidebarClientLoading from '../../../features/clients-features/sidebar-client-loading/sidebar-client-loading';
+
 
 const ClientOrderHistory = () => {
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ const ClientOrderHistory = () => {
     const clientDetails = useQuery({ queryKey: ['client-read'], queryFn: () => getClientById(id), enabled: !!id, retry: 1 });
     const clientOrders = useQuery({ queryKey: ['client-order'], queryFn: () => clientOrderHistory(id), enabled: !!id, retry: 1 });
 
-    const handleSearch = (e) => { }
+    const handleSearch = (e) => { };
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
             dt.current.exportCSV({ selectionOnly });
@@ -70,7 +71,7 @@ const ClientOrderHistory = () => {
                     </div>
 
                     <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                        <h1 onClick={() => { setVisible(true) }} className={`${style.clientName} m-0 p-0 cursor-pointer`} title={clientDetails?.data?.name}>{clientDetails?.data?.name || ""}</h1>
+                        <h1 onClick={() => { setVisible(true); }} className={`${style.clientName} m-0 p-0 cursor-pointer`} title={clientDetails?.data?.name}>{clientDetails?.data?.name || ""}</h1>
                     </div>
                     <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                         <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
@@ -88,7 +89,7 @@ const ClientOrderHistory = () => {
                 )}
             ></Sidebar>
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default ClientOrderHistory
+export default ClientOrderHistory;

@@ -1,5 +1,5 @@
-import React from 'react'
-import Profile from '../../layout/Login/profile'
+import React from 'react';
+import Profile from '../../layout/Login/profile';
 
 
 export const Work = () => {
@@ -7,5 +7,5 @@ export const Work = () => {
     <div>
       <Profile />
     </div>
-  )
-}
+  );
+};

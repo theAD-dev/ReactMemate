@@ -1,9 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import {
   X,
   Filter,
@@ -16,20 +11,27 @@ import {
   CheckCircle,
   Person,
 } from "react-bootstrap-icons";
-import SearchFilter from "./search-filter";
+import { NavLink } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import clsx from 'clsx';
+import { useDebounce } from "primereact/hooks";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import DateRangePicker from "./features/date-range-picker";
-import { fetchMultipleData } from "../../../../APIs/SalesApi";
-import { fetchMultipleLost } from "../../../../APIs/SalesApi";
-import ConfettiComponent from "../../../layout/ConfettiComponent";
-import BankDetailsModel from "./features/bank-details-model";
-import { mapSalesData } from "./sales-tables";
-import clsx from 'clsx';
 import { toast } from 'sonner';
+import BankDetailsModel from "./features/bank-details-model";
+import DateRangePicker from "./features/date-range-picker";
+import { mapSalesData } from "./sales-tables";
+import SearchFilter from "./search-filter";
 import { getProjectManager } from "../../../../APIs/ClientsApi";
-import { useQuery } from "@tanstack/react-query";
-import { useDebounce } from "primereact/hooks";
+import { fetchMultipleLost } from "../../../../APIs/SalesApi";
+import { fetchMultipleData } from "../../../../APIs/SalesApi";
+import ConfettiComponent from "../../../layout/ConfettiComponent";
+
+
 
 const leadArray = [
   {
@@ -58,6 +60,7 @@ const leadArray = [
     gradient: "linear-gradient(90deg, #1AB2FF 80%, transparent 80%)",
   },
 ];
+
 const TableTopBar = ({
   profileData,
   salesData,
@@ -253,7 +256,7 @@ const TableTopBar = ({
         };
       }
     });
-  }
+  };
 
   const applyProjectManagerFilters = () => {
     const newFilterState = { ...filterState };
@@ -264,7 +267,7 @@ const TableTopBar = ({
   };
 
   const clearProjectManagerFilters = () => {
-    console.log('...')
+    console.log('...');
     setFilterState((prevFilterState) => {
       const { projectManager, ...rest } = prevFilterState;
       return rest;

@@ -10,7 +10,7 @@ export const getDepartments = async (all) => {
   if (all === 1) url.searchParams.append('all', 1);
   
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getCalculationByReferenceId = async (id) => {
   const endpoint = `/references/calculators/${id}/`;
@@ -19,7 +19,7 @@ export const getCalculationByReferenceId = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getQuoteByUniqueId = async (unique_id) => {
   const endpoint = `/projects/${unique_id}/`;
@@ -28,7 +28,7 @@ export const getQuoteByUniqueId = async (unique_id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createNewCalculationQuoteRequest = async (data) => {
   const endpoint = '/sales/new-request/';
@@ -38,7 +38,7 @@ export const createNewCalculationQuoteRequest = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateNewCalculationQuoteRequest = async (unique_id, data) => {
   if(!unique_id) throw new Error("No id found");
@@ -50,7 +50,7 @@ export const updateNewCalculationQuoteRequest = async (unique_id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createNewMergeQuote = async (data) => {
   const endpoint = '/projects/merges/new/';
@@ -60,7 +60,7 @@ export const createNewMergeQuote = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteMergeQuote = async (id) => {
   const endpoint = `/projects/merges/${id}/delete/`;
@@ -69,7 +69,7 @@ export const deleteMergeQuote = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getMergeItemsByUniqueId = async (unique_id) => {
   const endpoint = `/projects/merges/${unique_id}/`;
@@ -78,7 +78,7 @@ export const getMergeItemsByUniqueId = async (unique_id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createDepartment = async (data) => {
   const endpoint = '/settings/departments/';
@@ -88,7 +88,7 @@ export const createDepartment = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateDepartment = async (id, data) => {
   if (!id) return;
@@ -100,7 +100,7 @@ export const updateDepartment = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createSubDepartment = async (data) => {
   const endpoint = '/settings/sub-departments/';
@@ -110,7 +110,7 @@ export const createSubDepartment = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateSubDepartment = async (id, data) => {
   if (!id) return;
@@ -122,7 +122,7 @@ export const updateSubDepartment = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createCalculator = async (index, data) => {
   const endpoint = `/references/calculators/${index}/new/`;
@@ -132,7 +132,7 @@ export const createCalculator = async (index, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateCalculator = async (index, id, data) => {
   const endpoint = `/references/calculators/${index}/update/${id}/`;
@@ -142,7 +142,7 @@ export const updateCalculator = async (index, id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteSettingCalculator = async (endpoint) => {
   const options = {
@@ -150,7 +150,7 @@ export const deleteSettingCalculator = async (endpoint) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createQuoteProposal = async (id, data) => {
   const endpoint = `/proposals/new/${id}/`;
@@ -160,4 +160,4 @@ export const createQuoteProposal = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

@@ -1,15 +1,16 @@
 import React, { useState } from "react";
+
 import "../Login/login.css";
-import LoinLogo from "../../../assets/images/logo.svg";
 import { ArrowLeftShort, CheckCircleFill,Eye,EyeSlash } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
-import changepassword from "../../../assets/images/img/changepassword.png";
-import Featuredlockicon from "../../../assets/images/icon/Featuredlockicon.png";
-import arrowRight from "../../../assets/images/icon/arrow.svg";
-import { useNavigate } from "react-router-dom";
 import PasswordStrengthBar from "react-password-strength-bar";
-import { ProfileChangePassword } from "../../../APIs/ProfileResetPasswordApi";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
+import { ProfileChangePassword } from "../../../APIs/ProfileResetPasswordApi";
+import arrowRight from "../../../assets/images/icon/arrow.svg";
+import Featuredlockicon from "../../../assets/images/icon/Featuredlockicon.png";
+import changepassword from "../../../assets/images/img/changepassword.png";
+import LoinLogo from "../../../assets/images/logo.svg";
 
 
 const ChangePassword = () => {
@@ -25,7 +26,7 @@ const ChangePassword = () => {
   const { token } = useParams();
   console.log('token: ', token);
   
-  const tokenId = `profile/change-password/${token}`
+  const tokenId = `profile/change-password/${token}`;
 
 
 

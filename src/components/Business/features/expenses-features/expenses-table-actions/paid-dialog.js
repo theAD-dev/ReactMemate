@@ -1,13 +1,12 @@
 import React, { useState } from "react";
+import { QuestionCircle } from "react-bootstrap-icons";
+import { useMutation } from "@tanstack/react-query";
+import { Badge } from "primereact/badge";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import style from './dialog.module.scss';
-import { QuestionCircle } from "react-bootstrap-icons";
-import { Tag } from "primereact/tag";
-import { Badge } from "primereact/badge";
-import { useMutation } from "@tanstack/react-query";
-import { paidExpense } from "../../../../../APIs/expenses-api";
 import { toast } from "sonner";
+import style from './dialog.module.scss';
+import { paidExpense } from "../../../../../APIs/expenses-api";
 
 export default function PaidDialog({ visible, setVisible, details, setRefetch }) {
     const paidMutation = useMutation({
@@ -25,7 +24,7 @@ export default function PaidDialog({ visible, setVisible, details, setRefetch })
     const handlePaidExpense = () => {
         const id = details?.id;
         paidMutation.mutate({ ids: [id]});
-    }
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -52,5 +51,5 @@ export default function PaidDialog({ visible, setVisible, details, setRefetch })
                 </div>
             </div>
         </Dialog>
-    )
+    );
 }

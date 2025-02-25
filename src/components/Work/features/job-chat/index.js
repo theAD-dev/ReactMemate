@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { Chat } from 'react-bootstrap-icons';
-
 import style from './job-chat.module.scss';
 
 const JobChat = () => {
@@ -14,7 +13,7 @@ const JobChat = () => {
             
         </>
 
-    )
-}
+    );
+};
 
-export default JobChat
+export default JobChat;

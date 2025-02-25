@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./org.css"
+import "./org.css";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import LoinLogo from "../../../assets/images/logo.svg";
 import BusinessProfile from "../../../assets/images/img/emailSlider02.png";
+import LoinLogo from "../../../assets/images/logo.svg";
 import { useLocation } from 'react-router-dom';
 
 const CompanyName = () => {
@@ -21,7 +21,7 @@ const CompanyName = () => {
       setFirstcmError('Company name is required');
       return;
     }
-    navigate(`/regional-settings/${uuid}?email=${email}&company_name=${company_name}`)
+    navigate(`/regional-settings/${uuid}?email=${email}&company_name=${company_name}`);
   };
   return (
     <>

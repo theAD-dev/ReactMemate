@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import style from './location.module.scss';
-import Sidebar from '../Sidebar';
-import { Link } from 'react-router-dom';
 import { Button, Spinner } from 'react-bootstrap';
 import { Plus } from 'react-bootstrap-icons';
-import { getDesktopUserList, getLocation, getLocationList, userAssigned, userUnassigned } from '../../../../APIs/location-api';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import CreateLocation from './features/create-location';
-import { Skeleton } from 'primereact/skeleton';
-import Table from 'react-bootstrap/Table';
-import GoogleMap from "../../../../assets/images/icon/google_maps_ico.png";
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Skeleton } from 'primereact/skeleton';
+import Table from 'react-bootstrap/Table';
 import { toast } from 'sonner';
+import { getDesktopUserList, getLocation, getLocationList, userAssigned, userUnassigned } from '../../../../APIs/location-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import GoogleMap from "../../../../assets/images/icon/google_maps_ico.png";
+import Sidebar from '../Sidebar';
+import CreateLocation from './features/create-location';
+import style from './location.module.scss';
 
 const Location = () => {
     const { trialHeight } = useTrialHeight();
@@ -66,7 +66,7 @@ const Location = () => {
             setDefaultLocation(null);
             setVisible(true);
         }
-    }
+    };
     const handleEditLocation = () => {
         setDefaultLocation({
             id: locationReadQuery?.data?.id,
@@ -76,31 +76,31 @@ const Location = () => {
             state: locationReadQuery?.data?.state,
             city: locationReadQuery?.data?.city,
             postcode: locationReadQuery?.data?.postcode
-        })
+        });
         setVisible(true);
-    }
+    };
 
     const assignedUser = (id) => {
-        assignedMutation.mutate({ id: id })
-    }
+        assignedMutation.mutate({ id: id });
+    };
 
     const fallbackLocation = () => {
         if (locationsQuery?.data?.locations?.length) {
             setActiveLocation(locationsQuery?.data?.locations[0].id);
         }
-    }
+    };
 
     useEffect(() => {
         if (!activeLocation && locationsQuery?.data?.locations?.length) {
             setActiveLocation(locationsQuery?.data?.locations[0].id);
         }
-    }, [locationsQuery?.data, activeLocation])
+    }, [locationsQuery?.data, activeLocation]);
 
     useEffect(() => {
         const locationUserIds = locationReadQuery?.data?.users.map(user => user.id);
         const filteredDesktopUsers = desktopUser?.data?.filter(user => !locationUserIds?.includes(user.id));
         setDesktopUserOptions(filteredDesktopUsers);
-    }, [desktopUser?.data, locationReadQuery?.data])
+    }, [desktopUser?.data, locationReadQuery?.data]);
 
     return (
         <div className={`settings-wrap ${style.userSettingPage}`}>
@@ -218,7 +218,7 @@ const Location = () => {
                                                             </div>
                                                             {option?.label}
                                                         </div>
-                                                    )
+                                                    );
                                                 }}
                                                 className='outline-none'
                                                 style={{ width: '230px' }}
@@ -317,7 +317,7 @@ const Location = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Location
+export default Location;

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Envelope, Telephone, Calendar, X } from "react-bootstrap-icons";
 import { Button, ButtonToolbar, OverlayTrigger, Popover } from 'react-bootstrap';
-import ContactAdd from "./contact-add";
-import phonecallgra from "../../../../../assets/images/icon/phonecallgra.svg";
-import mailgradi from "../../../../../assets/images/icon/mailgradi.svg";
+import { Envelope, Telephone, Calendar, X } from "react-bootstrap-icons";
 import calendargradi from "../../../../../assets/images/icon/calendargradi.svg";
+import mailgradi from "../../../../../assets/images/icon/mailgradi.svg";
+import phonecallgra from "../../../../../assets/images/icon/phonecallgra.svg";
 import styles from '../sales.module.scss';
+import ContactAdd from "./contact-add";
 
 // Format Date
 const formatDate = (timestamp) => {

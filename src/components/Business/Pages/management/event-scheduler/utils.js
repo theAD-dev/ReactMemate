@@ -4,7 +4,7 @@ let expandRow;
 
 function parseTimestamp(timestampStr) {
   return new Date(new Date(timestampStr).getTime() - (new Date(timestampStr).getTimezoneOffset() * 60 * 1000));
-};
+}
 
 function loadData(responses) {
   const events = [];
@@ -141,7 +141,7 @@ function loadData(responses) {
             </div>`,
             minHeight: 75,
             marginBottom: 10,
-          }
+          };
         }
 
 
@@ -212,7 +212,7 @@ function loadData(responses) {
   dp.update({ resources, events });
   dp.onResourceExpand = function (args) {
     expandRow = args.resource.id;
-  }
+  };
 }
 
 function startDaypilot(elementId, responses, viewTaskDetails) {

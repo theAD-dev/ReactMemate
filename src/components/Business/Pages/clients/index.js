@@ -1,14 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react';
 import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
-import { useDebounce } from 'primereact/hooks';
 
-import style from './clients.module.scss';
-import ClientTable from './client-table';
-import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import { Button } from 'react-bootstrap';
+import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
+import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
+import ClientTable from './client-table';
+import style from './clients.module.scss';
+import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
 import clsx from 'clsx';
 
 const ClientPage = () => {
@@ -81,7 +81,7 @@ const ClientPage = () => {
             <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} refetch={refetch}/>
             <NewClientCreate visible={visible} setVisible={setVisible} refetch={setRefetch}/>
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default ClientPage
+export default ClientPage;

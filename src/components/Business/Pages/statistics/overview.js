@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import style from './statistics.module.scss';
+import React, { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
-import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 const Overview = () => {
     const { trialHeight } = useTrialHeight();
@@ -191,7 +192,7 @@ const Overview = () => {
                 <h2 className={clsx(style.keyResultsTitle)}>Reports Overview</h2>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Overview
+export default Overview;

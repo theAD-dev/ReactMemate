@@ -29,7 +29,7 @@ export const authenticateUser = async (email, password) => {
     console.error('Authentication error:', error);
     return { success: false, error: error.message };
   }
-}
+};
 
 
 

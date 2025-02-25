@@ -1,19 +1,19 @@
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../Sidebar';
-import { ChevronLeft, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
-import style from './job-template.module.scss';
-import clsx from 'clsx';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'react-bootstrap';
-import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
-import { InputText } from 'primereact/inputtext';
+import { ChevronLeft, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Editor } from 'primereact/editor';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Editor } from 'primereact/editor';
 import { toast } from 'sonner';
+import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import Sidebar from '../Sidebar';
+import style from './job-template.module.scss';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -68,9 +68,9 @@ const CreateProposalTemplate = () => {
 
     const handleDelete = () => {
         if (id) {
-            deleteMutation.mutate()
+            deleteMutation.mutate();
         }
-    }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -106,7 +106,7 @@ const CreateProposalTemplate = () => {
             });
 
             const method = id ? 'PUT' : 'POST';
-            const URL = id ? `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/update/${id}/` : `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/new/`
+            const URL = id ? `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/update/${id}/` : `${process.env.REACT_APP_BACKEND_API_URL}/settings/proposals/new/`;
 
             setIsLoading(true);
             const accessToken = localStorage.getItem("access_token");
@@ -150,7 +150,7 @@ const CreateProposalTemplate = () => {
             setName(proposalQuery?.data?.name);
             setSections(proposalQuery?.data?.sections);
         }
-    }, [id, proposalQuery?.data])
+    }, [id, proposalQuery?.data]);
 
     return (
         <div className='settings-wrap'>

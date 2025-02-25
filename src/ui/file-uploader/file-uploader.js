@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Form from 'react-bootstrap/Form';
 import { Button, Modal } from 'react-bootstrap';
+import { ArrowClockwise, CloudUpload } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import Cropper from 'react-easy-crop';
-import styles from './file-uploader.module.scss';
-import { ArrowClockwise, CloudUpload } from 'react-bootstrap-icons';
-import { base64ToBlob } from './utils';
 import clsx from 'clsx';
+import Form from 'react-bootstrap/Form';
+import styles from './file-uploader.module.scss';
+import { base64ToBlob } from './utils';
 
 const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" }) => {
     const [files, setFiles] = useState([]);
@@ -105,7 +105,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" 
         const croppedImageBlob = base64ToBlob(croppedImageBase64, 'image/jpeg');
         setPhoto({ croppedImageBase64, croppedImageBlob });
         setShow(false);
-    }
+    };
 
     return (
         <Modal style={{ zIndex: 1111 }} show={show} centered onHide={handleClose} onShow={generateCroppedImages}>

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+
 import "flatpickr/dist/themes/material_green.css";
 import Flatpickr from "react-flatpickr";
 
@@ -16,7 +17,7 @@ const DateRangePicker = ({ onDataApply, dateRange, onClose }) => {
       setStartDate(dateRange?.startDate);
       setEndDate(dateRange?.endDate);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const currentDate = new Date();

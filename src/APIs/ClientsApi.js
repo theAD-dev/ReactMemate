@@ -9,7 +9,7 @@ export const createNewIndividualClient = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createNewBusinessClient = async (data) => {
   const endpoint = '/clients/business/new/';
@@ -19,7 +19,7 @@ export const createNewBusinessClient = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const restoreClient = async (id) => {
   const endpoint = `/clients/restore/${id}/`;
@@ -28,7 +28,7 @@ export const restoreClient = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getClientById = async (id) => {
   const endpoint = `/clients/${id}/`;
@@ -37,7 +37,7 @@ export const getClientById = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getClientCategories = async () => {
   const endpoint = `/references/clients/categories/`;
@@ -46,7 +46,7 @@ export const getClientCategories = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getClientIndustries = async () => {
   const endpoint = `/references/clients/industries/`;
@@ -55,7 +55,7 @@ export const getClientIndustries = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getCountries = async () => {
   const endpoint = `/references/countries/`;
@@ -64,7 +64,7 @@ export const getCountries = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const getStates = async (country) => {
   const endpoint = `/references/states/${country}/`;
@@ -73,7 +73,7 @@ export const getStates = async (country) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const getCities = async (state) => {
   const endpoint = `/references/cities/${state}/`;
@@ -82,7 +82,7 @@ export const getCities = async (state) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const getProjectManager = async () => {
   const endpoint = `/references/desktop-users/`;
@@ -91,7 +91,7 @@ export const getProjectManager = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const clientEditApi = async (id) => {
   const endpoint = `/clients/${id}/`;
@@ -100,7 +100,7 @@ export const clientEditApi = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getListOfClients = async (page, limit, name="", order="", isShowDeleted) => {
   const offset = (page - 1) * limit;
@@ -113,10 +113,10 @@ export const getListOfClients = async (page, limit, name="", order="", isShowDel
   url.searchParams.append("offset", offset);
   if (name) url.searchParams.append("name", name);
   if (order) url.searchParams.append("ordering", order);
-  if (isShowDeleted) url.searchParams.append('deleted', 1)
+  if (isShowDeleted) url.searchParams.append('deleted', 1);
 
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const clientOrderHistory = async (id) => {
   const endpoint = `/clients/${id}/orders/`;
@@ -125,7 +125,7 @@ export const clientOrderHistory = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const markeMainAddress = async (id) => {
   const endpoint = `/clients/address/${id}/main`;
@@ -134,7 +134,7 @@ export const markeMainAddress = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const markeMainContact = async (id) => {
   const endpoint = `/clients/contact-persons/${id}/main`;
@@ -143,7 +143,7 @@ export const markeMainContact = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteClient = async (id) => {
   const endpoint = `/clients/delete/${id}/`;
@@ -152,7 +152,7 @@ export const deleteClient = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteContactPerson = async (id) => {
   const endpoint = `/clients/contact-persons/${id}/delete/`;
@@ -161,7 +161,7 @@ export const deleteContactPerson = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteAddress = async (id) => {
   const endpoint = `/clients/address/${id}/delete/`;
@@ -170,7 +170,7 @@ export const deleteAddress = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const fetchClients = async (limit, offset) => {
   const myHeaders = new Headers();
@@ -207,4 +207,4 @@ export const bringBack = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

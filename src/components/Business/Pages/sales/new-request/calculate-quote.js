@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { ChevronLeft, FiletypePdf, PlusSlashMinus } from 'react-bootstrap-icons'
-import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import CustomRadioButton from './ui/custom-radio-button';
-import DepartmentQuote from './department-quote';
-import { toast } from 'sonner';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
+import React, { useEffect, useState } from 'react';
 import { Button, Spinner } from 'react-bootstrap';
-import SendQuote from '../../../features/sales-features/send-quote/send-quote';
-import CreateProposal from '../../../features/sales-features/create-proposal/create-proposal';
+import { ChevronLeft, FiletypePdf, PlusSlashMinus } from 'react-bootstrap-icons';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
+import DepartmentQuote from './department-quote';
+import CustomRadioButton from './ui/custom-radio-button';
+import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
+import CreateProposal from '../../../features/sales-features/create-proposal/create-proposal';
+import SendQuote from '../../../features/sales-features/send-quote/send-quote';
+
 
 const CalculateQuote = () => {
     const navigate = useNavigate();
@@ -44,11 +45,11 @@ const CalculateQuote = () => {
                 client: storedSessionData?.id || "",
                 reference: storedSessionData?.reference || "",
                 description: storedSessionData?.requirements || ""
-            }))
+            }));
         } else {
-            setPayload((others) => ({ ...others, ...newRequestQuery?.data }))
+            setPayload((others) => ({ ...others, ...newRequestQuery?.data }));
         }
-    }, [unique_id, newRequestQuery?.data])
+    }, [unique_id, newRequestQuery?.data]);
 
     const newRequestMutation = useMutation({
         mutationFn: (data) => createNewCalculationQuoteRequest(data),
@@ -100,7 +101,7 @@ const CalculateQuote = () => {
             payload.action = "save";
         }
 
-        payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() } // dummy
+        payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() }; // dummy
 
         const merges = payload.merges;
         if (payload.merges) delete payload.merges;
@@ -121,7 +122,7 @@ const CalculateQuote = () => {
                 } catch (error) {
                     console.log('Error during with deleting merge: ', error);
                 }
-            };
+            }
         }
         if (unique_id) {
             result = await updateRequestMutation.mutateAsync(payload);
@@ -149,7 +150,7 @@ const CalculateQuote = () => {
                         setIsLoading(false);
                         console.log('Error during with creating merge: ', error);
                     }
-                };
+                }
                 toast.success(`Calculations and merge items updated successfully.`);
             } else {
                 toast.success(`Calculations updated successfully.`);
@@ -195,16 +196,16 @@ const CalculateQuote = () => {
             }
         }
 
-        navigate(`/sales`)
+        navigate(`/sales`);
         setIsLoading(false);
         setShowQuoteModal(false);
-    }
+    };
 
     return (
         <div className='newQuotePage'>
             <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative' }}>
                 <NavLink to={""}>
-                    <button className='back-button' style={{ padding: "10px 16px" }} onClick={() => { navigate(-1) }}>
+                    <button className='back-button' style={{ padding: "10px 16px" }} onClick={() => { navigate(-1); }}>
                         <ChevronLeft color="#000000" size={17} /> &nbsp;Go Back
                     </button>
                 </NavLink>
@@ -298,7 +299,7 @@ const CalculateQuote = () => {
                                     <button type="button" className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
                                         Edit Proposal
                                     </button>
-                                    <a href={`${newRequestQuery?.data?.proposal_pdf}`} target='_blank' type="button" className="button-custom text-button px-2">
+                                    <a href={`${newRequestQuery?.data?.proposal_pdf}`} target='_blank' type="button" className="button-custom text-button px-2" rel="noreferrer">
                                         <FiletypePdf color='#106B99' size={20} />
                                     </a>
                                 </div>
@@ -343,9 +344,9 @@ const CalculateQuote = () => {
                 </div>
             }
         </div >
-    )
-}
+    );
+};
 
 
 
-export default CalculateQuote
+export default CalculateQuote;

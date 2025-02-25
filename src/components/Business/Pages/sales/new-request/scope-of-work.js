@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { CardList, ChevronLeft, InfoSquare, Person, FileText, FileImage, FileCode, FilePdf, FileWord, Upload, Trash } from 'react-bootstrap-icons';
-import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { Col, Row } from 'react-bootstrap';
-import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
-import { v4 as uuidv4 } from 'uuid';
+import { CardList, ChevronLeft, InfoSquare, Person, FileText, FileImage, FileCode, FilePdf, FileWord, Upload, Trash } from 'react-bootstrap-icons';
+import { useForm } from 'react-hook-form';
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { draftSalesRequest } from '../../../../../APIs/SalesApi';
-import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
+import { v4 as uuidv4 } from 'uuid';
+import * as yup from 'yup';
 import { getClientById } from '../../../../../APIs/ClientsApi';
+import { draftSalesRequest } from '../../../../../APIs/SalesApi';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+
+
 
 const schema = yup
     .object({
@@ -46,7 +48,7 @@ const ScopeOfWorkComponent = () => {
     const [defaultValues, setDefaultValues] = useState({
         reference: quoteFormData.reference || "",
         requirements: quoteFormData.requirements || ""
-    })
+    });
     const { register, handleSubmit, trigger, formState: { errors }, watch } = useForm({
         resolver: yupResolver(schema),
         defaultValues
@@ -117,7 +119,7 @@ const ScopeOfWorkComponent = () => {
                 managers: [{ manager: profileData?.desktop_user_id }],
             });
         }
-    }
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -218,6 +220,6 @@ const ScopeOfWorkComponent = () => {
             </div>
         </form>
     );
-}
+};
 
 export default ScopeOfWorkComponent;

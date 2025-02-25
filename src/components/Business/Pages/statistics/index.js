@@ -1,10 +1,11 @@
-import React from 'react'
 import { PrimeReactProvider } from 'primereact/api';
+import React from 'react';
+
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import style from './statistics.module.scss';
 import { ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
-import clsx from 'clsx';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 const StatisticsPage = () => {
@@ -98,7 +99,7 @@ const StatisticsPage = () => {
                 </div>
             </div>
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default StatisticsPage
+export default StatisticsPage;

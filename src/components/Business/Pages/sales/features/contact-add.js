@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Modal from 'react-bootstrap/Modal';
 import { PlusLg, Envelope, Telephone, Calendar, ChevronDown } from "react-bootstrap-icons";
 import Typography from '@mui/material/Typography';
-import Form from 'react-bootstrap/Form';
-import dayjs from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import saleContact from "../../../../../assets/images/icon/sale-01.svg";
 import { fetchContacts } from '../../../../../APIs/SalesApi';
+import saleContact from "../../../../../assets/images/icon/sale-01.svg";
 
 const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) => {
 
@@ -162,7 +162,7 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
         </Modal.Body>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default ContactAdd;

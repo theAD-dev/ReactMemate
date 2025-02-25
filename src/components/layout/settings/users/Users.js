@@ -1,11 +1,14 @@
-import { Link } from 'react-router-dom';
-import Sidebar from '../Sidebar';
-import { Plus } from 'react-bootstrap-icons';
-import style from './users.module.scss';
 import React, { useState } from 'react';
-import { Button } from 'primereact/button';
-import Desktop from './desktop';
+import { Plus } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
+import { Button } from 'primereact/button';
+import Sidebar from '../Sidebar';
+import Desktop from './desktop';
+import style from './users.module.scss';
+
+
+
 
 const Users = () => {
     const [activeTab, setActiveTab] = useState('desktop');
@@ -20,7 +23,7 @@ const Users = () => {
             </div>
         </>
     );
-}
+};
 
 
 export default Users;

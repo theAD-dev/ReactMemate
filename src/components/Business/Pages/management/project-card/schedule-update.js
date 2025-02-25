@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import DateRangePicker from '../../../../Work/Pages/tasks/old-development/DateRangePicker';
-import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import { useMutation } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { updateProjectScheduleById } from '../../../../../APIs/management-api';
+import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
+import DateRangePicker from '../../../../Work/Pages/tasks/old-development/DateRangePicker';
 
 const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };
@@ -27,12 +27,12 @@ const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
         mutationFn: (data) => updateProjectScheduleById(projectId, data),
         onSuccess: async () => { },
         onError: (error) => {
-            setDateRange({ startDate: null, endDate: null })
+            setDateRange({ startDate: null, endDate: null });
             console.error('Error creating task:', error);
         }
     });
     const handleDataApply = (data) => {
-        updateMutation.mutate({ booking_start: data.startDate, booking_end: data.endDate })
+        updateMutation.mutate({ booking_start: data.startDate, booking_end: data.endDate });
         setDateRange(data);
         setIsPickerVisible(false);
     };
@@ -43,8 +43,8 @@ const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
     };
 
     useEffect(() => {
-        if (startDate && endDate) setDateRange({ startDate: new Date(1000 * +startDate), endDate: new Date(1000 * +endDate) })
-    }, [startDate, endDate])
+        if (startDate && endDate) setDateRange({ startDate: new Date(1000 * +startDate), endDate: new Date(1000 * +endDate) });
+    }, [startDate, endDate]);
 
     useEffect(() => {
         if (isPickerVisible) {

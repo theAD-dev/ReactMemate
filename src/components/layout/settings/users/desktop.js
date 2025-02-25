@@ -1,19 +1,20 @@
-import { Building, Person } from 'react-bootstrap-icons';
-import style from './users.module.scss';
 import React, { useState } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteDesktopUser, getDesktopUserList, getPrivilegesList, restoreDesktopUser } from '../../../../APIs/settings-user-api';
 import { Spinner } from 'react-bootstrap';
-import CreateDesktopUser from './features/create-desktop-user';
-import clsx from 'clsx';
 import { Plus } from 'react-bootstrap-icons';
+import { Building, Person } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
+import CreateDesktopUser from './features/create-desktop-user';
+import style from './users.module.scss';
+import { deleteDesktopUser, getDesktopUserList, getPrivilegesList, restoreDesktopUser } from '../../../../APIs/settings-user-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 const Desktop = ({ visible, setVisible }) => {
     const { trialHeight } = useTrialHeight();
@@ -55,9 +56,9 @@ const Desktop = ({ visible, setVisible }) => {
         if (desktopUsersQuery?.data?.limits?.total <= activeUserCount?.length) {
             toast.error(`You have reached the maximum number of users allowed.`);
         } else {
-            restoreMutation.mutate(id)
+            restoreMutation.mutate(id);
         }
-    }
+    };
 
     const nameBody = (data) => {
         return <div className='d-flex align-items-center justify-content-between show-on-hover'>
@@ -69,22 +70,22 @@ const Desktop = ({ visible, setVisible }) => {
                 </div></div>
             <Button label="Edit" onClick={() => {
                 if (data?.privilege_name === "Admin") {
-                    navigate('/settings/generalinformation/profile')
+                    navigate('/settings/generalinformation/profile');
                 } else {
                     setId(data?.id);
                     setVisible(true);
                 }
             }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' />
-        </div>
-    }
+        </div>;
+    };
 
     const StatusBody = (data) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <div className={`styleGrey01  ${style.privilege}`}>
                 {data?.privilege_name || "-"}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const ActionsBody = (data) => {
         if (data?.privilege_name === "Admin") return "-";
@@ -93,7 +94,7 @@ const Desktop = ({ visible, setVisible }) => {
             {
                 data?.is_active
                     ?
-                    <Button onClick={() => { deleteMutation.mutate(data?.id) }} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
+                    <Button onClick={() => { deleteMutation.mutate(data?.id); }} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
                         Delete
                         {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </Button>
@@ -102,8 +103,8 @@ const Desktop = ({ visible, setVisible }) => {
                         {restoreMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </Button>
             }
-        </React.Fragment>
-    }
+        </React.Fragment>;
+    };
 
     return (
         <>
@@ -158,6 +159,6 @@ const Desktop = ({ visible, setVisible }) => {
             <CreateDesktopUser id={id} setId={setId} visible={visible} setVisible={setVisible} refetch={() => desktopUsersQuery?.refetch()} privilegeOptions={privilegesQuery?.data || []} />
         </>
     );
-}
+};
 
 export default Desktop;

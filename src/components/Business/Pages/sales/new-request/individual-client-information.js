@@ -2,9 +2,9 @@ import React, { useRef, useState } from 'react';
 import { Row } from 'react-bootstrap';
 import { CardList, ChevronLeft, InfoSquare, Person } from 'react-bootstrap-icons';
 import { Link, NavLink, useParams, useNavigate } from 'react-router-dom';
-import IndivisualForm from '../../../features/clients-features/new-client-create/indivisual-form';
 import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
+import IndivisualForm from '../../../features/clients-features/new-client-create/indivisual-form';
 
 const IndividualClientInformation = () => {
     const { id } = useParams();
@@ -16,7 +16,7 @@ const IndividualClientInformation = () => {
     const [individualDefaultValues, setIndividualDefaultValues] = useState({
         payment_terms: 1,
         category: 1,
-    })
+    });
 
     const handleExternalSubmit = () => {
         if (formRef.current) {
@@ -79,7 +79,7 @@ const IndividualClientInformation = () => {
         } finally {
             setIsPending(false);
         }
-    }
+    };
 
     return (
         <div className="newQuotePage existingClients borderSkyColor">

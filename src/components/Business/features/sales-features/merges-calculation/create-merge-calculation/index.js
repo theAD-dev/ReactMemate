@@ -1,18 +1,18 @@
-import clsx from 'clsx';
-import * as yup from 'yup';
-import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { QuestionCircle, Trash } from 'react-bootstrap-icons';
 import { Button, Col, InputGroup, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
-
+import { QuestionCircle, Trash } from 'react-bootstrap-icons';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import Form from 'react-bootstrap/Form';
+import { toast } from 'sonner';
+import * as yup from 'yup';
 import style from './create-merge-calculation.module.scss';
-import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
 import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
+import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
 import { romanize } from '../../../../shared/utils/helper';
+
 
 // Validation schema
 const schema = yup
@@ -28,12 +28,12 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
   const [defaultValues, setDefaultValues] = useState({
     title: '',
     description: ''
-  })
+  });
   const { register, reset, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema), defaultValues
   });
 
-  useEffect(() => { reset() }, [selectItem])
+  useEffect(() => { reset(); }, [selectItem]);
 
   const mutation = useMutation({
     mutationFn: (data) => createNewMergeQuote(data),
@@ -57,16 +57,16 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
         calculator: value.calculator, id: value.id, label: value.label, total: value.total,
         description: value.description
       }))
-    }
+    };
     setMerges((others) => ([...others, payload]));
     handleClose();
     setSelectItem({});
-  }
+  };
 
   const deleteAndCancel = () => {
     setShow(false);
     setSelectItem({});
-  }
+  };
   const handleClose = () => setShow(false);
   const handleOpen = () => setShow(true);
 
@@ -155,7 +155,7 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
         </Modal.Body>
       </Modal>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default CreateMergeCalculation
+export default CreateMergeCalculation;

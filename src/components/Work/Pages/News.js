@@ -1,6 +1,6 @@
 const News = () => {
   return (
     <div>Chat</div>
-  )
-}
-export default News
+  );
+};
+export default News;

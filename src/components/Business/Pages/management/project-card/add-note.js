@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { X } from "react-bootstrap-icons";
+import { useMutation } from '@tanstack/react-query';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { X } from "react-bootstrap-icons";
-import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
 import { createProjectNoteById } from '../../../../../APIs/management-api';
-import { useMutation } from '@tanstack/react-query';
+import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.svg";
 
 const AddNote = ({ projectId, projectCardData }) => {
   const [viewShow, setViewShow] = useState(false);
@@ -36,7 +36,7 @@ const AddNote = ({ projectId, projectCardData }) => {
       setUpdateDis('');
       setErrors({});
     }
-  }, [viewShow])
+  }, [viewShow]);
 
   return (
     <>

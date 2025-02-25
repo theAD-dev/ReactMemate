@@ -13,4 +13,4 @@ const Calendar = ({ selectedDate, handleDateChange }) => {
   );
 };
 
-export default Calendar
+export default Calendar;

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
+import React, { useEffect, useState } from 'react';
+
 import '@szhsin/react-menu/dist/index.css';
 import { ChevronDown } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
@@ -18,7 +19,7 @@ const colorMapping = {
     "#FF007F": { bg: "#FFCCE5", border: "#FF007F", color: "#6F0A3C", text: "Soft Pink" },
     "#FFD700": { bg: "#FFF8D1", border: "#FFD700", color: "#997100", text: "Yellow" },
     "#6C6C1C": { bg: "#E1E1B8", border: "#6C6C1C", color: "#444403", text: "Dark Yellow" }
-}
+};
 
 const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
     const [selectedOption, setSelectedOption] = useState(null);
@@ -33,7 +34,7 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
     });
     const handleSubMenuClick = (choosedStatus) => {
         if (choosedStatus?.id) {
-            updateMutation.mutate({ custom_status: choosedStatus?.id })
+            updateMutation.mutate({ custom_status: choosedStatus?.id });
             setSelectedOption(choosedStatus);
         }
     };
@@ -61,7 +62,7 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
                         selectedOption && selectedOption.title ? (
                             <div className="d-flex justify-content-center" style={{ width: '204px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
                                 <>{
-                                    updateMutation.isPending ? (<div class="dot-flashing"></div>) : (
+                                    updateMutation.isPending ? (<div className="dot-flashing"></div>) : (
                                         <>
                                             <div className="h-100" style={{ width: '4px', background: `${colorMapping[selectedOption?.color]?.border}` }}></div>
                                             <div className="h-100 statusFlex d-flex align-items-center" style={{ width: '100%', background: `${colorMapping[selectedOption?.color]?.bg}` }}>
@@ -106,7 +107,7 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
                 </MenuItem>
             ))}
         </Menu>
-    )
-}
+    );
+};
 
-export default SelectStatus
+export default SelectStatus;

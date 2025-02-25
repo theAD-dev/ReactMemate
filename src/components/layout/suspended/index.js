@@ -1,5 +1,5 @@
-import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 import styles from './index.module.scss';
 
 const Suspended = () => {
@@ -91,7 +91,7 @@ const Suspended = () => {
                 </div>
             </Col>
         </Row>
-    )
-}
+    );
+};
 
-export default Suspended
+export default Suspended;

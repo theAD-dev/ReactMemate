@@ -1,21 +1,22 @@
-import clsx from 'clsx';
 import React, { forwardRef, useRef, useState } from 'react';
-import { Tag } from 'primereact/tag';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import clsx from 'clsx';
 import '@szhsin/react-menu/dist/index.css';
 
-import style from './client-order-history.module.scss';
-import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
+import { useMutation } from '@tanstack/react-query';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Tag } from 'primereact/tag';
+import { CloseButton } from 'react-bootstrap';
 import { ArrowLeftCircle, CardChecklist, Check2Circle, FileEarmark, FilePdf, Files, FileText, InfoCircle, Link45deg, ListCheck, ListUl, PhoneVibrate, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { fetchduplicateData } from '../../../../../APIs/SalesApi';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { useMutation } from '@tanstack/react-query';
-import { CloseButton } from 'react-bootstrap';
+import style from './client-order-history.module.scss';
 import { bringBack } from '../../../../../APIs/ClientsApi';
+import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
+
 
 const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending, setVisible }, ref) => {
   const navigate = useNavigate();
@@ -26,52 +27,52 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     const status = rowData.status;
     switch (status) {
       case 'Lost':
-        return <Tag className={`status ${style.lost}`} value={status} />
+        return <Tag className={`status ${style.lost}`} value={status} />;
       case 'Completed':
-        return <Tag className={`status ${style.complete}`} value={status} />
+        return <Tag className={`status ${style.complete}`} value={status} />;
       case 'In progress':
-        return <Tag className={`status ${style.inprogress}`} value={status} />
+        return <Tag className={`status ${style.inprogress}`} value={status} />;
       case 'Declined':
-        return <Tag className={`status ${style.declined}`} value={status} />
+        return <Tag className={`status ${style.declined}`} value={status} />;
       default:
         return <Tag className={`status ${style.defaultStatus}`} value={status} />;
     }
-  }
+  };
 
   const profitBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
       case 'Lost':
-        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${rowData.profit}`} />
+        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${rowData.profit}`} />;
       case 'Completed':
-        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${rowData.profit}`} />
+        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${rowData.profit}`} />;
       case 'In progress':
-        return <Tag className={`profit ${style.inprogressProfit}`} value={`$ ${rowData.profit}`} />
+        return <Tag className={`profit ${style.inprogressProfit}`} value={`$ ${rowData.profit}`} />;
       case 'Declined':
-        return <Tag className={`profit ${style.declinedProfit} rounded`} value={`$ ${rowData.profit}`} />
+        return <Tag className={`profit ${style.declinedProfit} rounded`} value={`$ ${rowData.profit}`} />;
       default:
         return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$ ${rowData.profit}`} />;
     }
-  }
+  };
 
   const totalBodyTemplate = (rowData) => {
     return `$${rowData.total}`;
-  }
+  };
 
   const InvoiceBodyTemplate = (rowData) => {
     return <div className='d-flex align-items-center justify-content-center gap-4'>
       <Link to={rowData.invoice_url}><FilePdf color='#FF0000' size={16} /></Link>
       <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16} /></Link>
-    </div>
-  }
+    </div>;
+  };
 
   const quoteBodyTemplate = (rowData) => {
     return <div className='d-flex align-items-center justify-content-center gap-4'>
       <Link to={"#"}><div><PlusSlashMinus color='#FDB022' size={16} /></div></Link>
       <Link to={rowData.quote_url}><FilePdf color='#FF0000' size={16} /></Link>
       <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16} /></Link>
-    </div>
-  }
+    </div>;
+  };
 
   const duplicateSale = async (projectId) => {
     try {
@@ -86,7 +87,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     } finally {
       setIsDuplicating(null);
     }
-  }
+  };
 
   const bringBackSale = async (projectId, status) => {
     try {
@@ -106,7 +107,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     } finally {
       setIsBringBack(null);
     }
-  }
+  };
 
   const HistoryBodyTemplate = (rowData) => {
     const ref = useRef(null);
@@ -124,9 +125,9 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
         hour12: true,
       }).replace(',', '');
       const formattedDate = date.toLocaleDateString('en-GB').replaceAll('\/', '.');
-      const result = `${time} | ${day} | ${formattedDate} by ${history?.manager || "-"}`
+      const result = `${time} | ${day} | ${formattedDate} by ${history?.manager || "-"}`;
       return result;
-    }
+    };
 
     function getIconByType(type) {
       switch (type) {
@@ -185,8 +186,8 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
           </div>
         </ControlledMenu>
       </div>
-    </React.Fragment>
-  }
+    </React.Fragment>;
+  };
 
   const InfoBodyTemplate = (rowData) => {
     const ref = useRef(null);
@@ -221,24 +222,24 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
           </div>
         </ControlledMenu>
       </div>
-    </React.Fragment>
-  }
+    </React.Fragment>;
+  };
 
   const duplicateBodyTemplate = (rowData) => {
     return <>
       {rowData?.unique_id === isDuplicating
         ? <ProgressSpinner style={{ width: '18px', height: '18px', position: 'relative', top: '2px' }} />
         : <Files color='#667085' size={16} className='cursor-pointer' onClick={() => duplicateSale(rowData?.unique_id)} />}
-    </>
-  }
+    </>;
+  };
 
   const bringBackBodyTemplate = (rowData) => {
     return <>
       {rowData?.unique_id === isBringBack
         ? <ProgressSpinner style={{ width: '18px', height: '18px', position: 'relative', top: '2px' }} />
         : <ArrowLeftCircle color='#667085' size={16} className='cursor-pointer' onClick={() => bringBackSale(rowData?.unique_id, rowData.status)} />}
-    </>
-  }
+    </>;
+  };
 
   return (
     <DataTable ref={ref} value={clientOrders} scrollable selectionMode={'checkbox'} removableSort
@@ -261,7 +262,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
       <Column header="Duplicate" body={duplicateBodyTemplate} bodyClassName={"text-center"} style={{ minWidth: '82px' }}></Column>
       <Column header="Bring Back" body={bringBackBodyTemplate} bodyClassName={"text-center"} style={{ minWidth: '110px' }}></Column>
     </DataTable>
-  )
-})
+  );
+});
 
-export default ClientOrderHistoryTable
+export default ClientOrderHistoryTable;

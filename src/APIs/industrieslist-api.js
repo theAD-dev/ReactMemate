@@ -8,7 +8,7 @@ export const getIndustriesList = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const newIndustries = async (data) => {
   const endpoint = '/references/clients/industries/';
@@ -18,7 +18,7 @@ export const newIndustries = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const readIndustry = async (id) => {
   const endpoint = `/references/clients/industries/${id}/`;
@@ -27,7 +27,7 @@ export const readIndustry = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateIndustry = async (id, data) => {
   const endpoint = `/references/clients/industries/${id}/`;
@@ -37,7 +37,7 @@ export const updateIndustry = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteIndustry = async (id, data) => {
   const endpoint = `/references/clients/industries/${id}/`;
@@ -48,7 +48,7 @@ export const deleteIndustry = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getCategoriesList = async () => {
   const endpoint = `/references/clients/categories/`;
@@ -57,7 +57,7 @@ export const getCategoriesList = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const newCategories = async (data) => {
   const endpoint = '/references/clients/categories/';
@@ -67,7 +67,7 @@ export const newCategories = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const readCategories = async (id) => {
   const endpoint = `/references/clients/categories/${id}/`;
@@ -77,7 +77,7 @@ export const readCategories = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateCategories = async (id, data) => {
   const endpoint = `/references/clients/categories/${id}/`;
@@ -88,7 +88,7 @@ export const updateCategories = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteCategories = async (id, data) => {
   const endpoint = `/references/clients/categories/${id}/`;
@@ -98,4 +98,4 @@ export const deleteCategories = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

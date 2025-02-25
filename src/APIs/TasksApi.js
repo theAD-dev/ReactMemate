@@ -201,7 +201,7 @@ export const fetchTasksDelete = async (taskId) => {
 
     const response = await fetch(url, requestOptions);
     if (response.ok) 
-    return { message: 'Task deleted successfully' }
+    return { message: 'Task deleted successfully' };
     else
     throw new Error("Error during deleting"); 
     

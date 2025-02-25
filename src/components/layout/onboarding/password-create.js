@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeftShort, CheckCircleFill } from "react-bootstrap-icons";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import "./org.css";
 import createPasswordImg from "../../../assets/images/create-password.png";

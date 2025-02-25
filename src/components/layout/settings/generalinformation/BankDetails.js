@@ -1,17 +1,18 @@
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Skeleton } from "primereact/skeleton";
-import Sidebar from ".././Sidebar";
-import styles from "./general.module.scss";
 import { PencilSquare } from "react-bootstrap-icons";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Skeleton } from "primereact/skeleton";
+import * as yup from "yup";
+import styles from "./general.module.scss";
+import Sidebar from ".././Sidebar";
 import {
   SettingsBankInformation,
   updateBankInformation,
 } from "../../../../APIs/SettingsGeneral";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
+
 
 const schema = yup.object().shape({
   bank_name: yup.string().required("Bank name is required"),

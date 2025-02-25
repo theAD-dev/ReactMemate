@@ -12,10 +12,10 @@ export const getListOfInvoice = async (page, limit, name = "", order = "", isSho
   url.searchParams.append("offset", offset);
   if (name) url.searchParams.append("name", name);
   if (order) url.searchParams.append("ordering", order);
-  if (isShowDeleted) url.searchParams.append('deleted', 1)
+  if (isShowDeleted) url.searchParams.append('deleted', 1);
 
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getInvoice = async (uniqueId) => {
   const endpoint = `/invoices/view/${uniqueId}/`;
@@ -24,7 +24,7 @@ export const getInvoice = async (uniqueId) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const paymentIntentCreate = async (uniqueId, data) => {
   const endpoint = `/invoices/payment-intent/${uniqueId}/`;
@@ -34,7 +34,7 @@ export const paymentIntentCreate = async (uniqueId, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const deleteInvoice = async (uniqueId) => {
   const endpoint = `/invoices/delete/${uniqueId}/`;
@@ -43,7 +43,7 @@ export const deleteInvoice = async (uniqueId) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const resendInvoiceEmail = async (id, data) => {
     const endpoint = `/resend/invoice/${id}/`;
@@ -53,7 +53,7 @@ export const resendInvoiceEmail = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const partialPaymentCreate = async (id, data) => {
   const endpoint = `/invoices/partial-payment/${id}/`;
@@ -63,7 +63,7 @@ export const partialPaymentCreate = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const sendInvoiceToXeroApi = async (data) => {
   const endpoint = `/invoices/to-xero/`;
@@ -73,4 +73,4 @@ export const sendInvoiceToXeroApi = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

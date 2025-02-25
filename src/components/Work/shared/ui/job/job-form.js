@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 const JobForm = () => {
   return (
     <div>JobForm</div>
-  )
-}
+  );
+};
 
-export default JobForm
+export default JobForm;

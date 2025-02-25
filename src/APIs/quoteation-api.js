@@ -9,7 +9,7 @@ export const getQuoteation = async (lastId) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const quotationDecline = async (lastId) => {
   const endpoint = `/quotes/decline/${lastId}/`;
@@ -18,7 +18,7 @@ export const quotationDecline = async (lastId) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const quotationAccept = async (lastId) => {
   const endpoint = `/quotes/accept/${lastId}/`;
@@ -27,7 +27,7 @@ export const quotationAccept = async (lastId) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 
 export const quotationChanges = async (lastId, data) => {
   const endpoint = `/quotes/changes/${lastId}/`;
@@ -37,5 +37,5 @@ export const quotationChanges = async (lastId, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options, false);
-}
+};
 

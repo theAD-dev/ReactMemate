@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import ClientProvider from './client-provider';
 
@@ -7,7 +7,7 @@ const ClientLayout = () => {
         <ClientProvider>
             <Outlet />
         </ClientProvider>
-    )
-}
+    );
+};
 
-export default ClientLayout
+export default ClientLayout;

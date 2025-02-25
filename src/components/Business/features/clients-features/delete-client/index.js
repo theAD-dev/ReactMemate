@@ -1,12 +1,13 @@
-import React from 'react'
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
-import { toast } from 'sonner';
-import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
-import { useMutation } from '@tanstack/react-query';
-import { deleteClient } from '../../../../../APIs/ClientsApi';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
+import { deleteClient } from '../../../../../APIs/ClientsApi';
+
 
 const DeleteClient = ({ id }) => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const DeleteClient = ({ id }) => {
             accept,
             reject,
         });
-    }
+    };
     return (
         <>
             <ConfirmPopup />
@@ -51,7 +52,7 @@ const DeleteClient = ({ id }) => {
             </Button>
         </>
 
-    )
-}
+    );
+};
 
-export default DeleteClient
+export default DeleteClient;

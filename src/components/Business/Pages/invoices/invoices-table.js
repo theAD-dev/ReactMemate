@@ -1,28 +1,29 @@
+
+
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event } from 'react-bootstrap-icons';
-import { Tag } from 'primereact/tag';
-
-import style from './invoice.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
-
-import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { CloseButton, Spinner } from 'react-bootstrap';
-import { Badge } from 'primereact/badge';
-import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
+import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event } from 'react-bootstrap-icons';
+import { Link, useNavigate } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
-import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import clsx from 'clsx';
+import { Badge } from 'primereact/badge';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Tag } from 'primereact/tag';
+import { toast } from 'sonner';
+import style from './invoice.module.scss';
+import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
 import { fetchduplicateData } from '../../../../APIs/SalesApi';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
 import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
-import { Button } from 'primereact/button';
-import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
-import { formatAUD } from '../../../../shared/lib/format-aud';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -61,7 +62,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted);
-            setTotal(() => (data?.count || 0))
+            setTotal(() => (data?.count || 0));
             if (page === 1) setCients(data.results);
             else {
                 if (data?.results?.length > 0)
@@ -72,7 +73,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                     });
             }
             setSort(tempSort);
-            setHasMoreData(data.count !== clients.length)
+            setHasMoreData(data.count !== clients.length);
             setLoading(false);
         };
 
@@ -99,15 +100,15 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         return <div className={`d-flex align-items-center gap-2 justify-content-between show-on-hover`}>
             <span>{rowData.number}</span>
             <Button label="Open" onClick={() => navigate(`/management?unique_id=${rowData.unique_id}&reference=${rowData?.reference}&number=${rowData?.number}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
-        </div>
-    }
+        </div>;
+    };
 
     const InvoiceBody = (rowData) => {
         return <div className='d-flex align-items-center justify-content-around'>
             <Link to={`${rowData?.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
             <Link to={`/invoice/${rowData.unique_id}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
-        </div>
-    }
+        </div>;
+    };
 
     const customerNameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
@@ -117,8 +118,8 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 {rowData.deleted ?
                     <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const dueDate = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`} style={{ color: "#98A2B3" }}>
@@ -134,33 +135,33 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
             {formatDate(rowData.created)}
             <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={false} />
-        </div>
-    }
+        </div>;
+    };
 
     const totalBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`}>
             <div className={`text-dark`}>
                 ${formatAUD(rowData?.amount)}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const ToBePaidBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={`text-dark`}>
                 ${formatAUD(rowData?.to_be_paid)}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const depositBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`} style={{ position: 'static' }}>
             <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
                 ${formatAUD(rowData.deposit)}
-                <span onClick={() => { setVisible(true); setInvoiceData(rowData) }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
+                <span onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const xeroBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-center`}>
@@ -169,8 +170,8 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                     ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
                     : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
             }
-        </div>
-    }
+        </div>;
+    };
 
     const deleteMutation = useMutation({
         mutationFn: (data) => deleteInvoice(data),
@@ -261,8 +262,8 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
                 </ControlledMenu>
             </div>
-        </React.Fragment>
-    }
+        </React.Fragment>;
+    };
 
     const StatusBody = (rowData) => {
         const ref = useRef(null);
@@ -281,7 +282,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
             >
                 <div className='d-flex flex-column gap-2'>
                     <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
                         <Files color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
                         {duplicateMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
@@ -290,30 +291,30 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                         <FileEarmarkSpreadsheet color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false) }}>
+                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
                         <Trash color='#B42318' size={20} />
                         <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
                         {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </div>
                 </div>
             </ControlledMenu>
-        </React.Fragment>
-    }
+        </React.Fragment>;
+    };
 
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
-        </div>
-    }
+        </div>;
+    };
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : data?.payment_status === 'partial_payment' ? style.partialPaidRow : style.unpaidRow);
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
 
-        setTempSort({ sortField, sortOrder })
+        setTempSort({ sortField, sortOrder });
         setPage(1);  // Reset to page 1 whenever searchValue changes
     };
 
@@ -345,7 +346,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
             </DataTable>
             <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData} />
         </>
-    )
-})
+    );
+});
 
-export default InvoiceTable
+export default InvoiceTable;

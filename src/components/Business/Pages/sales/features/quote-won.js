@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { CheckCircle, Check2Circle } from "react-bootstrap-icons";
+import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
-import ManagementIcon from "../../../../../assets/images/icon/ManagementIcon.svg";
-import { markWon } from "../../../../../APIs/SalesApi";
-import ConfettiComponent from '../../../../layout/ConfettiComponent';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 import { toast } from 'sonner';
+import { markWon } from "../../../../../APIs/SalesApi";
+import ManagementIcon from "../../../../../assets/images/icon/ManagementIcon.svg";
+import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
+import ConfettiComponent from '../../../../layout/ConfettiComponent';
+
 
 
 const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
@@ -24,7 +25,7 @@ const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
       if (saleUniqueId) {
         const success = await markWon([saleUniqueId]);
         if (success.length) {
-          onRemoveRow()
+          onRemoveRow();
           toast.success("Successfully moved to Management!");
         } else {
           toast.error("Failed to move to Management. Please try again.");
@@ -127,6 +128,6 @@ const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
         </Box>
       </Modal>
     </>
-  )
-}
-export default QuoteWon
+  );
+};
+export default QuoteWon;

@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
-import { useDebounce } from 'primereact/hooks';
 import { PrimeReactProvider } from 'primereact/api';
+import { useDebounce } from 'primereact/hooks';
+
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import style from './task.module.scss';
+
 import TaskTable from './task-table';
+import style from './task.module.scss';
 import CreateTask from '../../features/task/create-task/create-task';
 
 const TaskPage = () => {
@@ -65,7 +67,7 @@ const TaskPage = () => {
             <TaskTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch}/>
             <CreateTask show={visible} setShow={setVisible} refetch={() => setRefetch((refetch)=> !refetch)}/>
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default TaskPage
+export default TaskPage;

@@ -1,17 +1,19 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { useNavigate } from 'react-router-dom';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-
+import { FileText } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import style from './task.module.scss';
 import { getListOfTasks } from '../../../../APIs/task-api';
-import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-import clsx from 'clsx';
-import { FileText } from 'react-bootstrap-icons';
-import ViewTaskModal from '../../features/task/view-task/view-task';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+import ViewTaskModal from '../../features/task/view-task/view-task';
+
+
+
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -51,7 +53,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfTasks(page, limit, searchValue, order);
-            setTotal(() => (data?.count || 0))
+            setTotal(() => (data?.count || 0));
             if (page === 1) setTasks(data.results);
             else {
                 if (data?.results?.length > 0)
@@ -62,7 +64,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                     });
             }
             setSort(tempSort);
-            setHasMoreData(data.count !== tasks.length)
+            setHasMoreData(data.count !== tasks.length);
             setLoading(false);
         };
 
@@ -88,9 +90,9 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     const idBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-center show-on-hover`}>
             <div>{rowData.number}</div>
-            <Button label="Open" onClick={() => { setTaskId(rowData?.id); setVisible(true) }} className='primary-text-button ms-3 show-on-hover-element' text />
-        </div>
-    }
+            <Button label="Open" onClick={() => { setTaskId(rowData?.id); setVisible(true); }} className='primary-text-button ms-3 show-on-hover-element' text />
+        </div>;
+    };
 
     const nameBody = (rowData) => {
         const name = `${rowData?.user.full_name}`;
@@ -100,14 +102,14 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 {rowData?.user?.photo ? <img src={rowData?.user?.photo} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /> : initials}
             </div>
             {name}
-        </div>
-    }
+        </div>;
+    };
 
     const statusBody = (rowdata) => {
         return <div className={`${style.time} ${rowdata.finished ? style.complete : style.pending}`}>
             {rowdata.finished ? "Complete" : "Not Complete"}
-        </div>
-    }
+        </div>;
+    };
 
     const projectBody = (rowData) => {
         return <div className='d-flex align-items-center gap-2'>
@@ -118,31 +120,31 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 <h1 className={clsx(style.projectText, 'mb-0')}>{rowData?.project?.reference}</h1>
                 <h6 className={clsx(style.projectNumber, 'mb-0')}>{rowData?.project?.number}</h6>
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const startBody = (rowData) => {
-        return formatDate(rowData.from_date)
-    }
+        return formatDate(rowData.from_date);
+    };
 
     const endBody = (rowData) => {
-        return formatDate(rowData.to_date)
-    }
+        return formatDate(rowData.to_date);
+    };
 
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
-        </div>
-    }
+        </div>;
+    };
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
 
-        setTempSort({ sortField, sortOrder })
+        setTempSort({ sortField, sortOrder });
         setPage(1);  // Reset to page 1 whenever searchValue changes
     };
 
@@ -171,7 +173,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             </DataTable>
             <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitilize={()=> setRefetch((refetch)=> !refetch)}/>
         </>
-    )
+    );
 });
 
-export default TaskTable
+export default TaskTable;

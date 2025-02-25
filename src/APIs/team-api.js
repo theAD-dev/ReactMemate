@@ -8,7 +8,7 @@ export const getTeamMobileUser = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getTeamDesktopUser = async () => {
     const endpoint = `/users/desktop-users/`;
@@ -17,4 +17,4 @@ export const getTeamDesktopUser = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};

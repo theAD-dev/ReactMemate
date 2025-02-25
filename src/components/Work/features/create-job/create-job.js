@@ -1,27 +1,27 @@
-import { Sidebar } from 'primereact/sidebar';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Calendar3, ClockHistory, CloudUpload, X } from 'react-bootstrap-icons';
+import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from "@tanstack/react-query";
-
-import style from './create-job.module.scss';
-import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
-import { Dropdown } from 'primereact/dropdown';
+import axios from 'axios';
 import clsx from 'clsx';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { Button as PrimeButton } from 'primereact/button';
+import { Calendar } from 'primereact/calendar';
+import { Dropdown } from 'primereact/dropdown';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from 'primereact/inputtextarea';
-import { getTeamMobileUser } from '../../../../APIs/team-api';
-import { getManagement } from '../../../../APIs/management-api';
-import { Calendar } from 'primereact/calendar';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { RadioButton } from 'primereact/radiobutton';
-import { Button as PrimeButton } from 'primereact/button';
-import { useDropzone } from 'react-dropzone';
-import { createNewJob } from '../../../../APIs/jobs-api';
+import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
-import axios from 'axios';
+import style from './create-job.module.scss';
+import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
+import { createNewJob } from '../../../../APIs/jobs-api';
+import { getManagement } from '../../../../APIs/management-api';
+import { getTeamMobileUser } from '../../../../APIs/team-api';
+
 
 function getFileIcon(fileType) {
     const fileTypes = {
@@ -190,7 +190,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 <div>{option.label}</div>
             </div>
         );
-    }
+    };
 
     const selectedItemTemplate = (option, props) => {
         if (option) {
@@ -234,7 +234,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         setEnd("");
         setDuration("");
         setErrors({});
-    }
+    };
 
     useEffect(() => {
         if (getTemplateByIDQuery?.data) {
@@ -280,7 +280,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 "name": file?.name,
                 "link": file?.url?.split("?")[0] || "",
                 "size": file?.size
-            }
+            };
             attachments.push(obj);
         }
 
@@ -299,7 +299,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
             console.error("Error uploading file:", err);
             toast.error(`Failed to update attachments in DB. Please try again.`);
         }
-    }
+    };
 
     const fileUploadBySignedURL = async (id) => {
         if (!files.length) return;
@@ -327,7 +327,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 toast.error(`Failed to upload ${file.name}. Please try again.`);
             }
         }
-    }
+    };
 
     const mutation = useMutation({
         mutationFn: (data) => createNewJob(data),
@@ -403,30 +403,30 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     };
 
     const workerDetailsSet = (id) => {
-        let user = mobileuserQuery?.data?.users?.find(user => user.id === id)
+        let user = mobileuserQuery?.data?.users?.find(user => user.id === id);
         let paymentCycleObj = {
             "7": "WEEK",
             "14": "TWO_WEEKS",
             "28": "FOUR_WEEKS",
             "1": "MONTH"
-        }
+        };
         if (user) {
             setSelectedUserInfo({
                 hourlyRate: parseFloat(user?.hourly_rate || 0).toFixed(2),
                 paymentCycle: paymentCycleObj[user?.payment_cycle] || "",
                 image: user?.photo || "",
                 name: `${user.first_name} ${user.last_name}`,
-            })
+            });
         }
 
-    }
+    };
 
     useEffect(()=> {
         if (workerId) {
             setUserId(+workerId);
             workerDetailsSet(+workerId);
         }
-    }, [workerId])
+    }, [workerId]);
 
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -557,7 +557,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                     setUserId(e.value);
                                                     workerDetailsSet(e.value);
                                                     if (e.value)
-                                                        setErrors((others) => ({ ...others, userId: false }))
+                                                        setErrors((others) => ({ ...others, userId: false }));
                                                 }}
                                                 value={userId}
                                                 valueTemplate={selectedItemTemplate}
@@ -704,7 +704,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                         name="timetype"
                                                         value="1"
                                                         onChange={(e) => {
-                                                            set_time_type(e.target.value)
+                                                            set_time_type(e.target.value);
                                                             if (e.target.value === "1")
                                                                 setErrors((others) => ({ ...others, time_type: false }));
                                                         }}
@@ -745,7 +745,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                         <Calendar
                                             value={start}
                                             onChange={(e) => {
-                                                setStart(e.value)
+                                                setStart(e.value);
                                                 if (e.value)
                                                     setErrors((others) => ({ ...others, start: false }));
                                             }}
@@ -1154,7 +1154,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
                         {/*  onSubmit ()=>fileUploadBySignedURL(128) */}
                         <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }}>Create {mutation?.isPending && <ProgressSpinner
                             style={{ width: "20px", height: "20px", color: "#fff" }}
@@ -1163,7 +1163,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 </div>
             )}
         ></Sidebar>
-    )
-}
+    );
+};
 
-export default CreateJob
+export default CreateJob;

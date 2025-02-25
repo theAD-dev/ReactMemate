@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import "../Login/login.css";
-import LoinLogo from "../../../assets/images/logo.svg";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { resetEmail } from '../../../APIs/ProfileResetPasswordApi';
+import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import arrowRight from "../../../assets/images/icon/arrow.svg";
-import { resetEmail } from '../../../APIs/ProfileResetPasswordApi';
 import forgetyourpass from "../../../assets/images/img/forgetyourpass.jpg";
-import { ProgressSpinner } from "primereact/progressspinner";
+import LoinLogo from "../../../assets/images/logo.svg";
+
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const ForgotPassword = () => {
       if (error.message === "Not found") {
         setError("Email does not exist");
       } else {
-        setError("Failed to send email. Please try again.")
+        setError("Failed to send email. Please try again.");
       }
     } finally {
       setIsLoading(false);

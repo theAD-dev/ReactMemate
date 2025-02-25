@@ -1,16 +1,16 @@
-import clsx from 'clsx';
-import * as yup from 'yup';
-import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Trash } from 'react-bootstrap-icons';
 import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
-
+import { Trash } from 'react-bootstrap-icons';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import Form from 'react-bootstrap/Form';
+import { toast } from 'sonner';
+import * as yup from 'yup';
 import style from './edit-merge-calculation.module.scss';
 import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
+
 
 // Validation schema
 const schema = yup
@@ -26,12 +26,12 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
   const [defaultValues, setDefaultValues] = useState({
     title: merge?.title || "",
     description: merge?.description || ""
-  })
+  });
   const { register, reset, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema), defaultValues
   });
 
-  useEffect(() => { reset() }, [alias])
+  useEffect(() => { reset(); }, [alias]);
 
   const mutation = useMutation({
     mutationFn: (data) => createNewMergeQuote(data),
@@ -54,18 +54,18 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
         calculator: value.calculator, id: value.id, label: value.label, total: value.total,
         description: value.description
       }))
-    }
+    };
     setMerges((merges) => 
       merges.map((item) => 
         item.alias === romanNo ? { ...item, ...payload } : item
       )
     );
     handleClose();
-  }
+  };
 
   const deleteAndCancel = () => {
     setShow(false);
-  }
+  };
   const handleClose = () => setShow(false);
   const handleOpen = () => setShow(true);
 
@@ -153,7 +153,7 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
         </Modal.Body>
       </Modal>
     </React.Fragment>
-  )
-}
+  );
+};
 
-export default EditMergeCalculation
+export default EditMergeCalculation;

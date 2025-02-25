@@ -12,10 +12,10 @@ export const getListOfExpensens = async (page, limit, name="", order="", isShowD
   url.searchParams.append("offset", offset);
   if (name) url.searchParams.append("name", name);
   if (order) url.searchParams.append("ordering", order);
-  if (isShowDeleted) url.searchParams.append('deleted', 1)
+  if (isShowDeleted) url.searchParams.append('deleted', 1);
 
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getXeroCodesList = async () => {
   const endpoint = `/references/xero-codes/`;
@@ -24,7 +24,7 @@ export const getXeroCodesList = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getProjectsList = async () => {
   const endpoint = `/references/projects/`;
@@ -33,7 +33,7 @@ export const getProjectsList = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getExpense = async (id) => {
   const endpoint = `/expenses/update/${id}`;
@@ -42,7 +42,7 @@ export const getExpense = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createNewExpense = async (data) => {
   const endpoint = '/expenses/new/';
@@ -52,7 +52,7 @@ export const createNewExpense = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateExpense = async (id, data) => {
   const endpoint = `/expenses/update/${id}`;
@@ -62,7 +62,7 @@ export const updateExpense = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const paidExpense = async (data) => {
   const endpoint = '/expenses/paid/';
@@ -72,7 +72,7 @@ export const paidExpense = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const unpaidExpense = async (data) => {
   const endpoint = '/expenses/unpaid/';
@@ -82,7 +82,7 @@ export const unpaidExpense = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const sendExpenseToXeroApi = async (data) => {
   const endpoint = `/expenses/to-xero/`;
@@ -92,4 +92,4 @@ export const sendExpenseToXeroApi = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

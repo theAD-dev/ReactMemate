@@ -1,10 +1,11 @@
-import React from 'react'
-import clsx from 'clsx';
-import style from './no-data-found-template.module.scss';
-import NodataImg from "../../assets/images/img/NodataImg.png";
+import React from 'react';
 import { Button } from 'react-bootstrap';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import style from './no-data-found-template.module.scss';
+import NodataImg from "../../assets/images/img/NodataImg.png";
+
 
 const NoDataFoundTemplate = ({ isDataExist = true }) => {
     return (
@@ -30,7 +31,7 @@ const NoDataFoundTemplate = ({ isDataExist = true }) => {
             }
 
         </div>
-    )
-}
+    );
+};
 
-export default NoDataFoundTemplate
+export default NoDataFoundTemplate;

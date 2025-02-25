@@ -1,37 +1,39 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Placeholder, Table } from 'react-bootstrap';
 import {
   X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink,
   Envelope
 } from "react-bootstrap-icons";
-import { Placeholder, Table } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
+import { toast } from 'sonner';
 import AddNote from './add-note';
-import NewTask from './new-task';
-import SendSMS from './send-sms/send-sms';
 import ComposeEmail from './compose-email/compose-email';
-import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
-import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
-import CreatePoIcon from "../../../../../assets/images/icon/createPoIcon.svg";
+import FilesModel from './files-model';
+import GoogleReviewEmail from './google-review/google-review';
+import InvoiceCreate from './invoice-create/invoice-create';
+import NewTask from './new-task';
+import ProjectCardFilter from './project-card-filter';
+import ScheduleUpdate from './schedule-update';
+import SelectStatus from './select-status';
+import SendSMS from './send-sms/send-sms';
+import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
+import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
+import CreatePoIcon from "../../../../../assets/images/icon/createPoIcon.svg";
+import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
 import InvoicesIcon from "../../../../../assets/images/icon/InvoicesIcon.svg";
-import placeholderUser from '../../../../../assets/images/Avatar.svg';
-import ProjectCardFilter from './project-card-filter';
-import FilesModel from './files-model';
-import ScheduleUpdate from './schedule-update';
-import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
-import SelectStatus from './select-status';
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { Link, useNavigate } from 'react-router-dom';
-import { fetchduplicateData } from '../../../../../APIs/SalesApi';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import InvoiceCreate from './invoice-create/invoice-create';
-import GoogleReviewEmail from './google-review/google-review';
+import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
+
+
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   const navigate = useNavigate();
@@ -75,7 +77,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     } finally {
       setIsFetching(false);
     }
-  }
+  };
 
   const duplicateSale = async () => {
     try {
@@ -90,7 +92,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     } finally {
       setIsDuplicating(false);
     }
-  }
+  };
 
   const referencemutation = useMutation({
     mutationFn: (data) => updateProjectReferenceById(projectId, data),
@@ -107,7 +109,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   const handleSaveReference = () => {
     setIsEditingReference(false);
-    referencemutation.mutate({ reference: editedReference })
+    referencemutation.mutate({ reference: editedReference });
   };
 
   const formatTimestamp = (timestamp) => {
@@ -191,20 +193,20 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   const createInvoice = () => {
     createInvoiceMutation.mutate(projectId);
-  }
+  };
 
   const declinecOrder = () => {
     declinecOrderMutation.mutate(projectId);
-  }
+  };
 
   const canReturn = (isReturn) => {
     if (isReturn) return;
     updateReturnMutation.mutate(projectId);
-  }
+  };
 
   useEffect(() => {
     if (filteredHistoryOptions?.length) {
-      let histories = cardData?.history?.filter((history) => filteredHistoryOptions.includes(history.type))
+      let histories = cardData?.history?.filter((history) => filteredHistoryOptions.includes(history.type));
       setFilteredHistory(histories || []);
     } else {
       setFilteredHistory(cardData?.history);
@@ -357,7 +359,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <>
                     {
                       referencemutation.isPending
-                        ? <div class="dot-flashing ms-5 mt-1"></div>
+                        ? <div className="dot-flashing ms-5 mt-1"></div>
                         : <>
                           <small style={{ color: '#1D2939', fontSize: '16px' }}> {cardData?.reference}</small>
                           <span> <PencilSquare size={16} color='#106B99' onClick={handleEditReference} style={{ cursor: 'pointer' }} /></span>

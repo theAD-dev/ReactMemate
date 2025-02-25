@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dropdown } from 'primereact/dropdown';
 import { Col, Placeholder, Row } from 'react-bootstrap';
-import { getClientById, getListOfClients } from '../../../../../../APIs/ClientsApi';
-import { useDebounce } from 'primereact/hooks';
-import { InputText } from 'primereact/inputtext';
-import { IconField } from 'primereact/iconfield';
-import { InputIcon } from 'primereact/inputicon';
 import { Search } from 'react-bootstrap-icons';
 import { useQuery } from '@tanstack/react-query';
+import { Dropdown } from 'primereact/dropdown';
+import { useDebounce } from 'primereact/hooks';
+import { IconField } from 'primereact/iconfield';
+import { InputIcon } from 'primereact/inputicon';
+import { InputText } from 'primereact/inputtext';
 import { toast } from 'sonner';
+import { getClientById, getListOfClients } from '../../../../../../APIs/ClientsApi';
 
 const QuoteToClient = ({ isLoading, data, setPayload }) => {
     const [selectClient, setSelectClient] = useState(null);
@@ -110,7 +110,7 @@ const QuoteToClient = ({ isLoading, data, setPayload }) => {
         if (!selectClient || !selectContact) return toast.error('Please select a client and contact person');
         setPayload((prev) => ({ ...prev, client: selectClient, contact_person: selectContact }));
         setIsEdit(false);
-    }
+    };
 
     return (
         <Row>

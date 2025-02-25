@@ -1,18 +1,21 @@
 import { useRef, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Dropdown } from 'primereact/dropdown';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 
 import './task.css';
-import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
-import SelectUser from './select-user';
 import SelectDate from './select-date';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../APIs/TasksApi';
-import { Dropdown } from 'primereact/dropdown';
+import SelectUser from './select-user';
 import { getUserList } from '../../../../../APIs/task-api';
+import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../APIs/TasksApi';
+import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
+
+
+
 
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";
@@ -20,7 +23,7 @@ const dateFormat = (dateInMiliSec) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(1000 * +dateInMiliSec);
     return date;
-}
+};
 
 const EditTask = ({ show, setShow, data, reInitilize }) => {
     const dropdownRef = useRef(null);
@@ -62,7 +65,7 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
 
     const handleDelete = () => {
         deleteMutation.mutate();
-    }
+    };
 
     const handleSubmit = () => {
         const newErrors = {
@@ -82,7 +85,7 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
                 from_date: date.startDate,
                 to_date: date.endDate,
                 ...(user && { user: user }),
-            })
+            });
         }
     };
     const handleClose = () => setShow(false);
@@ -169,7 +172,7 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
                                         {option?.photo && <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />}
                                     </div>
                                     {option?.label}
-                                </div>
+                                </div>;
                             }}
                             itemTemplate={(option) => {
                                 return (
@@ -179,7 +182,7 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
                                         </div>
                                         {option?.label}
                                     </div>
-                                )
+                                );
                             }}
                             className='outline-none border-0 p-0'
                             style={{
@@ -208,7 +211,7 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
                 </Modal>
             </Form>
         </>
-    )
-}
+    );
+};
 
 export default EditTask;

@@ -1,22 +1,22 @@
-import clsx from 'clsx';
-import { nanoid } from 'nanoid';
-import style from '../users.module.scss';
-import { Envelope, FileText, PencilSquare, Person, PersonAdd, PlusCircle, QuestionCircle } from 'react-bootstrap-icons';
 import React, { useState } from 'react';
-import { InputText } from "primereact/inputtext";
 import { Card, Col, Row } from 'react-bootstrap';
-import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
-import { Dialog } from 'primereact/dialog';
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
+import { Envelope, FileText, PencilSquare, Person, PersonAdd, PlusCircle, QuestionCircle } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { toast } from 'sonner';
+import clsx from 'clsx';
+import { nanoid } from 'nanoid';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from 'primereact/progressspinner';
-import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import { Skeleton } from 'primereact/skeleton';
+import { toast } from 'sonner';
+import * as yup from 'yup';
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+import style from '../users.module.scss';
 
 const schema = yup
     .object({
@@ -64,11 +64,11 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
             formData.append('photo', photo.croppedImageBlob, `${photoHintId}.jpg`);
         }
 
-        let method = "POST"
+        let method = "POST";
         let URL = `${process.env.REACT_APP_BACKEND_API_URL}/settings/mobile-users/create/`;
         if (id) {
-            method = "PUT"
-            URL = `${process.env.REACT_APP_BACKEND_API_URL}/mobile-users/update/${id}/`
+            method = "PUT";
+            URL = `${process.env.REACT_APP_BACKEND_API_URL}/mobile-users/update/${id}/`;
         }
         const accessToken = localStorage.getItem("access_token");
         try {

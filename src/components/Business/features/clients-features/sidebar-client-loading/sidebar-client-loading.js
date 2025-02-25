@@ -1,5 +1,5 @@
-import { Skeleton } from 'primereact/skeleton'
-import React from 'react'
+import React from 'react';
+import { Skeleton } from 'primereact/skeleton';
 
 const SidebarClientLoading = () => {
   return (
@@ -38,7 +38,7 @@ const SidebarClientLoading = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SidebarClientLoading
+export default SidebarClientLoading;

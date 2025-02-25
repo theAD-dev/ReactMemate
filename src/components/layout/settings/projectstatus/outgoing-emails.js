@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+
 import '@szhsin/react-menu/dist/index.css';
-import Sidebar from '../Sidebar';
 import { Button, Table } from 'react-bootstrap';
 import { PlusLg } from "react-bootstrap-icons";
-import { Link } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import Sidebar from '../Sidebar';
 import style from './project.module.scss';
 
 // Define schema for multiple entries
@@ -133,6 +134,6 @@ const OutgoingEmails = () => {
       </div>
     </div>
   );
-}
+};
 
 export default OutgoingEmails;

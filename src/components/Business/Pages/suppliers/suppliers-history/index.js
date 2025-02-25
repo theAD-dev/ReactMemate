@@ -1,19 +1,21 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react';
 import { PrimeReactProvider } from 'primereact/api';
+
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { ChevronLeft, Download } from 'react-bootstrap-icons';
 import { Button } from 'primereact/button';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useDebounce } from 'primereact/hooks';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
-import { useDebounce } from 'primereact/hooks';
-
-import style from './supplier-history.module.scss';
 import SupplierHistoryTable from './supplier-history-table';
+import style from './supplier-history.module.scss';
 import { getSupplierById } from '../../../../../APIs/SuppliersApi';
-import SupplierView from '../../../features/supliers-features/supplier-view';
 import SupplierLoadingSidebar from '../../../features/supliers-features/supplier-loading-sidebar';
+import SupplierView from '../../../features/supliers-features/supplier-view';
+
+
 
 const SupplierHistoryPage = () => {
   const navigate = useNavigate();
@@ -67,7 +69,7 @@ const SupplierHistoryPage = () => {
           </div>
 
           <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-            <h1 onClick={() => { setVisible(true) }} className={`${style.supplierName} m-0 p-0 cursor-pointer`} title={supplierDetails?.data?.name}>{supplierDetails?.data?.name || ""}</h1>
+            <h1 onClick={() => { setVisible(true); }} className={`${style.supplierName} m-0 p-0 cursor-pointer`} title={supplierDetails?.data?.name}>{supplierDetails?.data?.name || ""}</h1>
           </div>
           <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
             <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
@@ -87,7 +89,7 @@ const SupplierHistoryPage = () => {
         )}
       ></Sidebar>
     </PrimeReactProvider>
-  )
-}
+  );
+};
 
-export default SupplierHistoryPage
+export default SupplierHistoryPage;

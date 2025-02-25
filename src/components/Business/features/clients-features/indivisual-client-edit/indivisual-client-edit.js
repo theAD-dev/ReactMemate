@@ -1,9 +1,9 @@
-import { nanoid } from 'nanoid';
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner';
-import IndivisualForm from '../new-client-create/indivisual-form';
-import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { nanoid } from 'nanoid';
+import { toast } from 'sonner';
+import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
+import IndivisualForm from '../new-client-create/indivisual-form';
 
 const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
       onError
     );
     setIsPending(false);
-  }
+  };
 
   const handleSubmit = async (data) => {
     if (client.id) {
@@ -63,7 +63,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
 
   return (
     <IndivisualForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues} />
-  )
-})
+  );
+});
 
-export default IndivisualClientEdit
+export default IndivisualClientEdit;

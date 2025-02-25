@@ -7,6 +7,6 @@ const Management = () => {
         <>
             <EventScheduler />
         </>
-    )
-}
-export default Management
+    );
+};
+export default Management;

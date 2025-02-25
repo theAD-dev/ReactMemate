@@ -1,18 +1,20 @@
 import { useRef, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
-import SelectUser from './select-user';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Dropdown } from 'primereact/dropdown';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import SelectDate from './select-date';
+import SelectUser from './select-user';
+import { getUserList } from '../../../../../APIs/task-api';
+import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 import newTask from '../../../../../assets/images/new-task.svg';
 
+
 import './task.css';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchTasksNew } from '../../../../../APIs/TasksApi';
-import { Dropdown } from 'primereact/dropdown';
-import { getUserList } from '../../../../../APIs/task-api';
+
 
 const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) => {
     const dropdownRef = useRef(null);
@@ -37,8 +39,8 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
             description: false,
             user: false,
             date: false
-        })
-    }
+        });
+    };
     const mutation = useMutation({
         mutationFn: (data) => fetchTasksNew(data),
         onSuccess: () => {
@@ -69,7 +71,7 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
                 user: user,
                 from_date: date.startDate,
                 to_date: date.endDate,
-            })
+            });
             console.log('Form submitted with:', { taskTitle, description, user, date });
         }
     };
@@ -155,7 +157,7 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
                                     {option?.photo && <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />}
                                 </div>
                                 {option?.label}
-                            </div>
+                            </div>;
                         }}
                         itemTemplate={(option) => {
                             return (
@@ -165,7 +167,7 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
                                     </div>
                                     {option?.label}
                                 </div>
-                            )
+                            );
                         }}
                         className='outline-none border-0 p-0'
                         style={{

@@ -1,21 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import style from './invoice-partial-payment.module.scss';
-import { Dialog } from 'primereact/dialog';
+import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
-import clsx from 'clsx';
-import { Button } from 'primereact/button';
 import { Bank, Cash, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
-import { InputText } from 'primereact/inputtext';
-import { SelectButton } from 'primereact/selectbutton';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
-import { ProgressSpinner } from 'primereact/progressspinner';
-import { DataTable } from 'primereact/datatable';
+import clsx from 'clsx';
+import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from 'primereact/inputtext';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { SelectButton } from 'primereact/selectbutton';
+import { toast } from 'sonner';
+import style from './invoice-partial-payment.module.scss';
+import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
+
+
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -27,19 +29,19 @@ const headerElement = (
 
 const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
     const [isShowHistory, setIsShowHistory] = useState(false);
-    const [deposit, setDeposit] = useState(0.00)
+    const [deposit, setDeposit] = useState(0.00);
     const [type, setType] = useState(2);
     const [errors, setErrors] = useState({});
     const options = [
         { icon: <Bank size={20} />, label: 'Bank', value: 2 },
         { icon: <Cash size={20} />, label: 'Cash', value: 1 },
-    ]
+    ];
     const justifyTemplate = (option) => {
         return <div className='d-flex align-items-center gap-2'>
             {option.icon}
             {option.label}
-        </div>
-    }
+        </div>;
+    };
     const mutation = useMutation({
         mutationFn: (data) => partialPaymentCreate(invoice?.unique_id, data),
         onSuccess: (response) => {
@@ -66,12 +68,12 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
             setErrors((others) => ({ ...others, deposit: true }));
         }
         if (errorCount) return;
-        mutation.mutate({ deposit, type })
-    }
+        mutation.mutate({ deposit, type });
+    };
 
     useEffect(() => {
         setErrors({});
-    }, [show])
+    }, [show]);
 
     return (
         <Dialog
@@ -179,8 +181,8 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
             {isShowHistory && <InvoiceHistory history={invoice?.billing_history || []} />}
 
         </Dialog>
-    )
-}
+    );
+};
 
 const InvoiceHistory = ({ history }) => {
     const nameBody = (rowData) => {
@@ -191,8 +193,8 @@ const InvoiceHistory = ({ history }) => {
                 </div>
                 <span>{rowData?.manager?.name}</span>
             </div>
-        )
-    }
+        );
+    };
 
     const referenceBody = (rawData) => {
         let type = rawData.type;
@@ -200,20 +202,20 @@ const InvoiceHistory = ({ history }) => {
             return <div className='d-flex align-items-center gap-2'>
                 <Bank size={18} />
                 <span>Bank</span>
-            </div>
+            </div>;
         else if (type === 1) {
             return <div className='d-flex align-items-center gap-2'>
                 <Cash size={18} />
                 <span>Cash</span>
-            </div>
+            </div>;
         } else if (type === 3) {
             return <div className='d-flex align-items-center gap-2'>
                 <Stripe size={18} />
                 <span>Strip</span>
-            </div>
+            </div>;
         }
 
-    }
+    };
 
     const formatDate = (timestamp) => {
         const date = new Date(timestamp * 1000);
@@ -226,8 +228,8 @@ const InvoiceHistory = ({ history }) => {
     };
 
     const depositDate = (rawData) => {
-        return <span>{formatDate(rawData?.created)}</span>
-    }
+        return <span>{formatDate(rawData?.created)}</span>;
+    };
 
     return (
         <Card className={clsx(style.border, 'mb-3 mt-2')}>
@@ -242,7 +244,7 @@ const InvoiceHistory = ({ history }) => {
                 </DataTable>
             </Card.Body>
         </Card>
-    )
-}
+    );
+};
 
-export default InvoicePartialPayment
+export default InvoicePartialPayment;

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
+import { useLocation } from 'react-router-dom';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./requestademo.css"
-import LoinLogo from "../../../assets/images/logo.svg";
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
+import "./requestademo.css";
 import request02 from "../../../assets/images/img/request02.jpg";
+import LoinLogo from "../../../assets/images/logo.svg";
 import Select from 'react-select';
 import { PhoneInput } from 'react-international-phone';
-import { useLocation } from 'react-router-dom';
 import 'react-international-phone/style.css';
 
 const SelectCountry = () => {
@@ -24,7 +24,7 @@ const SelectCountry = () => {
   const { first_name, last_name } = location.state || { first_name: '', last_name: '' };
 
 
-const country = selectedCountry.label
+const country = selectedCountry.label;
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + '/timezones.json')

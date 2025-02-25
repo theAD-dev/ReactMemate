@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Sidebar } from 'primereact/sidebar';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
-
-import styles from './expense-edit.module.scss';
-import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
-import { toast } from 'sonner';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Sidebar } from 'primereact/sidebar';
+import { toast } from 'sonner';
+import styles from './expense-edit.module.scss';
 import { getExpense, updateExpense } from '../../../../../APIs/expenses-api';
+import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 import SidebarClientLoading from '../sidebar-client-loading/sidebar-client-loading';
+
 
 const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }) => {
   const formRef = useRef(null);
@@ -20,7 +20,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
       console.log('response: ', response);
       toast.success(`Expense updated successfully`);
       setVisible(false);
-      setEditData({})
+      setEditData({});
       setDefaultValues({});
       setRefetch((refetch) => !refetch);
     },
@@ -39,7 +39,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
     delete data["gst-calculation"];
     delete data.option;
     delete data.subtotal;
-    delete data.totalAmount
+    delete data.totalAmount;
     delete data.tax;
 
     if (!data.order) delete data.order;
@@ -60,7 +60,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
     if (gst) return "ex";
     else if (nogst) return "no";
     else return "in";
-  }
+  };
 
   const calculateAmounts = (amount, gstType) => {
     let calculatedTax = 0;
@@ -109,12 +109,12 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
         tax,
         totalAmount,
         option: expense?.data?.order ? 'Assign to order' : 'Assign to timeframe',
-      }))
+      }));
     }
-  }, [expense?.data])
+  }, [expense?.data]);
 
   return (
-    <Sidebar visible={visible} position="right" onHide={() => { setVisible(false); setEditData({}) }} modal={false} dismissable={false} style={{ width: '702px' }}
+    <Sidebar visible={visible} position="right" onHide={() => { setVisible(false); setEditData({}); }} modal={false} dismissable={false} style={{ width: '702px' }}
       content={({ closeIconRef, hide }) => (
         <div className='create-sidebar d-flex flex-column'>
           <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '24px' }}>
@@ -147,13 +147,13 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
           </div>
 
           <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); setEditData({}) }} className='outline-button'>Cancel</Button>
+            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); setEditData({}); }} className='outline-button'>Cancel</Button>
             <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }}>{mutation.isPending ? "Loading..." : "Update"}</Button>
           </div>
         </div>
       )}
     ></Sidebar>
-  )
-}
+  );
+};
 
-export default ExpensesEdit
+export default ExpensesEdit;

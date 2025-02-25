@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Send } from 'react-bootstrap-icons'
+import React, { useState } from 'react';
+import { Send } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getClientById } from '../../../../../APIs/ClientsApi';
-import SendDynamicEmailForm from '../../../../../ui/send-email-2/send-email';
-import { resendInvoiceEmail } from '../../../../../APIs/invoice-api';
-import { toast } from 'sonner';
 import { Button } from 'primereact/button';
+import { toast } from 'sonner';
+import { getClientById } from '../../../../../APIs/ClientsApi';
+import { resendInvoiceEmail } from '../../../../../APIs/invoice-api';
+import SendDynamicEmailForm from '../../../../../ui/send-email-2/send-email';
 
 const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
     const [show, setShow] = useState(false);
@@ -41,7 +41,7 @@ const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
             <SendDynamicEmailForm show={show} setShow={setShow} setPayload={setPayload} mutation={mutation} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={() => { }} defaultTemplateId={'Resend Invoice'} />
         </>
 
-    )
-}
+    );
+};
 
-export default ResendInvoiceEmail
+export default ResendInvoiceEmail;

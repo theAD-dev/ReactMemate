@@ -1,9 +1,9 @@
-import React from 'react'
-import style from './list-merge-calculation.module.scss';
+import React from 'react';
 import clsx from 'clsx';
-import ViewMerge from '../view-merge-calculation';
 import DeleteMerge from '../delete-merge-calculation';
 import EditMergeCalculation from '../edit-merge-calculation';
+import ViewMerge from '../view-merge-calculation';
+import style from './list-merge-calculation.module.scss';
 
 const ListMergeCalculations = ({ unique_id, merges, setMerges, refetch, deleteMergeCalculator }) => {
     return (
@@ -30,7 +30,7 @@ const ListMergeCalculations = ({ unique_id, merges, setMerges, refetch, deleteMe
 
             {(merges?.length && <div className={clsx('w-100', style.divider2)}></div>) || ""}
         </>
-    )
-}
+    );
+};
 
-export default ListMergeCalculations
+export default ListMergeCalculations;

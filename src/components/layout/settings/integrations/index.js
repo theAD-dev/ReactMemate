@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../Sidebar";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { Dialog } from "primereact/dialog";
-import style from "./integration.module.scss";
-import Button from "react-bootstrap/Button";
+import { Envelope } from "react-bootstrap-icons";
 import { useForm, Controller } from "react-hook-form";
+import { useLocation } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
+import { Dialog } from "primereact/dialog";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import * as yup from "yup";
+import { getEmailIntegrations, getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations, getXeroIntegrations } from "../../../../APIs/integrations-api";
+import googleAnalyticLogo from "../../../../assets/images/icon/googleAnalyticLogo.png";
+import googleCalLogo from "../../../../assets/images/icon/googleCalLogo.png";
+import googleLogo from "../../../../assets/images/icon/googleLogo.png";
 import stripelogo from "../../../../assets/images/icon/stripeLogo.png";
 import xeroLogo from "../../../../assets/images/icon/xeroLogo.png";
-import googleLogo from "../../../../assets/images/icon/googleLogo.png";
-import googleCalLogo from "../../../../assets/images/icon/googleCalLogo.png";
 import twilioLogo from '../../../../assets/images/twilio-logo.png';
-import googleAnalyticLogo from "../../../../assets/images/icon/googleAnalyticLogo.png";
-
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import clsx from "clsx";
-import StripeIntegrations from "./stripe-integrations";
-import { useQuery } from "@tanstack/react-query";
-import { getEmailIntegrations, getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations, getXeroIntegrations } from "../../../../APIs/integrations-api";
-import GoogleIntegrations from "./google-review-integration";
-import TwilioIntegrations from "./twilio-integration";
-import { useLocation } from "react-router-dom";
-import { Envelope } from "react-bootstrap-icons";
+import Sidebar from "../Sidebar";
 import EmailIntegrations from "./email-integration";
+import GoogleIntegrations from "./google-review-integration";
+import style from "./integration.module.scss";
+import StripeIntegrations from "./stripe-integrations";
+import TwilioIntegrations from "./twilio-integration";
 import XeroIntegration from "./xero-integration";
 
 const schema = yup.object().shape({
@@ -101,8 +100,8 @@ const Integrations = () => {
                         <div className={style.head}>
                           <img src={stripelogo} alt={"Stripe Settings"} />
                           {
-                            <button className={!!stripeIntegrationsQuery?.data?.stripe_secret_key ? style.connected : style.disconnected}>
-                              {!!stripeIntegrationsQuery?.data?.stripe_secret_key ? "Connected" : "Disconnected"}
+                            <button className={stripeIntegrationsQuery?.data?.stripe_secret_key ? style.connected : style.disconnected}>
+                              {stripeIntegrationsQuery?.data?.stripe_secret_key ? "Connected" : "Disconnected"}
                               <span className={style.dots}></span>
                             </button>
                           }
@@ -112,7 +111,7 @@ const Integrations = () => {
                           <p>{"Integrate Stripe to enable easy online invoice payments via credit card, ensuring quick and secure money transfers to your account."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => { setStripeVisible(true) }}>
+                          <button className={style.infoButton} onClick={() => { setStripeVisible(true); }}>
                             {!stripeIntegrationsQuery?.data?.stripe_secret_key ? 'Connect' : 'Update'}
                           </button>
                         </div>
@@ -134,7 +133,7 @@ const Integrations = () => {
                           <p>{"Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => { setGoogleVisible(true) }}>
+                          <button className={style.infoButton} onClick={() => { setGoogleVisible(true); }}>
                             {!googleReviewIntegrationsQuery?.data?.google_review_link ? 'Connect' : 'Update'}
                           </button>
                         </div>
@@ -156,7 +155,7 @@ const Integrations = () => {
                           <p>{"Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => { setTwilioVisible(true) }}>
+                          <button className={style.infoButton} onClick={() => { setTwilioVisible(true); }}>
                             {!twilioIntegrationsQuery?.data?.twilio_token ? 'Connect' : 'Update'}
                           </button>
                         </div>
@@ -180,7 +179,7 @@ const Integrations = () => {
                           <p>{"Link your email to be used for  all outgoing communications, including quotes, invoices, and reminders, etc."}</p>
                         </div>
                         <div className={style.bottom}>
-                          <button className={style.infoButton} onClick={() => { setEmailVisible(true) }}>
+                          <button className={style.infoButton} onClick={() => { setEmailVisible(true); }}>
                             {!emailIntegrationsQuery?.data?.outgoing_email ? 'Connect' : 'Update'}
                           </button>
                         </div>

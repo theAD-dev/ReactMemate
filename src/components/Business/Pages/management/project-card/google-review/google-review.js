@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { getClientById } from "../../../../../../APIs/ClientsApi";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
-import GoogleReview from "../../../../../../assets/images/icon/googleReviewIcon.svg";
 import { Button } from "react-bootstrap";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { getClientById } from "../../../../../../APIs/ClientsApi";
 import { sendComposeEmail } from "../../../../../../APIs/management-api";
+import GoogleReview from "../../../../../../assets/images/icon/googleReviewIcon.svg";
+import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
 
 const GoogleReviewEmail = ({ clientId, projectId }) => {
-    const [payload, setPayload] = useState({})
+    const [payload, setPayload] = useState({});
     const [viewShow, setViewShow] = useState(false);
     const handleShow = () => setViewShow(true);
     const clientQuery = useQuery({

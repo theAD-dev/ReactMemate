@@ -34,6 +34,6 @@ const NewClient = () => {
         </div>
       </div>
     </div>
-  )
-}
-export default NewClient
+  );
+};
+export default NewClient;

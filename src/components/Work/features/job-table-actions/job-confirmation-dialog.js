@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Button } from 'primereact/button';
+import { Chip } from "primereact/chip";
 import { Dialog } from 'primereact/dialog';
 import style from './job-dialog.module.scss';
-import { Chip } from "primereact/chip";
 import warningIcon from '../../../../assets/images/Jobs/Featured icon.svg';
+
 
 export default function JobConfirmation({ visible, setVisible }) {
 
@@ -32,5 +33,5 @@ export default function JobConfirmation({ visible, setVisible }) {
             </div>
         </Dialog>
 
-    )
+    );
 }

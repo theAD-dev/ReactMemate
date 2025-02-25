@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
+import { toast } from 'sonner';
+import VideoPlayer from './VideoPlayer';
+import { OnboardingCreateApi, onboardingNextStep } from "../../../APIs/OnboardingApi";
+import businessVideo from "../../../assets/images/businessVideo.mp4";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import "./org.css";
 import LoinLogo from "../../../assets/images/logo.svg";
-import VideoPlayer from './VideoPlayer';
-import businessVideo from "../../../assets/images/businessVideo.mp4";
-import { OnboardingCreateApi, onboardingNextStep } from "../../../APIs/OnboardingApi";
-import { toast } from 'sonner';
+
+
+
 
 const Create = () => {
   const navigate = useNavigate();
@@ -72,7 +75,7 @@ const Create = () => {
         if (response?.uuid) {
           const { step } = await onboardingNextStep(response?.uuid);
           if (step === 1) navigate(`/verify-mail/${response?.uuid}?email=${formData.email}`);
-          else if (step === 2) navigate(`/company-name/${response?.uuid}?email=${formData.email}`)
+          else if (step === 2) navigate(`/company-name/${response?.uuid}?email=${formData.email}`);
           else if (step === 3) navigate(`/discover-memate/${response?.uuid}`);
           else if (step === 4) navigate(`/create-password/${response?.uuid}`);
           else {

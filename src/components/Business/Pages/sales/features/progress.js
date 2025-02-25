@@ -3,6 +3,7 @@ import { ChevronDown } from "react-bootstrap-icons";
 import CircleProgressBar from "./circle-progress-bar";
 import { fetchSaleslead } from "../../../../../APIs/SalesApi";
 
+
 const Option = ({ percentage, label, gradient, onSelect, isActive }) => {
   return (
     <li
@@ -134,4 +135,4 @@ const Progress = ({ progressName1, progressPercentage1, salesUniqId1, refreshDat
   );
 };
 
-export default Progress
+export default Progress;

@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../Sidebar';
 import { PlusLg, PencilSquare } from 'react-bootstrap-icons';
-import style from './customer.module.scss';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { getIndustriesList, newIndustries, readIndustry, updateIndustry, deleteIndustry } from '../../../../APIs/industrieslist-api';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { getIndustriesList, newIndustries, readIndustry, updateIndustry, deleteIndustry } from '../../../../APIs/industrieslist-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import Sidebar from '../Sidebar';
+import style from './customer.module.scss';
 
 const CustomersIndustries = () => {
     const { trialHeight } = useTrialHeight();

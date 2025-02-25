@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
+import { NavLink } from "react-router-dom";
+import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+
 // import { MessageChatCircle } from "react-bootstrap-icons";
-import ClipboardCircle from "../../../assets/images/icon/clipboard-ch.png";
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import CalendarweekCircle from "../../../assets/images/icon/calendar-week.png";
+import ClipboardCircle from "../../../assets/images/icon/clipboard-ch.png";
 import PersonIconCircle from "../../../assets/images/icon/personIcon.png";
 import LenderPanel from "../../../assets/images/img/lender-panel02.png";
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+
 import "./style-model.css";
-import { NavLink } from "react-router-dom";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 const InsuranceContact = ({ onAdd }) => {
   const [open, setOpen] = useState(false);
@@ -191,7 +193,7 @@ const InsuranceContact = ({ onAdd }) => {
         </Box>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default InsuranceContact;

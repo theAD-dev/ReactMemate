@@ -1,40 +1,41 @@
-import { Sidebar } from 'primereact/sidebar';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Calendar3, X } from 'react-bootstrap-icons';
 import { useQuery } from "@tanstack/react-query";
-
-import style from './view-job.module.scss';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import clsx from 'clsx';
+import { Chip } from 'primereact/chip';
+import { Image } from 'primereact/image';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Sidebar } from 'primereact/sidebar';
+import ViewAttachements from './view-attachements';
+import style from './view-job.module.scss';
 import { getJob } from '../../../../APIs/jobs-api';
 import { formatDate } from '../../Pages/jobs/jobs-table';
-import { Image } from 'primereact/image';
-import { Chip } from 'primereact/chip';
-import ViewAttachements from './view-attachements';
+
+
 
 const statusBody = (status) => {
     switch (status) {
         case '1':
-            return <Chip className={`status ${style.open} font-14`} label={"Open"} />
+            return <Chip className={`status ${style.open} font-14`} label={"Open"} />;
         case '2':
-            return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />
+            return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />;
         case '3':
-            return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />
+            return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />;
         case '4':
-            return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />
+            return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
         case '5':
-            return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />
+            return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />;
         case '6':
-            return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />
+            return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />;
         case 'a':
-            return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />
+            return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />;
         case 'd':
-            return <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />
+            return <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />;
         default:
             return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
     }
-}
+};
 
 const ViewJob = ({ visible, setVisible, jobId }) => {
     const [show, setShow] = useState(false);
@@ -43,7 +44,7 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
         "14": "TWO_WEEKS",
         "28": "FOUR_WEEKS",
         "1": "MONTH"
-    }
+    };
     const jobQuery = useQuery({
         queryKey: ["jobRead", jobId],
         queryFn: () => getJob(jobId),
@@ -303,7 +304,7 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
                         </div>
 
                         <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
+                            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
                             <Button type='button' onClick={() => { }} className='solid-button' style={{ minWidth: '75px' }}>Create {false && <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
                             />}</Button>
@@ -314,6 +315,6 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
             <ViewAttachements attachments={job?.attachments || []} show={show} setShow={setShow} />
         </>
     );
-}
+};
 
-export default ViewJob
+export default ViewJob;

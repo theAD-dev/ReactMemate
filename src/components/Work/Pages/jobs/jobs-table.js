@@ -1,17 +1,18 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import style from './jobs.module.scss';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { Spinner } from 'react-bootstrap';
 import { ChatText, Person, Repeat } from 'react-bootstrap-icons';
-import { Chip } from 'primereact/chip';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
+import { Chip } from 'primereact/chip';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import style from './jobs.module.scss';
+import { getListOfJobs } from '../../../../APIs/jobs-api';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import JobDetails from '../../features/job-table-actions/job-details-dialog';
-import { useNavigate } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
-import { getListOfJobs } from '../../../../APIs/jobs-api';
 import ViewJob from '../../features/view-job/view-job';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 export const formatDate = (timestamp) => {
   const date = new Date(timestamp * 1000);
@@ -51,7 +52,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
       const data = await getListOfJobs(page, limit, searchValue, order);
-      setTotal(() => (data?.count || 0))
+      setTotal(() => (data?.count || 0));
       if (page === 1) setJobs(data.results);
       else {
         if (data?.results?.length > 0)
@@ -62,7 +63,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
           });
       }
       setSort(tempSort);
-      setHasMoreData(data.count !== jobs.length)
+      setHasMoreData(data.count !== jobs.length);
       setLoading(false);
     };
 
@@ -95,20 +96,20 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentHours}`}>{rowData.type_display}</div>
         {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>
+      </div>;
     else
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentFix}`}>{rowData.type_display}</div>
         {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>
-  }
+      </div>;
+  };
 
   const jobIDTemplate = (rowdata) => {
     return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
       <span>{rowdata.number}</span>
       <Button label="Open" onClick={() => setShow({jobId: rowdata.id, visible: true }) } className='primary-text-button ms-3 show-on-hover-element' text />
-    </div>
-  }
+    </div>;
+  };
 
   const timeBody = (rowdata) => {
     return <div className={`d-flex align-items-center justify-content-center show-on-hover`}>
@@ -116,23 +117,23 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         {rowdata.time_type_display}
       </div>
       <Button label="Open" onClick={() => openDeatils(rowdata)} className='primary-text-button ms-3 show-on-hover-element' text />
-    </div>
-  }
+    </div>;
+  };
 
   const clientHeader = () => {
     return <div className='d-flex align-items-center'>
       Client
       <small>A→Z</small>
-    </div>
-  }
+    </div>;
+  };
   const clientBody = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
         {rowData?.client?.has_photo ? <img src={rowData?.client?.photo} /> : <Person color='#667085' />}
       </div>
       {rowData?.client?.name}
-    </div>
-  }
+    </div>;
+  };
 
   const nameBody = (rowData) => {
     const name = `${rowData?.worker?.first_name} ${rowData?.worker?.last_name}`;
@@ -142,76 +143,76 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         {rowData?.worker?.photo ? <img src={rowData?.worker?.photo} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /> : initials}
       </div>
       {name}
-    </div>
-  }
+    </div>;
+  };
 
   const statusBody = (rowData) => {
     const status = rowData.status;
     switch (status) {
       case '1':
-        return <Chip className={`status ${style.open} font-14`} label={"Open"} />
+        return <Chip className={`status ${style.open} font-14`} label={"Open"} />;
       case '2':
-        return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />
+        return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />;
       case '3':
-        return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />
+        return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />;
       case '4':
-        return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />
+        return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
       case '5':
-        return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />
+        return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />;
       case '6':
-        return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />
+        return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />;
       case 'a':
-        return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />
+        return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />;
       case 'd':
         return <div className='d-flex gap-2 align-items-center'>
           <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />
           <ChatText size={16} />
-        </div>
+        </div>;
       default:
         return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
     }
-  }
+  };
 
   const startDateBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>{formatDate(rowData.start_date)}</span>
-  }
+    return <span style={{ color: '#667085' }}>{formatDate(rowData.start_date)}</span>;
+  };
 
   const endDateBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>{formatDate(rowData.end_date)}</span>
-  }
+    return <span style={{ color: '#667085' }}>{formatDate(rowData.end_date)}</span>;
+  };
 
   const assignedTimeBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>{parseFloat(rowData.time_assigned).toFixed(2)}h</span>
-  }
+    return <span style={{ color: '#667085' }}>{parseFloat(rowData.time_assigned).toFixed(2)}h</span>;
+  };
 
   const realTimeBody = (rowData) => {
     const [hours, minutes, seconds] = rowData?.real_time?.split(':').map(Number);
 
-    return <span style={{ color: '#667085' }}>{parseFloat(hours + (minutes / 60) + (seconds / 3600)).toFixed(2)}h</span>
-  }
+    return <span style={{ color: '#667085' }}>{parseFloat(hours + (minutes / 60) + (seconds / 3600)).toFixed(2)}h</span>;
+  };
 
   const bonusBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>${parseFloat(rowData.bonus || 0).toFixed(2)}</span>
-  }
+    return <span style={{ color: '#667085' }}>${parseFloat(rowData.bonus || 0).toFixed(2)}</span>;
+  };
 
   const totalBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>${parseFloat(rowData.total || 0).toFixed(2)}</span>
-  }
+    return <span style={{ color: '#667085' }}>${parseFloat(rowData.total || 0).toFixed(2)}</span>;
+  };
 
   const loadingIconTemplate = () => {
     return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
       <Spinner animation="border" role="status">
         <span className="visually-hidden">Loading...</span>
       </Spinner>
-    </div>
-  }
+    </div>;
+  };
 
   const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
 
-    setTempSort({ sortField, sortOrder })
+    setTempSort({ sortField, sortOrder });
     setPage(1);  // Reset to page 1 whenever searchValue changes
   };
 
@@ -248,7 +249,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
       <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others)=> ({...others, visible: bool }) )}/>
     </>
-  )
+  );
 });
 
 export default JobsTable;

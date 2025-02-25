@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { getClientById } from "../../../../../../APIs/ClientsApi";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
-import { sendComposeEmail } from "../../../../../../APIs/management-api";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { getClientById } from "../../../../../../APIs/ClientsApi";
 import { getOutgoingEmail } from "../../../../../../APIs/email-template";
+import { sendComposeEmail } from "../../../../../../APIs/management-api";
+import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
+
+
 
 const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
   const navigate = useNavigate();
-  const [payload, setPayload] = useState({})
+  const [payload, setPayload] = useState({});
   const [viewShow, setViewShow] = useState(false);
   const outgoingEmailTemplateQuery = useQuery({
     queryKey: ["getOutgoingEmail"],
@@ -22,7 +24,7 @@ const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
     } else {
       navigate('/settings/integrations?openEmail=true');
     }
-  }
+  };
   const clientQuery = useQuery({
     queryKey: ['getClientById', clientId],
     queryFn: () => getClientById(clientId),

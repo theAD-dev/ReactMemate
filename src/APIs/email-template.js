@@ -8,7 +8,7 @@ export const getJobTemplates = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getJobTemplate = async (id) => {
   const endpoint = `/jobs/templates/${id}/`;
@@ -17,7 +17,7 @@ export const getJobTemplate = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createJobTemplate = async (data) => {
   const endpoint = `/jobs/templates/`;
@@ -27,7 +27,7 @@ export const createJobTemplate = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateJobTemplate = async (id, data) => {
   const endpoint = `/jobs/templates/${id}/`;
@@ -37,7 +37,7 @@ export const updateJobTemplate = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteJobTemplate = async (id) => {
   const endpoint = `/jobs/templates/${id}/`;
@@ -46,7 +46,7 @@ export const deleteJobTemplate = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getEmailTemplates = async () => {
   const endpoint = `/settings/templates/email-templates/`;
@@ -55,7 +55,7 @@ export const getEmailTemplates = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createEmailTemplate = async (data) => {
   const endpoint = `/settings/templates/email-templates/`;
@@ -65,7 +65,7 @@ export const createEmailTemplate = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateEmailTemplate = async (id, data) => {
   const endpoint = `/settings/templates/email-templates/${id}/`;
@@ -75,7 +75,7 @@ export const updateEmailTemplate = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getEmail = async (id) => {
   const endpoint = `/settings/templates/email-templates/${id}/`;
@@ -84,7 +84,7 @@ export const getEmail = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getProposalBySalesId = async (id) => {
   const endpoint = `/proposals/${id}/`;
@@ -93,7 +93,7 @@ export const getProposalBySalesId = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getOutgoingEmail = async () => {
   const endpoint = `/references/outgoing-email/`;
@@ -102,7 +102,7 @@ export const getOutgoingEmail = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteEmailTemplates = async (id) => {
   const endpoint = `/settings/templates/email-templates/${id}/`;
@@ -111,7 +111,7 @@ export const deleteEmailTemplates = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getProposalsTemplates = async () => {
   const endpoint = `/settings/proposals/`;
@@ -120,7 +120,7 @@ export const getProposalsTemplates = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getProposalsTemplate = async (id) => {
   const endpoint = `/settings/proposals/${id}/`;
@@ -129,7 +129,7 @@ export const getProposalsTemplate = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createProposalTemplate = async (data) => {
   const endpoint = `/settings/proposals/new/`;
@@ -139,7 +139,7 @@ export const createProposalTemplate = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteProposalTemplates = async (id) => {
   const endpoint = `/settings/proposals/delete/${id}/`;
@@ -148,4 +148,4 @@ export const deleteProposalTemplates = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

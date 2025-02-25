@@ -1,13 +1,13 @@
-import { Link ,useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import Sidebar from '../Sidebar';
 import { PlusLg ,PencilSquare,GripVertical,ChevronDown,Plus,PlusCircle,Trash} from "react-bootstrap-icons";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import Typography from '@mui/material/Typography';
+import { Link ,useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Sidebar from '../Sidebar';
 import style from './job-template.module.scss';
 
 const EmailSignatures = () => {
@@ -121,6 +121,6 @@ const EmailSignatures = () => {
                     </Modal>
         </>
     );
-}
+};
 
 export default EmailSignatures;

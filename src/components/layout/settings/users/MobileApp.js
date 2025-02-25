@@ -1,21 +1,27 @@
-import { Link } from 'react-router-dom';
-import Sidebar from '../Sidebar';
-import { Building, Person, Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
-import style from './users.module.scss';
 import React, { useRef, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../../../APIs/settings-user-api';
 import { Spinner } from 'react-bootstrap';
-import clsx from 'clsx';
+import { Building, Person, Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
-import CreateMobileUser from './features/create-mobile-user';
-import { toast } from 'sonner';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
+import { toast } from 'sonner';
+import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../../../APIs/settings-user-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
+import Sidebar from '../Sidebar';
+import CreateMobileUser from './features/create-mobile-user';
+import style from './users.module.scss';
+
+
+
+
+
+
 
 const MobileApp = React.memo(() => {
     const { trialHeight } = useTrialHeight();
@@ -38,16 +44,16 @@ const MobileApp = React.memo(() => {
                 <div className='d-flex flex-column gap-1'>
                     <div className={`${style.ellipsis}`}>{data?.first_name} {data?.last_name}</div>
                 </div></div>
-        </div>
-    }
+        </div>;
+    };
 
     const StatusBody = (data) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <div className={`${style[data.status]}`}>
                 {data.status}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const deleteMutation = useMutation({
         mutationFn: (data) => deleteMobileUser(data),
@@ -57,6 +63,7 @@ const MobileApp = React.memo(() => {
             deleteMutation.reset();
         },
         onError: (error) => {
+            console.log('Error during disconnect user', error);
             toast.error(`Failed to disconnect user. Please try again.`);
         }
     });
@@ -76,11 +83,11 @@ const MobileApp = React.memo(() => {
 
     const restoreUser = (id) => {
         if (parseInt(mobileUsersQuery?.data?.limits?.total) > parseInt(mobileUsersQuery?.data?.limits?.number)) {
-            restoreMutation.mutate(id)
+            restoreMutation.mutate(id);
         } else {
             toast.error(`You have reached the maximum number of users allowed.`);
         }
-    }
+    };
     const ActionBody = (data) => {
         const ref = useRef(null);
         const [isOpen, setOpen] = useState(false);
@@ -99,7 +106,7 @@ const MobileApp = React.memo(() => {
                 <div className='d-flex flex-column gap-2'>
                     {
                         (data.status === "invited" || data.status === "connected") && <>
-                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2 w-100' style={{ width: 'fit-content ' }} onClick={() => { deleteMutation.mutate(data?.id) }}>
+                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2 w-100' style={{ width: 'fit-content ' }} onClick={() => { deleteMutation.mutate(data?.id); }}>
                                 <span className='d-flex align-items-center gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
                                     Disconnect User
                                     {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
@@ -119,8 +126,8 @@ const MobileApp = React.memo(() => {
                     }
                 </div>
             </ControlledMenu>
-        </React.Fragment>
-    }
+        </React.Fragment>;
+    };
 
     return (
         <>

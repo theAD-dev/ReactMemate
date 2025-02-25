@@ -1,23 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import Sidebar from '../Sidebar';
-import { PlusLg, PencilSquare, ChevronDown, Plus, Trash, ChevronUp, X, PlusCircle, Pencil, Save, Backspace } from "react-bootstrap-icons";
-import Button from 'react-bootstrap/Button';
-import { Accordion, AccordionTab } from 'primereact/accordion';
-import style from './calculators.module.scss';
-import clsx from 'clsx';
-import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
-import { useQuery } from '@tanstack/react-query';
 import { Col, Row } from 'react-bootstrap';
-import { formatMoney } from '../../../Business/shared/utils/helper';
-import { Skeleton } from 'primereact/skeleton';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { InputNumber } from 'primereact/inputnumber';
+import { PlusLg, PencilSquare, ChevronDown, Plus, Trash, ChevronUp, X, PlusCircle, Pencil, Save, Backspace } from "react-bootstrap-icons";
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Dialog } from 'primereact/dialog';
+import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
-import { toast } from 'sonner';
-import DeleteConfirmationModal from './delete-confirmation-modal';
+import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Skeleton } from 'primereact/skeleton';
+import Button from 'react-bootstrap/Button';
+import { toast } from 'sonner';
+import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import { formatMoney } from '../../../Business/shared/utils/helper';
+import Sidebar from '../Sidebar';
+import style from './calculators.module.scss';
+import DeleteConfirmationModal from './delete-confirmation-modal';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -44,11 +44,11 @@ const Departments = () => {
             ...prev,
             [subindexId]: calculation, // Store calculation data for the specific subindex
         }));
-    }
+    };
 
     const editCalculators = (id) => {
         if (id) setEdiSubIndex(id);
-    }
+    };
 
     const handleCreateCalculator = (e, id, i) => {
         e.preventDefault();
@@ -56,7 +56,7 @@ const Departments = () => {
         setCreateCalculatorId(id);
         setAccordionActiveTab2(i);
         getCalculator(id);
-    }
+    };
 
     const editHandleDepartment = (e, data) => {
         e.preventDefault();
@@ -64,7 +64,7 @@ const Departments = () => {
 
         setVisible(true);
         setEditDepartment(data);
-    }
+    };
 
     const createSubDepartmentOpen = (e, parent, index) => {
         e.preventDefault();
@@ -72,8 +72,8 @@ const Departments = () => {
 
         setSubDepartment({ parent });
         setVisible2(true);
-        setAccordionActiveTab(index)
-    }
+        setAccordionActiveTab(index);
+    };
 
     const updateSubDepartment = (e, id, parent, name) => {
         e.preventDefault();
@@ -81,7 +81,7 @@ const Departments = () => {
 
         setSubDepartment({ id, parent, name });
         setVisible2(true);
-    }
+    };
 
     return (
         <>
@@ -206,7 +206,7 @@ const Departments = () => {
             <CreateSubDepartmentModal visible2={visible2} setVisible2={setVisible2} refetch={departmentQuery.refetch} editSubDepartment={subDepartment} setEditSubDepartment={setSubDepartment} />
         </>
     );
-}
+};
 
 const calculateSummary = (calculators, taxType) => {
     let budget = 0;
@@ -243,7 +243,7 @@ const calculateSummary = (calculators, taxType) => {
         tax: tax.toFixed(2),
         total: total.toFixed(2),
     };
-}
+};
 
 const calculateUnitPrice = (item) => {
     let cost = parseFloat(item?.cost) || 0;
@@ -259,7 +259,7 @@ const calculateUnitPrice = (item) => {
     }
 
     return unit_price.toFixed(2);
-}
+};
 
 const ViewSectionComponent = ({ calculator, index, refetch }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -270,9 +270,9 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
         if (tempCalculator?.profit_type === "MRG") {
             let value = tempCalculator?.profit_type_value || 0.00;
             if (value > 100.00) value = 99.99;
-            setTempCalculator((others) => ({ ...others, profit_type_value: value }))
+            setTempCalculator((others) => ({ ...others, profit_type_value: value }));
         }
-    }, [tempCalculator])
+    }, [tempCalculator]);
 
     const saveCalculator = async () => {
         console.log('tempCalculator: ', tempCalculator);
@@ -285,10 +285,10 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             profit_type: tempCalculator?.profit_type,
             profit_type_value: tempCalculator?.profit_type_value,
             total: tempCalculator?.total
-        }
+        };
         try {
             setIsLoading(true);
-            await updateCalculator(index, calculator.id, payload)
+            await updateCalculator(index, calculator.id, payload);
             toast.success(`Calculator updated successfully.`);
             setIsEdit(false);
             refetch(index);
@@ -298,7 +298,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         if (isEdit && tempCalculator !== calculator) {
@@ -484,7 +484,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             }
         </div>
     );
-}
+};
 
 const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -676,8 +676,8 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, cancelCreateCalculator }) => {
     const uniqueCalculators = calculators.filter((item, index, self) =>
@@ -718,8 +718,8 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
                 </ul>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const EditCalculators = ({ editSubIndex, calculators }) => {
     const [updatedCalculator, setUpdatedCalculator] = useState(calculators || []);
@@ -727,7 +727,7 @@ const EditCalculators = ({ editSubIndex, calculators }) => {
 
     const setValue = (value, id, field) => {
 
-    }
+    };
     return (
         <div>
             {
@@ -810,8 +810,8 @@ const EditCalculators = ({ editSubIndex, calculators }) => {
                 </ul>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const LoadingCalculator = () => {
     return (
@@ -850,8 +850,8 @@ const LoadingCalculator = () => {
                 </Col>
             </Row>
         </div>
-    )
-}
+    );
+};
 
 const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEditDepartment }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -860,13 +860,13 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
     useEffect(() => {
         if (editDepartment?.name)
             setDepartment(editDepartment?.name);
-    }, [editDepartment?.name])
+    }, [editDepartment?.name]);
 
     const handleClose = (e) => {
         setVisible(false);
         setDepartment("");
         setEditDepartment({ id: null, name: null });
-    }
+    };
 
     const handleCreateDepartment = async () => {
         try {
@@ -898,7 +898,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -931,8 +931,8 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
                 </div>
             </Dialog>
         </>
-    )
-}
+    );
+};
 
 const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepartment, setEditSubDepartment }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -942,13 +942,13 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
     useEffect(() => {
         if (editSubDepartment?.name)
             setSubDepartment(editSubDepartment?.name);
-    }, [editSubDepartment?.name])
+    }, [editSubDepartment?.name]);
 
     const handleClose = (e) => {
         setVisible2(false);
         setSubDepartment("");
         setEditSubDepartment({ id: null, name: null, parent: null });
-    }
+    };
 
     const handleCreateSubDepartment = async () => {
         try {
@@ -975,7 +975,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -1008,7 +1008,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
                 </div>
             </Dialog>
         </>
-    )
-}
+    );
+};
 
 export default Departments;

@@ -1,19 +1,19 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react';
 import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { CheckCircle, Download, Eye, EyeSlash, Filter, Send, XCircle } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
-import { useDebounce } from 'primereact/hooks';
 
-import style from './expenses.module.scss';
-import ExpensesTable from './expenses-table';
-import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
-import { TieredMenu } from 'primereact/tieredmenu';
-import clsx from 'clsx';
-import { toast } from 'sonner';
-import { useMutation } from '@tanstack/react-query';
-import { paidExpense, sendExpenseToXeroApi, unpaidExpense } from '../../../../APIs/expenses-api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import { Button } from 'react-bootstrap';
+import { CheckCircle, Download, Eye, EyeSlash, Filter, Send, XCircle } from 'react-bootstrap-icons';
+import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { TieredMenu } from 'primereact/tieredmenu';
+import { toast } from 'sonner';
+import ExpensesTable from './expenses-table';
+import style from './expenses.module.scss';
+import { paidExpense, sendExpenseToXeroApi, unpaidExpense } from '../../../../APIs/expenses-api';
+import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
+import clsx from 'clsx';
+import { useMutation } from '@tanstack/react-query';
 
 const ExpensesPage = () => {
     const dt = useRef(null);
@@ -48,7 +48,7 @@ const ExpensesPage = () => {
     const sendExpenseToXero = () => {
         const ids = selected.map(item => item.id);
         sendExpenseToXeroMutation.mutate({ ids: ids });
-    }
+    };
 
     const paidMutation = useMutation({
         mutationFn: (data) => paidExpense(data),
@@ -77,12 +77,12 @@ const ExpensesPage = () => {
     const handlePaidExpense = () => {
         const ids = selected.map(item => item.id);
         paidMutation.mutate({ ids: ids });
-    }
+    };
 
     const handleUnPaidExpense = () => {
         const ids = selected.map(item => item.id);
         unpaidMutation.mutate({ ids: ids });
-    }
+    };
 
     return (
         <PrimeReactProvider className='peoples-page'>
@@ -144,7 +144,7 @@ const ExpensesPage = () => {
             />
             <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default ExpensesPage
+export default ExpensesPage;
