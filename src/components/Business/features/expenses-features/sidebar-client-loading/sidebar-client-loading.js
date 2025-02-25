@@ -1,6 +1,6 @@
-import { Skeleton } from 'primereact/skeleton'
-import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
+import { Skeleton } from 'primereact/skeleton';
 
 const SidebarClientLoading = () => {
   return (
@@ -76,7 +76,7 @@ const SidebarClientLoading = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SidebarClientLoading
+export default SidebarClientLoading;

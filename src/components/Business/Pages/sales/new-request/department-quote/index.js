@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import DepartmentCalculationTable from './department-calculation-table';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Placeholder } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
-import CustomRadioButton from '../ui/custom-radio-button';
-import { FormControl, MenuItem, Select } from '@mui/material';
 import { ChevronDown, InfoCircle, PencilSquare } from 'react-bootstrap-icons';
 import { components } from 'react-select';
 import Select1 from 'react-select';
+import { FormControl, MenuItem, Select } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import Form from 'react-bootstrap/Form';
+import DepartmentCalculationTable from './department-calculation-table';
 import QuoteToBusiness from './quote-to-business';
 import QuoteToClient from './quote-to-client';
-import { useQuery } from '@tanstack/react-query';
 import { getClientById, getProjectManager } from '../../../../../../APIs/ClientsApi';
+import CustomRadioButton from '../ui/custom-radio-button';
 
 const CustomOption = (props) => {
   return (
@@ -75,7 +75,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       }
       setContactPersons(clientQuery.data?.contact_persons);
     }
-  }, [clientQuery.data])
+  }, [clientQuery.data]);
 
   useEffect(() => {
     if (payload.managers) {
@@ -219,7 +219,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                                   backgroundColor: '#fff',
                                   cursor: 'pointer'
                                 },
-                              }
+                              };
                             },
                             multiValue: (styles, { data }) => {
                               return {
@@ -335,7 +335,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
         </Row>
       </div>
     </React.Fragment>
-  )
+  );
 });
 
-export default DepartmentQuote
+export default DepartmentQuote;

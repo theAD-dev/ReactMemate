@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { QuestionCircle,X } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { fetchTasksNew, fetchTasksProject } from "../../../APIs/TasksApi";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import NewTaskAdd from "../../../assets/images/icon/newTaskAdd.svg";
-import TaskDatePIcker from '../../Work/Pages/tasks/TaskDatePIcker';
-import CustomSelect from '../../Work/Pages/tasks/CustomSelect';
-import { QuestionCircle,X } from "react-bootstrap-icons";
-import { fetchTasksNew, fetchTasksProject } from "../../../APIs/TasksApi";
 import CustomProgram from "../../Work/Pages/tasks/customProgram";
+import CustomSelect from '../../Work/Pages/tasks/CustomSelect';
+import TaskDatePIcker from '../../Work/Pages/tasks/TaskDatePIcker';
+
 
 const NewTaskModal = () => {
   const [show, setShow] = useState(false);

@@ -8,7 +8,7 @@ export const getStripeIntegrations = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const stripeIntegrationsSet = async (data) => {
     const endpoint = '/settings/integrations/stripe/';
@@ -18,7 +18,7 @@ export const stripeIntegrationsSet = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getGoogleReviewIntegrations = async () => {
     const endpoint = `/settings/integrations/google/review/`;
@@ -27,7 +27,7 @@ export const getGoogleReviewIntegrations = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const googleReviewIntegrationsSet = async (data) => {
     const endpoint = '/settings/integrations/google/review/';
@@ -37,7 +37,7 @@ export const googleReviewIntegrationsSet = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getTwilioIntegrations = async () => {
     const endpoint = `/settings/integrations/twilio/`;
@@ -46,7 +46,7 @@ export const getTwilioIntegrations = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const twilioIntegrationsSet = async (data) => {
     const endpoint = '/settings/integrations/twilio/';
@@ -56,7 +56,7 @@ export const twilioIntegrationsSet = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getEmailIntegrations = async () => {
     const endpoint = `/references/outgoing-email/`;
@@ -65,7 +65,7 @@ export const getEmailIntegrations = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const emailIntegrationsSet = async (data) => {
     const endpoint = '/references/outgoing-email/';
@@ -75,7 +75,7 @@ export const emailIntegrationsSet = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getXeroIntegrations = async () => {
     const endpoint = '/xero/status/';
@@ -84,7 +84,7 @@ export const getXeroIntegrations = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const disconnectXeroIntegrations = async () => {
     const endpoint = '/xero/disconnect/';
@@ -93,4 +93,4 @@ export const disconnectXeroIntegrations = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};

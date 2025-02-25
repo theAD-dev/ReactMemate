@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import Sidebar from '../Sidebar';
 import { PencilSquare } from 'react-bootstrap-icons';
-import style from './accounting.module.scss';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { useAccountingGetQuery } from '../../../../entities/setting/accounting/department-turnover-plan/models/get-accounting-list.query';
-import { formatAUD } from '../../../../shared/lib/format-aud';
-import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Link } from 'react-router-dom';
-import { useAccountingTargetUpdateMutations } from '../../../../entities/setting/accounting/department-turnover-plan/models/update-accounting-target.mutation';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { useAccountingGetQuery } from '../../../../entities/setting/accounting/department-turnover-plan/models/get-accounting-list.query';
+import { useAccountingTargetUpdateMutations } from '../../../../entities/setting/accounting/department-turnover-plan/models/update-accounting-target.mutation';
+import { formatAUD } from '../../../../shared/lib/format-aud';
+import Sidebar from '../Sidebar';
+import style from './accounting.module.scss';
 
 const schema = yup.object().shape({
     target: yup.number().typeError('Target must be a number').required('Target is required').positive('Target must be positive'),
@@ -41,7 +41,7 @@ const DepartmentTurnoverPlan = () => {
         setVisible(false);
         setValue('target', '');
         setSelectedData(null);
-    }
+    };
 
     const { mutate: updateTarget, isPending } = useAccountingTargetUpdateMutations();
 
@@ -73,8 +73,8 @@ const DepartmentTurnoverPlan = () => {
         return <div className={"d-flex align-items-center justify-content-between show-on-hover"}>
             <span>{rowData.name}</span>
             <Button label="Edit" onClick={() => onEdit(rowData)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
-        </div>
-    }
+        </div>;
+    };
 
     return (
         <>
@@ -125,6 +125,6 @@ const DepartmentTurnoverPlan = () => {
             </div >
         </>
     );
-}
+};
 
 export default DepartmentTurnoverPlan;

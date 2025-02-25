@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
 import { Building, Buildings, Envelope, Person } from "react-bootstrap-icons";
 import { useMutation } from "@tanstack/react-query";
-
-import style from './add-remove-company-user.module.scss';
 import clsx from "clsx";
-import { DataTable } from "primereact/datatable";
+import { Button } from 'primereact/button';
 import { Column } from "primereact/column";
-import { toast } from "sonner";
+import { DataTable } from "primereact/datatable";
+import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from "primereact/progressspinner";
+import { toast } from "sonner";
+import style from './add-remove-company-user.module.scss';
 import { deleteMobileUser, updateMobileUserPrice } from "../../../../../APIs/settings-user-api";
 import { formatAUD } from "../../../../../shared/lib/format-aud";
+
 
 const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visible, setVisible, additionalUser }) => {
     const [add, setAdd] = useState(0);
     const [state, setState] = useState(users?.length || 0);
-    const [max, setMax] = useState(total || 0)
+    const [max, setMax] = useState(total || 0);
     const percentage = (users?.length / max) * 100;
 
     useEffect(() => {
@@ -26,17 +26,17 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
 
     const minusUser = () => {
         if ((defaultUser + (additionalUser + add)) === users?.length) {
-            toast.error("You are reducing the number of seats by 1, Remove 1 users to continue.")
+            toast.error("You are reducing the number of seats by 1, Remove 1 users to continue.");
         } else {
             if (additionalUser + add > 0) {
                 setAdd((prev) => prev - 1);
             }
         }
-    }
+    };
 
     const plusUser = () => {
         setAdd((prev) => prev + 1);
-    }
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -85,9 +85,9 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
     const saveWorkSubscription = () => {
         let obj = {
             max_workers: defaultUser + (additionalUser + add),
-        }
+        };
         mutation.mutate(obj);
-    }
+    };
 
     const footerContent = (
         <div className="d-flex justify-content-end align-items-center gap-3">
@@ -123,8 +123,8 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
                     }
                 </div>
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const emailBody = (data) => {
         return <div className="d-flex gap-2 align-items-center">
@@ -136,8 +136,8 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
                         <rect x="0.257812" width="198.729" height="12" rx="6" fill="#F2F4F7" />
                     </svg>
             }
-        </div>
-    }
+        </div>;
+    };
 
     const deleteMutation = useMutation({
         mutationFn: (data) => deleteMobileUser(data),
@@ -153,15 +153,15 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
 
     const ActionsBody = (data) => {
         if (!data?.id) return "";
-        return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2" onClick={() => { deleteMutation.mutate(data?.id) }}>
+        return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2" onClick={() => { deleteMutation.mutate(data?.id); }}>
             Remove
             {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
-        </Button>
-    }
+        </Button>;
+    };
 
     useEffect(() => {
         setAdd(0);
-    }, [visible])
+    }, [visible]);
 
     return (
         <Dialog visible={visible} modal header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={() => { setVisible(false); }}>
@@ -218,7 +218,7 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
             </div>
 
             <div className="mt-4">
-                <DataTable scrollable scrollHeight={"350px"} className={style.userTable} value={[...users || [], ...Array.from({ length: max - state }, (_, index) => { return {} })]} showGridlines>
+                <DataTable scrollable scrollHeight={"350px"} className={style.userTable} value={[...users || [], ...Array.from({ length: max - state }, (_, index) => { return {}; })]} showGridlines>
                     <Column field="name" style={{ width: '80px' }} body={nameBody} header="Name"></Column>
                     <Column field="email" style={{ width: '100px' }} body={emailBody} header="Email"></Column>
                     <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>
@@ -226,7 +226,7 @@ const AddRemoveMobileUser = ({ users, defaultUser, refetch, total, price, visibl
             </div>
 
         </Dialog>
-    )
-}
+    );
+};
 
 export default AddRemoveMobileUser;

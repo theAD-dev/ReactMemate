@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { DataTable } from 'primereact/datatable';
+import { useParams } from 'react-router-dom';
+import clsx from 'clsx';
 import { Column } from 'primereact/column';
+import { ColumnGroup } from 'primereact/columngroup';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from "primereact/dialog";
+import { Row } from 'primereact/row';
+import { Skeleton } from 'primereact/skeleton';
+import Button from "react-bootstrap/Button";
+import { toast } from 'sonner';
 import style from './quote.module.scss';
 import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } from "../../../APIs/quoteation-api";
-import { ColumnGroup } from 'primereact/columngroup';
-import { Row } from 'primereact/row';
-import { useParams } from 'react-router-dom';
-import Button from "react-bootstrap/Button";
-import { Dialog } from "primereact/dialog";
 import googleReview from "../../../assets/images/icon/checbold.svg";
-import { Skeleton } from 'primereact/skeleton';
-import { toast } from 'sonner';
-import clsx from 'clsx';
 import { formatAUD } from '../../../shared/lib/format-aud';
+
 
 const QuotationEmail = () => {
     const { id } = useParams();
@@ -180,7 +181,7 @@ const QuotationEmail = () => {
         'Declined': 'Declined',
         'Review': 'Under Review',
         'Completed': 'Project Completed'
-    }
+    };
     return (
         <>
             <div className={style.quotationWrapperPage}>
@@ -274,7 +275,7 @@ const QuotationEmail = () => {
                             </div>
                             <div className={style.right}>
                                 <button
-                                    onClick={() => { setVisible(true) }}
+                                    onClick={() => { setVisible(true); }}
                                 >
                                     {actionLoading.changes ? 'Requesting changes...' : 'Request changes'}
                                 </button>

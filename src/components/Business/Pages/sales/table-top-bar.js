@@ -1,9 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import {
   X,
   Filter,
@@ -16,20 +11,27 @@ import {
   CheckCircle,
   Person,
 } from "react-bootstrap-icons";
-import SearchFilter from "./search-filter";
+import { NavLink } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import clsx from 'clsx';
+import { useDebounce } from "primereact/hooks";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import DateRangePicker from "./features/date-range-picker";
-import { fetchMultipleData } from "../../../../APIs/SalesApi";
-import { fetchMultipleLost } from "../../../../APIs/SalesApi";
-import ConfettiComponent from "../../../layout/ConfettiComponent";
-import BankDetailsModel from "./features/bank-details-model";
-import { mapSalesData } from "./sales-tables";
-import clsx from 'clsx';
 import { toast } from 'sonner';
+import BankDetailsModel from "./features/bank-details-model";
+import DateRangePicker from "./features/date-range-picker";
+import { mapSalesData } from "./sales-tables";
+import SearchFilter from "./search-filter";
 import { getProjectManager } from "../../../../APIs/ClientsApi";
-import { useQuery } from "@tanstack/react-query";
-import { useDebounce } from "primereact/hooks";
+import { fetchMultipleLost } from "../../../../APIs/SalesApi";
+import { fetchMultipleData } from "../../../../APIs/SalesApi";
+import ConfettiComponent from "../../../layout/ConfettiComponent";
+
+
 
 const leadArray = [
   {
@@ -58,6 +60,7 @@ const leadArray = [
     gradient: "linear-gradient(90deg, #1AB2FF 80%, transparent 80%)",
   },
 ];
+
 const TableTopBar = ({
   profileData,
   salesData,
@@ -253,7 +256,7 @@ const TableTopBar = ({
         };
       }
     });
-  }
+  };
 
   const applyProjectManagerFilters = () => {
     const newFilterState = { ...filterState };
@@ -264,7 +267,7 @@ const TableTopBar = ({
   };
 
   const clearProjectManagerFilters = () => {
-    console.log('...')
+    console.log('...');
     setFilterState((prevFilterState) => {
       const { projectManager, ...rest } = prevFilterState;
       return rest;
@@ -297,7 +300,7 @@ const TableTopBar = ({
   });
 
   useEffect(() => {
-    if (rows.length) {
+    if (rows?.length) {
       const calculatedFilterAmount = rows.reduce(
         (total, sale) => total + sale.amountData,
         0
@@ -341,7 +344,7 @@ const TableTopBar = ({
           } flexbetween paddingLR tableTopBar tableTopBarSales`}
         style={{ borderBottom: "1px solid #f2f2f2" }}
       >
-        {!selectedRow || selectedRow.length === 0 ? (
+        {!selectedRow || selectedRow?.length === 0 ? (
           <Container fluid>
             <Row style={{ display: "flex", alignItems: "center" }}>
               <Col
@@ -391,14 +394,14 @@ const TableTopBar = ({
                 </div>
               </Col>
               <Col style={{ textAlign: "right" }}>
-                {salesData && salesData.length > 0 ? (
+                {salesData && salesData?.length > 0 ? (
                   <p className="flexEndStyle styleT3">
                     Total{" "}
                     <span className="styleT2">
-                      {rows.length ? (
-                        <> {rows.length}</>
+                      {rows?.length ? (
+                        <> {rows?.length}</>
                       ) : (
-                        <>{salesData.length} </>
+                        <>{salesData?.length} </>
                       )}{" "}
                       Sales
                     </span>
@@ -465,14 +468,14 @@ const TableTopBar = ({
               </Col>
               <Col></Col>
               <Col style={{ textAlign: "right" }}>
-                {salesData && salesData.length > 0 ? (
+                {salesData && salesData?.length > 0 ? (
                   <p className="flexEndStyle styleT3">
                     Total{" "}
                     <span className="styleT2">
-                      {rows.length ? (
-                        <> {rows.length}</>
+                      {rows?.length ? (
+                        <> {rows?.length}</>
                       ) : (
-                        <>{salesData.length} </>
+                        <>{salesData?.length} </>
                       )}{" "}
                       Sales
                     </span>
@@ -713,17 +716,17 @@ const TableTopBar = ({
           </Tab>
         </Tabs>
       )}
-      {Object.keys(filter).length > 0 && (
+      {Object.keys(filter)?.length > 0 && (
         <div className="mainTagsWrapper">
-          {Object.entries(filter).map(([group, items]) => (
+          {Object.entries(filter)?.map(([group, items]) => (
             <div key={group}>
-              {items.length > 0 && (
+              {items?.length > 0 && (
                 <div className="tags-input-container">
                   <ul>
                     {items.map((item, index) => (
                       <li className="mainWrapperTags tag-item-wrap" key={index}>
                         {item}
-                        {items.length > 1 && (
+                        {items?.length > 1 && (
                           <Button
                             variant="link"
                             size="sm"

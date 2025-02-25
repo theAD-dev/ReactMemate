@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
+import { X } from "react-bootstrap-icons";
+import { PhoneInput } from 'react-international-phone';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { X } from "react-bootstrap-icons";
-import AddNoteModeIcon from "../../../../../../assets/images/icon/addNoteModeIcon.svg";
-import { useNavigate } from 'react-router-dom';
-import { PhoneInput } from 'react-international-phone';
-import style from './send-sms.module.scss';
-import { PhoneNumberUtil } from 'google-libphonenumber';
-import { useMutation } from '@tanstack/react-query';
-import { sendSms } from '../../../../../../APIs/management-api';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import style from './send-sms.module.scss';
+import { sendSms } from '../../../../../../APIs/management-api';
+import AddNoteModeIcon from "../../../../../../assets/images/icon/addNoteModeIcon.svg";
+
+
+
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -64,9 +67,9 @@ const SendSMS = ({ projectId, projectCardData }) => {
       mutation.mutate({
         phone_number: phoneNumber,
         message: message
-      })
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -130,7 +133,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
                       placeholder='Enter a message here...'
                       onChange={(e) => {
                         setMessage(e.target.value);
-                        setErrors({})
+                        setErrors({});
                       }}
                     />
                   </div>

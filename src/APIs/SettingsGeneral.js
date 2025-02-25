@@ -54,7 +54,7 @@ export const getBillingPersonalInfo = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateBillingPersonalInfo = async (data) => {
   const endpoint = `/settings/subscriptions/tax-id/`;
@@ -64,7 +64,7 @@ export const updateBillingPersonalInfo = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getPaymentMethodInfo = async () => {
   const endpoint = `/settings/subscriptions/payment-method/`;
@@ -73,7 +73,7 @@ export const getPaymentMethodInfo = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updatePaymentMethodInfo = async (data) => {
   const endpoint = `/settings/subscriptions/payment-method/`;
@@ -83,7 +83,7 @@ export const updatePaymentMethodInfo = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getReginalAndLanguage = async () => {
   const endpoint = `/settings/organization/region-language/`;
@@ -92,7 +92,7 @@ export const getReginalAndLanguage = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateReginalAndLanguage = async (data) => {
   const endpoint = `/settings/organization/region-language/`;
@@ -102,7 +102,7 @@ export const updateReginalAndLanguage = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createProjectStatus = async (data) => {
   console.log('data: ', data);
@@ -118,7 +118,7 @@ export const createProjectStatus = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateProjectStatusById = async (id, data) => {
   const endpoint = `/settings/project-statuses/update/${id}/`;
@@ -128,7 +128,7 @@ export const updateProjectStatusById = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteProjectStatusById = async (id) => {
   const endpoint = `/settings/project-statuses/delete/${id}/`;
@@ -137,7 +137,7 @@ export const deleteProjectStatusById = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 
 

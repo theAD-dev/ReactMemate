@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchProfile, updateProfile } from "../../../APIs/ProfileApi";
-import { Link } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import styles from "./setting.profile.module.scss";
+import { Button, Spinner } from "react-bootstrap";
 import {
   PencilSquare,
   Telephone,
   Link45deg,
   Upload,
 } from "react-bootstrap-icons";
-import AvatarImg from "../../../assets/images/img/Avatar.png";
-import FileUploader from "../../../ui/file-uploader/file-uploader";
-import { Button, Spinner } from "react-bootstrap";
+import { Controller, useForm } from "react-hook-form";
 import { PhoneInput } from "react-international-phone";
+import { Link } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as yup from "yup";
+import styles from "./setting.profile.module.scss";
+import Sidebar from "./Sidebar";
+import { fetchProfile, updateProfile } from "../../../APIs/ProfileApi";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
+import AvatarImg from "../../../assets/images/img/Avatar.png";
 import ChangePassword from "../../../features/settings/profile/change-passowrd/change-password";
+import FileUploader from "../../../ui/file-uploader/file-uploader";
+
 
 const schema = yup.object().shape({
   first_name: yup.string().required("First Name is required"),

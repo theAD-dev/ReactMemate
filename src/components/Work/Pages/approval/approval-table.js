@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { DataTable } from 'primereact/datatable';
-import { Chip } from 'primereact/chip';
+import React, { useEffect, useState } from 'react';
 import { Link45deg, Person, Repeat } from 'react-bootstrap-icons';
+import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
+import { DataTable } from 'primereact/datatable';
 import { Row } from 'primereact/row';
-
-import style from './approval.module.scss';
 import { Tag } from 'primereact/tag';
+import style from './approval.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 export const CustomerService = {
     getData() {
@@ -93,7 +93,7 @@ export const CustomerService = {
                 total: "$2,950.00",
                 linkTo: "240007"
             }
-        ]
+        ];
     },
     getCustomersSmall() {
         return Promise.resolve(this.getData().slice(0, 10));
@@ -120,7 +120,7 @@ export const CustomerService = {
 
         return fetch('https://www.primefaces.org/data/customers?' + queryParams).then((res) => res.json());
     }
-}
+};
 
 const ApprovalTable = () => {
     const { trialHeight } = useTrialHeight();
@@ -136,34 +136,34 @@ const ApprovalTable = () => {
             return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
                 <div className={`${style.payment} ${style.paymentHours}`}>{rowData.paymentType}</div>
                 <Repeat color='#158ECC' />
-            </div>
+            </div>;
         else
             return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
                 <div className={`${style.payment} ${style.paymentFix}`}>{rowData.paymentType}</div>
                 <Repeat color='#158ECC' />
-            </div>
-    }
+            </div>;
+    };
 
     const timeBody = (rowdata) => {
         return <div className={`d-flex align-items-center show-on-hover`}>
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
                 {rowdata.time}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const clientHeader = () => {
         return <div className='d-flex align-items-center'>
             Client
             <small>A→Z</small>
-        </div>
-    }
+        </div>;
+    };
     const clientBody = (rowData) => {
         return <div className='d-flex align-items-center'>
             <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}><Person color='#667085' /></div>
             {rowData.client}
-        </div>
-    }
+        </div>;
+    };
 
     const nameBody = (rowData) => {
         const name = rowData.name;
@@ -171,34 +171,34 @@ const ApprovalTable = () => {
         return <div className='d-flex align-items-center'>
             <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>{initials}</div>
             {rowData.name}
-        </div>
-    }
+        </div>;
+    };
 
     const statusBody = (rowData) => {
         const status = rowData.status;
         switch (status) {
             case 'In Progress':
-                return <Chip className={`status ${style.inProgress}`} label={status} />
+                return <Chip className={`status ${style.inProgress}`} label={status} />;
             case 'Finished':
-                return <Chip className={`status ${style.finished}`} label={status} />
+                return <Chip className={`status ${style.finished}`} label={status} />;
             case 'Assign':
-                return <Chip className={`status ${style.assign}`} label={status} />
+                return <Chip className={`status ${style.assign}`} label={status} />;
             default:
                 return <Chip className={`status ${style.defaultStatus}`} label={status} />;
         }
-    }
+    };
 
     const linkToBody = (rowData) => {
-        return <div className='d-flex align-items-center' style={{ gap: '10px' }}>{rowData.linkTo} <Link45deg color='#3366CC' /> </div>
-    }
+        return <div className='d-flex align-items-center' style={{ gap: '10px' }}>{rowData.linkTo} <Link45deg color='#3366CC' /> </div>;
+    };
 
     const totalBody = (rowData) => {
-        return <Tag value={rowData.total} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>
-    }
+        return <Tag value={rowData.total} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>;
+    };
 
     const thisWeekTotalBody = (rowData) => {
-        return <span style={{ fontWeight: 'bold' }}>{rowData.total}</span>
-    }
+        return <span style={{ fontWeight: 'bold' }}>{rowData.total}</span>;
+    };
 
     const header = (
         <div className="flex align-items-center justify-content-end" style={{}}>
@@ -268,7 +268,7 @@ const ApprovalTable = () => {
             </DataTable>
         </>
 
-    )
-}
+    );
+};
 
-export default ApprovalTable
+export default ApprovalTable;

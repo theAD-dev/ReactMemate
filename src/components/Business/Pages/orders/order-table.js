@@ -1,19 +1,22 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { Spinner } from 'react-bootstrap';
 import { InfoCircle } from 'react-bootstrap-icons';
-import { Tag } from 'primereact/tag';
 import { CircularProgressbar } from 'react-circular-progressbar';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from "primereact/dialog";
+import { Tag } from 'primereact/tag';
 import style from './order.module.scss';
 import { getListOfOrder } from '../../../../APIs/OrdersApi';
-import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-import { Spinner } from 'react-bootstrap';
-import { Dialog } from "primereact/dialog";
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
-import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import { formatDate } from '../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../shared/lib/format-aud';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+
+
+
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
   const observerRef = useRef(null);
@@ -52,7 +55,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           });
       }
       setSort(tempSort);
-      setHasMoreData(data.count !== orders.length)
+      setHasMoreData(data.count !== orders.length);
       setLoading(false);
     };
 
@@ -88,8 +91,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         <span style={{ color: '#98A2B3' }} className='font-12'>{formatDate(rowData.created)}</span>
       </div>
       {/* <Button label="Open" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text /> */}
-    </div>
-  }
+    </div>;
+  };
 
   const customerBody = (rowData) => {
     return <div className='d-flex align-items-center'>
@@ -99,16 +102,16 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         {rowData.deleted ?
           <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
       </div>
-    </div>
-  }
+    </div>;
+  };
 
   const totalInvoice = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center`}>
         ${formatAUD(rowData.total)}
       </div>
-    </div>
-  }
+    </div>;
+  };
 
   const statusBody = (rowData) => {
     return (
@@ -165,8 +168,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
         /></div>
       <span>${formatAUD(rowData.real_cost)}</span>
-    </div>
-  }
+    </div>;
+  };
 
   const labourBody = (rowData) => {
     const labor_expenses_percentage = getPercentage(rowData.labor_expenses, rowData.budget);
@@ -208,8 +211,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
         /></div>
       <span>${formatAUD(rowData.labor_expenses)}</span>
-    </div>
-  }
+    </div>;
+  };
 
   const costofSaleBody = (rowData) => {
     const cost_of_sale_percentage = getPercentage(rowData.cost_of_sale, rowData.budget);
@@ -250,8 +253,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
         /></div>
       <span>${formatAUD(rowData.cost_of_sale)}</span>
-    </div>
-  }
+    </div>;
+  };
 
   const OperatingExpenseBody = (rowData) => {
     const operating_expense_percentage = getPercentage(rowData.operating_expense, rowData.budget);
@@ -292,37 +295,37 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
         /></div>
       <span>${formatAUD(rowData.operating_expense)}</span>
-    </div>
-  }
+    </div>;
+  };
 
   const profitBodyTemplate = (rowData) => {
     const status = rowData.status;
     switch (status) {
       case 'In progress':
-        return <Tag className={`profit ${style.inProgressProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
+        return <Tag className={`profit ${style.inProgressProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
       case 'Complete':
-        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
+        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
       case 'Lost':
-        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
+        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
       default:
         return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
     }
-  }
+  };
 
   const loadingIconTemplate = () => {
     return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
       <Spinner animation="border" role="status">
         <span className="visually-hidden">Loading...</span>
       </Spinner>
-    </div>
-  }
+    </div>;
+  };
 
   const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
 
-    setTempSort({ sortField, sortOrder })
+    setTempSort({ sortField, sortOrder });
     setPage(1);  // Reset to page 1 whenever searchValue changes
   };
 
@@ -392,6 +395,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         </div>
       </Dialog>
     </>
-  )
-})
-export default OrdersTable
+  );
+});
+export default OrdersTable;

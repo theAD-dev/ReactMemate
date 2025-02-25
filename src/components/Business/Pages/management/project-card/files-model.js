@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
+import { Button } from 'react-bootstrap';
 import { X,FileEarmarkPersonFill,ThreeDotsVertical
 } from "react-bootstrap-icons";
-import FolderFileIcon from "../../../../../assets/images/icon/folderFileIcon.svg";
-import { Button } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import Modal from 'react-bootstrap/Modal';
+import FolderFileIcon from "../../../../../assets/images/icon/folderFileIcon.svg";
 
 const FilesModel = () => {
   const [viewShow, setViewShow] = useState(false);

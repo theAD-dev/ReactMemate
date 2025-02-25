@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { ClockHistory, ArrowLeftShort } from "react-bootstrap-icons";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import VerificationInput from 'react-verification-input';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { OnboardingCode, onboardingNextStep } from "../../../APIs/OnboardingApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import mail01 from "../../../assets/images/icon/mail-01.png";
-import LoinLogo from "../../../assets/images/logo.svg";
 import login_slider1 from "../../../assets/images/img/emailSlider01.png";
-import VerificationInput from 'react-verification-input';
-import { OnboardingCode, onboardingNextStep } from "../../../APIs/OnboardingApi";
-import { ClockHistory, ArrowLeftShort } from "react-bootstrap-icons";
+import LoinLogo from "../../../assets/images/logo.svg";
+
 import "./org.css";
 
 const Verifymail = () => {
@@ -48,7 +49,7 @@ const Verifymail = () => {
       if (typeof response === "string" && response.includes("code")) {
         setCodeError(JSON.parse(response).otpCode);
       } else {
-        navigate(`/company-name/${uuid}?email=${email}`)
+        navigate(`/company-name/${uuid}?email=${email}`);
       }
     } catch (error) {
       console.error("API error:", error);
@@ -74,7 +75,7 @@ const Verifymail = () => {
       console.error("API error:", error);
       setCodeError("An error occurred while verifying the OTP. Please try again later.");
     }
-  }
+  };
 
   return (
     <div className='requestDemoWrap veryfymail'>

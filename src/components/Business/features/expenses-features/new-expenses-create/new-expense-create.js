@@ -1,13 +1,14 @@
-import React, { useRef, useState } from 'react'
-import { Sidebar } from 'primereact/sidebar';
+import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
-
-import styles from './new-expense-create.module.scss';
-import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
-import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
+import { Sidebar } from 'primereact/sidebar';
+import { toast } from 'sonner';
+import styles from './new-expense-create.module.scss';
 import { createNewExpense } from '../../../../../APIs/expenses-api';
+import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
+
+
 
 const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
     const url = window.location.href;
@@ -39,7 +40,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
         delete data["gst-calculation"];
         delete data.option;
         delete data.subtotal;
-        delete data.totalAmount
+        delete data.totalAmount;
         delete data.tax;
 
         if (!data.order) delete data.order;
@@ -83,13 +84,13 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
                         <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }}>{mutation.isPending ? "Loading..." : "Save"}</Button>
                     </div>
                 </div>
             )}
         ></Sidebar>
-    )
-}
+    );
+};
 
-export default NewExpensesCreate
+export default NewExpensesCreate;

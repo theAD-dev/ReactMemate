@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { SettingsGeneralInformation, updateGeneralInformation } from '../../../../APIs/SettingsGeneral';
-import { Link, useNavigate } from 'react-router-dom';
-import Sidebar from '.././Sidebar';
-import styles from "./general.module.scss";
+import { Spinner } from 'react-bootstrap';
 import { PencilSquare, Telephone, Building, Link45deg, Upload } from "react-bootstrap-icons";
+import { Controller, useForm } from 'react-hook-form';
+import { PhoneInput } from 'react-international-phone';
+import { Link, useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import * as yup from 'yup';
+import styles from "./general.module.scss";
+import Sidebar from '.././Sidebar';
+import { SettingsGeneralInformation, updateGeneralInformation } from '../../../../APIs/SettingsGeneral';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
 import AvatarImg from "../../../../assets/images/img/Avatar.png";
 import FileUploader from '../../../../ui/file-uploader/file-uploader';
-import { toast } from 'sonner';
-import { Spinner } from 'react-bootstrap';
-import { PhoneInput } from 'react-international-phone';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
+
+
 
 const schema = yup.object().shape({
   legal_name: yup.string().required('Company Legal Name is required'),

@@ -1,19 +1,21 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Envelope, GeoAlt, Globe } from 'react-bootstrap-icons';
-import { Button } from 'primereact/button';
-import { Link, useNavigate } from 'react-router-dom';
-import { OverlayPanel } from "primereact/overlaypanel";
-
-import style from './suppliers.module.scss';
-import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-import { getListOfSuppliers } from '../../../../APIs/SuppliersApi';
 import { Spinner } from 'react-bootstrap';
-import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import { Envelope, GeoAlt, Globe } from 'react-bootstrap-icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { OverlayPanel } from "primereact/overlaypanel";
 import { Tag } from 'primereact/tag';
-import { formatAUD } from '../../../../shared/lib/format-aud';
+import style from './suppliers.module.scss';
+import { getListOfSuppliers } from '../../../../APIs/SuppliersApi';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+
+
+
 
 export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers, refetch }, ref) => {
     const navigate = useNavigate();
@@ -39,7 +41,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             else if (sort?.sortOrder === -1) order = `-${sort.sortField}`;
 
             const data = await getListOfSuppliers(page, limit, searchValue, order);
-            setTotalSuppliers(() => (data?.count || 0))
+            setTotalSuppliers(() => (data?.count || 0));
             if (page === 1) setSuppliers(data.results);
             else {
                 if (data?.results?.length > 0)
@@ -75,16 +77,16 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     const supplierIdBodyTemplate = (rowData) => {
         return <div className='d-flex align-items-center'>
             <span>{rowData.number}</span>
-        </div>
-    }
+        </div>;
+    };
 
     const nameBodyTemplate = (rowData) => {
         return <div className='d-flex align-items-center gap-1 show-on-hover'>
             <ImageAvatar has_photo={rowData.has_photo} photo={rowData.photo} is_business={true} />
             <div className={`${style.ellipsis}`}>{rowData.name}</div>
             <Button label="Open" onClick={() => navigate(`/suppliers/${rowData.id}/history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
-        </div>
-    }
+        </div>;
+    };
 
     const ServicesBodyTemplate = (rowData) => {
         const op = useRef(null);
@@ -135,8 +137,8 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             >
                 <Envelope size={20} color='#98A2B3' className='email-icon' />
             </Link>
-        </div>
-    }
+        </div>;
+    };
 
     const addressesBody = (rowData) => {
         let defaultAddress = (rowData?.addresses?.length && rowData?.addresses[0]?.address) || "";
@@ -148,46 +150,46 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
                     <GeoAlt />
                 </Link>
             }
-        </div>
-    }
+        </div>;
+    };
 
     const addressesStateBodyTemplate = (rowData) => {
         let defaultState = (rowData?.addresses?.length && rowData?.addresses[0]?.state_alias) || "";
         let address = rowData?.addresses?.length && rowData?.addresses?.find((address) => address.is_main === true);
         return address?.state_alias || defaultState || "-";
-    }
+    };
 
     const addressesPostCodeBodyTemplate = (rowData) => {
         let defaultPost = (rowData?.addresses?.length && rowData?.addresses[0]?.postcode) || "";
         let address = rowData?.addresses?.length && rowData?.addresses?.find((address) => address.is_main === true);
         return address?.postcode || defaultPost || "-";
-    }
+    };
 
     const websiteBody = (rowData) => {
-        return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-"
-    }
+        return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-";
+    };
 
     const totalSpentBody = (rowData) => {
-        return <Tag value={`$${formatAUD(rowData.total_spent)}`} style={{ height: '22px', minWidth: '26px', borderRadius: '20px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
-    }
+        return <Tag value={`$${formatAUD(rowData.total_spent)}`} style={{ height: '22px', minWidth: '26px', borderRadius: '20px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>;
+    };
 
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
-        </div>
-    }
+        </div>;
+    };
 
     const onResizeColumn = (event) => {
         console.log('event: ', event);
-    }
+    };
 
     const onSort = (event) => {
         console.log('event: ', event);
         const { sortField, sortOrder } = event;
         setPage(1);  // Reset to page 1 whenever searchValue changes
-        setSort({ sortField, sortOrder })
+        setSort({ sortField, sortOrder });
     };
 
     return (
@@ -215,5 +217,5 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             <Column field='total_spent' body={totalSpentBody} header="Total Spent" style={{ minWidth: '111px' }} sortable></Column>
             <Column field="website" header="Website" body={websiteBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
         </DataTable>
-    )
-})
+    );
+});

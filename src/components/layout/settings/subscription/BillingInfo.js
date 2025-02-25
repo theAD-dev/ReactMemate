@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Sidebar from "./../Sidebar";
-import { ExclamationCircle } from "react-bootstrap-icons";
-import { getBillingPersonalInfo, getPaymentMethodInfo, updateBillingPersonalInfo } from "../../../../APIs/SettingsGeneral";
 import { Button, Card, Col, Row } from "react-bootstrap";
+import { ExclamationCircle } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { InputText } from "primereact/inputtext";
-import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
-import ChangePaymentMethod from "./features/change-payment-method";
 import { Skeleton } from "primereact/skeleton";
+import { toast } from "sonner";
+import Sidebar from "./../Sidebar";
+import ChangePaymentMethod from "./features/change-payment-method";
+import { getBillingPersonalInfo, getPaymentMethodInfo, updateBillingPersonalInfo } from "../../../../APIs/SettingsGeneral";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
+
 
 const BillingInfo = () => {
   const { trialHeight } = useTrialHeight();
@@ -44,12 +45,12 @@ const BillingInfo = () => {
   });
 
   const updateBillingPaymentInfo = () => {
-    if (!generalData?.payment_name) return toast.error("Business name is required.")
+    if (!generalData?.payment_name) return toast.error("Business name is required.");
     if (!generalData?.abn) return toast.error("ABN number is not valid");
     if (generalData?.abn?.length < 11) return toast.error("Enter 11 digit ABN number.");
 
     mutation.mutate(generalData);
-  }
+  };
 
   const handleInfoDetails = (e) => {
     const { name, value } = e.target;
@@ -61,9 +62,9 @@ const BillingInfo = () => {
 
   useEffect(() => {
     if (billingInfoQuery?.data) {
-      setGeneralData(billingInfoQuery?.data)
+      setGeneralData(billingInfoQuery?.data);
     }
-  }, [billingInfoQuery?.data])
+  }, [billingInfoQuery?.data]);
 
   return (
     <>

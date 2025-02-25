@@ -54,7 +54,7 @@ export const updateProjectScheduleById = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateProjectStatusById = async (id, data) => {
     const endpoint = `/project-card/custom-status/${id}/`;
@@ -64,7 +64,7 @@ export const updateProjectStatusById = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateProjectReferenceById = async (id, data) => {
     const endpoint = `/project-card/reference/${id}/`;
@@ -74,7 +74,7 @@ export const updateProjectReferenceById = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const createProjectNoteById = async (id, data) => {
     const endpoint = `/project-card/note/${id}/`;
@@ -84,7 +84,7 @@ export const createProjectNoteById = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const projectsToSalesUpdate = async (id) => {
     const endpoint = `/projects/back/`;
@@ -94,7 +94,7 @@ export const projectsToSalesUpdate = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const projectsOrderDecline = async (id) => {
     const endpoint = `/projects/decline/`;
@@ -104,7 +104,7 @@ export const projectsOrderDecline = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const projectsComplete = async (id) => {
     const endpoint = `/projects/complete/`;
@@ -114,7 +114,7 @@ export const projectsComplete = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const createInvoiceById = async (id) => {
     const endpoint = `/invoices/create/${id}/`;
@@ -123,7 +123,7 @@ export const createInvoiceById = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const createAndSendInvoiceById = async (id, data) => {
     const endpoint = `/invoices/send/${id}/`;
@@ -133,7 +133,7 @@ export const createAndSendInvoiceById = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const sendComposeEmail = async (id, action, data) => {
     let endpoint;
@@ -146,7 +146,7 @@ export const sendComposeEmail = async (id, action, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const sendSms = async (id, data) => {
     let endpoint = `/sms/${id}/`;
@@ -156,7 +156,17 @@ export const sendSms = async (id, data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
+
+export const resendQuoteEmail = async (id, data) => {
+    let endpoint = `/resend/quote/${id}/`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
 
 export const getManagement = async () => {
     const myHeaders = new Headers();
@@ -178,7 +188,7 @@ export const getManagement = async () => {
         console.error(error);
         throw error; // Rethrow the error if needed
     }
-}
+};
 
 
 
@@ -202,7 +212,7 @@ export const ProjectCardApi = async (uniqueId) => {
         console.error(error);
         throw error; // Rethrow the error if needed
     }
-}
+};
 
 export const cardScheduleUpdateApi = async (uniqueId) => {
     const myHeaders = new Headers();
@@ -225,7 +235,7 @@ export const cardScheduleUpdateApi = async (uniqueId) => {
         console.error(error);
         throw error; // Rethrow the error if needed
     }
-}
+};
 
 export const cardAddNoteApi = async (projectId) => {
     const myHeaders = new Headers();
@@ -249,7 +259,7 @@ export const cardAddNoteApi = async (projectId) => {
         console.error(error);
         throw error; // Rethrow the error if needed
     }
-}
+};
 
 
 

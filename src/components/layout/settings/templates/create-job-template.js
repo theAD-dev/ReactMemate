@@ -1,19 +1,19 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
-import Sidebar from '../Sidebar';
-import { ChevronLeft, ClockHistory, PencilSquare } from "react-bootstrap-icons";
-import style from './job-template.module.scss';
-import clsx from 'clsx';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'react-bootstrap';
-import { createJobTemplate, deleteJobTemplate, getJobTemplate, updateJobTemplate } from '../../../../APIs/email-template';
-import { InputText } from 'primereact/inputtext';
+import { ChevronLeft, ClockHistory, PencilSquare } from "react-bootstrap-icons";
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Editor } from 'primereact/editor';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Editor } from 'primereact/editor';
 import { toast } from 'sonner';
+import { createJobTemplate, deleteJobTemplate, getJobTemplate, updateJobTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import Sidebar from '../Sidebar';
+import style from './job-template.module.scss';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -102,7 +102,7 @@ const CreateJobTemplate = () => {
             console.error("Error deleting template:", error);
             toast.error("Failed to delete the template. Please try again.");
         },
-    })
+    });
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -128,13 +128,13 @@ const CreateJobTemplate = () => {
         };
         templateData.duration = duration || 0.0;
         mutation.mutate(templateData);
-    }
+    };
 
     const handleDelete = () => {
         if (id) {
-            deleteMutation.mutate()
+            deleteMutation.mutate();
         }
-    }
+    };
 
     useEffect(() => {
         if (jobQuery?.data) {
@@ -144,9 +144,9 @@ const CreateJobTemplate = () => {
             setText(jobQuery?.data?.description);
             setType(jobQuery?.data?.type);
             setCost(jobQuery?.data?.cost);
-            if (jobQuery?.data?.duration) setDuration(+jobQuery?.data?.duration)
+            if (jobQuery?.data?.duration) setDuration(+jobQuery?.data?.duration);
         }
-    }, [jobQuery?.data])
+    }, [jobQuery?.data]);
 
     return (
         <div className='settings-wrap'>
@@ -357,7 +357,7 @@ const CreateJobTemplate = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default CreateJobTemplate
+export default CreateJobTemplate;

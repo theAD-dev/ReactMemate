@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import style from './job-dialog.module.scss';
-import { Chip } from "primereact/chip";
-import JobConfirmation from "./job-confirmation-dialog";
 import {InfoCircle} from "react-bootstrap-icons";
+import { Button } from 'primereact/button';
+import { Chip } from "primereact/chip";
+import { Dialog } from 'primereact/dialog';
+import JobConfirmation from "./job-confirmation-dialog";
+import style from './job-dialog.module.scss';
 
 export default function JobDetails({ visible, setVisible, JobDetails}) {
     const [confirmation, setConfirmation] = useState(false);
@@ -47,5 +47,5 @@ export default function JobDetails({ visible, setVisible, JobDetails}) {
             </Dialog>
             <JobConfirmation visible={confirmation} setVisible={setConfirmation} />
         </>
-    )
+    );
 }

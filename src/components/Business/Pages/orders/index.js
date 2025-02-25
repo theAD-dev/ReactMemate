@@ -1,14 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react';
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
 import { useDebounce } from 'primereact/hooks';
-
-import style from './order.module.scss';
-import OrdersTable from './order-table';
-import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
 import { TieredMenu } from 'primereact/tieredmenu';
+import OrdersTable from './order-table';
+import style from './order.module.scss';
 import clsx from 'clsx';
 
 const OrderPage = () => {
@@ -76,7 +73,7 @@ const OrderPage = () => {
             <OrdersTable ref={dt} searchValue={debouncedValue}  selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
        
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default OrderPage
+export default OrderPage;

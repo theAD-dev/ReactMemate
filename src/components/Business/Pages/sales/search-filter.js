@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Search } from 'react-bootstrap-icons';
 
 const SearchFilter = ({ setInputValue, inputValue }) => {
@@ -17,4 +17,4 @@ const SearchFilter = ({ setInputValue, inputValue }) => {
   );
 };
 
-export default SearchFilter
+export default SearchFilter;

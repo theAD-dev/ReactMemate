@@ -48,10 +48,10 @@ export const dateFormat = (dateInMiliSec, isDotformate) => {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
-    }).replace(/\//g, '.');;
+    }).replace(/\//g, '.');
     return dotFormattedDate;
   }
 
   const formattedDate = date.toLocaleDateString('en-US', options)?.replace(/,/g, '');
   return formattedDate;
-}
+};

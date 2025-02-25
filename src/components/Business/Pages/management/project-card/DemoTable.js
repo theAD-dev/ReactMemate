@@ -42,6 +42,6 @@ const DemoTable = () => {
   </tr>
 </Table>
     </>
-  )
-}
-export default DemoTable
+  );
+};
+export default DemoTable;

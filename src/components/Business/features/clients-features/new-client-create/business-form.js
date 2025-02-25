@@ -1,23 +1,24 @@
-import clsx from 'clsx';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
-import { useQuery } from '@tanstack/react-query';
-import React, { forwardRef, useEffect, useState } from 'react'
-import { PhoneInput } from 'react-international-phone';
+import { Exclamation, Person, Building, Plus } from 'react-bootstrap-icons';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import { Dropdown } from 'primereact/dropdown';
-
+import { ProgressSpinner } from 'primereact/progressspinner';
+import * as yup from 'yup';
 import styles from './new-client-create.module.scss';
-import { Exclamation, Person, Building, Plus } from 'react-bootstrap-icons';
-import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import { getCities, getCountries, getStates, getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
-import { ProgressSpinner } from 'primereact/progressspinner';
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+
+
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
@@ -57,11 +58,11 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
       const response = await getCities(id);
       setCitiesOptions((others) => ({ ...others, [id]: response }));
     }
-  }
+  };
 
   useEffect(() => {
     if (stateId) fetchCities(stateId);
-  }, [stateId])
+  }, [stateId]);
 
   const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -75,14 +76,14 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
     if (id) await deleteContact(id);
     removeContact(index);
     setDeleteIndex({ type: null, index: null });
-  }
+  };
 
   const deleteAddressIndex = async (index, id) => {
     setDeleteIndex({ type: 'address', index: index });
     if (id) await deleteAddress(id);
     removeAddress(index);
     setDeleteIndex({ type: null, index: null });
-  }
+  };
 
   useEffect(() => {
     if (defaultValues?.addresses?.length) {
@@ -461,7 +462,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                             placeholder={"Select a city"}
                             filter
                           />
-                        )
+                        );
                       }}
                     />
                     {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses?.[index]?.city?.message}</p>}
@@ -514,7 +515,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
       </Row>
 
     </form>
-  )
-})
+  );
+});
 
-export default BusinessForm
+export default BusinessForm;

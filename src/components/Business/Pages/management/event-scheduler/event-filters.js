@@ -1,6 +1,7 @@
+import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import React from 'react';
 import { useRef, useState } from 'react';
-import { ControlledMenu, useClick } from '@szhsin/react-menu';
+
 import '@szhsin/react-menu/dist/index.css';
 import { ListGroup } from 'react-bootstrap';
 import './event-filter.css';
@@ -54,7 +55,7 @@ const EventFilters = () => {
         </ControlledMenu>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default EventFilters
+export default EventFilters;

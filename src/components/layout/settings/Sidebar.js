@@ -18,8 +18,8 @@ import {
   ListUl,
   Headset,
 } from "react-bootstrap-icons";
-import LogoutButton from "../Login/logout-button";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
+import LogoutButton from "../Login/logout-button";
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const { trialHeight } = useTrialHeight();
   const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');

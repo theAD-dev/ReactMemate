@@ -1,25 +1,25 @@
-import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from "react-bootstrap";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Dialog } from "primereact/dialog";
-import { Editor } from "primereact/editor";
-import { Dropdown } from "primereact/dropdown";
-import { AutoComplete } from "primereact/autocomplete";
-import { InputText } from "primereact/inputtext";
+import { Check2Circle, CloudUpload, PlusLg, Trash, Upload } from 'react-bootstrap-icons';
+import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
+import clsx from 'clsx';
+import { nanoid } from 'nanoid';
+import { Accordion, AccordionTab } from 'primereact/accordion';
+import { AutoComplete } from "primereact/autocomplete";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
+import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import { Accordion, AccordionTab } from 'primereact/accordion';
-
-import style from './create-proposal.module.scss';
-import { Check2Circle, CloudUpload, PlusLg, Trash, Upload } from 'react-bootstrap-icons';
-import { getProposalBySalesId, getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
-import { useParams } from 'react-router-dom';
+import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from 'sonner';
+import style from './create-proposal.module.scss';
+import { getProposalBySalesId, getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
 import SendProposal from '../send-proposal/send-proposal';
 import FileUploader from './file-uploader/file-uploader';
-import { nanoid } from 'nanoid';
+
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -105,9 +105,9 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             setTemplatedId(readProposalQuery?.data?.template);
         }
         if (!image && readProposalQuery?.data?.image) {
-            setImage({ croppedImageBase64: readProposalQuery?.data?.image })
+            setImage({ croppedImageBase64: readProposalQuery?.data?.image });
         }
-    }, [readProposalQuery?.data])
+    }, [readProposalQuery?.data]);
 
     const proposalQuery = useQuery({
         queryKey: ["getProposal", templateId],
@@ -143,7 +143,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             setShow(false);
             setShowSendModal(true);
         }
-    }
+    };
     const onSubmit = async (action) => {
         // if (!templateId) return toast.error('Template is required');
         if (!unique_id) return toast.error('Id not found');
@@ -199,11 +199,11 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             const accessToken = localStorage.getItem("access_token");
 
             setIsLoading(true);
-            let method = "POST"
+            let method = "POST";
             let URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/new/${unique_id}/`;
             if (readProposalQuery?.data) {
-                method = "PUT"
-                URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/update/${unique_id}/`
+                method = "PUT";
+                URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/update/${unique_id}/`;
             }
             try {
                 setIsLoading(true);
@@ -238,7 +238,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                 setIsLoading(false);
             }
         }
-    }
+    };
     const handleClose = () => {
         setShow(false);
         // setTemplatedId(null);
@@ -246,7 +246,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         // setImage(null);
         // setFileName('');
         setShowSendModal(false);
-    }
+    };
     const handleAddSection = () => {
         setSections([...sections, { title: "", description: "" }]);
     };
@@ -301,7 +301,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         } else if (templateId === readProposalQuery?.data?.template) {
             setSections(readProposalQuery?.data?.sections);
         }
-    }, [templateId, proposalQuery?.data, readProposalQuery?.data])
+    }, [templateId, proposalQuery?.data, readProposalQuery?.data]);
 
     return (
         <>
@@ -356,7 +356,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                                             style={{ width: "100%", height: "100#" }}
                                         />
                                     </div>
-                                    <div className={clsx(style.trashBox, 'cursor-pointer')} onClick={(e) => { e.stopPropagation(); setImage(null) }}>
+                                    <div className={clsx(style.trashBox, 'cursor-pointer')} onClick={(e) => { e.stopPropagation(); setImage(null); }}>
                                         <Trash color='#F04438' size={16} />
                                     </div>
                                 </div>
@@ -454,7 +454,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
             </Dialog >
             <SendProposal show={showSendModal} setShow={setShowSendModal} contactPersons={contactPersons} setPayload={setPayload} onSubmit={onSubmit} handleClose={handleClose} />
         </>
-    )
-}
+    );
+};
 
-export default CreateProposal
+export default CreateProposal;

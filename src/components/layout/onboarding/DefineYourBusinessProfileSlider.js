@@ -1,6 +1,7 @@
 import React from 'react';
-import { Fade } from 'react-slideshow-image';
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
+import { Fade } from 'react-slideshow-image';
+
 import 'react-slideshow-image/dist/styles.css';
 import login_slider1 from "../../../assets/images/img/emailSlider01.png";
 import login_slider2 from "../../../assets/images/img/emailSlider02.png";

@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
+import { NavLink } from "react-router-dom";
+import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+
 // import { MessageChatCircle } from "react-bootstrap-icons";
-import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.png";
-import ZapCircle from "../../../assets/images/icon/zap.png";
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-square.png";
 import ClockHistoryCircle from "../../../assets/images/icon/clock-history-icon.png";
 import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
-import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-square.png";
+import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.png";
+import ZapCircle from "../../../assets/images/icon/zap.png";
 import LenderPanel from "../../../assets/images/img/lender-panel03.png";
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+
 import "./style-model.css";
-import { NavLink } from "react-router-dom";
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 const AccountingContact = ({ onAdd }) => {
   const [open, setOpen] = useState(false);
@@ -193,7 +195,7 @@ const AccountingContact = ({ onAdd }) => {
         </Box>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default AccountingContact;

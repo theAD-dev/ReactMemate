@@ -9,7 +9,7 @@ export const draftSalesRequest = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 // Sale Table Api
 export const fetchSales = async () => {
@@ -75,7 +75,7 @@ export const markWon = async (ids) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const markLost = async (ids) => {
   const endpoint = `/sales/status/lost/`;
@@ -85,7 +85,7 @@ export const markLost = async (ids) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 // Sale Won Api
 export const fetchWon = async (saleUniqueId) => {
@@ -106,7 +106,7 @@ export const fetchWon = async (saleUniqueId) => {
   const response = await fetch(`${API_BASE_URL}/sales/status/won/`, requestOptions);
   const result = await response.json();
   return result[0];
-}
+};
 
 
 // Sale Contact Api
@@ -220,7 +220,7 @@ export const fetchduplicateData = async (saleUniqueId) => {
   const response = await fetch(`${API_BASE_URL}/sales/${saleUniqueId}/duplicate/`, requestOptions);
   const result = await response.json();
   return result[0];
-}
+};
 
 
 
@@ -243,7 +243,7 @@ export const fetchhistoryData = async (saleUniqueId) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 
 

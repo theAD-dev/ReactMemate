@@ -1,12 +1,12 @@
-import React, { useRef, useState } from 'react'
 import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { Download, Filter } from 'react-bootstrap-icons';
-import { Button } from 'react-bootstrap';
-import { useDebounce } from 'primereact/hooks';
+import React, { useRef, useState } from 'react';
 
-import style from './suppliers.module.scss';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import { Button } from 'react-bootstrap';
+import { Download, Filter } from 'react-bootstrap-icons';
+import { useDebounce } from 'primereact/hooks';
 import { SupplierTable } from './supplier-table';
+import style from './suppliers.module.scss';
 import SupplierCreate from '../../features/supliers-features/supplier-create';
 
 const SupplierPage = () => {
@@ -69,7 +69,7 @@ const SupplierPage = () => {
             <SupplierTable ref={dt} searchValue={debouncedValue} setTotalSuppliers={setTotalSuppliers} selectedSuppliers={selectedSuppliers} setSelectedSuppliers={setSelectedSuppliers} refetch={refetch} />
             <SupplierCreate visible={visible} setVisible={setVisible} refetch={setRefetch} />
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default SupplierPage
+export default SupplierPage;

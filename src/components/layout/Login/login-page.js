@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import "../Login/login.css";
-import LoinLogo from "../../../assets/images/logo.svg";
+import { authenticateUser } from "../../../APIs/LoginApi";
+import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import unlockIcon from "../../../assets/images/icon/unlock.svg";
-import arrowRight from "../../../assets/images/icon/arrow.svg";
 import loginSlide from "../../../assets/images/img/loginslidebg.png";
+import LoinLogo from "../../../assets/images/logo.svg";
 import Header from "../Header";
-import { authenticateUser } from "../../../APIs/LoginApi";
 
 const Login = () => {
   const navigate = useNavigate();

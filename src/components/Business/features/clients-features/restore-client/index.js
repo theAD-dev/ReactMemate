@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { restoreClient } from '../../../../../APIs/ClientsApi';
-import { toast } from 'sonner';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
+import { restoreClient } from '../../../../../APIs/ClientsApi';
 
 const Restore = ({ id, refetch }) => {
     const navigate = useNavigate();
@@ -26,12 +26,12 @@ const Restore = ({ id, refetch }) => {
         } finally {
             setIsRestoring(false);
         }
-    }
+    };
     return (
         <Button type='button' disabled={isRestoring} onClick={(e) => { e.stopPropagation(); restorClient(id); }} className='outline-button'>
             Restore Client {isRestoring && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
         </Button>
-    )
-}
+    );
+};
 
-export default Restore
+export default Restore;

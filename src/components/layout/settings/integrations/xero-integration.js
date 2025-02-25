@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import style from "./integration.module.scss";
-import { toast } from "sonner";
 import { Button } from "react-bootstrap";
 import { useMutation } from "@tanstack/react-query";
-import { disconnectXeroIntegrations } from "../../../../APIs/integrations-api";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { toast } from "sonner";
+import style from "./integration.module.scss";
+import { disconnectXeroIntegrations } from "../../../../APIs/integrations-api";
+
+
 
 const CLIENT_ID = "743BAB12B3A24534889C5C803A35E12C";
 // const REDIRECT_URI = "http://localhost:3000/settings/integrations";
@@ -62,7 +64,7 @@ const XeroIntegration = ({ connected, refetch }) => {
           const state = queryParams.get("state");
 
           if (code) {
-            exchangeCodeForToken(code)
+            exchangeCodeForToken(code);
             // Close the popup and clear the interval
             popup.close();
             clearInterval(timer);

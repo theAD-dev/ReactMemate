@@ -19,7 +19,7 @@ const getStatusLabel = (status) => {
 
 function parseTimestamp(timestampStr) {
   return new Date(new Date(timestampStr).getTime() - (new Date(timestampStr).getTimezoneOffset() * 60 * 1000));
-};
+}
 
 function loadData(data) {
   const events = [];
@@ -64,7 +64,7 @@ function loadData(data) {
       </div > `,
       minHeight: 45,
       backColor: '#FFFFFF',
-    })) || []
+    })) || [];
 
     childResource.push({
       id: worker.id + "-" + index,
@@ -78,7 +78,7 @@ function loadData(data) {
         </button>
       </div>`,
       backColor: "#fff"
-    })
+    });
 
     resources.push(
       {
@@ -96,7 +96,7 @@ function loadData(data) {
         expanded: true,
         children: childResource
       }
-    )
+    );
 
     worker?.jobs?.forEach((job) => {
       if (job.start_date && job.end_date) {
@@ -117,7 +117,7 @@ function loadData(data) {
   dp.update({ resources, events });
   dp.onResourceExpand = function (args) {
     expandRow = args.resource.id;
-  }
+  };
 }
 
 function initDayPilot(elementId, data) {
@@ -192,7 +192,7 @@ function initDayPilot(elementId, data) {
   dp.onBeforeTimeHeaderRender = (args) => {
     if (args.header.level === 1 && (args.header.start.getDayOfWeek() === 6 || args.header.start.getDayOfWeek() === 0))
       args.header.backColor = "#F9FAFB";
-  }
+  };
 
   dp.onBeforeCellRender = function (args) {
     if (args.cell.start.getDayOfWeek() === 6 || args.cell.start.getDayOfWeek() === 0) {

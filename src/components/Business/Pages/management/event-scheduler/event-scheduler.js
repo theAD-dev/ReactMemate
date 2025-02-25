@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Spinner } from "react-bootstrap";
 import { initDaypilot, reInitilizeData } from "./utils";
 import { getManagement } from "../../../../../APIs/management-api";
-import { Spinner } from "react-bootstrap";
-import ViewTask from "../task/view-task";
-import CreateTask from "../task/create-task";
-import ProjectCardModel from "../project-card/project-card-model";
 import { ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
+import ProjectCardModel from "../project-card/project-card-model";
+import CreateTask from "../task/create-task";
+import ViewTask from "../task/view-task";
+
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
@@ -52,7 +53,7 @@ function EventScheduler() {
     } catch (error) {
       console.error("Error fetching project status data:", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
@@ -137,24 +138,24 @@ function EventScheduler() {
     } catch (error) {
       console.error("Error initializing DayPilot:", error);
     }
-  }
+  };
 
   const handleViewTask = () => {
     console.log('handleViewTask: ',);
 
-  }
+  };
 
   useEffect(() => {
     const taskList = document.querySelector(".task-list");
     if (taskList) {
-      let taskId = taskList.getAttribute('task-id')
+      let taskId = taskList.getAttribute('task-id');
       console.log('taskId: ', taskId);
       taskList.addEventListener("click", handleViewTask());
     }
 
     return () => {
       if (taskList) {
-        let taskId = taskList.getAttribute('task-id')
+        let taskId = taskList.getAttribute('task-id');
         console.log('taskId: ', taskId);
         taskList.removeEventListener("click", handleViewTask);
       }
@@ -180,10 +181,10 @@ function EventScheduler() {
           (data?.client?.name.toLowerCase()?.startsWith(search?.toLowerCase() || ""))
         ) return true;
         else return false;
-      })
+      });
       reInitilizeData(filteredResponse || []);
     }, 600);
-  }
+  };
 
   return <React.Fragment>
     <div className="topbar bottom-border" style={{ padding: '0px 20px', position: 'relative' }}>
@@ -223,7 +224,7 @@ function EventScheduler() {
         </Spinner>
       </div>
     }
-  </React.Fragment>
+  </React.Fragment>;
 }
 
 export default EventScheduler;

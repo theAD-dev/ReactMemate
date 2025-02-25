@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import { PlusCircle } from "react-bootstrap-icons";
+import { CreditCard2Front } from "react-bootstrap-icons";
+import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { PlusCircle } from "react-bootstrap-icons";
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import VisaIcon from "../../../assets/images/icon/visaIcon.png";
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 import Paymentmethodicon from "../../../assets/images/icon/Paymentmethodicon.png";
-import { CreditCard2Front } from "react-bootstrap-icons";
+import VisaIcon from "../../../assets/images/icon/visaIcon.png";
 
 const AddPaymentModal = ({ onAdd }) => {
   const [open, setOpen] = useState(false);
@@ -158,7 +158,7 @@ const AddPaymentModal = ({ onAdd }) => {
         </Box>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default AddPaymentModal;

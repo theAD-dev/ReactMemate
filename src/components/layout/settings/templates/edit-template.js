@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import Sidebar from '../Sidebar';
-import style from './job-template.module.scss';
-import BreadCrumbPage from './bread-crumb';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { PencilSquare } from "react-bootstrap-icons";
 import { Button, Col, Row } from 'react-bootstrap';
+import { PencilSquare } from "react-bootstrap-icons";
+import { useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { useForm } from 'react-hook-form';
-import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { InputTextarea } from "primereact/inputtextarea";
 import * as yup from 'yup';
-import { InputTextarea } from "primereact/inputtextarea"
+import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
+import Sidebar from '../Sidebar';
+import BreadCrumbPage from './bread-crumb';
+import style from './job-template.module.scss';
 
 
 
@@ -222,6 +222,6 @@ const EditTemplates = () => {
             </div>
         </>
     );
-}
+};
 
 export default EditTemplates;

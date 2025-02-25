@@ -1,18 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
 import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import newTaskImg from '../../../../../assets/images/new-task.svg';
-import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
-import { createNewTask, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { Dropdown } from 'primereact/dropdown';
-import { getProjectsList } from '../../../../../APIs/expenses-api';
-import SelectDate from '../../../../Business/Pages/management/task/select-date';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import { toast } from 'sonner';
+import { getProjectsList } from '../../../../../APIs/expenses-api';
+import { createNewTask, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
+import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
+import newTaskImg from '../../../../../assets/images/new-task.svg';
+import SelectDate from '../../../../Business/Pages/management/task/select-date';
+
+
 
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return null;
@@ -20,7 +22,7 @@ const dateFormat = (dateInMiliSec) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(1000 * +dateInMiliSec);
     return date;
-}
+};
 
 const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue }) => {
     const dropdownRef = useRef(null);
@@ -45,9 +47,9 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
             setDescription(defaultValue?.description);
             setProject(defaultValue?.project?.id);
             setUser(defaultValue?.user?.id);
-            setDate({ startDate: dateFormat(defaultValue?.from_date), endDate: dateFormat(defaultValue?.to_date) })
+            setDate({ startDate: dateFormat(defaultValue?.from_date), endDate: dateFormat(defaultValue?.to_date) });
         }
-    }, [taskId, defaultValue])
+    }, [taskId, defaultValue]);
 
     const reset = () => {
         setTaskTitle("");
@@ -62,8 +64,8 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
             project: false,
             user: false,
             date: false
-        })
-    }
+        });
+    };
     const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
 
@@ -113,9 +115,9 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                 user: user,
                 from_date: date.startDate,
                 to_date: date.endDate,
-            })
+            });
         }
-    }
+    };
 
     const deleteMutation = useMutation({
         mutationFn: (data) => fetchTasksDelete(taskId),
@@ -131,7 +133,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
 
     const handleDelete = () => {
         deleteMutation.mutate();
-    }
+    };
 
     const handleClose = () => setShow(false);
     return (
@@ -215,7 +217,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                                     {option?.photo && <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />}
                                 </div>
                                 {option?.label}
-                            </div>
+                            </div>;
                         }}
                         itemTemplate={(option) => {
                             return (
@@ -225,7 +227,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                                     </div>
                                     {option?.label}
                                 </div>
-                            )
+                            );
                         }}
                         className='outline-none border-0 p-0'
                         style={{
@@ -255,7 +257,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                 <Button type='button' className='save-button' onClick={handleSubmit}>{mutation.isPending ? 'Loading...' : `${taskId ? "Update" : "Create"} Task`}</Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default CreateTask
+export default CreateTask;

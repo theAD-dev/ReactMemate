@@ -5,5 +5,5 @@ const ThemeImages = {
     appIndicator:require('../assets/images/icon/app-indicator.png'),
     geoAlt:require('../assets/images/icon/geo-alt.png'),
 
-  }
+  };
   export default ThemeImages;

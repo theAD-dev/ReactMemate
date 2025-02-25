@@ -1,18 +1,17 @@
-import React, { useRef, useState } from 'react'
-import clsx from 'clsx';
-import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
+import React, { useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
+import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
-
-import style from './indivisual-client-view.module.scss';
-import mapicon from '../../../../../assets/images/google_maps_ico.png'
-import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
-import DeleteClient from '../delete-client';
-import { dateFormat, formatMoney } from '../../../shared/utils/helper';
-import { getClientCategories } from '../../../../../APIs/ClientsApi';
 import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { Tag } from 'primereact/tag';
+import { getClientCategories } from '../../../../../APIs/ClientsApi';
+import mapicon from '../../../../../assets/images/google_maps_ico.png';
+import { dateFormat, formatMoney } from '../../../shared/utils/helper';
+import DeleteClient from '../delete-client';
+import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
 import Restore from '../restore-client';
+import style from './indivisual-client-view.module.scss';
 
 const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
@@ -65,7 +64,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
 
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
-              <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
+              <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false); }} className='outline-button'>Cancel</Button>
               <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '179px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
             </div>
               : client.deleted
@@ -75,8 +74,8 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const ViewSection = ({ client }) => {
   const payments = [
@@ -85,13 +84,13 @@ const ViewSection = ({ client }) => {
     { value: 7, label: "Week" },
     { value: 14, label: "Two weeks" },
     { value: 30, label: "One month" },
-  ]
+  ];
   const getOrderFrequencyPerMonth = (totalOrders, created) => {
     const monthsActive = (new Date().getFullYear() - new Date(+created * 1000).getFullYear()) * 12 + (new Date().getMonth() - new Date(created * 1000).getMonth());
     const result = monthsActive > 0 ? (parseFloat(totalOrders) / monthsActive).toFixed(2) : 0;
     return `${result} p/m`;
   };
-  let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
+  let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms);
   return (
     <>
       <div className={clsx(style.box)}>
@@ -292,7 +291,7 @@ const ViewSection = ({ client }) => {
         <h4 className={clsx(style.text, 'mb-0')}>{dateFormat(client.created, true) || "-"}</h4>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default IndivisualClientView
+export default IndivisualClientView;

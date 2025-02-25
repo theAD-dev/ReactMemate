@@ -2,13 +2,16 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Placeholder from 'react-bootstrap/Placeholder';
+import EditTask from './edit-task';
+import { fetchTasksRead, TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import taskdetails from '../../../../../assets/images/task-details.svg';
+
 import './task.css';
 import { ArrowRight } from 'react-bootstrap-icons';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { fetchTasksRead, TaskCompleteJob } from '../../../../../APIs/TasksApi';
-import EditTask from './edit-task';
+
+
 
 const TaskLoadingView = () => {
   return (
@@ -73,8 +76,8 @@ const TaskLoadingView = () => {
       </table>
 
     </>
-  )
-}
+  );
+};
 
 const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
@@ -106,7 +109,7 @@ const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
     const date = new Date(1000 * +dateInMiliSec);
     const formattedDate = date.toLocaleDateString('en-US', options)?.replace(/,/g, '');
     return formattedDate;
-  }
+  };
 
   function handleEdit() {
     setShowEditModal(true);
@@ -115,7 +118,7 @@ const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
 
   useEffect(() => {
     if (!showEditModal) setTaskId(null);
-  }, [showEditModal])
+  }, [showEditModal]);
 
   return (
     <>
@@ -220,7 +223,7 @@ const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
       }
 
     </>
-  )
-}
+  );
+};
 
-export default ViewTask
+export default ViewTask;

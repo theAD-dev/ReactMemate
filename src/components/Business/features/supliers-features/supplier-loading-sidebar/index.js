@@ -1,7 +1,7 @@
 import React from 'react';
-import { Skeleton } from 'primereact/skeleton';
 import { Button } from 'react-bootstrap';
 import { X } from 'react-bootstrap-icons';
+import { Skeleton } from 'primereact/skeleton';
 
 const SupplierLoadingSidebar = ({ closeIconRef, hide }) => {
     return (
@@ -48,7 +48,7 @@ const SupplierLoadingSidebar = ({ closeIconRef, hide }) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default SupplierLoadingSidebar
+export default SupplierLoadingSidebar;

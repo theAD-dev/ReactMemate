@@ -18,7 +18,7 @@ export const fetchProfile = async () => {
       window.localStorage.removeItem('access_token');
       window.localStorage.removeItem('refresh_token');
       window.localStorage.removeItem('isLoggedIn');
-      window.location = "/login"
+      window.location = "/login";
     }
 
     if (!response.ok) {
@@ -33,7 +33,7 @@ export const fetchProfile = async () => {
     } else {
       const text = await response.text();
       localStorage.setItem('profileData', text);
-      return text
+      return text;
     }
   } catch (error) {
     console.error('Profile fetch error:', error);

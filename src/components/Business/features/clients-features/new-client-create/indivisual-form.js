@@ -1,22 +1,23 @@
-import clsx from 'clsx';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { useQuery } from '@tanstack/react-query';
-import React, { forwardRef, useEffect, useState } from 'react'
-import { PhoneInput } from 'react-international-phone';
+import { Person } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
+import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import { Dropdown } from 'primereact/dropdown';
-
+import * as yup from 'yup';
 import styles from './new-client-create.module.scss';
-import { Person } from 'react-bootstrap-icons';
-import FileUploader from '../../../../../ui/file-uploader/file-uploader';
-import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { getCities, getClientCategories, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+
+
 
 
 const schema = yup
@@ -324,7 +325,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                 </Col>
             </Row>
         </form>
-    )
-})
+    );
+});
 
-export default IndivisualForm
+export default IndivisualForm;

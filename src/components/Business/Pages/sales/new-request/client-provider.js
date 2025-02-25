@@ -10,7 +10,7 @@ const ClientProvider = ({ children }) => {
         <ClientContext.Provider value={{ quoteFormData, setQuoteFormData }}>
             {children}
         </ClientContext.Provider>
-    )
-}
+    );
+};
 
-export default ClientProvider
+export default ClientProvider;

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+
 import "../Login/login.css";
-import { useLocation } from "react-router-dom";
 import { ArrowLeftShort } from "react-bootstrap-icons";
-import LoinLogo from "../../../assets/images/logo.svg";
+import { useLocation } from "react-router-dom";
+
 // import arrowRight from "../../../assets/images/icon/arrow.svg";
-import mail01 from "../../../assets/images/icon/mail-01.png";
 import { Link } from "react-router-dom";
+import mail01 from "../../../assets/images/icon/mail-01.png";
 import checkemail from "../../../assets/images/img/checkemail.jpg";
+import LoinLogo from "../../../assets/images/logo.svg";
 
 const CheckMail = () => {
   const [email, setEmail] = useState("");

@@ -1,24 +1,24 @@
 
-import clsx from 'clsx';
-import style from '../location.module.scss';
-import { PencilSquare, PlusCircle } from 'react-bootstrap-icons';
-import React, { useEffect, useState } from 'react'
-import { InputText } from "primereact/inputtext";
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
-import { Dialog } from 'primereact/dialog';
-import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
+import { PencilSquare, PlusCircle } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
 import * as yup from 'yup';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { toast } from 'sonner';
 import { createLocation, deleteLocation, updateLocation } from '../../../../../APIs/location-api';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import style from '../location.module.scss';
 
 const schema = yup
     .object({
@@ -50,7 +50,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
         setValue('country', '');
         setValue('state', '');
         setValue('city', '');
-    }
+    };
     const mutation = useMutation({
         mutationFn: (data) => id ? updateLocation(id, data) : createLocation(data),
         onSuccess: (response) => {
@@ -269,7 +269,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
                 </form>
             </div>
         </Dialog>
-    )
-}
+    );
+};
 
-export default CreateLocation
+export default CreateLocation;

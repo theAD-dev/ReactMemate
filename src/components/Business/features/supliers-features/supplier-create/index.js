@@ -1,13 +1,13 @@
-import clsx from 'clsx';
-import { toast } from 'sonner';
-import { nanoid } from 'nanoid';
-import React, { useEffect, useRef, useState } from 'react'
-import { Sidebar } from 'primereact/sidebar';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from 'react-bootstrap-icons';
-
+import clsx from 'clsx';
+import { nanoid } from 'nanoid';
+import { Sidebar } from 'primereact/sidebar';
+import { toast } from 'sonner';
 import styles from './supplier-create.module.scss';
 import SupplierForm from '../../../shared/ui/supliers-ui/supplier-form';
+
 
 const SupplierCreate = ({ visible, setVisible, refetch }) => {
   const formRef = useRef(null);
@@ -77,7 +77,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
     } finally {
       setIsPending(false);
     }
-  }
+  };
 
   const handleSubmit = async (data) => {
     console.log('data: ', data);
@@ -92,7 +92,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
 
   useEffect(() => {
     if (!visible) setPhoto(null);
-  }, [visible])
+  }, [visible]);
   return (
     <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
       content={({ closeIconRef, hide }) => (
@@ -118,13 +118,13 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
           </div>
 
           <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
+            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
             <Button type='button' disabled={isPending} onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '75px' }}>{isPending ? "Loading..." : "Save"}</Button>
           </div>
         </div>
       )}
     ></Sidebar>
-  )
-}
+  );
+};
 
-export default SupplierCreate
+export default SupplierCreate;

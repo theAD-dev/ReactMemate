@@ -1,16 +1,17 @@
-import React from 'react'
 import { PrimeReactProvider } from 'primereact/api';
+import React from 'react';
+
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Filter } from 'react-bootstrap-icons';
-
-import PeoplesTable from './peoples-table';
-import style from './people.module.scss';
 import DesktopPeoplesTable from './desktop-user-table';
+import style from './people.module.scss';
+import PeoplesTable from './peoples-table';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 const PeoplePage = () => {
     const { trialHeight } = useTrialHeight();
-    const handleSearch = (e) => { }
+    const handleSearch = (e) => { };
     return (
         <PrimeReactProvider className='peoples-page'>
             <div className="topbar border-bottom" style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
@@ -39,6 +40,6 @@ const PeoplePage = () => {
                 <PeoplesTable />
             </div>
         </PrimeReactProvider>
-    )
-}
-export default PeoplePage
+    );
+};
+export default PeoplePage;

@@ -1,9 +1,9 @@
-import { nanoid } from 'nanoid';
 import React, { forwardRef, useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import BusinessForm from '../new-client-create/business-form';
-import { deleteAddress, deleteContactPerson } from '../../../../../APIs/ClientsApi';
 import { useNavigate } from 'react-router-dom';
+import { nanoid } from 'nanoid';
+import { toast } from 'sonner';
+import { deleteAddress, deleteContactPerson } from '../../../../../APIs/ClientsApi';
+import BusinessForm from '../new-client-create/business-form';
 
 
 const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
@@ -103,7 +103,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     } finally {
       setIsPending(false);
     }
-  }
+  };
 
   const handleSubmit = async (data) => {
     if (client.id) {
@@ -130,7 +130,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
 
   const deleteContact = async (id) => {
     try {
-      const response = await deleteContactPerson(id)
+      const response = await deleteContactPerson(id);
 
       if (response.message) {
         toast.success(`Contact deleted successfully.`);
@@ -149,7 +149,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
       deleteAddress={deleteLocation}
       deleteContact={deleteContact}
     />
-  )
-})
+  );
+});
 
-export default BusinessClientEdit
+export default BusinessClientEdit;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import PaidDialog from './paid-dialog';
 import UnPaidDialog from './unpaid-dialog';
 
@@ -12,7 +12,7 @@ const TotalExpenseDialog = ({ showDialog, setShowDialog, setRefetch }) => {
                     : show ? <UnPaidDialog visible={show} details={data} setVisible={() => setShowDialog({ data: null, show: false })} setRefetch={setRefetch} /> : ""
             }
         </>
-    )
-}
+    );
+};
 
-export default TotalExpenseDialog
+export default TotalExpenseDialog;

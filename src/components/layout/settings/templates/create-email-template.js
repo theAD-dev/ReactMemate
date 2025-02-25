@@ -1,19 +1,19 @@
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
-import Sidebar from '../Sidebar';
-import { ChevronLeft, PencilSquare } from "react-bootstrap-icons";
-import style from './job-template.module.scss';
-import clsx from 'clsx';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Spinner } from 'react-bootstrap';
-import { createEmailTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../APIs/email-template';
-import { InputText } from 'primereact/inputtext';
+import { ChevronLeft, PencilSquare } from "react-bootstrap-icons";
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Editor } from 'primereact/editor';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Editor } from 'primereact/editor';
 import { toast } from 'sonner';
+import { createEmailTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import Sidebar from '../Sidebar';
+import style from './job-template.module.scss';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -97,7 +97,7 @@ const CreateEmailTemplate = () => {
             console.error("Error deleting template:", error);
             toast.error("Failed to delete the template. Please try again.");
         },
-    })
+    });
 
     const insertTextAtCursor = (insertedText) => {
         const activeElement = document.activeElement;
@@ -146,21 +146,21 @@ const CreateEmailTemplate = () => {
             body: text,
         };
         mutation.mutate(templateData);
-    }
+    };
 
     const handleDelete = () => {
         if (id) {
-            deleteMutation.mutate()
+            deleteMutation.mutate();
         }
-    }
+    };
 
     useEffect(() => {
         if (emailQuery?.data) {
             setName(emailQuery?.data?.name);
             setSubject(emailQuery?.data?.subject);
-            setText(emailQuery?.data?.body)
+            setText(emailQuery?.data?.body);
         }
-    }, [emailQuery?.data])
+    }, [emailQuery?.data]);
 
     return (
         <div className='settings-wrap'>
@@ -281,7 +281,7 @@ const CreateEmailTemplate = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default CreateEmailTemplate
+export default CreateEmailTemplate;

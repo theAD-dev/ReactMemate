@@ -34,9 +34,9 @@ const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
   };
 
   const handleSelectAll = () => {
-    if (tempSelectedOptions?.length > 0) setTempSelectedOptions([])
+    if (tempSelectedOptions?.length > 0) setTempSelectedOptions([]);
     else setTempSelectedOptions(OPTIONS.map(option => option.value));
-  }
+  };
 
   const handleClearSelection = () => setTempSelectedOptions([]);
 
@@ -52,7 +52,7 @@ const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
             <span className='border-0' style={{ background: 'transparent' }}>All</span>
             {
               OPTIONS.length === tempSelectedOptions?.length && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M16.6666 5L7.49992 14.1667L3.33325 10" stroke="#1AB2FF" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M16.6666 5L7.49992 14.1667L3.33325 10" stroke="#1AB2FF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             }
           </button>
@@ -63,7 +63,7 @@ const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
                 className={tempSelectedOptions.includes(label) ? 'active' : ''}
                 onClick={() => handleCheckboxChange(value)}
               >
-                <label for={label} className='w-100 d-flex justify-content-between align-items-center'>
+                <label htmlFor={label} className='w-100 d-flex justify-content-between align-items-center'>
                   <input
                     id={label}
                     type="checkbox"
@@ -74,7 +74,7 @@ const ProjectCardFilter = ({ setFilteredHistoryOptions }) => {
                   <span className='border-0'>{icon} {label}</span>
                   {
                     tempSelectedOptions.includes(value) && <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M16.6666 5L7.49992 14.1667L3.33325 10" stroke="#1AB2FF" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M16.6666 5L7.49992 14.1667L3.33325 10" stroke="#1AB2FF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   }
                 </label>

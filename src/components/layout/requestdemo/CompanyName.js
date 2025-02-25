@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./requestademo.css"
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
+import "./requestademo.css";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
-import LoinLogo from "../../../assets/images/logo.svg";
 import request03 from "../../../assets/images/img/request03.jpg";
+import LoinLogo from "../../../assets/images/logo.svg";
 import { useLocation } from 'react-router-dom';
 
 const options = [

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash } from "react-bootstrap-icons";
+import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
-import { fetchduplicateData } from "../../../../../APIs/SalesApi";
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { fetchduplicateData } from "../../../../../APIs/SalesApi";
 import { useSaleQuotationDeleteMutations } from '../../../../../entities/sales/models/delete-sale-quotation.mutation';
 import ResendQuoteEmail from '../../../features/sales-features/resend-quote/resend-quote';
 import SaleHistory from '../../../features/sales-features/sales-history/sale-history';
@@ -23,8 +23,8 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory
       try {
         setLoading(4);
         await fetchduplicateData(saleUniqueId);
-        refreshData()
-        handleClose()
+        refreshData();
+        handleClose();
       } catch (error) {
         console.error('Error fetching duplicate data:', error);
       } finally {

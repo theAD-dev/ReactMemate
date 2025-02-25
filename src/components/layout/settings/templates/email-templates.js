@@ -1,14 +1,18 @@
-import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
-import Sidebar from '../Sidebar';
-import { Tooltip } from 'primereact/tooltip';
-import { PlusLg, InfoCircle } from "react-bootstrap-icons";
-import style from './job-template.module.scss';
-import clsx from 'clsx';
-import { getEmailTemplates } from '../../../../APIs/email-template';
-import { useQuery } from '@tanstack/react-query';
 import { Button, Spinner } from 'react-bootstrap';
+import { PlusLg, InfoCircle } from "react-bootstrap-icons";
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Tooltip } from 'primereact/tooltip';
+import { getEmailTemplates } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import Sidebar from '../Sidebar';
+import style from './job-template.module.scss';
+
+
+
+
 
 const EmailTemplates = () => {
     const { trialHeight } = useTrialHeight();
@@ -68,6 +72,6 @@ const EmailTemplates = () => {
             </div>
         </div>
     );
-}
+};
 
 export default EmailTemplates;

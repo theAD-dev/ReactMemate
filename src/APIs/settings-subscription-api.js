@@ -8,7 +8,7 @@ export const getSubscriptions = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const activeWorkSubscription = async () => {
     const endpoint = `/settings/subscriptions/work/activate/`;
@@ -17,7 +17,7 @@ export const activeWorkSubscription = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const cancelWorkSubscription = async () => {
     const endpoint = `/settings/subscriptions/work/cancel/`;
@@ -26,7 +26,7 @@ export const cancelWorkSubscription = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getSubscriptionsBills = async ({ limit, offset }) => {
     const endpoint = `/settings/subscriptions/bills?limit=${limit}&offset=${offset}`;
@@ -35,4 +35,4 @@ export const getSubscriptionsBills = async ({ limit, offset }) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};

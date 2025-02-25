@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player';
-import Subtract from "../../../assets/images/icon/Subtract.png"
-import OnBoardingMain from "../../../assets/images/img/onboardingmain.png"
+import Subtract from "../../../assets/images/icon/Subtract.png";
+import OnBoardingMain from "../../../assets/images/img/onboardingmain.png";
 const VideoPlayer = ({ videoUrl, coverImageUrl }) => {
   const [showVideo, setShowVideo] = useState(false);
 

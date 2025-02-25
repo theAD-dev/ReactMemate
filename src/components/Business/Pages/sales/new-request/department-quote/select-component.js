@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
+import React, { useState } from 'react';
+
 import '@szhsin/react-menu/dist/index.css';
 import { ChevronDown } from 'react-bootstrap-icons';
 
@@ -47,6 +48,6 @@ const SelectComponent = ({ departments, handleChange, isShowlabel = false, title
             ))}
         </Menu>
     );
-}
+};
 
 export default SelectComponent;

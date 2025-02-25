@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import classNames from 'classnames';
 import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle } from "react-bootstrap-icons";
+import CountUp from 'react-countup';
+import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Row from 'react-bootstrap/Row';
+import Tooltip from 'react-bootstrap/Tooltip';
+import { fetchHomePage } from "../APIs/HomeApi";
+import AccountingContact from './layout/modals/accounting-contact';
+import BookkeepingContact from './layout/modals/book-keeping-contact';
+import InsuranceContact from './layout/modals/insurance-contact';
+import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
 import homeboxImg01 from "../assets/images/img/homeboxImg01.png";
 import homeboxImg02 from "../assets/images/img/homeboxImg02.png";
 import homeboxImg03 from "../assets/images/img/homeboxImg03.png";
 import homeboxImg04 from "../assets/images/img/homeboxImg04.png";
-import { fetchHomePage } from "../APIs/HomeApi";
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-import { Link } from 'react-router-dom';
-import CountUp from 'react-countup';
-import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
-import BookkeepingContact from './layout/modals/book-keeping-contact';
-import InsuranceContact from './layout/modals/insurance-contact';
-import AccountingContact from './layout/modals/accounting-contact';
+
+
 
 const Home = () => {
     const [selectedOption, setSelectedOption] = useState('');
@@ -391,6 +393,6 @@ const Home = () => {
                 </div>
             </div>
         </div>
-    )
-}
-export default Home
+    );
+};
+export default Home;

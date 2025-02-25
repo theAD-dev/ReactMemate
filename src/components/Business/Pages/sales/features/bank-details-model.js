@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import { PlusLg, ExclamationOctagon } from "react-bootstrap-icons";
+import { useNavigate } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { PlusLg, ExclamationOctagon } from "react-bootstrap-icons";
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
 import NewQuoteImg from "../../../../../assets/images/img/newQuote.png";
 import "../new-request/new-request.css";
-import { useNavigate } from 'react-router-dom';
 
 const BankDetailsModel = () => {
   const [open, setOpen] = useState(false);
@@ -68,7 +68,7 @@ const BankDetailsModel = () => {
         </Box>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default BankDetailsModel;

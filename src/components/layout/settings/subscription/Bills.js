@@ -1,11 +1,12 @@
-import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import Sidebar from './../Sidebar';
-import { FilePdf, CreditCard2Front } from "react-bootstrap-icons";
-import { useQuery } from '@tanstack/react-query';
-import { getSubscriptionsBills } from '../../../../APIs/settings-subscription-api';
 import { Spinner } from 'react-bootstrap';
+import { FilePdf, CreditCard2Front } from "react-bootstrap-icons";
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import Sidebar from './../Sidebar';
+import { getSubscriptionsBills } from '../../../../APIs/settings-subscription-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 function formatDate(timestampMs) {
   const date = new Date(+timestampMs * 1000);

@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import style from './statistics.module.scss';
-import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
-import clsx from 'clsx';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
+import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import clsx from 'clsx';
 import { Chart } from 'primereact/chart';
+import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 const verticalLinePlugin = {
     id: 'verticalLine',
@@ -352,7 +353,7 @@ const Executive = () => {
                 </Row>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Executive
+export default Executive;

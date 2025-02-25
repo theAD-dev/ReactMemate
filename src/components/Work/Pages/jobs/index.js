@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react';
-import style from './jobs.module.scss';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
-import JobsTable from './jobs-table';
-import { useDebounce } from 'primereact/hooks';
 import { PrimeReactProvider } from 'primereact/api';
+import { useDebounce } from 'primereact/hooks';
+import JobsTable from './jobs-table';
+import style from './jobs.module.scss';
+
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import JobChat from '../../features/job-chat';
 import CreateJob from '../../features/create-job/create-job';
+import JobChat from '../../features/job-chat';
 
 const JobsPage = () => {
     const dt = useRef(null);
@@ -68,7 +69,7 @@ const JobsPage = () => {
             <JobChat />
             <CreateJob visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default JobsPage
+export default JobsPage;

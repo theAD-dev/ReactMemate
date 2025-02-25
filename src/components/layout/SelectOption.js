@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
+import React, { useEffect, useState } from "react";
+
 import '@szhsin/react-menu/dist/index.css';
 import {
   ChevronExpand,
@@ -10,7 +11,7 @@ const SelectOption = ({ currentLocation, locations, profileUserName }) => {
   const changeLocation = (id, name) => {
 
     setSelectedLocation({ id, name });
-  }
+  };
   useEffect(() => {
     const data = locations.find((location) => location.id === currentLocation);
     setSelectedLocation(data);
@@ -42,12 +43,12 @@ const SelectOption = ({ currentLocation, locations, profileUserName }) => {
     >
       {
         locations.map((location) => {
-          return <MenuItem onClick={() => changeLocation(location.id, location.name)} style={{ color: '#667085', textAlign: 'left', fontSize: '12px', fontWeight: 400, padding: '6px', background: `${currentLocation === location.id ? '#ebf8ff' : ''}` }} key={location.id}>{location?.name}</MenuItem>
+          return <MenuItem onClick={() => changeLocation(location.id, location.name)} style={{ color: '#667085', textAlign: 'left', fontSize: '12px', fontWeight: 400, padding: '6px', background: `${currentLocation === location.id ? '#ebf8ff' : ''}` }} key={location.id}>{location?.name}</MenuItem>;
         })
       }
 
     </Menu>
-  )
-}
+  );
+};
 
 export default SelectOption;

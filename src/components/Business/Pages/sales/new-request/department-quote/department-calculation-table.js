@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
-import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
-
-import { getCalculationByReferenceId, getDepartments } from '../../../../../../APIs/CalApi';
-import SelectComponent from './select-component';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
+import SelectComponent from './select-component';
+import { getCalculationByReferenceId, getDepartments } from '../../../../../../APIs/CalApi';
+
 import './select-component.css';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import CreateMergeCalculation from '../../../../features/sales-features/merges-calculation/create-merge-calculation';
 import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
 import { romanize } from '../../../../shared/utils/helper';
+
 
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
     return (
@@ -84,8 +85,8 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                 <Trash color="#98A2B3" style={{ cursor: 'not-allowed', opacity: '.5' }} onClick={() => { }} />
             </td>
         </tr>
-    )
-}
+    );
+};
 
 const DepartmentCalculationTableHead = () => {
     return (
@@ -104,8 +105,8 @@ const DepartmentCalculationTableHead = () => {
                 <th style={{ width: '32px' }}></th>
             </tr>
         </thead>
-    )
-}
+    );
+};
 
 const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDiscount, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
     const handleChange = (event, value) => {
@@ -118,7 +119,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                     id: value?.id,
                     index: value?.index,
                     total: value?.total
-                }
+                };
 
                 return {
                     ...oldItems,
@@ -254,7 +255,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
             ))}
         </>
     );
-}
+};
 
 const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xero_tax, preExistCalculation, preMerges, refetch, setMergeDeletedItems }) => {
     const { unique_id } = useParams();
@@ -312,8 +313,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
     const handleChange = (subitemId, label) => {
         if (subitemId) setSubItem(subitemId);
-        if (label) setSubItemLabel(label)
-    }
+        if (label) setSubItemLabel(label);
+    };
 
     const calculateTotal = (item) => {
         let cost = parseFloat(item.cost) || 0;
@@ -333,7 +334,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         let total = subtotal - (subtotal * discount) / 100;
 
         return total.toFixed(2);
-    }
+    };
 
     const calculateUnitPrice = (item) => {
         let cost = parseFloat(item.cost) || 0;
@@ -349,7 +350,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         }
 
         return unit_price.toFixed(2);
-    }
+    };
 
     const updateData = (key, id, type, value) => {
         setRows(prevRows => {
@@ -389,7 +390,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         }, []);
         setMerges(updatedMerges);
         setMergeDeletedItems((prev) => [...new Set([...prev, ...idsToDelete])]);
-    }
+    };
 
     const deleteRow = (key, id, calcReferenceId) => {
         setRows(prevRows => {
@@ -415,7 +416,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     item.discount = defaultDiscount;
                     item.unit_price = calculateUnitPrice(item);
                     item.total = calculateTotal(item);
-                })
+                });
             } else {
                 data.push({
                     label: subItemLabel,
@@ -441,7 +442,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
         if (subItem && data?.length === 0) {
             console.log('data.length: ', data.length);
-            toast.error(`No calculation found inside ${subItemLabel}`)
+            toast.error(`No calculation found inside ${subItemLabel}`);
         }
     }, [data, rows, subItem]);
 
@@ -483,7 +484,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             tax: tax.toFixed(2),
             total: total.toFixed(2),
         };
-    }
+    };
 
     useEffect(() => {
         const summary = calculateSummary(xero_tax);
@@ -505,8 +506,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     }, [rows, xero_tax]);
 
     useEffect(() => {
-        setPreExistMerges(preMerges)
-    }, [preMerges])
+        setPreExistMerges(preMerges);
+    }, [preMerges]);
 
     useEffect(() => {
         if (!preExistCalculation?.length || !departments?.length) return;
@@ -559,7 +560,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             });
 
             setMapMergeItemWithNo(keyIndexMap);
-            setPayload((others) => ({ ...others, merges }))
+            setPayload((others) => ({ ...others, merges }));
         }
     }, [merges]);
 
@@ -606,7 +607,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 />
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default DepartmentCalculationTable;

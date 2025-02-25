@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { PencilSquare } from 'react-bootstrap-icons';
-import style from './change-password.module.scss';
-import { Dialog } from 'primereact/dialog';
-import { Button } from 'primereact/button';
 import { CheckCircleFill } from "react-bootstrap-icons";
 import clsx from 'clsx';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import style from './change-password.module.scss';
 
 const ChangePassword = () => {
     const [visible, setVisible] = useState(false);
@@ -194,6 +194,6 @@ const ChangePassword = () => {
             </Dialog>
         </>
     );
-}
+};
 
 export default ChangePassword;

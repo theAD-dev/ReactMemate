@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Col, Placeholder, Row } from 'react-bootstrap';
 import { People, InfoSquare, ChevronLeft, CardList, Search } from "react-bootstrap-icons";
 import { NavLink, Link } from "react-router-dom";
+import { useDebounce } from 'use-debounce';
 import { newQuoteClientList } from "../../../../../APIs/NewQuoteApis";
+import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import nodata from "../../../../../assets/images/img/nodata.png";
 import nodatabg from "../../../../../assets/images/img/nodataBg.png";
-import { Col, Placeholder, Row } from 'react-bootstrap';
-import { useDebounce } from 'use-debounce';
 import ImageAvatar from '../../../../../ui/image-with-fallback/image-avatar';
-import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 
 const ExistingClients = () => {
   const { trialHeight } = useTrialHeight();

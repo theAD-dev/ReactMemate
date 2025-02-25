@@ -8,7 +8,7 @@ export const getLocationList = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getLocation = async (id) => {
   const endpoint = `/locations/${id}`;
@@ -17,7 +17,7 @@ export const getLocation = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const createLocation = async (data) => {
   const endpoint = '/locations/new/';
@@ -27,7 +27,7 @@ export const createLocation = async (data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateLocation = async (id, data) => {
   if(!id) throw new Error("No id found");
@@ -39,7 +39,7 @@ export const updateLocation = async (id, data) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteLocation = async (id) => {
   const endpoint = `/locations/${id}/delete/`;
@@ -48,7 +48,7 @@ export const deleteLocation = async (id) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const getDesktopUserList = async () => {
   const endpoint = `/references/desktop-users/`;
@@ -57,7 +57,7 @@ export const getDesktopUserList = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const userAssigned = async (locationId, userId) => {
   const endpoint = `/locations/${locationId}/${userId}/assign-user/`;
@@ -66,7 +66,7 @@ export const userAssigned = async (locationId, userId) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 export const userUnassigned = async (locationId, userId) => {
   if (!locationId) throw new Error("Location id not found");
@@ -78,4 +78,4 @@ export const userUnassigned = async (locationId, userId) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

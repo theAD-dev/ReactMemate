@@ -8,7 +8,7 @@ export const getInvoiceTermsapp = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 export const updateTermsapp = async (terms) => {
   const endpoint = `/settings/app-terms/`;
   const options = {
@@ -17,7 +17,7 @@ export const updateTermsapp = async (terms) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 
 
 
@@ -28,7 +28,7 @@ export const getInvoiceTerms = async () => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};
 export const updateTerms = async (terms) => {
   const endpoint = `/settings/invoice-terms/`;
   const options = {
@@ -38,4 +38,4 @@ export const updateTerms = async (terms) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
-}
+};

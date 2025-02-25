@@ -1,23 +1,23 @@
-import clsx from 'clsx';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
-import { useQuery } from '@tanstack/react-query';
-import React, { forwardRef, useEffect, useState } from 'react'
+import { Building, Plus } from 'react-bootstrap-icons';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { Chips } from "primereact/chips";
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import { Building, Plus } from 'react-bootstrap-icons';
-
+import * as yup from 'yup';
 import styles from './supplier-form.module.scss';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
-import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import FileUploader from '../../../../../ui/file-uploader/file-uploader';
+
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
@@ -78,11 +78,11 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
       const response = await getCities(id);
       setCitiesOptions((others) => ({ ...others, [id]: response }));
     }
-  }
+  };
 
   useEffect(() => {
     if (stateId) fetchCities(stateId);
-  }, [stateId])
+  }, [stateId]);
 
   const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -408,7 +408,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                             placeholder={"Select a city"}
                             filter
                           />
-                        )
+                        );
                       }}
                     />
                     {errors.addresses?.[index]?.city && <p className="error-message">{errors.addresses?.[index]?.city?.message}</p>}
@@ -447,7 +447,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
       </Row>
 
     </form>
-  )
-})
+  );
+});
 
-export default SupplierForm
+export default SupplierForm;

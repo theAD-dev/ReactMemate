@@ -1,17 +1,18 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
+import { Spinner } from 'react-bootstrap';
+import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { Tag } from 'primereact/tag';
 import style from './expenses.module.scss';
 import { getListOfExpensens } from "../../../../APIs/expenses-api";
-import { Button } from 'primereact/button';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-import { Spinner } from 'react-bootstrap';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
-import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
-import { formatAUD } from '../../../../shared/lib/format-aud';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -51,7 +52,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfExpensens(page, limit, searchValue, order, isShowDeleted);
-            setTotal(() => (data?.count || 0))
+            setTotal(() => (data?.count || 0));
             if (page === 1) setCients(data.results);
             else {
                 if (data?.results?.length > 0)
@@ -62,7 +63,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                     });
             }
             setSort(tempSort);
-            setHasMoreData(data.count !== clients.length)
+            setHasMoreData(data.count !== clients.length);
             setLoading(false);
         };
 
@@ -88,9 +89,9 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
     const ExpensesIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span>{rowData.number}</span>
-            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }) }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
-        </div>
-    }
+            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }); }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+        </div>;
+    };
 
     const nameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
@@ -100,14 +101,14 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 {rowData.deleted ?
                     <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const dueDate = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
             {formatDate(rowData.created)}
-        </div>
-    }
+        </div>;
+    };
 
     const totalBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
@@ -115,20 +116,20 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 ${formatAUD(rowData.total)}
                 {/* <span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span> */}
             </div>
-        </div>
-    }
+        </div>;
+    };
 
     const accountCode = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}>
             {rowData.account_code?.code} : {rowData.account_code?.name}
-        </div>
-    }
+        </div>;
+    };
 
     const departmentBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}>
             {rowData?.department?.name}
-        </div>
-    }
+        </div>;
+    };
 
     const xeroBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-center`}>
@@ -137,13 +138,13 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
                 : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
             }
-        </div>
-    }
+        </div>;
+    };
     
     const StatusBody = (rowData) => {
         if (rowData.paid)
-            return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='success-outline-button font-14' style={{ width: '86px', height: '36px' }}>Paid</Button>
-        return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='danger-outline-button font-14' style={{ width: '86px', height: '36px' }}>Not Paid</Button>
+            return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='success-outline-button font-14' style={{ width: '86px', height: '36px' }}>Paid</Button>;
+        return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='danger-outline-button font-14' style={{ width: '86px', height: '36px' }}>Not Paid</Button>;
 
         //  <div className={`${style.status} ${style.inactive}`}>
         //     Not Paid <Badge severity="danger"></Badge>
@@ -151,22 +152,22 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
         // <div className={`${style.status} ${style.active}`}>
         //     <Badge severity="success"></Badge> Paid
         // </div>
-    }
+    };
 
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
-        </div>
-    }
+        </div>;
+    };
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
 
-        setTempSort({ sortField, sortOrder })
+        setTempSort({ sortField, sortOrder });
         setPage(1);  // Reset to page 1 whenever searchValue changes
     };
 
@@ -199,7 +200,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
             <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
             <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />
         </>
-    )
-})
+    );
+});
 
-export default ExpensesTable
+export default ExpensesTable;

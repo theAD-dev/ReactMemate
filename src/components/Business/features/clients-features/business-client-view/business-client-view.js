@@ -1,19 +1,19 @@
-import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Building, StarFill, Trash, X } from 'react-bootstrap-icons';
-import BusinessClientEdit from '../business-client-edit/business-client-edit'
-
-import style from './business-client.module.scss';
-import mapicon from '../../../../../assets/images/google_maps_ico.png'
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getClientIndustries, markeMainAddress, markeMainContact } from '../../../../../APIs/ClientsApi';
-import DeleteClient from '../delete-client';
-import { Tag } from 'primereact/tag';
-import Restore from '../restore-client';
+import clsx from 'clsx';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
+import { getClientIndustries, markeMainAddress, markeMainContact } from '../../../../../APIs/ClientsApi';
+import mapicon from '../../../../../assets/images/google_maps_ico.png';
+import BusinessClientEdit from '../business-client-edit/business-client-edit';
+import DeleteClient from '../delete-client';
+import Restore from '../restore-client';
+import style from './business-client.module.scss';
+
 
 const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
@@ -68,7 +68,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
 
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
-              <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false) }} className='outline-button'>Cancel</Button>
+              <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false); }} className='outline-button'>Cancel</Button>
               <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ width: '180px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
             </div>
               : client.deleted
@@ -78,8 +78,8 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const ViewSection = ({ client, industries, refetch }) => {
   const [isMainLoading, setIsMainLoading] = useState(null);
@@ -89,9 +89,9 @@ const ViewSection = ({ client, industries, refetch }) => {
     { value: 7, label: "Week" },
     { value: 14, label: "Two weeks" },
     { value: 30, label: "One month" },
-  ]
-  let clientIndustry = industries?.find((industry) => industry.id === client?.industry)
-  let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms)
+  ];
+  let clientIndustry = industries?.find((industry) => industry.id === client?.industry);
+  let clientPayment = payments?.find((payment) => payment?.value === client?.payment_terms);
 
   const addresses = client?.addresses?.filter((address) => !address?.deleted);
   const contacts = client?.contact_persons?.filter((contact) => !contact?.deleted);
@@ -110,7 +110,7 @@ const ViewSection = ({ client, industries, refetch }) => {
     } finally {
       setIsMainLoading(null);
     }
-  }
+  };
 
   const markAddressMain = async (id) => {
     try {
@@ -126,7 +126,7 @@ const ViewSection = ({ client, industries, refetch }) => {
     } finally {
       setIsMainLoading(null);
     }
-  }
+  };
 
   return (
     <>
@@ -319,7 +319,7 @@ const ViewSection = ({ client, industries, refetch }) => {
         {client.description || "-"}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default BusinessClientView
+export default BusinessClientView;

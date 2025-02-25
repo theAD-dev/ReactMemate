@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { initJobScheduler, reInitializeJobScheduler } from './job-scheduler-calendar';
-import './job-scheduler-calendar.scss';
-import { getJobDashboardData } from '../../../../APIs/jobs-api';
 
+import './job-scheduler-calendar.scss';
 import style from './job-scheduler-calendar.scss';
+import { getJobDashboardData } from '../../../../APIs/jobs-api';
 import CreateJob from '../create-job/create-job';
 
 const CALENDAR_ID = "job-scheduler";
@@ -24,7 +24,7 @@ const JobSchedulerCalendarModule = () => {
 
         const handleLoad = async () => {
             try {
-                const data = await getJobDashboardData()
+                const data = await getJobDashboardData();
                 initJobScheduler(CALENDAR_ID, data);
             } catch (error) {
                 console.error("Error initializing DayPilot:", error);
@@ -47,13 +47,13 @@ const JobSchedulerCalendarModule = () => {
 
     const refetchAndReInit = async () => {
         try {
-            const data = await getJobDashboardData()
+            const data = await getJobDashboardData();
             reInitializeJobScheduler(data);
             setWorkerId("");
         } catch (error) {
             console.error("Error initializing DayPilot:", error);
         }
-    }
+    };
 
     useEffect(() => {
         const handleClick = (e) => {
@@ -98,7 +98,7 @@ const JobSchedulerCalendarModule = () => {
 
             <CreateJob visible={visible} setVisible={setVisible} setRefetch={refetchAndReInit} workerId={workerId}/>
         </React.Fragment>
-    )
-}
+    );
+};
 
-export default JobSchedulerCalendarModule
+export default JobSchedulerCalendarModule;

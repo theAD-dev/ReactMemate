@@ -1,19 +1,21 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react';
 import { PrimeReactProvider } from 'primereact/api';
+
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Download, Eye, EyeSlash, Filter, Printer, Send } from 'react-bootstrap-icons';
 import { useDebounce } from 'primereact/hooks';
-
-import style from './invoice.module.scss';
-import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
-import { TieredMenu } from 'primereact/tieredmenu';
-import clsx from 'clsx';
-import { toast } from 'sonner';
-import { useMutation } from '@tanstack/react-query';
-import { paidExpense, unpaidExpense } from '../../../../APIs/expenses-api';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { TieredMenu } from 'primereact/tieredmenu';
+import { toast } from 'sonner';
+import style from './invoice.module.scss';
 import InvoiceTable from './invoices-table';
+import { paidExpense, unpaidExpense } from '../../../../APIs/expenses-api';
 import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
+import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
+import clsx from 'clsx';
+import { useMutation } from '@tanstack/react-query';
+
+
 
 const InvoicePage = () => {
     const dt = useRef(null);
@@ -48,7 +50,7 @@ const InvoicePage = () => {
     const handlePaidExpense = () => {
         const ids = selected.map(item => item.id);
         paidMutation.mutate({ ids: ids });
-    }
+    };
 
     const sendInvoiceToXeroMutation = useMutation({
         mutationFn: (data) => sendInvoiceToXeroApi(data),
@@ -65,7 +67,7 @@ const InvoicePage = () => {
     const sendInvoiceToXero = () => {
         const ids = selected.map(item => item.unique_id);
         sendInvoiceToXeroMutation.mutate({ ids: ids });
-    }
+    };
 
     return (
         <PrimeReactProvider className='peoples-page'>
@@ -130,7 +132,7 @@ const InvoicePage = () => {
             />
             <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
         </PrimeReactProvider>
-    )
-}
+    );
+};
 
-export default InvoicePage
+export default InvoicePage;

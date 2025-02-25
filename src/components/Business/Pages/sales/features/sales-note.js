@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
+import { FileEarmarkPlus, PlusLg, CheckLg } from 'react-bootstrap-icons';
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { FileEarmarkPlus, PlusLg, CheckLg } from 'react-bootstrap-icons';
 import Form from 'react-bootstrap/Form';
-import Button from "@mui/material/Button";
-import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import { fetchSales } from "../../../../../APIs/SalesApi";
 import { fetchSalesNotes } from "../../../../../APIs/SalesApi";
 
@@ -135,4 +135,4 @@ const SalesNote = ( props ) => {
   );
 };
 
-export default SalesNote
+export default SalesNote;

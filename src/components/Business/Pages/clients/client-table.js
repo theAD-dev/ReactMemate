@@ -1,18 +1,20 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { GeoAlt, Globe } from 'react-bootstrap-icons';
-import { Tag } from 'primereact/tag';
-
-import style from './clients.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
-import { getListOfClients } from '../../../../APIs/ClientsApi';
-import { Button } from 'primereact/button';
-import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import { Spinner } from 'react-bootstrap';
-import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
-import { formatAUD } from '../../../../shared/lib/format-aud';
+import { GeoAlt, Globe } from 'react-bootstrap-icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Tag } from 'primereact/tag';
+import style from './clients.module.scss';
+import { getListOfClients } from '../../../../APIs/ClientsApi';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
+import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
+import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+
+
+
 
 const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted, refetch }, ref) => {
     const navigate = useNavigate();
@@ -39,7 +41,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfClients(page, limit, searchValue, order, isShowDeleted);
-            setTotalClients(() => (data?.count || 0))
+            setTotalClients(() => (data?.count || 0));
             if (page === 1) setClients(data.results);
             else {
                 if (data?.results?.length > 0)
@@ -50,7 +52,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
                     });
             }
             setSort(tempSort);
-            setHasMoreData(data.count !== clients.length)
+            setHasMoreData(data.count !== clients.length);
             setLoading(false);
         };
 
@@ -77,8 +79,8 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <span>{rowData.number}</span>
             <Button label="Open" onClick={() => navigate(`/clients/${rowData.id}/order-history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
-        </div>
-    }
+        </div>;
+    };
 
     const nameBody = (rowData) => {
         return <div className='d-flex align-items-center'>
@@ -89,32 +91,32 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
                     <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
             </div>
 
-        </div>
-    }
+        </div>;
+    };
 
     const daysBody = (rowData) => {
-        return <Tag value={rowData.days_in_company} style={{ height: '22px', minWidth: '26px', borderRadius: '4px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
-    }
+        return <Tag value={rowData.days_in_company} style={{ height: '22px', minWidth: '26px', borderRadius: '4px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>;
+    };
 
     const JobBody = (rowData) => {
-        return <Tag value={rowData.jobsdone} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #EAECF0', background: '#F9FAFB', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
-    }
+        return <Tag value={rowData.jobsdone} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #EAECF0', background: '#F9FAFB', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>;
+    };
 
     const totalTurnoverBody = (rowData) => {
-        return <span style={{ color: '#667085' }}>${formatAUD(rowData.total_turnover)}</span>
-    }
+        return <span style={{ color: '#667085' }}>${formatAUD(rowData.total_turnover)}</span>;
+    };
 
     const averagePD = (rowData) => {
-        return <Tag value={`$${formatAUD(rowData.average_pd)}`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #ABEFC6', background: '#ECFDF3', color: '#067647', fontSize: '12px', fontWeight: 500 }}></Tag>
-    }
+        return <Tag value={`$${formatAUD(rowData.average_pd)}`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #ABEFC6', background: '#ECFDF3', color: '#067647', fontSize: '12px', fontWeight: 500 }}></Tag>;
+    };
 
     const projectBody = (rowData) => {
-        return <Tag value={rowData.total_requests} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #EAECF0', background: '#F9FAFB', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>
-    }
+        return <Tag value={rowData.total_requests} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #EAECF0', background: '#F9FAFB', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>;
+    };
 
     const orderFrequencyBody = (rowData) => {
-        return <Tag value={`${formatAUD(rowData.order_frequency)} p/m`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #A3E0FF', background: '#F2FAFF', color: '#1AB2FF', fontSize: '12px', fontWeight: 500 }}></Tag>
-    }
+        return <Tag value={`${formatAUD(rowData.order_frequency)} p/m`} style={{ height: '22px', minWidth: '32px', borderRadius: '16px', border: '1px solid #A3E0FF', background: '#F2FAFF', color: '#1AB2FF', fontSize: '12px', fontWeight: 500 }}></Tag>;
+    };
 
     const addressesBody = (rowData) => {
         let defaultAddress = (rowData?.addresses?.length && rowData?.addresses[0]?.address) || "";
@@ -126,27 +128,27 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
                     <GeoAlt color='#1AB2FF' />
                 </Link>
             }
-        </div>
-    }
+        </div>;
+    };
 
     const websiteBody = (rowData) => {
-        return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-"
-    }
+        return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-";
+    };
 
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
-        </div>
-    }
+        </div>;
+    };
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
 
-        setTempSort({ sortField, sortOrder })
+        setTempSort({ sortField, sortOrder });
         setPage(1);  // Reset to page 1 whenever searchValue changes
     };
 
@@ -178,7 +180,7 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
             <Column field="abn" header="ABN" style={{ minWidth: '140px' }}></Column>
             <Column field="website" header="Website" body={websiteBody} style={{ minWidth: '56px', textAlign: 'center' }}></Column>
         </DataTable>
-    )
-})
+    );
+});
 
-export default ClientTable
+export default ClientTable;

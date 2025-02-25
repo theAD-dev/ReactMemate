@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
-import style from './calculators.module.scss';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import style from './calculators.module.scss';
 import { deleteSettingCalculator } from '../../../../APIs/CalApi';
 import confirmImg from '../../../../assets/images/confirm-img.svg';
+
 
 const DeleteConfirmationModal = ({ title, api, refetch }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,7 @@ const DeleteConfirmationModal = ({ title, api, refetch }) => {
     const stop = (e) => {
         e.preventDefault();
         e.stopPropagation();
-    }
+    };
 
     const handleConfirm = async () => {
         try {
@@ -30,7 +31,7 @@ const DeleteConfirmationModal = ({ title, api, refetch }) => {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -57,7 +58,7 @@ const DeleteConfirmationModal = ({ title, api, refetch }) => {
                 </div>
             </Dialog>
         </div>
-    )
-}
+    );
+};
 
-export default DeleteConfirmationModal
+export default DeleteConfirmationModal;

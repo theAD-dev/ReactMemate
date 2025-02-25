@@ -1,23 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-
-import style from './people.module.scss';
+import { Spinner } from 'react-bootstrap';
+import { Chat, Envelope, Person, Plus, PlusLg, Telephone } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
-import { Chat, Envelope, Person, Plus, PlusLg, Telephone } from 'react-bootstrap-icons';
-import { Badge } from 'primereact/badge';
-import { getTeamDesktopUser } from '../../../../APIs/team-api';
-import { Link } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
-import clsx from 'clsx';
+import style from './people.module.scss';
 import { getPrivilegesList } from '../../../../APIs/settings-user-api';
-import { useQuery } from '@tanstack/react-query';
+import { getTeamDesktopUser } from '../../../../APIs/team-api';
+
+
 
 const DesktopPeoplesTable = () => {
     const observerRef = useRef(null);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
     const [peoples, setPeoples] = useState([]);
     const [selectedPeoples, setSelectedPeoples] = useState(null);
     const privilegesQuery = useQuery({ queryKey: ['privileges-list'], queryFn: getPrivilegesList });
@@ -34,9 +35,9 @@ const DesktopPeoplesTable = () => {
             } finally {
                 setLoading(false);
             }
-        }
+        };
         getMobileUser();
-    }, [])
+    }, []);
 
     const nameBody = (rowdata) => {
         return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
@@ -47,18 +48,18 @@ const DesktopPeoplesTable = () => {
                 {rowdata?.first_name} {rowdata?.last_name}
             </div>
             <Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text />
-        </div>
-    }
+        </div>;
+    };
 
     const typeBody = (rowData) => {
         const type = rowData.privilege;
         let privilege = privilegesQuery?.data?.find((t) => type === t.id);
         return privilege?.name || "-";
-    }
+    };
 
     const daysBody = (rowData) => {
-        return <Chip className={`custom ${style.defaultDays}`} label={rowData.days_in_company || "-"} />
-    }
+        return <Chip className={`custom ${style.defaultDays}`} label={rowData.days_in_company || "-"} />;
+    };
 
     const emailBodyTemplate = (rowData) => {
         return <div className='d-flex align-items-center justify-content-center'>
@@ -70,8 +71,8 @@ const DesktopPeoplesTable = () => {
             >
                 <Envelope size={20} color='#98A2B3' className='email-icon' />
             </Link>
-        </div>
-    }
+        </div>;
+    };
 
     const phoneBodyTemplate = (rowData) => {
         return <div className='d-flex align-items-center justify-content-center'>
@@ -83,20 +84,20 @@ const DesktopPeoplesTable = () => {
             >
                 <Telephone size={20} color='#98A2B3' className='phone-icon' />
             </Link>
-        </div>
-    }
+        </div>;
+    };
 
     const actionBody = () => {
-        return <Button className='text-button bg-tranparent p-0 text-dark' disabled>New Job <Plus color='#667085' size={20} /></Button>
-    }
+        return <Button className='text-button bg-tranparent p-0 text-dark' disabled>New Job <Plus color='#667085' size={20} /></Button>;
+    };
 
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
-        </div>
-    }
+        </div>;
+    };
 
     return (
         <>
@@ -121,7 +122,7 @@ const DesktopPeoplesTable = () => {
                 <Column field="Actions" header="Status" body={actionBody} style={{ minWidth: '135px' }}></Column>
             </DataTable>
         </>
-    )
-}
+    );
+};
 
-export default DesktopPeoplesTable
+export default DesktopPeoplesTable;

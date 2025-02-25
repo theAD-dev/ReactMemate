@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
+import { Row, Button } from 'react-bootstrap';
 import { Building, ChevronLeft, InfoSquare, Person } from 'react-bootstrap-icons';
 import { NavLink, useParams, useNavigate, Link } from 'react-router-dom';
 import { nanoid } from 'nanoid';
-import { Row, Button } from 'react-bootstrap';
 import { toast } from 'sonner';
 import BusinessForm from '../../../features/clients-features/new-client-create/business-form';
 
@@ -89,7 +89,7 @@ const BusinessClientInformation = () => {
     } finally {
       setIsPending(false);
     }
-  }
+  };
 
   return (
     <div className="newQuotePage existingClients borderSkyColor">

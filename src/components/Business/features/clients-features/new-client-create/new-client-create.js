@@ -1,15 +1,14 @@
-import clsx from 'clsx';
-import { nanoid } from 'nanoid';
-import React, { useEffect, useRef, useState } from 'react'
-import { Sidebar } from 'primereact/sidebar';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from 'react-bootstrap-icons';
-
-import styles from './new-client-create.module.scss';
-import IndivisualForm from './indivisual-form';
-import BusinessForm from './business-form';
-import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
+import clsx from 'clsx';
+import { nanoid } from 'nanoid';
+import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
+import BusinessForm from './business-form';
+import IndivisualForm from './indivisual-form';
+import styles from './new-client-create.module.scss';
+import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
 const NewClientCreate = ({ visible, setVisible, refetch }) => {
@@ -27,7 +26,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
     const [individualDefaultValues, setIndividualDefaultValues] = useState({
         payment_terms: 1,
         category: '',
-    })
+    });
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);
 
@@ -51,7 +50,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
             onError
         );
         setIsPending(false);
-    }
+    };
 
     const businessFormSubmit = async (data) => {
         console.log('data: ', data);
@@ -117,7 +116,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         } finally {
             setIsPending(false);
         }
-    }
+    };
 
     const handleSubmit = async (data) => {
         if (data && tab === "2") {
@@ -135,7 +134,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
 
     useEffect(() => {
         if (!visible) setPhoto(null);
-    }, [visible])
+    }, [visible]);
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
@@ -181,13 +180,13 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false) }} className='outline-button'>Cancel</Button>
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
                         <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '179px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
                     </div>
                 </div>
             )}
         ></Sidebar>
-    )
-}
+    );
+};
 
-export default NewClientCreate
+export default NewClientCreate;

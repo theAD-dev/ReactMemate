@@ -34,7 +34,7 @@ const Signup = () => {
       <button onClick={handleSignup}>Signup</button>
     </div>
     </>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

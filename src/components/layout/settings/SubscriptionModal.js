@@ -1,10 +1,10 @@
 import React from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
 import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 
 const SubscriptionModal = ({ statusValue }) => {
   const [open, setOpen] = React.useState(false);

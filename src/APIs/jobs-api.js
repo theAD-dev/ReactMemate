@@ -12,10 +12,10 @@ export const getListOfJobs = async (page, limit, name = "", order = "", isShowDe
     url.searchParams.append("offset", offset);
     if (name) url.searchParams.append("name", name);
     if (order) url.searchParams.append("ordering", order);
-    if (isShowDeleted) url.searchParams.append('deleted', 1)
+    if (isShowDeleted) url.searchParams.append('deleted', 1);
 
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const createNewJob = async (data) => {
     const endpoint = '/jobs/create/';
@@ -25,7 +25,7 @@ export const createNewJob = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getJob = async (id) => {
     const endpoint = `/jobs/${id}/`;
@@ -34,7 +34,7 @@ export const getJob = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getJobDashboardData = async () => {
     const endpoint = `/dashboard/`;
@@ -43,4 +43,4 @@ export const getJobDashboardData = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};

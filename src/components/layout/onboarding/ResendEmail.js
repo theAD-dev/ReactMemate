@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import { Link } from "react-router-dom";
-import "./org.css"
+import "./org.css";
 import mail01 from "../../../assets/images/icon/mail-01.png";
-import LoinLogo from "../../../assets/images/logo.svg";
 import login_slider1 from "../../../assets/images/img/emailSlider01.png";
+import LoinLogo from "../../../assets/images/logo.svg";
 import { ArrowLeftShort } from "react-bootstrap-icons";
 
 

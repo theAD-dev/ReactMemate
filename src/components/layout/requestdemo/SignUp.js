@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
+import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import "./requestademo.css";
-import LoinLogo from "../../../assets/images/logo.svg";
 import RegionalSettings from "../../../assets/images/img/login_slider.jpg";
 import OnboardingLogo from "../../../assets/images/img/onboarding-logo.svg";
+import LoinLogo from "../../../assets/images/logo.svg";
 
 const SignUp = () => {
   const navigate = useNavigate();

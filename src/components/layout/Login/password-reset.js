@@ -1,11 +1,12 @@
 import React from "react";
+
 import "../Login/login.css";
-import { useNavigate } from "react-router-dom";
 import { ArrowLeftShort, CheckCircle } from "react-bootstrap-icons";
-import LoinLogo from "../../../assets/images/logo.svg";
-import arrowRight from "../../../assets/images/icon/arrow.svg";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import arrowRight from "../../../assets/images/icon/arrow.svg";
 import passwordreset from "../../../assets/images/img/passwordreset.jpg";
+import LoinLogo from "../../../assets/images/logo.svg";
 
 const PasswordReset = () => {
   const navigate = useNavigate();

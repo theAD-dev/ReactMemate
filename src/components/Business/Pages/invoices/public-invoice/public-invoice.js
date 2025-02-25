@@ -1,29 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import style from './public-invoice.module.scss';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Skeleton } from 'primereact/skeleton';
-import { toast } from 'sonner';
-import clsx from 'clsx';
-import { getInvoice, paymentIntentCreate } from '../../../../../APIs/invoice-api';
 import { Col, Row as BootstrapRow, Button, Card } from 'react-bootstrap';
 import { CardList, Check2Circle, CheckCircleFill, FilePdf, Person } from 'react-bootstrap-icons';
-import { Dialog } from 'primereact/dialog';
 import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
+import { Divider } from 'primereact/divider';
+import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from 'primereact/dropdown';
-import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { ProgressSpinner } from 'primereact/progressspinner';
-import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
-import { Divider } from 'primereact/divider';
+import { Skeleton } from 'primereact/skeleton';
+import { toast } from 'sonner';
+import * as yup from 'yup';
+import style from './public-invoice.module.scss';
+import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
+import { getInvoice, paymentIntentCreate } from '../../../../../APIs/invoice-api';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
+import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
+
 
 const schema = yup.object().shape({
     firstname: yup.string().required('First name is required'),
@@ -148,7 +149,7 @@ const PublicInvoice = () => {
         console.log('Form Data:', data);
         mutation.mutate({
             name: `${firstname} ${lastname}`, email, city: cityname, postal_code, address
-        })
+        });
     };
 
     const step = (payment?.client_secret && payment?.public_key) ? 2 : 1;
@@ -375,7 +376,7 @@ const PublicInvoice = () => {
                                 </div>
                                 <button
                                     className={style.accept}
-                                    onClick={() => { setVisible(true) }}
+                                    onClick={() => { setVisible(true); }}
                                     style={{ height: '48px' }}
                                 >
                                     Pay this invoice
@@ -521,7 +522,7 @@ const PublicInvoice = () => {
                                                     onChange={(e) => {
                                                         const selectedCity = citiesQuery.data.find(city => city.id === e.value);
                                                         field.onChange(e.value);
-                                                        setValue('cityname', selectedCity?.name || "")
+                                                        setValue('cityname', selectedCity?.name || "");
                                                     }}
                                                     className={clsx(style.dropdownSelect, { [style.error]: errors?.city }, 'dropdown-height-fixed')}
                                                     style={{ height: '46px' }}
@@ -591,7 +592,7 @@ const PublicInvoice = () => {
                 </BootstrapRow>
             </Dialog>
         </>
-    )
-}
+    );
+};
 
-export default PublicInvoice
+export default PublicInvoice;

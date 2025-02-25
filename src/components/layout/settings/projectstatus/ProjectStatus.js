@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
 import { Menu, MenuItem, MenuButton, MenuGroup } from '@szhsin/react-menu';
+import React, { useState, useEffect } from "react";
+
 import '@szhsin/react-menu/dist/index.css';
-import Sidebar from '../Sidebar';
 import { Button, Spinner, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
-import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 import { toast } from 'sonner';
+import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
+import Sidebar from '../Sidebar';
 
 const colorOptions = [
     { value: "#1AB2FF", bg: "#BAE8FF", border: "#1AB2FF", color: "#0A4766", text: "Blue" },

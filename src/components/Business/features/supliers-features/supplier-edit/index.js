@@ -1,8 +1,9 @@
-import React, { forwardRef, useState } from 'react'
-import SupplierForm from '../../../shared/ui/supliers-ui/supplier-form';
+import React, { forwardRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
-import { useParams } from 'react-router-dom';
+import SupplierForm from '../../../shared/ui/supliers-ui/supplier-form';
+
 
 const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref) => {
     const { id } = useParams();
@@ -81,7 +82,7 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
         } finally {
             setIsPending(false);
         }
-    }
+    };
 
     const handleSubmit = async (data) => {
         if (id) {
@@ -93,7 +94,7 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
 
     return (
         <SupplierForm photo={photo} setPhoto={setPhoto} ref={ref} onSubmit={handleSubmit} defaultValues={defaultValues} />
-    )
-})
+    );
+});
 
-export default SupplierEdit
+export default SupplierEdit;

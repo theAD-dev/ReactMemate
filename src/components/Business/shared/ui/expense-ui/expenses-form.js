@@ -1,27 +1,32 @@
-import clsx from 'clsx';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { useQuery } from '@tanstack/react-query';
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import { Plus, Calendar3, QuestionCircle } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { AutoComplete } from 'primereact/autocomplete';
+import { Calendar } from 'primereact/calendar';
+import { Checkbox } from 'primereact/checkbox';
+import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
-import styles from './expenses-form.module.scss';
-import { Plus, Calendar3, QuestionCircle } from 'react-bootstrap-icons';
-import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
-import { Link } from 'react-router-dom';
-import { AutoComplete } from 'primereact/autocomplete';
-import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
-import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-api';
-import { getDepartments } from '../../../../../APIs/CalApi';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tooltip } from 'primereact/tooltip';
-import { Checkbox } from 'primereact/checkbox';
+import * as yup from 'yup';
+import styles from './expenses-form.module.scss';
+import { getDepartments } from '../../../../../APIs/CalApi';
+import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-api';
+import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
+import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
+
+
+
+
+
 
 function debounce(fn, delay) {
     let timeoutId;
@@ -62,8 +67,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     });
 
     useEffect(() => {
-        setValue('supplier', +supplierValue?.id)
-        if (supplierValue?.id) trigger(['supplier'])
+        setValue('supplier', +supplierValue?.id);
+        if (supplierValue?.id) trigger(['supplier']);
 
     }, [supplierValue]);
 
@@ -151,7 +156,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
             setValue("totalAmount", newTotalAmount);
             setValue("nogst", value === 'no');
             setValue("gst", value === 'ex');
-            trigger(['gst'])
+            trigger(['gst']);
         }
     };
 
@@ -165,7 +170,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const watchOrder = watch('order');
     useEffect(() => {
         if (watchOrder) trigger(['order']);
-    }, [watchOrder])
+    }, [watchOrder]);
     const watchType = watch('type');
     const validateFields = () => {
         if (option === 'Assign to order' && !watchOrder) {
@@ -195,8 +200,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     }, [option]);
 
     useEffect(() => {
-        if (defaultValues?.option) setOptionValue(defaultValues?.option)
-    }, [defaultValues?.option])
+        if (defaultValues?.option) setOptionValue(defaultValues?.option);
+    }, [defaultValues?.option]);
 
     const handleFormSubmit = (data) => {
         validateFields();
@@ -207,13 +212,13 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         }
 
         onSubmit(data, reset);
-    }
+    };
 
     useEffect(() => {
         if (projectId) {
             setValue('order', +projectId);
         }
-    }, [projectId])
+    }, [projectId]);
 
     useEffect(() => {
         if (!id) setValue('gst-calculation', 'in');
@@ -232,7 +237,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             completeMethod={search}
                             onChange={(e) => {
                                 if (!e.value) setSearchValue("");
-                                setSupplierValue(e.value)
+                                setSupplierValue(e.value);
                             }}
                             dropdownAutoFocus
                             field="name"
@@ -240,7 +245,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             onClick={onFocus}
                             onFocus={onFocus}
                             onBlur={() => {
-                                console.log('blur')
+                                console.log('blur');
                                 setPage(1);
                                 setSearchValue("");
                                 setHasMoreData(true);
@@ -534,7 +539,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 <label className="ms-2" style={{ position: 'relative', top: '1px', color: '#344054', fontWeight: 500, fontSize: '14px' }}>Send Email Notification when paid</label>
             </div>
         </form>
-    )
-})
+    );
+});
 
-export default ExpensesForm
+export default ExpensesForm;

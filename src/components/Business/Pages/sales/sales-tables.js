@@ -1,29 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Table } from "react-bootstrap";
 import {
   PlusSlashMinus,
   FilePdf,
   Link45deg,
   Check,
 } from "react-bootstrap-icons";
-import Progress from "./features/progress";
-import ContactSales from "./features/contact-sales";
-import SalesNote from "./features/sales-note";
-import Button from "react-bootstrap/Button";
-import QuoteLost from "./features/quote-lost";
-import QuoteWon from "./features/quote-won";
-import ActionsDots from "./features/actions-dots";
-
-import { Table } from "react-bootstrap";
-import TableTopBar from "./table-top-bar";
 import { Resizable } from 'react-resizable';
+import { Link } from "react-router-dom";
 import { Avatar } from 'primereact/avatar';
 import { AvatarGroup } from 'primereact/avatargroup';
-
 import { OverlayPanel } from 'primereact/overlaypanel';
+import Button from "react-bootstrap/Button";
+import ActionsDots from "./features/actions-dots";
+import ContactSales from "./features/contact-sales";
+import Progress from "./features/progress";
+import QuoteLost from "./features/quote-lost";
+import QuoteWon from "./features/quote-won";
+import SalesNote from "./features/sales-note";
+import TableTopBar from "./table-top-bar";
+import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 import ImageAvatar from "../../../../ui/image-with-fallback/image-avatar";
 import NoDataFoundTemplate from "../../../../ui/no-data-template/no-data-found-template";
-import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
+
+
 
 
 const CustomAvatarGroup = ({ params }) => {
@@ -108,7 +108,7 @@ export const mapSalesData = (salesData) => {
     Actions: "Actions",
     history: sale?.previous_versions
   }));
-}
+};
 
 const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   const { trialHeight } = useTrialHeight();
@@ -116,12 +116,12 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const removeRow = async () => {
-    await fetchData()
+    await fetchData();
   };
 
   const refreshData = () => {
-    fetchData()
-  }
+    fetchData();
+  };
 
   const handleSelectAllCheckboxChange = () => {
     const allRowIds = salesData && salesData.length && salesData.map((sale) => sale.id) || [];
@@ -242,7 +242,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       headerName: "User",
       width: 56,
       renderCell: (params) => {
-        return <CustomAvatarGroup params={params} />
+        return <CustomAvatarGroup params={params} />;
       }
     },
     {
@@ -319,15 +319,15 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       className: "ActionBtn",
       renderCell: (params) => {
         return <ActionsDots key={params.row.saleUniqueId} saleUniqueId={params.row.saleUniqueId}
-          clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status} salesHistory={params.row.history} />
+          clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status} salesHistory={params.row.history} />;
       },
     },
   ];
 
   useEffect(() => {
     const rows = mapSalesData(salesData);
-    setRows(rows)
-  }, [salesData, selectedRows])
+    setRows(rows);
+  }, [salesData, selectedRows]);
 
 
   const handleCheckboxChange = (rowId) => {
@@ -435,4 +435,4 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   );
 };
 
-export default SalesTables
+export default SalesTables;

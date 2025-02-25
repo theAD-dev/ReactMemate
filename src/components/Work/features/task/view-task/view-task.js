@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Placeholder from 'react-bootstrap/Placeholder';
+import { getTask } from '../../../../../APIs/task-api';
+import { TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import taskdetails from '../../../../../assets/images/task-details.svg';
+
 import '../../../../Business/Pages/management/task/task.css';
 import { ArrowRight } from 'react-bootstrap-icons';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { TaskCompleteJob } from '../../../../../APIs/TasksApi';
-import { getTask } from '../../../../../APIs/task-api';
 import CreateTask from '../create-task/create-task';
 
 const TaskLoadingView = () => {
@@ -74,8 +75,8 @@ const TaskLoadingView = () => {
       </table>
 
     </>
-  )
-}
+  );
+};
 
 const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitilize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
@@ -107,7 +108,7 @@ const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitilize }) => {
     const date = new Date(1000 * +dateInMiliSec);
     const formattedDate = date.toLocaleDateString('en-US', options)?.replace(/,/g, '');
     return formattedDate;
-  }
+  };
 
   function handleEdit() {
     handleClose();
@@ -210,7 +211,7 @@ const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitilize }) => {
       </Modal>
       <CreateTask show={showEditModal} setShow={setShowEditModal} taskId={taskId} setTaskId={setTaskId} defaultValue={data} refetch={reInitilize}/>
     </>
-  )
-}
+  );
+};
 
-export default ViewTaskModal
+export default ViewTaskModal;

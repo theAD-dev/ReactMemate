@@ -8,7 +8,7 @@ export const getPrivilegesList = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getDesktopUserList = async () => {
     const endpoint = `/desktop-users/`;
@@ -17,7 +17,7 @@ export const getDesktopUserList = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getDesktopUserPrice = async () => {
     const endpoint = `/settings/subscriptions/business/`;
@@ -26,7 +26,7 @@ export const getDesktopUserPrice = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateUserPrice = async (data) => {
     const endpoint = `/settings/subscriptions/business/`;
@@ -36,7 +36,7 @@ export const updateUserPrice = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getDesktopUser = async (id) => {
     const endpoint = `/desktop-users/update/${id}/`;
@@ -45,7 +45,7 @@ export const getDesktopUser = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteDesktopUser = async (id) => {
     const endpoint = `/desktop-users/active/${id}/`;
@@ -55,7 +55,7 @@ export const deleteDesktopUser = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const restoreDesktopUser = async (id) => {
     const endpoint = `/desktop-users/active/${id}/`;
@@ -65,7 +65,7 @@ export const restoreDesktopUser = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getMobileUserList = async () => {
     const endpoint = `/team/mobile-users/`;
@@ -74,7 +74,7 @@ export const getMobileUserList = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const getMobileUserPrice = async () => {
     const endpoint = `/settings/subscriptions/work/`;
@@ -83,7 +83,7 @@ export const getMobileUserPrice = async () => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const updateMobileUserPrice = async (data) => {
     const endpoint = `/settings/subscriptions/work/`;
@@ -93,7 +93,7 @@ export const updateMobileUserPrice = async (data) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const deleteMobileUser = async (id) => {
     const endpoint = `/mobile-users/active/${id}/`;
@@ -103,7 +103,7 @@ export const deleteMobileUser = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};
 
 export const restoreMobileUser = async (id) => {
     const endpoint = `/mobile-users/active/${id}/`;
@@ -113,4 +113,4 @@ export const restoreMobileUser = async (id) => {
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
-}
+};

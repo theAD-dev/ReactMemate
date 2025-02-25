@@ -1,18 +1,18 @@
 import React, { useEffect, useRef } from "react";
-import * as yup from "yup";
-import Button from "react-bootstrap/Button";
-import { Dialog } from "primereact/dialog";
+import { Envelope } from "react-bootstrap-icons";
 import { useForm, Controller } from "react-hook-form";
+import { PhoneInput } from "react-international-phone";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { Dialog } from "primereact/dialog";
 import { InputNumber } from 'primereact/inputnumber';
-
+import { ProgressSpinner } from "primereact/progressspinner";
+import Button from "react-bootstrap/Button";
+import { toast } from "sonner";
+import * as yup from "yup";
 import style from "./integration.module.scss";
 import { emailIntegrationsSet } from "../../../../APIs/integrations-api";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { PhoneInput } from "react-international-phone";
-import { Envelope } from "react-bootstrap-icons";
+
 
 // Updated validation schema
 const schema = yup.object().shape({
