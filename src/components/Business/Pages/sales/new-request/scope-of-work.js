@@ -7,10 +7,11 @@ import * as yup from 'yup';
 import { Col, Row } from 'react-bootstrap';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { v4 as uuidv4 } from 'uuid';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { draftSalesRequest } from '../../../../../APIs/SalesApi';
 import { toast } from 'sonner';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { getClientById } from '../../../../../APIs/ClientsApi';
 
 const schema = yup
     .object({
@@ -32,6 +33,7 @@ const ScopeOfWorkComponent = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     let quoteFormData = {};
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || "{}");
     try {
         const storedData = window.sessionStorage.getItem(`new-request`);
         if (storedData) {
@@ -45,7 +47,7 @@ const ScopeOfWorkComponent = () => {
         reference: quoteFormData.reference || "",
         requirements: quoteFormData.requirements || ""
     })
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, trigger, formState: { errors }, watch } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });
@@ -57,7 +59,6 @@ const ScopeOfWorkComponent = () => {
             requirements: data.requirements,
             files: files.map(file => file.file)
         };
-        console.log('formObject: ', formObject);
         window.sessionStorage.setItem(`new-request`, JSON.stringify(formObject));
         navigate(`/sales/quote-calculation`);
     };
@@ -88,12 +89,34 @@ const ScopeOfWorkComponent = () => {
         }
     });
 
-    const saveAsDraft = () => {
-        mutation.mutate({
-            reference: defaultValues.reference,
-            description: defaultValues.requirements,
-            action: 'draft'
-        });
+    const clientQuery = useQuery({
+        queryKey: ['id', id],
+        queryFn: () => getClientById(id),
+        enabled: !!id,
+        retry: 1,
+    });
+
+    const saveAsDraft = async () => {
+        const isValid = await trigger();
+
+        const person = clientQuery.data?.contact_persons[0];
+        const find = clientQuery.data?.contact_persons.find((contact) => contact.is_main === true);
+        const contact_person = find?.id ? find?.id : person?.id;
+        if (!contact_person) {
+            toast.error('No contact person found for this client. Please add a contact person before saving as a draft.');
+            return;
+        }
+
+        if (isValid) {
+            mutation.mutate({
+                client: id,
+                action: 'draft',
+                contact_person,
+                reference: watch('reference'),
+                description: watch('requirements'),
+                managers: [{ manager: profileData?.desktop_user_id }],
+            });
+        }
     }
 
     return (

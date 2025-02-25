@@ -24,12 +24,14 @@ import PublicInvoice from './components/Business/Pages/invoices/public-invoice/p
 import StripeContainer from './ui/strip-payment/strip-payment';
 import PasswordCreate from './components/layout/onboarding/password-create';
 import Suspended from './components/layout/suspended';
+import Logout from './pages/setting/logout/logout';
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="*" element={<Login />} />
+        <Route path='/logout' element={<Logout />} />
         <Route path='/suspended' element={<Suspended/> }/>
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/check-mail" element={<CheckMail />} />

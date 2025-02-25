@@ -9,6 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
 import ArchiveIcon from "../../../../../assets/images/icon/archive.svg"
 import { markLost } from "../../../../../APIs/SalesApi";
+import { toast } from 'sonner';
 
 const QuoteWon = ({ salesData, saleUniqueId, LostQuote, quoteType, onRemoveRow }) => {
   const [open, setOpen] = React.useState(false);
@@ -22,14 +23,14 @@ const QuoteWon = ({ salesData, saleUniqueId, LostQuote, quoteType, onRemoveRow }
         const success = await markLost([saleUniqueId]);
         if (success.length) {
           onRemoveRow()
-          setMessage({ content: 'Successfully moved to Management!', type: 'success' });
+          toast.success("Sale request has been updated to Lost!");
         } else {
-          setMessage({ content: 'Failed to move to Management. Please try again.', type: 'error' });
+          toast.error("Failed to update the sale request to Lost. Please try again.");
         }
       }
     } catch (error) {
       console.error('Error:', error);
-      setMessage({ content: 'An error occurred. Please try again.', type: 'error' });
+      toast.error("An error occurred. Please try again.");
     }
     handleClose();
     setConfetti(true);

@@ -7,17 +7,14 @@ import Button from "react-bootstrap/Button";
 import {
   X,
   Filter,
-  Person,
   Check,
   ViewStacked,
   CalendarWeek,
-  PersonBoundingBox,
   BarChartSteps,
-  Search,
   XCircle,
   Download,
-  PlusLg,
   CheckCircle,
+  Person,
 } from "react-bootstrap-icons";
 import SearchFilter from "./search-filter";
 import Tab from "react-bootstrap/Tab";
@@ -30,6 +27,9 @@ import BankDetailsModel from "./features/bank-details-model";
 import { mapSalesData } from "./sales-tables";
 import clsx from 'clsx';
 import { toast } from 'sonner';
+import { getProjectManager } from "../../../../APIs/ClientsApi";
+import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "primereact/hooks";
 
 const leadArray = [
   {
@@ -76,9 +76,12 @@ const TableTopBar = ({
   const [buttonClicked, setButtonClicked] = useState(false);
   const [confetti, setConfetti] = useState(false);
   const filterDropdownRef = useRef(null);
+  const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
   console.log("rows: ", rows);
   console.log("filterState: ", filterState);
+
+  const projectManagerQuery = useQuery({ queryKey: ['project-manager'], queryFn: getProjectManager });
 
   const handleMoveToWon = async () => {
     try {
@@ -106,9 +109,9 @@ const TableTopBar = ({
           setSelectedRows([]);
           removeRowMulti();
           setConfetti(true);
-          toast.success("Successfully moved to Management!");
+          toast.success("Sale request has been updated to Lost!");
         } else {
-          toast.error("Failed to move to Management. Please try again.");
+          toast.error("Failed to update to Lost. Please try again.");
         }
       }
     } catch (error) {
@@ -139,6 +142,19 @@ const TableTopBar = ({
         state?.statuses?.includes(item?.Status)
       );
     }
+
+    if (state?.projectManager?.length > 0) {
+      filteredRows = filteredRows.filter((item) =>
+        item?.User?.map((user) => user?.full_name).some((name) =>
+          state?.projectManager?.includes(name)
+        )
+      );
+    }
+
+
+    filteredRows = filteredRows.filter((item) =>
+      item?.Client?.toLowerCase().includes(debouncedValue?.toLowerCase())
+    );
 
     onRowsFilterChange(filteredRows);
   };
@@ -222,6 +238,39 @@ const TableTopBar = ({
     });
   };
 
+  const handleProjectManagerChange = (projectManager) => {
+    setFilterState((prevFilterState) => {
+      const prevProjectManager = prevFilterState.projectManager || [];
+      if (prevProjectManager?.includes(projectManager)) {
+        return {
+          ...prevFilterState,
+          projectManager: prevProjectManager.filter((item) => item !== projectManager),
+        };
+      } else {
+        return {
+          ...prevFilterState,
+          projectManager: [...prevProjectManager, projectManager],
+        };
+      }
+    });
+  }
+
+  const applyProjectManagerFilters = () => {
+    const newFilterState = { ...filterState };
+    setFilterState(newFilterState);
+    startFilter(newFilterState);
+    setFilters({ ...filter, projectManager: newFilterState.projectManager });
+    setButtonClicked(false);
+  };
+
+  const clearProjectManagerFilters = () => {
+    console.log('...')
+    setFilterState((prevFilterState) => {
+      const { projectManager, ...rest } = prevFilterState;
+      return rest;
+    });
+  };
+
   const handleRemoveTag = (group, itemName) => {
     const newFilters = { ...filter };
     const newItems = newFilters[group].filter((item) => item !== itemName);
@@ -281,12 +330,15 @@ const TableTopBar = ({
     };
   }, []);
 
+  useEffect(()=> {
+    startFilter(filterState);
+  }, [debouncedValue]);
+
   return (
     <>
       <div
-        className={`${
-          selectedRowCount ? "selected-row" : ""
-        } flexbetween paddingLR tableTopBar tableTopBarSales`}
+        className={`${selectedRowCount ? "selected-row" : ""
+          } flexbetween paddingLR tableTopBar tableTopBarSales`}
         style={{ borderBottom: "1px solid #f2f2f2" }}
       >
         {!selectedRow || selectedRow.length === 0 ? (
@@ -310,8 +362,8 @@ const TableTopBar = ({
                 </div>
                 <div className="filterSearch">
                   <SearchFilter
-                    onRowsFilterChange1={onRowsFilterChange}
-                    rows={mapSalesData(salesData)}
+                    setInputValue={setInputValue}
+                    inputValue={inputValue}
                   />
                 </div>
               </Col>
@@ -323,8 +375,8 @@ const TableTopBar = ({
                     </li>
                     <li>
                       {profileData &&
-                      profileData.bank_detail &&
-                      profileData.bank_detail.account_number ? (
+                        profileData.bank_detail &&
+                        profileData.bank_detail.account_number ? (
                         <NavLink
                           className="tabActive"
                           to="/sales/newquote/selectyourclient"
@@ -353,8 +405,8 @@ const TableTopBar = ({
                     <strong className="styleT1">
                       $
                       {formattedAmount !== null &&
-                      formattedAmount !== undefined &&
-                      formattedAmount > 0 ? (
+                        formattedAmount !== undefined &&
+                        formattedAmount > 0 ? (
                         <>{formattedAmount}</>
                       ) : (
                         <>{formattedAmount}</>
@@ -427,8 +479,8 @@ const TableTopBar = ({
                     <strong className="styleT1">
                       $
                       {formattedAmount !== null &&
-                      formattedAmount !== undefined &&
-                      formattedAmount > 0 ? (
+                        formattedAmount !== undefined &&
+                        formattedAmount > 0 ? (
                         <>{formattedAmount}</>
                       ) : (
                         <>{formattedAmount}</>
@@ -556,30 +608,30 @@ const TableTopBar = ({
             }
           >
             <ul>
-            <div style={{ maxHeight: "350px", overflow: "auto" }}>
-              {['Draft', 'Saved', 'Sent', 'Accepted', 'Recurring', 'Review', 'Declined', 'Required'].map((itemName, index) => (
-                <li
-                  key={index}
-                  className={
-                    filterState?.statuses?.includes(itemName) ? "checkedList" : ""
-                  }
-                >
-                  <label className={`customCheckBox ${itemName}`}>
-                    <input
-                      type="checkbox"
-                      value={itemName}
-                      checked={filterState?.statuses?.includes(itemName)}
-                      onChange={() => handleStatusChange(itemName)}
-                    />
-                    <span className="checkmark">
-                      <Check color="#9E77ED" size={20} />
-                    </span>
-                    <div className="userName">
-                      <span className={clsx('statusInfo', itemName)}><a>{itemName}</a></span>{" "}
-                    </div>
-                  </label>
-                </li>
-              ))}
+              <div style={{ maxHeight: "350px", overflow: "auto" }}>
+                {['Draft', 'Saved', 'Sent', 'Accepted', 'Recurring', 'Review', 'Declined', 'Required'].map((itemName, index) => (
+                  <li
+                    key={index}
+                    className={
+                      filterState?.statuses?.includes(itemName) ? "checkedList" : ""
+                    }
+                  >
+                    <label className={`customCheckBox ${itemName}`}>
+                      <input
+                        type="checkbox"
+                        value={itemName}
+                        checked={filterState?.statuses?.includes(itemName)}
+                        onChange={() => handleStatusChange(itemName)}
+                      />
+                      <span className="checkmark">
+                        <Check color="#9E77ED" size={20} />
+                      </span>
+                      <div className="userName">
+                        <span className={clsx('statusInfo', itemName)}><a>{itemName}</a></span>{" "}
+                      </div>
+                    </label>
+                  </li>
+                ))}
               </div>
               <Row className="buttomBottom d-flex justify-content-between align-items-center">
                 <Col className="pr-2">
@@ -602,127 +654,63 @@ const TableTopBar = ({
             </ul>
           </Tab>
 
-          {/* <Tab
-            eventKey="FullName"
-            title={
-              <>
-                <Person color="#667085" size={16} /> User
-              </>
-            }
-          >
-            <ul>
-              <div className="filterSearch filterSearchTab">
-                <span className="mr-3">
-                  <Search color="#98A2B3" size={20} />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Search"
-                  value={searchValue}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="scrollItemsBox">
-                {filteredUserNames.map((itemName, index) => (
-                  <li
-                    key={index}
-                    className={
-                      selectedItems.includes(itemName) ? "checkedList" : ""
-                    }
-                  >
-                    <label className="customCheckBox">
-                      <div className="userName">{itemName}</div>
-
-                      <input
-                        type="checkbox"
-                        value={itemName}
-                        checked={selectedItems.includes(itemName)}
-                        onChange={() => handleCheckboxChange(itemName)}
-                      />
-                      <span className="checkmark">
-                        <Check color="#9E77ED" size={20} />
-                      </span>
-                    </label>
-                  </li>
-                ))}
-              </div>
-              <Row className="buttomBottom d-flex justify-content-between align-items-center">
-                <Col className="pr-2">
-                  <Button
-                    variant="tabContent tabCancel"
-                    onClick={clearSelectedTags}
-                  >
-                    Cancel
-                  </Button>
-                </Col>
-                <Col>
-                  <Button variant="tabContent tabApply" onClick={applyFilters}>
-                    Apply
-                  </Button>
-                </Col>
-              </Row>
-            </ul>
-          </Tab>
           <Tab
-            eventKey="ClientNames"
+            eventKey="projectManager"
             title={
               <>
-                <PersonBoundingBox color="#667085" size={16} />
-                Client
+                <Person color="#667085" size={16} />
+                Project Manager
               </>
             }
           >
             <ul>
-              <div className="filterSearch filterSearchTab">
-                <span className="mr-3">
-                  <Search color="#98A2B3" size={20} />
-                </span>
-                <input
-                  type="text"
-                  placeholder="Search"
-                  value={searchValue}
-                  onChange={handleInputChange}
-                />
+              <div id="controlled-tab-example-tabpane-Status" style={{ maxHeight: "350px", overflow: "auto" }}>
+                {
+                  projectManagerQuery?.data?.map((itemName, index) => (
+                    <li
+                      key={index}
+                      className={
+                        filterState?.projectManager?.includes(itemName.name) ? "checkedList" : ""
+                      }
+                    >
+                      <label className={`customCheckBox ${itemName.name}`}>
+                        <input
+                          type="checkbox"
+                          value={itemName.name}
+                          checked={filterState?.projectManager?.includes(itemName.name) || false}
+                          onChange={() => handleProjectManagerChange(itemName.name)}
+                        />
+                        <span className="checkmark">
+                          <Check color="#9E77ED" size={20} />
+                        </span>
+                        <div className="userName">
+                          <span className={clsx('statusInfo', itemName)}><a>{itemName.name}</a></span>{" "}
+                        </div>
+                      </label>
+                    </li>
+                  ))
+                }
               </div>
-              {filteredClientNames.map((itemName, index) => (
-                <li
-                  key={index}
-                  className={
-                    selectedItems.includes(itemName) ? "checkedList" : ""
-                  }
-                >
-                  <label className="customCheckBox">
-                    <div className="userName">{itemName}</div>
-                    <input
-                      type="checkbox"
-                      value={itemName}
-                      checked={selectedItems.includes(itemName)}
-                      onChange={() => handleCheckboxChange(itemName)}
-                    />
-                    <span className="checkmark">
-                      <Check color="#9E77ED" size={20} />
-                    </span>
-                  </label>
-                </li>
-              ))}
               <Row className="buttomBottom d-flex justify-content-between align-items-center">
                 <Col className="pr-2">
                   <Button
                     variant="tabContent tabCancel"
-                    onClick={clearSelectedTags}
+                    onClick={clearProjectManagerFilters}
                   >
                     Cancel
                   </Button>
                 </Col>
                 <Col>
-                  <Button variant="tabContent tabApply" onClick={applyFilters}>
+                  <Button
+                    variant="tabContent tabApply"
+                    onClick={applyProjectManagerFilters}
+                  >
                     Apply
                   </Button>
                 </Col>
               </Row>
             </ul>
           </Tab>
-           */}
         </Tabs>
       )}
       {Object.keys(filter).length > 0 && (

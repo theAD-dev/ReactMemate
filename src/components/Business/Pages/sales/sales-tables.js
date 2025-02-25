@@ -106,6 +106,7 @@ export const mapSalesData = (salesData) => {
     LostQuote: (sale.number, sale.status),
     amountData: sale.amount,
     Actions: "Actions",
+    history: sale?.previous_versions
   }));
 }
 
@@ -317,7 +318,8 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       width: 72,
       className: "ActionBtn",
       renderCell: (params) => {
-        return <ActionsDots key={params.row.saleUniqueId} saleUniqueId={params.row.saleUniqueId} clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status} />
+        return <ActionsDots key={params.row.saleUniqueId} saleUniqueId={params.row.saleUniqueId}
+          clientId={params.row.clientId} refreshData={refreshData} status={params.row.Status} salesHistory={params.row.history} />
       },
     },
   ];
