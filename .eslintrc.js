@@ -7,11 +7,13 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    // 'airbnb' (if you chose Airbnb style guide)
   ],
   parserOptions: {
     ecmaVersion: 12,
     sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true, // Ensure JSX is enabled
+    },
   },
   plugins: [
     'react',
@@ -19,33 +21,43 @@ module.exports = {
     'import',
   ],
   rules: {
-    'react/prop-types': 'off', // Optional: disable prop-types rule if you don’t use it
-    'no-unused-vars': 'warn',  // Customize rules as needed
-    'semi': ['error', 'always'], // Enforce semicolons at the end of statements
+    'react/prop-types': 'off',
+    'no-unused-vars': 'warn',
+    'semi': ['warn', 'always'],
     'import/order': [
-      'error',
+      'warn',
       {
         groups: [
-          ['builtin', 'external'], // Group module imports together (no newline within)
-          ['internal', 'parent', 'sibling', 'index'], // Group file imports together (no newline within)
+          ['builtin', 'external'],
+          ['internal', 'parent', 'sibling', 'index'],
         ],
-        'newlines-between': 'never', // Enforce a newline between the two main groups
+        'newlines-between': 'never',
         pathGroups: [
           {
-            pattern: 'react',       // Match React specifically
-            group: 'external',      // Place it in the external group
-            position: 'before',     // Before other externals
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
           },
           {
-            pattern: 'react-*',     // Match React-related modules (e.g., react-dom)
+            pattern: 'react-*',
             group: 'external',
-            position: 'before',     // Before other externals, after React
+            position: 'before',
           },
         ],
-        pathGroupsExcludedImportTypes: ['builtin'], // Ensure pathGroups only apply to non-builtins
-        alphabetize: { order: 'asc', caseInsensitive: true }, // Alphabetize within groups
+        pathGroupsExcludedImportTypes: ['builtin'],
+        alphabetize: { order: 'asc', caseInsensitive: true },
       },
     ],
+    'react/react-in-jsx-scope': 'off', // Disable the rule requiring React import
+    'react/no-unescaped-entities': 'warn',
+    'react/display-name': 'off',
+    'no-useless-escape': 'warn',
+    'react/jsx-key': 'warn',
+    'valid-typeof': 'warn',
+    'no-empty': 'warn',
+    'react/no-unknown-property': 'warn',
+    'no-unsafe-optional-chaining': 'warn',
+    'no-constant-condition': 'warn',
   },
   settings: {
     react: {

@@ -191,16 +191,12 @@ export const fetchMultipleData = async (selectedUniqueIds) => {
     redirect: "follow"
   };
 
-  try {
-    const responses = await Promise.all([
-      fetch(`${API_BASE_URL}/sales/status/won/`, requestOptions), // Pass requestOptions directly
-    ]);
+  const responses = await Promise.all([
+    fetch(`${API_BASE_URL}/sales/status/won/`, requestOptions), // Pass requestOptions directly
+  ]);
 
-    const data = await Promise.all(responses.map(response => response.json()));
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  const data = await Promise.all(responses.map(response => response.json()));
+  return data;
 };
 
 
@@ -267,16 +263,13 @@ export const fetchMultipleLost = async (selectedUniqueIds) => {
     redirect: "follow"
   };
 
-  try {
-    const responses = await Promise.all([
-      fetch(`${API_BASE_URL}/sales/status/lost/`, requestOptions), // Pass requestOptions directly
-    ]);
 
-    const data = await Promise.all(responses.map(response => response.json()));
-    return data; // Return data to handleMoveToManagementWon function
-  } catch (error) {
-    throw error; // Rethrow error to handleMoveToManagementWon function
-  }
+  const responses = await Promise.all([
+    fetch(`${API_BASE_URL}/sales/status/lost/`, requestOptions), // Pass requestOptions directly
+  ]);
+
+  const data = await Promise.all(responses.map(response => response.json()));
+  return data; // Return data to handleMoveToManagementWon function
 };
 
 
