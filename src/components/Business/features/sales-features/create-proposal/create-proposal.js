@@ -16,9 +16,9 @@ import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from 'sonner';
 import style from './create-proposal.module.scss';
+import FileUploader from './file-uploader/file-uploader';
 import { getProposalBySalesId, getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
 import SendProposal from '../send-proposal/send-proposal';
-import FileUploader from './file-uploader/file-uploader';
 
 
 const headerElement = (

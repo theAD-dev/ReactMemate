@@ -9,12 +9,12 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import * as yup from 'yup';
+import style from './accounting.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { useAccountingGetQuery } from '../../../../entities/setting/accounting/department-turnover-plan/models/get-accounting-list.query';
 import { useAccountingTargetUpdateMutations } from '../../../../entities/setting/accounting/department-turnover-plan/models/update-accounting-target.mutation';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Sidebar from '../Sidebar';
-import style from './accounting.module.scss';
 
 const schema = yup.object().shape({
     target: yup.number().typeError('Target must be a number').required('Target is required').positive('Target must be positive'),

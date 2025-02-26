@@ -3,23 +3,13 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
   parserOptions: {
     ecmaVersion: 12,
     sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true, // Ensure JSX is enabled
-    },
+    ecmaFeatures: { jsx: true },
   },
-  plugins: [
-    'react',
-    'react-hooks',
-    'import',
-  ],
+  plugins: ['react', 'react-hooks', 'import'],
   rules: {
     'react/prop-types': 'off',
     'no-unused-vars': 'warn',
@@ -27,28 +17,17 @@ module.exports = {
     'import/order': [
       'warn',
       {
-        groups: [
-          ['builtin', 'external'],
-          ['internal', 'parent', 'sibling', 'index'],
-        ],
+        groups: [['builtin', 'external'], ['internal', 'parent', 'sibling', 'index']],
         'newlines-between': 'never',
         pathGroups: [
-          {
-            pattern: 'react',
-            group: 'external',
-            position: 'before',
-          },
-          {
-            pattern: 'react-*',
-            group: 'external',
-            position: 'before',
-          },
+          { pattern: 'react', group: 'external', position: 'before' },
+          { pattern: 'react-*', group: 'external', position: 'before' },
         ],
         pathGroupsExcludedImportTypes: ['builtin'],
         alphabetize: { order: 'asc', caseInsensitive: true },
       },
     ],
-    'react/react-in-jsx-scope': 'off', // Disable the rule requiring React import
+    'react/react-in-jsx-scope': 'off',
     'react/no-unescaped-entities': 'warn',
     'react/display-name': 'off',
     'no-useless-escape': 'warn',
@@ -60,8 +39,6 @@ module.exports = {
     'no-constant-condition': 'warn',
   },
   settings: {
-    react: {
-      version: 'detect', // Automatically detect React version
-    },
+    react: { version: 'detect' },
   },
 };

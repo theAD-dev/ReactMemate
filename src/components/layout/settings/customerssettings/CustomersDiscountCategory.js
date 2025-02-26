@@ -10,10 +10,10 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import * as yup from 'yup';
+import style from './customer.module.scss';
 import { getCategoriesList, newCategories, readCategories, updateCategories,deleteCategories } from '../../../../APIs/industrieslist-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
-import style from './customer.module.scss';
 
 const CustomersDiscountCategory = () => {
      const { trialHeight } = useTrialHeight();

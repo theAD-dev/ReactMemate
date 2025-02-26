@@ -7,8 +7,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Sidebar from '../Sidebar';
 import style from './project.module.scss';
+import Sidebar from '../Sidebar';
 
 // Define schema for multiple entries
 const schema = yup.object().shape({

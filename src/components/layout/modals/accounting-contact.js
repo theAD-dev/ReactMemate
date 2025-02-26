@@ -2,24 +2,19 @@ import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-
-// import { MessageChatCircle } from "react-bootstrap-icons";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-square.png";
 import ClockHistoryCircle from "../../../assets/images/icon/clock-history-icon.png";
 import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
-import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.png";
 import ZapCircle from "../../../assets/images/icon/zap.png";
 import LenderPanel from "../../../assets/images/img/lender-panel03.png";
 
 import "./style-model.css";
 
-const AccountingContact = ({ onAdd }) => {
+const AccountingContact = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -29,9 +24,6 @@ const AccountingContact = ({ onAdd }) => {
   const [jobTitle, setJobTitle] = useState('');
   const [pnumber, setPnumber] = useState('');
   const [help, setHelp] = useState('');
-  const handleAdd = () => {
-    handleClose();
-  };
 
   return (
     <>

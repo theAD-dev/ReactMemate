@@ -12,13 +12,11 @@ import ManagementIcon from "../../../../../assets/images/icon/ManagementIcon.svg
 import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
 import ConfettiComponent from '../../../../layout/ConfettiComponent';
 
-
-
 const QuoteWon = ({ saleUniqueId, wonQuote, quoteType, onRemoveRow }) => {
   const [open, setOpen] = React.useState(false);
   const [confetti, setConfetti] = useState(false);
   const handleOpen = () => setOpen(true);
-  const [message, setMessage] = useState({ content: '', type: 'success' });
+  const [message,] = useState({ content: '', type: 'success' });
 
   const handleMoveToManagementWon = async () => {
     try {

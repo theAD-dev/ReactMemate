@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { ArrowRight } from 'react-bootstrap-icons';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Placeholder from 'react-bootstrap/Placeholder';
@@ -6,12 +8,7 @@ import EditTask from './edit-task';
 import { fetchTasksRead, TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import taskdetails from '../../../../../assets/images/task-details.svg';
-
 import './task.css';
-import { ArrowRight } from 'react-bootstrap-icons';
-import { useQuery, useMutation } from '@tanstack/react-query';
-
-
 
 const TaskLoadingView = () => {
   return (
@@ -81,7 +78,7 @@ const TaskLoadingView = () => {
 
 const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
-  const { isFetching: isLoading, data, isError, refetch } = useQuery({
+  const { isFetching: isLoading, data } = useQuery({
     queryKey: ['taskId', taskId],
     queryFn: () => fetchTasksRead(taskId),
     enabled: !!taskId,
@@ -101,7 +98,6 @@ const ViewTask = ({ view, setView, taskId, setTaskId, reInitilize }) => {
   const handleInComplete = () => mutation.mutate(false);
   const handleComplete = () => mutation.mutate(true);
   const handleClose = () => setView(false);
-  const handleShow = () => setView(true);
   const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";
 

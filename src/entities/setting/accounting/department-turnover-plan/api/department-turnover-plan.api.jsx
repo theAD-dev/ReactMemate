@@ -6,7 +6,7 @@ export const getAccountingList = async () => {
         method: 'GET',
     };
     return fetchInstance(path, options);
-}
+};
 
 export const updateAccountingTarget = async (id, data) => {
     const path = `/settings/accounting/${id}/`;
@@ -15,4 +15,4 @@ export const updateAccountingTarget = async (id, data) => {
         body: data
     };
     return fetchInstance(path, options);
-}
+};

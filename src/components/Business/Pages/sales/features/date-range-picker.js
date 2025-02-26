@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import "flatpickr/dist/themes/material_green.css";
 import Flatpickr from "react-flatpickr";
 
-const DateRangePicker = ({ onDataApply, salesData }) => {
+const DateRangePicker = ({ onDataApply }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   const calendarRef = useRef(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [isApplying, setIsApplying] = useState(false);
+  const [, setIsApplying] = useState(false);
   const [formattedCurrentDate, setFormattedCurrentDate] = useState("");
 
   useEffect(() => {
@@ -31,19 +30,13 @@ const DateRangePicker = ({ onDataApply, salesData }) => {
   }, [selectedDates]);
 
   const updateCustomDiv = () => {
-    const monthElement = document.querySelector(".flatpickr-months");
     const existingCustomDiv = document.querySelector(".custom-div p");
     if (startDate && endDate) {
       if (existingCustomDiv) {
         existingCustomDiv.textContent = `${startDate.toISOString().split('T')[0]} - ${endDate.toISOString().split('T')[0]}`;
-      } else {
-        if (monthElement) {
-
-        }
       }
     }
   };
-
 
   const handleApply = () => {
     updateCustomDiv();
@@ -73,11 +66,6 @@ const DateRangePicker = ({ onDataApply, salesData }) => {
     mode: "range",
     inline: true
   };
-
-  useEffect(() => {
-    if (isApplying) {
-    }
-  }, [isApplying]);
 
   useEffect(() => {
     if (!startDate && !endDate) {
@@ -128,7 +116,6 @@ const DateRangePicker = ({ onDataApply, salesData }) => {
 
   return (
     <div>
-
       <Flatpickr
         options={flatpickrOptions}
         value={selectedDates}

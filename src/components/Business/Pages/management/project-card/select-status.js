@@ -1,9 +1,8 @@
-import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import React, { useEffect, useState } from 'react';
-
-import '@szhsin/react-menu/dist/index.css';
 import { ChevronDown } from 'react-bootstrap-icons';
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
+import '@szhsin/react-menu/dist/index.css';
 import { updateProjectStatusById } from '../../../../../APIs/management-api';
 
 const colorMapping = {

@@ -34,6 +34,7 @@ const Desktop = ({ visible, setVisible }) => {
             deleteMutation.reset();
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to delete user. Please try again.`);
         }
     });

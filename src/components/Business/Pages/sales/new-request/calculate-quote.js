@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { ChevronLeft, FiletypePdf, PlusSlashMinus } from 'react-bootstrap-icons';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -54,8 +54,7 @@ const CalculateQuote = () => {
     const newRequestMutation = useMutation({
         mutationFn: (data) => createNewCalculationQuoteRequest(data),
         onSuccess: (response) => {
-            if (response) {
-            } else {
+            if (!response) {
                 toast.error(`Failed to create new calculation quote. Please try again.`);
             }
         },
@@ -69,8 +68,7 @@ const CalculateQuote = () => {
     const updateRequestMutation = useMutation({
         mutationFn: (data) => updateNewCalculationQuoteRequest(unique_id, data),
         onSuccess: (response) => {
-            if (response) {
-            } else {
+            if (!response) {
                 setIsLoading(false);
                 toast.error(`Failed to update calculation quote. Please try again.`);
             }
@@ -288,9 +286,9 @@ const CalculateQuote = () => {
                             //         Quote PDF
                             //     </a>
                             // ) : (
-                                <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-2">
-                                    Quote PDF
-                                </a>
+                            <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-2">
+                                Quote PDF
+                            </a>
                             // )
                         }
                         {
@@ -334,7 +332,7 @@ const CalculateQuote = () => {
             </div>
 
             <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest} />
-            <CreateProposal show={showProposalModal} setShow={setShowProposalModal} refetch={newRequestQuery?.refetch} contactPersons={contactPersons}/>
+            <CreateProposal show={showProposalModal} setShow={setShowProposalModal} refetch={newRequestQuery?.refetch} contactPersons={contactPersons} />
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

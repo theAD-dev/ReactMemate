@@ -4,10 +4,10 @@ import { PlusLg } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import style from './job-template.module.scss';
 import { getJobTemplates } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
-import style from './job-template.module.scss';
 
 
 

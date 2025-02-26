@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { CloudUpload, Envelope, PencilSquare, Person, PlusCircle } from 'react-bootstrap-icons';
+import { CloudUpload, Envelope, PencilSquare, PlusCircle } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { Button } from 'primereact/button';
@@ -16,9 +16,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
 import * as yup from 'yup';
-import { createLocation, deleteLocation, updateLocation } from '../../../../../APIs/location-api';
 import { getDesktopUser } from '../../../../../APIs/settings-user-api';
-import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import style from '../users.module.scss';
 
@@ -42,7 +40,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
     const [show, setShow] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const { control, register, reset, handleSubmit, setValue, formState: { errors } } = useForm({
+    const { control, register, reset, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
 

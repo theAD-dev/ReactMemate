@@ -1,17 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Modal, Row } from "react-bootstrap";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Editor } from "primereact/editor";
-import { Dropdown } from "primereact/dropdown";
-import { AutoComplete } from "primereact/autocomplete";
-import { InputText } from "primereact/inputtext";
 import { useQuery } from "@tanstack/react-query";
-
-import style from "./send-email.module.scss";
-import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 import clsx from 'clsx';
+import { AutoComplete } from "primereact/autocomplete";
+import { Dropdown } from "primereact/dropdown";
+import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
+import style from "./send-email.module.scss";
+import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -78,12 +77,12 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
         setSubject([]);
         setText([]);
         setEmailTemplatedId(null);
-    }
+    };
 
     const handleClose = () => {
         setShow(false);
         if (!defaultTemplateId) reset();
-    }
+    };
 
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
@@ -150,8 +149,8 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })
-        })
-    }
+        });
+    };
 
     const search = (event) => {
         const query = event?.query?.toLowerCase() || '';
@@ -211,10 +210,10 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
 
     useEffect(() => {
         if (contactPersons?.length) {
-            let emails = contactPersons.map((data) => (data.email))
+            let emails = contactPersons.map((data) => (data.email));
             setFilteredEmails(emails);
         }
-    }, [contactPersons])
+    }, [contactPersons]);
 
     useEffect(() => {
         setPayload((prev) => ({
@@ -225,7 +224,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })
-        }))
+        }));
     }, [subject, text, from, to, cc, bcc]);
 
     useEffect(() => {
@@ -340,13 +339,13 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                             </div>
                             <Button
                                 className={clsx(style.box, { [style.active]: showCC })}
-                                onClick={() => { setShowCC(!showCC); setCC([]) }}
+                                onClick={() => { setShowCC(!showCC); setCC([]); }}
                             >
                                 CC
                             </Button>
                             <Button
                                 className={clsx(style.box, { [style.active]: showBCC })}
-                                onClick={() => { setShowBCC(!showBCC); setBCC([]) }}
+                                onClick={() => { setShowBCC(!showBCC); setBCC([]); }}
                             >
                                 BCC
                             </Button>
@@ -365,7 +364,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     ref={autoCompleteRef2}
                                     value={cc}
                                     completeMethod={search}
-                                    onChange={(e) => { setCC(e.value) }}
+                                    onChange={(e) => { setCC(e.value); }}
                                     multiple
                                     suggestions={filteredEmails}
                                     onClick={onFocus2}
@@ -394,7 +393,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     ref={autoCompleteRef3}
                                     value={bcc}
                                     completeMethod={search}
-                                    onChange={(e) => { setBCC(e.value) }}
+                                    onChange={(e) => { setBCC(e.value); }}
                                     multiple
                                     suggestions={filteredEmails}
                                     onClick={onFocus3}
@@ -477,7 +476,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                 </div>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default SendDynamicEmailForm
+export default SendDynamicEmailForm;

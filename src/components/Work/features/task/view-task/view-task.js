@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { ArrowRight } from 'react-bootstrap-icons';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Placeholder from 'react-bootstrap/Placeholder';
@@ -6,10 +8,7 @@ import { getTask } from '../../../../../APIs/task-api';
 import { TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import taskdetails from '../../../../../assets/images/task-details.svg';
-
 import '../../../../Business/Pages/management/task/task.css';
-import { ArrowRight } from 'react-bootstrap-icons';
-import { useQuery, useMutation } from '@tanstack/react-query';
 import CreateTask from '../create-task/create-task';
 
 const TaskLoadingView = () => {

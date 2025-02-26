@@ -29,9 +29,8 @@ import SearchFilter from "./search-filter";
 import { getProjectManager } from "../../../../APIs/ClientsApi";
 import { fetchMultipleLost } from "../../../../APIs/SalesApi";
 import { fetchMultipleData } from "../../../../APIs/SalesApi";
+import { formatAUD } from "../../../../shared/lib/format-aud";
 import ConfettiComponent from "../../../layout/ConfettiComponent";
-
-
 
 const leadArray = [
   {
@@ -294,11 +293,7 @@ const TableTopBar = ({
     startFilter(newFilterState);
   };
 
-  const formattedAmount = totalAmount.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
+  const formattedAmount = formatAUD(totalAmount);
   useEffect(() => {
     if (rows?.length) {
       const calculatedFilterAmount = rows.reduce(

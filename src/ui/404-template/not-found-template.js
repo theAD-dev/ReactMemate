@@ -24,7 +24,7 @@ const NotFoundTemplate = () => {
 
                 <img className={clsx(style.searchImg)} src={SearchIcon} alt='search' />
             </div>
-            <h2 className={clsx(style.title)}>Uh oh, we can’t find that page...</h2>
+            <h2 className={clsx(style.title)}>Uh oh, we can't find that page...</h2>
             <p className={clsx(style.subTitle)}>
                 Sorry, the page you are looking for doesn't exist or has been moved. Try searching our site:
             </p>

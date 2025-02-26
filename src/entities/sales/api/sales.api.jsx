@@ -6,4 +6,4 @@ export const deleteSaleQuotation = async (unique_id) => {
         method: 'DELETE',
     };
     return fetchInstance(path, options);
-}
+};

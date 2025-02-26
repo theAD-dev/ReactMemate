@@ -1,12 +1,12 @@
-import { toast } from "sonner";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { getClientById } from "../../../../../APIs/ClientsApi";
 import { resendQuoteEmail } from "../../../../../APIs/management-api";
 import SendDynamicEmailForm from "../../../../../ui/send-email-2/send-email";
 
 const ResendQuoteEmail = ({ viewShow, setViewShow, clientId, projectId, projectCardData }) => {
-    const [payload, setPayload] = useState({});
+    const [, setPayload] = useState({});
 
     const clientQuery = useQuery({
         queryKey: ['getClientById', clientId],
@@ -17,7 +17,7 @@ const ResendQuoteEmail = ({ viewShow, setViewShow, clientId, projectId, projectC
 
     const mutation = useMutation({
         mutationFn: (data) => resendQuoteEmail(projectId, data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             setViewShow(false);
             projectCardData();
             toast.success(`Email send successfully.`);

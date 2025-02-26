@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { CardElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
-import { CardElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-
-import style from './change-payment-method.module.scss'
-import { updatePaymentMethodInfo } from "../../../../../APIs/SettingsGeneral";
 import { ProgressSpinner } from "primereact/progressspinner";
+import style from './change-payment-method.module.scss';
+import { updatePaymentMethodInfo } from "../../../../../APIs/SettingsGeneral";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISH_KEY);
 
@@ -53,7 +52,7 @@ const Wrapper = ({ setVisible, refetch }) => {
         <div className="d-flex gap-2 border rounded p-3">
           <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g opacity="0.1">
-              <rect x="1.5" y="1.5" width="36" height="36" rx="18" stroke="#D92D20" stroke-width="2" />
+              <rect x="1.5" y="1.5" width="36" height="36" rx="18" stroke="#D92D20" strokeWidth="2" />
             </g>
             <path d="M19.5 28.25C14.6675 28.25 10.75 24.3325 10.75 19.5C10.75 14.6675 14.6675 10.75 19.5 10.75C24.3325 10.75 28.25 14.6675 28.25 19.5C28.25 24.3325 24.3325 28.25 19.5 28.25ZM19.5 29.5C25.0228 29.5 29.5 25.0228 29.5 19.5C29.5 13.9772 25.0228 9.5 19.5 9.5C13.9772 9.5 9.5 13.9772 9.5 19.5C9.5 25.0228 13.9772 29.5 19.5 29.5Z" fill="#D92D20" />
             <path d="M18.2519 23.25C18.2519 22.5596 18.8116 22 19.5019 22C20.1923 22 20.7519 22.5596 20.7519 23.25C20.7519 23.9404 20.1923 24.5 19.5019 24.5C18.8116 24.5 18.2519 23.9404 18.2519 23.25Z" fill="#D92D20" />
@@ -84,8 +83,8 @@ const Wrapper = ({ setVisible, refetch }) => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
 const ChangePaymentMethod = ({ visible, setVisible, refetch }) => {
   const headerElement = (
@@ -107,7 +106,7 @@ const ChangePaymentMethod = ({ visible, setVisible, refetch }) => {
         <Wrapper setVisible={setVisible} refetch={refetch} />
       </Elements>
     </Dialog>
-  )
-}
+  );
+};
 
-export default ChangePaymentMethod
+export default ChangePaymentMethod;

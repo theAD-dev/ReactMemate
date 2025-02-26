@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { PlusLg, PencilSquare, ChevronDown, Plus, Trash, ChevronUp, X, PlusCircle, Pencil, Save, Backspace } from "react-bootstrap-icons";
+import { PlusLg, PencilSquare, ChevronDown, ChevronUp, X, PlusCircle, Save, Backspace } from "react-bootstrap-icons";
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Accordion, AccordionTab } from 'primereact/accordion';
@@ -12,12 +12,12 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Skeleton } from 'primereact/skeleton';
 import Button from 'react-bootstrap/Button';
 import { toast } from 'sonner';
+import style from './calculators.module.scss';
+import DeleteConfirmationModal from './delete-confirmation-modal';
 import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { formatMoney } from '../../../Business/shared/utils/helper';
 import Sidebar from '../Sidebar';
-import style from './calculators.module.scss';
-import DeleteConfirmationModal from './delete-confirmation-modal';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -44,10 +44,6 @@ const Departments = () => {
             ...prev,
             [subindexId]: calculation, // Store calculation data for the specific subindex
         }));
-    };
-
-    const editCalculators = (id) => {
-        if (id) setEdiSubIndex(id);
     };
 
     const handleCreateCalculator = (e, id, i) => {

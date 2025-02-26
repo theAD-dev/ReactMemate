@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/Auth';
-import Components from '../src/ui/memate-select';
 import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
 import QuotationEmail from './components/layout/browser-web/quotation-email';
 import ChangePassword from './components/layout/Login/change-password';
@@ -25,6 +24,7 @@ import Demo from './components/layout/settings/Demo';
 import Suspended from './components/layout/suspended';
 import Logout from './pages/setting/logout/logout';
 import StripeContainer from './ui/strip-payment/strip-payment';
+import Components from '../src/ui/memate-select';
 
 function App() {
   return (

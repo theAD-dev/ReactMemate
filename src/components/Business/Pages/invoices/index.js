@@ -1,19 +1,18 @@
 import React, { useRef, useState } from 'react';
-import { PrimeReactProvider } from 'primereact/api';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Download, Eye, EyeSlash, Filter, Printer, Send } from 'react-bootstrap-icons';
+import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { TieredMenu } from 'primereact/tieredmenu';
 import { toast } from 'sonner';
 import style from './invoice.module.scss';
 import InvoiceTable from './invoices-table';
-import { paidExpense, unpaidExpense } from '../../../../APIs/expenses-api';
+import { paidExpense } from '../../../../APIs/expenses-api';
 import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
-import clsx from 'clsx';
-import { useMutation } from '@tanstack/react-query';
 
 
 
@@ -43,6 +42,7 @@ const InvoicePage = () => {
             toast.success(`Expenses have been successfully marked as paid.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to mark the expenses as paid. Please try again.`);
         }
     });

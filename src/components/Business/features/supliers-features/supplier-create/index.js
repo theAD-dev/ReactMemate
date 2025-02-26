@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from 'react-bootstrap-icons';
-import clsx from 'clsx';
+import { Button } from 'react-bootstrap';
+import { PlusCircle, X } from 'react-bootstrap-icons';
 import { nanoid } from 'nanoid';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';

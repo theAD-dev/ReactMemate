@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-
-// import { MessageChatCircle } from "react-bootstrap-icons";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import CalendarweekCircle from "../../../assets/images/icon/calendar-week.png";
@@ -17,7 +14,7 @@ import LenderPanel from "../../../assets/images/img/lender-panel02.png";
 
 import "./style-model.css";
 
-const InsuranceContact = ({ onAdd }) => {
+const InsuranceContact = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -27,9 +24,6 @@ const InsuranceContact = ({ onAdd }) => {
   const [jobTitle, setJobTitle] = useState('');
   const [pnumber, setPnumber] = useState('');
   const [help, setHelp] = useState('');
-  const handleAdd = () => {
-    handleClose();
-  };
 
   return (
     <>

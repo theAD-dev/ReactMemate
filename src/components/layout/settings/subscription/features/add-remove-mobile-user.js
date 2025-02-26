@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Building, Buildings, Envelope, Person } from "react-bootstrap-icons";
+import { Envelope } from "react-bootstrap-icons";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Button } from 'primereact/button';

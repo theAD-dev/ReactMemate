@@ -1,18 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from "react-bootstrap";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Dialog } from "primereact/dialog";
-import { Editor } from "primereact/editor";
-import { Dropdown } from "primereact/dropdown";
-import { AutoComplete } from "primereact/autocomplete";
-import { InputText } from "primereact/inputtext";
 import { useQuery } from "@tanstack/react-query";
-
-import style from "./send-proposal-email.module.scss";
-import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 import clsx from 'clsx';
+import { AutoComplete } from "primereact/autocomplete";
+import { Dialog } from "primereact/dialog";
+import { Dropdown } from "primereact/dropdown";
+import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
+import style from "./send-proposal-email.module.scss";
+import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -64,7 +63,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save, handleOtherClose }) => {
+const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
@@ -108,7 +107,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
             if (activeTemplateId?.id) setEmailTemplatedId(activeTemplateId.id);
         }
 
-    }, [emailQuery, outgoingEmailTemplateQuery])
+    }, [emailQuery, outgoingEmailTemplateQuery]);
 
     const onSubmit = async () => {
         let errorCount = 0;
@@ -137,8 +136,8 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
         if (errorCount) return;
         setIsLoading(true);
         await save();
-        setIsLoading(false)
-    }
+        setIsLoading(false);
+    };
 
     const footerContent = (
         <div className="d-flex justify-content-end gap-2">
@@ -214,10 +213,10 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
 
     useEffect(() => {
         if (contactPersons?.length) {
-            let emails = contactPersons.map((data) => (data.email))
+            let emails = contactPersons.map((data) => (data.email));
             setFilteredEmails(emails);
         }
-    }, [contactPersons])
+    }, [contactPersons]);
 
     useEffect(() => {
         setPayload((prev) => ({
@@ -228,7 +227,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })
-        }))
+        }));
     }, [subject, text, from, to, cc, bcc]);
 
     useEffect(() => {
@@ -335,13 +334,13 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                         </div>
                         <Button
                             className={clsx(style.box, { [style.active]: showCC })}
-                            onClick={() => { setShowCC(!showCC); setCC([]) }}
+                            onClick={() => { setShowCC(!showCC); setCC([]); }}
                         >
                             CC
                         </Button>
                         <Button
                             className={clsx(style.box, { [style.active]: showBCC })}
-                            onClick={() => { setShowBCC(!showBCC); setBCC([]) }}
+                            onClick={() => { setShowBCC(!showBCC); setBCC([]); }}
                         >
                             BCC
                         </Button>
@@ -360,7 +359,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                                 ref={autoCompleteRef2}
                                 value={cc}
                                 completeMethod={search}
-                                onChange={(e) => { setCC(e.value) }}
+                                onChange={(e) => { setCC(e.value); }}
                                 multiple
                                 suggestions={filteredEmails}
                                 onClick={onFocus2}
@@ -389,7 +388,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                                 ref={autoCompleteRef3}
                                 value={bcc}
                                 completeMethod={search}
-                                onChange={(e) => { setBCC(e.value) }}
+                                onChange={(e) => { setBCC(e.value); }}
                                 multiple
                                 suggestions={filteredEmails}
                                 onClick={onFocus3}
@@ -455,7 +454,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                 </Col>
             </Row>
         </Dialog>
-    )
-}
+    );
+};
 
-export default SendProposalEmailForm
+export default SendProposalEmailForm;

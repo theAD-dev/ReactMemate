@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { InputGroup } from 'react-bootstrap';
-import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
+import { Person, QuestionCircle } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Dropdown } from 'primereact/dropdown';
 import Button from 'react-bootstrap/Button';

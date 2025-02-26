@@ -1,11 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { FilePdf, FilePdfFill, PencilSquare } from 'react-bootstrap-icons';
-import { Dialog } from 'primereact/dialog';
-import { Button } from 'primereact/button';
-import { CheckCircleFill } from "react-bootstrap-icons";
-import clsx from 'clsx';
-import style from './sale-history.module.scss';
+import React, { useState } from 'react';
+import { FilePdf } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
+import { Dialog } from 'primereact/dialog';
+import style from './sale-history.module.scss';
 import NodataImg from "../../../../../assets/images/img/NodataImg.png";
 
 const SaleHistory = ({ history, setHistory }) => {
@@ -28,7 +26,7 @@ const SaleHistory = ({ history, setHistory }) => {
                                     {key}
                                 </Link>
                             </div>
-                        )
+                        );
                     })
                 }
 
@@ -42,7 +40,7 @@ const SaleHistory = ({ history, setHistory }) => {
                 }
             </div>
         </Dialog>
-    )
-}
+    );
+};
 
-export default SaleHistory
+export default SaleHistory;

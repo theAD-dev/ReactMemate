@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { updateProjectScheduleById } from '../../../../../APIs/management-api';
 import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
