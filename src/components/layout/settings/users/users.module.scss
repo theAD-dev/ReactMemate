@@ -51,8 +51,7 @@
   .privilege {
     border-radius: 16px;
     border: 1px solid var(--Success-200, #abefc6);
-    background: var(--Success-50, #ecfdf3);
-    
+    background: var(--Success-50, #ecfdf3);  
     padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
     color: var(--Success-700, #067647);
     text-align: center;
@@ -135,7 +134,6 @@
     border-radius: 16px;
     border: 1px solid var(--Success-200, #abefc6);
     background: var(--Success-50, #ecfdf3);
-    
     padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
     color: var(--Success-700, #067647);
     text-align: center;
@@ -159,8 +157,7 @@
     align-items: center;
     border-radius: 16px;
     border: 1px solid var(--Blue-200, #b2ddff);
-    background: var(--Blue-50, #eff8ff);
-    
+    background: var(--Blue-50, #eff8ff); 
   }
 
   .disconnected {
@@ -176,8 +173,7 @@
     align-items: center;
     border-radius: 16px;
     border: 1px solid var(--Error-200, #fecdca);
-    background: var(--Error-50, #fef3f2);
-    
+    background: var(--Error-50, #fef3f2);  
   }
 }
 
