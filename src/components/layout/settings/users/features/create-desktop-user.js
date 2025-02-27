@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { CloudUpload, Envelope, PencilSquare, PlusCircle } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
+import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -102,7 +103,6 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
                 body: formData,
             });
 
-            const data = await response.json();
             setIsLoading(false);
             if (response.ok) {
                 handleClose();
@@ -253,7 +253,19 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
                                 :
                                 <div className="d-flex flex-column gap-1 mb-4">
                                     <label className={clsx(style.label)}>Phone (optional)</label>
-                                    <InputText {...register("phone")} className={clsx(style.inputText, "outline-none")} placeholder='Enter phone number' />
+                                    <Controller
+                                        name="phone"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <PhoneInput
+                                                defaultCountry='au'
+                                                value={typeof field.value === 'string' ? field.value : ''}
+                                                className='phoneInput rounded'
+                                                onChange={field.onChange}
+                                                placeholder='Enter phone number'
+                                            />
+                                        )}
+                                    />
                                 </div>
                             }
                         </Col>

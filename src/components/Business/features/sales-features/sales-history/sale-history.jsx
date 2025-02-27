@@ -16,7 +16,7 @@ const SaleHistory = ({ history, setHistory }) => {
 
     return (
         <Dialog visible={visible} modal header={headerElement} className={`${style.modal} custom-modal`} onHide={() => setHistory(null)}>
-            <div className='d-flex justify-content-start gap-4 align-items-center'>
+            <div className='d-flex justify-content-start flex-wrap gap-4 align-items-center'>
                 {
                     Object.entries(history).map(([key, value]) => {
                         return (

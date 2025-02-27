@@ -88,7 +88,7 @@
 }
 
 .active {
-  background: #ebf8ff;
+  background: #ebf8ff !important;
 }
 
 .selectedCount {
@@ -137,7 +137,7 @@
     border: 1px solid var(--Success-200, #abefc6);
     background: #ecfdf3;
     padding: 4px 8px 4px 8px;
-    mix-blend-mode: multiply;
+    
     svg {
       fill: #079455;
     }
@@ -162,7 +162,7 @@
     border-radius: 16px;
     border: 1px solid var(--Warning-200, #fedf89);
     background: var(--Warning-50, #fffaeb);
-    mix-blend-mode: multiply;
+    
     padding: 4px 8px;
     svg {
       fill: #d92d20;

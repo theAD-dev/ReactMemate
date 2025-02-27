@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PhoneInput } from 'react-international-phone';
 import { NavLink } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
@@ -11,7 +12,6 @@ import ClockHistoryCircle from "../../../assets/images/icon/clock-history-icon.p
 import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
 import ZapCircle from "../../../assets/images/icon/zap.png";
 import LenderPanel from "../../../assets/images/img/lender-panel03.png";
-
 import "./style-model.css";
 
 const AccountingContact = () => {
@@ -124,14 +124,15 @@ const AccountingContact = () => {
                       <Col sm={12}>
                         <div className="formgroup mb-2">
                           <label>Phone (Optional)</label>
-                          <div className={`inputInfo `}>
-                            <input
-                              type="text"
+                          <div className={``}>
+                            <PhoneInput
+                              defaultCountry='au'
                               name="pnumber"
                               value={pnumber}
+                              className='phoneInput rounded'
                               placeholder='+1 (555) 000-0000'
                               onChange={(e) => {
-                                setPnumber(e.target.value);
+                                setPnumber(e);
                               }}
                             />
                           </div>

@@ -36,22 +36,26 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
         formData.append("note", data.note);
 
         data.addresses.forEach((address, index) => {
-            formData.append(`addresses[${index}]city`, address.city);
-            formData.append(`addresses[${index}]title`, address.title);
-            formData.append(`addresses[${index}]address`, address.address);
-            formData.append(`addresses[${index}]is_main`, address.is_main);
-            formData.append(`addresses[${index}]postcode`, address.postcode);
-            if (address?.id) formData.append(`addresses[${index}]id`, address?.id);
+            if (address.city) {
+                formData.append(`addresses[${index}]city`, address.city);
+                formData.append(`addresses[${index}]title`, address.title);
+                formData.append(`addresses[${index}]address`, address.address);
+                formData.append(`addresses[${index}]is_main`, address.is_main);
+                formData.append(`addresses[${index}]postcode`, address.postcode);
+                if (address?.id) formData.append(`addresses[${index}]id`, address?.id);
+            }
         });
 
         data.contact_persons.forEach((person, index) => {
-            formData.append(`contact_persons[${index}]firstname`, person.firstname);
-            formData.append(`contact_persons[${index}]lastname`, person.lastname);
-            formData.append(`contact_persons[${index}]email`, person.email);
-            formData.append(`contact_persons[${index}]phone`, person.phone);
-            formData.append(`contact_persons[${index}]position`, person.position);
-            formData.append(`contact_persons[${index}]is_main`, person.is_main);
-            if (person?.id) formData.append(`contact_persons[${index}]id`, person?.id);
+            if (person.firstname || person.email) {
+                formData.append(`contact_persons[${index}]firstname`, person.firstname);
+                formData.append(`contact_persons[${index}]lastname`, person.lastname);
+                formData.append(`contact_persons[${index}]email`, person.email);
+                formData.append(`contact_persons[${index}]phone`, person.phone);
+                formData.append(`contact_persons[${index}]position`, person.position);
+                formData.append(`contact_persons[${index}]is_main`, person.is_main);
+                if (person?.id) formData.append(`contact_persons[${index}]id`, person?.id);
+            }
         });
 
         if (photo?.croppedImageBlob) {

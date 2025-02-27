@@ -1,9 +1,8 @@
-import { PrimeReactProvider } from 'primereact/api';
 import React, { useRef, useState } from 'react';
-
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
+import { PrimeReactProvider } from 'primereact/api';
 import { useDebounce } from 'primereact/hooks';
 import { SupplierTable } from './supplier-table';
 import style from './suppliers.module.scss';

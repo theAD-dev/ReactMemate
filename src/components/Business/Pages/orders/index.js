@@ -41,14 +41,7 @@ const OrderPage = () => {
                                 <>
                                     <div className='filtered-box'>
                                         <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20}/></button>
-                                        <TieredMenu model={[{
-                                            label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
-                                                {
-                                                    isShowDeleted ? (<>Hide Deleted <EyeSlash /></>)
-                                                        : (<>Show Deleted <Eye /></>)
-                                                }
-                                            </div>,
-                                        }]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
+                                        <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
