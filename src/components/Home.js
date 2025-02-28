@@ -357,7 +357,7 @@ const Home = () => {
                                 backgroundRepeat: 'no-repeat',
                             }} >
                                 <div className='textOverly'>
-                                    <h3>Bookkeeping</h3>
+                                    <h3>Book keeping</h3>
                                     <Button variant="link">
                                         <BookkeepingContact />
                                     </Button>
