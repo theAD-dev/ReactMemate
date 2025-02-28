@@ -1,9 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { PencilSquare } from 'react-bootstrap-icons';
 import { CheckCircleFill } from "react-bootstrap-icons";
+import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { toast } from 'sonner';
+import { changePassword } from './api/change-password-api';
 import style from './change-password.module.scss';
 
 const ChangePassword = () => {
@@ -18,7 +21,22 @@ const ChangePassword = () => {
         general: ''
     });
     const [strength, setStrength] = useState('');
-    const [loading, setLoading] = useState(false);
+    const mutation = useMutation({
+        mutationFn: changePassword,
+        onSuccess: () => {
+            toast.success('Password updated successfully!'),
+                setVisible(false);
+        },
+        onError: (error) => {
+            const errorMessage = error.response?.data?.message ||
+                (error.response?.data && Object.entries(error.response.data)
+                    .map(([field, messages]) => `${Array.isArray(messages) ? messages.join(', ') : messages}`)
+                    .join('; ')) ||
+                error.message ||
+                'Error updating password';
+            toast.error(errorMessage);
+        },
+    });
 
     const validatePassword = (password) => {
         const required = password.trim().length > 0;
@@ -67,35 +85,30 @@ const ChangePassword = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setPasswordError({ oldPassword: '', password: '', confirmedPassword: '', general: '' });
+        const errors = { oldPassword: '', password: '', confirmedPassword: '', general: '' };
 
-        // Check required fields
-        if (!oldPassword.trim()) {
-            setPasswordError(prev => ({ ...prev, oldPassword: 'Old password is required' }));
-            return;
-        }
-        if (!password.trim()) {
-            setPasswordError(prev => ({ ...prev, password: 'New password is required' }));
-            return;
-        }
-        if (!confirmedPassword.trim()) {
-            setPasswordError(prev => ({ ...prev, confirmedPassword: 'Confirm password is required' }));
+        if (!oldPassword.trim()) errors.oldPassword = 'Old password is required';
+        if (!password.trim()) errors.password = 'New password is required';
+        if (!confirmedPassword.trim()) errors.confirmedPassword = 'Confirm password is required';
+
+        if (errors.oldPassword || errors.password || errors.confirmedPassword) {
+            setPasswordError(errors);
             return;
         }
 
         const { length, uppercase, specialChar } = validationResult;
-
         if (!length || !uppercase || !specialChar) {
-            setPasswordError(prev => ({ ...prev, general: 'Password does not meet the criteria' }));
+            errors.general = 'Password does not meet the criteria';
+        } else if (password !== confirmedPassword) {
+            errors.general = 'Passwords do not match';
+        }
+
+        if (errors.general) {
+            setPasswordError(errors);
             return;
         }
 
-        if (password !== confirmedPassword) {
-            setPasswordError(prev => ({ ...prev, general: 'Passwords do not match' }));
-            return;
-        }
-
-        setLoading(true);
+        mutation.mutate({ current_password: oldPassword, new_password: password });
     };
 
     const headerElement = (
@@ -114,7 +127,7 @@ const ChangePassword = () => {
     const footerContent = (
         <div className="d-flex justify-content-end align-items-center gap-3">
             <Button label="Cancel" className="outline-button outline-none" onClick={() => setVisible(false)} />
-            <Button label={loading ? "Loading..." : "Change Password"} className="success-button outline-none" onClick={handleSubmit} />
+            <Button loading={mutation.isPending} disabled={mutation.isPending} label={"Change Password"} className="success-button outline-none" onClick={handleSubmit} />
         </div>
     );
 
