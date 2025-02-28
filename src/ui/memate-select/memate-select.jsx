@@ -1,9 +1,9 @@
 import React, { useState, forwardRef } from "react";
-import PropTypes from "prop-types";
+import { ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import Select from "react-select";
 import { defaultTheme } from "react-select";
-import { ChevronDown, ChevronUp } from "react-bootstrap-icons";
 import classNames from "classnames";
+import PropTypes from "prop-types";
 import styles from "./memate-select.module.scss";
 
 const { colors } = defaultTheme;

@@ -9,12 +9,12 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Skeleton } from 'primereact/skeleton';
 import Table from 'react-bootstrap/Table';
 import { toast } from 'sonner';
+import CreateLocation from './features/create-location';
+import style from './location.module.scss';
 import { getDesktopUserList, getLocation, getLocationList, userAssigned, userUnassigned } from '../../../../APIs/location-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import GoogleMap from "../../../../assets/images/icon/google_maps_ico.png";
 import Sidebar from '../Sidebar';
-import CreateLocation from './features/create-location';
-import style from './location.module.scss';
 
 const Location = () => {
     const { trialHeight } = useTrialHeight();

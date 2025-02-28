@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, InputGroup, ListGroup, Modal, Row, Spinner } from 'react-bootstrap';
-import { QuestionCircle, Trash } from 'react-bootstrap-icons';
+import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
+import { Trash } from 'react-bootstrap-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import * as yup from 'yup';
 import style from './create-merge-calculation.module.scss';
 import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
-import mergeItemsImg from "../../../../../../assets/images/img/merge-items.svg";
 import { romanize } from '../../../../shared/utils/helper';
 
 
@@ -22,10 +21,10 @@ const schema = yup
   })
   .required();
 
-const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, setMerges, refetch }) => {
+const CreateMergeCalculation = ({ selectItem, setSelectItem, merges, setMerges }) => {
   const [show, setShow] = useState(false);
   const romanNo = romanize((merges?.length || 0) + 1);
-  const [defaultValues, setDefaultValues] = useState({
+  const [defaultValues, ] = useState({
     title: '',
     description: ''
   });
@@ -34,20 +33,6 @@ const CreateMergeCalculation = ({ unique_id, selectItem, setSelectItem, merges, 
   });
 
   useEffect(() => { reset(); }, [selectItem]);
-
-  const mutation = useMutation({
-    mutationFn: (data) => createNewMergeQuote(data),
-    onSuccess: (response) => {
-      refetch();
-      setSelectItem({});
-      handleClose();
-      toast.success(`New merge items created successfully.`);
-    },
-    onError: (error) => {
-      console.error('Error creating task:', error);
-      toast.error(`Failed to create new merge items. Please try again.`);
-    }
-  });
 
   const onSubmit = (data) => {
     const payload = {

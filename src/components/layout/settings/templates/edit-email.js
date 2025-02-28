@@ -9,18 +9,16 @@ import { Editor } from "primereact/editor";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
 import * as yup from 'yup';
-import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
-import Sidebar from '../Sidebar';
 import BreadCrumbPage from './bread-crumb';
 import style from './job-template.module.scss';
+import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
+import Sidebar from '../Sidebar';
 
 
 const EditEmail = () => {
     const [activeTab, setActiveTab] = useState('email-templates');
     const location = useLocation();
-    const [ingredient, setIngredient] = useState('');
     const [text, setText] = useState('');
     const { departments } = location.state || {};
     const [cardData, setCardData] = useState(null);
@@ -37,7 +35,7 @@ const EditEmail = () => {
       });
 
   
-      const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
+      const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
     });
 

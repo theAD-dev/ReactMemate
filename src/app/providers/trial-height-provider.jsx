@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useRef } from "react";
+import { createContext, useContext, useState } from "react";
 const TrialHeightContext = createContext();
 
 export const TrialHeightProvider = ({ children }) => {
@@ -8,7 +8,7 @@ export const TrialHeightProvider = ({ children }) => {
         <TrialHeightContext.Provider value={{ trialHeight, setTrialHeight }}>
             {children}
         </TrialHeightContext.Provider>
-    )
-}
+    );
+};
 
 export const useTrialHeight = () => useContext(TrialHeightContext);

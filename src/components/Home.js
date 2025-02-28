@@ -9,11 +9,11 @@ import Container from 'react-bootstrap/Container';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { fetchHomePage } from "../APIs/HomeApi";
 import AccountingContact from './layout/modals/accounting-contact';
 import BookkeepingContact from './layout/modals/book-keeping-contact';
 import InsuranceContact from './layout/modals/insurance-contact';
 import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
+import { fetchHomePage } from "../APIs/HomeApi";
 import homeboxImg01 from "../assets/images/img/homeboxImg01.png";
 import homeboxImg02 from "../assets/images/img/homeboxImg02.png";
 import homeboxImg03 from "../assets/images/img/homeboxImg03.png";
@@ -357,7 +357,7 @@ const Home = () => {
                                 backgroundRepeat: 'no-repeat',
                             }} >
                                 <div className='textOverly'>
-                                    <h3>Bookkeeping</h3>
+                                    <h3>Book keeping</h3>
                                     <Button variant="link">
                                         <BookkeepingContact />
                                     </Button>

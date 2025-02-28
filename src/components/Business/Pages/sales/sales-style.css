@@ -22,7 +22,6 @@
   border-radius: 16px;
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-50, #ebf8ff);
-  mix-blend-mode: multiply;
   color: var(--Primary-500, #1ab2ff);
   text-align: center;
   font-family: Inter;
@@ -527,7 +526,6 @@ div#popoverStyleChange {
   border-radius: 16px;
   border: 1px solid var(--colorG2);
   background: var(--color9);
-  mix-blend-mode: multiply;
   color: var(--colorG1);
   text-align: center;
   font-size: 12px;
@@ -2500,7 +2498,6 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   border-radius: 16px;
   border: 1px solid var(--Success-200, #abefc6);
   background: var(--Success-50, #ecfdf3);
-  mix-blend-mode: multiply;
 }
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green span.text {
   color: var(--Success-700, var(--Success-700, #067647));
@@ -2514,7 +2511,6 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   border-radius: 16px;
   border: 1px solid var(--Blue-200, #b2ddff);
   background: var(--Blue-50, #eff8ff);
-  mix-blend-mode: multiply;
 }
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue span.text {
   color: var(--Blue-700, #175cd3);

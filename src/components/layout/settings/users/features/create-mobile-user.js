@@ -29,7 +29,7 @@ const schema = yup
     })
     .required();
 
-const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, refetch }) => {
+const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }) => {
     const [show, setShow] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);

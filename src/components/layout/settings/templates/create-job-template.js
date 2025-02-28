@@ -10,10 +10,10 @@ import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import style from './job-template.module.scss';
 import { createJobTemplate, deleteJobTemplate, getJobTemplate, updateJobTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
-import style from './job-template.module.scss';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -67,9 +67,6 @@ const CreateJobTemplate = () => {
     const [text, setText] = useState('');
     const [type, setType] = useState('2');
     const [cost, setCost] = useState(0.00);
-    const [time_type, set_time_type] = useState('');
-    const [start, setStart] = useState("");
-    const [end, setEnd] = useState("");
     const [duration, setDuration] = useState("");
 
     const [errors, setErrors] = useState({});

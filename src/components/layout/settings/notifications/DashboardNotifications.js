@@ -1,40 +1,9 @@
 import React, { useState } from 'react';
-import { PlusLg } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
-import CloseIcon from '@mui/icons-material/Close';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Sidebar from '../Sidebar';
-
 
 const DashboardNotifications = () => {
     const [activeTab, setActiveTab] = useState('dashboard-notifications');
-    const [showModal, setShowModal] = useState(false);
-    const [dname, setDname] = useState('');
-    const [departments, setDepartments] = useState([]);
-
-    const createIndex = () => {
-      setShowModal(true);
-    };
-    
-    const handleClose = () => {
-      setShowModal(false);
-    };
-
-    const handleSave = () => {
-      if (dname.trim()) {
-        setDepartments([...departments, dname]);
-        setDname('');
-        setShowModal(false);
-      }
-    };
 
     return (
         <>

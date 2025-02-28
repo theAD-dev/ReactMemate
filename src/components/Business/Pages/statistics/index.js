@@ -1,10 +1,9 @@
-import { PrimeReactProvider } from 'primereact/api';
 import React from 'react';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 

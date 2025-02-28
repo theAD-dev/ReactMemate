@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { QuestionCircle } from "react-bootstrap-icons";
 import { useMutation } from "@tanstack/react-query";
 import { Badge } from "primereact/badge";
@@ -17,6 +17,7 @@ export default function PaidDialog({ visible, setVisible, details, setRefetch })
             toast.success(`Expenses have been successfully marked as paid.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to mark the expenses as paid. Please try again.`);
         }
     });

@@ -7,12 +7,12 @@ import clsx from 'clsx';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
+import style from './business-client.module.scss';
 import { getClientIndustries, markeMainAddress, markeMainContact } from '../../../../../APIs/ClientsApi';
 import mapicon from '../../../../../assets/images/google_maps_ico.png';
 import BusinessClientEdit from '../business-client-edit/business-client-edit';
 import DeleteClient from '../delete-client';
 import Restore from '../restore-client';
-import style from './business-client.module.scss';
 
 
 const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {

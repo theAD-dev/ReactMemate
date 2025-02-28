@@ -571,7 +571,6 @@ ul.listStyle li:last-child {
   border-radius: 28px;
   border: 4px solid var(--Gray-50, #f9fafb);
   background: var(--Gray-100, #f2f4f7);
-  mix-blend-mode: multiply;
   width: 32px;
   height: 32px;
   text-align: center;
@@ -593,7 +592,7 @@ ul.listStyle li:last-child {
   border-radius: 28px;
   border: 4px solid var(--Primary-50, #ebf8ff);
   background: var(--Primary-100, #bae8ff);
-  mix-blend-mode: multiply;
+  
   width: 32px;
   height: 32px;
   justify-content: center;
@@ -1339,7 +1338,7 @@ div#controlled-tab-example-tabpane-Status
   border-radius: 16px;
   border: 1px solid #fff0c1;
   background: #fffaeb;
-  mix-blend-mode: multiply;
+  
   color: #ffc301;
   text-align: center;
   font-family: Inter;
@@ -1366,7 +1365,7 @@ div#controlled-tab-example-tabpane-Status
 .statusInfo a,
 .NameStatus {
   border-radius: 16px;
-  mix-blend-mode: multiply;
+  
   text-align: center;
   font-size: 12px;
   font-style: normal;

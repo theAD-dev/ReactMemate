@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { PencilSquare, Telephone, Building, Link45deg, Upload } from "react-bootstrap-icons";
+import { PencilSquare, Telephone, Link45deg, Upload } from "react-bootstrap-icons";
 import { Controller, useForm } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import { Link, useNavigate } from 'react-router-dom';
@@ -37,9 +37,7 @@ const schema = yup.object().shape({
 });
 
 function GeneralInformation() {
-  const navigate = useNavigate();
   const { trialHeight } = useTrialHeight();
-  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('generalinformation');
   const [isEditingGroup, setIsEditingGroup] = useState(false);
   const [photo, setPhoto] = useState({});

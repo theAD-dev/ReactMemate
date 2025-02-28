@@ -7,10 +7,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { Editor } from "primereact/editor";
 import { toast } from 'sonner';
+import style from './terms-.module.scss';
 import { getInvoiceTerms, updateTerms } from "../../../../APIs/terms-and-condition";
 import { renderHeader } from '../../../../shared/ui/editor/editor-header-template';
 import Sidebar from '../Sidebar';
-import style from './terms-.module.scss';
 
 
 

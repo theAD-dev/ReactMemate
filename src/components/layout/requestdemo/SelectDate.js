@@ -1,13 +1,13 @@
 import React from 'react';
+import { InlineWidget } from "react-calendly";
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { requestDemoCreate } from "../../../APIs/OnboardingApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import "./requestademo.css";
 import request04 from "../../../assets/images/img/request04.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
-import { useLocation } from 'react-router-dom';
-import { requestDemoCreate } from "../../../APIs/OnboardingApi";
-import { InlineWidget } from "react-calendly";
 
 
 const SelectDate = () => {
@@ -66,18 +66,16 @@ const SelectDate = () => {
                     <div className="step active" ></div>
                     <div className="step" ></div>
                   </div>
-                  <div className="formgroup ">
-                  
-                   
-                  </div>
-      
-                 
-                  <InlineWidget 
-        url="https://calendly.com/memate/memate-demo" 
-        styles={{ height: '700px' }} 
-      />
 
-                 {/* <img className="" src={datecal} alt="datecal" /> */}
+                  <InlineWidget
+                    url="https://calendly.com/memate/memate-demo"
+                    styles={{ height: '700px' }}
+                    prefill={{
+                      name: `${first_name} ${last_name}`,
+                      email: email,
+                    }}
+                  />
+
                   <button
                     type='button'
                     className="fillbtn flexcenterbox"

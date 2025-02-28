@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { PrimeReactProvider } from 'primereact/api';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Button } from 'react-bootstrap';
-import { CheckCircle, Download, Eye, EyeSlash, Filter, Send, XCircle } from 'react-bootstrap-icons';
+import { CheckCircle, Download, Filter, Send, XCircle } from 'react-bootstrap-icons';
+import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { TieredMenu } from 'primereact/tieredmenu';
@@ -12,8 +13,6 @@ import ExpensesTable from './expenses-table';
 import style from './expenses.module.scss';
 import { paidExpense, sendExpenseToXeroApi, unpaidExpense } from '../../../../APIs/expenses-api';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
-import clsx from 'clsx';
-import { useMutation } from '@tanstack/react-query';
 
 const ExpensesPage = () => {
     const dt = useRef(null);
@@ -41,6 +40,7 @@ const ExpensesPage = () => {
             toast.success(`Expense successfully sent to Xero!`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to send the expense to xero. Please try again.`);
         }
     });
@@ -58,6 +58,7 @@ const ExpensesPage = () => {
             toast.success(`Expenses have been successfully marked as paid.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to mark the expenses as paid. Please try again.`);
         }
     });
@@ -70,6 +71,7 @@ const ExpensesPage = () => {
             toast.success(`Expenses have been successfully marked as unpaid.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to mark the expenses as unpaid. Please try again.`);
         }
     });

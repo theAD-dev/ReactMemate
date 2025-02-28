@@ -3,7 +3,6 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { Dialog } from "primereact/dialog";
-import { InputNumber } from 'primereact/inputnumber';
 import { ProgressSpinner } from "primereact/progressspinner";
 import Button from "react-bootstrap/Button";
 import { toast } from "sonner";
@@ -130,7 +129,7 @@ const GoogleIntegrations = ({ visible, setVisible, data, refetch }) => {
                         <li>Dashboard: Once logged in, navigate to the "Home" tab on your GMB dashboard.</li>
 
                         <h3>Step 3: Get More Reviews</h3>
-                        <li>Find the ‘Get more reviews’ Card: In the "Home" tab, look for a card or section titled "Get more reviews". This section provides a direct link that you can share with customers to write reviews.</li>
+                        <li>Find the Get more reviews Card: In the "Home" tab, look for a card or section titled "Get more reviews". This section provides a direct link that you can share with customers to write reviews.</li>
                         <li>Copy Your Link: Click on the "Share review form" button or similar option to copy your unique link.</li>
                     </ul>
                 </div>

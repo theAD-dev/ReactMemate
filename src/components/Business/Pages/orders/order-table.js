@@ -131,7 +131,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     const realCostPercentage = getPercentage(rowData.real_cost, rowData.budget);
 
     return <div
-      className={`d-flex justify-content-center align-items-center ${style.piCircleStyle} ${style.RealCostCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.RealCostCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
@@ -174,7 +174,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const labourBody = (rowData) => {
     const labor_expenses_percentage = getPercentage(rowData.labor_expenses, rowData.budget);
     return <div
-      className={`d-flex justify-content-center align-items-center ${style.piCircleStyle} ${style.labourCostCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.labourCostCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
 
@@ -217,7 +217,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const costofSaleBody = (rowData) => {
     const cost_of_sale_percentage = getPercentage(rowData.cost_of_sale, rowData.budget);
     return <div
-      className={`d-flex justify-content-center align-items-center ${style.piCircleStyle} ${style.saleCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.saleCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
@@ -259,7 +259,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const OperatingExpenseBody = (rowData) => {
     const operating_expense_percentage = getPercentage(rowData.operating_expense, rowData.budget);
     return <div onClick={setVisible}
-      className={`d-flex justify-content-center align-items-center  ${style.piCircleStyle} ${style.operCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.operCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>

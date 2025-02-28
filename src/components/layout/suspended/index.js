@@ -1,29 +1,35 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import styles from './index.module.scss';
+import { Link } from 'react-router-dom';
+import styles from './suspended.module.scss';
+import suspendedImage from '../../../assets/suspended-mask.svg';
 
 const Suspended = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
-    const isAdmin = profileData?.type === "Admin" ? true : false;
-    
+    const isAdmin = !(profileData?.type === "Admin") ? true : false;
+
     return (
         <Row>
             <Col sm={6} className={styles.leftSection}>
                 <div className="logohead"><img src="/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt="Loin Logo" /></div>
-                <div style={{ width: '568px', maxWidth: "calc(100% - 0px)" }} className='d-flex flex-column justify-content-center align-items-center text-center m-auto'>
-                    <h1 className={styles.heading}>
-                        {
-                            isAdmin ? "Authentication filed because your account has been suspended."
-                                : "It looks like the organization's account is suspended."
-                        }
+                <div style={{ width: '568px', maxWidth: "calc(100% - 0px)" }} className='d-flex flex-column align-items-center text-center m-auto'>
+                    <div className={styles.topHeading}>
+                        <h1 className={styles.heading}>
+                            {
+                                isAdmin ? "Authentication filed because your account has been suspended."
+                                    : "It looks like the organization's account is suspended."
+                            }
 
-                    </h1>
-                    <p className={styles.subHeading}>
-                        {isAdmin ? "If you believe your account was suspended due to non-payment of the outstanding balance, you can pay now using the link below."
-                            : "Please contact your company admin."}
-                    </p>
+                        </h1>
+                        <p className={styles.subHeading}>
+                            {isAdmin ? "If you believe your account was suspended due to non-payment of the outstanding balance, you can pay now using the link below."
+                                : "Please contact your company admin."}
+                        </p>
+                    </div>
 
-                    {isAdmin && <button className={styles.payButton}>Pay Outstanding Balance</button>}
+                    <img src={suspendedImage} className='w-100' />
+
+                    {isAdmin && <Link to={"/account-overdue"}><button className={styles.payButton}>Pay Outstanding Balance</button></Link>}
                 </div>
                 <div className="copywrite">© Memate {new Date().getFullYear()}</div>
             </Col>

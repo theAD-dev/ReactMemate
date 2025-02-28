@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import style from './image-avatar.module.scss';
 import { Building, Person } from 'react-bootstrap-icons';
+import style from './image-avatar.module.scss';
 
 const ImageAvatar = ({ has_photo, photo, is_business }) => {
     const [imgError, setImgError] = useState(false);
@@ -27,7 +27,7 @@ export const FallbackImage = ({ has_photo, photo, is_business, size }) => {
         ) : (
             <Icon color="#667085" size={size}/>
         )}
-    </>
-}
+    </>;
+};
 
 export default ImageAvatar;

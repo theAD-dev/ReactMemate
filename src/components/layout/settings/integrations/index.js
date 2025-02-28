@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Envelope } from "react-bootstrap-icons";
-import { useForm, Controller } from "react-hook-form";
 import { useLocation } from "react-router-dom";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Dialog } from "primereact/dialog";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import * as yup from "yup";
+import EmailIntegrations from "./email-integration";
+import GoogleIntegrations from "./google-review-integration";
+import style from "./integration.module.scss";
+import StripeIntegrations from "./stripe-integrations";
+import TwilioIntegrations from "./twilio-integration";
+import XeroIntegration from "./xero-integration";
 import { getEmailIntegrations, getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations, getXeroIntegrations } from "../../../../APIs/integrations-api";
 import googleAnalyticLogo from "../../../../assets/images/icon/googleAnalyticLogo.png";
 import googleCalLogo from "../../../../assets/images/icon/googleCalLogo.png";
@@ -18,12 +21,6 @@ import stripelogo from "../../../../assets/images/icon/stripeLogo.png";
 import xeroLogo from "../../../../assets/images/icon/xeroLogo.png";
 import twilioLogo from '../../../../assets/images/twilio-logo.png';
 import Sidebar from "../Sidebar";
-import EmailIntegrations from "./email-integration";
-import GoogleIntegrations from "./google-review-integration";
-import style from "./integration.module.scss";
-import StripeIntegrations from "./stripe-integrations";
-import TwilioIntegrations from "./twilio-integration";
-import XeroIntegration from "./xero-integration";
 
 const schema = yup.object().shape({
   emails: yup.array().of(

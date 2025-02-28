@@ -1,5 +1,5 @@
 .active {
-  background: #ebf8ff;
+  background: #ebf8ff !important;
 }
 
 .selectedCount {
@@ -61,7 +61,6 @@
   border-radius: 16px;
   border: 1px solid #fff0c1;
   background: #fffaeb;
-  mix-blend-mode: multiply;
 }
 
 /* Jobs table css */
@@ -115,7 +114,7 @@
   border-radius: 16px;
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-50, #ebf8ff);
-  mix-blend-mode: multiply;
+  
 }
 
 .time.tracker {
@@ -131,7 +130,7 @@
   border-radius: 16px;
   border: 1px solid var(--Success-200, #a9efc5);
   background: var(--Success-50, #ecfdf3);
-  mix-blend-mode: multiply;
+  
 }
 
 .clientImg {
@@ -164,7 +163,7 @@
   border-radius: 16px;
   border: 1px solid var(--Warning-200, #fedf89);
   background: var(--Warning-50, #fffaeb);
-  // mix-blend-mode: multiply;
+  // 
 }
 
 .defaultStatus {
