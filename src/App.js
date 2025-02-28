@@ -22,6 +22,7 @@ import SelectDate from './components/layout/requestdemo/SelectDate';
 import SignUp from './components/layout/requestdemo/SignUp';
 import Demo from './components/layout/settings/Demo';
 import Suspended from './components/layout/suspended';
+import AccountOverdue from './pages/account-overdue/account-overdue';
 import Logout from './pages/setting/logout/logout';
 import StripeContainer from './ui/strip-payment/strip-payment';
 import Components from '../src/ui/memate-select';
@@ -33,12 +34,14 @@ function App() {
         <Route path="*" element={<Login />} />
         <Route path='/logout' element={<Logout />} />
         <Route path='/suspended' element={<Suspended/> }/>
+        <Route path="/account-overdue" element={<AccountOverdue />}/>
+        
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/check-mail" element={<CheckMail />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/profile/change-password/:token" element={<ChangePassword />} />
         <Route path="/request-demo" element={<SignUp />} />
-        <Route path="/selectcountry" element={<SelectCountry />} />
+        <Route path="/select-country" element={<SelectCountry />} />
         <Route path="/companyname" element={<CompanyName />} />
         <Route path="/selectdate" element={<SelectDate />} />
         <Route path="/allset" element={<AllSet />} />

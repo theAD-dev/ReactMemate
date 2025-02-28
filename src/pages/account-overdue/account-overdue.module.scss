@@ -1,0 +1,138 @@
+.leftSection {
+  display: flex;
+  padding: 0px 100px;
+  background-size: contain;
+  background-repeat: no-repeat !important;
+  background-position: center top !important;
+  background: url("../../assets/images/background-pattern-decorative.png");
+}
+
+.topHeading {
+  margin-top: 120px;
+}
+
+.heading {
+  color: var(--Gray-900, #101828);
+  text-align: center;
+
+  /* Display md/Semibold */
+  font-family: Inter;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 44px; /* 122.222% */
+  letter-spacing: -0.72px;
+}
+
+.subHeading {
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+  letter-spacing: 0.16px;
+}
+
+.paymentFormBox {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  margin-top: 32px;
+  border-radius: 4px;
+  align-items: center;
+  background: #F9FAFB;
+  justify-content: space-between;
+}
+
+.payButton {
+  gap: 8px;
+  height: 44px;
+  color: #fff;
+  display: flex;
+  margin-top: 32px;
+  padding: 10px 18px;
+  align-items: center;
+  border-radius: 40px;
+  justify-content: center;
+  background: var(--color1, #158ecc);
+  border: 1px solid var(--color1, #158ecc);
+}
+
+.rightSection {
+  height: 100dvh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #1ab2ff 7.86%, #ffb258 94.98%);
+}
+
+.rightTextBox {
+  display: flex;
+  padding: 24px;
+  width: 588px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.rightTextBox::after {
+  content: "";
+  width: 80px;
+  height: 80px;
+  left: -25.382px;
+  bottom: -24px;
+  position: absolute;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.rightTextBox::before {
+  content: "";
+  width: 72px;
+  height: 72px;
+  position: absolute;
+  right: -32px;
+  top: -31.561px;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.rightSectionContent::before {
+  content: "";
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  right: -65px;
+  top: 0.439px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.rightSectionContent {
+  position: relative;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.rightSectionTextContent {
+  padding: 16px 24px 24px 24px;
+}
+.rightSectionText {
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+  letter-spacing: 0.16px;
+}

@@ -25,7 +25,7 @@ const SignUp = () => {
     }
     
     // If validation passes, navigate to the next step
-    navigate("/selectcountry", { state: { first_name, last_name } });
+    navigate("/select-country", { state: { first_name, last_name } });
   };
 
   return (

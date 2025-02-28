@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import "../Login/login.css";
 import { authenticateUser } from "../../../APIs/LoginApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";

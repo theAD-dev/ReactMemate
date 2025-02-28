@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import styles from './index.module.scss';
+import { Link } from 'react-router-dom';
+import styles from './suspended.module.scss';
 import suspendedImage from '../../../assets/suspended-mask.svg';
 
 const Suspended = () => {
@@ -28,7 +29,7 @@ const Suspended = () => {
 
                     <img src={suspendedImage} className='w-100' />
 
-                    {isAdmin && <button className={styles.payButton}>Pay Outstanding Balance</button>}
+                    {isAdmin && <Link to={"/account-overdue"}><button className={styles.payButton}>Pay Outstanding Balance</button></Link>}
                 </div>
                 <div className="copywrite">© Memate {new Date().getFullYear()}</div>
             </Col>

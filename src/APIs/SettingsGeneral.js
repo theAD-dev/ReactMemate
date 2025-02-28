@@ -75,6 +75,15 @@ export const getPaymentMethodInfo = async () => {
   return fetchAPI(url.toString(), options);
 };
 
+export const retryPayment = async () => {
+  const endpoint = `/subscriptions/retry/`;
+  const options = {
+    method: 'POST'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
 export const updatePaymentMethodInfo = async (data) => {
   const endpoint = `/settings/subscriptions/payment-method/`;
   const options = {
