@@ -1,6 +1,5 @@
-import { ProgressSpinner } from 'primereact/progressspinner'
-import React from 'react'
-
+import React from 'react';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import style from './loader.module.scss';
 
 const Loader = () => {
@@ -10,7 +9,7 @@ const Loader = () => {
                 <ProgressSpinner className={style.spinnerSize} />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Loader
+export default Loader;
