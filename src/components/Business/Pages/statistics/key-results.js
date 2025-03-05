@@ -89,8 +89,8 @@ const KeyResultsPage = () => {
     const statistics = keyResultStaticsQuery?.data?.statistics || [];
     const topStatistics = [...statistics]
         .filter(stat => parseFloat(stat.target_value) > 0)
-        .sort((a, b) => parseFloat(b.sum) - parseFloat(a.sum))
-        .slice(0, 10);
+        .sort((a, b) => parseFloat(b.sum) - parseFloat(a.sum));
+        // .slice(0, 4);
 
     return (
         <PrimeReactProvider className='peoples-page'>
@@ -238,6 +238,7 @@ const KeyResultsPage = () => {
                         let progressWidth = parseFloat(stat.target_value) > 0
                             ? (parseFloat(stat.sum) / parseFloat(stat.target_value) * 100)
                             : 0;
+                        const progressWidthText = progressWidth;
                         progressWidth = progressWidth > 100 ? 100 : progressWidth;
 
                         const progressClass = [
@@ -258,7 +259,7 @@ const KeyResultsPage = () => {
                                         style={{ width: `${progressWidth}%` }}
                                         className={clsx(progressClass || style.progressDefaultClass, style.ProgressInnerBar)}
                                     >
-                                        <div className={style.ProgressInnerBarPercentage} style={{ right: parseInt(progressWidth) > 10 ? '0px' : '-50px' }}>{parseFloat(progressWidth).toFixed(2)}%</div>
+                                        <div className={style.ProgressInnerBarPercentage} style={{ right: parseInt(progressWidth) > 10 ? '0px' : '-50px' }}>{parseFloat(progressWidthText).toFixed(2)}%</div>
                                     </div>
                                 </div>
                                 <div className={style.chartProgressText} style={{ width: '170px', textAlign: 'left' }}>
