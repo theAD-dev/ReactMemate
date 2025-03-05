@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.50c63cb4.css",
-    "main.js": "/static/js/main.02445c52.js",
+    "main.css": "/static/css/main.ecfeb65e.css",
+    "main.js": "/static/js/main.ef1ef46a.js",
     "static/js/692.2280fcce.chunk.js": "/static/js/692.2280fcce.chunk.js",
     "static/js/351.12735450.chunk.js": "/static/js/351.12735450.chunk.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
@@ -106,12 +106,10 @@
     "static/media/Avatar.svg": "/static/media/Avatar.58594ab62b53fb25ff3255321cd11118.svg",
     "static/media/roboto-greek-ext-400-normal.woff2": "/static/media/roboto-greek-ext-400-normal.1df4abad55796d11a0c8.woff2",
     "static/media/Featured icon.svg": "/static/media/Featured icon.f0452deecdd8a0600a95469561a90cfe.svg",
-    "static/media/createPoIcon.svg": "/static/media/createPoIcon.4c633112ffe5250d616d98251ee523a7.svg",
     "static/media/googleReviewIcon.svg": "/static/media/googleReviewIcon.0184cc6ef401c44935cf67effccb9dd0.svg",
     "static/media/roboto-greek-ext-400-normal.woff": "/static/media/roboto-greek-ext-400-normal.16eb83b4a3b1ea994243.woff",
     "static/media/taskEditIcon.svg": "/static/media/taskEditIcon.5073a6098e75cbfe59e3f782e1a2d772.svg",
     "static/media/task-details.svg": "/static/media/task-details.6c24fdfe452b19f485da192519e9cbe3.svg",
-    "static/media/folderFileIcon.svg": "/static/media/folderFileIcon.ea8d1ab0e5f9d712876b6e6f3e9f303d.svg",
     "static/media/exclamation-circle.svg": "/static/media/exclamation-circle.cae916ce28e0a8d8d07a477235f7a993.svg",
     "static/media/checbold.svg": "/static/media/checbold.46982ac8db5260866e48b47073903a71.svg",
     "static/media/unlock.svg": "/static/media/unlock.5229ed0737dba142ff1428b223a851a0.svg",
@@ -120,8 +118,8 @@
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.50c63cb4.css.map": "/static/css/main.50c63cb4.css.map",
-    "main.02445c52.js.map": "/static/js/main.02445c52.js.map",
+    "main.ecfeb65e.css.map": "/static/css/main.ecfeb65e.css.map",
+    "main.ef1ef46a.js.map": "/static/js/main.ef1ef46a.js.map",
     "692.2280fcce.chunk.js.map": "/static/js/692.2280fcce.chunk.js.map",
     "351.12735450.chunk.js.map": "/static/js/351.12735450.chunk.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
@@ -140,7 +138,7 @@
     "reactPlayerPreview.40333d14.chunk.js.map": "/static/js/reactPlayerPreview.40333d14.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.50c63cb4.css",
-    "static/js/main.02445c52.js"
+    "static/css/main.ecfeb65e.css",
+    "static/js/main.ef1ef46a.js"
   ]
 }
