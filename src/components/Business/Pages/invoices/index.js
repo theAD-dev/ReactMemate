@@ -94,7 +94,7 @@ const InvoicePage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter /></button>
+                                        <button className={`${style.filterBox}`}><Filter /></button>
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 

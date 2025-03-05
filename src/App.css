@@ -510,3 +510,12 @@ table.department-calculation tbody tr:hover .checkbox{
 .proposal-accordion .p-accordion-content {
   background: #FBFCFD;
 }
+
+.dropdown-item:hover {
+    background-color: #F2FAFF;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #fff !important;
+    background-color: #1AB2FF !important;
+}

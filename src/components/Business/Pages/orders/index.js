@@ -40,7 +40,7 @@ const OrderPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20}/></button>
+                                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
