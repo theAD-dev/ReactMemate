@@ -1,6 +1,5 @@
 import React from 'react';
 import { ChevronLeft,HouseDoor ,SlashLg} from "react-bootstrap-icons";
-import { BreadCrumb } from 'primereact/breadcrumb';
 import style from './job-template.module.scss';
 
 const BreadCrumbPage = ({ backHandle,templateName }) => {

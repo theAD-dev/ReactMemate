@@ -10,88 +10,87 @@ import Form from 'react-bootstrap/Form';
 import { fetchSales } from "../../../../../APIs/SalesApi";
 import { fetchSalesNotes } from "../../../../../APIs/SalesApi";
 
-const SalesNote = ( props ) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [noteText, setNoteText] = useState(props.noteData || '');
-    const [isEditMode, setIsEditMode] = useState(!props.noteData);
-    const [isViewMode, setIsViewMode] = useState(false);
-  
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-      setIsViewMode(!isEditMode && !isViewMode);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+const SalesNote = (props) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [noteText, setNoteText] = useState(props.noteData || '');
+  const [isEditMode, setIsEditMode] = useState(!props.noteData);
+  const [isViewMode, setIsViewMode] = useState(false);
 
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-    
-    const handleSave = async () => {
-      try {
-        if (!props.saleUniqueId) {
-          console.error('Error: saleUniqueId is not defined');
-          return;
-        }
-    
-        setNoteText(noteText);
-        const saleUniqueId = props.saleUniqueId;
-        const updatedNote = noteText;
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsViewMode(!isEditMode && !isViewMode);
+  };
 
-        fetchSalesNotes(saleUniqueId, updatedNote);
-        fetchSales();
-    
-        setIsEditMode(false);
-        handleClose();
-      } catch (error) {
-        console.error('Error saving note:', error);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  const handleSave = async () => {
+    try {
+      if (!props.saleUniqueId) {
+        console.error('Error: saleUniqueId is not defined');
+        return;
       }
-    };
-    
+
+      setNoteText(noteText);
+      const saleUniqueId = props.saleUniqueId;
+      const updatedNote = noteText;
+
+      fetchSalesNotes(saleUniqueId, updatedNote);
+      fetchSales();
+
+      setIsEditMode(false);
+      handleClose();
+    } catch (error) {
+      console.error('Error saving note:', error);
+    }
+  };
+
   return (
     <>
-     <div  className={`saleNoteBorder noteInfo ${noteText ? "Yes" : "No"}`} aria-describedby={id} variant="contained" onClick={handleClick}>
-    {isViewMode ? (
-     
+      <div className={`saleNoteBorder noteInfo ${noteText ? "Yes" : "No"}`} aria-describedby={id} onClick={handleClick}>
+        {isViewMode ? (
           <span style={{ cursor: 'pointer' }} onClick={() => setIsViewMode(false)}>
-         Note <CheckLg color="#17B26A" size={16} />
-        </span>
-      ) : (
-      <strong>
-      {noteText ? (
-            <span style={{ cursor: 'pointer' }} onClick={() => setIsEditMode(true)}>
-             Note <CheckLg color="#17B26A" size={16} />
-            </span>
-          ) : (
-            <span style={{ cursor: 'pointer' }}>
-              Note <PlusLg color="#667085" size={16} />
-            </span>
-          )}
-      </strong>
-      )}
-       </div>
+            Note <CheckLg color="#17B26A" size={16} />
+          </span>
+        ) : (
+          <strong>
+            {noteText ? (
+              <span style={{ cursor: 'pointer' }} onClick={() => setIsEditMode(true)}>
+                Note <CheckLg color="#17B26A" size={16} />
+              </span>
+            ) : (
+              <span style={{ cursor: 'pointer' }}>
+                Note <PlusLg color="#667085" size={16} />
+              </span>
+            )}
+          </strong>
+        )}
+      </div>
       <Popover
         id={id}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
         PaperProps={{
-            style: {
-              width: '460px', 
-            },
-            id: 'popoverStyleChange'
-          }}
+          style: {
+            width: '460px',
+          },
+          id: 'popoverStyleChange'
+        }}
       >
-      <Form>
+        <Form>
           <div className='popoverHead popoverHeadflex salesTableWrap'>
             <span>
               <div className='iconOutStyle'>
@@ -107,18 +106,18 @@ const SalesNote = ( props ) => {
           </div>
 
           <div className='popupcrossInfomain'>
-            
-          <Typography sx={{ p: '16px 24px 24px 24px' }}>
-            <h3>Note</h3>
-            <Form.Control id='placeholderColor'
-              as="textarea"
-              placeholder="Enter a description..." 
-              style={{ height: '157px' }}
-              value={noteText}
-              onChange={(e) => setNoteText(e.target.value)}
-              readOnly={!isEditMode}
-            />
-          </Typography>
+
+            <Typography sx={{ p: '16px 24px 24px 24px' }}>
+              <h3>Note</h3>
+              <Form.Control id='placeholderColor'
+                as="textarea"
+                placeholder="Enter a description..."
+                style={{ height: '157px' }}
+                value={noteText}
+                onChange={(e) => setNoteText(e.target.value)}
+                readOnly={!isEditMode}
+              />
+            </Typography>
           </div>
 
           <div className='popoverbottom popoverendflex'>
@@ -130,7 +129,7 @@ const SalesNote = ( props ) => {
             </Button>
           </div>
         </Form>
-        </Popover>
+      </Popover>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Download, Eye, EyeSlash, Filter, Printer, Send } from 'react-bootstrap-icons';
+import { Download, Filter, Printer, Send } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { PrimeReactProvider } from 'primereact/api';
@@ -47,11 +47,6 @@ const InvoicePage = () => {
         }
     });
 
-    const handlePaidExpense = () => {
-        const ids = selected.map(item => item.id);
-        paidMutation.mutate({ ids: ids });
-    };
-
     const sendInvoiceToXeroMutation = useMutation({
         mutationFn: (data) => sendInvoiceToXeroApi(data),
         onSuccess: () => {
@@ -60,6 +55,7 @@ const InvoicePage = () => {
             toast.success(`Invoice successfully sent to Xero!`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to send the invoice to xero. Please try again.`);
         }
     });
@@ -94,7 +90,7 @@ const InvoicePage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter /></button>
+                                        <button className={`${style.filterBox}`}><Filter /></button>
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 

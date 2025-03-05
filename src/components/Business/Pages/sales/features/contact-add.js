@@ -42,7 +42,7 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
     };
 
     try {
-      const data = await fetchContacts(saleUniqueId, formData);
+      await fetchContacts(saleUniqueId, formData);
       handleClose();
       refreshData();
     } catch (error) {

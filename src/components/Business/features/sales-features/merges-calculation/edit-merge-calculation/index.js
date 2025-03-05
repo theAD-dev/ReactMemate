@@ -23,7 +23,7 @@ const schema = yup
 const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCalculator }) => {
   const [show, setShow] = useState(false);
   const romanNo = alias;
-  const [defaultValues, setDefaultValues] = useState({
+  const [defaultValues, ] = useState({
     title: merge?.title || "",
     description: merge?.description || ""
   });
@@ -32,19 +32,6 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
   });
 
   useEffect(() => { reset(); }, [alias]);
-
-  const mutation = useMutation({
-    mutationFn: (data) => createNewMergeQuote(data),
-    onSuccess: (response) => {
-      refetch();
-      handleClose();
-      toast.success(`New merge items created successfully.`);
-    },
-    onError: (error) => {
-      console.error('Error creating task:', error);
-      toast.error(`Failed to create new merge items. Please try again.`);
-    }
-  });
 
   const onSubmit = (data) => {
     const payload = {

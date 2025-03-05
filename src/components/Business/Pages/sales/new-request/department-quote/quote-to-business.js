@@ -90,7 +90,7 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
         };
     }, [clients, hasMoreData, isEdit]);
 
-    const filterTemplate = (options) => {
+    const filterTemplate = () => {
         return (
             <IconField iconPosition="left">
                 <InputIcon><Search className='mb-2' /></InputIcon>

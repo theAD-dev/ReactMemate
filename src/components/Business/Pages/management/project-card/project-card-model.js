@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Placeholder, Table } from 'react-bootstrap';
 import {
-  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink,
+  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
   Envelope
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,7 +14,6 @@ import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import AddNote from './add-note';
 import ComposeEmail from './compose-email/compose-email';
-import FilesModel from './files-model';
 import GoogleReviewEmail from './google-review/google-review';
 import InvoiceCreate from './invoice-create/invoice-create';
 import NewTask from './new-task';
@@ -27,10 +26,7 @@ import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
-import CreatePoIcon from "../../../../../assets/images/icon/createPoIcon.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
-import InvoicesIcon from "../../../../../assets/images/icon/InvoicesIcon.svg";
-import OrdersIcon from "../../../../../assets/images/icon/OrdersIcon.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 
@@ -83,7 +79,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     try {
       if (!projectId) return toast.error("Project id not found");
       setIsDuplicating(true);
-      const data = await fetchduplicateData(projectId);
+      await fetchduplicateData(projectId);
       navigate('/sales');
       toast.success('Sale has been successfully duplicated');
     } catch (error) {
@@ -622,7 +618,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       ) : (
                         <div className='projectHistoryScroll'>
                           {filteredHistory?.length ? (
-                            filteredHistory.map(({ id, type, text, title, created, manager, links, ...rest }, index) => (
+                            filteredHistory.map(({ id, type, text, title, created, manager, links }, index) => (
                               <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>

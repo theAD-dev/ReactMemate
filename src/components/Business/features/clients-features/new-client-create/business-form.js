@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
-import { Exclamation, Person, Building, Plus } from 'react-bootstrap-icons';
+import { Building, Plus } from 'react-bootstrap-icons';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -64,7 +64,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
     if (stateId) fetchCities(stateId);
   }, [stateId]);
 
-  const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+  const { control, register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues
   });

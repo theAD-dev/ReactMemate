@@ -45,7 +45,7 @@ const ScopeOfWorkComponent = () => {
         console.error('Failed to parse form data from sessionStorage', error);
     }
     const [files, setFiles] = useState([]);
-    const [defaultValues, setDefaultValues] = useState({
+    const [defaultValues,] = useState({
         reference: quoteFormData.reference || "",
         requirements: quoteFormData.requirements || ""
     });
@@ -81,7 +81,7 @@ const ScopeOfWorkComponent = () => {
 
     const mutation = useMutation({
         mutationFn: (data) => draftSalesRequest(data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             navigate('/sales');
             toast.success(`New request created as draft successfully.`);
         },

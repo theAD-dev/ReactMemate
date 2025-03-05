@@ -19,11 +19,11 @@ const schema = yup
     })
     .required();
 
-const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, setMapMergeItemWithNo }) => {
+const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems }) => {
     const { unique_id } = useParams();
     const romanNo = romanize((Object.keys(mergeItems)?.length || 0) + 1);
     const [show, setShow] = useState(false);
-    const [defaultValues, setDefaultValues] = useState({
+    const [defaultValues,] = useState({
         title: '',
         description: ''
     });
@@ -33,7 +33,7 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
 
     const mutation = useMutation({
         mutationFn: (data) => createNewMergeQuote(data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             toast.success(`New merge items created successfully.`);
         },
         onError: (error) => {
@@ -47,7 +47,7 @@ const MergeItems = ({ selectItems, setSelectItems, mergeItems, setMergeItems, se
         const payload = {
             ...data,
             unique_id,
-            calculations: Object.values(selectItems).reduce((acc, value, index) => {
+            calculations: Object.values(selectItems).reduce((acc, value) => {
                 acc.push({ calculator: value.calculator });
                 return acc;
             }, [])

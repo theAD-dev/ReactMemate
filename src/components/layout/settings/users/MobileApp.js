@@ -77,6 +77,7 @@ const MobileApp = React.memo(() => {
             setIsShowDeleted(false);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to re-connected user. Please try again.`);
         }
     });

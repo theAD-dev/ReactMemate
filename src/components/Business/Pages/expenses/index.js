@@ -112,7 +112,7 @@ const ExpensesPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20}/></button>
+                                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
@@ -128,11 +128,14 @@ const ExpensesPage = () => {
                             )
                     }
                 </div>
-
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Expenses</h1>
-                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
-                </div>
+                {
+                    selected?.length === 0 && (
+                        <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                            <h1 className="title p-0" style={{ marginRight: '16px' }}>Expenses</h1>
+                            <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
+                        </div>
+                    )
+                }
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Expenses</div>

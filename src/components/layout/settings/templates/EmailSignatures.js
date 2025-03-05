@@ -12,7 +12,6 @@ import Sidebar from '../Sidebar';
 const EmailSignatures = () => {
     const [activeTab, setActiveTab] = useState('job-templates');
     const [showModal, setShowModal] = useState(false);
-    const [dname, setDname] = useState('');
     const [departments, setDepartments] = useState([]);
     const navigate = useNavigate(); // useNavigate hook
     const createIndex = () => {

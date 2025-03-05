@@ -1,9 +1,8 @@
-import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import React from 'react';
 import { useRef, useState } from 'react';
-
-import '@szhsin/react-menu/dist/index.css';
 import { CloseButton, ListGroup } from 'react-bootstrap';
+import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 
 const ViewMerge = ({ title, alias, items }) => {
     const ref = useRef(null);

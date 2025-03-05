@@ -1,10 +1,9 @@
-import { Menu, MenuItem, MenuButton, MenuGroup } from '@szhsin/react-menu';
 import React, { useState, useEffect } from "react";
-
-import '@szhsin/react-menu/dist/index.css';
 import { Button, Spinner, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
+import { Menu, MenuItem, MenuButton, MenuGroup } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 import { useMutation } from "@tanstack/react-query";
 import { toast } from 'sonner';
 import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";

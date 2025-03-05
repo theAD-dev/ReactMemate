@@ -53,6 +53,7 @@ const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visib
       window.location.reload();
     },
     onError: (error) => {
+      console.log('error: ', error);
       toast.error(`Failed to update subscription. Please try again.`);
     }
   });
@@ -109,6 +110,7 @@ const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visib
       deleteMutation.reset();
     },
     onError: (error) => {
+      console.log('error: ', error);
       toast.error(`Failed to delete user. Please try again.`);
     }
   });
@@ -195,7 +197,7 @@ const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visib
       </div>
 
       <div className="mt-4">
-        <DataTable scrollable scrollHeight={"350px"} className={style.userTable} value={[...users || [], ...Array.from({ length: max - state }, (_, index) => { return {}; })]} showGridlines>
+        <DataTable scrollable scrollHeight={"350px"} className={style.userTable} value={[...users || [], ...Array.from({ length: max - state }, () => { return {}; })]} showGridlines>
           <Column field="name" style={{ width: '80px' }} body={nameBody} header="Name"></Column>
           <Column field="email" style={{ width: '100px' }} body={emailBody} header="Email"></Column>
           <Column style={{ width: '210px' }} header="Actions" body={ActionsBody}></Column>

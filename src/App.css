@@ -19,36 +19,44 @@
     --colorG5: #D0D5DD;
     --colorG6: #98A2B3;
 
- 
+
 }
+
 .noDataAvilable {
     width: 100%;
     text-align: center;
 }
-.styleGrey01{
+
+.styleGrey01 {
     color: #667085;
 }
-.styleGrey02{
+
+.styleGrey02 {
     color: #98A2B3;
 }
+
 .table-responsive {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overflow-x: auto !important;
 }
+
 .slide-up {
     transition: transform 0.9s ease-in-out;
     transform: translateY(-100%);
-  }
+}
+
 li {
     list-style: none;
 }
+
 textarea.form-control:focus {
     outline: none;
-    box-shadow: 0 0 0 0 rgba(13,110,253,.25);
+    box-shadow: 0 0 0 0 rgba(13, 110, 253, .25);
     border-color: #158ECC;
     border: 1px solid #158ECC;
 }
+
 .disPlayInline li {
     display: inline-block;
 }
@@ -62,19 +70,24 @@ img {
 }
 
 table thead tr th {
-    background: linear-gradient(to top,#EAECF0, #EAECF0 1px, #ffffff 1px, #ffffff 100%);
+    background: linear-gradient(to top, #EAECF0, #EAECF0 1px, #ffffff 1px, #ffffff 100%);
     border-bottom: 0;
 }
-table thead tr th,table tbody tr td{
+
+table thead tr th,
+table tbody tr td {
     border-right: 1px solid var(--Gray-200, #EAECF0);
 }
+
 .table-responsive {
     border-top: 1px solid #eaecf0;
     border-top: 1px solid var(--color10);
     height: calc(100vh - 164px);
     padding-bottom: 2px;
 }
-table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) thead tr th:first-child, table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td:first-child {
+
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) thead tr th:first-child,
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td:first-child {
     position: sticky;
     left: 0;
     width: 40px;
@@ -84,50 +97,38 @@ table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) the
     padding: 0px 6px 0 22px !important;
 }
 
-.custom-table td{
+.custom-table td {
     vertical-align: middle;
 }
 
 table tbody tr td:first-child label {
     visibility: hidden;
 }
-table tbody tr:hover td:first-child label ,
-table tbody tr.selected-row td:first-child label 
-{
+
+table tbody tr:hover td:first-child label,
+table tbody tr.selected-row td:first-child label {
     visibility: visible;
 }
-table tbody tr.selected-row .linkByttonStyle{
-opacity: 1;
+
+table tbody tr.selected-row .linkByttonStyle {
+    opacity: 1;
 }
-/* table thead tr th{
-   border-bottom: 0px;
-} */
-/* table thead tr th:before {
-    position: absolute;
-    background: var(--color10);
-    content: "";
-    right: 0;
-    width: 100%;
-    height: 1px;
-    bottom: 0;
-    z-index: 9;
-} */
 
-
-
-table thead tr th:nth-child(4) span.react-resizable-handle.react-resizable-handle-se ,
-table thead tr th:nth-child(3) span.react-resizable-handle.react-resizable-handle-se ,
-table thead tr th:nth-child(2) span.react-resizable-handle.react-resizable-handle-se ,
-table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handle-se 
-{
+table thead tr th:nth-child(4) span.react-resizable-handle.react-resizable-handle-se,
+table thead tr th:nth-child(3) span.react-resizable-handle.react-resizable-handle-se,
+table thead tr th:nth-child(2) span.react-resizable-handle.react-resizable-handle-se,
+table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handle-se {
     display: none;
 }
+
 .selected-row.tableTopBar {
     background: #EBF8FF;
 }
+
 .tableTopBar {
     padding: 6px 11px;
 }
+
 .boxLogin p.error-text {
     color: var(--color6);
     font-size: 14px;
@@ -147,32 +148,39 @@ span.react-resizable-handle.react-resizable-handle-se {
     cursor: row-resize;
     opacity: 0;
 }
+
 span.react-resizable-handle.react-resizable-handle-se:hover {
     opacity: 1;
 }
+
 .table>thead tr th .react-resizable-handle-se:before:hover {
     opacity: 1;
 }
+
 .react-resizable {
     position: relative;
 }
+
 tr.selected-row td {
     background: #EBF8FF !important;
 }
+
 .customCheckBox {
     position: relative;
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
 }
-  .customCheckBox input {
+
+.customCheckBox input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
     height: 0;
     width: 0;
-  }
-  .customCheckBox .checkmark {
+}
+
+.customCheckBox .checkmark {
     position: relative;
     top: 4px;
     left: 0;
@@ -186,25 +194,31 @@ tr.selected-row td {
     align-items: center;
     justify-content: center;
 }
-.customCheckBox input:checked ~ .checkmark {
+
+.customCheckBox input:checked~.checkmark {
     border-radius: var(--radius-sm, 6px);
     border: 1px solid var(--Primary-500, #1AB2FF);
     background: var(--Primary-50, #EBF8FF);
 }
+
 .customCheckBox .checkmark svg {
     opacity: 0;
 }
-  .customCheckBox .checkmark:after {
+
+.customCheckBox .checkmark:after {
     content: "";
     position: absolute;
     display: none;
-  }
-  .customCheckBox input:checked ~ .checkmark:after {
+}
+
+.customCheckBox input:checked~.checkmark:after {
     display: block;
-  }
-  .customCheckBox input:checked ~ .checkmark svg {
+}
+
+.customCheckBox input:checked~.checkmark svg {
     opacity: 1;
 }
+
 .menu-item ul li a,
 .headerNav ul li a,
 .menu-item ul li a.menuActive,
@@ -222,9 +236,11 @@ tr.selected-row td {
     font-weight: 400;
     line-height: 22px;
 }
+
 .filterSearch input:focus {
     outline: none;
 }
+
 .boxLogin h2,
 .boxLogin h2 span {
     font-size: 22px;
@@ -233,11 +249,19 @@ tr.selected-row td {
     line-height: 28px;
     letter-spacing: -0.33px;
 }
+
 .selected-row td {
     border-bottom: 1px solid #EAECF0;
     background: #F9F5FF;
 }
-.avatar-info, .avatar-info span, .boxLogin .fillbtn, .boxLogin .fillbtn:hover, .boxLogin .textbtn, .boxLogin .textbtn:hover, .boxLogin .textbtn {
+
+.avatar-info,
+.avatar-info span,
+.boxLogin .fillbtn,
+.boxLogin .fillbtn:hover,
+.boxLogin .textbtn,
+.boxLogin .textbtn:hover,
+.boxLogin .textbtn {
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -250,22 +274,27 @@ tr.selected-row td {
     font-weight: 500;
     line-height: 22px;
 }
+
 .userImgStyle {
     width: 100%;
 }
+
 .headerNav {
     border-top: 1px solid var(--colorG2);
     border-bottom: 1px solid var(--colorG2);
 }
+
 .main-wrapper .topbar {
     border-bottom: 0;
     border-top: 0;
 }
+
 span.lightColorStyle {
     opacity: .56;
 }
+
 .MuiDataGrid-columnHeader {
-    border-right: 1px solid #EAECF0 ;
+    border-right: 1px solid #EAECF0;
     position: sticky !important;
     left: 0;
 }
@@ -277,11 +306,13 @@ span.lightColorStyle {
 .css-9cbj60-MuiDataGrid-root .MuiDataGrid-iconSeparator {
     display: none;
 }
+
 .MuiDataGrid-columnHeaders {
     min-height: 44px !important;
     max-height: 44px !important;
     height: 44px !important;
 }
+
 /* Model Style */
 .modelStyleBox {
     position: absolute;
@@ -294,17 +325,21 @@ span.lightColorStyle {
     box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
     padding: 16px 0px;
 }
-.modelStyleBox.QuoteWon .stepBoxStyle,.modelStyleBox.QuoteLost .stepBoxStyle {
+
+.modelStyleBox.QuoteWon .stepBoxStyle,
+.modelStyleBox.QuoteLost .stepBoxStyle {
     background: var(--Gray-25, #FCFCFD);
     padding: 32px 24px;
     border-top: 1px solid #EAECF0;
     margin-top: 12px;
 }
+
 .radioSelectButton.btn-group {
     width: 100%;
     justify-content: space-between;
     align-items: center;
 }
+
 /* .radioSelectButton .radioSelectButtons:nth-child(2) {
     padding: 0 20px;
 } */
@@ -317,37 +352,48 @@ span.lightColorStyle {
     line-height: 28px;
     letter-spacing: -0.27px;
 }
+
 .SalesContact .modelHeader span {
     margin-bottom: 0;
     display: flex;
     align-items: center;
 }
+
 .ContactModel fieldset {
     bottom: 6px;
     right: 0;
     top: -15px;
 }
+
 .SalesContact .modal-body {
     padding: 0;
 }
+
 .ContactModelIn {
     padding: 6px 23px 24px;
     background: var(--Gray-25, #FCFCFD);
     border-top: 1px solid #EAECF0;
     margin-top: 12px;
 }
+
 .SalesContact .popoverbottom {
     padding: 30px 23px;
 }
-.contactButListIn2:focus-visible,.contactButListIn1:focus-visible,.contactButList:focus-visible{
+
+.contactButListIn2:focus-visible,
+.contactButListIn1:focus-visible,
+.contactButList:focus-visible {
     outline: 0;
 }
+
 .radioSelectButtons svg {
     margin-left: 6px;
 }
+
 .modelHeader span .iconOutStyle {
     margin-bottom: 0;
 }
+
 .radioSelectButton label {
     border-radius: 4px;
     border: 1px solid #D0D5DD !important;
@@ -363,18 +409,26 @@ span.lightColorStyle {
     width: 116px;
     height: 44px;
 }
+
 .datepickerField {
     width: 173px;
 }
+
 .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
     border-radius: 4px;
     border: 1px solid var(--Border, #D0D5DD);
 }
+
 .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
     border-color: #106B99 !important;
     border-width: 1px !important;
 }
-.radioSelectButton .btn-check:checked+.btn, .radioSelectButton .btn.active, .radioSelectButton .btn.show, .radioSelectButton .btn:first-child:active, .radioSelectButton :not(.btn-check)+.btn:active {
+
+.radioSelectButton .btn-check:checked+.btn,
+.radioSelectButton .btn.active,
+.radioSelectButton .btn.show,
+.radioSelectButton .btn:first-child:active,
+.radioSelectButton :not(.btn-check)+.btn:active {
     color: #106B99;
     border-color: #A3E0FF;
     border: 1px solid !important;
@@ -384,6 +438,7 @@ span.lightColorStyle {
     border-radius: 4px;
     background: var(--Primary-50, #EBF8FF);
 }
+
 .radioSelectButtons {
     width: 100%;
 }
@@ -403,6 +458,7 @@ span.lightColorStyle {
 .event.busy {
     background: #1AB2FF;
 }
+
 .flatpickr-day.today {
     border-color: #1AB2FF;
     border-radius: 20px;
@@ -413,6 +469,7 @@ span.lightColorStyle {
     font-style: normal;
     font-weight: 500;
 }
+
 .flatpickr-day {
     color: #344054 !important;
     text-align: center !important;
@@ -420,22 +477,45 @@ span.lightColorStyle {
     font-style: normal;
     font-weight: 400 !important;
 }
-span.flatpickr-day.today{
+
+span.flatpickr-day.today {
     color: #fff !important;
 }
-span.flatpickr-day.prevMonthDay,span.flatpickr-day.nextMonthDay{
+
+span.flatpickr-day.prevMonthDay,
+span.flatpickr-day.nextMonthDay {
     color: #667085 !important;
 }
+
 .flatpickr-innerContainer {
     padding-bottom: 20px;
 }
-.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
-    background: #158ECC !important; 
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+    background: #158ECC !important;
     -webkit-box-shadow: none;
     box-shadow: none;
     color: #fff;
     border-color: #158ECC !important;
 }
+
 span.flatpickr-weekday {
     color: var(--Gray-700, #344054) !important;
     text-align: center !important;
@@ -445,6 +525,7 @@ span.flatpickr-weekday {
     line-height: 20px !important;
     background: #fff !important;
 }
+
 .flatpickr-day {
     background: none;
     border: 1px solid transparent;
@@ -469,44 +550,55 @@ span.flatpickr-weekday {
     justify-content: center;
     text-align: center;
 }
+
 .flatpickr-weekdays {
     background: #fff !important;
     height: 40px;
 }
-.flatpickr-months .flatpickr-month, .flatpickr-current-month .flatpickr-monthDropdown-months {
+
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months {
     background: #ffffff !important;
     color: #344054 !important;
 }
-.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
-    color: #000!important;
-    fill: #000!important;
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    color: #000 !important;
+    fill: #000 !important;
 }
+
 .filterSearchTab {
     margin: 8px 8px 8px;
     width: 92% !important;
 }
 
-table.department-calculation tbody tr td, table.department-calculation thead tr th {
+table.department-calculation tbody tr td,
+table.department-calculation thead tr th {
     border-right: none !important;
     background-color: #fff !important;
     white-space: nowrap;
 }
-table.department-calculation tbody tr:hover td, table.department-calculation tbody tr.selected td{
+
+table.department-calculation tbody tr:hover td,
+table.department-calculation tbody tr.selected td {
     background-color: #F2FAFF !important;
 }
-
-/* table.department-calculation tbody tr .checkbox {
-    visibility: hidden;
-}
-
-table.department-calculation tbody tr:hover .checkbox{
-    visibility: visible;
-} */
 
 .checkbox:has(table.department-calculation tbody tr input[type="checkbox"]:checked) {
     visibility: visible !important;
 }
 
 .proposal-accordion .p-accordion-content {
-  background: #FBFCFD;
+    background: #FBFCFD;
+}
+
+.dropdown-item:hover {
+    background-color: #F2FAFF;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    color: #fff !important;
+    background-color: #1AB2FF !important;
 }

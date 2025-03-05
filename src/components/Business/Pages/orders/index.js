@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
+import { Download, Filter } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
@@ -12,7 +12,7 @@ const OrderPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
  
-    const [isShowDeleted, setIsShowDeleted] = useState(false);
+    const [isShowDeleted,] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
@@ -40,7 +40,7 @@ const OrderPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20}/></button>
+                                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 

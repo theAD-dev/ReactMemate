@@ -14,8 +14,6 @@ import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";
-
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(1000 * +dateInMiliSec);
     return date;
 };
@@ -47,7 +45,7 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (data) => fetchTasksDelete(taskId),
+        mutationFn: () => fetchTasksDelete(taskId),
         onSuccess: () => {
             console.log('Delete success');
             setShow(false);
@@ -84,7 +82,6 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
         }
     };
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
     return (
         <>

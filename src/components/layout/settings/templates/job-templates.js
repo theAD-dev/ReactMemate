@@ -44,7 +44,7 @@ const JobTemplates = () => {
                         <div className='content_wrapper'>
                             <div className='listwrapper' style={{ height: 'calc(100vh - 229px)' }}>
                                 {
-                                    proposalTemplateQuery?.data?.map((proposal, index) =>
+                                    proposalTemplateQuery?.data?.map((proposal) =>
                                         <div key={proposal.id} className={clsx(style.listbox, 'mb-2')}>
                                             <h2 className={clsx(style.heading)}>{proposal?.name}</h2>
                                             <Link to={`/settings/templates/job-templates/${proposal?.id}`}>

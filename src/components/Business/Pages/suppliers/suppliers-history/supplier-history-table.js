@@ -1,11 +1,8 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { ArrowLeftCircle, FilePdf, Files, FileText, InfoCircle, Link45deg, PlusSlashMinus } from 'react-bootstrap-icons';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import clsx from 'clsx';
+import { useParams } from 'react-router-dom';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { Tag } from 'primereact/tag';
 import style from './supplier-history.module.scss';
 import { getSupplierHistory } from '../../../../../APIs/SuppliersApi';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
@@ -13,7 +10,6 @@ import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-foun
 
 const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, isShowDeleted }, ref) => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const observerRef = useRef(null);
   const [expenses, setExpenses] = useState([]);
 
@@ -82,9 +78,6 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
     </div>;
   };
 
-  const onResizeColumn = (event) => {
-    console.log('event: ', event);
-  };
 
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
@@ -142,8 +135,6 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
       </div>
     </div>;
   };
-
-  const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
   
   return (
     <DataTable ref={ref} value={expenses} scrollable selectionMode={'checkbox'} removableSort

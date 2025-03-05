@@ -16,7 +16,6 @@ import Sidebar from "../Sidebar";
 
 const Subscription = () => {
   const { trialHeight } = useTrialHeight();
-  const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
   const [mobileUserVisible, setMobileUserVisible] = useState(false);

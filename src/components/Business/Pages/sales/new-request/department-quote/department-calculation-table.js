@@ -74,7 +74,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         type="text"
                         style={{ width: '60px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
                         value={`${"0.00"}`}
-                        onChange={(e) => { }}
+                        onChange={() => { }}
                     />
                     <span>%</span>
                 </div>

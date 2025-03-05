@@ -8,7 +8,7 @@ import GoogleReview from "../../../../../../assets/images/icon/googleReviewIcon.
 import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
 
 const GoogleReviewEmail = ({ clientId, projectId }) => {
-    const [payload, setPayload] = useState({});
+    const [, setPayload] = useState({});
     const [viewShow, setViewShow] = useState(false);
     const handleShow = () => setViewShow(true);
     const clientQuery = useQuery({
@@ -20,7 +20,7 @@ const GoogleReviewEmail = ({ clientId, projectId }) => {
 
     const mutation = useMutation({
         mutationFn: (data) => sendComposeEmail(projectId, "google-review", data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             setViewShow(false);
             toast.success(`Email send successfully.`);
         },

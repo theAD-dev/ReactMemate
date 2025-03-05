@@ -22,7 +22,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         contact_persons: [{}],
         addresses: [{}],
     });
-    const [individualDefaultValues, setIndividualDefaultValues] = useState({
+    const [individualDefaultValues, ] = useState({
         payment_terms: 1,
         category: '',
     });

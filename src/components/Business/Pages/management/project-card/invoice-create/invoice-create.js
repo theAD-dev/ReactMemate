@@ -7,7 +7,7 @@ import SendInvoiceEmailForm from '../../../../../../ui/send-invoice/send-invoice
 
 const InvoiceCreate = ({ clientId, projectId, isLoading, create, projectCardData, isCreated }) => {
     const [show, setShow] = useState(false);
-    const [payload, setPayload] = useState({});
+    const [, setPayload] = useState({});
     const clientQuery = useQuery({
         queryKey: ['id', clientId],
         queryFn: () => getClientById(clientId),

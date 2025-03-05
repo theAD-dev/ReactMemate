@@ -5,7 +5,7 @@ import DeleteMerge from '../delete-merge-calculation';
 import EditMergeCalculation from '../edit-merge-calculation';
 import ViewMerge from '../view-merge-calculation';
 
-const ListMergeCalculations = ({ unique_id, merges, setMerges, refetch, deleteMergeCalculator }) => {
+const ListMergeCalculations = ({ merges, setMerges, refetch, deleteMergeCalculator }) => {
     return (
         <>
             <div className={clsx('w-100', style.divider)} style={{}}></div>

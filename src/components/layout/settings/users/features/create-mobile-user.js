@@ -89,7 +89,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                 refetch();
                 return "success";
             } else {
-                const data = await response.json();
+                await response.json();
                 toast.error(`Failed to create the user. Please try again.`);
                 return "error";
             }

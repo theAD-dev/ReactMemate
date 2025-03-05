@@ -16,7 +16,7 @@ import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
 
-const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending, setVisible }, ref) => {
+const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
   const navigate = useNavigate();
   const [isDuplicating, setIsDuplicating] = useState(null);
   const [isBringBack, setIsBringBack] = useState(null);
@@ -76,7 +76,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     try {
       if (!projectId) return toast.error("Project id not found");
       setIsDuplicating(projectId);
-      const data = await fetchduplicateData(projectId);
+      await fetchduplicateData(projectId);
       navigate('/sales');
       toast.success('Sale has been successfully duplicated');
     } catch (error) {
@@ -168,8 +168,8 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
           <h1 className={clsx(style.orderHeading, 'mb-3')}>Order card history </h1>
           <div style={{ maxHeight: '300px', overflow: 'auto' }}>
             {
-              rowData?.history?.map((history) => (
-                <div className='d-flex flex-column mb-4 text-start'>
+              rowData?.history?.map((history, index) => (
+                <div key={`${rowData.unique_id}-${index}`} className='d-flex flex-column mb-4 text-start'>
                   <div className='d-flex align-items-center gap-1'>
                     {getIconByType(history.type)}
                     <p className={clsx(style.historyTitle, 'mb-0')}>{history?.title || "-"}</p>

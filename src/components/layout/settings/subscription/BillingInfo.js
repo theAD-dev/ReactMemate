@@ -40,6 +40,7 @@ const BillingInfo = () => {
       setIsEdit(false);
     },
     onError: (error) => {
+      console.log('error: ', error);
       toast.error(`Failed to update Payment Info. Please try again.`);
     }
   });
