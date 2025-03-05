@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { ChevronLeft, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Editor } from 'primereact/editor';
@@ -79,7 +79,7 @@ const CreateProposalTemplate = () => {
         const newErrors = {};
         if (!name) newErrors.name = true;
 
-        const sectionErrors = sections.map((section, index) => {
+        const sectionErrors = sections.map((section) => {
             const sectionError = {};
             if (!section.title) sectionError.title = true;
             if (!section.description) sectionError.description = true;

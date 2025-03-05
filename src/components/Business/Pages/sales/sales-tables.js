@@ -383,7 +383,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
                   </span>
                 </label>
               </th>
-              {columns.map((column, index) => (
+              {columns.map((column) => (
                 <th key={column.field} style={{ width: column.width }}>
                   <Resizable
                     width={column.width || 100} // Provide a default width if undefined

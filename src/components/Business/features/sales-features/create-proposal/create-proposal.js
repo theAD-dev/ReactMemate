@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Row } from "react-bootstrap";
-import { Check2Circle, CloudUpload, PlusLg, Trash, Upload } from 'react-bootstrap-icons';
+import { Check2Circle, CloudUpload, PlusLg, Trash } from 'react-bootstrap-icons';
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { Accordion, AccordionTab } from 'primereact/accordion';
-import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { Editor } from "primereact/editor";
@@ -79,7 +78,6 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [errors, setErrors] = useState({});
     const [fileName, setFileName] = useState('');
-    const [errorIndex, setErrorIndex] = useState(null);
     const [showSendModal, setShowSendModal] = useState(false);
     const [payload, setPayload] = useState({});
 
@@ -122,7 +120,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         if (!notdeletedSections?.length) return toast.error('Please add proposal content');
 
         const newErrors = {};
-        const sectionErrors = sections?.filter(section => !section.delete)?.map((section, index) => {
+        const sectionErrors = sections?.filter(section => !section.delete)?.map((section) => {
             const sectionError = {};
 
             if (!section.title) sectionError.title = true;
@@ -152,7 +150,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
         setErrors({});
 
         const newErrors = {};
-        const sectionErrors = sections?.filter(section => !section.delete)?.map((section, index) => {
+        const sectionErrors = sections?.filter(section => !section.delete)?.map((section) => {
             const sectionError = {};
 
             if (!section.title) sectionError.title = true;

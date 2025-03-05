@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Badge } from "primereact/badge";
 import { Button } from 'primereact/button';
-import { Chip } from "primereact/chip";
 import { Dialog } from 'primereact/dialog';
 import { toast } from "sonner";
 import style from './dialog.module.scss';
@@ -18,6 +17,7 @@ export default function UnPaidDialog({ visible, setVisible, details, setRefetch 
             toast.success(`Expenses have been successfully marked as unpaid.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to mark the expenses as unpaid. Please try again.`);
         }
     });

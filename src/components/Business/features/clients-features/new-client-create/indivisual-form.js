@@ -43,7 +43,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
     const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
 
-    const { control, register, handleSubmit, setValue, formState: { errors } } = useForm({
+    const { control, register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });

@@ -53,7 +53,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
     };
     const mutation = useMutation({
         mutationFn: (data) => id ? updateLocation(id, data) : createLocation(data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             refetch();
             refetch2();
             handleClose();
@@ -86,6 +86,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
             setValue('city', '');
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to delete location. Please try again.`);
         }
     });

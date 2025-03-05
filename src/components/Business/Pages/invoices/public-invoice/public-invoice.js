@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Col, Row as BootstrapRow, Button, Card } from 'react-bootstrap';
 import { CardList, Check2Circle, CheckCircleFill, FilePdf, Person } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -37,7 +37,6 @@ const schema = yup.object().shape({
 
 const PublicInvoice = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
     const paymentRef = useRef();
     const [isPaymentProcess, setIsPaymentProcess] = useState(false);
 
@@ -46,7 +45,7 @@ const PublicInvoice = () => {
     const [payment, setPayment] = useState({});
 
     const [visible, setVisible] = useState(false);
-    const handleClose = (e) => setVisible(false);
+    const handleClose = () => setVisible(false);
 
     const { register, control, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema),

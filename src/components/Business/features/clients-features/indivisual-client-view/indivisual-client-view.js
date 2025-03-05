@@ -1,12 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
+import { Person, StarFill, X } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Tag } from 'primereact/tag';
 import style from './indivisual-client-view.module.scss';
-import { getClientCategories } from '../../../../../APIs/ClientsApi';
 import mapicon from '../../../../../assets/images/google_maps_ico.png';
 import { dateFormat, formatMoney } from '../../../shared/utils/helper';
 import DeleteClient from '../delete-client';

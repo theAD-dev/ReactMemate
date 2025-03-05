@@ -182,6 +182,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         },
         onError: (error) => {
             deleteMutation.reset();
+            console.log('error: ', error);
             toast.error(`Failed to delete invoice. Please try again.`);
         }
     });
@@ -195,6 +196,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         },
         onError: (error) => {
             deleteMutation.reset();
+            console.log('error: ', error);
             toast.error(`Failed to duplicate project. Please try again.`);
         }
     });
@@ -221,8 +223,8 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                         <CloseButton onClick={() => setOpen(false)} />
                     </div>
                     {
-                        rowData?.billing_history.map((history) =>
-                            <div className='d-flex gap-4 border justify-content-around py-1 px-2 rounded mb-2'>
+                        rowData?.billing_history.map((history, index) =>
+                            <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-around py-1 px-2 rounded mb-2'>
                                 <div className='d-flex gap-2 align-items-center'>
                                     <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '50%', overflow: 'hidden' }}>
                                         <img src={history?.manager?.photo} style={{ widows: '20px' }} />

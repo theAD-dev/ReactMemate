@@ -1,6 +1,5 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 import IndivisualForm from '../new-client-create/indivisual-form';
@@ -8,7 +7,7 @@ import IndivisualForm from '../new-client-create/indivisual-form';
 const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handleExternalSubmit, setIsEdit }, ref) => {
   const navigate = useNavigate();
   const [photo, setPhoto] = useState(client?.photo || null);
-  const [defaultValues, setDefaultValues] = useState({
+  const [defaultValues, ] = useState({
     firstname: client?.name?.split(" ")?.[0] || "",
     lastname: client?.name?.split(" ")?.[1] || "",
     email: client?.email,

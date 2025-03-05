@@ -44,7 +44,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
     };
     const mutation = useMutation({
         mutationFn: (data) => partialPaymentCreate(invoice?.unique_id, data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             setShow(false);
             setRefetch((old) => !old);
             toast.success(`Partial payment is completed successfully.`);

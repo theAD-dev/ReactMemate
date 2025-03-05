@@ -329,7 +329,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     setPage(1);  // Reset to page 1 whenever searchValue changes
   };
 
-  const handleClose = (e) => {
+  const handleClose = () => {
     setVisible(false);
   };
 

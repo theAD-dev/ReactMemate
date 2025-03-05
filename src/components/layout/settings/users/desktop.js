@@ -48,6 +48,7 @@ const Desktop = ({ visible, setVisible }) => {
             restoreMutation.reset();
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to restore user. Please try again.`);
         }
     });

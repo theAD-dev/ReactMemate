@@ -5,7 +5,6 @@ import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from 'axios';
 import clsx from 'clsx';
-import { Button as PrimeButton } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from 'primereact/iconfield';

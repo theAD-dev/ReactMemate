@@ -19,10 +19,6 @@ const RecurringJobs = () => {
     const [showModal, setShowModal] = useState(false);
     const [dname, setDname] = useState('');
     const [departments, setDepartments] = useState([]);
-
-    const createIndex = () => {
-      setShowModal(true);
-    };
     
     const handleClose = () => {
       setShowModal(false);
