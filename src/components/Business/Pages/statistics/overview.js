@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { Chart } from 'primereact/chart';
 import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const Overview = () => {
     const { trialHeight } = useTrialHeight();
@@ -267,7 +268,7 @@ const Overview = () => {
                                     </div>
                                     <span className={style.dateLabel}>{reportsData.grossVolume.date}<br /> ${reportsData.grossVolume.prevValue}</span>
                                 </div>
-                                <div className={style.value}>${reportsData.grossVolume.value}</div>
+                                <div className={style.value}>${formatAUD(reportsData.grossVolume.value)}</div>
                                 <Chart type="line" data={grossVolumeChartData} options={grossVolumeChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -281,7 +282,7 @@ const Overview = () => {
                                     </div>
                                     <span className={style.dateLabel}>{reportsData.activeQuotesVolume.date} <br />${reportsData.activeQuotesVolume.prevValue}</span>
                                 </div>
-                                <div className={style.value}>{reportsData.activeQuotesVolume.value}</div>
+                                <div className={style.value}>{formatAUD(reportsData.activeQuotesVolume.value)}</div>
                                 <Chart type="line" data={activeQuotesChartData} options={activeQuotesChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -295,7 +296,7 @@ const Overview = () => {
                                     </div>
                                     <span className={style.dateLabel}>{reportsData.orders.date} <br /> ${reportsData.orders.prevValue}</span>
                                 </div>
-                                <div className={style.value}>{reportsData.orders.value}</div>
+                                <div className={style.value}>{formatAUD(reportsData.orders.value)}</div>
                                 <Chart type="line" data={ordersChartData} options={ordersChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -309,7 +310,7 @@ const Overview = () => {
                                     </div>
                                     <span className={style.dateLabel}>{reportsData.unpaidInvoicesVolume.date} <br /> ${reportsData.unpaidInvoicesVolume.prevValue}</span>
                                 </div>
-                                <div className={style.value}>${reportsData.unpaidInvoicesVolume.value}</div>
+                                <div className={style.value}>${formatAUD(reportsData.unpaidInvoicesVolume.value)}</div>
                                 <Chart type="line" data={unpaidInvoicesChartData} options={unpaidInvoicesChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -324,7 +325,7 @@ const Overview = () => {
 
                                     <span className={style.dateLabel}>{reportsData.spendPerOrder.date}<br /> ${reportsData.spendPerOrder.prevValue}</span>
                                 </div>
-                                <div className={style.value}>${reportsData.spendPerOrder.value}</div>
+                                <div className={style.value}>${formatAUD(reportsData.spendPerOrder.value)}</div>
                                 <Chart type="line" data={spendPerOrderChartData} options={spendPerOrderChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -339,7 +340,7 @@ const Overview = () => {
 
                                     <span className={style.dateLabel}>{reportsData.jobsCompleted.date}<br /> ${reportsData.jobsCompleted.prevValue}</span>
                                 </div>
-                                <div className={style.value}>{reportsData.jobsCompleted.value}%</div>
+                                <div className={style.value}>{formatAUD(reportsData.jobsCompleted.value)}%</div>
                                 <Chart type="line" data={jobsCompletedChartData} options={jobsCompletedChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -353,7 +354,7 @@ const Overview = () => {
 
                                     <span className={style.dateLabel}>{reportsData.contractorExpense.date} <br /> ${reportsData.contractorExpense.prevValue}</span>
                                 </div>
-                                <div className={style.value}>${reportsData.contractorExpense.value}</div>
+                                <div className={style.value}>${formatAUD(reportsData.contractorExpense.value)}</div>
                                 <Chart type="line" data={contractorExpenseChartData} options={contractorExpenseChartData.options} style={{ height: '200px' }} />
                             </Col>
                         </Row>

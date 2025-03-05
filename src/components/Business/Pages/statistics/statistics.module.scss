@@ -466,6 +466,13 @@
 }
 
 .value {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: 0.34px;
   text-align: left;
   margin-bottom: 16px;
 }
