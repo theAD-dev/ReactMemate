@@ -1,8 +1,7 @@
-import { PrimeReactProvider } from 'primereact/api';
 import React from 'react';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Filter } from 'react-bootstrap-icons';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
 

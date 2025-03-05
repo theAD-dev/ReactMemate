@@ -1,10 +1,9 @@
-import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import React, { useEffect, useState } from "react";
-
-import '@szhsin/react-menu/dist/index.css';
 import {
   ChevronExpand,
 } from "react-bootstrap-icons";
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 
 const SelectOption = ({ currentLocation, locations, profileUserName }) => {
   const [selectedLocation, setSelectedLocation] = useState({ id: null, name: null });

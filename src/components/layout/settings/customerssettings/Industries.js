@@ -31,7 +31,7 @@ const CustomersIndustries = () => {
         name: yup.string().required("Name is required"),
     }).required();
 
-    const { control, register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         resolver: yupResolver(yup.object({
             name: yup.string().required("Name is required"),
         }).required()),

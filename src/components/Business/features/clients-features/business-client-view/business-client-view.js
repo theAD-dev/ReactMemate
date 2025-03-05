@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Building, StarFill, Trash, X } from 'react-bootstrap-icons';
+import { Building, StarFill, X } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -101,7 +101,7 @@ const ViewSection = ({ client, industries, refetch }) => {
       if (!id) return toast.error("Id not found");
       setIsMainLoading(id);
 
-      const data = await markeMainContact(id);
+      await markeMainContact(id);
       refetch();
       toast.success('Contact person has been successfully set as the primary contact');
     } catch (error) {
@@ -117,7 +117,7 @@ const ViewSection = ({ client, industries, refetch }) => {
       if (!id) return toast.error("Id not found");
       setIsMainLoading(id);
 
-      const data = await markeMainAddress(id);
+      await markeMainAddress(id);
       refetch();
       toast.success('Address has been successfully set as the primary address');
     } catch (error) {

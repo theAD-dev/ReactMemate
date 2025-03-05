@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "./settings.css";
+import React from "react";
 import {
   InfoSquare,
   Person,
@@ -18,24 +16,32 @@ import {
   ListUl,
   Headset,
 } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
+import "./settings.css";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import LogoutButton from "../Login/logout-button";
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const { trialHeight } = useTrialHeight();
-  const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+  const profileData = JSON.parse(
+    window.localStorage.getItem("profileData") || "{}"
+  );
   return (
     <>
       <div className="settings-menu">
         <div className="menuList">
-          <div className="topList" style={{ height: `calc(100vh - 320px - ${trialHeight}px)` }}>
+          <div
+            className="topList"
+            style={{ height: `calc(100vh - 320px - ${trialHeight}px)` }}
+          >
             <h2>General</h2>
             <ul>
               <li>
                 {" "}
                 <Link
                   to="/settings/generalinformation"
-                  className={`sidebar-tab ${activeTab === "generalinformation" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "generalinformation" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("generalinformation")}
                 >
                   <InfoSquare color="#667085" size={18} />
@@ -46,13 +52,10 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/generalinformation/profile"
-                  className={`sidebar-tab ${activeTab === "profile"
-                    ? "activelist"
-                    : ""
-                    }`}
-                  onClick={() =>
-                    setActiveTab("profile")
-                  }
+                  className={`sidebar-tab ${
+                    activeTab === "profile" ? "activelist" : ""
+                  }`}
+                  onClick={() => setActiveTab("profile")}
                 >
                   <Person color="#667085" size={18} />
                   My Profile
@@ -62,13 +65,10 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/generalinformation/subscription"
-                  className={`sidebar-tab ${activeTab === "subscription"
-                    ? "activelist"
-                    : ""
-                    }`}
-                  onClick={() =>
-                    setActiveTab("subscription")
-                  }
+                  className={`sidebar-tab ${
+                    activeTab === "subscription" ? "activelist" : ""
+                  }`}
+                  onClick={() => setActiveTab("subscription")}
                 >
                   <CreditCard2Back color="#667085" size={18} />
                   Subscription
@@ -78,8 +78,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/users/desktop"
-                  className={`sidebar-tab ${activeTab === "desktop" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "desktop" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("desktop")}
                 >
                   <People color="#667085" size={18} />
@@ -90,8 +91,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/location"
-                  className={`sidebar-tab ${activeTab === "locations" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "locations" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("locations")}
                 >
                   <Map color="#667085" size={18} />
@@ -105,8 +107,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/calculators/departments"
-                  className={`sidebar-tab ${activeTab === "departments" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "departments" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("departments")}
                 >
                   <PlusSlashMinus color="#667085" size={18} />
@@ -117,8 +120,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/templates/job-templates"
-                  className={`sidebar-tab ${activeTab === "job-templates" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "job-templates" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("job-templates")}
                 >
                   <WindowDock color="#667085" size={18} />
@@ -129,8 +133,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/companyethos/company-ethos"
-                  className={`sidebar-tab ${activeTab === "company-ethos" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "company-ethos" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("company-ethos")}
                 >
                   <Bookmarks color="#667085" size={18} />
@@ -141,8 +146,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/integrations"
-                  className={`sidebar-tab ${activeTab === "integrations" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "integrations" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("integrations")}
                 >
                   <CardChecklist color="#667085" size={18} />
@@ -153,8 +159,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/quotesjobs/recurring-quotes"
-                  className={`sidebar-tab ${activeTab === "recurring-quotes" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "recurring-quotes" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("recurring-quotes")}
                 >
                   <BlockquoteRight color="#667085" size={18} />
@@ -165,8 +172,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/projectstatus/project-status"
-                  className={`sidebar-tab ${activeTab === "organisation-setting" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "organisation-setting" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("organisation-setting")}
                 >
                   <WindowStack color="#667085" size={18} />
@@ -177,8 +185,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/termsandconditions/terms-and-conditions"
-                  className={`sidebar-tab ${activeTab === "terms-and-conditions" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "terms-and-conditions" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("terms-and-conditions")}
                 >
                   <FiletypeDoc color="#667085" size={18} />
@@ -189,8 +198,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/customerssettings/industries"
-                  className={`sidebar-tab ${activeTab === "industries" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "industries" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("industries")}
                 >
                   <Person color="#667085" size={18} />
@@ -201,8 +211,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/accounting/expenses"
-                  className={`sidebar-tab ${activeTab === "expenses" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "expenses" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("expenses")}
                 >
                   <ListUl color="#667085" size={18} />
@@ -213,8 +224,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 {" "}
                 <Link
                   to="/settings/notifications/dashboard-notifications"
-                  className={`sidebar-tab ${activeTab === "dashboard-notifications" ? "activelist" : ""
-                    }`}
+                  className={`sidebar-tab ${
+                    activeTab === "dashboard-notifications" ? "activelist" : ""
+                  }`}
                   onClick={() => setActiveTab("dashboard-notifications")}
                 >
                   <Bell color="#667085" size={18} />
@@ -223,7 +235,10 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
               </li>
             </ul>
           </div>
-          <div className="logoutBottomS pt-2" style={{ borderTop: '.5px solid #dedede', height: '200px' }}>
+          <div
+            className="logoutBottomS pt-2"
+            style={{ borderTop: ".5px solid #dedede", height: "200px" }}
+          >
             <div className="userNameList ps-2">
               <button className="btn d-flex align-items-center gap-3 mb-2 px-0">
                 <Headset size={16} color="#667085" />

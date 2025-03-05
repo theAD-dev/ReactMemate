@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Chat, Envelope, Person, Plus, PlusLg, Telephone } from 'react-bootstrap-icons';
+import { Chat, Envelope, Person, Plus, Telephone } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
@@ -16,7 +15,6 @@ import { getTeamMobileUser } from '../../../../APIs/team-api';
 
 
 const PeoplesTable = () => {
-    const observerRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [peoples, setPeoples] = useState([]);
     const [selectedPeoples, setSelectedPeoples] = useState(null);

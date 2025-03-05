@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { Chat, Envelope, Person, Plus, Telephone } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,6 @@ import { getPrivilegesList } from '../../../../APIs/settings-user-api';
 import { getTeamDesktopUser } from '../../../../APIs/team-api';
 
 const DesktopPeoplesTable = () => {
-    const observerRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [peoples, setPeoples] = useState([]);
     const [selectedPeoples, setSelectedPeoples] = useState(null);
