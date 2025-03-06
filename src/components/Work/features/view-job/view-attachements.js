@@ -1,5 +1,4 @@
 import React from 'react';
-import { InfoCircle } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -21,7 +20,7 @@ const ViewAttachements = ({ show, setShow, attachments }) => {
             <div className='d-flex flex-wrap gap-2'>
                 {
                     attachments?.map((attachment) => (
-                        <div className={style.attachmentBox}>
+                        <div key={attachment?.link} className={style.attachmentBox}>
                             <div className='d-flex align-items-center gap-2'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                     <path d="M9.29289 0H4C2.89543 0 2 0.895431 2 2V14C2 15.1046 2.89543 16 4 16H12C13.1046 16 14 15.1046 14 14V4.70711C14 4.44189 13.8946 4.18754 13.7071 4L10 0.292893C9.81246 0.105357 9.55811 0 9.29289 0ZM9.5 3.5V1.5L12.5 4.5H10.5C9.94772 4.5 9.5 4.05228 9.5 3.5ZM11 8C11 9.65685 9.65685 11 8 11C6.34315 11 5 9.65685 5 8C5 6.34315 6.34315 5 8 5C9.65685 5 11 6.34315 11 8ZM13 13.7553V14C13 14.5523 12.5523 15 12 15H4C3.44772 15 3 14.5523 3 14V13.7554C3 13.7554 4 12 8 12C12 12 13 13.7553 13 13.7553Z" fill="#667085" />

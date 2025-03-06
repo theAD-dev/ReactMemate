@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import {
   PencilSquare,
   Telephone,
@@ -34,7 +34,6 @@ const schema = yup.object().shape({
 
 function MyProfile() {
   const { trialHeight } = useTrialHeight();
-  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditingGroup, setIsEditingGroup] = useState(false);
   const [photo, setPhoto] = useState({});

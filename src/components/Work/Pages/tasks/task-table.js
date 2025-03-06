@@ -1,7 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { FileText } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -26,7 +25,6 @@ const formatDate = (timestamp) => {
 };
 
 const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
-    const navigate = useNavigate();
     const { trialHeight } = useTrialHeight();
     const observerRef = useRef(null);
     const [visible, setVisible] = useState(false);
