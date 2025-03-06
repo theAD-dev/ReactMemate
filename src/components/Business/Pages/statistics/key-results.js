@@ -17,21 +17,22 @@ const KeyResultsPage = () => {
     const { trialHeight } = useTrialHeight();
     const [selectedYear, setSelectedYear] = useState('');
     const [selectedMonth, setSelectedMonth] = useState('');
-    const [outerProgress, setOuterProgress] = useState(0); // Start at 0
+    const [outerProgress, setOuterProgress] = useState(0);
     const [uptoDate, setUptoDate] = useState(0);
     const [totalTarget, setTotalTarget] = useState(0);
     const [innerProgress, setInnerProgress] = useState(0);
 
     const keyResultStaticsQuery = useQuery({
         queryKey: ["getKeyResultStatics", selectedYear, selectedMonth],
-        queryFn: () => getKeyResultStatics(selectedYear, months.indexOf(selectedMonth)),
+        queryFn: () => getKeyResultStatics(selectedYear, months.indexOf(selectedMonth) + 1),
         enabled: !!(selectedMonth && selectedYear),
         retry: 1
     });
 
     // Path lengths (approximated)
     const outerPathLength = 596.9;
-    const innerPathLength = 471.24;
+    const innerRadius = 67.9758; // From the existing circle
+    const innerPathLength = 2 * Math.PI * innerRadius; // Full circle circumference ≈ 426.94
 
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
@@ -40,7 +41,7 @@ const KeyResultsPage = () => {
     const currentDate = new Date();
     const currentMonthIndex = currentDate.getMonth();
     const daysInMonth = new Date(selectedYear || currentYear, months.indexOf(selectedMonth) + 1, 0).getDate();
-    const daysCompleted = Math.min(currentDate.getDate(), daysInMonth);
+    const daysCompleted = (selectedYear === currentYear && currentMonthIndex === months.indexOf(selectedMonth)) ? Math.min(currentDate.getDate(), daysInMonth) : daysInMonth;
 
     const isMonthDisabled = (month, year) => {
         const monthIndex = months.indexOf(month);
@@ -73,11 +74,11 @@ const KeyResultsPage = () => {
         // Update inner progress based on days
         const daysProgress = daysInMonth > 0 ? (daysCompleted / daysInMonth) * 100 : 0;
         setInnerProgress(daysProgress);
-    }, [keyResultStaticsQuery.data, selectedMonth, selectedYear]);
+    }, [keyResultStaticsQuery.data, selectedMonth, selectedYear, daysCompleted, daysInMonth]);
 
     useEffect(() => {
-        const currentDate = new Date('2025-03-03');
-        setSelectedYear(currentDate.getUTCFullYear().toString());
+        const currentDate = new Date();
+        setSelectedYear(currentDate.getUTCFullYear());
         setSelectedMonth(months[currentDate.getMonth()]);
     }, []);
 
@@ -90,7 +91,7 @@ const KeyResultsPage = () => {
     const topStatistics = [...statistics]
         .filter(stat => parseFloat(stat.target_value) > 0)
         .sort((a, b) => parseFloat(b.sum) - parseFloat(a.sum));
-        // .slice(0, 4);
+    // .slice(0, 4);
 
     return (
         <PrimeReactProvider className='peoples-page'>
@@ -172,7 +173,7 @@ const KeyResultsPage = () => {
                                 />
                                 <path
                                     id="progress-path"
-                                    d="M108 39.5237C119.269 39.5237 130.361 42.3253 140.279 47.6765C150.196 53.0276 158.628 60.7605 164.815 70.1792C171.002 79.5979 174.75 90.4071 175.722 101.634C176.695 112.861 174.861 124.154 170.385 134.496C165.91 144.838 158.933 153.905 150.084 160.882C141.234 167.859 130.788 172.526 119.687 174.463C108.586 176.4 97.1772 175.548 86.4874 171.981C75.7976 168.415 66.1622 162.247 58.448 154.032"
+                                    d="M108,39.5237 A67.9758,67.9758 0 0 1 175.9758,107.499 A67.9758,67.9758 0 0 1 108,175.4746 A67.9758,67.9758 0 0 1 40.0242,107.499 A67.9758,67.9758 0 0 1 108,39.5237 Z"
                                     stroke="url(#paint0_linear_9278_365206)"
                                     strokeWidth="24"
                                     strokeLinecap="round"
