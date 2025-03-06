@@ -30,7 +30,8 @@ const KeyResultsPage = () => {
     });
 
     // Path lengths (approximated)
-    const outerPathLength = 596.9;
+    const outerRadius = 95.1661; // From the existing outer circle
+    const outerPathLength = 2 * Math.PI * outerRadius; // Full circle circumference ≈ 597.65
     const innerRadius = 67.9758; // From the existing circle
     const innerPathLength = 2 * Math.PI * innerRadius; // Full circle circumference ≈ 426.94
 
@@ -163,7 +164,7 @@ const KeyResultsPage = () => {
                                 <circle cx="108" cy="107.5" r="95.1661" stroke="url(#paint1_linear_9278_365203)" strokeOpacity="0.2" strokeWidth="24" />
                                 <path
                                     id="outer-progress"
-                                    d="M108 12.334C126.822 12.334 145.222 17.9154 160.872 28.3724C176.521 38.8293 188.719 53.6923 195.922 71.0816C203.125 88.4709 205.01 107.606 201.338 126.066C197.666 144.526 188.602 161.483 175.293 174.793C161.983 188.102 145.026 197.166 126.566 200.838C108.106 204.51 88.9709 202.625 71.5816 195.422C54.1923 188.219 39.3293 176.021 28.8724 160.371C18.4154 144.722 12.834 126.322 12.834 107.5"
+                                    d="M108,12.334 A95.1661,95.1661 0 0 1 203.1661,107.5 A95.1661,95.1661 0 0 1 108,202.6661 A95.1661,95.1661 0 0 1 12.8339,107.5 A95.1661,95.1661 0 0 1 108,12.334 Z"
                                     stroke="url(#paint1_linear_9278_365206)"
                                     strokeWidth="24"
                                     strokeLinecap="round"
