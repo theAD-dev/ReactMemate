@@ -179,7 +179,7 @@ const Home = () => {
                         <Col className='mt-4'>
                             <div className="bigBoxHome tobePaidWrap" >
                                 <div className='TooltipWrapper'>
-                                    {['top-end'].map((placement) => (
+                                    {['top'].map((placement) => (
                                         <OverlayTrigger
                                             key={placement}
                                             placement={placement}
@@ -202,7 +202,7 @@ const Home = () => {
                         <Col className='mt-4'>
                             <div className="bigBoxHome invoiceDuewrap" >
                                 <div className='TooltipWrapper'>
-                                    {['top-end'].map((placement) => (
+                                    {['top'].map((placement) => (
                                         <OverlayTrigger
                                             key={placement}
                                             placement={placement}
@@ -226,7 +226,7 @@ const Home = () => {
                         <Col className='mt-4'>
                             <div className="bigBoxHome h-100">
                                 <div className='TooltipWrapper'>
-                                    {['top-end'].map((placement) => (
+                                    {['top'].map((placement) => (
                                         <OverlayTrigger
                                             key={placement}
                                             placement={placement}
@@ -250,7 +250,7 @@ const Home = () => {
                         <Col className='mt-4'>
                             <div className="bigBoxHome h-100">
                                 <div className='TooltipWrapper'>
-                                    {['top-end'].map((placement) => (
+                                    {['top'].map((placement) => (
                                         <OverlayTrigger
                                             key={placement}
                                             placement={placement}
@@ -275,7 +275,7 @@ const Home = () => {
                         <Col className='mt-4'>
                             <div className="bigBoxHome h-100">
                                 <div className='TooltipWrapper'>
-                                    {['top-end'].map((placement) => (
+                                    {['top'].map((placement) => (
                                         <OverlayTrigger
                                             key={placement}
                                             placement={placement}
@@ -297,7 +297,7 @@ const Home = () => {
                         <Col className='mt-4'>
                             <div className="bigBoxHome h-100">
                                 <div className='TooltipWrapper'>
-                                    {['top-end'].map((placement) => (
+                                    {['top'].map((placement) => (
                                         <OverlayTrigger
                                             key={placement}
                                             placement={placement}

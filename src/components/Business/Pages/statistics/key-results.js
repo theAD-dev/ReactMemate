@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { Button } from 'react-bootstrap';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -123,7 +123,17 @@ const KeyResultsPage = () => {
                 </Link>
             </div>
             <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)` }}>
-                <h2 className={clsx(style.keyResultsTitle)}>Key Results</h2>
+                <OverlayTrigger
+                    key={'top'}
+                    placement={'top'}
+                    overlay={
+                        <Tooltip className='TooltipOverlay width-300' id={`tooltip-${top}`}>
+                            The key result has to be measurable. But at the end you can look, and without any arguments No judgments in it.
+                        </Tooltip>
+                    }
+                >
+                    <h2 className={clsx(style.keyResultsTitle)}>Key Results</h2>
+                </OverlayTrigger>
                 <Dropdown>
                     <Dropdown.Toggle as={Button} className={clsx(style.button, "outline-button mx-auto")}>
                         <CalendarIcon color='#475467' size={16} />
