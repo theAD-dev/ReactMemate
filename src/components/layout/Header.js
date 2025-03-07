@@ -56,6 +56,7 @@ import StatisticsIcon from "../../assets/images/icon/StatisticsIcon.svg";
 import statusUp from "../../assets/images/icon/status-up.svg";
 import SuppliersIcon from "../../assets/images/icon/suppliersIcon.svg";
 import Logo from "../../assets/images/logo.svg";
+import Chat from "../../pages/work/chat";
 import { formatDate } from "../../shared/lib/date-format";
 import NotFoundTemplate from "../../ui/404-template/not-found-template";
 import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
@@ -454,7 +455,7 @@ const Header = () => {
                     </li>
                     <li>
                       <NavLink
-                        to="/work/news"
+                        to="/work/chat"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " news"
                         }
@@ -515,6 +516,7 @@ const Header = () => {
           <Route path="/work/approval" element={<ApprovalPage />} />
           <Route path="/work/jobs" element={<JobsPage />} />
           <Route path="/work/people" element={<PeoplePage />} />
+          <Route path="/work/chat" element={<Chat />} />
 
           <Route path="/profile" element={<Profile />} />
 
