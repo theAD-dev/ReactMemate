@@ -98,8 +98,10 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
 
     useEffect(() => {
         if (outgoingEmailTemplateQuery?.data) {
-            if (outgoingEmailTemplateQuery?.data?.outgoing_email)
+            if (outgoingEmailTemplateQuery?.data?.outgoing_email && outgoingEmailTemplateQuery?.data?.outgoing_email_verified)
                 setFrom(outgoingEmailTemplateQuery?.data?.outgoing_email);
+            else
+                setFrom('no-reply@memate.com.au');
         }
 
         if (!emailTemplateId && emailTemplateQuery?.data) {

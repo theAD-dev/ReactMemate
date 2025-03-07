@@ -90,8 +90,10 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
 
     useEffect(() => {
         if (outgoingEmailTemplateQuery?.data) {
-            if (outgoingEmailTemplateQuery?.data?.outgoing_email)
+            if (outgoingEmailTemplateQuery?.data?.outgoing_email && outgoingEmailTemplateQuery?.data?.outgoing_email_verified)
                 setFrom(outgoingEmailTemplateQuery?.data?.outgoing_email);
+            else
+                setFrom('no-reply@memate.com.au');
         }
     }, [emailQuery, outgoingEmailTemplateQuery]);
 
