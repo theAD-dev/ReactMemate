@@ -9,6 +9,7 @@ import DepartmentQuote from './department-quote';
 import CustomRadioButton from './ui/custom-radio-button';
 import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 import CreateProposal from '../../../features/sales-features/create-proposal/create-proposal';
 import SendQuote from '../../../features/sales-features/send-quote/send-quote';
 
@@ -253,51 +254,45 @@ const CalculateQuote = () => {
                     <div className='d-flex align-items-center' style={{ gap: '16px' }}>
                         <div className='item'>
                             <label>Budget</label>
-                            <div className='amount'>$ {totals.budget}</div>
+                            <div className='amount'>${formatAUD(totals.budget)}</div>
                         </div>
                         <div className='item'>
                             <label>Operational Profit</label>
-                            <div className='amount' style={{ color: '#079455' }}>$ {totals.operationalProfit}</div>
+                            <div className='amount' style={{ color: '#079455' }}>${formatAUD(totals.operationalProfit)}</div>
                         </div>
                     </div>
                     <div className='d-flex align-items-center' style={{ gap: '16px' }}>
                         <div className='item'>
                             <label>Subtotal</label>
-                            <div className='amount'>$ {totals.subtotal}</div>
+                            <div className='amount'>${formatAUD(totals.subtotal)}</div>
                         </div>
                         <div className='item'>
-                            <label>Tax ( 10% )</label>
-                            <div className='amount'>$ {totals.tax}</div>
+                            <label>Tax (10%)</label>
+                            <div className='amount'>${formatAUD(totals.tax)}</div>
                         </div>
                         <div className='item' style={{ minWidth: 'fit-content' }}>
                             <label>Total</label>
-                            <div className='amount'>$ {totals.total}</div>
+                            <div className='amount'>${formatAUD(totals.total)}</div>
                         </div>
                     </div>
                 </div>
                 <div className='d-flex justify-content-between align-items-center'>
                     <div className='d-flex align-items-center' style={{ gap: '0px' }}>
-                        <a href='/sales' type="button" className="button-custom text-button padding-left-0" style={{ color: '#B42318' }}>
+                        <a href='/sales' type="button" className="button-custom text-button text-danger padding-left-0" style={{ color: '#B42318' }}>
                             Cancel
                         </a>
                         {
-                            // (unique_id && newRequestQuery?.data?.quote_url) ? (
-                            //     <a href={`${newRequestQuery?.data?.quote_url}`} target='_blank' type="button" className="button-custom text-button px-2">
-                            //         Quote PDF
-                            //     </a>
-                            // ) : (
-                            <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-2">
+                            <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-0">
                                 Quote PDF
                             </a>
-                            // )
                         }
                         {
                             newRequestQuery?.data?.proposal_pdf ? (
-                                <div className='d-flex align-items-center'>
-                                    <button type="button" className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
+                                <div className='d-flex align-items-center gap-2'>
+                                    <button type="button" className="button-custom text-button pe-0" onClick={() => setShowProposalModal(true)}>
                                         Edit Proposal
                                     </button>
-                                    <a href={`${newRequestQuery?.data?.proposal_pdf}`} target='_blank' type="button" className="button-custom text-button px-2" rel="noreferrer">
+                                    <a href={`${newRequestQuery?.data?.proposal_pdf}`} target='_blank' type="button" className="button-custom text-button ps-0" rel="noreferrer">
                                         <FiletypePdf color='#106B99' size={20} />
                                     </a>
                                 </div>

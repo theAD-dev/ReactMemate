@@ -20,11 +20,12 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         category: '',
         phone: { country: '', number: '' },
         contact_persons: [{}],
-        addresses: [{}],
+        addresses: [{ country: 1 }],
     });
     const [individualDefaultValues, ] = useState({
         payment_terms: 1,
         category: '',
+        address: { country: 1 },
     });
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);

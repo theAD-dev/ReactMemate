@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash } from "react-bootstrap-icons";
+import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash, Printer, Postcard } from "react-bootstrap-icons";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -61,6 +61,8 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory
     },
     { label: "History", icon: <ClockHistory color="#344054" size={20} /> },
     { label: "Label", icon: <Tag color="#344054" size={20} /> },
+    { label: "Project Card", icon: <Postcard color="#344054" size={20} /> },
+    { label: "Print Label", icon: <Printer color="#344054" size={20} /> },
     {
       label: "Replicate",
       icon: loading === 4 ? (

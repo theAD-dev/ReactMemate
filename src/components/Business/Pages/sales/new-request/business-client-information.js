@@ -17,7 +17,7 @@ const BusinessClientInformation = () => {
     category: 1,
     phone: { country: '', number: '' },
     contact_persons: [{}],
-    addresses: [{}],
+    addresses: [{ country: 1 }],
   });
 
   const handleExternalSubmit = () => {

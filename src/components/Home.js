@@ -14,12 +14,6 @@ import BookkeepingContact from './layout/modals/book-keeping-contact';
 import InsuranceContact from './layout/modals/insurance-contact';
 import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
 import { fetchHomePage } from "../APIs/HomeApi";
-import homeboxImg01 from "../assets/images/img/homeboxImg01.png";
-import homeboxImg02 from "../assets/images/img/homeboxImg02.png";
-import homeboxImg03 from "../assets/images/img/homeboxImg03.png";
-import homeboxImg04 from "../assets/images/img/homeboxImg04.png";
-
-
 
 const Home = () => {
     const [selectedOption, setSelectedOption] = useState('');
@@ -43,8 +37,6 @@ const Home = () => {
         };
         fetchData();
     }, []);
-
-    const formatter = (value) => `${value}`;
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -335,60 +327,18 @@ const Home = () => {
                 </button>
                 <div className='w-100 mx-auto'>
                     <ul className='pt-4'>
-
                         <li>
-                            <div className="imageBoxHome" style={{
-                                backgroundImage: `url(${homeboxImg01})`,
-                                backgroundSize: 'cover',
-                                backgroundRepeat: 'no-repeat',
-                            }} >
-                                <div className='textOverly'>
-                                    <h3>Finance</h3>
-                                    <Button variant="link">
-                                        <ModalSalesContactFinance />
-                                    </Button>
-                                </div>
-                            </div>
+                            <ModalSalesContactFinance />
                         </li>
                         <li>
-                            <div className="imageBoxHome" style={{
-                                backgroundImage: `url(${homeboxImg02})`,
-                                backgroundSize: 'cover',
-                                backgroundRepeat: 'no-repeat',
-                            }} >
-                                <div className='textOverly'>
-                                    <h3>Book keeping</h3>
-                                    <Button variant="link">
-                                        <BookkeepingContact />
-                                    </Button>
-                                </div>
-                            </div>
+                            <BookkeepingContact />
                         </li>
                         <li>
-                            <div className="imageBoxHome" style={{
-                                backgroundImage: `url(${homeboxImg03})`,
-                                backgroundSize: 'cover',
-                                backgroundRepeat: 'no-repeat',
-                            }} >
-                                <div className='textOverly'>
-                                    <h3>Insurance</h3>
-                                    <Button variant="link"><InsuranceContact /></Button>
-                                </div>
-                            </div>
+                            <InsuranceContact />
                         </li>
                         <li>
-                            <div className="imageBoxHome" style={{
-                                backgroundImage: `url(${homeboxImg04})`,
-                                backgroundSize: 'cover',
-                                backgroundRepeat: 'no-repeat',
-                            }} >
-                                <div className='textOverly'>
-                                    <h3>Accounting</h3>
-                                    <Button variant="link"><AccountingContact /></Button>
-                                </div>
-                            </div>
+                            <AccountingContact />
                         </li>
-
                     </ul>
                 </div>
             </div>

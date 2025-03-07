@@ -8,6 +8,7 @@ import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loa
 import SelectComponent from './select-component';
 import { getCalculationByReferenceId, getDepartments } from '../../../../../../APIs/CalApi';
 import './select-component.css';
+import { formatAUD } from '../../../../../../shared/lib/format-aud';
 import CreateMergeCalculation from '../../../../features/sales-features/merges-calculation/create-merge-calculation';
 import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
 import { romanize } from '../../../../shared/utils/helper';
@@ -213,7 +214,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                 </select>
                                             </div>
                                         </td>
-                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.unit_price || "0.00"}</td>
+                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>${formatAUD(value.unit_price || "0.00")}</td>
                                         <td style={{ width: '166px' }}>
                                             <div className='d-flex align-items-center'>
                                                 <input
@@ -241,7 +242,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                             </div>
                                         </td>
 
-                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.total || 0.00}</td>
+                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {formatAUD(value.total || 0.00)}</td>
                                         <td style={{ width: '32px' }}>
                                             <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id, value.calculator)} />
                                         </td>

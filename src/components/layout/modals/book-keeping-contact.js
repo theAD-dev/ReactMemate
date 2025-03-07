@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import { NavLink } from "react-router-dom";
@@ -15,6 +16,7 @@ import { createAdditionalService } from '../../../APIs/service-api';
 import ClockHistoryCircle from "../../../assets/images/icon/clock-history-icon.png";
 import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
 import ZapCircle from "../../../assets/images/icon/zap.png";
+import homeboxImg02 from "../../../assets/images/img/homeboxImg02.png";
 import LenderPanel from "../../../assets/images/img/lender-panel01.png";
 import "./style-model.css";
 
@@ -62,8 +64,20 @@ const BookkeepingContact = ({ onAdd }) => {
 
   return (
     <>
-      <div onClick={handleOpen} className={`styleGrey01 popupModalStyle`}>
-        Learn More
+      <div className="imageBoxHome" onClick={handleOpen} style={{
+        backgroundImage: `url(${homeboxImg02})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        cursor: 'pointer'
+      }} >
+        <div className='textOverly'>
+          <h3>Book keeping</h3>
+          <Button variant="link">
+            <div className={`styleGrey01 popupModalStyle`}>
+              Learn More
+            </div>
+          </Button>
+        </div>
       </div>
 
       <Modal

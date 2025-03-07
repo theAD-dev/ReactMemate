@@ -439,7 +439,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
                 {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => removeAddress(index)}>Delete</Button>}
-                {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({})}>Add New <Plus size={24} color="#106b99" /></Button>}
+                {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({ country: 1 })}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>
           ))
