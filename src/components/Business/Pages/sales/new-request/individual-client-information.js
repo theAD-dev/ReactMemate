@@ -15,7 +15,8 @@ const IndividualClientInformation = () => {
 
     const [individualDefaultValues,] = useState({
         payment_terms: 1,
-        category: 1,
+        category: '',
+        address: { country: 1 },
     });
 
     const handleExternalSubmit = () => {

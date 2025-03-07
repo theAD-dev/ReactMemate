@@ -12,7 +12,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
   const formRef = useRef(null);
   const [isPending, setIsPending] = useState(false);
   const [photo, setPhoto] = useState(null);
-  const [defaultValues, setDefaultValues] = useState({
+  const [defaultValues, ] = useState({
     contact_persons: [{}],
     addresses: [{
       country: 1

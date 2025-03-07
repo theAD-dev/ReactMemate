@@ -10,17 +10,16 @@ import DepartmentCalculationTable from './department-calculation-table';
 import QuoteToBusiness from './quote-to-business';
 import QuoteToClient from './quote-to-client';
 import { getClientById, getProjectManager } from '../../../../../../APIs/ClientsApi';
+import ImageAvatar from '../../../../../../ui/image-with-fallback/image-avatar';
 import CustomRadioButton from '../ui/custom-radio-button';
 
 const CustomOption = (props) => {
   return (
     <components.Option {...props}>
-      <img
-        src={props.data.image}
-        alt={props.data.label}
-        style={{ width: 20, height: 20, marginRight: 10 }}
-      />
-      {props.data.label}
+      <div className='d-flex align-items-center'>
+        <ImageAvatar has_photo={props?.data.has_photo} photo={props.data.image} is_business={false} />
+        {props.data.label}
+      </div>
     </components.Option>
   );
 };
@@ -88,6 +87,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
 
       const initialManagers = uniqueManagers.map(manager => ({
         value: manager.manager,
+        has_photo: projectManagerQuery?.data?.find(user => user.id === manager.manager)?.has_photo,
         label: projectManagerQuery?.data?.find(user => user.id === manager.manager)?.name || 'Unknown',
         image: projectManagerQuery?.data?.find(user => user.id === manager.manager)?.photo || 'https://dev.memate.com.au/media/no_org.png'
       }));
@@ -230,7 +230,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                                 ':before': {
                                   borderRadius: '50%',
                                   content: '" "',
-                                  backgroundImage: `url(${data.image})`,
+                                  backgroundImage: data?.has_photo ? `url(${data.image})` : 'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiIgd2lkdGg9IjFlbSIgaGVpZ2h0PSIxZW0iIGZpbGw9IiM2NjcwODUiIGNsYXNzPSJiaSBiaS1wZXJzb24iPjxwYXRoIGQ9Ik04IDhhMyAzIDAgMSAwIDAtNiAzIDMgMCAwIDAgMCA2bTItM2EyIDIgMCAxIDEtNCAwIDIgMiAwIDEgMSA0IDBtNCA4YzAgMS0xIDEtMSAxSDMscy0xIDAtMS0xIDEtNCA2LTQgNiAzIDYgNG0tMS0uMDA0Yy0uMDAxLS4yNDYtLjE1NC0uOTg2LS44MzItMS42NjRDMTEuNTE2IDEwLjY4IDEwLjI4OSAxMCA4IDEwcy0zLjUxNi42OC00LjE2OCAxLjMzMmMtLjY3OC42NzgtLjgzIDEuNDE4LS44MzIgMS42NjR6Ij48L3BhdGg+PC9zdmc+")',
                                   backgroundSize: 'cover',
                                   backgroundPosition: 'center',
                                   backgroundRepeat: 'no-repeat',
@@ -249,7 +249,8 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                           options={projectManagerQuery?.data?.map((user) => ({
                             value: user.id,
                             label: user.name,
-                            image: user.photo || 'https://dev.memate.com.au/media/no_org.png',
+                            image: user.photo,
+                            has_photo: user.has_photo
                           }))}
                         />
                       </div>

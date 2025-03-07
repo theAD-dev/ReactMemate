@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import { useMutation } from '@tanstack/react-query';
+import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
@@ -15,6 +16,7 @@ import { createAdditionalService } from '../../../APIs/service-api';
 import ChartBreakoutSquare from "../../../assets/images/icon/chart-breakout-square.png";
 import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.png";
 import ZapCircle from "../../../assets/images/icon/zap.png";
+import homeboxImg01 from "../../../assets/images/img/homeboxImg01.png";
 import LenderPanel from "../../../assets/images/img/lender-panel 1.png";
 import "./style-model.css";
 
@@ -61,10 +63,22 @@ const ModalSalesContactFinance = () => {
 
   return (
     <>
-      <div onClick={handleOpen} className={`styleGrey01 popupModalStyle`}>
-        Learn More
+      <div className="imageBoxHome" onClick={handleOpen} style={{
+        backgroundImage: `url(${homeboxImg01})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        cursor: 'pointer'
+      }} >
+        <div className='textOverly'>
+          <h3>Finance</h3>
+          <Button variant="link">
+            <div className={`styleGrey01 popupModalStyle`}>
+              Learn More
+            </div>
+          </Button>
+        </div>
       </div>
-
+      
       <Modal
         open={open}
         onClose={handleClose}

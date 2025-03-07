@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { useForm, Controller } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import { NavLink } from "react-router-dom";
@@ -15,6 +16,7 @@ import { createAdditionalService } from '../../../APIs/service-api';
 import CalendarweekCircle from "../../../assets/images/icon/calendar-week.png";
 import ClipboardCircle from "../../../assets/images/icon/clipboard-ch.png";
 import PersonIconCircle from "../../../assets/images/icon/personIcon.png";
+import homeboxImg03 from "../../../assets/images/img/homeboxImg03.png";
 import LenderPanel from "../../../assets/images/img/lender-panel02.png";
 import "./style-model.css";
 
@@ -61,9 +63,23 @@ const InsuranceContact = () => {
 
   return (
     <>
-      <div onClick={handleOpen} className={`styleGrey01 popupModalStyle`}>
-        Learn More
+      <div className="imageBoxHome" onClick={handleOpen} style={{
+        backgroundImage: `url(${homeboxImg03})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        cursor: 'pointer'
+      }} >
+        <div className='textOverly'>
+          <h3>Insurance</h3>
+
+          <Button variant="link">
+            <div className={`styleGrey01 popupModalStyle`}>
+              Learn More
+            </div>
+          </Button>
+        </div>
       </div>
+
 
       <Modal
         open={open}
