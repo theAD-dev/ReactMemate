@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import NProgress from 'nprogress';
 import { ProgressSpinner } from 'primereact/progressspinner';
-
 import style from './suspense-loader.module.scss';
 
 function SuspenseLoader() {

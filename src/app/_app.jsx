@@ -1,19 +1,15 @@
-import { Toaster } from "sonner";
-import { PrimeReactProvider } from "primereact/api";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ReactQueryProvider } from "./providers/query-client-provider";
 import { ErrorBoundary } from "react-error-boundary";
 import { HelmetProvider } from "react-helmet-async";
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { PrimeReactProvider } from "primereact/api";
+import { Toaster } from "sonner";
+import { AuthProvider } from "./providers/auth-provider";
+import { ReactQueryProvider } from "./providers/query-client-provider";
 import "./global.scss";
 import routes from "./router";
-import { AuthProvider } from "./providers/auth-provider";
 
 const App = () => {
-  useDisableScreenshots();
-  useDisableRightClickAndDevTools();
   const content = createBrowserRouter(routes);
-  const isRecording = useScreenRecordingDetector();
 
   return (
     <ErrorBoundary
@@ -24,23 +20,7 @@ const App = () => {
         <PrimeReactProvider>
           <ReactQueryProvider>
             <AuthProvider>
-              <Toaster
-                className="snackbar"
-                position="top-right"
-                expand
-                closeButton
-                duration={5000}
-                visibleToasts={2}
-                toastOptions={{
-                  classNames: {
-                    success: "snack-bar-success",
-                    error: "snack-bar-error",
-                    closeButton: "snack-bar-action-button",
-                    content: "snackbar-content",
-                    title: "snackbar-title",
-                  },
-                }}
-              />
+              <Toaster expand={true} richColors closeButton position="top-right" />
               <RouterProvider router={content} />
             </AuthProvider>
           </ReactQueryProvider>

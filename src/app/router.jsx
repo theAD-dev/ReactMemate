@@ -1,12 +1,14 @@
-import { Suspense, lazy } from "react";
-import { Navigate, RouteObject } from "react-router";
-import SuspenseLoader from "../shared/ui/suspense-loader/suspense-loader";
+import ProtectedRoute from "./providers/protected-route-provider";
 
-const LazyLoader = (Component) => (props) =>
-(
-    <Suspense fallback={<SuspenseLoader />}>
-        <Component {...props} />
-    </Suspense>
-);
+const routes = [
+    {
+        path: "/",
+        element: (
+            <ProtectedRoute>
+                <>Welcome</>
+            </ProtectedRoute>
+        ),
+    },
+];
 
-// Pages
+export default routes;
