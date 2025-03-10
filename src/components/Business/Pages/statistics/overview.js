@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { ClipboardData, Google, InfoSquareFill, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Chart } from 'primereact/chart';
 import style from './statistics.module.scss';
@@ -209,30 +210,30 @@ const Overview = () => {
     return (
         <>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                <a href="/statistics/executive" className={clsx('d-flex align-items-center px-2 py-1')}>
+                <Link to="/statistics/executive" className={clsx('d-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
-                </a>
-                <a href="/statistics/sales-conversion" className='d-flex align-items-center px-2 py-1'>
+                </Link>
+                <Link to="/statistics/sales-conversion" className='d-flex align-items-center px-2 py-1'>
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
-                </a>
-                <a href="/statistics/overview" style={{ background: "#FEF3F2" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
+                </Link>
+                <Link to="/statistics/overview" style={{ background: "#FEF3F2" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: "#F04438" }}>Overview</span>
-                </a>
-                <a href="/statistics/key-results" className='d-flex align-items-center px-2 py-1'>
+                </Link>
+                <Link to="/statistics/key-results" className='d-flex align-items-center px-2 py-1'>
                     <WindowDesktop color='#667085' size={16} className='me-2' />
                     <span className={style.topbartext}>Key Results</span>
-                </a>
-                <a className='d-flex align-items-center px-2 py-1'>
+                </Link>
+                <Link to={"#"} className='d-flex align-items-center px-2 py-1'>
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
-                </a>
-                <a className='d-flex align-items-center px-2 py-1'>
+                </Link>
+                <Link to={"#"} className='d-flex align-items-center px-2 py-1'>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
-                </a>
+                </Link>
             </div>
 
             <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)`, background: '#F8F9FC', position: 'relative' }}>

@@ -40,7 +40,7 @@ function App() {
         <Route path="/check-mail" element={<CheckMail />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/profile/change-password/:token" element={<ChangePassword />} />
-        <Route path="/request-demo" element={<SignUp />} />
+        <Route path="/requestdemo" element={<SignUp />} />
         <Route path="/select-country" element={<SelectCountry />} />
         <Route path="/companyname" element={<CompanyName />} />
         <Route path="/selectdate" element={<SelectDate />} />

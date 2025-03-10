@@ -208,7 +208,7 @@ export const fetchduplicateData = async (saleUniqueId) => {
   myHeaders.append("Content-Type", "application/json");
 
   const requestOptions = {
-    method: "GET",
+    method: "POST",
     headers: myHeaders,
     redirect: "follow"
   };
