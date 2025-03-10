@@ -33,7 +33,7 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory
     } else if (option.label === 'Resend') {
       setIsVisibleResendEmail(true);
       setAnchorEl(null);
-    } else if (option.label === 'Label') {
+    } else if (option.label === 'Print Label') {
       window.open(`/api/v1/sales/${saleUniqueId}/label/`, '_blank');
     } else if (option.label === 'Delete' && saleUniqueId) {
       setLoading(5);
@@ -60,9 +60,8 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory
       )
     },
     { label: "History", icon: <ClockHistory color="#344054" size={20} /> },
-    { label: "Label", icon: <Tag color="#344054" size={20} /> },
+    { label: "Print Label", icon: <Tag color="#344054" size={20} /> },
     { label: "Project Card", icon: <Postcard color="#344054" size={20} /> },
-    { label: "Print Label", icon: <Printer color="#344054" size={20} /> },
     {
       label: "Replicate",
       icon: loading === 4 ? (
