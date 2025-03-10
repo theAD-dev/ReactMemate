@@ -1,9 +1,25 @@
 {
     "compilerOptions": {
-        "baseUrl" : ".",
+        "baseUrl": ".",
         "paths": {
-            "@utils/*": [
-                "utils/*"
+            "@/*": ["./src/*"],
+            "@app/*": [
+                "./src/app/*"
+            ],
+            "@features/*": [
+                "./src/features/*"
+            ],
+            "@pages/*": [
+                "./src/pages/*"
+            ],
+            "@entities/*": [
+                "./src/entities/*"
+            ],
+            "@shared/*": [
+                "./src/shared/*"
+            ],
+            "@components/*": [
+                "./src/components/*"
             ]
         },
         "module": "esnext",
