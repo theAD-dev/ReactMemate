@@ -1,15 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { PrimeReactProvider } from 'primereact/api';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Button } from 'react-bootstrap';
 import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
+import clsx from 'clsx';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
 import ClientTable from './client-table';
 import style from './clients.module.scss';
 import NewClientCreate from '../../features/clients-features/new-client-create/new-client-create';
-import clsx from 'clsx';
 
 const ClientPage = () => {
     const dt = useRef(null);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 import {
-  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate, FolderSymlink
+  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FileText, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate
 } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -15,14 +15,13 @@ import ProjectCardFilter from './ProjectCardFilter';
 import ScheduleUpdate from './ScheduleUpdate';
 import SelectStatus from './select-status';
 import SendSMS from './SendSMS';
-import { ProjectCardApi, cardScheduleUpdateApi } from "../../../../APIs/management-api";
+import { ProjectCardApi } from "../../../../APIs/management-api";
 import Briefcase from "../../../../assets/images/icon/briefcase.svg";
 import CalendarIcon from "../../../../assets/images/icon/calendar.svg";
 import CreatePoIcon from "../../../../assets/images/icon/createPoIcon.svg";
 import ExpenseIcon from "../../../../assets/images/icon/ExpenseIcon.svg";
 import GoogleReview from "../../../../assets/images/icon/googleReviewIcon.svg";
 import InvoicesIcon from "../../../../assets/images/icon/InvoicesIcon.svg";
-import OrdersIcon from "../../../../assets/images/icon/OrdersIcon.svg";
 
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
@@ -74,18 +73,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     if (projectId && viewShow) projectCardData(projectId);
   }, [projectId, viewShow]);
 
-  const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
-  const handleDateRangeChange = (range) => {
-    // Handle the date range update
-    console.log('New date range:', range);
-};
-
-//Real Cost Calculation
-const cs = parseFloat(cardData?.cost_of_sale) || 0;
-const le = parseFloat(cardData?.labor_expenses) || 0;
-const oe = parseFloat(cardData?.operating_expense) || 0;
-const RealCost = cs + le + oe;
-const formattedRealCost = RealCost.toFixed(2);
+  //Real Cost Calculation
+  const cs = parseFloat(cardData?.cost_of_sale) || 0;
+  const le = parseFloat(cardData?.labor_expenses) || 0;
+  const oe = parseFloat(cardData?.operating_expense) || 0;
+  const RealCost = cs + le + oe;
+  const formattedRealCost = RealCost.toFixed(2);
 
 
   return (
@@ -123,7 +116,7 @@ const formattedRealCost = RealCost.toFixed(2);
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
             <div className='selectButStatus'>
-            <SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status}/>
+              <SelectStatus projectId={projectId} statusOptions={statusOptions} custom_status={cardData?.custom_status} />
             </div>
             <button className='CustonCloseModal' onClick={handleClose}>
               <X size={24} color='#667085' />
@@ -161,7 +154,7 @@ const formattedRealCost = RealCost.toFixed(2);
                     <tbody>
                       {cardData?.jobs?.length ? (
                         cardData.jobs.map(({ id, number, reference, status, total }) => (
-                          <tr>
+                          <tr key={id}>
                             <td>{number.substring(4)}</td>
                             <td><div className='ellipsis-width'>{reference}</div></td>
                             <td> <Github size={24} color='#101828' /></td>
@@ -187,7 +180,7 @@ const formattedRealCost = RealCost.toFixed(2);
               <Col className='projectHistoryCol'>
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center' >
-                    <AddNote projectId={projectId}/>
+                    <AddNote projectId={projectId} />
                     <NewTask project={project} reInitilize={reInitilize} />
                     <SendSMS />
                     <ComposeEmail />
@@ -202,7 +195,7 @@ const formattedRealCost = RealCost.toFixed(2);
                     <div className='projectHistoryScroll'>
                       {cardData?.history?.length ? (
                         cardData.history.map(({ id, type, text, title, created, manager }) => (
-                         
+
                           <div className='projectHistorygroup' key={id}>
                             <ul>
                               <li>

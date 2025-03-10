@@ -29,7 +29,7 @@ const schema = yup
     })
     .required();
 
-const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, refetch }) => {
+const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }) => {
     const [show, setShow] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +89,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, setId, re
                 refetch();
                 return "success";
             } else {
-                const data = await response.json();
+                await response.json();
                 toast.error(`Failed to create the user. Please try again.`);
                 return "error";
             }

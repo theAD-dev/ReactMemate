@@ -6,7 +6,7 @@ import { Dialog } from 'primereact/dialog';
 import JobConfirmation from "./job-confirmation-dialog";
 import style from './job-dialog.module.scss';
 
-export default function JobDetails({ visible, setVisible, JobDetails}) {
+export default function JobDetails({ visible, setVisible }) {
     const [confirmation, setConfirmation] = useState(false);
 
     const headerElement = (

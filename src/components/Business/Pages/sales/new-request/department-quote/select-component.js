@@ -1,9 +1,7 @@
-import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import React, { useState } from 'react';
-
-import '@szhsin/react-menu/dist/index.css';
 import { ChevronDown } from 'react-bootstrap-icons';
-
+import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 
 const SelectComponent = ({ departments, handleChange, isShowlabel = false, title }) => {
     const [selectedOption, setSelectedOption] = useState(title || null);
@@ -30,7 +28,7 @@ const SelectComponent = ({ departments, handleChange, isShowlabel = false, title
             overflow={"auto"}
             position={"anchor"}
         >
-            {departments?.filter((data) => !data?.deleted)?.map((department, i) => (
+            {departments?.filter((data) => !data?.deleted)?.map((department) => (
                 <React.Fragment key={department.id}>
                     {
                         department?.subindexes?.length ? (

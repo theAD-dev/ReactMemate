@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "react-bootstrap";
 import { useMutation } from "@tanstack/react-query";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -15,8 +15,6 @@ const XeroIntegration = ({ connected, refetch }) => {
   console.log('connected: ', connected);
   const REDIRECT_URI = window.location.href;
   const authorizationUrl = `https://login.xero.com/identity/connect/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=openid profile email offline_access accounting.transactions accounting.contacts accounting.settings&state=111`;
-
-  const [redirectParams, setRedirectParams] = useState(null);
 
   const processedCodes = new Set();
   const exchangeCodeForToken = async (code) => {
@@ -84,12 +82,13 @@ const XeroIntegration = ({ connected, refetch }) => {
   };
 
   const mutation = useMutation({
-    mutationFn: (data) => disconnectXeroIntegrations(),
+    mutationFn: () => disconnectXeroIntegrations(),
     onSuccess: () => {
       refetch();
       toast.success(`Xero disconnected successfully.`);
     },
     onError: (error) => {
+      console.log('error: ', error);
       toast.error(`Failed to disconnect xero. Please try again.`);
     }
   });

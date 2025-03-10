@@ -158,6 +158,16 @@ export const sendSms = async (id, data) => {
     return fetchAPI(url.toString(), options);
 };
 
+export const resendQuoteEmail = async (id, data) => {
+    let endpoint = `/resend/quote/${id}/`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
 export const getManagement = async () => {
     const myHeaders = new Headers();
     const accessToken = localStorage.getItem("access_token");

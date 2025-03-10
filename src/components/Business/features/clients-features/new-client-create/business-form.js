@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
-import { Exclamation, Person, Building, Plus } from 'react-bootstrap-icons';
+import { Building, Plus } from 'react-bootstrap-icons';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -64,7 +64,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
     if (stateId) fetchCities(stateId);
   }, [stateId]);
 
-  const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+  const { control, register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues
   });
@@ -181,7 +181,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   className='phoneInput rounded'
                   containerClass={styles.countrySelector}
                   onChange={field.onChange}
-                  style={{ border: `1px solid ${errors.phone ? 'red' : '#dedede'}`}}
+                  style={{ border: `1px solid ${errors.phone ? 'red' : '#dedede'}` }}
                 />
               )}
             />
@@ -328,7 +328,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                           className='phoneInput rounded'
                           containerClass={styles.countrySelector}
                           onChange={(phone) => field.onChange(phone)}
-                          style={{ border: `1px solid ${errors.contact_persons?.[index]?.phone ? 'red' : '#dedede'}`}}
+                          style={{ border: `1px solid ${errors.contact_persons?.[index]?.phone ? 'red' : '#dedede'}` }}
                         />
                       )}
                     />
@@ -493,7 +493,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
                 {<Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteAddressIndex(index, item.uniqeId)}>Delete {deleteIndex?.type === "address" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
-                {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({})}>Add New <Plus size={24} color="#106b99" /></Button>}
+                {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({ country: 1 })}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>
           ))

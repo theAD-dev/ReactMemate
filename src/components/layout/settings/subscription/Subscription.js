@@ -4,19 +4,18 @@ import { Divider } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from "sonner";
+import AddRemoveCompanyUser from "./features/add-remove-company-user";
+import AddRemoveMobileUser from "./features/add-remove-mobile-user";
+import styles from "./subscription.module.scss";
 import { activeWorkSubscription, cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 import ThemeImages from '../../../../assets/imgconstant';
 import { formatAUD } from "../../../../shared/lib/format-aud";
 import Sidebar from "../Sidebar";
-import AddRemoveCompanyUser from "./features/add-remove-company-user";
-import AddRemoveMobileUser from "./features/add-remove-mobile-user";
-import styles from "./subscription.module.scss";
 
 const Subscription = () => {
   const { trialHeight } = useTrialHeight();
-  const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
   const [mobileUserVisible, setMobileUserVisible] = useState(false);

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { Dropdown } from 'primereact/dropdown';
+import timezones from './timezones.json';
+import { OnboardingCreateOrganisation } from "../../../APIs/OnboardingApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./org.css";
 import RegionalSettings from "../../../assets/images/img/emailSlider03.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
-import { OnboardingCreateOrganisation } from "../../../APIs/OnboardingApi";
-import { useLocation } from 'react-router-dom';
-import timezones from './timezones.json';
-import { Dropdown } from 'primereact/dropdown';
+import "./org.css";
 
 const Regionalsettings = () => {
   const navigate = useNavigate();

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
+import { useParams } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import SelectComponent from './select-component';
 import { getCalculationByReferenceId, getDepartments } from '../../../../../../APIs/CalApi';
-
 import './select-component.css';
-import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
+import { formatAUD } from '../../../../../../shared/lib/format-aud';
 import CreateMergeCalculation from '../../../../features/sales-features/merges-calculation/create-merge-calculation';
 import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
 import { romanize } from '../../../../shared/utils/helper';
@@ -23,7 +23,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                 <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
             </td>
             <td style={{ width: '100%', paddingTop: '10px' }}>
-                <textarea disabled rows={1} placeholder='Enter a description...' style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} onChange={(e) => { }}></textarea>
+                <textarea disabled rows={1} placeholder='Enter a description...' style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box' }} onChange={() => { }}></textarea>
             </td>
             <td style={{ width: '128px' }}>
                 <div className='d-flex align-items-center'>
@@ -33,7 +33,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         disabled
                         style={{ padding: '4px', width: '100px', background: 'transparent', color: '#98A2B3' }}
                         value={`${'0.00'}`}
-                        onChange={(e) => { }}
+                        onChange={() => { }}
                     />
                 </div>
             </td>
@@ -44,9 +44,9 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         disabled
                         style={{ padding: '4px', width: '60px', background: 'transparent', color: '#98A2B3' }}
                         value={`${'0.00'}`}
-                        onChange={(e) => { }}
+                        onChange={() => { }}
                     />
-                    <select value={"MRG"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => { }}>
+                    <select value={"MRG"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
                         <option value={"MRG"}>MRG %</option>
                         <option value={"AMN"}>AMT $</option>
                         <option value={"MRK"}>MRK %</option>
@@ -61,9 +61,9 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         disabled
                         style={{ padding: '4px', width: '60px', background: 'transparent', color: '#98A2B3' }}
                         value={`${'0.00'}`}
-                        onChange={(e) => { }}
+                        onChange={() => { }}
                     />
-                    <select value={"Cost"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={(e) => { }}>
+                    <select value={"Cost"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
                         <option value="Cost">1/Q</option>
                         <option value="Hourly">1/H</option>
                     </select>
@@ -75,7 +75,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         type="text"
                         style={{ width: '60px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
                         value={`${"0.00"}`}
-                        onChange={(e) => { }}
+                        onChange={() => { }}
                     />
                     <span>%</span>
                 </div>
@@ -108,7 +108,7 @@ const DepartmentCalculationTableHead = () => {
     );
 };
 
-const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDiscount, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
+const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
     const handleChange = (event, value) => {
         setSelectItem((oldItems) => {
             if (event.target.checked) {
@@ -214,7 +214,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                                 </select>
                                             </div>
                                         </td>
-                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.unit_price || "0.00"}</td>
+                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>${formatAUD(value.unit_price || "0.00")}</td>
                                         <td style={{ width: '166px' }}>
                                             <div className='d-flex align-items-center'>
                                                 <input
@@ -242,7 +242,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, defaultDi
                                             </div>
                                         </td>
 
-                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {value.total || 0.00}</td>
+                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {formatAUD(value.total || 0.00)}</td>
                                         <td style={{ width: '32px' }}>
                                             <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id, value.calculator)} />
                                         </td>

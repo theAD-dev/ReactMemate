@@ -13,9 +13,10 @@ const IndividualClientInformation = () => {
     const [photo, setPhoto] = useState(null);
     const [isPending, setIsPending] = useState(false);
 
-    const [individualDefaultValues, setIndividualDefaultValues] = useState({
+    const [individualDefaultValues,] = useState({
         payment_terms: 1,
-        category: 1,
+        category: '',
+        address: { country: 1 },
     });
 
     const handleExternalSubmit = () => {

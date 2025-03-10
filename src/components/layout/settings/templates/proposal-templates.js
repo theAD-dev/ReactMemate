@@ -4,10 +4,10 @@ import { PlusLg } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import style from './job-template.module.scss';
 import { getProposalsTemplates } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
-import style from './job-template.module.scss';
 
 
 
@@ -44,7 +44,7 @@ const ProposalTemplates = () => {
                         <div className='content_wrapper'>
                             <div className='listwrapper' style={{ height: 'calc(100vh - 229px)' }}>
                                 {
-                                    proposalTemplateQuery?.data?.map((proposal, index) =>
+                                    proposalTemplateQuery?.data?.map((proposal) =>
                                         <div key={proposal.id} className={clsx(style.listbox, 'mb-2')}>
                                             <h2 className={clsx(style.heading)}>{proposal?.name}</h2>
                                             <Link to={`/settings/templates/proposal-templates/${proposal?.id}`}>

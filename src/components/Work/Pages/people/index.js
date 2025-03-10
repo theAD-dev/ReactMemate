@@ -1,8 +1,7 @@
-import { PrimeReactProvider } from 'primereact/api';
 import React from 'react';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Filter } from 'react-bootstrap-icons';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import DesktopPeoplesTable from './desktop-user-table';
 import style from './people.module.scss';
 import PeoplesTable from './peoples-table';

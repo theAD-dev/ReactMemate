@@ -1,18 +1,16 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Placeholder } from "react-bootstrap";
+import { XCircle } from "react-bootstrap-icons";
 import { useLocation, NavLink, Outlet, Routes, Route, useNavigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import style from './header.module.scss';
-import Home from "../Home";
 import Profile from "./Login/profile";
 import ProfileInfo from "./ProfileInfo";
 import SelectOption from "./SelectOption";
-import { fetchProfile } from "../../APIs/ProfileApi";
-
-
-import "./header.css";
 import DepartmentTurnoverPlan from "./settings/accounting/DepartmentTurnoverPlan";
+import "./header.css";
 import ExpensesAccount from "./settings/accounting/ExpensesAccount";
 import CompanyEthos from "./settings/companyethos/CompanyEthos";
 import CustomersDiscountCategory from "./settings/customerssettings/CustomersDiscountCategory";
@@ -41,6 +39,7 @@ import JobTemplates from "./settings/templates/job-templates";
 import ProposalTemplates from "./settings/templates/proposal-templates";
 import TermsandConditions from "./settings/termsandconditions/TermsandConditions";
 import TermsConditionsInvoice from "./settings/termsandconditions/TermsConditionsInvoice";
+import { fetchProfile } from "../../APIs/ProfileApi";
 import { useTrialHeight } from "../../app/providers/trial-height-provider";
 import bookSquare from "../../assets/images/icon/book-square.svg";
 import Briefcase from "../../assets/images/icon/briefcase.svg";
@@ -57,6 +56,7 @@ import StatisticsIcon from "../../assets/images/icon/StatisticsIcon.svg";
 import statusUp from "../../assets/images/icon/status-up.svg";
 import SuppliersIcon from "../../assets/images/icon/suppliersIcon.svg";
 import Logo from "../../assets/images/logo.svg";
+import Chat from "../../pages/work/chat";
 import { formatDate } from "../../shared/lib/date-format";
 import NotFoundTemplate from "../../ui/404-template/not-found-template";
 import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
@@ -66,6 +66,7 @@ import ExpensesPage from "../Business/Pages/expenses";
 import InvoicePage from "../Business/Pages/invoices";
 import Management from "../Business/Pages/management/management-page";
 import DemoTable from "../Business/Pages/management/project-card/DemoTable";
+import OrderPage from "../Business/Pages/orders";
 import ClientLayout from "../Business/Pages/sales/new-request";
 import BusinessClientInformation from "../Business/Pages/sales/new-request/business-client-information";
 import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
@@ -82,28 +83,24 @@ import Overview from "../Business/Pages/statistics/overview";
 import SalesConversion from "../Business/Pages/statistics/sales-conversion";
 import SupplierPage from "../Business/Pages/suppliers";
 import SupplierHistoryPage from "../Business/Pages/suppliers/suppliers-history";
+import Home from "../Home";
 import Departments from "../layout/settings/calculators/Departments";
 import BankDetails from "../layout/settings/generalinformation/BankDetails";
 import GeneralInformation from "../layout/settings/generalinformation/GeneralInformation";
+import RegionLanguage from "../layout/settings/generalinformation/RegionLanguage";
+import BillingInfo from "../layout/settings/subscription/BillingInfo";
+import Bills from "../layout/settings/subscription/Bills";
+import MobileApp from "../layout/settings/users/MobileApp";
+import Users from "../layout/settings/users/Users";
+import ApprovalPage from "../Work/Pages/approval";
+import Dashboard from "../Work/Pages/Dashboard";
+import JobsPage from "../Work/Pages/jobs";
+import News from "../Work/Pages/News";
+import PeoplePage from "../Work/Pages/people";
+import TaskPage from "../Work/Pages/tasks";
 import { Work } from "../Work/Pages/Work";
 
-import RegionLanguage from "../layout/settings/generalinformation/RegionLanguage";
-import Bills from "../layout/settings/subscription/Bills";
-import BillingInfo from "../layout/settings/subscription/BillingInfo";
-import Users from "../layout/settings/users/Users";
-import MobileApp from "../layout/settings/users/MobileApp";
-import Dashboard from "../Work/Pages/Dashboard";
-import News from "../Work/Pages/News";
-import { Placeholder, Spinner } from "react-bootstrap";
-import JobsPage from "../Work/Pages/jobs";
-import PeoplePage from "../Work/Pages/people";
-import OrderPage from "../Business/Pages/orders";
-import ApprovalPage from "../Work/Pages/approval";
-import TaskPage from "../Work/Pages/tasks";
-import { XCircle, XCircleFill } from "react-bootstrap-icons";
-
-
-const Header = ({ onClick }) => {
+const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { setTrialHeight } = useTrialHeight();
@@ -458,7 +455,7 @@ const Header = ({ onClick }) => {
                     </li>
                     <li>
                       <NavLink
-                        to="/work/news"
+                        to="/work/chat"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " news"
                         }
@@ -519,6 +516,7 @@ const Header = ({ onClick }) => {
           <Route path="/work/approval" element={<ApprovalPage />} />
           <Route path="/work/jobs" element={<JobsPage />} />
           <Route path="/work/people" element={<PeoplePage />} />
+          <Route path="/work/chat" element={<Chat />} />
 
           <Route path="/profile" element={<Profile />} />
 

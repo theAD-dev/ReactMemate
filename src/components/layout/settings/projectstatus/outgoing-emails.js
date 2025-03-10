@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import '@szhsin/react-menu/dist/index.css';
 import { Button, Table } from 'react-bootstrap';
 import { PlusLg } from "react-bootstrap-icons";
@@ -7,8 +6,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Sidebar from '../Sidebar';
 import style from './project.module.scss';
+import Sidebar from '../Sidebar';
 
 // Define schema for multiple entries
 const schema = yup.object().shape({
@@ -24,7 +23,7 @@ const OutgoingEmails = () => {
   const [activeTab, setActiveTab] = useState('project-status');
   const [rows, setRows] = useState([{ id: 1 }]); // State to store rows
 
-  const { control, handleSubmit, formState: { errors }, register } = useForm({
+  const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       emails: [{ email: '', username: '' }] // Default values for array fields

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Spinner } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { toast } from 'sonner';
@@ -10,12 +10,13 @@ import { deleteMergeQuote } from '../../../../../../APIs/CalApi';
 const DeleteMerge = ({ id, alias, refetch, setMerges }) => {
   const { unique_id } = useParams();
   const deleteMutation = useMutation({
-    mutationFn: (data) => deleteMergeQuote(id),
+    mutationFn: () => deleteMergeQuote(id),
     onSuccess: () => {
       toast.success(`Merge item deleted successfully`);
       refetch();
     },
     onError: (error) => {
+      console.log('error: ', error);
       toast.error(`Failed to delete merge item. Please try again.`);
     }
   });

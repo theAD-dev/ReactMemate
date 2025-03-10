@@ -21,7 +21,7 @@ const Bills = () => {
 
   const offset = (currentPage - 1) * itemsPerPage;
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['bills', itemsPerPage, offset],
     queryFn: () => getSubscriptionsBills({ limit: itemsPerPage, offset }),
     keepPreviousData: true,

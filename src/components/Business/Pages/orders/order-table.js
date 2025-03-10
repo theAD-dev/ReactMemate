@@ -1,7 +1,8 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { InfoCircle } from 'react-bootstrap-icons';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from "primereact/dialog";
@@ -14,9 +15,6 @@ import { formatDate } from '../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-
-
-
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
   const observerRef = useRef(null);
@@ -131,7 +129,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     const realCostPercentage = getPercentage(rowData.real_cost, rowData.budget);
 
     return <div
-      className={`d-flex justify-content-center align-items-center ${style.piCircleStyle} ${style.RealCostCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.RealCostCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
@@ -139,34 +137,15 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           value={realCostPercentage}
           text={`${realCostPercentage}%`}
           strokeWidth={11}
-          styles={{
-            root: {},
-            path: {
-              stroke: `rgba(234, 236, 240, ${realCostPercentage / 100})`,
-              strokeLinecap: 'butt',
-              transition: 'stroke-dashoffset 0.5s ease 0s',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            trail: {
-              stroke: '#25D5D0',
-              strokeLinecap: '#EAECF0',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            text: {
-              fill: '#667085',
-              fontSize: '30px',
-              textAnchor: 'middle',
-              dominantBaseline: 'middle',
-
-            },
-            background: {
-              fill: '#ffffff',
-            },
-          }}
-
-        /></div>
+          styles={buildStyles({
+            pathColor: '#F79009',
+            trailColor: '#EAECF0',
+            textColor: '#667085',
+            textSize: '25px',
+            pathTransitionDuration: 0.5,
+          })}
+        />
+      </div>
       <span>${formatAUD(rowData.real_cost)}</span>
     </div>;
   };
@@ -174,7 +153,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const labourBody = (rowData) => {
     const labor_expenses_percentage = getPercentage(rowData.labor_expenses, rowData.budget);
     return <div
-      className={`d-flex justify-content-center align-items-center ${style.piCircleStyle} ${style.labourCostCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.labourCostCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
 
@@ -183,33 +162,15 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           value={labor_expenses_percentage}
           text={`${labor_expenses_percentage}%`}
           strokeWidth={11}
-          styles={{
-            root: {},
-            path: {
-              stroke: `rgba(234, 236, 240, ${labor_expenses_percentage / 100})`,
-              strokeLinecap: 'butt',
-              transition: 'stroke-dashoffset 0.5s ease 0s',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            trail: {
-              stroke: '#F79009',
-              strokeLinecap: '#EAECF0',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            text: {
-              fill: '#667085',
-              fontSize: '30px',
-              textAnchor: 'middle',
-              dominantBaseline: 'middle',
-            },
-            background: {
-              fill: '#ffffff',
-            },
-          }}
-
-        /></div>
+          styles={buildStyles({
+            pathColor: '#F79009',
+            trailColor: '#EAECF0',
+            textColor: '#667085',
+            textSize: '25px',
+            pathTransitionDuration: 0.5,
+          })}
+        />
+      </div>
       <span>${formatAUD(rowData.labor_expenses)}</span>
     </div>;
   };
@@ -217,7 +178,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const costofSaleBody = (rowData) => {
     const cost_of_sale_percentage = getPercentage(rowData.cost_of_sale, rowData.budget);
     return <div
-      className={`d-flex justify-content-center align-items-center ${style.piCircleStyle} ${style.saleCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.saleCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
@@ -225,33 +186,15 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           value={cost_of_sale_percentage}
           text={`${cost_of_sale_percentage}%`}
           strokeWidth={11}
-          styles={{
-            root: {},
-            path: {
-              stroke: `rgba(234, 236, 240, ${cost_of_sale_percentage / 100})`,
-              strokeLinecap: 'butt',
-              transition: 'stroke-dashoffset 0.5s ease 0s',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            trail: {
-              stroke: '#F04438',
-              strokeLinecap: '#EAECF0',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            text: {
-              fill: '#667085',
-              fontSize: '30px',
-              textAnchor: 'middle',
-              dominantBaseline: 'middle',
-            },
-            background: {
-              fill: '#ffffff',
-            },
-          }}
-
-        /></div>
+          styles={buildStyles({
+            pathColor: '#F04438',
+            trailColor: '#EAECF0',
+            textColor: '#667085',
+            textSize: '25px',
+            pathTransitionDuration: 0.5,
+          })}
+        />
+      </div>
       <span>${formatAUD(rowData.cost_of_sale)}</span>
     </div>;
   };
@@ -259,7 +202,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const OperatingExpenseBody = (rowData) => {
     const operating_expense_percentage = getPercentage(rowData.operating_expense, rowData.budget);
     return <div onClick={setVisible}
-      className={`d-flex justify-content-center align-items-center  ${style.piCircleStyle} ${style.operCircleStyle}`}
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.operCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
@@ -267,33 +210,15 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           value={operating_expense_percentage}
           text={`${operating_expense_percentage}%`}
           strokeWidth={11}
-          styles={{
-            root: {},
-            path: {
-              stroke: `rgba(234, 236, 240, ${operating_expense_percentage / 100})`,
-              strokeLinecap: 'butt',
-              transition: 'stroke-dashoffset 0.5s ease 0s',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            trail: {
-              stroke: '#1AB2FF',
-              strokeLinecap: '#EAECF0',
-              transform: 'rotate(0.25turn)',
-              transformOrigin: 'center center',
-            },
-            text: {
-              fill: '#667085',
-              fontSize: '30px',
-              textAnchor: 'middle',
-              dominantBaseline: 'middle',
-            },
-            background: {
-              fill: '#ffffff',
-            },
-          }}
-
-        /></div>
+          styles={buildStyles({
+            pathColor: '#1AB2FF',
+            trailColor: '#EAECF0',
+            textColor: '#667085',
+            textSize: '25px',
+            pathTransitionDuration: 0.5,
+          })}
+        />
+      </div>
       <span>${formatAUD(rowData.operating_expense)}</span>
     </div>;
   };
@@ -329,7 +254,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     setPage(1);  // Reset to page 1 whenever searchValue changes
   };
 
-  const handleClose = (e) => {
+  const handleClose = () => {
     setVisible(false);
   };
 
@@ -349,7 +274,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         onSelectionChange={(e) => setSelectedOrder(e.value)}
         loading={loading}
         loadingIcon={loadingIconTemplate}
-        emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
+        emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
         sortField={sort?.sortField}
         sortOrder={sort?.sortOrder}
         onSort={onSort}
@@ -361,12 +286,12 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         <Column field="reference" header="Order Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '400px' }}>{rowData.reference}</div>} style={{ minWidth: '400px' }} ></Column>
         <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
-        <Column field="budget" header="Budget" body={(rowData) => `$${formatAUD(rowData.budget)}`} style={{ minWidth: '110px' }} className='text-end' ></Column>
-        <Column field="realcost" header="Real Cost" body={reaclCost} style={{ minWidth: '113px', textAlign: 'right' }} ></Column>
+        <Column field="budget" header="Budget" body={(rowData) => `$${formatAUD(rowData.budget)}`} style={{ minWidth: '110px' }} className='text-end' sortable></Column>
+        <Column field="realcost" header="Real Cost" body={reaclCost} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column>
         <Column field="labor_expenses" header="Labour" body={labourBody} style={{ minWidth: '149px', textAlign: 'right' }} sortable></Column>
         <Column field="cost_of_sale" header="Cost of Sale" body={costofSaleBody} style={{ minWidth: '146x', textAlign: 'center' }} sortable></Column>
         <Column field="operating_expense" header="Operating Expense" body={OperatingExpenseBody} style={{ minWidth: '152x', textAlign: 'center' }} sortable></Column>
-        <Column field="total" body={totalInvoice} header="Total Invoice" style={{ minWidth: '101x', textAlign: 'center' }} ></Column>
+        <Column field="total" body={totalInvoice} header="Total Invoice" style={{ minWidth: '101x', textAlign: 'center' }} sortable></Column>
         <Column field='profit' header="Operational Profit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '150px' }} sortable></Column>
       </DataTable>
 

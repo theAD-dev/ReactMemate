@@ -1,18 +1,18 @@
 import React, { useRef, useState } from 'react';
+import { Download, Filter } from 'react-bootstrap-icons';
+import clsx from 'clsx';
 import { PrimeReactProvider } from 'primereact/api';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
 import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
 import OrdersTable from './order-table';
 import style from './order.module.scss';
-import clsx from 'clsx';
 
 const OrderPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
  
-    const [isShowDeleted, setIsShowDeleted] = useState(false);
+    const [isShowDeleted,] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
@@ -40,15 +40,8 @@ const OrderPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20}/></button>
-                                        <TieredMenu model={[{
-                                            label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
-                                                {
-                                                    isShowDeleted ? (<>Hide Deleted <EyeSlash /></>)
-                                                        : (<>Show Deleted <Eye /></>)
-                                                }
-                                            </div>,
-                                        }]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
+                                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
+                                        <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>

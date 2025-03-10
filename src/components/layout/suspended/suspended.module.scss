@@ -2,10 +2,11 @@
   display: flex;
   align-items: center;
   padding: 0px 100px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  background-image: url("../../../assets/suspended-mask.svg");
+}
+
+.topHeading {
+  top: 152px;
+  position: relative;
 }
 
 .heading {
@@ -30,7 +31,6 @@
   font-weight: 400;
   line-height: 150%; /* 24px */
   letter-spacing: 0.16px;
-  margin-bottom: 200px;
 }
 
 .payButton {
@@ -42,6 +42,8 @@
   align-items: center;
   gap: 8px;
   border-radius: 40px;
+  position: relative;
+  top: -150px;
   border: 1px solid var(--Success-600, #079455);
   background: var(--Success-600, #079455);
 }

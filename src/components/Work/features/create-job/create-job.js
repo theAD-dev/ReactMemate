@@ -5,7 +5,6 @@ import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from 'axios';
 import clsx from 'clsx';
-import { Button as PrimeButton } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from 'primereact/iconfield';
@@ -885,7 +884,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenRepeatSection(!isOpenRepeatSection)}>
-                                <div className='d-flex justify-content-between'>
+                                <div className='d-flex justify-content-between align-items-center'>
                                     <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Set to repeat</h1>
                                     <button className='text-button p-0'>
                                         {
@@ -919,7 +918,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                 repeat === 'Weekly' && <div className='d-flex gap-3 align-items-center'>
                                                     {
                                                         ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) =>
-                                                            <button onClick={() => {
+                                                            <button key={day} onClick={() => {
                                                                 setWeeks((prevWeeks) =>
                                                                     prevWeeks.includes(index)
                                                                         ? prevWeeks.filter((d) => d !== index)
@@ -936,7 +935,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                 repeat === 'Monthly' && <div className='d-flex gap-2 align-items-center flex-wrap'>
                                                     {
                                                         Array.from({ length: 31 }, (_, i) => i + 1).map((month) => (
-                                                            <button onClick={() => {
+                                                            <button key={month} onClick={() => {
                                                                 setMonths((prevMonths) =>
                                                                     prevMonths.includes(month)
                                                                         ? prevMonths.filter((m) => m !== month)
@@ -1065,7 +1064,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenProjectPhotoSection(!isOpenProjectPhotoSection)}>
-                                <div className='d-flex justify-content-between'>
+                                <div className='d-flex justify-content-between align-items-center'>
                                     <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Project Photos</h1>
                                     <button className='text-button p-0'>
                                         {
@@ -1100,7 +1099,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx(style.borderBottom, 'cursor-pointer')} onClick={() => setIsOpenAttachmentsSection(!isOpenAttachmentsSection)}>
-                                <div className='d-flex justify-content-between'>
+                                <div className='d-flex justify-content-between align-items-center'>
                                     <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Attachments</h1>
                                     <button className='text-button p-0'>
                                         {

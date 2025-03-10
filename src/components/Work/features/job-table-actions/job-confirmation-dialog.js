@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from 'primereact/button';
-import { Chip } from "primereact/chip";
 import { Dialog } from 'primereact/dialog';
 import style from './job-dialog.module.scss';
 import warningIcon from '../../../../assets/images/Jobs/Featured icon.svg';

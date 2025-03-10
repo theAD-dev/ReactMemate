@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef } from 'react';
 import { Card } from 'react-bootstrap';
 import { Elements } from '@stripe/react-stripe-js';
 import {
@@ -9,17 +9,15 @@ import {
 import { loadStripe } from '@stripe/stripe-js';
 import { toast } from 'sonner';
 
-const StripPayment = forwardRef(({ amount, close, setIsPaymentProcess }, ref) => {
+const StripPayment = forwardRef(({ setIsPaymentProcess }, ref) => {
     const stripe = useStripe();
     const elements = useElements();
-    const [message, setMessage] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!stripe || !elements) return;
 
         setIsPaymentProcess(true);
-        setMessage("Payment in Progress");
 
         const resp = await stripe.confirmPayment({
             elements,

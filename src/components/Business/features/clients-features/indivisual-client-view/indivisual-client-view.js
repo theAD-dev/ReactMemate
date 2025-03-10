@@ -1,17 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
+import { Person, StarFill, X } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Tag } from 'primereact/tag';
-import { getClientCategories } from '../../../../../APIs/ClientsApi';
+import style from './indivisual-client-view.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png';
 import { dateFormat, formatMoney } from '../../../shared/utils/helper';
 import DeleteClient from '../delete-client';
 import IndivisualClientEdit from '../indivisual-client-edit/indivisual-client-edit';
 import Restore from '../restore-client';
-import style from './indivisual-client-view.module.scss';
 
 const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);

@@ -6,4 +6,4 @@ export const useAccountingGetQuery = () => {
         queryKey: ['accounting-list'],
         queryFn: getAccountingList
     });
-}
+};

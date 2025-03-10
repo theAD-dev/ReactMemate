@@ -1,3 +1,14 @@
+.active {
+  background: #ebf8ff !important;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
 .filterBox {
   display: flex;
   padding: var(--spacing-sm, 2px) var(--spacing-md, 2px);
@@ -131,7 +142,6 @@
 
 .piCircleStyle span {
   border-radius: 16px;
-  mix-blend-mode: multiply;
   padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
   text-align: center;
   font-family: Inter;
@@ -165,7 +175,7 @@
   border-radius: 16px;
   border: 1px solid var(--Warning-200, #fedf89);
   background: var(--Warning-50, #fffaeb);
-  mix-blend-mode: multiply;
+  
   color: var(--Warning-700, #b54708);
   text-align: center;
 
@@ -183,7 +193,7 @@
   border-radius: 30px;
   border: 1px solid var(--Success-200, #abefc6);
   background: var(--Success-50, #ecfdf3);
-  mix-blend-mode: multiply;
+  
   padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px)
     var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
   color: var(--Success-700, #067647);
@@ -200,7 +210,7 @@
   border-radius: 30px;
   border: 1px solid var(--Warning-200, #fedf89);
   background: var(--Warning-50, #fffaeb);
-  mix-blend-mode: multiply;
+  
   padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px)
     var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
   color: var(--Warning-700, #b54708);
@@ -217,7 +227,7 @@
   border-radius: 30px;
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
-  mix-blend-mode: multiply;
+  
   padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px)
     var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
   color: var(--Warning-700, #b42318);
@@ -234,7 +244,7 @@
   border-radius: 16px;
   border: 1px solid var(--Success-200, #a9efc5);
   background: var(--Success-50, #ecfdf3);
-  mix-blend-mode: multiply;
+  
   padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px)
     var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
   color: var(--Success-700, #067647);

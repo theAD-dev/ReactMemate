@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from 'react-bootstrap-icons';
-import clsx from 'clsx';
+import { Button } from 'react-bootstrap';
+import { PlusCircle, X } from 'react-bootstrap-icons';
 import { nanoid } from 'nanoid';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
@@ -13,7 +12,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
   const formRef = useRef(null);
   const [isPending, setIsPending] = useState(false);
   const [photo, setPhoto] = useState(null);
-  const [defaultValues, setDefaultValues] = useState({
+  const [defaultValues, ] = useState({
     contact_persons: [{}],
     addresses: [{
       country: 1
@@ -33,20 +32,24 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
     formData.append("note", data.note);
 
     data.addresses.forEach((address, index) => {
-      formData.append(`addresses[${index}]address`, address.address);
-      formData.append(`addresses[${index}]city`, address.city);
-      formData.append(`addresses[${index}]postcode`, address.postcode);
-      formData.append(`addresses[${index}]is_main`, address.is_main);
-      formData.append(`addresses[${index}]title`, address.title);
+      if (address.city) {
+        formData.append(`addresses[${index}]address`, address.address);
+        formData.append(`addresses[${index}]city`, address.city);
+        formData.append(`addresses[${index}]postcode`, address.postcode);
+        formData.append(`addresses[${index}]is_main`, address.is_main);
+        formData.append(`addresses[${index}]title`, address.title);
+      }
     });
 
     data.contact_persons.forEach((person, index) => {
-      formData.append(`contact_persons[${index}]firstname`, person.firstname);
-      formData.append(`contact_persons[${index}]lastname`, person.lastname);
-      formData.append(`contact_persons[${index}]email`, person.email);
-      formData.append(`contact_persons[${index}]phone`, person.phone);
-      formData.append(`contact_persons[${index}]position`, person.position);
-      formData.append(`contact_persons[${index}]is_main`, person.is_main);
+      if (person.firstname || person.email) {
+        formData.append(`contact_persons[${index}]firstname`, person.firstname);
+        formData.append(`contact_persons[${index}]lastname`, person.lastname);
+        formData.append(`contact_persons[${index}]email`, person.email);
+        formData.append(`contact_persons[${index}]phone`, person.phone);
+        formData.append(`contact_persons[${index}]position`, person.position);
+        formData.append(`contact_persons[${index}]is_main`, person.is_main);
+      }
     });
 
     if (photo?.croppedImageBlob) {

@@ -9,6 +9,7 @@ import { DataTable } from 'primereact/datatable';
 import style from './jobs.module.scss';
 import { getListOfJobs } from '../../../../APIs/jobs-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import JobDetails from '../../features/job-table-actions/job-details-dialog';
 import ViewJob from '../../features/view-job/view-job';
@@ -192,11 +193,11 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const bonusBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>${parseFloat(rowData.bonus || 0).toFixed(2)}</span>;
+    return <span style={{ color: '#667085' }}>${formatAUD(rowData.bonus || 0)}</span>;
   };
 
   const totalBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>${parseFloat(rowData.total || 0).toFixed(2)}</span>;
+    return <span style={{ color: '#667085' }}>${formatAUD(rowData.total || 0)}</span>;
   };
 
   const loadingIconTemplate = () => {

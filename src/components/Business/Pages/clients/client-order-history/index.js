@@ -1,10 +1,9 @@
-import { PrimeReactProvider } from 'primereact/api';
 import React, { useRef, useState } from 'react';
-
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import { ChevronLeft, Download, Filter } from 'react-bootstrap-icons';
+import { ChevronLeft, Download } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { PrimeReactProvider } from 'primereact/api';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import { Sidebar } from 'primereact/sidebar';
@@ -28,7 +27,6 @@ const ClientOrderHistory = () => {
     const clientDetails = useQuery({ queryKey: ['client-read'], queryFn: () => getClientById(id), enabled: !!id, retry: 1 });
     const clientOrders = useQuery({ queryKey: ['client-order'], queryFn: () => clientOrderHistory(id), enabled: !!id, retry: 1 });
 
-    const handleSearch = (e) => { };
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
             dt.current.exportCSV({ selectionOnly });

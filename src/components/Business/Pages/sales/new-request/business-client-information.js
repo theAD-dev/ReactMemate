@@ -12,12 +12,12 @@ const BusinessClientInformation = () => {
   const formRef = useRef(null);
   const [photo, setPhoto] = useState(null);
   const [isPending, setIsPending] = useState(false);
-  const [businessDefaultValues, setBusinessDefaultValues] = useState({
+  const [businessDefaultValues,] = useState({
     payment_terms: 1,
     category: 1,
     phone: { country: '', number: '' },
     contact_persons: [{}],
-    addresses: [{}],
+    addresses: [{ country: 1 }],
   });
 
   const handleExternalSubmit = () => {

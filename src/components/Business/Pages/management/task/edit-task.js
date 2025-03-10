@@ -1,26 +1,19 @@
 import { useRef, useState } from 'react';
 import { InputGroup } from 'react-bootstrap';
+import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Dropdown } from 'primereact/dropdown';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-
 import './task.css';
-import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
 import SelectDate from './select-date';
-import SelectUser from './select-user';
 import { getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../APIs/TasksApi';
 import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 
-
-
-
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return "-";
-
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(1000 * +dateInMiliSec);
     return date;
 };
@@ -52,7 +45,7 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (data) => fetchTasksDelete(taskId),
+        mutationFn: () => fetchTasksDelete(taskId),
         onSuccess: () => {
             console.log('Delete success');
             setShow(false);
@@ -89,7 +82,6 @@ const EditTask = ({ show, setShow, data, reInitilize }) => {
         }
     };
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
     return (
         <>

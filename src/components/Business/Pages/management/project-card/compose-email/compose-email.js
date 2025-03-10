@@ -11,7 +11,7 @@ import SendDynamicEmailForm from "../../../../../../ui/send-email-2/send-email";
 
 const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
   const navigate = useNavigate();
-  const [payload, setPayload] = useState({});
+  const [, setPayload] = useState({});
   const [viewShow, setViewShow] = useState(false);
   const outgoingEmailTemplateQuery = useQuery({
     queryKey: ["getOutgoingEmail"],
@@ -34,7 +34,7 @@ const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
 
   const mutation = useMutation({
     mutationFn: (data) => sendComposeEmail(projectId, "", data),
-    onSuccess: (response) => {
+    onSuccess: () => {
       setViewShow(false);
       projectCardData();
       toast.success(`Email send successfully.`);

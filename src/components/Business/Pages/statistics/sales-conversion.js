@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, Col, Row } from 'react-bootstrap';
+import { Button, Card, CardBody, Col, Dropdown, Row } from 'react-bootstrap';
 import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { Divider } from '@mui/material';
@@ -25,7 +25,7 @@ const verticalLinePlugin = {
 
             // Save the current canvas state to avoid conflicts
             ctx.save();
-            
+
             // Set the line style properties
             ctx.lineWidth = 2; // Single line with width of 2
             ctx.strokeStyle = '#1AB2FF'; // Blue color
@@ -48,6 +48,34 @@ const SalesConversion = () => {
     const { trialHeight } = useTrialHeight();
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
+    const [selectedYear, setSelectedYear] = useState(2025);
+    const [selectedMonth, setSelectedMonth] = useState('Mar');
+
+    const currentYear = new Date().getFullYear();
+    const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+
+    // List of months
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    // Determine if a month should be disabled (future months in the current year)
+    const currentDate = new Date('2025-03-03'); // Current date as per system info
+    const currentMonthIndex = currentDate.getMonth(); // 2 (March)
+    const isMonthDisabled = (month, year) => {
+        const monthIndex = months.indexOf(month);
+        return year === currentDate.getFullYear() && monthIndex > currentMonthIndex;
+    };
+
+    const handleYearSelect = (year) => {
+        setSelectedYear(year);
+        // Optionally update progress based on year selection
+        // e.g., fetch data and setOuterProgress/setInnerProgress here
+    };
+
+    const handleMonthSelect = (month) => {
+        if (!isMonthDisabled(month, selectedYear)) {
+            setSelectedMonth(month);
+        }
+    };
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -176,13 +204,13 @@ const SalesConversion = () => {
                     borderColor: '#fff',
                     borderWidth: 1,
                     callbacks: {
-                        label: function(tooltipItem) {
+                        label: function (tooltipItem) {
                             const datasetIndex = tooltipItem.datasetIndex;
                             const datasetLabel = tooltipItem.dataset.label;
                             const value = tooltipItem.raw;
                             return `${datasetLabel}: $${value}`;  // Display dataset label and value
                         },
-                        footer: function(tooltipItems) {
+                        footer: function (tooltipItems) {
                             return `Hover over the chart to see values`; // Optional footer
                         },
                     },
@@ -231,47 +259,59 @@ const SalesConversion = () => {
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
                 </Link>
-                <Link to={"/statistics/sales-conversion"} className={clsx(style.activeTab, 'd-flex align-items-center px-2')}>
+                <Link to={"/statistics/sales-conversion"} style={{ background: "#ECFDF3" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
-                    <span className={style.topbartext}>Conversion</span>
+                    <span className={style.topbartext} style={{ color: '#17B26A' }}>Conversion</span>
                 </Link>
-                <Link to={"/statistics/overview"} className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/overview"} className='d-flex align-items-center px-2 py-1'>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
-                <Link to={"/statistics/key-results"} className='d-flex align-items-center px-2'>
+                <Link to={"/statistics/key-results"} className='d-flex align-items-center px-2 py-1'>
                     <WindowDesktop color='#667085' size={16} className='me-2' />
                     <span className={style.topbartext}>Key Results</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2'>
+                <Link className='d-flex align-items-center px-2 py-1'>
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2'>
+                <Link className='d-flex align-items-center px-2 py-1'>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
             </div>
             <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)`, background: '#F8F9FC' }}>
                 <h2 className={clsx(style.keyResultsTitle)}>Sales Conversion</h2>
-                <Button className={clsx(style.button, "outline-button mx-auto")}>
-                    <CalendarIcon color='#475467' size={16} />
-                    2024
-                </Button>
+                <Dropdown>
+                    <Dropdown.Toggle as={Button} className={clsx(style.button, "outline-button mx-auto")}>
+                        <CalendarIcon color='#475467' size={16} />
+                        {selectedYear}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        {years.map((year) => (
+                            <Dropdown.Item
+                                key={year}
+                                eventKey={year}
+                                active={year === selectedYear}
+                                onClick={() => handleYearSelect(year)}
+                            >
+                                {year}
+                            </Dropdown.Item>
+                        ))}
+                    </Dropdown.Menu>
+                </Dropdown>
 
                 <div className='d-flex justify-content-center gap-0' style={{ marginTop: '16px', borderBottom: "1px solid var(--Gray-200, #EAECF0)", background: '#F8F9FC' }}>
-                    <Button className={clsx(style.monthName)}>Jan</Button>
-                    <Button className={clsx(style.monthName)}>Feb</Button>
-                    <Button className={clsx(style.monthName)}>Mar</Button>
-                    <Button className={clsx(style.monthName, style.activeButton)}>Apr</Button>
-                    <Button className={clsx(style.monthName)}>May</Button>
-                    <Button className={clsx(style.monthName)}>Jun</Button>
-                    <Button className={clsx(style.monthName)}>Jul</Button>
-                    <Button className={clsx(style.monthName)}>Aug</Button>
-                    <Button className={clsx(style.monthName)}>Sep</Button>
-                    <Button disabled className={clsx(style.monthName)}>Oct</Button>
-                    <Button disabled className={clsx(style.monthName)}>Nov</Button>
-                    <Button disabled className={clsx(style.monthName)}>Dec</Button>
+                    {months.map((month) => (
+                        <Button
+                            key={month}
+                            className={clsx(style.monthName, { [style.activeButton]: month === selectedMonth })}
+                            disabled={isMonthDisabled(month, selectedYear)}
+                            onClick={() => handleMonthSelect(month)}
+                        >
+                            {month}
+                        </Button>
+                    ))}
                 </div>
 
                 <Card className='border-0 mt-3'>
@@ -362,7 +402,7 @@ const SalesConversion = () => {
                                 <h6 style={{ color: '#475467', fontSize: '14px' }}>Leads are sourced from multiple channels like Instagram, Facebook, LinkedIn, and more, offering insight into the most effective platforms.</h6>
                             </div>
                         </div>
-                        <Divider className='mt-0'/>
+                        <Divider className='mt-0' />
                         <div className='d-flex flex-column w-100 mt-3'>
                             <Row>
                                 <Col xs={12}>

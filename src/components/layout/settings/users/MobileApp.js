@@ -10,12 +10,12 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import CreateMobileUser from './features/create-mobile-user';
+import style from './users.module.scss';
 import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../../../APIs/settings-user-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
 import Sidebar from '../Sidebar';
-import CreateMobileUser from './features/create-mobile-user';
-import style from './users.module.scss';
 
 
 
@@ -77,6 +77,7 @@ const MobileApp = React.memo(() => {
             setIsShowDeleted(false);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to re-connected user. Please try again.`);
         }
     });

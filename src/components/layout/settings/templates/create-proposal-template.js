@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { ChevronLeft, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Editor } from 'primereact/editor';
@@ -10,10 +10,10 @@ import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import style from './job-template.module.scss';
 import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
-import style from './job-template.module.scss';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -79,7 +79,7 @@ const CreateProposalTemplate = () => {
         const newErrors = {};
         if (!name) newErrors.name = true;
 
-        const sectionErrors = sections.map((section, index) => {
+        const sectionErrors = sections.map((section) => {
             const sectionError = {};
             if (!section.title) sectionError.title = true;
             if (!section.description) sectionError.description = true;

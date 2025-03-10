@@ -1,11 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
+import style from './list-merge-calculation.module.scss';
 import DeleteMerge from '../delete-merge-calculation';
 import EditMergeCalculation from '../edit-merge-calculation';
 import ViewMerge from '../view-merge-calculation';
-import style from './list-merge-calculation.module.scss';
 
-const ListMergeCalculations = ({ unique_id, merges, setMerges, refetch, deleteMergeCalculator }) => {
+const ListMergeCalculations = ({ merges, setMerges, refetch, deleteMergeCalculator }) => {
     return (
         <>
             <div className={clsx('w-100', style.divider)} style={{}}></div>

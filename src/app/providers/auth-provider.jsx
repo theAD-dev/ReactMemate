@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { useSessionQuery } from '@/entities/session/model/session.query';
+import { useSessionQuery } from '../../entities/session/model/session.query';
 
 export const AuthContext = createContext(undefined);
 

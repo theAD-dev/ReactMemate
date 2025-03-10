@@ -10,10 +10,10 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import * as yup from 'yup';
+import style from './customer.module.scss';
 import { getIndustriesList, newIndustries, readIndustry, updateIndustry, deleteIndustry } from '../../../../APIs/industrieslist-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
-import style from './customer.module.scss';
 
 const CustomersIndustries = () => {
     const { trialHeight } = useTrialHeight();
@@ -31,7 +31,7 @@ const CustomersIndustries = () => {
         name: yup.string().required("Name is required"),
     }).required();
 
-    const { control, register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         resolver: yupResolver(yup.object({
             name: yup.string().required("Name is required"),
         }).required()),

@@ -5,7 +5,7 @@ export function formatAUD(amount, shorten = false) {
         return "0.00";
     }
 
-    if (shorten && num >= 1000000) {
+    if (shorten && num >= 1000) {
         return new Intl.NumberFormat('en-AU', {
             notation: "compact",
             compactDisplay: "short",

@@ -12,12 +12,13 @@ import { deleteSupplier } from '../../../../../APIs/SuppliersApi';
 const DeleteSupplier = ({ id }) => {
   const navigate = useNavigate();
   const deleteMutation = useMutation({
-    mutationFn: (data) => deleteSupplier(id),
+    mutationFn: () => deleteSupplier(id),
     onSuccess: () => {
       toast.success(`Supplier deleted successfully`);
       navigate('/suppliers');
     },
     onError: (error) => {
+      console.log('error: ', error);
       toast.error(`Failed to delete supplier. Please try again.`);
     }
   });
@@ -38,7 +39,6 @@ const DeleteSupplier = ({ id }) => {
       accept,
       reject,
     });
-
   };
   return (
     <>

@@ -1,20 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Modal, Row } from "react-bootstrap";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Editor } from "primereact/editor";
-import { Dropdown } from "primereact/dropdown";
-import { AutoComplete } from "primereact/autocomplete";
-import { InputText } from "primereact/inputtext";
 import { useMutation, useQuery } from "@tanstack/react-query";
-
-import style from "./send-invoice.module.scss";
-import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 import clsx from 'clsx';
+import { AutoComplete } from "primereact/autocomplete";
+import { Dropdown } from "primereact/dropdown";
+import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from 'sonner';
-import { createAndSendInvoiceById } from '../../APIs/management-api';
+import style from "./send-invoice.module.scss";
+import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
 import { resendInvoiceEmail } from '../../APIs/invoice-api';
+import { createAndSendInvoiceById } from '../../APIs/management-api';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -91,14 +90,16 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
 
     useEffect(() => {
         if (outgoingEmailTemplateQuery?.data) {
-            if (outgoingEmailTemplateQuery?.data?.outgoing_email)
+            if (outgoingEmailTemplateQuery?.data?.outgoing_email && outgoingEmailTemplateQuery?.data?.outgoing_email_verified)
                 setFrom(outgoingEmailTemplateQuery?.data?.outgoing_email);
+            else
+                setFrom('no-reply@memate.com.au');
         }
     }, [emailQuery, outgoingEmailTemplateQuery]);
 
     const mutation = useMutation({
         mutationFn: (data) => isCreated ? resendInvoiceEmail(projectId, data) : createAndSendInvoiceById(projectId, data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             handleClose();
             projectCardData();
             toast.success(`Invoice created and send successfully.`);
@@ -142,8 +143,8 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })
-        })
-    }
+        });
+    };
 
     const search = (event) => {
         const query = event?.query?.toLowerCase() || '';
@@ -203,10 +204,10 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
 
     useEffect(() => {
         if (contactPersons?.length) {
-            let emails = contactPersons.map((data) => (data.email))
+            let emails = contactPersons.map((data) => (data.email));
             setFilteredEmails(emails);
         }
-    }, [contactPersons])
+    }, [contactPersons]);
 
     useEffect(() => {
         setPayload((prev) => ({
@@ -217,7 +218,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })
-        }))
+        }));
     }, [subject, text, from, to, cc, bcc]);
 
     useEffect(() => {
@@ -342,13 +343,13 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                             </div>
                             <Button
                                 className={clsx(style.box, { [style.active]: showCC })}
-                                onClick={() => { setShowCC(!showCC); setCC([]) }}
+                                onClick={() => { setShowCC(!showCC); setCC([]); }}
                             >
                                 CC
                             </Button>
                             <Button
                                 className={clsx(style.box, { [style.active]: showBCC })}
-                                onClick={() => { setShowBCC(!showBCC); setBCC([]) }}
+                                onClick={() => { setShowBCC(!showBCC); setBCC([]); }}
                             >
                                 BCC
                             </Button>
@@ -367,7 +368,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                                     ref={autoCompleteRef2}
                                     value={cc}
                                     completeMethod={search}
-                                    onChange={(e) => { setCC(e.value) }}
+                                    onChange={(e) => { setCC(e.value); }}
                                     multiple
                                     suggestions={filteredEmails}
                                     onClick={onFocus2}
@@ -396,7 +397,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                                     ref={autoCompleteRef3}
                                     value={bcc}
                                     completeMethod={search}
-                                    onChange={(e) => { setBCC(e.value) }}
+                                    onChange={(e) => { setBCC(e.value); }}
                                     multiple
                                     suggestions={filteredEmails}
                                     onClick={onFocus3}
@@ -491,7 +492,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                 </div>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default SendInvoiceEmailForm
+export default SendInvoiceEmailForm;

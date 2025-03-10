@@ -3,13 +3,10 @@ import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 import { Trash } from 'react-bootstrap-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Form from 'react-bootstrap/Form';
-import { toast } from 'sonner';
 import * as yup from 'yup';
 import style from './edit-merge-calculation.module.scss';
-import { createNewMergeQuote } from '../../../../../../APIs/CalApi';
 
 
 // Validation schema
@@ -23,7 +20,7 @@ const schema = yup
 const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCalculator }) => {
   const [show, setShow] = useState(false);
   const romanNo = alias;
-  const [defaultValues, setDefaultValues] = useState({
+  const [defaultValues, ] = useState({
     title: merge?.title || "",
     description: merge?.description || ""
   });
@@ -32,19 +29,6 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
   });
 
   useEffect(() => { reset(); }, [alias]);
-
-  const mutation = useMutation({
-    mutationFn: (data) => createNewMergeQuote(data),
-    onSuccess: (response) => {
-      refetch();
-      handleClose();
-      toast.success(`New merge items created successfully.`);
-    },
-    onError: (error) => {
-      console.error('Error creating task:', error);
-      toast.error(`Failed to create new merge items. Please try again.`);
-    }
-  });
 
   const onSubmit = (data) => {
     const payload = {

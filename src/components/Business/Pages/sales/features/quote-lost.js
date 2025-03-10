@@ -12,11 +12,11 @@ import ArchiveIcon from "../../../../../assets/images/icon/archive.svg";
 import SalesIcon from "../../../../../assets/images/icon/SalesIcon.svg";
 
 
-const QuoteWon = ({ salesData, saleUniqueId, LostQuote, quoteType, onRemoveRow }) => {
+const QuoteWon = ({ saleUniqueId, LostQuote, quoteType, onRemoveRow }) => {
   const [open, setOpen] = React.useState(false);
-  const [confetti, setConfetti] = useState(false);
+  const [, setConfetti] = useState(false);
   const handleOpen = () => setOpen(true);
-  const [message, setMessage] = useState({ content: '', type: 'success' });
+  const [message, ] = useState({ content: '', type: 'success' });
 
   const handleMoveToManagementLost = async () => {
     try {

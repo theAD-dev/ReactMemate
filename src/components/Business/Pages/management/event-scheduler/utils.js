@@ -126,7 +126,7 @@ function loadData(responses) {
           ${status}
         </div>
       </div>`,
-      children: [...data.tasks, { title: 'create-task', id: data.number }].map((task, index) => {
+      children: [...data.tasks, { title: 'create-task', id: data.number }].map((task) => {
 
         // for create-task only
         if (task.title === 'create-task') {

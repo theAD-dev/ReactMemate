@@ -9,6 +9,7 @@ import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { toast } from 'sonner';
 import { getClientById, getListOfClients } from '../../../../../../APIs/ClientsApi';
+import ImageAvatar from '../../../../../../ui/image-with-fallback/image-avatar';
 
 const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
     const [selectClient, setSelectClient] = useState(null);
@@ -90,7 +91,7 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
         };
     }, [clients, hasMoreData, isEdit]);
 
-    const filterTemplate = (options) => {
+    const filterTemplate = () => {
         return (
             <IconField iconPosition="left">
                 <InputIcon><Search className='mb-2' /></InputIcon>
@@ -113,6 +114,26 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
         setIsEdit(false);
     };
 
+    const clientOptionTemplate = (option) => {
+        return (
+            <div className="d-flex align-items-center gap-1">
+                <ImageAvatar has_photo={option.has_photo} photo={option.photo} is_business={option.is_business} />
+                <div>{option.name}</div>
+            </div>
+        );
+    };
+
+    const selectedOptionTemplate = (option) => {
+        if (option?.name) {
+            return (
+                <div className="d-flex align-items-center gap-1">
+                    <ImageAvatar has_photo={option?.has_photo} photo={option?.photo} is_business={option?.is_business} />
+                    <div>{option?.name}</div>
+                </div>
+            );
+        }
+    };
+
     return (
         <>
             <Row>
@@ -126,6 +147,8 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
                                 loading={loading}
                                 onChange={(e) => setSelectClient(e.value)}
                                 options={clients}
+                                itemTemplate={clientOptionTemplate}
+                                valueTemplate={selectClient && selectedOptionTemplate}
                                 optionLabel="name"
                                 optionValue="id"
                                 placeholder="Select client"

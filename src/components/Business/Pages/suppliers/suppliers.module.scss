@@ -50,7 +50,6 @@
   font-weight: 400;
   letter-spacing: 0.12px;
   line-height: 22px;
-  mix-blend-mode: multiply;
   text-align: center;
   padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
 }
@@ -76,7 +75,7 @@
 }
 
 .active {
-  background: #ebf8ff;
+  background: #ebf8ff !important;
 }
 
 .selectedCount {

@@ -116,7 +116,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const removeRow = async () => {
-    await fetchData();
+    fetchData();
   };
 
   const refreshData = () => {
@@ -271,7 +271,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
             progressName1={params.row.progressName}
             progressPercentage1={params.row.progressPercentage}
             salesUniqId1={params.row.saleUniqueId}
-            refreshData={refreshData}
+            refreshData={() => { }}
           />
         </div>
       ),
@@ -383,7 +383,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
                   </span>
                 </label>
               </th>
-              {columns.map((column, index) => (
+              {columns.map((column) => (
                 <th key={column.field} style={{ width: column.width }}>
                   <Resizable
                     width={column.width || 100} // Provide a default width if undefined

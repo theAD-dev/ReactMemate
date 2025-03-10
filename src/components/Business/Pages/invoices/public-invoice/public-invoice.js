@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Col, Row as BootstrapRow, Button, Card } from 'react-bootstrap';
 import { CardList, Check2Circle, CheckCircleFill, FilePdf, Person } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -37,7 +37,6 @@ const schema = yup.object().shape({
 
 const PublicInvoice = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
     const paymentRef = useRef();
     const [isPaymentProcess, setIsPaymentProcess] = useState(false);
 
@@ -46,7 +45,7 @@ const PublicInvoice = () => {
     const [payment, setPayment] = useState({});
 
     const [visible, setVisible] = useState(false);
-    const handleClose = (e) => setVisible(false);
+    const handleClose = () => setVisible(false);
 
     const { register, control, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema),
@@ -201,7 +200,7 @@ const PublicInvoice = () => {
                                 Back
                             </Button>
                             <Button onClick={handlePareentPay} className="success-button text-nowrap">
-                                Pay ${parseFloat(invoice?.outstanding_amount).toFixed(2)}
+                                Pay ${formatAUD(invoice?.outstanding_amount)}
                                 {isPaymentProcess && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>
                         </>
@@ -230,7 +229,9 @@ const PublicInvoice = () => {
                                 <p className='mb-2 mt-2'> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{invoice?.number}</span>} </p>
                             </div>
                             <div className={style.right}>
-                                <img src={`${process.env.REACT_APP_URL}${invoice?.organization?.logo}` || "https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg"} alt='Logo' style={{ width: '102px' }} />
+                                {
+                                    invoice?.organization?.logo && <img src={`${process.env.REACT_APP_URL}${invoice?.organization?.logo}`} alt='Logo' style={{ width: '102px' }} />
+                                }
                             </div>
                         </div>
 
@@ -371,7 +372,7 @@ const PublicInvoice = () => {
                             </div>
                             <div className={clsx(style.right, 'd-flex align-items-center')}>
                                 <div>
-                                    <p className='mb-0' style={{ fontSize: '24px', fontWeight: 600, color: '#1A1C21' }}>${parseFloat(invoice?.outstanding_amount).toFixed(2)}</p>
+                                    <p className='mb-0' style={{ fontSize: '24px', fontWeight: 600, color: '#1A1C21' }}>${formatAUD(invoice?.outstanding_amount)}</p>
                                     <p className='mb-0' style={{ fontSize: '16px', fontWeight: 500, color: '#FFB258' }}>{daysLeft(invoice?.due_date)}</p>
                                 </div>
                                 <button
@@ -560,7 +561,7 @@ const PublicInvoice = () => {
                         <Card className='mt-2' style={{ border: '1px solid #EAECF0' }}>
                             <Card.Body className='border-0'>
                                 <p className='mb-0' style={{ color: '#475467', fontSize: '16px' }}>{invoice?.number}</p>
-                                <p className='mb-0' style={{ color: '#1D2939', fontSize: '42px' }}>${parseFloat(invoice?.outstanding_amount).toFixed(2)}</p>
+                                <p className='mb-0' style={{ color: '#1D2939', fontSize: '42px' }}>${formatAUD(invoice?.outstanding_amount)}</p>
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
                                     <span className='font-14' style={{ color: '#1D2939' }}>Subtotal</span>

@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
-import { Building, StarFill, X } from 'react-bootstrap-icons';
+import { X } from 'react-bootstrap-icons';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import style from './supplier-view.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png';
 import { FallbackImage } from '../../../../../ui/image-with-fallback/image-avatar';
 import DeleteSupplier from '../supplier-delete';
 import SupplierEdit from '../supplier-edit';
-import style from './supplier-view.module.scss';
 
 const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
     const { id } = useParams();

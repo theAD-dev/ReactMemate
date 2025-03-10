@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { PrimeReactProvider } from 'primereact/api';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Button } from 'react-bootstrap';
-import { CheckCircle, Download, Eye, EyeSlash, Filter, Send, XCircle } from 'react-bootstrap-icons';
+import { CheckCircle, Download, Filter, Send, XCircle } from 'react-bootstrap-icons';
+import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { PrimeReactProvider } from 'primereact/api';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { TieredMenu } from 'primereact/tieredmenu';
@@ -12,8 +13,6 @@ import ExpensesTable from './expenses-table';
 import style from './expenses.module.scss';
 import { paidExpense, sendExpenseToXeroApi, unpaidExpense } from '../../../../APIs/expenses-api';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
-import clsx from 'clsx';
-import { useMutation } from '@tanstack/react-query';
 
 const ExpensesPage = () => {
     const dt = useRef(null);
@@ -41,6 +40,7 @@ const ExpensesPage = () => {
             toast.success(`Expense successfully sent to Xero!`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to send the expense to xero. Please try again.`);
         }
     });
@@ -58,6 +58,7 @@ const ExpensesPage = () => {
             toast.success(`Expenses have been successfully marked as paid.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to mark the expenses as paid. Please try again.`);
         }
     });
@@ -70,6 +71,7 @@ const ExpensesPage = () => {
             toast.success(`Expenses have been successfully marked as unpaid.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to mark the expenses as unpaid. Please try again.`);
         }
     });
@@ -110,7 +112,7 @@ const ExpensesPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20}/></button>
+                                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
@@ -126,11 +128,14 @@ const ExpensesPage = () => {
                             )
                     }
                 </div>
-
-                <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Expenses</h1>
-                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
-                </div>
+                {
+                    selected?.length === 0 && (
+                        <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                            <h1 className="title p-0" style={{ marginRight: '16px' }}>Expenses</h1>
+                            <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
+                        </div>
+                    )
+                }
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Expenses</div>

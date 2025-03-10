@@ -40,7 +40,6 @@
   border-radius: 16px;
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-25, #f2faff);
-  mix-blend-mode: multiply;
 }
 
 .iconStyle {
@@ -75,7 +74,7 @@
   border-radius: var(--radius-xl, 12px);
   border: 1px solid var(--Success-200, #a9efc5);
   background: var(--Success-50, #ecfdf3);
-  mix-blend-mode: multiply;
+  
 }
 
 .unpaidTotal {
@@ -98,5 +97,5 @@
   border-radius: var(--radius-xl, 12px);
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
-  mix-blend-mode: multiply;
+  
 }

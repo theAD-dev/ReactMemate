@@ -1,9 +1,8 @@
-import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import React, { useEffect, useState } from 'react';
-
-import '@szhsin/react-menu/dist/index.css';
 import { ChevronDown } from 'react-bootstrap-icons';
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
+import '@szhsin/react-menu/dist/index.css';
 import { updateProjectStatusById } from '../../../../../APIs/management-api';
 
 const colorMapping = {
@@ -96,7 +95,7 @@ const SelectStatus = ({ projectId, statusOptions, custom_status }) => {
             overflow={"auto"}
             position={"anchor"}
         >
-            {statusOptions?.map((status, i) => (
+            {statusOptions?.map((status) => (
                 <MenuItem style={{ textAlign: 'left' }} onClick={() => handleSubMenuClick(status)} key={status.id}>
                     <div className="d-flex" style={{ width: '163px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
                         <div className="h-100" style={{ width: '4px', background: `${colorMapping[status?.color]?.border}` }}></div>

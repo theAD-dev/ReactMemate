@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import SelectDate from './select-date';
-import SelectUser from './select-user';
 import { getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 import newTask from '../../../../../assets/images/new-task.svg';

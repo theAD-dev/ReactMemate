@@ -1,9 +1,8 @@
-import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import React from 'react';
 import { useRef, useState } from 'react';
-
-import '@szhsin/react-menu/dist/index.css';
 import { ListGroup } from 'react-bootstrap';
+import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 import './event-filter.css';
 
 const EventFilters = () => {

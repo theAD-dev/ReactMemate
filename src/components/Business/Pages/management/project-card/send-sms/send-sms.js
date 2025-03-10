@@ -50,7 +50,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
 
   const mutation = useMutation({
     mutationFn: (data) => sendSms(projectId, data),
-    onSuccess: (response) => {
+    onSuccess: () => {
       toast.success(`SMS send successfully`);
       handleClose();
       projectCardData();

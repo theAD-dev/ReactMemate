@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import { Building, BuildingAdd, PersonAdd, PlusCircle, StarFill, Trash, X } from 'react-bootstrap-icons';
+import { Button } from 'react-bootstrap';
+import { BuildingAdd, PersonAdd, PlusCircle, X } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { Sidebar } from 'primereact/sidebar';
@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import BusinessForm from './business-form';
 import IndivisualForm from './indivisual-form';
 import styles from './new-client-create.module.scss';
-import { createNewIndividualClient } from '../../../../../APIs/ClientsApi';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
 const NewClientCreate = ({ visible, setVisible, refetch }) => {
@@ -16,16 +15,17 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
     const [isPending, setIsPending] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [tab, setTab] = useState('1');
-    const [businessDefaultValues, setBusinessDefaultValues] = useState({
+    const [businessDefaultValues, ] = useState({
         payment_terms: 1,
         category: '',
         phone: { country: '', number: '' },
         contact_persons: [{}],
-        addresses: [{}],
+        addresses: [{ country: 1 }],
     });
-    const [individualDefaultValues, setIndividualDefaultValues] = useState({
+    const [individualDefaultValues, ] = useState({
         payment_terms: 1,
         category: '',
+        address: { country: 1 },
     });
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);

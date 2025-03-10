@@ -22,7 +22,6 @@
   border-radius: 16px;
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-50, #ebf8ff);
-  mix-blend-mode: multiply;
   color: var(--Primary-500, #1ab2ff);
   text-align: center;
   font-family: Inter;
@@ -527,7 +526,6 @@ div#popoverStyleChange {
   border-radius: 16px;
   border: 1px solid var(--colorG2);
   background: var(--color9);
-  mix-blend-mode: multiply;
   color: var(--colorG1);
   text-align: center;
   font-size: 12px;
@@ -2500,7 +2498,6 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   border-radius: 16px;
   border: 1px solid var(--Success-200, #abefc6);
   background: var(--Success-50, #ecfdf3);
-  mix-blend-mode: multiply;
 }
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green span.text {
   color: var(--Success-700, var(--Success-700, #067647));
@@ -2514,7 +2511,6 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   border-radius: 16px;
   border: 1px solid var(--Blue-200, #b2ddff);
   background: var(--Blue-50, #eff8ff);
-  mix-blend-mode: multiply;
 }
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue span.text {
   color: var(--Blue-700, #175cd3);
@@ -2758,7 +2754,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .salesTableWrap table thead tr th:nth-child(4),
 .salesTableWrap table tbody tr td:nth-child(4) {
   position: sticky;
-  left: 464px;
+  left: 472px;
   z-index: 8;
   min-width: 254px;
 }
@@ -2766,7 +2762,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .salesTableWrap table thead tr th:nth-child(3),
 .salesTableWrap table tbody tr td:nth-child(3) {
   position: sticky;
-  left: 194px;
+  left: 202px;
   min-width: 270px;
   z-index: 5;
 }
@@ -2784,4 +2780,22 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .salesTableWrap table thead tr th:first-child,
 .salesTableWrap table tbody tr td:first-child {
   border-right: 0px !important;
+}
+
+.salesTableWrap table thead tr th:last-child,
+.salesTableWrap table tbody tr td:last-child {
+  position: sticky;
+  min-width: 54px;
+  right: 0px;
+  z-index: 8;
+}
+
+.salesTableWrap table thead tr th:nth-child(11),
+.salesTableWrap table tbody tr td:nth-child(11) {
+  position: sticky;
+  min-width: 120px;
+  right: 76px;
+  z-index: 8;
+  box-shadow: 0 0 6px #dedede;
+  clip-path: inset(0px 0px 0px -6px);
 }
