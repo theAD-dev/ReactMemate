@@ -156,7 +156,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       renderCell: (params) => (
         <div className="innerFlex styleColor2 d-flex justify-content-between">
           <div className="styleColor1">
-            <strong className="ellipsis-width" style={{ maxWidth: '80px' }}>{params.value}</strong>
+            <strong className="ellipsis-width" style={{ maxWidth: '80px' }} title={params.value}>{params.value}</strong>
             <p>{formatDate(params.row.created)}</p>
           </div>
           <Link to={`/sales/quote-calculation/${params.row.unique_id}`}><Button className="linkByttonStyle" variant="link">Open</Button></Link>
