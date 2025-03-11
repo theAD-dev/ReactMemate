@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button, Spinner, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
@@ -24,26 +24,28 @@ const colorOptions = [
     { value: "#6C6C1C", bg: "#E1E1B8", border: "#6C6C1C", color: "#444403", text: "Dark Yellow" }
 ];
 
-
-
 const ProjectStatus = () => {
     const [isCreating, setIsCreating] = useState(false);
     const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
     const [error, setError] = useState('');
-    const [charCount, setCharCount] = useState(0);
-    const fetchData = async () => {
+
+    const fetchData = useCallback(async () => {
         try {
             setIsCreating(true);
             const data = await ProjectStatusesList();
-            console.log('data: ', data);
-            setOptions([...data]); // Include empty option
+            setOptions(prev => {
+                const unsavedOptions = prev.filter(opt => opt.isNew);
+                const fetchedOptions = data.map(item => ({ ...item, isChanged: false, isNew: false }));
+                return [...fetchedOptions, ...unsavedOptions];
+            });
         } catch (error) {
             console.error("Error fetching project status data:", error);
+            toast.error('Failed to fetch project statuses');
         } finally {
             setIsCreating(false);
         }
-    };
+    }, []);
 
     const updateMutation = useMutation({
         mutationFn: (data) => updateProjectStatusById(data.id, data),
@@ -52,9 +54,8 @@ const ProjectStatus = () => {
             await fetchData();
         },
         onError: (error) => {
-            console.error('Error creating task:', error);
-            toast.error('Failed to update the project status. Please try again.');
-            fetchData();
+            console.error('Error updating status:', error);
+            toast.error('Failed to update the project status');
         }
     });
 
@@ -65,9 +66,8 @@ const ProjectStatus = () => {
             fetchData();
         },
         onError: (error) => {
-            console.error('Error creating task:', error);
-            toast.error('Failed to delete the project status. Please try again.');
-            fetchData();
+            console.error('Error deleting status:', error);
+            toast.error('Failed to delete the project status');
         }
     });
 
@@ -78,53 +78,81 @@ const ProjectStatus = () => {
             fetchData();
         },
         onError: (error) => {
-            console.error('Error creating task:', error);
-            toast.error('Failed to create the project status. Please try again.');
-            fetchData();
+            console.error('Error creating status:', error);
+            toast.error('Failed to create the project status');
         }
     });
 
     const addOption = () => {
-        setOptions((oldOptions) => [...oldOptions, { isNew: true, id: oldOptions.length + 1, value: '#FFB258', color: '#FFB258', title: "" }]);
+        const availableColors = getAvailableColors(null);
+        if (availableColors.length === 0) return;
+
+        setOptions(prev => [...prev, {
+            isNew: true,
+            id: Date.now(),
+            value: availableColors[0].value,
+            color: availableColors[0].value,
+            title: ""
+        }]);
     };
 
     const updateOptionColor = (id, color) => {
-        setOptions(options.map(option => option.id === id ? { ...option, color, isChanged: true } : option));
+        setOptions(options.map(option =>
+            option.id === id ? { ...option, color, value: color, isChanged: true } : option
+        ));
     };
 
     const updateOptionTitle = (id, title) => {
-        setCharCount(title.length);
-        if (title.length <= 20) {
-            setError('');
-            setOptions(options.map(option => option.id === id ? { ...option, title, isChanged: true } : option));
-        } else {
-            setError(`The status name can be up to 20 characters long.`);
+        if (title.length > 20) {
+            setError('The status name can be up to 20 characters long.');
+            return;
         }
+        setError('');
+        setOptions(options.map(option =>
+            option.id === id ? { ...option, title, isChanged: true } : option
+        ));
     };
 
-    const saveOption = (id, isNew = false) => {
+    const saveOption = async (id, isNew = false) => {
         const optionToSave = options.find(option => option.id === id);
+        if (!optionToSave.title.trim()) {
+            setError('Status name is required');
+            return;
+        }
+        const dataToSave = { ...optionToSave, value: optionToSave.color };
+        delete dataToSave.isNew; // Remove temporary flags before saving
+        delete dataToSave.isChanged;
+
         if (isNew) {
-            console.log('new options to create...', optionToSave);
-            createMutation.mutate(optionToSave);
+            await createMutation.mutateAsync(dataToSave);
+            setOptions(prev => {
+                const unsavedOptions = prev.filter(opt => opt.id !== id);
+                return [...unsavedOptions];
+            });
         } else {
-            console.log('options to update...', optionToSave);
-            updateMutation.mutate(optionToSave);
+            updateMutation.mutate(dataToSave);
         }
     };
 
     const removeOption = (id) => {
-        let updatedOptions = options.filter(option => option.id === id);
-        console.log('updatedOptions: ', updatedOptions);
-        if (updatedOptions && updatedOptions.length && updatedOptions[0].isNew) {
-            setOptions(options.filter(option => option.id !== id));
+        const option = options.find(opt => opt.id === id);
+        if (option?.isNew) {
+            setOptions(options.filter(opt => opt.id !== id));
+        } else {
+            deleteMutation.mutate(id);
         }
-        else if (updatedOptions && updatedOptions.length) deleteMutation.mutate(id);
+    };
+
+    const getAvailableColors = (currentOptionId) => {
+        const usedColors = options
+            .filter(opt => opt.id !== currentOptionId)
+            .map(opt => opt.color);
+        return colorOptions.filter(color => !usedColors.includes(color.value));
     };
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     return (
         <div className='settings-wrap'>
@@ -136,56 +164,52 @@ const ProjectStatus = () => {
                         <div className='contentMenuTab'>
                             <ul>
                                 <li className='menuActive'><Link to="/settings/projectstatus/project-status">Project Status</Link></li>
-                                {/* <li><Link to="/settings/projectstatus/outgoing-emails">Outgoing Emails</Link></li> */}
                             </ul>
                         </div>
                     </div>
                     <div className="content_wrap_main">
                         <div className='content_wrapper'>
                             <div className="listwrapper orgColorStatus">
-                               <div className="top">
-                               <h4>Custom Order Status</h4>
-                               {/* <p>The status name can be up to 20 characters long.</p> */}
-                               {error ? (
-                                <p style={{ color: 'red' }}>{error}</p>
-                            ) : (
-                                <p>The status name can be up to 20 characters long.</p>
-                            )}
-                               </div>
-                                {
-                                    isCreating && (
-                                        <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-                                            <Spinner animation="border" role="status">
-                                                <span className="visually-hidden">Loading...</span>
-                                            </Spinner>
-                                        </div>
-                                    )
-                                }
+                                <div className="top">
+                                    <h4>Custom Order Status</h4>
+                                    {error ? (
+                                        <p style={{ color: 'red' }}>{error}</p>
+                                    ) : (
+                                        <p>The status name can be up to 20 characters long.</p>
+                                    )}
+                                </div>
+                                {isCreating && (
+                                    <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+                                        <Spinner animation="border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </Spinner>
+                                    </div>
+                                )}
                                 <Table>
                                     <tbody>
-                                        {options.map((option, index) => (
-                                            <tr key={`option-${option.id}-${index}`}>
+                                        {options.map((option) => (
+                                            <tr key={`option-${option.id}`}>
                                                 <td>
                                                     <div className='statuswrapper'>
-                                                  
-                                                    <div className='statusTitle'>
-                                                        <input
-                                                            type="text"
-                                                            value={option.title}
-                                                            onChange={(e) => updateOptionTitle(option.id, e.target.value)}
-                                                        />
-                                                 {
-                                                       (option.isNew || option.isChanged) && <>
-                                                        {
-                                                            option?.title?.length >= 20
-                                                            ? <p className="mb-2 mt-2 text-danger">20</p>
-                                                            : <p className="mb-2 mt-2">{option?.title?.length || 0} </p>
-                                                        }
-                                                       </> 
-                                                    }
-                                                    </div>
-                                                    
-                                                    
+                                                        <div className='statusTitle'>
+                                                            <input
+                                                                type="text"
+                                                                value={option.title}
+                                                                onChange={(e) => updateOptionTitle(option.id, e.target.value)}
+                                                                maxLength={20}
+                                                                placeholder="Enter status name"
+                                                            />
+                                                            {(option.isNew || option.isChanged) && (
+                                                                <p className="mb-2 mt-2">
+                                                                    {option.title.length >= 20 ? (
+                                                                        <span className="text-danger">{option.title.length}</span>
+                                                                    ) : (
+                                                                        option.title.length
+                                                                    )}
+                                                                    /20
+                                                                </p>
+                                                            )}
+                                                        </div>
                                                         <Menu
                                                             className='mainSelectMenu'
                                                             menuButton={
@@ -202,18 +226,22 @@ const ProjectStatus = () => {
                                                                     </div>
                                                                     <ChevronDown size={20} color='#98A2B3' />
                                                                 </MenuButton>
-
                                                             }
                                                             overflow={"auto"}
-                                                            position={"anchor"}>
-                                                            <MenuGroup takeOverflow style={{ maxHeight: '230px', overflow: 'auto', boxShadow: ' 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
-                                                                {colorOptions.map(({ value, bg, border, color, text }, index) => (
-
-                                                                    <MenuItem onClick={() => updateOptionColor(option.id, value)} key={`${index}-${value}`} value={value} style={{ padding: '8px 10px 8px 8px' }}>
+                                                            position={"anchor"}
+                                                        >
+                                                            <MenuGroup takeOverflow style={{ maxHeight: '230px', overflow: 'auto', boxShadow: '0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
+                                                                {getAvailableColors(option.id).map(({ value, bg, border, color, text }, index) => (
+                                                                    <MenuItem
+                                                                        onClick={() => updateOptionColor(option.id, value)}
+                                                                        key={`${index}-${value}`}
+                                                                        value={value}
+                                                                        style={{ padding: '8px 10px 8px 8px' }}
+                                                                    >
                                                                         <div className="d-flex" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
-                                                                            <div className="h-100" style={{ width: '4px', background: `${border}` }}></div>
-                                                                            <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: `${bg}` }}>
-                                                                                <span style={{ color: `${color}`, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{text}</span>
+                                                                            <div className="h-100" style={{ width: '4px', background: border }}></div>
+                                                                            <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: bg }}>
+                                                                                <span style={{ color: color, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{text}</span>
                                                                             </div>
                                                                         </div>
                                                                     </MenuItem>
@@ -221,31 +249,37 @@ const ProjectStatus = () => {
                                                             </MenuGroup>
                                                         </Menu>
                                                     </div>
-                                                   
                                                 </td>
                                                 <td className="butactionOrg">
-                                                    {(option.isNew || option.isChanged) &&
-
-                                                        <Button className="save" onClick={() => saveOption(option.id, option.isNew)}>
-                                                            {
-                                                                (updateMutation.isPending && updateMutation?.variables?.id === option.id)
-                                                                    ||
-                                                                    (createMutation.isPending && createMutation?.variables?.id === option.id)
-                                                                    ?
-                                                                    "Loading..."
-                                                                    : "Save"
-                                                            }
+                                                    {(option.isNew || option.isChanged) && (
+                                                        <Button
+                                                            className="save"
+                                                            onClick={() => saveOption(option.id, option.isNew)}
+                                                            disabled={!option.title.trim() || createMutation.isPending || updateMutation.isPending}
+                                                        >
+                                                            {(updateMutation.isPending && updateMutation?.variables?.id === option.id) ||
+                                                                (createMutation.isPending && createMutation?.variables?.id === option.id)
+                                                                ? "Loading..."
+                                                                : "Save"}
                                                         </Button>
-
-                                                    }
-                                                    <Button className="remove" onClick={() => removeOption(option.id)}>{deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}</Button>
+                                                    )}
+                                                    <Button
+                                                        className="remove"
+                                                        onClick={() => removeOption(option.id)}
+                                                        disabled={deleteMutation.isPending}
+                                                    >
+                                                        {deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         ))}
                                         <tr>
                                             <td id='addmoreOption' colSpan={3}>
-                                                <Button onClick={addOption}>
-                                                    Add an Option  &nbsp;<PlusLg size={20} color='#000000' />
+                                                <Button
+                                                    onClick={addOption}
+                                                    disabled={getAvailableColors(null).length === 0}
+                                                >
+                                                    Add an Option   <PlusLg size={20} color='#000000' />
                                                 </Button>
                                             </td>
                                         </tr>

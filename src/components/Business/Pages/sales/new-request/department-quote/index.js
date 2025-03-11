@@ -191,7 +191,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 <Row>
                   <Col sm={12} className='text-start'>
                     <div className='formgroupboxs mb-3 mt-1'>
-                      <label style={{ color: '#475467', fontSize: '14px', display: 'block', marginBottom: '6px' }}>Project Manager <sup className="text-danger">*</sup></label>
+                      <label style={{ color: '#475467', fontSize: '14px', display: 'block', marginBottom: '6px' }}>Project Manager<span className='required'>*</span></label>
                       <div className={`inputInfo px-0`} style={{ minHeight: '46px', height: 'fit-content', padding: '0px 14px' }}>
                         <Select1
                           placeholder="Select Manager"
@@ -275,7 +275,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                   </Col>
                   <Col sm={12} className='text-start'>
                     <Form.Group className="mb-3 mui-select-custom">
-                      <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Amounts are</Form.Label>
+                      <Form.Label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Amounts are<span className='required'>*</span></Form.Label>
                       <FormControl sx={{ m: 0, minWidth: `100%`, color: '#101828' }}>
                         <Select
                           value={payload?.xero_tax || ""}

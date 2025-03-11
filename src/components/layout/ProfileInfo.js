@@ -2,8 +2,8 @@ import React from "react";
 import { Placeholder } from "react-bootstrap";
 import { QuestionCircle, Search, PlusLg, Bell } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
-import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
 import style from './header.module.scss';
+import { FallbackImage } from "../../ui/image-with-fallback/image-avatar";
 
 const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
   return (

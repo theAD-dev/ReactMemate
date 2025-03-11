@@ -28,7 +28,7 @@ const ForgotPassword = () => {
 
     try {
       setIsLoading(true);
-      const response = await resetEmail({ email: email });
+      await resetEmail({ email: email });
       navigate(`/check-mail?email=${encodeURIComponent(email)}`);
     } catch (error) {
       if (error.message === "Not found") {

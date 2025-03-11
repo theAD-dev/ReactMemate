@@ -11,9 +11,16 @@ import AddNoteModeIcon from "../../../../../assets/images/icon/addNoteModeIcon.s
 const AddNote = ({ projectId, projectCardData }) => {
   const [viewShow, setViewShow] = useState(false);
   const [updateDis, setUpdateDis] = useState('');
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    description: '',
+  });
+
+  const MAX_LENGTH = 500; // Maximum allowed characters
+  const MIN_LENGTH = 3;   // Minimum required characters
+
   const handleClose = () => setViewShow(false);
   const handleShow = () => setViewShow(true);
+
   const mutation = useMutation({
     mutationFn: (data) => createProjectNoteById(projectId, data),
     onSuccess: () => {
@@ -21,31 +28,64 @@ const AddNote = ({ projectId, projectCardData }) => {
       projectCardData(projectId);
     },
     onError: (error) => {
-      console.error('Error creating task:', error);
+      console.error('Error creating note:', error);
+      setErrors(prev => ({
+        ...prev,
+        description: error.message || 'Failed to save note. Please try again.'
+      }));
     }
   });
 
-  const handleChange = () => {
-    if (!updateDis) return setErrors((errs) => ({ ...errs, description: "Note is required" }));
-    else setErrors((errs) => ({ ...errs, description: "" }));
-    mutation.mutate({ text: updateDis });
+  const validateNote = (text) => {
+    if (!text.trim()) {
+      return 'Note is required';
+    }
+    if (text.length < MIN_LENGTH) {
+      return `Note must be at least ${MIN_LENGTH} characters long`;
+    }
+    if (text.length > MAX_LENGTH) {
+      return `Note must not exceed ${MAX_LENGTH} characters`;
+    }
+    // Add any additional validation rules here (e.g., special characters, etc.)
+    if (/^\s+$/.test(text)) {
+      return 'Note cannot contain only whitespace';
+    }
+    return '';
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setUpdateDis(value);
+
+    // Real-time validation
+    const error = validateNote(value);
+    setErrors(prev => ({ ...prev, description: error }));
+  };
+
+  const handleSubmit = () => {
+    const validationError = validateNote(updateDis);
+
+    if (validationError) {
+      setErrors(prev => ({ ...prev, description: validationError }));
+      return;
+    }
+
+    mutation.mutate({ text: updateDis.trim() });
   };
 
   useEffect(() => {
     if (!viewShow) {
       setUpdateDis('');
-      setErrors({});
+      setErrors({ description: '' });
     }
   }, [viewShow]);
 
   return (
     <>
-      {/* View modal trigger */}
       <div className="linkByttonStyle py-2 border-right" onClick={handleShow}>
         Add Note
       </div>
 
-      {/* View modal */}
       <Modal
         show={viewShow}
         aria-labelledby="contained-modal-title-vcenter"
@@ -70,66 +110,45 @@ const AddNote = ({ projectId, projectCardData }) => {
             <Row>
               <Col>
                 <div className="formgroup mb-2 mt-2">
-                  <label>Note </label>
+                  <label htmlFor="note-input">Note <span className="required">*</span></label>
                   <div className={`inputInfo ${errors.description ? 'error-border' : ''}`}>
                     <textarea
+                      id="note-input"
                       type="text"
-                      name="Enter a message here..."
+                      name="note"
                       value={updateDis}
                       placeholder='Enter a message here...'
-                      onChange={(e) => {
-                        setUpdateDis(e.target.value);
-                      }}
+                      onChange={handleChange}
+                      maxLength={MAX_LENGTH}
+                      rows={4}
+                      className="w-100"
                     />
                   </div>
-                  {errors.description && <p className="error-message">{errors.description}</p>}
+                  <div className="d-flex justify-content-between mt-1">
+                    <small className={errors.description ? "error-message" : "text-muted"}>
+                      {errors.description || `${updateDis.length}/${MAX_LENGTH} characters`}
+                    </small>
+                  </div>
                 </div>
               </Col>
             </Row>
-            {/* <Row>
-              <Col>
-                <div className="formgroup mb-2 mt-3">
-                  <label>App Logo</label>
-                  <div className="upload-btn-wrapper">
-                    <button className="btnup">
-                      <div className="iconPerson">
-                        <CloudArrowUp color="#475467" size={32} />
-                      </div>
-                      <div className="textbtm">
-                        <p>
-                          <span>Click to upload</span> or drag and drop
-                          <br></br>
-                          SVG, PNG, JPG or GIF (max. 800x400px)
-                        </p>
-                      </div>
-                    </button>
-                    <input type="file" onChange={handleImageUpload} />
-                    {image && (
-                      <div className='uploadImgWrap'>
-                        <div>
-                          <img src={image} alt="Uploaded" />
-                          <div className='updatebut'>
-                            <button className='update' onClick={handleImageUpdate}>Update</button>
-                            <button className='delete' onClick={handleImageDelete}>Delete</button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                </div>
-              </Col>
-            </Row> */}
-
           </div>
         </Modal.Body>
         <Modal.Footer className='pt-0'>
-          <div className="popoverbottom w-100  border-0 mt-0 pt-0">
-            <Button variant="outline-danger" onClick={handleClose}>
+          <div className="popoverbottom w-100 border-0 mt-0 pt-0">
+            <Button
+              variant="outline-danger"
+              onClick={handleClose}
+              disabled={mutation.isPending}
+            >
               Cancel
             </Button>
-            <Button variant="primary save" onClick={handleChange}>
-              {mutation.isPending ? "Loading..." : "Save"}
+            <Button
+              variant="primary save"
+              onClick={handleSubmit}
+              disabled={mutation.isPending || !!errors.description}
+            >
+              {mutation.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </Modal.Footer>

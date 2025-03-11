@@ -428,7 +428,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             }
 
             let filteredData = data.filter((item, index, self) =>
-                index === self.findIndex((t) => t.id === item.id) // remove duplicates
+                index === self.findIndex((t) => t.id === item.id)
             );
 
             if (subItem && !rows[subItem]) {

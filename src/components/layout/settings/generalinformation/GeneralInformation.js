@@ -13,10 +13,8 @@ import Sidebar from '.././Sidebar';
 import { SettingsGeneralInformation, updateGeneralInformation } from '../../../../APIs/SettingsGeneral';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
-import FileUploader from '../../../../ui/file-uploader/file-uploader';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
-
-
+import FileUploader from '../../../../ui/file-uploader/file-uploader';
 
 
 const schema = yup.object().shape({

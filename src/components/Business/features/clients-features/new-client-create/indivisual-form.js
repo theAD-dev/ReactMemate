@@ -43,7 +43,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
     const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
 
-    const { control, register, handleSubmit, formState: { errors } } = useForm({
+    const { control, register, handleSubmit, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(schema),
         defaultValues
     });
@@ -52,6 +52,16 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
         if (defaultValues?.address?.country) setCountryId(defaultValues?.address?.country);
         if (defaultValues?.address?.state) setStateId(defaultValues?.address?.state);
     }, [defaultValues?.address]);
+
+    useEffect(() => {
+        if (categoriesQuery?.data?.length && !defaultValues.category) {
+            let findRegular = categoriesQuery.data?.find(category => category.name.toLowerCase() === 'regular');
+            if (findRegular.name) {
+                setValue('category', findRegular.id);
+            }
+        }
+    }, [categoriesQuery?.data, defaultValues, setValue]);
+
     return (
         <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
             <Row className={clsx(styles.bgGreay, 'pt-0')}>
@@ -68,7 +78,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>First Name</label>
+                        <label className={clsx(styles.lable)}>First Name<span className='required'>*</span></label>
                         <IconField>
                             <InputIcon>{errors.firstname && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("firstname")} className={clsx(styles.inputText, { [styles.error]: errors.firstname })} placeholder='Enter first name' />
@@ -79,7 +89,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Last Name</label>
+                        <label className={clsx(styles.lable)}>Last Name<span className='required'>*</span></label>
                         <IconField>
                             <InputIcon>{errors.lastname && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("lastname")} className={clsx(styles.inputText, { [styles.error]: errors.lastname })} placeholder='Enter last name' />
@@ -90,7 +100,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Email</label>
+                        <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
                         <IconField>
                             <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
@@ -112,7 +122,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     className='phoneInput rounded'
                                     containerClass={styles.countrySelector}
                                     onChange={field.onChange}
-                                    style={{ border: `1px solid ${errors.phone ? 'red' : '#dedede'}`}}
+                                    style={{ border: `1px solid ${errors.phone ? 'red' : '#dedede'}` }}
                                 />
                             )}
                         />
@@ -125,7 +135,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
             <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Payment Terms</label>
+                        <label className={clsx(styles.lable)}>Payment Terms<span className='required'>*</span></label>
                         <Controller
                             name="payment_terms"
                             control={control}
@@ -154,7 +164,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                 </Col>
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Customers Discount Category</label>
+                        <label className={clsx(styles.lable)}>Customers Discount Category<span className='required'>*</span></label>
                         <Controller
                             name="category"
                             control={control}

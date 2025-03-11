@@ -1,25 +1,22 @@
 :root {
-  --color1: #158ECC;
+  --color1: #158ecc;
   --color2: #ffffff;
-  --color3: #F7F9FC;
-  --color4: #D6BBFB;
+  --color3: #f7f9fc;
+  --color4: #d6bbfb;
   --color5: #1976d2;
-  --color6: #F04438;
-  --color7: #F9F5FF;
+  --color6: #f04438;
+  --color7: #f9f5ff;
   --color8: #9f9f9f;
-  --color9: #F9FAFB;
-  --color10: #EAECF0;
-
+  --color9: #f9fafb;
+  --color10: #eaecf0;
 
   /* Grey */
   --colorG1: #344054;
-  --colorG2: #EAECF0;
+  --colorG2: #eaecf0;
   --colorG3: #475467;
   --colorG4: #667085;
-  --colorG5: #D0D5DD;
-  --colorG6: #98A2B3;
-
-
+  --colorG5: #d0d5dd;
+  --colorG6: #98a2b3;
 }
 
 .noDataAvilable {
@@ -32,7 +29,7 @@
 }
 
 .styleGrey02 {
-  color: #98A2B3;
+  color: #98a2b3;
 }
 
 .table-responsive {
@@ -52,9 +49,9 @@ li {
 
 textarea.form-control:focus {
   outline: none;
-  box-shadow: 0 0 0 0 rgba(13, 110, 253, .25);
-  border-color: #158ECC;
-  border: 1px solid #158ECC;
+  box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.25);
+  border-color: #158ecc;
+  border: 1px solid #158ecc;
 }
 
 .disPlayInline li {
@@ -70,13 +67,19 @@ img {
 }
 
 table thead tr th {
-  background: linear-gradient(to top, #EAECF0, #EAECF0 1px, #ffffff 1px, #ffffff 100%);
+  background: linear-gradient(
+    to top,
+    #eaecf0,
+    #eaecf0 1px,
+    #ffffff 1px,
+    #ffffff 100%
+  );
   border-bottom: 0;
 }
 
 table thead tr th,
 table tbody tr td {
-  border-right: 1px solid var(--Gray-200, #EAECF0);
+  border-right: 1px solid var(--Gray-200, #eaecf0);
 }
 
 .table-responsive {
@@ -86,8 +89,14 @@ table tbody tr td {
   padding-bottom: 2px;
 }
 
-table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) thead tr th:first-child,
-table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td:first-child {
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar)
+  thead
+  tr
+  th:first-child,
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar)
+  tbody
+  tr
+  td:first-child {
   position: sticky;
   left: 0;
   width: 40px;
@@ -114,15 +123,31 @@ table tbody tr.selected-row .linkByttonStyle {
   opacity: 1;
 }
 
-table thead tr th:nth-child(4) span.react-resizable-handle.react-resizable-handle-se,
-table thead tr th:nth-child(3) span.react-resizable-handle.react-resizable-handle-se,
-table thead tr th:nth-child(2) span.react-resizable-handle.react-resizable-handle-se,
-table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handle-se {
+table
+  thead
+  tr
+  th:nth-child(4)
+  span.react-resizable-handle.react-resizable-handle-se,
+table
+  thead
+  tr
+  th:nth-child(3)
+  span.react-resizable-handle.react-resizable-handle-se,
+table
+  thead
+  tr
+  th:nth-child(2)
+  span.react-resizable-handle.react-resizable-handle-se,
+table
+  thead
+  tr
+  th:nth-child(1)
+  span.react-resizable-handle.react-resizable-handle-se {
   display: none;
 }
 
 .selected-row.tableTopBar {
-  background: #EBF8FF;
+  background: #ebf8ff;
 }
 
 .tableTopBar {
@@ -140,7 +165,7 @@ table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handl
 
 span.react-resizable-handle.react-resizable-handle-se {
   position: absolute;
-  background: #158ECC;
+  background: #158ecc;
   width: 5px;
   height: 26px;
   right: -19px;
@@ -153,7 +178,7 @@ span.react-resizable-handle.react-resizable-handle-se:hover {
   opacity: 1;
 }
 
-.table>thead tr th .react-resizable-handle-se:before:hover {
+.table > thead tr th .react-resizable-handle-se:before:hover {
   opacity: 1;
 }
 
@@ -162,7 +187,7 @@ span.react-resizable-handle.react-resizable-handle-se:hover {
 }
 
 tr.selected-row td {
-  background: #EBF8FF !important;
+  background: #ebf8ff !important;
 }
 
 .customCheckBox {
@@ -187,18 +212,18 @@ tr.selected-row td {
   height: 20px;
   width: 20px;
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
   vertical-align: middle;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.customCheckBox input:checked~.checkmark {
+.customCheckBox input:checked ~ .checkmark {
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--Primary-500, #1AB2FF);
-  background: var(--Primary-50, #EBF8FF);
+  border: 1px solid var(--Primary-500, #1ab2ff);
+  background: var(--Primary-50, #ebf8ff);
 }
 
 .customCheckBox .checkmark svg {
@@ -211,11 +236,11 @@ tr.selected-row td {
   display: none;
 }
 
-.customCheckBox input:checked~.checkmark:after {
+.customCheckBox input:checked ~ .checkmark:after {
   display: block;
 }
 
-.customCheckBox input:checked~.checkmark svg {
+.customCheckBox input:checked ~ .checkmark svg {
   opacity: 1;
 }
 
@@ -251,8 +276,8 @@ tr.selected-row td {
 }
 
 .selected-row td {
-  border-bottom: 1px solid #EAECF0;
-  background: #F9F5FF;
+  border-bottom: 1px solid #eaecf0;
+  background: #f9f5ff;
 }
 
 .avatar-info,
@@ -290,11 +315,11 @@ tr.selected-row td {
 }
 
 span.lightColorStyle {
-  opacity: .56;
+  opacity: 0.56;
 }
 
 .MuiDataGrid-columnHeader {
-  border-right: 1px solid #EAECF0;
+  border-right: 1px solid #eaecf0;
   position: sticky !important;
   left: 0;
 }
@@ -320,17 +345,18 @@ span.lightColorStyle {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
   padding: 16px 0px;
 }
 
 .modelStyleBox.QuoteWon .stepBoxStyle,
 .modelStyleBox.QuoteLost .stepBoxStyle {
-  background: var(--Gray-25, #FCFCFD);
+  background: var(--Gray-25, #fcfcfd);
   padding: 32px 24px;
-  border-top: 1px solid #EAECF0;
+  border-top: 1px solid #eaecf0;
   margin-top: 12px;
 }
 
@@ -371,8 +397,8 @@ span.lightColorStyle {
 
 .ContactModelIn {
   padding: 6px 23px 24px;
-  background: var(--Gray-25, #FCFCFD);
-  border-top: 1px solid #EAECF0;
+  background: var(--Gray-25, #fcfcfd);
+  border-top: 1px solid #eaecf0;
   margin-top: 12px;
 }
 
@@ -396,7 +422,7 @@ span.lightColorStyle {
 
 .radioSelectButton label {
   border-radius: 4px;
-  border: 1px solid #D0D5DD !important;
+  border: 1px solid #d0d5dd !important;
   background: #fff;
   color: #344054;
   font-size: 16px;
@@ -416,27 +442,28 @@ span.lightColorStyle {
 
 .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
   border-radius: 4px;
-  border: 1px solid var(--Border, #D0D5DD);
+  border: 1px solid var(--Border, #d0d5dd);
 }
 
-.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #106B99 !important;
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #106b99 !important;
   border-width: 1px !important;
 }
 
-.radioSelectButton .btn-check:checked+.btn,
+.radioSelectButton .btn-check:checked + .btn,
 .radioSelectButton .btn.active,
 .radioSelectButton .btn.show,
 .radioSelectButton .btn:first-child:active,
-.radioSelectButton :not(.btn-check)+.btn:active {
-  color: #106B99;
-  border-color: #A3E0FF;
+.radioSelectButton :not(.btn-check) + .btn:active {
+  color: #106b99;
+  border-color: #a3e0ff;
   border: 1px solid !important;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  background: var(--Primary-50, #EBF8FF);
+  background: var(--Primary-50, #ebf8ff);
 }
 
 .radioSelectButtons {
@@ -452,18 +479,18 @@ span.lightColorStyle {
   left: calc(50% - 1.5px);
   content: " ";
   display: block;
-  background: #98A2B3;
+  background: #98a2b3;
 }
 
 .event.busy {
-  background: #1AB2FF;
+  background: #1ab2ff;
 }
 
 .flatpickr-day.today {
-  border-color: #1AB2FF;
+  border-color: #1ab2ff;
   border-radius: 20px;
-  background: #1AB2FF;
-  color: #FFF;
+  background: #1ab2ff;
+  color: #fff;
   text-align: center;
   font-size: 14px;
   font-style: normal;
@@ -509,11 +536,11 @@ span.flatpickr-day.nextMonthDay {
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: #158ECC !important;
+  background: #158ecc !important;
   -webkit-box-shadow: none;
   box-shadow: none;
   color: #fff;
-  border-color: #158ECC !important;
+  border-color: #158ecc !important;
 }
 
 span.flatpickr-weekday {
@@ -582,25 +609,27 @@ table.department-calculation thead tr th {
 
 table.department-calculation tbody tr:hover td,
 table.department-calculation tbody tr.selected td {
-  background-color: #F2FAFF !important;
+  background-color: #f2faff !important;
 }
 
-.checkbox:has(table.department-calculation tbody tr input[type="checkbox"]:checked) {
+.checkbox:has(
+    table.department-calculation tbody tr input[type="checkbox"]:checked
+  ) {
   visibility: visible !important;
 }
 
 .proposal-accordion .p-accordion-content {
-  background: #FBFCFD;
+  background: #fbfcfd;
 }
 
 .dropdown-item:hover {
-  background-color: #F2FAFF;
+  background-color: #f2faff;
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
   color: #fff !important;
-  background-color: #1AB2FF !important;
+  background-color: #1ab2ff !important;
 }
 
 #calender .scheduler_default_rowheader_scroll,
@@ -1980,7 +2009,8 @@ strong.dollorIcon {
   width: 263px;
   z-index: 1000;
   right: 0;
-  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px) var(--radius-xs, 4px);
+  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px)
+    var(--radius-xs, 4px);
   border: 1px solid var(--Gray-200, #eaecf0);
   background: var(--Base-White, #fff);
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
@@ -2395,9 +2425,15 @@ color: #4285F4;
   border-radius: 40px;
 }
 
-.salesTableWrap .flatpickr-day.selected.startRange+.endRange:not(:nth-child(7n + 1)),
-.salesTableWrap .flatpickr-day.startRange.startRange+.endRange:not(:nth-child(7n + 1)),
-.salesTableWrap .flatpickr-day.endRange.startRange+.endRange:not(:nth-child(7n + 1)) {
+.salesTableWrap
+  .flatpickr-day.selected.startRange
+  + .endRange:not(:nth-child(7n + 1)),
+.salesTableWrap
+  .flatpickr-day.startRange.startRange
+  + .endRange:not(:nth-child(7n + 1)),
+.salesTableWrap
+  .flatpickr-day.endRange.startRange
+  + .endRange:not(:nth-child(7n + 1)) {
   box-shadow: -13px 0 0 #7f56d9c7, 13px 0 0 #7f56d9c7 !important;
 }
 
@@ -2852,10 +2888,13 @@ div#popoverStyleChange {
   border-bottom-color: #434a54;
 }
 
-.salesTableWrap #tooltip-top-start[data-popper-placement^="top"] .tooltip-arrow::before,
+.salesTableWrap
+  #tooltip-top-start[data-popper-placement^="top"]
+  .tooltip-arrow::before,
 .salesTableWrap #tooltip-top-start .tooltip-arrow::before {
   top: -1px;
-  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-width: var(--bs-tooltip-arrow-height)
+    calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-top-color: #fff;
 }
 
@@ -2967,7 +3006,7 @@ div#popoverStyleChange {
   left: 0;
 }
 
-.salesTableWrap .progress>span {
+.salesTableWrap .progress > span {
   width: 50%;
   height: 100%;
   overflow: hidden;
@@ -4479,7 +4518,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   text-align: center;
 } */
 
-.salesTableWrap .checkbox-custom:checked+.checkbox-custom-label:before {
+.salesTableWrap .checkbox-custom:checked + .checkbox-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -4487,13 +4526,13 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
+.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
   border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--primary-500, #9e77ed);
   background: var(--primary-50, #f9f5ff);
 }
 
-.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
+.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -4501,8 +4540,8 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .checkbox-custom:focus+.checkbox-custom-label,
-.salesTableWrap .radio-custom:focus+.radio-custom-label {
+.salesTableWrap .checkbox-custom:focus + .checkbox-custom-label,
+.salesTableWrap .radio-custom:focus + .radio-custom-label {
   outline: 1px solid #ddd;
 }
 
@@ -4860,8 +4899,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 
 .salesTableWrap .stepBoxStyle ul li strong {
   border-radius: var(--radius-lg, 10px);
-  border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border,
-      #eaecf0);
+  border: 1px solid
+    var(
+      --Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border,
+      #eaecf0
+    );
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   width: 48px;
   height: 48px;
@@ -4918,7 +4960,9 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin-bottom: 3px;
 }
 
-.salesTableWrap .datepickerField .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+.salesTableWrap
+  .datepickerField
+  .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 16.5px 14px;
   padding-right: 0;
   color: #475467;
@@ -5241,7 +5285,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 
 .salesTableWrap .colfilterbig {
-  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
+  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px)
+    var(--radius-md, 8px);
   border: 1px solid var(--Gray-100, #f2f4f7);
   background: var(--Base-White, #fff);
   padding: 16px 0px 0;
@@ -5299,7 +5344,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   align-items: center;
 }
 
-.salesTableWrap .ProgressTag .option input:checked~.checkmark {
+.salesTableWrap .ProgressTag .option input:checked ~ .checkmark {
   border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--Primary-500, #9e77ed) !important;
   background: var(--Primary-50, #f9f5ff);
@@ -5353,11 +5398,15 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin: 0 auto;
 }
 
-.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+.SalesContact
+  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error
+  .MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd;
 }
 
-.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+.SalesContact
+  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd;
 }
 
@@ -5540,7 +5589,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   justify-content: flex-end;
 }
 
-.custom-radio-button input:checked~.custom-radio-button__checkmark {
+.custom-radio-button input:checked ~ .custom-radio-button__checkmark {
   border-radius: var(--radius-lg, 10px);
   border: 1px solid var(--Gray-300, #1ab2ff);
   background: var(--Base-White, #ebf8ff);
@@ -5555,7 +5604,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   display: none;
 }
 
-.custom-radio-button input:checked~.custom-radio-button__checkmark:after {
+.custom-radio-button input:checked ~ .custom-radio-button__checkmark:after {
   display: block;
 }
 
@@ -5757,9 +5806,11 @@ li.szh-menu__item:hover {
   align-items: center;
   border-radius: var(--radius-xs, 4px);
   border: 2px solid #1ab2ff;
-  background: radial-gradient(2061.16% 127.06% at -1.24% 2.75%,
+  background: radial-gradient(
+      2061.16% 127.06% at -1.24% 2.75%,
       #1ab2ff 0%,
-      #ffb258 100%),
+      #ffb258 100%
+    ),
     #fff;
 }
 
@@ -5814,7 +5865,7 @@ li.szh-menu__item:hover {
   color: #98a2b3;
 }
 
-.basic-multi-select>* {
+.basic-multi-select > * {
   border: none !important;
   outline: none !important;
 }
@@ -5857,8 +5908,8 @@ ul.szh-menu {
   text-align: left;
 }
 
-.szh-menu__submenu>.szh-menu__item::after {
-  right: .5rem !important;
+.szh-menu__submenu > .szh-menu__item::after {
+  right: 0.5rem !important;
 }
 
 .dropdown-menus .list-menu-item {
@@ -5894,13 +5945,15 @@ ul.szh-menu {
 
 .requestDemoWrap .step-progress .step {
   border-radius: var(--radius-full, 9999px);
-  background: var(--Colors-Background-bg-quaternary, #EAECF0);
+  background: var(--Colors-Background-bg-quaternary, #eaecf0);
   height: 8px;
   width: 66.5px;
   margin: 0 8px;
 }
 
-.requestDemoWrap .react-international-phone-input-container .react-international-phone-input {
+.requestDemoWrap
+  .react-international-phone-input-container
+  .react-international-phone-input {
   border: 0px solid !important;
 }
 
@@ -5916,8 +5969,8 @@ ul.szh-menu {
   margin: 0 15px 15px 0;
   position: relative;
   border-radius: 4px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
 }
 
 .requestDemoWrap .inputInfoSizeCheck.active {
@@ -5972,7 +6025,7 @@ ul.szh-menu {
 .DiscoverMemate select {
   width: 100%;
   border: 0;
-  color: var(--Gray-400, #98A2B3);
+  color: var(--Gray-400, #98a2b3);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -5991,8 +6044,8 @@ ul.szh-menu {
 
 .requestDemoWrap .BusinessPlanBox {
   border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
   box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
   padding: 40px;
   width: 617px;
@@ -6001,7 +6054,7 @@ ul.szh-menu {
 
 .requestDemoWrap .BusinessPlanwrap {
   height: 100vh;
-  background: var(--Gray-100, #F2F4F7);
+  background: var(--Gray-100, #f2f4f7);
   padding-left: 41px;
   padding-right: 62px;
   display: flex;
@@ -6087,9 +6140,9 @@ ul.szh-menu {
 
 .requestDemoWrap .verifyEmail .vi__character {
   border-radius: 4px;
-  border: 1px solid var(--Gray-300, #D0D5DD);
-  background: var(--Base-White, #FFF);
-  color: var(--Gray-300, #D0D5DD);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  color: var(--Gray-300, #d0d5dd);
   text-align: center;
   font-family: Inter;
   font-size: 48px;
@@ -6104,10 +6157,10 @@ ul.szh-menu {
 
 .requestDemoWrap .verifyEmail .vi__character--filled {
   border-radius: 4px;
-  border: 2px solid var(--Primary-600, #7F56D9);
-  background: var(--Base-White, #FFF);
-  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #F4EBFF;
-  color: var(--Primary-600, #7F56D9);
+  border: 2px solid var(--Primary-600, #7f56d9);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #f4ebff;
+  color: var(--Primary-600, #7f56d9);
   text-align: center;
   font-family: Inter;
   font-size: 48px;
@@ -6169,7 +6222,12 @@ ul.szh-menu {
 }
 
 .requestDemoWrap .SinglBgRight:before {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) -14.5%, rgba(0, 0, 0, 0.00) 23.66%), linear-gradient(180deg, rgba(0, 0, 0, 0.00) 70.94%, rgba(0, 0, 0, 0.40) 100%);
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.4) -14.5%,
+      rgba(0, 0, 0, 0) 23.66%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
   position: absolute;
   content: "";
   width: 100%;
@@ -6177,7 +6235,7 @@ ul.szh-menu {
 }
 
 .requestDemoWrap .SinglBgRight p {
-  color: var(--Base-White, #FFF);
+  color: var(--Base-White, #fff);
   text-align: center;
   font-family: Inter;
   font-size: 20px;
@@ -6190,13 +6248,12 @@ ul.szh-menu {
 
 .requestDemoWrap .removeBorder:first-child div {
   border: 0;
-  color: var(--Gray-400, #98A2B3);
+  color: var(--Gray-400, #98a2b3);
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-
 }
 
 .requestDemoWrap .removeBorder {
@@ -6205,8 +6262,8 @@ ul.szh-menu {
 
 .requestDemoWrap .Timercount {
   border-radius: var(--radius-md, 8px);
-  border: 1px solid #EAECF0;
-  background: #FBFCFD;
+  border: 1px solid #eaecf0;
+  background: #fbfcfd;
   width: 157px;
   height: 70px;
   vertical-align: middle;
@@ -6227,7 +6284,7 @@ ul.szh-menu {
   height: 40px;
   margin: 0 auto;
   border-radius: 62px;
-  background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
+  background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
   padding: 5px;
 }
 
@@ -6250,7 +6307,7 @@ ul.szh-menu {
 }
 
 .requestDemoWrap button.fillbtn.flexcenterbox:disabled {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .timezoneWrapGroup .css-1dimb5e-singleValue {
@@ -6329,12 +6386,12 @@ ul.szh-menu {
   border: 1px solid var(--colorG5);
 }
 
-.inputInfocheckbox:hover input~.checkmarkdata {
+.inputInfocheckbox:hover input ~ .checkmarkdata {
   background-color: #fafafa;
   border: 1px solid var(--colorG5);
 }
 
-.inputInfocheckbox input:checked~.checkmarkdata {
+.inputInfocheckbox input:checked ~ .checkmarkdata {
   background-color: #fafafa;
   border: 1px solid var(--colorG5);
 }
@@ -6345,7 +6402,7 @@ ul.szh-menu {
   display: none;
 }
 
-.inputInfocheckbox input:checked~.checkmarkdata:after {
+.inputInfocheckbox input:checked ~ .checkmarkdata:after {
   display: block;
 }
 
@@ -6694,7 +6751,7 @@ span.checkmarkdata.agree_marketing-border {
 }
 
 .color-blue {
-  color: var(--Primary-700, #106B99);
+  color: var(--Primary-700, #106b99);
 }
 
 .font-600 {
@@ -7247,9 +7304,11 @@ button.cancel {
 
 .progressSubsIcon {
   border-radius: var(--radius-full, 9999px);
-  background: linear-gradient(135deg,
-      rgba(114, 237, 242, 0.15) 0%,
-      rgba(81, 81, 229, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(114, 237, 242, 0.15) 0%,
+    rgba(81, 81, 229, 0.15) 100%
+  );
   display: flex;
   width: 40px;
   height: 40px;
@@ -7633,9 +7692,9 @@ button.closeSubscription {
 
 .billsPage .billsStatus span.v {
   border-radius: 16px;
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-50, #FEF3F2);
-  color: #B42318;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
+  color: #b42318;
   text-align: center;
   font-family: Inter;
   font-size: 12px;
@@ -8427,7 +8486,7 @@ td.butactionOrg p {
 }
 
 button:disabled {
-  opacity: .5;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -8530,8 +8589,9 @@ ul.activeListPassword li.active {
   line-height: 20px;
 }
 
-.boxLogin .fillbtn {
-  border-radius: 4px;
+.boxLogin .fillbtn,
+.boxLogin .fillbtn:hover {
+  border-radius: 40px !important;
   border: 1px solid var(--color1);
   background: var(--color1);
   padding: 12px 18px;
@@ -8560,7 +8620,7 @@ ul.activeListPassword li.active {
   padding: 12px 18px;
   color: var(--color2);
   width: 100%;
-  opacity: .98;
+  opacity: 0.98;
 }
 
 .boxLogin .fillbtn img {
@@ -8636,10 +8696,15 @@ ul.activeListPassword li.active {
   content: "";
   width: 100%;
   height: 100vh;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) -14.5%, rgba(0, 0, 0, 0.00) 23.66%), linear-gradient(180deg, rgba(0, 0, 0, 0.00) 70.94%, rgba(0, 0, 0, 0.40) 100%);
+  background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.4) -14.5%,
+      rgba(0, 0, 0, 0) 23.66%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
 }
 
-.react-slideshow-container+ul.indicators {
+.react-slideshow-container + ul.indicators {
   display: flex;
   justify-content: center;
   margin-top: 20px;
@@ -8659,7 +8724,7 @@ ul.activeListPassword li.active {
   left: 40% !important;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator:before {
+.react-slideshow-container + ul.indicators .each-slideshow-indicator:before {
   width: 10px !important;
   height: 10px !important;
   background: #ffffff !important;
@@ -8669,18 +8734,20 @@ ul.indicators li {
   margin: 0 4px !important;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator {
+.react-slideshow-container + ul.indicators .each-slideshow-indicator {
   opacity: 1 !important;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator:hover,
-.react-slideshow-container+ul.indicators .each-slideshow-indicator.active {
+.react-slideshow-container + ul.indicators .each-slideshow-indicator:hover,
+.react-slideshow-container + ul.indicators .each-slideshow-indicator.active {
   opacity: 1 !important;
   outline: 0;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator.active:before {
-  background: #9E77ED !important;
+.react-slideshow-container
+  + ul.indicators
+  .each-slideshow-indicator.active:before {
+  background: #9e77ed !important;
 }
 
 .react-slideshow-container .nav {
@@ -8702,7 +8769,7 @@ ul.indicators li {
 
 .loginSliderImages p {
   position: absolute;
-  color: var(--Base-White, #FFF);
+  color: var(--Base-White, #fff);
   text-align: center;
   font-size: 20px;
   font-style: normal;
@@ -8722,8 +8789,8 @@ ul.indicators li {
 
 .envolpicon {
   border-radius: 12px;
-  border: 1px solid var(--Gray-200, #EAECF0);
-  background: var(--Base-White, #FFF);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
   display: flex;
   width: 56px;
   height: 56px;
@@ -8850,7 +8917,7 @@ ul.activeListPassword li {
 }
 
 ul.activeListPassword li.active svg {
-  fill: #75E0A7;
+  fill: #75e0a7;
 }
 
 .onboardingWrap .sliderRightOrg {
@@ -9113,9 +9180,11 @@ ul.activeListPassword li.active svg {
 }
 
 .onboardingWrap .SinglBgRight:before {
-  background: linear-gradient(0deg,
+  background: linear-gradient(
+      0deg,
       rgba(0, 0, 0, 0.4) -14.5%,
-      rgba(0, 0, 0, 0) 23.66%),
+      rgba(0, 0, 0, 0) 23.66%
+    ),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
   position: absolute;
   content: "";
@@ -9341,7 +9410,8 @@ ul.activeListPassword li.active svg {
   border: unset !important;
 }
 
-#viewtask {}
+#viewtask {
+}
 
 .edit-button,
 .edit-button:hover {
@@ -9483,7 +9553,7 @@ ul.activeListPassword li.active svg {
 }
 
 .task-form .input-group-text {
-  color: #98A2B3;
+  color: #98a2b3;
   background: var(--Base-White, #fff);
   outline: none !important;
   box-shadow: none !important;
@@ -9510,10 +9580,12 @@ ul.activeListPassword li.active svg {
 }
 
 .select-date-range {
-  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
-  border: 1px solid var(--Gray-100, #F2F4F7);
-  background: #FFF;
+  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px)
+    var(--radius-md, 8px);
+  border: 1px solid var(--Gray-100, #f2f4f7);
+  background: #fff;
 
   /* lg */
-  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
 }

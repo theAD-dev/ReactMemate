@@ -22,7 +22,7 @@ import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-
 import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
-import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar'
+import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 function debounce(fn, delay) {
@@ -226,7 +226,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
             <Row className={clsx(styles.bgGreay, 'pt-3')}>
                 <Col sm={8}>
                     <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Supplier</label>
+                        <label className={clsx(styles.lable)}>Supplier<span className='required'>*</span></label>
                         <input type="hidden" {...register("supplier")} />
                         <AutoComplete
                             ref={autoCompleteRef}
@@ -266,15 +266,15 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 </Col>
 
                 <Col sm={4}>
-                    <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-4 pt-3 mb-4">
+                    <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-4">
                         <Link to={"/suppliers"}>
-                            <Button className={styles.expensesCreateNew}>Create New Suplier  <Plus size={24} color="#475467" /></Button>
+                            <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
                         </Link>
                     </div>
                 </Col>
                 <Col sm={12}>
                     <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Invoice/#Ref</label>
+                        <label className={clsx(styles.lable)}>Invoice/#Ref<span className='required'>*</span></label>
                         <IconField>
                             <InputIcon>{errors?.invoice_reference && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("invoice_reference")} className={clsx(styles.inputText, { [styles.error]: errors.invoice_reference })} placeholder='Enter invoice reference' />
@@ -285,7 +285,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>Date</label>
+                        <label className={clsx(styles.lable)}>Date<span className='required'>*</span></label>
                         <Controller
                             name="date"
                             control={control}
@@ -308,7 +308,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>Due Date</label>
+                        <label className={clsx(styles.lable)}>Due Date<span className='required'>*</span></label>
                         <Controller
                             name="due_date"
                             control={control}
@@ -332,7 +332,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mt-4">
-                        <label className={clsx(styles.lable)}>Total Amount</label>
+                        <label className={clsx(styles.lable)}>Total Amount<span className='required'>*</span></label>
                         <IconField>
                             <InputText keyfilter="money" {...register("amount")} onBlur={(e) => setValue('amount', parseFloat(e?.target?.value || 0).toFixed(2))} onKeyUp={(e) => handleGstChange(getValues('gst-calculation'))} className={clsx(styles.inputText, { [styles.error]: errors.amount })} placeholder='$ Enter total amount' />
                             <InputIcon>{errors.amount && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
@@ -342,7 +342,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 </Col>
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>GST</label>
+                        <label className={clsx(styles.lable)}>GST<span className='required'>*</span></label>
                         <input type="hidden" {...register("nogst")} />
                         <Controller
                             name="gst-calculation"
@@ -405,7 +405,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             <Col sm={6}>
                                 <div className="d-flex flex-column gap-1 mt-4 mb-4">
                                     <Tooltip position='top' target={`.info-timeinterval`} />
-                                    <label className={clsx(styles.lable)}>Search Project <QuestionCircle color='#667085' className={`ms-2 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
+                                    <label className={clsx(styles.lable)}>Search Project<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
                                     <Controller
                                         name="order"
                                         control={control}
@@ -436,7 +436,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             <Col sm={6}>
                                 <div className="d-flex flex-column gap-1 mt-4 mb-4">
                                     <Tooltip position='top' target={`.info-timeinterval`} />
-                                    <label className={clsx(styles.lable)}>Expense time interval <QuestionCircle color='#667085' className={`ms-2 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
+                                    <label className={clsx(styles.lable)}>Expense time interval<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
                                     <Controller
                                         name="type"
                                         control={control}

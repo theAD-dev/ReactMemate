@@ -26,6 +26,19 @@ const schema = yup.object({
   abn: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^\d{11}$/, "ABN must be an 11-digit number").notRequired(),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
+  website: yup
+    .string()
+    .nullable() // Allows the field to be null or empty if not required
+    .transform((value) => (value === "" ? null : value)) // Converts empty string to null
+    .matches(
+      /^https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+      "Website must be a valid URL starting with https://"
+    )
+    .test(
+      'is-https',
+      'Website must start with https://',
+      value => !value || value.startsWith('https://')
+    ),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
 
@@ -64,7 +77,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
     if (stateId) fetchCities(stateId);
   }, [stateId]);
 
-  const { control, register, handleSubmit, watch, formState: { errors } } = useForm({
+  const { control, register, handleSubmit, watch, formState: { errors }, setValue } = useForm({
     resolver: yupResolver(schema),
     defaultValues
   });
@@ -103,6 +116,15 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
     }
   }, [defaultValues, addressIndex, countryId, stateId]);
 
+  useEffect(() => {
+    if (categoriesQuery?.data?.length && !defaultValues.category) {
+      let findRegular = categoriesQuery.data?.find(category => category.name.toLowerCase() === 'regular');
+      if (findRegular.name) {
+        setValue('category', findRegular.id);
+      }
+    }
+  }, [categoriesQuery?.data, defaultValues, setValue]);
+
   return (
     <form ref={ref} onSubmit={handleSubmit(onSubmit)}>
       <Row className={clsx(styles.bgGreay, 'pt-0')}>
@@ -119,7 +141,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Company Name</label>
+            <label className={clsx(styles.lable)}>Company Name<span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("name")} className={clsx(styles.inputText, { [styles.error]: errors.name })} placeholder='Enter company name' />
@@ -130,7 +152,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Industry</label>
+            <label className={clsx(styles.lable)}>Industry<span className='required'>*</span></label>
             <Controller
               name="industry"
               control={control}
@@ -191,7 +213,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1">
-            <label className={clsx(styles.lable)}>Email</label>
+            <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
@@ -216,7 +238,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
       <Row className={clsx(styles.bgGreay)}>
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Payment Terms</label>
+            <label className={clsx(styles.lable)}>Payment Terms<span className='required'>*</span></label>
             <Controller
               name="payment_terms"
               control={control}
@@ -245,7 +267,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
         </Col>
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Customers Discount Category</label>
+            <label className={clsx(styles.lable)}>Customers Discount Category<span className='required'>*</span></label>
             <Controller
               name="category"
               control={control}

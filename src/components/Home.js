@@ -324,7 +324,7 @@ const Home = () => {
             </div>
 
             <div className={`my-component homeBottom ${isVisible ? 'show' : 'hide'}`}>
-                <button className='downArrowIcon' onClick={toggleVisibility}>
+                <button className='downArrowIcon' style={{ position: 'relative', top: '5px' }} onClick={toggleVisibility}>
 
                     Additional Services {isVisible ? (
                         <ChevronDoubleUp size={20} color="#6941C6" />

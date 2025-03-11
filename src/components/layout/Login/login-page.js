@@ -32,7 +32,7 @@ const Login = () => {
         return;
       }
 
-      const { success, error } = await authenticateUser(email, password);
+      const { success } = await authenticateUser(email, password);
       console.log('success: ', success);
 
       if (success) {
