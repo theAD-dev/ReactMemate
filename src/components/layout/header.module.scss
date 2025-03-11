@@ -18,3 +18,18 @@
   background: #1ab2ff;
   position: relative;
 }
+
+.navbarActionIcon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 6px;
+  align-items: center;
+  margin: 0px !important;
+  justify-content: center;
+  display: flex !important;
+}
+
+.navbarActionIcon:hover {
+  background: var(--Primary-25, #F2FAFF);
+}
