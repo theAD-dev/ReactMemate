@@ -5,17 +5,38 @@ import { Link } from "react-router-dom";
 import mail01 from "../../../assets/images/icon/mail-01.png";
 import checkemail from "../../../assets/images/img/checkemail.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { toast } from "sonner";
+import { resetEmail } from "../../../APIs/ProfileResetPasswordApi";
 
 const CheckMail = () => {
-  const [email, setEmail] = useState("");
-
   const location = useLocation();
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const email = searchParams.get("email");
-    setEmail(email); // Update email state
+    setEmail(email);
   }, [location.search]);
+
+  const handleResend = async () => {
+    if (!email) return toast.error("No email address found to resend.");
+
+    try {
+      setIsLoading(true);
+      const response = await resetEmail({ email: email });
+      toast.success("Password reset link has been resent to your email.");
+    } catch (error) {
+      if (error.message === "Not found") {
+        toast.error("Email address not found.");
+      } else {
+        toast.error("Something went wrong. Please try again later.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <>
@@ -37,9 +58,14 @@ const CheckMail = () => {
                   We sent a password reset link to <strong>{email}</strong>
                 </label>
                 <div className="linkBottom">
-                  <p>
+                  <p className="d-flex align-items-center gap-1">
                     Didn’t receive the email?{" "}
-                    <Link to="set-new-password">Click to resend</Link>
+                    <span onClick={handleResend} className="d-flex align-items-center gap-1" style={{ fontWeight: '600', fontSize: '14px', color: '#158ECC', cursor: 'pointer' }}>
+                      Click to resend
+                      {
+                        isLoading && <ProgressSpinner style={{ width: '15px', height: '15px' }} />
+                      }
+                    </span>
                   </p>
                   <Link className="backToLogin" to="/login" style={{ color: '#475467', fontWeight: '600', fontSize: '14px' }}>
                     <ArrowLeftShort color="#475467" size={20} />

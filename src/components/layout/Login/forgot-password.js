@@ -29,7 +29,6 @@ const ForgotPassword = () => {
     try {
       setIsLoading(true);
       const response = await resetEmail({ email: email });
-      console.log('response: ', response);
       navigate(`/check-mail?email=${encodeURIComponent(email)}`);
     } catch (error) {
       if (error.message === "Not found") {
@@ -70,11 +69,6 @@ const ForgotPassword = () => {
                     : <>Reset Password <img src={arrowRight} alt="Arrow Right" /></>}
                 </button>
               </form>
-              {/* {isPasswordReset && (
-                <div className="confirmation-message">
-                  Password reset instructions sent to your email.
-                </div>
-              )} */}
             </div>
           </div>
           <div className="copywrite">
