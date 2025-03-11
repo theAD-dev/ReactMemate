@@ -1,222 +1,222 @@
 :root {
-    --color1: #158ECC;
-    --color2: #ffffff;
-    --color3: #F7F9FC;
-    --color4: #D6BBFB;
-    --color5: #1976d2;
-    --color6: #F04438;
-    --color7: #F9F5FF;
-    --color8: #9f9f9f;
-    --color9: #F9FAFB;
-    --color10: #EAECF0;
+  --color1: #158ECC;
+  --color2: #ffffff;
+  --color3: #F7F9FC;
+  --color4: #D6BBFB;
+  --color5: #1976d2;
+  --color6: #F04438;
+  --color7: #F9F5FF;
+  --color8: #9f9f9f;
+  --color9: #F9FAFB;
+  --color10: #EAECF0;
 
 
-    /* Grey */
-    --colorG1: #344054;
-    --colorG2: #EAECF0;
-    --colorG3: #475467;
-    --colorG4: #667085;
-    --colorG5: #D0D5DD;
-    --colorG6: #98A2B3;
+  /* Grey */
+  --colorG1: #344054;
+  --colorG2: #EAECF0;
+  --colorG3: #475467;
+  --colorG4: #667085;
+  --colorG5: #D0D5DD;
+  --colorG6: #98A2B3;
 
 
 }
 
 .noDataAvilable {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 .styleGrey01 {
-    color: #667085;
+  color: #667085;
 }
 
 .styleGrey02 {
-    color: #98A2B3;
+  color: #98A2B3;
 }
 
 .table-responsive {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overflow-x: auto !important;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto !important;
 }
 
 .slide-up {
-    transition: transform 0.9s ease-in-out;
-    transform: translateY(-100%);
+  transition: transform 0.9s ease-in-out;
+  transform: translateY(-100%);
 }
 
 li {
-    list-style: none;
+  list-style: none;
 }
 
 textarea.form-control:focus {
-    outline: none;
-    box-shadow: 0 0 0 0 rgba(13, 110, 253, .25);
-    border-color: #158ECC;
-    border: 1px solid #158ECC;
+  outline: none;
+  box-shadow: 0 0 0 0 rgba(13, 110, 253, .25);
+  border-color: #158ECC;
+  border: 1px solid #158ECC;
 }
 
 .disPlayInline li {
-    display: inline-block;
+  display: inline-block;
 }
 
 .disPlayInlineCenter {
-    text-align: center;
+  text-align: center;
 }
 
 img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 table thead tr th {
-    background: linear-gradient(to top, #EAECF0, #EAECF0 1px, #ffffff 1px, #ffffff 100%);
-    border-bottom: 0;
+  background: linear-gradient(to top, #EAECF0, #EAECF0 1px, #ffffff 1px, #ffffff 100%);
+  border-bottom: 0;
 }
 
 table thead tr th,
 table tbody tr td {
-    border-right: 1px solid var(--Gray-200, #EAECF0);
+  border-right: 1px solid var(--Gray-200, #EAECF0);
 }
 
 .table-responsive {
-    border-top: 1px solid #eaecf0;
-    border-top: 1px solid var(--color10);
-    height: calc(100vh - 164px);
-    padding-bottom: 2px;
+  border-top: 1px solid #eaecf0;
+  border-top: 1px solid var(--color10);
+  height: calc(100vh - 164px);
+  padding-bottom: 2px;
 }
 
 table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) thead tr th:first-child,
 table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td:first-child {
-    position: sticky;
-    left: 0;
-    width: 40px;
-    z-index: 8;
-    border-right: 0;
-    text-align: left;
-    padding: 0px 6px 0 22px !important;
+  position: sticky;
+  left: 0;
+  width: 40px;
+  z-index: 8;
+  border-right: 0;
+  text-align: left;
+  padding: 0px 6px 0 22px !important;
 }
 
 .custom-table td {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 table tbody tr td:first-child label {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 table tbody tr:hover td:first-child label,
 table tbody tr.selected-row td:first-child label {
-    visibility: visible;
+  visibility: visible;
 }
 
 table tbody tr.selected-row .linkByttonStyle {
-    opacity: 1;
+  opacity: 1;
 }
 
 table thead tr th:nth-child(4) span.react-resizable-handle.react-resizable-handle-se,
 table thead tr th:nth-child(3) span.react-resizable-handle.react-resizable-handle-se,
 table thead tr th:nth-child(2) span.react-resizable-handle.react-resizable-handle-se,
 table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handle-se {
-    display: none;
+  display: none;
 }
 
 .selected-row.tableTopBar {
-    background: #EBF8FF;
+  background: #EBF8FF;
 }
 
 .tableTopBar {
-    padding: 6px 11px;
+  padding: 6px 11px;
 }
 
 .boxLogin p.error-text {
-    color: var(--color6);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: 0.14px;
+  color: var(--color6);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
 }
 
 span.react-resizable-handle.react-resizable-handle-se {
-    position: absolute;
-    background: #158ECC;
-    width: 5px;
-    height: 26px;
-    right: -19px;
-    top: -3px;
-    cursor: row-resize;
-    opacity: 0;
+  position: absolute;
+  background: #158ECC;
+  width: 5px;
+  height: 26px;
+  right: -19px;
+  top: -3px;
+  cursor: row-resize;
+  opacity: 0;
 }
 
 span.react-resizable-handle.react-resizable-handle-se:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .table>thead tr th .react-resizable-handle-se:before:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .react-resizable {
-    position: relative;
+  position: relative;
 }
 
 tr.selected-row td {
-    background: #EBF8FF !important;
+  background: #EBF8FF !important;
 }
 
 .customCheckBox {
-    position: relative;
-    cursor: pointer;
-    -webkit-user-select: none;
-    user-select: none;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .customCheckBox input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
 }
 
 .customCheckBox .checkmark {
-    position: relative;
-    top: 4px;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    border-radius: var(--radius-sm, 6px);
-    border: 1px solid var(--Gray-300, #D0D5DD);
-    background: var(--Base-White, #FFF);
-    vertical-align: middle;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  top: 4px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Gray-300, #D0D5DD);
+  background: var(--Base-White, #FFF);
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .customCheckBox input:checked~.checkmark {
-    border-radius: var(--radius-sm, 6px);
-    border: 1px solid var(--Primary-500, #1AB2FF);
-    background: var(--Primary-50, #EBF8FF);
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Primary-500, #1AB2FF);
+  background: var(--Primary-50, #EBF8FF);
 }
 
 .customCheckBox .checkmark svg {
-    opacity: 0;
+  opacity: 0;
 }
 
 .customCheckBox .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
+  content: "";
+  position: absolute;
+  display: none;
 }
 
 .customCheckBox input:checked~.checkmark:after {
-    display: block;
+  display: block;
 }
 
 .customCheckBox input:checked~.checkmark svg {
-    opacity: 1;
+  opacity: 1;
 }
 
 .menu-item ul li a,
@@ -224,35 +224,35 @@ tr.selected-row td {
 .menu-item ul li a.menuActive,
 .company_logo,
 .boxLogin input {
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 24px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
 }
 
 .boxLogin p.signuptext {
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
 }
 
 .filterSearch input:focus {
-    outline: none;
+  outline: none;
 }
 
 .boxLogin h2,
 .boxLogin h2 span {
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 28px;
-    letter-spacing: -0.33px;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.33px;
 }
 
 .selected-row td {
-    border-bottom: 1px solid #EAECF0;
-    background: #F9F5FF;
+  border-bottom: 1px solid #EAECF0;
+  background: #F9F5FF;
 }
 
 .avatar-info,
@@ -262,166 +262,166 @@ tr.selected-row td {
 .boxLogin .textbtn,
 .boxLogin .textbtn:hover,
 .boxLogin .textbtn {
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
 }
 
 .boxLogin label {
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 22px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px;
 }
 
 .userImgStyle {
-    width: 100%;
+  width: 100%;
 }
 
 .headerNav {
-    border-top: 1px solid var(--colorG2);
-    border-bottom: 1px solid var(--colorG2);
+  border-top: 1px solid var(--colorG2);
+  border-bottom: 1px solid var(--colorG2);
 }
 
 .main-wrapper .topbar {
-    border-bottom: 0;
-    border-top: 0;
+  border-bottom: 0;
+  border-top: 0;
 }
 
 span.lightColorStyle {
-    opacity: .56;
+  opacity: .56;
 }
 
 .MuiDataGrid-columnHeader {
-    border-right: 1px solid #EAECF0;
-    position: sticky !important;
-    left: 0;
+  border-right: 1px solid #EAECF0;
+  position: sticky !important;
+  left: 0;
 }
 
 .MuiModal-root {
-    overflow: auto;
+  overflow: auto;
 }
 
 .css-9cbj60-MuiDataGrid-root .MuiDataGrid-iconSeparator {
-    display: none;
+  display: none;
 }
 
 .MuiDataGrid-columnHeaders {
-    min-height: 44px !important;
-    max-height: 44px !important;
-    height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  height: 44px !important;
 }
 
 /* Model Style */
 .modelStyleBox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: var(--radius-xs, 4px);
-    border: 1px solid var(--Gray-200, #EAECF0);
-    background: var(--Base-White, #FFF);
-    box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
-    padding: 16px 0px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #EAECF0);
+  background: var(--Base-White, #FFF);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  padding: 16px 0px;
 }
 
 .modelStyleBox.QuoteWon .stepBoxStyle,
 .modelStyleBox.QuoteLost .stepBoxStyle {
-    background: var(--Gray-25, #FCFCFD);
-    padding: 32px 24px;
-    border-top: 1px solid #EAECF0;
-    margin-top: 12px;
+  background: var(--Gray-25, #FCFCFD);
+  padding: 32px 24px;
+  border-top: 1px solid #EAECF0;
+  margin-top: 12px;
 }
 
 .radioSelectButton.btn-group {
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* .radioSelectButton .radioSelectButtons:nth-child(2) {
     padding: 0 20px;
 } */
 .modelHeader span {
-    color: var(--Gray-700, #344054);
-    font-family: Inter;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 28px;
-    letter-spacing: -0.27px;
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.27px;
 }
 
 .SalesContact .modelHeader span {
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
 }
 
 .ContactModel fieldset {
-    bottom: 6px;
-    right: 0;
-    top: -15px;
+  bottom: 6px;
+  right: 0;
+  top: -15px;
 }
 
 .SalesContact .modal-body {
-    padding: 0;
+  padding: 0;
 }
 
 .ContactModelIn {
-    padding: 6px 23px 24px;
-    background: var(--Gray-25, #FCFCFD);
-    border-top: 1px solid #EAECF0;
-    margin-top: 12px;
+  padding: 6px 23px 24px;
+  background: var(--Gray-25, #FCFCFD);
+  border-top: 1px solid #EAECF0;
+  margin-top: 12px;
 }
 
 .SalesContact .popoverbottom {
-    padding: 30px 23px;
+  padding: 30px 23px;
 }
 
 .contactButListIn2:focus-visible,
 .contactButListIn1:focus-visible,
 .contactButList:focus-visible {
-    outline: 0;
+  outline: 0;
 }
 
 .radioSelectButtons svg {
-    margin-left: 6px;
+  margin-left: 6px;
 }
 
 .modelHeader span .iconOutStyle {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .radioSelectButton label {
-    border-radius: 4px;
-    border: 1px solid #D0D5DD !important;
-    background: #fff;
-    color: #344054;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 116px;
-    height: 44px;
+  border-radius: 4px;
+  border: 1px solid #D0D5DD !important;
+  background: #fff;
+  color: #344054;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 116px;
+  height: 44px;
 }
 
 .datepickerField {
-    width: 173px;
+  width: 173px;
 }
 
 .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-    border-radius: 4px;
-    border: 1px solid var(--Border, #D0D5DD);
+  border-radius: 4px;
+  border: 1px solid var(--Border, #D0D5DD);
 }
 
 .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: #106B99 !important;
-    border-width: 1px !important;
+  border-color: #106B99 !important;
+  border-width: 1px !important;
 }
 
 .radioSelectButton .btn-check:checked+.btn,
@@ -429,66 +429,66 @@ span.lightColorStyle {
 .radioSelectButton .btn.show,
 .radioSelectButton .btn:first-child:active,
 .radioSelectButton :not(.btn-check)+.btn:active {
-    color: #106B99;
-    border-color: #A3E0FF;
-    border: 1px solid !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    background: var(--Primary-50, #EBF8FF);
+  color: #106B99;
+  border-color: #A3E0FF;
+  border: 1px solid !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--Primary-50, #EBF8FF);
 }
 
 .radioSelectButtons {
-    width: 100%;
+  width: 100%;
 }
 
 .event {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-radius: 150px;
-    bottom: 2px;
-    left: calc(50% - 1.5px);
-    content: " ";
-    display: block;
-    background: #98A2B3;
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 150px;
+  bottom: 2px;
+  left: calc(50% - 1.5px);
+  content: " ";
+  display: block;
+  background: #98A2B3;
 }
 
 .event.busy {
-    background: #1AB2FF;
+  background: #1AB2FF;
 }
 
 .flatpickr-day.today {
-    border-color: #1AB2FF;
-    border-radius: 20px;
-    background: #1AB2FF;
-    color: #FFF;
-    text-align: center;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
+  border-color: #1AB2FF;
+  border-radius: 20px;
+  background: #1AB2FF;
+  color: #FFF;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
 }
 
 .flatpickr-day {
-    color: #344054 !important;
-    text-align: center !important;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400 !important;
+  color: #344054 !important;
+  text-align: center !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400 !important;
 }
 
 span.flatpickr-day.today {
-    color: #fff !important;
+  color: #fff !important;
 }
 
 span.flatpickr-day.prevMonthDay,
 span.flatpickr-day.nextMonthDay {
-    color: #667085 !important;
+  color: #667085 !important;
 }
 
 .flatpickr-innerContainer {
-    padding-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 .flatpickr-day.selected,
@@ -509,98 +509,98 @@ span.flatpickr-day.nextMonthDay {
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-    background: #158ECC !important;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    color: #fff;
-    border-color: #158ECC !important;
+  background: #158ECC !important;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #fff;
+  border-color: #158ECC !important;
 }
 
 span.flatpickr-weekday {
-    color: var(--Gray-700, #344054) !important;
-    text-align: center !important;
-    font-size: 14px !important;
-    font-style: normal;
-    font-weight: 500 !important;
-    line-height: 20px !important;
-    background: #fff !important;
+  color: var(--Gray-700, #344054) !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 500 !important;
+  line-height: 20px !important;
+  background: #fff !important;
 }
 
 .flatpickr-day {
-    background: none;
-    border: 1px solid transparent;
-    border-radius: 150px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    color: #484848;
-    cursor: pointer;
-    font-weight: 400;
-    width: 14.2857143%;
-    -ms-flex-preferred-size: 14.2857143%;
-    -webkit-flex-basis: 14.2857143%;
-    flex-basis: 14.2857143%;
-    max-width: 30px;
-    height: 30px;
-    line-height: 28px;
-    margin: 5px;
-    display: inline-block;
-    position: relative;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    text-align: center;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 150px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #484848;
+  cursor: pointer;
+  font-weight: 400;
+  width: 14.2857143%;
+  -ms-flex-preferred-size: 14.2857143%;
+  -webkit-flex-basis: 14.2857143%;
+  flex-basis: 14.2857143%;
+  max-width: 30px;
+  height: 30px;
+  line-height: 28px;
+  margin: 5px;
+  display: inline-block;
+  position: relative;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .flatpickr-weekdays {
-    background: #fff !important;
-    height: 40px;
+  background: #fff !important;
+  height: 40px;
 }
 
 .flatpickr-months .flatpickr-month,
 .flatpickr-current-month .flatpickr-monthDropdown-months {
-    background: #ffffff !important;
-    color: #344054 !important;
+  background: #ffffff !important;
+  color: #344054 !important;
 }
 
 .flatpickr-months .flatpickr-prev-month,
 .flatpickr-months .flatpickr-next-month {
-    color: #000 !important;
-    fill: #000 !important;
+  color: #000 !important;
+  fill: #000 !important;
 }
 
 .filterSearchTab {
-    margin: 8px 8px 8px;
-    width: 92% !important;
+  margin: 8px 8px 8px;
+  width: 92% !important;
 }
 
 table.department-calculation tbody tr td,
 table.department-calculation thead tr th {
-    border-right: none !important;
-    background-color: #fff !important;
-    white-space: nowrap;
+  border-right: none !important;
+  background-color: #fff !important;
+  white-space: nowrap;
 }
 
 table.department-calculation tbody tr:hover td,
 table.department-calculation tbody tr.selected td {
-    background-color: #F2FAFF !important;
+  background-color: #F2FAFF !important;
 }
 
 .checkbox:has(table.department-calculation tbody tr input[type="checkbox"]:checked) {
-    visibility: visible !important;
+  visibility: visible !important;
 }
 
 .proposal-accordion .p-accordion-content {
-    background: #FBFCFD;
+  background: #FBFCFD;
 }
 
 .dropdown-item:hover {
-    background-color: #F2FAFF;
+  background-color: #F2FAFF;
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
-    color: #fff !important;
-    background-color: #1AB2FF !important;
+  color: #fff !important;
+  background-color: #1AB2FF !important;
 }
 
 #calender .scheduler_default_rowheader_scroll,
@@ -883,6 +883,7 @@ ul.eventStyleCal li:first-child {
 .scheduler_default_event.job-item .scheduler_default_event_float_inner::after {
   top: 10px !important;
 }
+
 ul.eventStyleCal li {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -892,6 +893,7 @@ ul.eventStyleCal li {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 ul.eventStyleCal li:nth-child(2) {
   color: var(--Primary-800, #0a4766);
   font-family: Inter;
@@ -905,6 +907,7 @@ ul.eventStyleCal li:nth-child(2) {
 ul.eventStyleCal {
   display: flex;
 }
+
 .scheduler_default_corner_inner {
   background: #fff;
 }
@@ -918,6 +921,7 @@ ul.eventStyleCal {
   height: 100vh;
   z-index: 10;
 }
+
 .create-task-div:before {
   position: absolute;
   right: 0;
@@ -961,6 +965,7 @@ ul.eventStyleCal {
 .scheduler_default_tree_image_expand {
   right: 8px;
 }
+
 .scheduler_default_event_inner {
   padding: 9px 19px 9px 0 !important;
   border-radius: 10px !important;
@@ -969,6 +974,7 @@ ul.eventStyleCal {
   border: 0 !important;
   display: block !important;
 }
+
 .scheduler_default_rowheader {
   text-align: left;
 }
@@ -1087,7 +1093,8 @@ ul.eventStyleCal {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
 }
 
 .scheduler_default_tree_image_collapse {
@@ -1116,6 +1123,7 @@ ul.eventStyleCal {
 .projectCardModel .modal-dialog {
   min-width: 1284px;
 }
+
 strong.dollorIcon {
   border-radius: 28px;
   width: 40px;
@@ -1126,6 +1134,7 @@ strong.dollorIcon {
   position: relative;
   top: -3px;
 }
+
 .projectCardModel .cardId {
   margin-left: 16px;
   color: var(--Gray-700, #344054);
@@ -1136,10 +1145,12 @@ strong.dollorIcon {
   line-height: 28px;
   letter-spacing: -0.27px;
 }
+
 .projectCardModel .selectedStatusWrap label select {
   background: transparent;
   border: 0;
 }
+
 .projectCardModel .selectedStatusWrap label {
   border-radius: 4px;
   border: 1px solid var(--Error-100, #fee4e2);
@@ -1171,6 +1182,7 @@ strong.dollorIcon {
   align-items: center;
   justify-content: flex-start;
 }
+
 .projectCardModel .refrencesTag strong {
   color: var(--Gray-600, #475467);
   font-family: Inter;
@@ -1180,6 +1192,7 @@ strong.dollorIcon {
   line-height: 24px;
   letter-spacing: 0.08px;
 }
+
 .projectCardModel .modal-header {
   border-bottom: 1px solid #eaecf0;
   padding: 16px 16px !important;
@@ -1190,17 +1203,21 @@ strong.dollorIcon {
   height: 8px;
   padding: 5px;
 }
+
 .customScrollBar::-webkit-scrollbar-track {
   box-shadow: inset 0 0 8px #f2f4f7;
   border-radius: 10px;
 }
+
 .customScrollBar::-webkit-scrollbar-thumb {
   background: #76d1ff;
   border-radius: 10px;
 }
+
 .customScrollBar::-webkit-scrollbar-thumb:hover {
   background: #76d1ff;
 }
+
 .orderDiscription .customScrollBar {
   height: 137px;
   overflow: auto;
@@ -1213,6 +1230,7 @@ strong.dollorIcon {
   letter-spacing: -0.08px;
   padding-right: 22px;
 }
+
 .orderDiscription strong {
   color: var(--Gray-800, #1d2939);
   font-family: Inter;
@@ -1222,6 +1240,7 @@ strong.dollorIcon {
   line-height: 24px;
   letter-spacing: -0.08px;
 }
+
 .currentJobsTable h5 {
   color: var(--Gray-800, #1d2939);
   font-family: Inter;
@@ -1231,6 +1250,7 @@ strong.dollorIcon {
   line-height: 24px;
   letter-spacing: -0.08px;
 }
+
 .currentJobsTable table thead th {
   color: #475467;
   font-family: Inter;
@@ -1240,6 +1260,7 @@ strong.dollorIcon {
   line-height: 22px;
   letter-spacing: 0.12px;
 }
+
 .currentJobsTable table tbody td {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -1250,45 +1271,54 @@ strong.dollorIcon {
   letter-spacing: 0.12px;
   height: 40px;
 }
+
 .currentJobsTable table tbody td:first-child,
 .currentJobsTable table thead th:first-child {
   width: 159px;
   text-align: left;
 }
+
 .currentJobsTable table tbody td:last-child,
 .currentJobsTable table thead th:last-child {
   width: 96px;
   text-align: center;
 }
+
 .currentJobsTable table tbody td:nth-child(2),
 .currentJobsTable table thead th:nth-child(2) {
   width: 230px;
   text-align: left;
 }
+
 .currentJobsTable table tbody td:nth-child(3),
 .currentJobsTable table thead th:nth-child(3) {
   width: 76px;
   text-align: center;
 }
+
 .currentJobsTable table tbody td:nth-child(4),
 .currentJobsTable table thead th:nth-child(4) {
   width: 116px;
   text-align: right;
 }
+
 .currentJobsTable table tbody td:first-child,
 .currentJobsTable table thead th:first-child {
   border-right: 1px solid var(--Gray-200, #eaecf0);
 }
+
 .currentJobsTable table {
   border-top: 1px solid var(--Gray-200, #eaecf0);
   border-bottom: 1px solid var(--Gray-200, #eaecf0);
   border-left: 1px solid var(--Gray-200, #eaecf0);
   background: var(--Base-White, #fff);
 }
+
 .orderDiscription.col {
   border-right: 1px solid #eaecf0;
   padding: 16px 8px 8px 24px;
 }
+
 .tabModelMenu {
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: var(--Base-White, #fff);
@@ -1296,13 +1326,16 @@ strong.dollorIcon {
   border-radius: 6px;
   min-width: 89%;
 }
+
 .projectHistoryCol {
   border-left: 1px solid #eaecf0;
   padding: 16px 24px;
 }
+
 .tabModelMenu .col {
   text-align: center;
 }
+
 .tabModelMenu .linkByttonStyle {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -1313,29 +1346,35 @@ strong.dollorIcon {
   text-align: center;
   padding: 0 24px;
 }
+
 .taskModelProject .sendSMSPhone .inputInfo {
   width: 100%;
   display: flex;
 }
+
 .projectHistoryCol .filter span {
   border-radius: 4px;
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: #fff;
   padding: 8px;
 }
+
 .projectHistoryCol .filter {
   min-width: 11%;
 }
+
 .projectHistorygroup ul {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
+
 .projectHistorygroup ul li {
   display: flex;
   align-items: center;
   padding-right: 8px;
 }
+
 .projectHistorygroup ul li strong {
   color: var(--Text-Dark-Gray, #344054);
   font-family: Inter;
@@ -1345,6 +1384,7 @@ strong.dollorIcon {
   line-height: 24px;
   letter-spacing: 0.08px;
 }
+
 .projectHistoryWrap h3 {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -1354,6 +1394,7 @@ strong.dollorIcon {
   line-height: 24px;
   letter-spacing: -0.18px;
 }
+
 .projectHistorygroup h6 {
   color: var(--Gray-500, #667085);
   font-family: Inter;
@@ -1365,6 +1406,7 @@ strong.dollorIcon {
   margin: 0;
   padding: 0;
 }
+
 .projectHistorygroup h5 {
   color: var(--Gray-500, #344054);
   font-family: Inter;
@@ -1376,6 +1418,7 @@ strong.dollorIcon {
   margin: 0;
   padding: 0;
 }
+
 .projectHistorygroup p {
   color: var(--Gray-400, #98a2b3);
   font-family: Inter;
@@ -1387,59 +1430,74 @@ strong.dollorIcon {
   margin: 0;
   padding: 0;
 }
+
 .projectHistoryScroll::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
+
 .currentJobsTable .table-responsive::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   /* padding: 5px; */
 }
+
 .projectHistoryScroll::-webkit-scrollbar-track {
   box-shadow: inset 0 0 8px #f2f4f7;
   border-radius: 10px;
 }
+
 .currentJobsTable .table-responsive::-webkit-scrollbar-track {
   box-shadow: inset 0 0 8px #f2f4f7;
   border-radius: 10px;
 }
+
 .projectHistoryWrap {
   margin-top: 16px;
 }
+
 .projectHistoryScroll::-webkit-scrollbar-thumb {
   background: #76d1ff;
   border-radius: 10px;
 }
+
 .currentJobsTable .table-responsive::-webkit-scrollbar-thumb {
   background: #76d1ff;
   border-radius: 10px;
 }
+
 .projectHistoryScroll::-webkit-scrollbar-thumb:hover {
   background: #76d1ff;
 }
+
 .currentJobsTable .table-responsive::-webkit-scrollbar-thumb:hover {
   background: #76d1ff;
 }
+
 .projectHistoryScroll {
   height: 429px;
   overflow: auto;
   margin-right: 15px;
 }
+
 .projectCardMain {
   border-bottom: 1px solid #f1f1f1;
   margin: 0;
 }
+
 .projectHistorygroup {
   margin-bottom: 18px;
 }
+
 .projectHistorygroup:last-child {
   margin-bottom: 0px;
 }
+
 .currentJobsTable .table-responsive {
   height: 320px;
 }
+
 .currentJobsTable table tbody td span {
   text-align: center;
   font-family: Inter;
@@ -1458,22 +1516,27 @@ strong.dollorIcon {
   background: var(--Success-50, #ecfdf3);
   color: #067647;
 }
+
 .currentJobsTable td.status span.unpaid {
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
   color: #b42318;
 }
+
 .currentJobsTable td.status span {
   border: 1px solid #ccc;
   background: #fff;
   color: #000;
 }
+
 .projectCardButWrap.row {
   margin: 0;
 }
+
 .projectCardButWrap button img {
   margin-left: 7px;
 }
+
 .projectCardButWrap button {
   border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -1489,6 +1552,7 @@ strong.dollorIcon {
   align-items: center;
   justify-content: center;
 }
+
 .projectCardButWrap .col {
   gap: 15px;
   display: flex;
@@ -1496,23 +1560,28 @@ strong.dollorIcon {
   justify-content: flex-end;
   padding: 16px 24px;
 }
+
 .projectCardCalculation.row {
   margin: 0;
   border-top: 1px solid #eaecf0;
   border-bottom: 1px solid #eaecf0;
 }
+
 .proBuget {
   background: var(--Gray-50, #f9fafb);
   max-width: 236.75px;
 }
+
 .proBuget h5,
 .proBuget p {
   color: #475467;
 }
+
 .proRealCost {
   background: #f3ffff;
   max-width: 236.75px;
 }
+
 .proRealCost h5,
 .proRealCost p {
   color: #2a928f;
@@ -1522,6 +1591,7 @@ strong.dollorIcon {
   background: var(--Error-50, #fef3f2);
   max-width: 236.75px;
 }
+
 .proCostSale h5,
 .proCostSale p {
   color: #b42318;
@@ -1531,6 +1601,7 @@ strong.dollorIcon {
   background: var(--Warning-50, #fffaeb);
   max-width: 236.75px;
 }
+
 .proLabour h5,
 .proLabour p {
   color: #93370d;
@@ -1541,9 +1612,11 @@ strong.dollorIcon {
   max-width: 337px;
   justify-content: space-between !important;
 }
+
 .proProfit span svg {
   margin-left: 8px;
 }
+
 .projectColBg {
   text-align: right;
   padding: 4px 24px;
@@ -1551,6 +1624,7 @@ strong.dollorIcon {
   align-items: center;
   justify-content: flex-end;
 }
+
 .projectColBg h5 {
   font-family: Inter;
   font-size: 16px;
@@ -1560,6 +1634,7 @@ strong.dollorIcon {
   letter-spacing: -0.08px;
   margin: 0;
 }
+
 .projectColBg p {
   font-family: Inter;
   font-size: 18px;
@@ -1569,6 +1644,7 @@ strong.dollorIcon {
   letter-spacing: -0.18px;
   margin: 0;
 }
+
 .proProfit span {
   color: var(--Success-800, #085d3a);
   font-family: Inter;
@@ -1580,6 +1656,7 @@ strong.dollorIcon {
   display: flex;
   align-items: center;
 }
+
 .proProfit strong {
   color: var(--Success-800, #085d3a);
   font-family: Inter;
@@ -1589,6 +1666,7 @@ strong.dollorIcon {
   line-height: 28px;
   letter-spacing: -0.33px;
 }
+
 .projectCardactionBut.row {
   margin: 0;
   padding: 8px 24px;
@@ -1596,6 +1674,7 @@ strong.dollorIcon {
   align-items: center;
   border-bottom: 1px solid #eaecf0;
 }
+
 .projectCardactionBut .actionLeftSide button,
 .projectCardactionBut .actionLeftSide button:hover {
   color: var(--Gray-600, #475467);
@@ -1608,27 +1687,33 @@ strong.dollorIcon {
   border: 0;
   padding: 0;
 }
+
 .projectCardactionBut .actionLeftSide button.declineAction {
   color: #b42318;
   display: flex;
   align-items: center;
 }
+
 .projectCardactionBut .actionLeftSide button svg {
   margin-right: 5px;
 }
+
 .projectCardactionBut .actionLeftSide button.duplicateAction {
   color: #106b99;
   display: flex;
   align-items: center;
 }
+
 .projectCardactionBut .actionLeftSide button.sendBackAction {
   color: #475467;
   display: flex;
   align-items: center;
 }
+
 .projectCardactionBut .actionLeftSide button.duplicateAction {
   padding: 0 32px;
 }
+
 .projectCardactionBut .actionRightSide button,
 .projectCardactionBut .actionRightSide button:hover {
   border-radius: 40px;
@@ -1642,18 +1727,22 @@ strong.dollorIcon {
   font-weight: 600;
   line-height: 24px;
 }
+
 .projectCardactionBut .actionRightSide {
   text-align: right;
   padding-right: 0;
 }
+
 .projectCardactionBut .actionLeftSide {
   padding-left: 0;
   display: flex;
   align-items: center;
 }
+
 .projectCardactionBut .actionRightSide button.ProgressAction {
   margin: 0 8px;
 }
+
 .projectCardactionBut .actionRightSide button.CompleteActionBut {
   border-radius: 40px;
   border: 1px solid var(--Primary-600, #158ecc);
@@ -1665,11 +1754,13 @@ strong.dollorIcon {
   font-weight: 600;
   line-height: 24px;
 }
+
 .projectBreakdown.row {
   margin: 0;
   padding: 8px 24px;
   text-align: center;
 }
+
 .projectBreakdown.row button,
 .projectBreakdown.row button:hover {
   color: var(--Primary-700, #106b99);
@@ -1709,7 +1800,8 @@ strong.dollorIcon {
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
-  line-height: 24px; /* 133.333% */
+  line-height: 24px;
+  /* 133.333% */
   letter-spacing: -0.18px;
   padding: 14px 24px;
 }
@@ -1727,7 +1819,8 @@ strong.dollorIcon {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
 
   display: flex;
   padding: 8px 14px;
@@ -1739,19 +1832,23 @@ strong.dollorIcon {
   border: 1px solid var(--Gray-300, #d0d5dd);
   background: #fff;
 }
+
 .taskModelProject .modal-header {
   border-bottom: 1px solid #eaecf0 !important;
   justify-content: space-between;
 }
+
 .taskModelProject .modal-header span img {
   margin-right: 12px;
 }
+
 .taskModelProject .inputInfo {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Border, #d0d5dd);
   background: var(--Base-White, #fff);
   padding: 8px 14px;
 }
+
 .taskModelProject .inputInfo textarea {
   font-family: Inter;
   font-size: 16px;
@@ -1763,13 +1860,16 @@ strong.dollorIcon {
   min-height: 140px;
   border: 0;
 }
+
 .taskModelProject .upload-btn-wrapper {
   display: block;
   width: 100% !important;
 }
+
 .taskModelProject .upload-btn-wrapper button.btnup {
   width: 100%;
 }
+
 .taskModelProject .upload-btn-wrapper .textbtm p span {
   color: var(--Primary-700, #106b99);
   font-family: Inter;
@@ -1778,12 +1878,14 @@ strong.dollorIcon {
   font-weight: 600;
   line-height: 20px;
 }
+
 .taskModelProject .popoverbottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 0 0 !important;
 }
+
 .taskModelProject .popoverbottom .btn-outline-danger,
 .taskModelProject .popoverbottom .btn-outline-danger:hover {
   color: var(--Error-700, #b42318);
@@ -1797,6 +1899,7 @@ strong.dollorIcon {
   text-align: left;
   background: transparent;
 }
+
 .taskModelProject .popoverbottom .save,
 .taskModelProject .popoverbottom .save:hover {
   border-radius: 40px;
@@ -1809,6 +1912,7 @@ strong.dollorIcon {
   font-weight: 600;
   line-height: 24px;
 }
+
 .sendSMSPhone .inputInfo span {
   border-radius: 6px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -1826,19 +1930,23 @@ strong.dollorIcon {
   line-height: 20px;
   margin-right: 7px;
 }
+
 .taskModelCompose .modal-dialog {
   max-width: 896px;
 }
+
 .taskModelCompose .select__control {
   border: 0px;
   width: 100%;
   max-width: 100%;
   min-width: 100% !important;
 }
+
 .taskModelProject .inputInfo {
   width: 100%;
   display: block;
 }
+
 .formgroupSelectTag .inputInfo span {
   border-radius: 6px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -1852,15 +1960,18 @@ strong.dollorIcon {
   font-weight: 500;
   line-height: 20px;
 }
+
 .formgroupSelectTag .basic-multi-select {
   width: 100%;
 }
+
 .formgroupSelectTag .inputInfo {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
 }
+
 .projectCardFilterDropdown .dropdown-menuF {
   position: absolute;
   margin-top: 11px;
@@ -1869,17 +1980,18 @@ strong.dollorIcon {
   width: 263px;
   z-index: 1000;
   right: 0;
-  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px)
-    var(--radius-xs, 4px);
+  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px) var(--radius-xs, 4px);
   border: 1px solid var(--Gray-200, #eaecf0);
   background: var(--Base-White, #fff);
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
     0px 8px 8px -4px rgba(16, 24, 40, 0.03);
 }
+
 .projectCardFilterDropdown .dropdown-menuF ul {
   padding: 0;
   margin: 0;
 }
+
 .projectCardFilterDropdown .dropdown-menuF .all {
   color: var(--Gray-900, #101828);
   font-family: Inter;
@@ -1891,6 +2003,7 @@ strong.dollorIcon {
   background: transparent;
   padding: 10px 10px 10px var(--spacing-md, 8px);
 }
+
 .projectCardFilterDropdown .dropdown-menuF li {
   color: var(--Gray-900, #101828);
   font-family: Inter;
@@ -1900,6 +2013,7 @@ strong.dollorIcon {
   line-height: 24px;
   margin: 6px 0;
 }
+
 .projectCardFilterDropdown .dropdown-buttonsF .apply {
   border-radius: 40px;
   border: 1px solid var(--Primary-600, #158ecc);
@@ -1913,9 +2027,11 @@ strong.dollorIcon {
   line-height: 20px;
   width: 50%;
 }
+
 .projectCardFilterDropdown .dropdown-menuF li label svg {
   margin-right: 8px;
 }
+
 .projectCardFilterDropdown .dropdown-buttonsF .cancel {
   border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -1929,20 +2045,24 @@ strong.dollorIcon {
   line-height: 20px;
   width: 50%;
 }
+
 .projectCardFilterDropdown .dropdown-menuF li label {
   display: flex;
   align-items: center;
 }
+
 .projectCardFilterDropdown .dropdown-menuF li.active {
   border-radius: var(--radius-sm, 6px);
   background: var(--Gray-50, #f9fafb);
 }
+
 .projectCardFilterDropdown .dropdown-menuF li input {
   opacity: 0;
   position: absolute;
   width: 100%;
   margin-right: 8px;
 }
+
 .projectCardFilterDropdown .dropdown-buttonsF {
   margin-top: 10px;
   display: flex;
@@ -1956,13 +2076,16 @@ strong.dollorIcon {
 .projectCardFilterDropdown .selected-options {
   margin-top: 20px;
 }
+
 .projectCardFilterDropdown {
   position: relative;
   cursor: pointer;
 }
+
 .taskModelProjectFiles .modal-dialog {
   max-width: 1080px;
 }
+
 .taskModelProjectFiles .ContactModel {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1971,6 +2094,7 @@ strong.dollorIcon {
   position: relative;
   align-items: center;
 }
+
 .taskModelProjectFiles .dragItem {
   border-radius: var(--radius-sm, 6px);
   background: var(--Gray-100, #f2f4f7);
@@ -1979,6 +2103,7 @@ strong.dollorIcon {
   align-items: center;
   justify-content: space-between;
 }
+
 .CustonCloseModalBottom .but {
   border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -2010,6 +2135,7 @@ strong.dollorIcon {
 #calender {
   height: auto !important;
 }
+
 .refrencesTag span {
   border-radius: 300px;
   background: var(--Primary-25, #f2faff);
@@ -2020,6 +2146,7 @@ strong.dollorIcon {
   align-items: center;
   margin-left: 8px;
 }
+
 .orderDiscription ul li {
   display: block;
   padding-bottom: 8px;
@@ -2031,11 +2158,13 @@ strong.dollorIcon {
   line-height: 24px;
   letter-spacing: -0.08px;
 }
+
 .projectCardactionBut .actionRightSide button.InvoiceAction:hover {
   border-radius: 40px;
   border: 1px solid #d7f2ee;
   background: #fff;
 }
+
 /* .projectCardactionBut .actionRightSide button.InvoiceAction.InvoiceActive {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid #97E4CE;
@@ -2048,6 +2177,7 @@ strong.dollorIcon {
   background: #fff;
   color: var(--Gray-700, #344054);
 }
+
 /* .projectCardButWrap button.expActive {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid #F9758A;
@@ -2060,6 +2190,7 @@ strong.dollorIcon {
   background: #fff;
   color: var(--Gray-700, #344054);
 }
+
 /* .projectCardButWrap button.jobActive {
   border-radius: var(--radius-xs, 4px);
 border: 1px solid #FFB800;
@@ -2072,6 +2203,7 @@ color: #FFC501;
   background: #fff;
   color: var(--Gray-700, #344054);
 }
+
 /* .projectCardButWrap button.googleActive {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid #D9E8FF;
@@ -2098,6 +2230,7 @@ color: #4285F4;
   background: #fff;
   color: var(--Gray-700, #344054);
 }
+
 /* .projectCardButWrap button.calenActive {
   border-radius: var(--radius-xs, 4px);
 border: 1px solid #D9E8FF;
@@ -2139,6 +2272,7 @@ color: #4285F4;
   background: #fff;
   color: var(--Gray-700, #344054);
 }
+
 /* .projectCardButWrap button.fileActive {
   border-radius: var(--radius-xs, 4px);
   padding: 10px 18px;
@@ -2152,29 +2286,36 @@ color: #4285F4;
   height: 238px;
   overflow-y: auto;
 }
+
 .projectCardModel .szh-menu::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
+
 .projectCardModel .szh-menu::-webkit-scrollbar-track {
   box-shadow: inset 0 0 8px #f2f4f7;
   border-radius: 10px;
 }
+
 .projectCardModel .szh-menu::-webkit-scrollbar-thumb {
   background: #76d1ff;
   border-radius: 10px;
 }
+
 .projectCardModel .szh-menu::-webkit-scrollbar-thumb:hover {
   background: #76d1ff;
 }
+
 .selectButStatus span.outArrow {
   display: none;
 }
+
 .selectButStatus .statusFlex {
   justify-content: space-between;
   padding-right: 8px;
 }
+
 .selectButStatus li.szh-menu__item:hover {
   background: transparent;
 }
@@ -2189,20 +2330,25 @@ color: #4285F4;
   height: 8px;
   padding: 5px;
 }
+
 .salesTableWrap tr.nodataTableRow:hover td {
   background: none;
 }
+
 .salesTableWrap .table-responsive::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
+
 .salesTableWrap .table-responsive::-webkit-scrollbar-thumb {
   background: #eaecf0;
   border-radius: 10px;
 }
+
 .salesTableWrap .table-responsive::-webkit-scrollbar-thumb:hover {
   background: #eaecf0;
 }
+
 .tableTopBarSales .styleT3 span.styleT2 {
   border-radius: 16px;
   border: 1px solid var(--Primary-200, #a3e0ff);
@@ -2216,17 +2362,20 @@ color: #4285F4;
   line-height: 22px;
   letter-spacing: 0.12px;
 }
+
 .salesTableWrap button.btn.btn-ContactAdd {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 /* .salesTableWrap .centerTabSales {
   height: 30px;
 } */
 .salesTableWrap .tabActive svg {
   margin-left: 7px;
 }
+
 .salesTableWrap .tabActive {
   border-radius: 4px;
   border: 1px solid #158ecc;
@@ -2245,17 +2394,13 @@ color: #4285F4;
   font-family: "Inter";
   border-radius: 40px;
 }
-.salesTableWrap
-  .flatpickr-day.selected.startRange
-  + .endRange:not(:nth-child(7n + 1)),
-.salesTableWrap
-  .flatpickr-day.startRange.startRange
-  + .endRange:not(:nth-child(7n + 1)),
-.salesTableWrap
-  .flatpickr-day.endRange.startRange
-  + .endRange:not(:nth-child(7n + 1)) {
+
+.salesTableWrap .flatpickr-day.selected.startRange+.endRange:not(:nth-child(7n + 1)),
+.salesTableWrap .flatpickr-day.startRange.startRange+.endRange:not(:nth-child(7n + 1)),
+.salesTableWrap .flatpickr-day.endRange.startRange+.endRange:not(:nth-child(7n + 1)) {
   box-shadow: -13px 0 0 #7f56d9c7, 13px 0 0 #7f56d9c7 !important;
 }
+
 .salesTableWrap .flatpickr-day.inRange {
   box-shadow: -13px 0 0 #e2e2e2, 13px 0 0 #e2e2e2 !important;
 }
@@ -2277,6 +2422,7 @@ color: #4285F4;
   cursor: pointer;
   margin: 0 auto;
 }
+
 .salesTableWrap .contactButListIn1 {
   width: 32px;
   background: #f2faff;
@@ -2288,6 +2434,7 @@ color: #4285F4;
   justify-content: center;
   cursor: pointer;
 }
+
 .salesTableWrap .styleT3 {
   color: rgb(71, 84, 103);
   font-size: 16px;
@@ -2300,6 +2447,7 @@ color: #4285F4;
   align-items: center;
   justify-content: flex-end;
 }
+
 .salesTableWrap .styleT4 {
   color: #1ab2ff;
   font-size: 16px;
@@ -2312,9 +2460,11 @@ color: #4285F4;
   align-items: center;
   justify-content: flex-end;
 }
+
 .salesTableWrap .styleT1 {
   color: rgb(7, 148, 85);
 }
+
 .salesTableWrap .contactButListIn2 {
   border-radius: 16px;
   border: 1px solid #76d1ff;
@@ -2325,15 +2475,19 @@ color: #4285F4;
   align-items: center;
   justify-content: center;
 }
+
 .salesTableWrap .modal-header {
   align-items: start;
 }
+
 .salesTableWrap button.btn-close {
   font-size: 12px;
 }
+
 .salesTableWrap .SalesContact.modal-header {
   padding: 24px 24px 0;
 }
+
 .salesTableWrap .SalesContact .modal-dialog .modal-content {
   width: 449px;
   border-radius: 12px;
@@ -2342,6 +2496,7 @@ color: #4285F4;
     0px 20px 24px -4px rgba(16, 24, 40, 0.08);
   border: 0;
 }
+
 .salesTableWrap .styleColor1 {
   text-align: left;
 }
@@ -2349,12 +2504,15 @@ color: #4285F4;
 .salesTableWrap .tableSales tbody tr td:nth-child(6) {
   text-align: center;
 }
+
 .salesTableWrap .saleNoteBorder span svg {
   margin-left: 2px;
 }
+
 .salesTableWrap .statusInfo {
   text-align: center;
 }
+
 .salesTableWrap .saleNoteBorder span {
   border-radius: 16px;
   border: 1px solid #eaecf0;
@@ -2372,6 +2530,7 @@ color: #4285F4;
   display: flex;
   align-items: center;
 }
+
 .salesTableWrap .styleColor1 strong {
   color: #667085;
   font-size: 14px;
@@ -2381,9 +2540,11 @@ color: #4285F4;
   letter-spacing: 0.14px;
   text-wrap: nowrap;
 }
+
 .salesTableWrap .leftStyle span {
   color: #344054;
 }
+
 .salesTableWrap .mainStyle {
   color: #344054;
   font-size: 14px;
@@ -2392,6 +2553,7 @@ color: #4285F4;
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 .salesTableWrap .noteInfo.Yes span {
   border-color: #17b26a;
   color: #17b26a;
@@ -2407,6 +2569,7 @@ color: #4285F4;
   margin: 0;
   text-wrap: nowrap;
 }
+
 .salesTableWrap .styleColor2 {
   color: var(--colorG1);
   font-size: 14px;
@@ -2415,11 +2578,13 @@ color: #4285F4;
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 .salesTableWrap .select-menu .select-btn span {
   padding-left: 9px;
   color: #667085;
   white-space: nowrap;
 }
+
 /* .salesTableWrap .popupcrossInfo {
   position: absolute !important;
   top: 8px;
@@ -2432,6 +2597,7 @@ div#popoverStyleChange {
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
     0px 8px 8px -4px rgba(16, 24, 40, 0.03);
 }
+
 #placeholderColor {
   color: #475467;
   font-family: Inter;
@@ -2450,6 +2616,7 @@ div#popoverStyleChange {
   justify-content: space-between;
   align-items: center;
 }
+
 .popupcrossInfomain h3 {
   color: var(--Gray-600, #475467);
   font-family: Inter;
@@ -2459,15 +2626,19 @@ div#popoverStyleChange {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 .popupcrossInfomain {
   background: var(--Gray-25, #fcfcfd);
 }
+
 .popoverendflex .popoverbottom {
   justify-content: end;
 }
+
 .popoverendflex button {
   padding: 10px 18px;
 }
+
 .popoverendflex .closebox {
   margin-right: 12px;
 }
@@ -2480,6 +2651,7 @@ div#popoverStyleChange {
   font-weight: 600;
   line-height: 28px;
 }
+
 .salesTableWrap .contactInfo p {
   color: var(--gray-600, #475467);
   font-family: Inter;
@@ -2496,22 +2668,26 @@ div#popoverStyleChange {
   border: 1px solid #a3e0ff;
   background: #ebf8ff;
 }
+
 .MuiButtonBase-roo.LmenuList {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
 }
+
 .salesTableWrap .flexBoxLabel {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
 }
+
 .salesTableWrap .statusInfo.Accepted a,
 .salesTableWrap .Accepted .NameStatus {
   color: #067647;
   border: 1px solid #abefc6;
   background: #ecfdf3;
 }
+
 .salesTableWrap .countStatus {
   border-radius: 16px;
   border: 1px solid var(--Gray-200, #eaecf0);
@@ -2519,6 +2695,7 @@ div#popoverStyleChange {
   padding: 2px 8px;
   margin-left: 24px;
 }
+
 .salesTableWrap .statusInfo.Sent a,
 .salesTableWrap .Sent .NameStatus {
   color: #026aa2;
@@ -2531,6 +2708,7 @@ div#popoverStyleChange {
   border: 1px solid #b2ddff;
   background: #eff8ff;
 }
+
 .salesTableWrap .statusInfo.Review a {
   color: #175cd3;
   border: 1px solid #b2ddff;
@@ -2542,6 +2720,7 @@ div#popoverStyleChange {
   border: 1px solid #fecdca;
   background: #fef3f2;
 }
+
 .salesTableWrap .statusInfo.Accepted a {
   color: #067647;
   border: 1px solid #abefc6;
@@ -2553,6 +2732,7 @@ div#popoverStyleChange {
   border: 1px solid #fedf89;
   background: #fffaeb;
 }
+
 /* .salesTableWrap .disPlayInlineCenter li:nth-child(2) {
   padding: 0 25px;
 } */
@@ -2563,39 +2743,50 @@ div#popoverStyleChange {
   border-radius: 6px;
   width: 41px;
 }
+
 .mainStyleMin {
   width: 297px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
+
 .salesTableWrap .disPlayInlineCenter li.Draft {
   pointer-events: none;
 }
+
 .salesTableWrap .disPlayInlineCenter li.Draft a svg {
   fill: #c3bdbd;
 }
+
 .salesTableWrap .disPlayInline .plusminus:hover {
   background: #fefaec !important;
 }
+
 .salesTableWrap .disPlayInline .plusminus:hover svg {
   fill: #fdb022 !important;
 }
+
 .salesTableWrap .disPlayInline li:nth-child(2):hover {
   background: #fcf3f2;
 }
+
 .salesTableWrap .disPlayInline li:nth-child(2):hover svg {
   fill: #ff0000;
 }
+
 .salesTableWrap .disPlayInline li:last-child:hover {
   background: #eff3fe;
 }
+
 .salesTableWrap .disPlayInline li:last-child:hover svg {
   fill: #3366cc;
 }
+
 .salesTableWrap .disPlayInlineCenter li.disable svg {
   fill: #98a2b3;
 }
+
 .salesTableWrap .disPlayInlineCenter li {
   cursor: pointer;
 }
@@ -2610,15 +2801,19 @@ div#popoverStyleChange {
   width: 30px;
   height: 30px;
 }
+
 .salesTableWrap .selected-row .styleColor1 strong {
   color: #344054;
 }
+
 .salesTableWrap .selected-row .leftStyle span {
   color: #667085;
 }
+
 .salesTableWrap .selected-row .disPlayInline svg {
   fill: #667085;
 }
+
 .salesTableWrap .circleImgStyle span {
   text-transform: uppercase;
   color: var(--Gray-600, #475467);
@@ -2634,6 +2829,7 @@ div#popoverStyleChange {
   padding: 1px;
   display: inline-block;
 }
+
 .salesTableWrap #tooltip-top-start .tooltip-inner {
   border-radius: var(--radius-md, 8px);
   background: var(--Base-White, #fff);
@@ -2656,13 +2852,10 @@ div#popoverStyleChange {
   border-bottom-color: #434a54;
 }
 
-.salesTableWrap
-  #tooltip-top-start[data-popper-placement^="top"]
-  .tooltip-arrow::before,
+.salesTableWrap #tooltip-top-start[data-popper-placement^="top"] .tooltip-arrow::before,
 .salesTableWrap #tooltip-top-start .tooltip-arrow::before {
   top: -1px;
-  border-width: var(--bs-tooltip-arrow-height)
-    calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-top-color: #fff;
 }
 
@@ -2694,6 +2887,7 @@ div#popoverStyleChange {
 .salesTableWrap img.truePhotoStyle {
   border-radius: 4px;
 }
+
 .salesTableWrap img.falsePhotoStyle {
   border-radius: 100px;
 }
@@ -2753,6 +2947,7 @@ div#popoverStyleChange {
   align-items: center;
   position: relative;
 }
+
 .salesTableWrap .progress {
   width: 32px;
   height: 32px;
@@ -2760,6 +2955,7 @@ div#popoverStyleChange {
   box-shadow: none;
   position: relative;
 }
+
 .salesTableWrap .progress:after {
   content: "";
   width: 100%;
@@ -2770,7 +2966,8 @@ div#popoverStyleChange {
   top: 0;
   left: 0;
 }
-.salesTableWrap .progress > span {
+
+.salesTableWrap .progress>span {
   width: 50%;
   height: 100%;
   overflow: hidden;
@@ -2778,9 +2975,11 @@ div#popoverStyleChange {
   top: 0;
   z-index: 1;
 }
+
 .salesTableWrap .progress .progress-left {
   left: 0;
 }
+
 .salesTableWrap .progress .progress-bar {
   width: 100%;
   height: 100%;
@@ -2791,6 +2990,7 @@ div#popoverStyleChange {
   top: 0;
   border-color: #1ab2ff;
 }
+
 .salesTableWrap .progress .progress-left .progress-bar {
   left: 100%;
   border-top-right-radius: 80px;
@@ -2799,9 +2999,11 @@ div#popoverStyleChange {
   -webkit-transform-origin: center left;
   transform-origin: center left;
 }
+
 .salesTableWrap .progress .progress-right {
   right: 0;
 }
+
 .salesTableWrap .progress .progress-right .progress-bar {
   left: -100%;
   border-top-left-radius: 80px;
@@ -2810,6 +3012,7 @@ div#popoverStyleChange {
   -webkit-transform-origin: center right;
   transform-origin: center right;
 }
+
 .salesTableWrap .progress .progress-value {
   display: flex;
   border-radius: 50%;
@@ -2825,6 +3028,7 @@ div#popoverStyleChange {
   line-height: 22px;
   letter-spacing: 0.1px;
 }
+
 .salesTableWrap .progress .progress-value span {
   font-size: 12px;
   text-transform: uppercase;
@@ -2836,6 +3040,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="1"] .progress-right .progress-bar {
   animation: loading-1 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="1"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2843,6 +3048,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="2"] .progress-right .progress-bar {
   animation: loading-2 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="2"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2850,6 +3056,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .progress[data-percentage="3"] .progress-right .progress-bar {
   animation: loading-3 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="3"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2857,6 +3064,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="4"] .progress-right .progress-bar {
   animation: loading-4 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="4"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2864,6 +3072,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="5"] .progress-right .progress-bar {
   animation: loading-5 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="5"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2871,6 +3080,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="6"] .progress-right .progress-bar {
   animation: loading-6 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="6"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2878,6 +3088,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="7"] .progress-right .progress-bar {
   animation: loading-7 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="7"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2885,6 +3096,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="8"] .progress-right .progress-bar {
   animation: loading-8 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="8"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2892,6 +3104,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="9"] .progress-right .progress-bar {
   animation: loading-9 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="9"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2899,6 +3112,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="10"] .progress-right .progress-bar {
   animation: loading-10 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="10"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2906,6 +3120,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="11"] .progress-right .progress-bar {
   animation: loading-11 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="11"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2913,6 +3128,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="12"] .progress-right .progress-bar {
   animation: loading-12 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="12"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2920,6 +3136,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="13"] .progress-right .progress-bar {
   animation: loading-13 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="13"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2927,6 +3144,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="14"] .progress-right .progress-bar {
   animation: loading-14 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="14"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2934,6 +3152,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="15"] .progress-right .progress-bar {
   animation: loading-15 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="15"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2941,6 +3160,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="16"] .progress-right .progress-bar {
   animation: loading-16 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="16"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2948,6 +3168,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="17"] .progress-right .progress-bar {
   animation: loading-17 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="17"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2955,6 +3176,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="18"] .progress-right .progress-bar {
   animation: loading-18 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="18"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2962,6 +3184,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="19"] .progress-right .progress-bar {
   animation: loading-19 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="19"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2969,6 +3192,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="20"] .progress-right .progress-bar {
   animation: loading-20 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="20"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2976,6 +3200,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="21"] .progress-right .progress-bar {
   animation: loading-21 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="21"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2983,6 +3208,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="22"] .progress-right .progress-bar {
   animation: loading-22 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="22"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2990,6 +3216,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="23"] .progress-right .progress-bar {
   animation: loading-23 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="23"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -2997,6 +3224,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="24"] .progress-right .progress-bar {
   animation: loading-24 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="24"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3004,6 +3232,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="25"] .progress-right .progress-bar {
   animation: loading-25 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="25"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3011,6 +3240,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="26"] .progress-right .progress-bar {
   animation: loading-26 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="26"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3018,6 +3248,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="27"] .progress-right .progress-bar {
   animation: loading-27 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="27"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3025,6 +3256,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="28"] .progress-right .progress-bar {
   animation: loading-28 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="28"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3032,6 +3264,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="29"] .progress-right .progress-bar {
   animation: loading-29 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="29"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3039,6 +3272,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="30"] .progress-right .progress-bar {
   animation: loading-30 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="30"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3046,6 +3280,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="31"] .progress-right .progress-bar {
   animation: loading-31 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="31"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3053,6 +3288,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="32"] .progress-right .progress-bar {
   animation: loading-32 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="32"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3060,6 +3296,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="33"] .progress-right .progress-bar {
   animation: loading-33 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="33"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3067,6 +3304,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="34"] .progress-right .progress-bar {
   animation: loading-34 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="34"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3074,6 +3312,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="35"] .progress-right .progress-bar {
   animation: loading-35 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="35"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3081,6 +3320,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="36"] .progress-right .progress-bar {
   animation: loading-36 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="36"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3088,6 +3328,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="37"] .progress-right .progress-bar {
   animation: loading-37 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="37"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3095,6 +3336,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="38"] .progress-right .progress-bar {
   animation: loading-38 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="38"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3102,6 +3344,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="39"] .progress-right .progress-bar {
   animation: loading-39 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="39"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3109,6 +3352,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="40"] .progress-right .progress-bar {
   animation: loading-40 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="40"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3116,6 +3360,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="41"] .progress-right .progress-bar {
   animation: loading-41 0.5s linear forwards;
 }
+
 .progress[data-percentage="41"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3123,6 +3368,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="42"] .progress-right .progress-bar {
   animation: loading-42 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="42"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3130,6 +3376,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="43"] .progress-right .progress-bar {
   animation: loading-43 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="43"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3137,6 +3384,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="44"] .progress-right .progress-bar {
   animation: loading-44 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="44"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3144,6 +3392,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="45"] .progress-right .progress-bar {
   animation: loading-45 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="45"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3151,6 +3400,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="46"] .progress-right .progress-bar {
   animation: loading-46 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="46"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3158,6 +3408,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="47"] .progress-right .progress-bar {
   animation: loading-47 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="47"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3165,6 +3416,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="48"] .progress-right .progress-bar {
   animation: loading-48 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="48"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3172,6 +3424,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="49"] .progress-right .progress-bar {
   animation: loading-49 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="49"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3179,6 +3432,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="50"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="50"] .progress-left .progress-bar {
   animation: 0;
 }
@@ -3186,6 +3440,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="51"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .progress[data-percentage="51"] .progress-left .progress-bar {
   animation: loading-1 0.5s linear forwards 0.5s;
 }
@@ -3193,6 +3448,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="52"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .progress[data-percentage="52"] .progress-left .progress-bar {
   animation: loading-2 0.5s linear forwards 0.5s;
 }
@@ -3200,6 +3456,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="53"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="53"] .progress-left .progress-bar {
   animation: loading-3 0.5s linear forwards 0.5s;
 }
@@ -3207,6 +3464,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="54"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="54"] .progress-left .progress-bar {
   animation: loading-4 0.5s linear forwards 0.5s;
 }
@@ -3214,6 +3472,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="55"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="55"] .progress-left .progress-bar {
   animation: loading-5 0.5s linear forwards 0.5s;
 }
@@ -3221,6 +3480,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="56"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="56"] .progress-left .progress-bar {
   animation: loading-6 0.5s linear forwards 0.5s;
 }
@@ -3228,6 +3488,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="57"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="57"] .progress-left .progress-bar {
   animation: loading-7 0.5s linear forwards 0.5s;
 }
@@ -3235,6 +3496,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="58"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="58"] .progress-left .progress-bar {
   animation: loading-8 0.5s linear forwards 0.5s;
 }
@@ -3242,6 +3504,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="59"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="59"] .progress-left .progress-bar {
   animation: loading-9 0.5s linear forwards 0.5s;
 }
@@ -3249,12 +3512,15 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="60"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="60"] .progress-left .progress-bar {
   animation: loading-10 0.5s linear forwards 0.5s;
 }
+
 .salesTableWrap .progress[data-percentage="61"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="61"] .progress-left .progress-bar {
   animation: loading-11 0.5s linear forwards 0.5s;
 }
@@ -3262,6 +3528,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="62"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="62"] .progress-left .progress-bar {
   animation: loading-12 0.5s linear forwards 0.5s;
 }
@@ -3269,6 +3536,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="63"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="63"] .progress-left .progress-bar {
   animation: loading-13 0.5s linear forwards 0.5s;
 }
@@ -3276,6 +3544,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="64"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="64"] .progress-left .progress-bar {
   animation: loading-14 0.5s linear forwards 0.5s;
 }
@@ -3283,6 +3552,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="65"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="65"] .progress-left .progress-bar {
   animation: loading-15 0.5s linear forwards 0.5s;
 }
@@ -3290,6 +3560,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="66"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="66"] .progress-left .progress-bar {
   animation: loading-16 0.5s linear forwards 0.5s;
 }
@@ -3297,6 +3568,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="67"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="67"] .progress-left .progress-bar {
   animation: loading-17 0.5s linear forwards 0.5s;
 }
@@ -3304,6 +3576,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="68"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="68"] .progress-left .progress-bar {
   animation: loading-18 0.5s linear forwards 0.5s;
 }
@@ -3311,6 +3584,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="69"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="69"] .progress-left .progress-bar {
   animation: loading-19 0.5s linear forwards 0.5s;
 }
@@ -3318,6 +3592,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="70"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="70"] .progress-left .progress-bar {
   animation: loading-20 0.5s linear forwards 0.5s;
 }
@@ -3325,6 +3600,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="71"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="71"] .progress-left .progress-bar {
   animation: loading-21 0.5s linear forwards 0.5s;
 }
@@ -3332,6 +3608,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="72"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="72"] .progress-left .progress-bar {
   animation: loading-22 0.5s linear forwards 0.5s;
 }
@@ -3339,6 +3616,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="73"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="73"] .progress-left .progress-bar {
   animation: loading-23 0.5s linear forwards 0.5s;
 }
@@ -3346,6 +3624,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="74"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="74"] .progress-left .progress-bar {
   animation: loading-24 0.5s linear forwards 0.5s;
 }
@@ -3353,6 +3632,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="75"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="75"] .progress-left .progress-bar {
   animation: loading-25 0.5s linear forwards 0.5s;
 }
@@ -3360,6 +3640,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="76"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="76"] .progress-left .progress-bar {
   animation: loading-26 0.5s linear forwards 0.5s;
 }
@@ -3367,6 +3648,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="77"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="77"] .progress-left .progress-bar {
   animation: loading-27 0.5s linear forwards 0.5s;
 }
@@ -3374,6 +3656,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="78"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="78"] .progress-left .progress-bar {
   animation: loading-28 0.5s linear forwards 0.5s;
 }
@@ -3381,6 +3664,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="79"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="79"] .progress-left .progress-bar {
   animation: loading-29 0.5s linear forwards 0.5s;
 }
@@ -3388,6 +3672,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="80"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="80"] .progress-left .progress-bar {
   animation: loading-30 0.5s linear forwards 0.5s;
 }
@@ -3395,6 +3680,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="81"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="81"] .progress-left .progress-bar {
   animation: loading-31 0.5s linear forwards 0.5s;
 }
@@ -3402,6 +3688,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="82"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="82"] .progress-left .progress-bar {
   animation: loading-32 0.5s linear forwards 0.5s;
 }
@@ -3409,6 +3696,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="83"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="83"] .progress-left .progress-bar {
   animation: loading-33 0.5s linear forwards 0.5s;
 }
@@ -3416,6 +3704,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="84"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="84"] .progress-left .progress-bar {
   animation: loading-34 0.5s linear forwards 0.5s;
 }
@@ -3423,6 +3712,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="85"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="85"] .progress-left .progress-bar {
   animation: loading-35 0.5s linear forwards 0.5s;
 }
@@ -3430,6 +3720,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="86"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="86"] .progress-left .progress-bar {
   animation: loading-36 0.5s linear forwards 0.5s;
 }
@@ -3437,6 +3728,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="87"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="87"] .progress-left .progress-bar {
   animation: loading-37 0.5s linear forwards 0.5s;
 }
@@ -3444,6 +3736,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="88"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="88"] .progress-left .progress-bar {
   animation: loading-38 0.5s linear forwards 0.5s;
 }
@@ -3451,6 +3744,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="89"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="89"] .progress-left .progress-bar {
   animation: loading-39 0.5s linear forwards 0.5s;
 }
@@ -3458,6 +3752,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="90"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="90"] .progress-left .progress-bar {
   animation: loading-40 0.5s linear forwards 0.5s;
 }
@@ -3465,6 +3760,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="91"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="91"] .progress-left .progress-bar {
   animation: loading-41 0.5s linear forwards 0.5s;
 }
@@ -3472,6 +3768,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="92"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="92"] .progress-left .progress-bar {
   animation: loading-42 0.5s linear forwards 0.5s;
 }
@@ -3479,6 +3776,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="93"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="93"] .progress-left .progress-bar {
   animation: loading-43 0.5s linear forwards 0.5s;
 }
@@ -3486,6 +3784,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="94"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="94"] .progress-left .progress-bar {
   animation: loading-44 0.5s linear forwards 0.5s;
 }
@@ -3493,6 +3792,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="95"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="95"] .progress-left .progress-bar {
   animation: loading-45 0.5s linear forwards 0.5s;
 }
@@ -3500,6 +3800,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="96"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="96"] .progress-left .progress-bar {
   animation: loading-46 0.5s linear forwards 0.5s;
 }
@@ -3507,6 +3808,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="97"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="97"] .progress-left .progress-bar {
   animation: loading-47 0.5s linear forwards 0.5s;
 }
@@ -3514,6 +3816,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="98"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="98"] .progress-left .progress-bar {
   animation: loading-48 0.5s linear forwards 0.5s;
 }
@@ -3521,6 +3824,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="99"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="99"] .progress-left .progress-bar {
   animation: loading-49 0.5s linear forwards 0.5s;
 }
@@ -3528,6 +3832,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 .salesTableWrap .progress[data-percentage="100"] .progress-right .progress-bar {
   animation: loading-50 0.5s linear forwards;
 }
+
 .salesTableWrap .progress[data-percentage="100"] .progress-left .progress-bar {
   animation: loading-50 0.5s linear forwards 0.5s;
 }
@@ -3537,506 +3842,607 @@ Due to the split circle of progress-left and progress right, we must use the ani
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(3.6);
     transform: rotate(3.6deg);
   }
 }
+
 @keyframes loading-2 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(7.2);
     transform: rotate(7.2deg);
   }
 }
+
 @keyframes loading-3 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(10.8);
     transform: rotate(10.8deg);
   }
 }
+
 @keyframes loading-4 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(14.4);
     transform: rotate(14.4deg);
   }
 }
+
 @keyframes loading-5 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(18);
     transform: rotate(18deg);
   }
 }
+
 @keyframes loading-6 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(21.6);
     transform: rotate(21.6deg);
   }
 }
+
 @keyframes loading-7 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(25.2);
     transform: rotate(25.2deg);
   }
 }
+
 @keyframes loading-8 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(28.8);
     transform: rotate(28.8deg);
   }
 }
+
 @keyframes loading-9 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(32.4);
     transform: rotate(32.4deg);
   }
 }
+
 @keyframes loading-10 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(36);
     transform: rotate(36deg);
   }
 }
+
 @keyframes loading-11 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(39.6);
     transform: rotate(39.6deg);
   }
 }
+
 @keyframes loading-12 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(43.2);
     transform: rotate(43.2deg);
   }
 }
+
 @keyframes loading-13 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(46.8);
     transform: rotate(46.8deg);
   }
 }
+
 @keyframes loading-14 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(50.4);
     transform: rotate(50.4deg);
   }
 }
+
 @keyframes loading-15 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(54);
     transform: rotate(54deg);
   }
 }
+
 @keyframes loading-16 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(57.6);
     transform: rotate(57.6deg);
   }
 }
+
 @keyframes loading-17 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(61.2);
     transform: rotate(61.2deg);
   }
 }
+
 @keyframes loading-18 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(64.8);
     transform: rotate(64.8deg);
   }
 }
+
 @keyframes loading-19 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(68.4);
     transform: rotate(68.4deg);
   }
 }
+
 @keyframes loading-20 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(72);
     transform: rotate(72deg);
   }
 }
+
 @keyframes loading-21 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(75.6);
     transform: rotate(75.6deg);
   }
 }
+
 @keyframes loading-22 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(79.2);
     transform: rotate(79.2deg);
   }
 }
+
 @keyframes loading-23 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(82.8);
     transform: rotate(82.8deg);
   }
 }
+
 @keyframes loading-24 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(86.4);
     transform: rotate(86.4deg);
   }
 }
+
 @keyframes loading-25 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(90);
     transform: rotate(90deg);
   }
 }
+
 @keyframes loading-26 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(93.6);
     transform: rotate(93.6deg);
   }
 }
+
 @keyframes loading-27 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(97.2);
     transform: rotate(97.2deg);
   }
 }
+
 @keyframes loading-28 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(100.8);
     transform: rotate(100.8deg);
   }
 }
+
 @keyframes loading-29 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(104.4);
     transform: rotate(104.4deg);
   }
 }
+
 @keyframes loading-30 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(108);
     transform: rotate(108deg);
   }
 }
+
 @keyframes loading-31 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(111.6);
     transform: rotate(111.6deg);
   }
 }
+
 @keyframes loading-32 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(115.2);
     transform: rotate(115.2deg);
   }
 }
+
 @keyframes loading-33 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(118.8);
     transform: rotate(118.8deg);
   }
 }
+
 @keyframes loading-34 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(122.4);
     transform: rotate(122.4deg);
   }
 }
+
 @keyframes loading-35 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(126);
     transform: rotate(126deg);
   }
 }
+
 @keyframes loading-36 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(129.6);
     transform: rotate(129.6deg);
   }
 }
+
 @keyframes loading-37 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(133.2);
     transform: rotate(133.2deg);
   }
 }
+
 @keyframes loading-38 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(136.8);
     transform: rotate(136.8deg);
   }
 }
+
 @keyframes loading-39 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(140.4);
     transform: rotate(140.4deg);
   }
 }
+
 @keyframes loading-40 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(144);
     transform: rotate(144deg);
   }
 }
+
 @keyframes loading-41 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(147.6);
     transform: rotate(147.6deg);
   }
 }
+
 @keyframes loading-42 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(151.2);
     transform: rotate(151.2deg);
   }
 }
+
 @keyframes loading-43 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(154.8);
     transform: rotate(154.8deg);
   }
 }
+
 @keyframes loading-44 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(158.4);
     transform: rotate(158.4deg);
   }
 }
+
 @keyframes loading-45 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(162);
     transform: rotate(162deg);
   }
 }
+
 @keyframes loading-46 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(165.6);
     transform: rotate(165.6deg);
   }
 }
+
 @keyframes loading-47 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(169.2);
     transform: rotate(169.2deg);
   }
 }
+
 @keyframes loading-48 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(172.8);
     transform: rotate(172.8deg);
   }
 }
+
 @keyframes loading-49 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(176.4);
     transform: rotate(176.4deg);
   }
 }
+
 @keyframes loading-50 {
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(180);
     transform: rotate(180deg);
   }
 }
+
 .salesTableWrap li.option.active,
 .salesTableWrap li.option:hover {
   border-radius: 6px;
   background: var(--primary-50, #ebf8ff);
 }
+
 .salesTableWrap .checkbox-custom,
 .salesTableWrap .radio-custom {
   opacity: 0;
@@ -4073,7 +4479,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   text-align: center;
 } */
 
-.salesTableWrap .checkbox-custom:checked + .checkbox-custom-label:before {
+.salesTableWrap .checkbox-custom:checked+.checkbox-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -4081,13 +4487,13 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
+.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
   border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--primary-500, #9e77ed);
   background: var(--primary-50, #f9f5ff);
 }
 
-.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
+.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -4095,8 +4501,8 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .checkbox-custom:focus + .checkbox-custom-label,
-.salesTableWrap .radio-custom:focus + .radio-custom-label {
+.salesTableWrap .checkbox-custom:focus+.checkbox-custom-label,
+.salesTableWrap .radio-custom:focus+.radio-custom-label {
   outline: 1px solid #ddd;
 }
 
@@ -4119,10 +4525,12 @@ Due to the split circle of progress-left and progress right, we must use the ani
   cursor: pointer;
   justify-content: flex-start;
 }
+
 .salesTableWrap .select-menu .select-btn svg {
   position: absolute;
   right: 0;
 }
+
 .salesTableWrap .select-btn i {
   font-size: 25px;
   transition: 0.3s;
@@ -4139,20 +4547,24 @@ Due to the split circle of progress-left and progress right, we must use the ani
   /* float: left; */
   width: 100%;
 }
+
 .salesTableWrap .progress-light-grey {
   background-color: #eaecf0;
   width: 175px;
   border-radius: 8px;
   height: 8px;
 }
+
 .salesTableWrap .progress-color {
   color: #fff;
   border-radius: 8px;
   height: 8px;
 }
+
 .salesTableWrap .progress-container span {
   opacity: 0;
 }
+
 .salesTableWrap .progressWrapper label {
   color: #344054;
   font-size: 14px;
@@ -4163,9 +4575,11 @@ Due to the split circle of progress-left and progress right, we must use the ani
   position: relative;
   top: 6px;
 }
+
 .salesTableWrap li.option.active .labelInfo strong {
   font-weight: 600;
 }
+
 .salesTableWrap .labelInfo strong {
   color: var(--gray-700, #344054);
   font-size: 14px;
@@ -4176,12 +4590,15 @@ Due to the split circle of progress-left and progress right, we must use the ani
   margin-bottom: 5px;
   display: inline-block;
 }
+
 .salesTableWrap .progressWrapper .labelInfo {
   text-align: left;
 }
+
 .salesTableWrap .select-menu.active .select-btn i {
   transform: rotate(-180deg);
 }
+
 .salesTableWrap .select-menu .options {
   position: absolute;
   padding: 0 6px;
@@ -4195,9 +4612,11 @@ Due to the split circle of progress-left and progress right, we must use the ani
   box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.08),
     0px 4px 6px -2px rgba(16, 24, 40, 0.03);
 }
+
 .salesTableWrap .select-menu.active .options {
   display: block;
 }
+
 .salesTableWrap .options .option {
   cursor: pointer;
   padding: 12px 21px 17px;
@@ -4206,6 +4625,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background: #fff;
   margin: 6px 0;
 }
+
 @keyframes progress {
   0% {
     --percentage: 0;
@@ -4221,12 +4641,15 @@ Due to the split circle of progress-left and progress right, we must use the ani
   inherits: true;
   initial-value: 0;
 }
+
 .salesTableWrap .styleActionBtn button:first-child {
   margin-right: 2px;
 }
+
 .salesTableWrap .styleActionBtn button:last-child {
   margin-left: 3px;
 }
+
 .salesTableWrap .styleActionBtn button {
   border-radius: 4px;
   border: 1px solid var(--gray-300, #d0d5dd);
@@ -4240,16 +4663,19 @@ Due to the split circle of progress-left and progress right, we must use the ani
   margin: 0;
   min-width: auto;
 }
+
 .salesTableWrap .styleActionBtn button.quoteWon:hover {
   border-radius: 4px;
   border: 1px solid var(--Success-200, #a9efc5);
   background: var(--Success-50, #ecfdf3);
 }
+
 .salesTableWrap .styleActionBtn button.quoteLost:hover {
   border-radius: 4px;
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-100, #fee4e2);
 }
+
 .salesTableWrap .ActionsDotsBox ul {
   padding: 0;
 }
@@ -4278,6 +4704,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   color: #667085;
   font-size: 35px;
 }
+
 .salesTableWrap ul.multiDropdown {
   width: 211px;
   position: relative;
@@ -4297,11 +4724,13 @@ Due to the split circle of progress-left and progress right, we must use the ani
   position: absolute;
   /* right: -95px; */
 }
+
 .salesTableWrap .innerTableStyle {
   display: grid;
   justify-content: center;
   align-content: center;
 }
+
 .salesTableWrap .innerTableStyle ul {
   display: grid;
   grid-template-columns: repeat(3, 84px);
@@ -4309,24 +4738,30 @@ Due to the split circle of progress-left and progress right, we must use the ani
   align-items: center;
   text-align: center;
 }
+
 .salesTableWrap.bs-popover-bottom .popover-arrow {
   display: none;
 }
+
 .salesTableWrap .MuiDataGrid-cell [data-field="Contact"] {
   justify-content: center !important;
 }
+
 .salesTableWrap .btn-toolbar {
   justify-content: center;
 }
+
 .btn-saleContacte {
   margin: 0;
   padding: 0;
   border: 0;
 }
+
 .salesTableWrap .contactButListIn2:hover {
   border: 1px solid #76d1ff;
   background: #76d1ff57;
 }
+
 /* button.btn.btn-saleContacte,.salesTableWrap .selected-row .disPlayInline svg ,.salesTableWrap .disPlayInlineCenter svg{
   transition: transform .2s;
 }
@@ -4340,11 +4775,13 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   padding: 0;
   margin: 0;
 }
+
 .contactInfoflex {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .salesTableWrap.bs-popover-bottom {
   border-radius: 4px;
   background: var(--Base-White, #fff);
@@ -4354,9 +4791,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   max-width: 400px;
   width: 400px;
 }
+
 .salesTableWrap .btn-saleContacte:focus {
   border: 0;
 }
+
 .salesTableWrap .btn-saleContacte div {
   color: var(--Gray-500, #667085);
   font-size: 12px;
@@ -4365,6 +4804,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   line-height: 22px;
   letter-spacing: 0.12px;
 }
+
 .salesTableWrap .ContactModel span {
   display: block;
   color: #344054;
@@ -4375,6 +4815,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin: 10px 0 8px;
   padding: 0;
 }
+
 .salesTableWrap .MuiPopover-paper {
   margin-left: -18px !important;
 }
@@ -4384,25 +4825,31 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   display: flex;
   align-items: flex-start;
 }
+
 .salesTableWrap .QuoteActionStyle .modelHeader span .iconOutStyle {
   margin-bottom: 0;
 }
+
 .salesTableWrap .QuoteLost .modelHeader span .iconOutStyle {
   background: #fef3f2;
 }
+
 .salesTableWrap .QuoteLost .modelHeader span .iconinStyle {
   background: #fee4e2;
 }
+
 .salesTableWrap .QuoteLost .modelHeader span .iconinnerStyle {
   background: #fee4e2;
   border: 1px solid #fee4e2;
 }
+
 .salesTableWrap .stepBoxStyle ul,
 .salesTableWrap .stepBoxStyle ul li {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
+
 .salesTableWrap .stepBoxStyle ul li span {
   color: #344054;
   font-size: 16px;
@@ -4410,13 +4857,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 600;
   line-height: 24px;
 }
+
 .salesTableWrap .stepBoxStyle ul li strong {
   border-radius: var(--radius-lg, 10px);
-  border: 1px solid
-    var(
-      --Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border,
-      #eaecf0
-    );
+  border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border,
+      #eaecf0);
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   width: 48px;
   height: 48px;
@@ -4424,6 +4869,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   justify-content: center;
   align-items: center;
 }
+
 .salesTableWrap .stepBoxStyle ul li em.lineHor {
   border-radius: var(--spacing-xxs, 2px);
   background: var(--Colors-Border-border-secondary, #eaecf0);
@@ -4432,40 +4878,47 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   display: inline-block;
   margin: 0 7px;
 }
+
 .salesTableWrap .stepBoxStyle ul {
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
 .salesTableWrap .QuoteActionStyle .stepBoxStyle {
   margin-top: 0px;
 }
+
 .salesTableWrap .modelStyleBox button.MuiButtonBase-root {
   margin-top: -9px;
   color: #667085;
 }
+
 .salesTableWrap .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
   background-color: rgba(16, 24, 40, 0.5) !important;
 }
+
 .salesTableWrap .QuoteActionStyle .iconOutStyle {
   margin-bottom: 0 !important;
 }
+
 .salesTableWrap .stepBoxStyle ul li:first-child span {
   margin-left: 9px;
 }
+
 .salesTableWrap .stepBoxStyle ul li:last-child span {
   margin-left: 9px;
 }
+
 .salesTableWrap .ContactModel span.flexRemove {
   margin-top: 12px;
 }
+
 .salesTableWrap .ContactModel span.flexRemove {
   margin-top: 16px;
   margin-bottom: 3px;
 }
 
-.salesTableWrap
-  .datepickerField
-  .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+.salesTableWrap .datepickerField .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 16.5px 14px;
   padding-right: 0;
   color: #475467;
@@ -4485,6 +4938,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   line-height: 24px;
   padding: 12px;
 }
+
 .salesTableWrap .stepBoxStyle p {
   color: var(--colors-text-text-tertiary-600, #475467);
   font-size: 16px;
@@ -4492,15 +4946,19 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 400;
   line-height: 24px;
 }
+
 .salesTableWrap .QuoteActionStyle {
   padding: 0;
 }
+
 .salesTableWrap .stepBoxStyle ul span {
   margin-bottom: 0;
 }
+
 .salesTableWrap .QuoteActionStyle .modelHeader {
   padding: 24px 24px 0 24px;
 }
+
 .salesTableWrap .footerBorder button {
   border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -4513,6 +4971,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 600;
   line-height: 24px;
 }
+
 .salesTableWrap .footerBorder {
   border-top: 1px solid #eaecf0;
   padding: 24px;
@@ -4527,9 +4986,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   float: left;
   width: 100%;
 }
+
 .Nodata .image {
   position: relative;
 }
+
 .Nodata .image img.SearchIcon {
   position: absolute;
   left: 0;
@@ -4537,6 +4998,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   bottom: 13px;
   margin: 0 auto;
 }
+
 .gobackButton,
 .gobackButton:hover {
   border-radius: 4px;
@@ -4553,6 +5015,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   justify-content: center;
   margin: 0 auto;
 }
+
 .gobackSupport,
 .gobackSupport:hover {
   text-decoration: none;
@@ -4572,6 +5035,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 600;
   line-height: 18px;
 }
+
 .iconOutStyleflex {
   display: flex;
   align-items: center;
@@ -4579,10 +5043,12 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   width: 100%;
   padding: 0px 24px 3px;
 }
+
 .flexIconWrap {
   display: flex;
   align-items: center;
 }
+
 .salesTableWrap .footerBorder {
   border-top: 1px solid #eaecf0;
   padding: 12px 24px 0px;
@@ -4590,6 +5056,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   display: flex;
   justify-content: flex-end;
 }
+
 /* Top Filter tags */
 
 .salesTableWrap .mainTagsWrapper {
@@ -4601,19 +5068,23 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   overflow-x: auto;
   white-space: nowrap;
 }
+
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
+
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
+
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar-thumb {
   background: #eaecf0;
   border-radius: 10px;
 }
+
 .salesTableWrap .mainTagsWrapper::-webkit-scrollbar-thumb:hover {
   background: #eaecf0;
 }
@@ -4621,11 +5092,13 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .salesTableWrap .tags-input-container .tag-item-wrap {
   display: inline-block;
 }
+
 .salesTableWrap .tags-input-container {
   margin-right: 20px;
   margin-top: 8px;
   margin-bottom: 8px;
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap button,
 .mainTagsWrapper button {
   padding: 0;
@@ -4636,6 +5109,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin: 0;
   display: inline-flex;
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap {
   border-radius: var(--radius-md, 8px);
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -4652,6 +5126,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   padding: 3px 8px;
   display: flex;
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item {
   border-radius: 6px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -4661,9 +5136,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   align-items: center;
   margin-right: 8px;
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item:last-child {
   margin-right: 0;
 }
+
 .salesTableWrap .tags-input-container .tag-item span.text {
   color: var(--Gray-700, #344054);
   text-align: center;
@@ -4673,17 +5150,21 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 500;
   line-height: 18px;
 }
+
 .salesTableWrap .tags-input-container .close {
   cursor: pointer;
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item .close {
   margin-left: 7px;
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green {
   border-radius: 16px;
   border: 1px solid var(--Success-200, #abefc6);
   background: var(--Success-50, #ecfdf3);
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.green span.text {
   color: var(--Success-700, var(--Success-700, #067647));
   text-align: center;
@@ -4692,11 +5173,13 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 500;
   line-height: 18px;
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue {
   border-radius: 16px;
   border: 1px solid var(--Blue-200, #b2ddff);
   background: var(--Blue-50, #eff8ff);
 }
+
 .salesTableWrap .tags-input-container .tag-item-wrap .tag-item.blue span.text {
   color: var(--Blue-700, #175cd3);
   text-align: center;
@@ -4705,9 +5188,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-weight: 500;
   line-height: 18px;
 }
+
 .salesTableWrap .tableTopBar div#example-fade-text {
   position: absolute;
 }
+
 .salesTableWrap .tableTopBar div#example-fade-text .filterWrap {
   position: absolute;
   z-index: 999;
@@ -4722,6 +5207,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   width: 211px;
   padding: 2px 6px;
 }
+
 .salesTableWrap .colfilterSmall .nav-item a.active {
   border-radius: 6px;
   background: var(--Primary-50, #f9f5ff);
@@ -4732,6 +5218,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   line-height: 22px;
   letter-spacing: 0.175px;
 }
+
 .salesTableWrap .colfilterSmall .nav-item a {
   color: var(--Gray-700, #344054);
   font-size: 14px;
@@ -4747,21 +5234,24 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .salesTableWrap .colfilterSmall .nav-item a svg {
   margin-right: 12px;
 }
+
 .filterWrapmain {
   display: flex;
   align-items: flex-start;
 }
+
 .salesTableWrap .colfilterbig {
-  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px)
-    var(--radius-md, 8px);
+  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
   border: 1px solid var(--Gray-100, #f2f4f7);
   background: var(--Base-White, #fff);
   padding: 16px 0px 0;
   min-width: 278px;
 }
+
 .salesTableWrap .colfilterSmall .nav-item a.active svg {
   fill: #9e77ed;
 }
+
 .salesTableWrap .ClosePopover {
   position: absolute;
   right: 15px;
@@ -4799,18 +5289,22 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   display: flex;
   align-items: center;
 }
+
 .salesTableWrap .ProgressTag .option .progressWrapper {
   margin-left: 16px;
 }
+
 .salesTableWrap .ProgressTag .option {
   display: flex;
   align-items: center;
 }
-.salesTableWrap .ProgressTag .option input:checked ~ .checkmark {
+
+.salesTableWrap .ProgressTag .option input:checked~.checkmark {
   border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--Primary-500, #9e77ed) !important;
   background: var(--Primary-50, #f9f5ff);
 }
+
 .salesTableWrap .ProgressTag .option .checkmark {
   border: 1px solid #d0d5dd !important;
   border: 1px solid var(--Gray-300, #d0d5dd) !important;
@@ -4820,16 +5314,20 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   pointer-events: none;
   opacity: 0;
 }
+
 .salesTableWrap table tbody tr td:nth-child(2) {
   padding-left: 0 !important;
 }
+
 .salesTableWrap .saleNoteBorder {
   white-space: nowrap;
 }
+
 .salesTableWrap .disPlayInlineCenter {
   text-align: center;
   white-space: nowrap;
 }
+
 .salesTableWrap .SalesContact.modal-header {
   padding: 16px 24px 12px !important;
   align-items: center;
@@ -4854,16 +5352,15 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
     0px 8px 8px -4px rgba(16, 24, 40, 0.03);
   margin: 0 auto;
 }
-.SalesContact
-  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error
-  .MuiOutlinedInput-notchedOutline {
+
+.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd;
 }
-.SalesContact
-  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover
-  .MuiOutlinedInput-notchedOutline {
+
+.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd;
 }
+
 .SalesContact textarea.form-control {
   color: #475467;
   font-family: Inter;
@@ -4880,9 +5377,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .SalesContact .popoverbottom .closebox {
   margin-right: 12px;
 }
+
 .SalesContact .popoverbottom button {
   min-width: 90px;
 }
+
 .SalesContact .modelStyle .modal-footer,
 .SalesContact .popoverbottom {
   justify-content: flex-end;
@@ -4897,6 +5396,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   .salesTableWrap .table-responsive {
     overflow-x: auto;
   }
+
   .salesTableWrap .select-menu {
     position: relative;
     width: 200px;
@@ -4916,7 +5416,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 24px; /* 150% */
+  line-height: 24px;
+  /* 150% */
 }
 
 .salesTableWrap table tbody tr td:nth-child(4),
@@ -4955,7 +5456,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 .salesTableWrap table thead tr th:nth-child(2),
 .salesTableWrap table tbody tr td:nth-child(2) {
   position: sticky;
-  min-width: 144px;
+  min-width: 153px;
+  max-width: 153px;
   left: 49px;
   z-index: 8;
   padding-left: 0px !important;
@@ -5031,12 +5533,14 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   align-items: center;
   justify-content: center;
 }
+
 .radio-buttons {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-.custom-radio-button input:checked ~ .custom-radio-button__checkmark {
+
+.custom-radio-button input:checked~.custom-radio-button__checkmark {
   border-radius: var(--radius-lg, 10px);
   border: 1px solid var(--Gray-300, #1ab2ff);
   background: var(--Base-White, #ebf8ff);
@@ -5051,7 +5555,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   display: none;
 }
 
-.custom-radio-button input:checked ~ .custom-radio-button__checkmark:after {
+.custom-radio-button input:checked~.custom-radio-button__checkmark:after {
   display: block;
 }
 
@@ -5110,12 +5614,15 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   padding: 0;
   margin: 0;
 }
+
 .dropdown.dropdown1551 {
   margin-top: 200px;
 }
+
 .DepartmentQuote .options.active {
   display: block;
 }
+
 .DepartmentQuote .szh-menu__item.szh-menu__item--submenu,
 li.szh-menu__item {
   border-radius: var(--radius-sm, 6px);
@@ -5131,25 +5638,30 @@ li.szh-menu__item {
   line-height: 24px;
   white-space: normal;
 }
+
 .szh-menu__submenu .szh-menu {
   margin-left: 8px !important;
   overflow: auto;
   height: 320px;
   width: 320px;
 }
+
 .szh-menu__submenu .szh-menu::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
+
 .szh-menu__submenu .szh-menu::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
+
 .szh-menu__submenu .szh-menu::-webkit-scrollbar-thumb {
   background: #eaecf0;
   border-radius: 10px;
 }
+
 .szh-menu__submenu .szh-menu::-webkit-scrollbar-thumb:hover {
   background: #d9d9da;
 }
@@ -5166,6 +5678,7 @@ li.szh-menu__item:hover {
   font-weight: 500;
   line-height: 24px;
 }
+
 .DepartmentQuote .select-menu .options {
   position: absolute;
   padding: 0 6px;
@@ -5192,6 +5705,7 @@ li.szh-menu__item:hover {
   background: #fff;
   margin: 6px 0;
 }
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -5243,11 +5757,9 @@ li.szh-menu__item:hover {
   align-items: center;
   border-radius: var(--radius-xs, 4px);
   border: 2px solid #1ab2ff;
-  background: radial-gradient(
-      2061.16% 127.06% at -1.24% 2.75%,
+  background: radial-gradient(2061.16% 127.06% at -1.24% 2.75%,
       #1ab2ff 0%,
-      #ffb258 100%
-    ),
+      #ffb258 100%),
     #fff;
 }
 
@@ -5302,7 +5814,7 @@ li.szh-menu__item:hover {
   color: #98a2b3;
 }
 
-.basic-multi-select > * {
+.basic-multi-select>* {
   border: none !important;
   outline: none !important;
 }
@@ -5345,7 +5857,7 @@ ul.szh-menu {
   text-align: left;
 }
 
-.szh-menu__submenu > .szh-menu__item::after {
+.szh-menu__submenu>.szh-menu__item::after {
   right: .5rem !important;
 }
 
@@ -5369,7 +5881,7 @@ ul.szh-menu {
   background: var(--Primary-50, #ebf8ff) !important;
 }
 
-.requestDemoWrap .sliderRightOrg{
+.requestDemoWrap .sliderRightOrg {
   height: 100vh;
 }
 
@@ -5387,13 +5899,16 @@ ul.szh-menu {
   width: 66.5px;
   margin: 0 8px;
 }
+
 .requestDemoWrap .react-international-phone-input-container .react-international-phone-input {
   border: 0px solid !important;
 }
+
 .requestDemoWrap .react-international-phone-country-selector-button {
   border: 0px solid !important;
   background-color: transparent !important;
 }
+
 .requestDemoWrap .inputInfoSizeCheck {
   display: inline-block;
   padding: 5px 14px;
@@ -5404,13 +5919,16 @@ ul.szh-menu {
   border: 1px solid var(--Gray-300, #D0D5DD);
   background: var(--Base-White, #FFF);
 }
+
 .requestDemoWrap .inputInfoSizeCheck.active {
   border: 1px solid #158ecc;
   background-color: #158ecc;
 }
+
 .requestDemoWrap .inputInfoSizeCheck.active label {
   color: #fff;
 }
+
 .requestDemoWrap .boxLogin input.radioBtn {
   letter-spacing: -0.08px;
   padding: 4px 0 4px;
@@ -5422,6 +5940,7 @@ ul.szh-menu {
   right: 0;
   margin: 0 auto;
 }
+
 .requestDemoWrap .inputInfoSizeCheck label {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -5435,17 +5954,22 @@ ul.szh-menu {
   padding: 10px 18px;
   cursor: pointer;
 }
-.requestDemoWrap .inputInfoSizeCheck.active input{
+
+.requestDemoWrap .inputInfoSizeCheck.active input {
   color: #fff;
 }
+
 .requestDemoWrap .step-progress .step.active {
   background: var(--Colors-Background-bg-quaternary, #158ecc);
 }
+
 .requestDemoWrap .boxLogin .inputInfo textarea {
   width: 100%;
   border: 0;
 }
-.requestDemoWrap .CuRegional select,.DiscoverMemate select{
+
+.requestDemoWrap .CuRegional select,
+.DiscoverMemate select {
   width: 100%;
   border: 0;
   color: var(--Gray-400, #98A2B3);
@@ -5455,13 +5979,16 @@ ul.szh-menu {
   font-weight: 400;
   line-height: 24px;
 }
+
 .requestDemoWrap .colgridpaymentwrap {
   display: flex;
   align-items: flex-end;
 }
+
 .requestDemoWrap .colgridpaymentwrap .middle {
   margin: 0 18px;
 }
+
 .requestDemoWrap .BusinessPlanBox {
   border-radius: var(--radius-md, 8px);
   border: 1px solid var(--Gray-200, #EAECF0);
@@ -5480,9 +6007,11 @@ ul.szh-menu {
   display: flex;
   align-items: center;
 }
+
 .requestDemoWrap .BusinessPlanBox .headPlan {
   text-align: center;
 }
+
 .requestDemoWrap .BusinessPlanBox .headPlan h1 {
   color: var(--Gray-900, #101828);
   text-align: center;
@@ -5492,6 +6021,7 @@ ul.szh-menu {
   line-height: 60px;
   letter-spacing: -0.96px;
 }
+
 .requestDemoWrap .BusinessPlanBox .headPlan h3 {
   color: var(--Gray-900, #101828);
   text-align: center;
@@ -5501,6 +6031,7 @@ ul.szh-menu {
   line-height: 30px;
   margin: 0;
 }
+
 .requestDemoWrap .BusinessPlanBox .headPlan p {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -5510,6 +6041,7 @@ ul.szh-menu {
   line-height: 24px;
   margin: 0;
 }
+
 .requestDemoWrap .BusinessPlanBox .listPlan ul li {
   color: var(--Gray-600, #475467);
   font-size: 16px;
@@ -5518,6 +6050,7 @@ ul.szh-menu {
   line-height: 24px;
   padding: 6.3px 0;
 }
+
 .requestDemoWrap .BusinessPlanBox .listPlan ul {
   width: 50%;
 }
@@ -5527,6 +6060,7 @@ ul.szh-menu {
   justify-content: space-between;
   margin: 25px 0;
 }
+
 .requestDemoWrap .BusinessPlanBox p {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -5536,17 +6070,21 @@ ul.szh-menu {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 .requestDemoWrap .BusinessPlanBox p strong {
   font-weight: 500;
 }
+
 .requestDemoWrap .BusinessPlanBox .listPlan ul li img {
   float: left;
   width: 25px;
   margin-right: 12px;
 }
+
 .requestDemoWrap .verifyEmail input.vi {
   opacity: 0;
 }
+
 .requestDemoWrap .verifyEmail .vi__character {
   border-radius: 4px;
   border: 1px solid var(--Gray-300, #D0D5DD);
@@ -5563,7 +6101,8 @@ ul.szh-menu {
   align-items: center;
   justify-content: center;
 }
-.requestDemoWrap .verifyEmail  .vi__character--filled {
+
+.requestDemoWrap .verifyEmail .vi__character--filled {
   border-radius: 4px;
   border: 2px solid var(--Primary-600, #7F56D9);
   background: var(--Base-White, #FFF);
@@ -5577,21 +6116,28 @@ ul.szh-menu {
   line-height: 60px;
   letter-spacing: -0.96px;
 }
+
 .requestDemoWrap .verifyEmail form p.emailDis {
   margin: 8px 0px 36px !important;
 }
+
 .requestDemoWrap .verifyEmail .vi__container {
   margin: 0 auto;
 }
-.requestDemoWrap .timezoneWrapGroup .css-b62m3t-container,.requestDemoWrap .timezoneWrapGroup .css-b62m3t-container {
+
+.requestDemoWrap .timezoneWrapGroup .css-b62m3t-container,
+.requestDemoWrap .timezoneWrapGroup .css-b62m3t-container {
   position: relative;
   box-sizing: border-box;
   width: 100%;
 }
-.requestDemoWrap .timezoneWrapGroup .css-13cymwt-control,.requestDemoWrap .timezoneWrapGroup .css-13cymwt-control {
+
+.requestDemoWrap .timezoneWrapGroup .css-13cymwt-control,
+.requestDemoWrap .timezoneWrapGroup .css-13cymwt-control {
   width: 100% !important;
   border: 0;
 }
+
 .requestDemoWrap .timezoneWrapGroup .inputInfo {
   border-radius: 4px;
   padding: 5px 0px;
@@ -5600,10 +6146,12 @@ ul.szh-menu {
   box-shadow: none !important;
   height: 44px !important;
 }
+
 .requestDemoWrap .removeBorder1 .inputInfo {
   height: 44px !important;
   padding: 5px 0px;
 }
+
 .requestDemoWrap .SinglBgRight {
   height: 100vh;
   background-position: center center;
@@ -5611,6 +6159,7 @@ ul.szh-menu {
   align-items: flex-end;
   justify-content: center;
 }
+
 .logoWrapMain img {
   position: absolute;
   top: 64px;
@@ -5618,6 +6167,7 @@ ul.szh-menu {
   right: 0;
   margin: 0 auto;
 }
+
 .requestDemoWrap .SinglBgRight:before {
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.40) -14.5%, rgba(0, 0, 0, 0.00) 23.66%), linear-gradient(180deg, rgba(0, 0, 0, 0.00) 70.94%, rgba(0, 0, 0, 0.40) 100%);
   position: absolute;
@@ -5625,6 +6175,7 @@ ul.szh-menu {
   width: 100%;
   height: 100vh;
 }
+
 .requestDemoWrap .SinglBgRight p {
   color: var(--Base-White, #FFF);
   text-align: center;
@@ -5636,6 +6187,7 @@ ul.szh-menu {
   z-index: 999;
   width: 616px;
 }
+
 .requestDemoWrap .removeBorder:first-child div {
   border: 0;
   color: var(--Gray-400, #98A2B3);
@@ -5646,9 +6198,11 @@ ul.szh-menu {
   line-height: 24px;
 
 }
+
 .requestDemoWrap .removeBorder {
   width: 100%;
 }
+
 .requestDemoWrap .Timercount {
   border-radius: var(--radius-md, 8px);
   border: 1px solid #EAECF0;
@@ -5661,6 +6215,7 @@ ul.szh-menu {
   margin-top: 37px;
   position: relative;
 }
+
 .requestDemoWrap .Timercount span {
   position: absolute;
   border: 0.75px solid #10182829;
@@ -5675,6 +6230,7 @@ ul.szh-menu {
   background: linear-gradient(180deg, #F9FAFB 0%, #EDF0F3 100%);
   padding: 5px;
 }
+
 .requestDemoWrap .Timercount .text {
   margin-top: 20px;
   color: var(--Gray-600, #475467);
@@ -5687,16 +6243,20 @@ ul.szh-menu {
   letter-spacing: 0.12px;
   margin-bottom: 0;
 }
+
 .requestDemoWrap .inputInfo.verifyEmail {
   border: 0;
   padding: 0;
 }
+
 .requestDemoWrap button.fillbtn.flexcenterbox:disabled {
   opacity: .5;
 }
+
 .timezoneWrapGroup .css-1dimb5e-singleValue {
   font-weight: 600;
 }
+
 .requestDemoWrap .boxLogin h2 {
   color: #101828;
   margin-bottom: 32px;
@@ -5704,21 +6264,26 @@ ul.szh-menu {
   line-height: 44px;
   font-size: 36px;
 }
+
 .requestDemoWrap .boxinfo .boxLogin {
   width: 380px;
   margin: 0 auto;
 }
+
 .request-calendly-date h2 {
   text-align: center;
 }
+
 .request-calendly-date button.fillbtn.flexcenterbox {
   width: 177px;
   margin: 0 auto;
 }
+
 .request-calendly-date .boxinfo .boxLogin {
   width: 1000px;
   margin: 0 auto;
 }
+
 .requestDemoWrap .Timercount .timer {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -5728,6 +6293,7 @@ ul.szh-menu {
   font-weight: 400;
   line-height: 24px;
 }
+
 .inputInfocheckbox {
   display: block;
   position: relative;
@@ -5740,6 +6306,7 @@ ul.szh-menu {
   -ms-user-select: none;
   user-select: none;
 }
+
 .inputInfocheckbox input {
   position: absolute;
   opacity: 0;
@@ -5747,9 +6314,11 @@ ul.szh-menu {
   height: 0;
   width: 0;
 }
+
 .formgroup.formgroupHide {
   display: none;
 }
+
 .checkmarkdata {
   position: absolute;
   top: 0;
@@ -5759,28 +6328,35 @@ ul.szh-menu {
   background-color: #fafafa;
   border: 1px solid var(--colorG5);
 }
-.inputInfocheckbox:hover input ~ .checkmarkdata {
+
+.inputInfocheckbox:hover input~.checkmarkdata {
   background-color: #fafafa;
   border: 1px solid var(--colorG5);
 }
-.inputInfocheckbox input:checked ~ .checkmarkdata {
+
+.inputInfocheckbox input:checked~.checkmarkdata {
   background-color: #fafafa;
   border: 1px solid var(--colorG5);
 }
+
 .checkmarkdata:after {
   content: "";
   position: absolute;
   display: none;
 }
-.inputInfocheckbox input:checked ~ .checkmarkdata:after {
+
+.inputInfocheckbox input:checked~.checkmarkdata:after {
   display: block;
 }
+
 .requestAllset .boxLogin {
   text-align: center;
 }
+
 span.checkmarkdata.agree_marketing-border {
   border: 1px solid #f04438;
 }
+
 /* Style the checkmark/indicator */
 .inputInfocheckbox .checkmarkdata:after {
   left: 7px;
@@ -6070,6 +6646,7 @@ span.checkmarkdata.agree_marketing-border {
   justify-content: space-between;
   padding: 0 22px;
 }
+
 .settings-content {
   width: calc(100% - 280px);
   padding: 0 0px 0 24px;
@@ -6117,48 +6694,53 @@ span.checkmarkdata.agree_marketing-border {
 }
 
 .color-blue {
-    color: var(--Primary-700, #106B99);
+  color: var(--Primary-700, #106B99);
 }
 
 .font-600 {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .font-500 {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .color-344054 {
-    color: #344054;
+  color: #344054;
 }
 
 .color-475467 {
-    color: #475467;
+  color: #475467;
 }
 
 .bg-transparent {
-    background: transparent !important;
+  background: transparent !important;
 }
 
 .settings-menu .menuList .topList {
   overflow: auto;
 }
+
 .settings-menu .menuList .topList::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
+
 .settings-menu .menuList .topList::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
+
 .settings-menu .menuList .topList::-webkit-scrollbar-thumb {
   background: #eaecf0;
   border-radius: 10px;
 }
+
 .settings-menu .menuList .topList::-webkit-scrollbar-thumb:hover {
   background: #d9d9da;
 }
+
 .logoutBottom {
   /* width: 250px; */
   text-align: left;
@@ -6201,6 +6783,7 @@ span.checkmarkdata.agree_marketing-border {
   border-radius: 6px;
   background: var(--Primary-50, #ebf8ff);
 }
+
 .settings-menu .menuList ul li:hover {
   border-radius: 6px;
   background: var(--Primary-50, #ebf8ff);
@@ -6465,13 +7048,16 @@ a.editInline {
 .listwrapper ul li strong {
   margin-left: 10px;
 }
+
 .listwrapper ul li strong {
   display: flex;
   align-items: center;
 }
+
 .listwrapper ul li strong svg {
   margin-left: 9px;
 }
+
 .selectInputWidth {
   width: 316px;
 }
@@ -6589,6 +7175,7 @@ button.cancel {
   padding: 16px 24px;
   width: 316px;
 }
+
 .upload-btn-wrapper .textbtm p span {
   color: var(--Primary-700, #106b99);
   font-family: Inter;
@@ -6597,6 +7184,7 @@ button.cancel {
   font-weight: 600;
   line-height: 20px;
 }
+
 .upload-btn-wrapper .textbtm p {
   color: var(--Gray-600, #475467);
   font-family: Inter;
@@ -6659,11 +7247,9 @@ button.cancel {
 
 .progressSubsIcon {
   border-radius: var(--radius-full, 9999px);
-  background: linear-gradient(
-    135deg,
-    rgba(114, 237, 242, 0.15) 0%,
-    rgba(81, 81, 229, 0.15) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(114, 237, 242, 0.15) 0%,
+      rgba(81, 81, 229, 0.15) 100%);
   display: flex;
   width: 40px;
   height: 40px;
@@ -6671,6 +7257,7 @@ button.cancel {
   align-items: center;
   justify-content: center;
 }
+
 .subscription-page .listwrapper li {
   display: block;
 }
@@ -7158,9 +7745,11 @@ button.closeSubscription {
   margin-bottom: 34px;
   padding-right: 19px;
 }
+
 .billingwrapper .head {
   border-bottom: 1px solid #eaecf0;
 }
+
 .billingwrapper .head h2 {
   color: var(--Gray-900, #101828);
   font-family: Inter;
@@ -7170,15 +7759,18 @@ button.closeSubscription {
   line-height: 28px;
   margin-bottom: 14px;
 }
+
 .billingwrapper .boxWrap {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
 }
+
 .billingwrapper label {
   display: flex;
   justify-content: space-between;
 }
+
 .billingwrapper .grid-item {
   margin-top: 25px;
   border-radius: var(--radius-xs, 4px);
@@ -7186,6 +7778,7 @@ button.closeSubscription {
   background: #fff;
   padding: var(--spacing-xl, 16px);
 }
+
 .billingwrapper .boxItem h2 {
   color: #344054;
   font-family: Inter;
@@ -7194,6 +7787,7 @@ button.closeSubscription {
   font-weight: 500;
   line-height: 20px;
 }
+
 .billingwrapper .boxItem p {
   color: #475467;
   font-family: Inter;
@@ -7203,9 +7797,11 @@ button.closeSubscription {
   line-height: 20px;
   margin: 0;
 }
+
 .billingwrapper .boxItem {
   margin-left: 12px;
 }
+
 .billingwrapper button {
   color: #475467;
   font-family: Inter;
@@ -7218,10 +7814,12 @@ button.closeSubscription {
   padding: 0;
   margin-top: 8px;
 }
+
 .billingwrapper button.close {
   color: #f04438;
   margin-left: 12px;
 }
+
 .billingwrapper .boxCheckNo .ckeckIcon {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid #d0d5dd;
@@ -7231,21 +7829,25 @@ button.closeSubscription {
   align-items: center;
   justify-content: center;
 }
+
 .billingwrapper label input[type="radio"] {
   width: 100%;
   height: 100%;
   cursor: pointer;
   display: none;
 }
+
 .billingwrapper .grid-item.active {
   border-radius: var(--radius-xs, 4px);
   border: 2px solid #158ecc;
   background: #fff;
 }
+
 .billingwrapper .grid-item.active .boxCheckNo .ckeckIcon {
   border-radius: var(--radius-xs, 4px);
   background: #158ecc;
 }
+
 .billingwrapper .grid-item.active .boxCheckNo .ckeckIcon svg {
   fill: #ffffff;
 }
@@ -7257,6 +7859,7 @@ button.closeSubscription {
   margin: 4px 0 22px;
   padding: 10px 8px 6px;
 }
+
 .stepBoxStylePayment .formgroup label {
   color: var(--Gray-600, #475467);
   font-family: Inter;
@@ -7266,6 +7869,7 @@ button.closeSubscription {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 .stepBoxStylePayment .formgroup .inputInfo input {
   color: var(--Gray-500, #667085);
   font-family: Inter;
@@ -7276,11 +7880,13 @@ button.closeSubscription {
   letter-spacing: -0.08px;
   width: 100%;
 }
+
 .modelHeadFlex {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .modelHeadFlex h2 {
   color: var(--Gray-700, #344054);
   font-family: Inter;
@@ -7291,10 +7897,12 @@ button.closeSubscription {
   letter-spacing: -0.27px;
   margin: 0;
 }
+
 .modelHeaderBillig {
   padding: 16px 24px 12px 24px;
   border-bottom: 1px solid #eaecf0;
 }
+
 .stepBoxStylePayment {
   padding: 10px 23px 13px 23px;
   background: var(--Gray-25, #fcfcfd);
@@ -7302,6 +7910,7 @@ button.closeSubscription {
   gap: 0 18px;
   grid-template-columns: 58% 39%;
 }
+
 .footerButton {
   display: flex;
   align-items: center;
@@ -7309,6 +7918,7 @@ button.closeSubscription {
   border-top: 1px solid #eaecf0;
   padding: 12px 24px 16px !important;
 }
+
 .footerButton button.save {
   padding: 10px 18px;
   color: #fff;
@@ -7325,6 +7935,7 @@ button.closeSubscription {
   border: 1px solid var(--Primary-600, #158ecc);
   background: var(--Primary-600, #158ecc);
 }
+
 .footerButton button.Cancel {
   border-radius: 40px;
   background: #fff;
@@ -7342,6 +7953,7 @@ button.closeSubscription {
   margin-right: 12px;
   font-family: "Inter";
 }
+
 .setModalelBoots .topHeadStyle button {
   border-radius: 40px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -7354,11 +7966,13 @@ button.closeSubscription {
   font-weight: 600;
   line-height: 24px;
 }
+
 .setModalelBoots table thead tr th:first-child,
 .setModalelBoots table tbody tr td:first-child {
   width: auto;
   border-right: 1px solid var(--Gray-200, #eaecf0);
 }
+
 .inlineEditFiled input[type="text"] {
   border: 0;
   background: transparent;
@@ -7370,6 +7984,7 @@ button.closeSubscription {
   line-height: 24px;
   letter-spacing: 0.08px;
 }
+
 .updateButtoninline .close {
   border-radius: 4px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -7384,6 +7999,7 @@ button.closeSubscription {
   margin-top: 17px;
   margin-right: 11px;
 }
+
 .updateButtoninline .save {
   border-radius: 4px;
   border: 1px solid var(--Primary-600, #158ecc);
@@ -7416,6 +8032,7 @@ button.closeSubscription {
   font-weight: 600;
   line-height: 28px;
 }
+
 .colorSelectBut {
   border: 0;
   border-radius: 4px;
@@ -7431,10 +8048,12 @@ button.closeSubscription {
   border: 1px solid var(--Border, #d0d5dd);
   background: #fff;
 }
+
 .listwrapper.orgColorStatus table tr td {
   position: relative !important;
   z-index: auto !important;
 }
+
 .butcolorIn {
   width: 132px;
   height: 30px;
@@ -7444,9 +8063,11 @@ button.closeSubscription {
   border-radius: 4px;
   border-left: 4px solid;
 }
+
 td.butactionOrg p {
   margin: 7px;
 }
+
 .selectOptionMenu li,
 .selectOptionMenu li:hover {
   /* width: 132px !important;  */
@@ -7462,10 +8083,12 @@ td.butactionOrg p {
   display: inline-block !important;
   background: transparent;
 }
+
 .selectOptionMenu {
   padding: 0 !important;
   margin: 0 !important;
 }
+
 .selectOptionMenu {
   overflow-x: hidden;
   overflow-y: auto;
@@ -7476,25 +8099,31 @@ td.butactionOrg p {
   background: var(--Base-White, #fff);
   padding: 12px 12px !important;
 }
+
 .selectOptionMenu li {
   border: 0 !important;
 }
+
 .selectOptionMenu::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   padding: 5px;
 }
+
 .selectOptionMenu::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
+
 .selectOptionMenu::-webkit-scrollbar-thumb {
   background: #eaecf0;
   border-radius: 10px;
 }
+
 .selectOptionMenu::-webkit-scrollbar-thumb:hover {
   background: #d9d9da;
 }
+
 .mainSelectMenu .szh-menu {
   -webkit-user-select: none;
   user-select: none;
@@ -7509,15 +8138,19 @@ td.butactionOrg p {
   text-align: left;
   width: 184px;
 }
+
 .selectOptionMenu li.szh-menu__item--checked svg {
   opacity: 1 !important;
 }
+
 .selectOptionMenu li svg {
   opacity: 0;
 }
+
 .selectOptionMenu li::before {
   display: none;
 }
+
 .dflexColorStatus {
   display: flex;
   align-items: center;
@@ -7532,6 +8165,7 @@ td.butactionOrg p {
   text-align: left;
   padding-left: 12px;
 }
+
 #addmoreOption,
 #addmoreOption:hover {
   text-align: center;
@@ -7542,6 +8176,7 @@ td.butactionOrg p {
   background: transparent;
   padding-top: 32px !important;
 }
+
 #addmoreOption button {
   text-align: center;
   margin: 0 auto;
@@ -7558,6 +8193,7 @@ td.butactionOrg p {
   display: flex;
   align-items: center;
 }
+
 .orgColorStatus tbody tr td,
 .orgColorStatus tbody tr td:hover {
   background: transparent !important;
@@ -7565,17 +8201,21 @@ td.butactionOrg p {
   vertical-align: middle;
   /* padding: 20px 0 !important; */
 }
+
 .orgColorStatus tbody tr td:first-child {
   width: 280px !important;
   padding: 0 !important;
 }
+
 .orgColorStatus tbody tr td:nth-child(2) {
   width: 280px;
 }
+
 .orgColorStatus tbody tr td:last-child {
   width: 425px;
   text-align: right;
 }
+
 .orgColorStatus tbody tr td:last-child button {
   border-radius: 4px;
   padding: 8px 14px;
@@ -7587,6 +8227,7 @@ td.butactionOrg p {
   line-height: 20px;
   margin-left: 9px;
 }
+
 .orgColorStatus .top p {
   color: var(--Gray-600, #475467);
   font-family: Inter;
@@ -7595,14 +8236,17 @@ td.butactionOrg p {
   font-weight: 400;
   line-height: 20px;
 }
+
 .orgColorStatus .top {
   margin-bottom: 31px;
 }
+
 .statuswrapper {
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
+
 .butactionOrg button.save,
 .butactionOrg button.save:hover {
   width: 85px !important;
@@ -7610,6 +8254,7 @@ td.butactionOrg p {
   background: var(--Primary-50, #ebf8ff) !important;
   color: var(--Primary-700, #106b99) !important;
 }
+
 .butactionOrg button.remove,
 .butactionOrg button.remove:hover {
   width: 85px !important;
@@ -7617,6 +8262,7 @@ td.butactionOrg p {
   background: #fff !important;
   color: var(--Gray-800, #b42318) !important;
 }
+
 .statusTitle {
   border-radius: var(--radius-xs, 4px);
   border: 1px solid var(--Border, #d0d5dd);
@@ -7635,17 +8281,21 @@ td.butactionOrg p {
   display: flex;
   align-items: center;
 }
+
 .statusTitle p.mb-2 {
   font-size: 12px;
   padding: 0;
   margin: 0 !important;
 }
+
 .statusTitle input {
   width: 100%;
 }
+
 .orgColorStatus tbody tr {
   border-top: 1px solid #eaecf0;
 }
+
 /* .containerStatus .checkmark svg {
     opacity: 0;
 }
@@ -7701,20 +8351,25 @@ td.butactionOrg p {
   height: 8px;
   padding: 5px;
 }
+
 .statuswrapper .szh-menu__group::-webkit-scrollbar-track {
   box-shadow: inset 0 0 0px #fff;
   border-radius: 10px;
 }
+
 .statuswrapper .szh-menu__group::-webkit-scrollbar-thumb {
   background: #eaecf0;
   border-radius: 10px;
 }
+
 .statuswrapper .szh-menu__group::-webkit-scrollbar-thumb:hover {
   background: #d9d9da;
 }
+
 .listwrapper .statuswrapper ul li {
   border: 0;
 }
+
 .listwrapper .statuswrapper li.szh-menu__item:hover {
   background: transparent;
 }
@@ -7739,7 +8394,8 @@ td.butactionOrg p {
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 24px; /* 150% */
+  line-height: 24px;
+  /* 150% */
   letter-spacing: 0.08px;
   margin-bottom: 6px;
 }
@@ -7750,7 +8406,8 @@ td.butactionOrg p {
   font-size: 32px;
   font-style: normal;
   font-weight: 800;
-  line-height: 34px; /* 106.25% */
+  line-height: 34px;
+  /* 106.25% */
   letter-spacing: -0.8px;
   margin-bottom: 6px;
 }
@@ -7763,7 +8420,8 @@ td.butactionOrg p {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 22px; /* 157.143% */
+  line-height: 22px;
+  /* 157.143% */
   letter-spacing: 0.175px;
   margin-bottom: 6px;
 }
@@ -7821,6 +8479,7 @@ ul.activeListPassword li.active {
   line-height: 44px;
   font-size: 36px;
 }
+
 .lockIconStyle p {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -7830,6 +8489,7 @@ ul.activeListPassword li.active {
   font-weight: 400;
   line-height: 24px;
 }
+
 .PasswordStrengthBar p {
   color: var(--Gray-600, #475467) !important;
   font-family: Inter;
@@ -7839,6 +8499,7 @@ ul.activeListPassword li.active {
   line-height: 22px;
   letter-spacing: 0.12px;
 }
+
 .boxLogin h2 span {
   color: var(--color1);
   display: inline-block;
@@ -7886,7 +8547,8 @@ ul.activeListPassword li.active {
   margin-right: 9px;
 }
 
-.forgotPage .boxLogin h2, .forgotPage .boxLogin h2 span {
+.forgotPage .boxLogin h2,
+.forgotPage .boxLogin h2 span {
   font-size: 30px;
   margin-bottom: 11px;
 }
@@ -7904,6 +8566,7 @@ ul.activeListPassword li.active {
 .boxLogin .fillbtn img {
   margin-left: 12px;
 }
+
 .boxLogin .textbtn {
   color: var(--color1);
   letter-spacing: 0.175px;
@@ -8175,14 +8838,17 @@ a.backToLogin {
   display: inline-block;
   margin-top: 50px;
 }
+
 ul.activeListPassword {
   margin-top: 28px;
 }
+
 ul.activeListPassword li {
   padding: 7px 0;
   display: flex;
   align-items: center;
 }
+
 ul.activeListPassword li.active svg {
   fill: #75E0A7;
 }
@@ -8190,6 +8856,7 @@ ul.activeListPassword li.active svg {
 .onboardingWrap .sliderRightOrg {
   height: 100vh;
 }
+
 .SubtractIconPlay {
   display: flex;
   align-items: center;
@@ -8200,12 +8867,15 @@ ul.activeListPassword li.active svg {
   left: 0;
   right: 0;
 }
+
 .onboardingWrap .linkBottom.hide {
   opacity: 0;
 }
+
 .onboardingWrap .linkBottom.show {
   opacity: 1;
 }
+
 .onboardingWrap .step-progress {
   display: flex;
   align-items: center;
@@ -8220,9 +8890,11 @@ ul.activeListPassword li.active svg {
   width: 66.5px;
   margin: 0 8px;
 }
+
 .onboardingWrap .step-progress .step.active {
   background: var(--Colors-Background-bg-quaternary, #7f56d9);
 }
+
 .onboardingWrap .CuRegional select,
 .DiscoverMemate select {
   width: 100%;
@@ -8234,16 +8906,20 @@ ul.activeListPassword li.active svg {
   font-weight: 400;
   line-height: 24px;
 }
+
 .veryfymail a.backToLogin {
   margin-top: 0;
 }
+
 .onboardingWrap .colgridpaymentwrap {
   display: flex;
   align-items: flex-end;
 }
+
 .colgridpaymentwrap .middle {
   margin: 0 18px;
 }
+
 .onboardingWrap .BusinessPlanBox {
   border-radius: var(--radius-md, 8px);
   border: 1px solid var(--Gray-200, #eaecf0);
@@ -8253,6 +8929,7 @@ ul.activeListPassword li.active svg {
   width: 617px;
   margin: 0 auto;
 }
+
 .onboardingWrap .BusinessPlanwrap {
   height: 100vh;
   background: var(--Gray-100, #f2f4f7);
@@ -8261,9 +8938,11 @@ ul.activeListPassword li.active svg {
   display: flex;
   align-items: center;
 }
+
 .onboardingWrap .BusinessPlanBox .headPlan {
   text-align: center;
 }
+
 .onboardingWrap .BusinessPlanBox .headPlan h1 {
   color: var(--Gray-900, #101828);
   text-align: center;
@@ -8273,6 +8952,7 @@ ul.activeListPassword li.active svg {
   line-height: 60px;
   letter-spacing: -0.96px;
 }
+
 .onboardingWrap .BusinessPlanBox .headPlan h3 {
   color: var(--Gray-900, #101828);
   text-align: center;
@@ -8282,6 +8962,7 @@ ul.activeListPassword li.active svg {
   line-height: 30px;
   margin: 0;
 }
+
 .onboardingWrap .BusinessPlanBox .headPlan p {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -8291,6 +8972,7 @@ ul.activeListPassword li.active svg {
   line-height: 24px;
   margin: 0;
 }
+
 .onboardingWrap .BusinessPlanBox .listPlan ul li {
   color: var(--Gray-600, #475467);
   font-size: 16px;
@@ -8299,6 +8981,7 @@ ul.activeListPassword li.active svg {
   line-height: 24px;
   padding: 6.3px 0;
 }
+
 .onboardingWrap .BusinessPlanBox .listPlan ul {
   width: 50%;
 }
@@ -8308,6 +8991,7 @@ ul.activeListPassword li.active svg {
   justify-content: space-between;
   margin: 25px 0;
 }
+
 .onboardingWrap .BusinessPlanBox p {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -8317,20 +9001,25 @@ ul.activeListPassword li.active svg {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 .onboardingWrap .BusinessPlanBox p strong {
   font-weight: 500;
 }
+
 .onboardingWrap .css-1u9des2-indicatorSeparator {
   width: 0px;
 }
+
 .onboardingWrap .BusinessPlanBox .listPlan ul li img {
   float: left;
   width: 25px;
   margin-right: 12px;
 }
+
 .hideinputfild {
   display: none;
 }
+
 .veryfymail .linkBottom p {
   color: var(--Gray-600, #475467);
   font-size: 14px;
@@ -8339,9 +9028,11 @@ ul.activeListPassword li.active svg {
   line-height: 22px;
   letter-spacing: 0.14px;
 }
+
 .onboardingWrap input.vi {
   opacity: 0;
 }
+
 .onboardingWrap .vi__character {
   border-radius: 4px;
   border: 1px solid var(--Gray-300, #d0d5dd);
@@ -8358,6 +9049,7 @@ ul.activeListPassword li.active svg {
   align-items: center;
   justify-content: center;
 }
+
 .onboardingWrap .vi__character--filled {
   border-radius: 4px;
   border: 2px solid var(--Primary-600, #158ecc);
@@ -8372,26 +9064,32 @@ ul.activeListPassword li.active svg {
   line-height: 60px;
   letter-spacing: -0.96px;
 }
+
 .onboardingWrap form p.emailDis {
   margin: 8px 0px 36px !important;
 }
+
 .onboardingWrap .vi__container {
   margin: 0 auto;
 }
+
 .onboardingWrap .timezoneWrapGroup .css-b62m3t-container,
 .onboardingWrap .timezoneWrapGroup .css-b62m3t-container {
   position: relative;
   box-sizing: border-box;
   width: 100%;
 }
+
 .verifyEmailb {
   text-align: center;
 }
+
 .onboardingWrap .timezoneWrapGroup .css-13cymwt-control,
 .onboardingWrap .timezoneWrapGroup .css-13cymwt-control {
   width: 100% !important;
   border: 0;
 }
+
 .onboardingWrap .timezoneWrapGroup .inputInfo {
   border-radius: 4px;
   padding: 5px 0px;
@@ -8400,10 +9098,12 @@ ul.activeListPassword li.active svg {
   box-shadow: none !important;
   height: 44px !important;
 }
+
 .onboardingWrap .removeBorder1 .inputInfo {
   height: 44px !important;
   padding: 5px 0px;
 }
+
 .onboardingWrap .SinglBgRight {
   height: 100vh;
   background-position: center center;
@@ -8413,17 +9113,16 @@ ul.activeListPassword li.active svg {
 }
 
 .onboardingWrap .SinglBgRight:before {
-  background: linear-gradient(
-      0deg,
+  background: linear-gradient(0deg,
       rgba(0, 0, 0, 0.4) -14.5%,
-      rgba(0, 0, 0, 0) 23.66%
-    ),
+      rgba(0, 0, 0, 0) 23.66%),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
   position: absolute;
   content: "";
   width: 100%;
   height: 100vh;
 }
+
 .onboardingWrap .SinglBgRight p {
   color: var(--Base-White, #fff);
   text-align: center;
@@ -8435,6 +9134,7 @@ ul.activeListPassword li.active svg {
   z-index: 999;
   width: 616px;
 }
+
 .onboardingWrap .removeBorder:first-child div {
   border: 0;
   color: var(--Gray-400, #98a2b3);
@@ -8444,9 +9144,11 @@ ul.activeListPassword li.active svg {
   font-weight: 400;
   line-height: 24px;
 }
+
 .onboardingWrap .removeBorder {
   width: 100%;
 }
+
 .onboardingWrap .Timercount {
   border-radius: var(--radius-md, 8px);
   border: 1px solid #eaecf0;
@@ -8459,6 +9161,7 @@ ul.activeListPassword li.active svg {
   margin-top: 37px;
   position: relative;
 }
+
 .onboardingWrap .Timercount span {
   position: absolute;
   border: 0.75px solid #10182829;
@@ -8473,6 +9176,7 @@ ul.activeListPassword li.active svg {
   background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
   padding: 5px;
 }
+
 .onboardingWrap .Timercount .text {
   margin-top: 0px !important;
   color: var(--Gray-600, #475467);
@@ -8485,13 +9189,16 @@ ul.activeListPassword li.active svg {
   letter-spacing: 0.12px;
   margin-bottom: 0;
 }
+
 .onboardingWrap .inputInfo.verifyEmail {
   border: 0;
   padding: 0;
 }
+
 .onboardingWrap button.fillbtn.flexcenterbox:disabled {
   opacity: 0.5;
 }
+
 .onboardingWrap .boxLogin h2 {
   color: var(--colorG1);
   margin-bottom: 32px;
@@ -8499,10 +9206,12 @@ ul.activeListPassword li.active svg {
   line-height: 44px;
   font-size: 30px;
 }
+
 .onboardingWrap .boxinfo .boxLogin {
   width: 380px;
   margin: 0 auto;
 }
+
 .onboardingWrap .Timercount .timer {
   color: var(--Gray-600, #475467);
   text-align: center;
@@ -8547,7 +9256,8 @@ ul.activeListPassword li.active svg {
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22px; /* 183.333% */
+  line-height: 22px;
+  /* 183.333% */
   letter-spacing: 0.12px;
 }
 
@@ -8580,7 +9290,8 @@ ul.activeListPassword li.active svg {
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  line-height: 24px; /* 150% */
+  line-height: 24px;
+  /* 150% */
   letter-spacing: 0.08px;
   margin-bottom: 4px;
 }
@@ -8591,7 +9302,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22px; /* 157.143% */
+  line-height: 22px;
+  /* 157.143% */
   letter-spacing: 0.14px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -8606,7 +9318,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22px; /* 157.143% */
+  line-height: 22px;
+  /* 157.143% */
   letter-spacing: 0.14px;
   padding: unset !important;
   padding-bottom: 12px !important;
@@ -8614,21 +9327,21 @@ ul.activeListPassword li.active svg {
   background: unset !important;
   border: unset !important;
 }
+
 .task-deatils-table tr td:last-child {
   color: var(--Gray-600, #475467);
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22px; /* 157.143% */
+  line-height: 22px;
+  /* 157.143% */
   letter-spacing: 0.14px;
   background: unset !important;
   border: unset !important;
 }
 
-#viewtask {
-
-}
+#viewtask {}
 
 .edit-button,
 .edit-button:hover {
@@ -8648,7 +9361,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
 }
 
 .incomplete-button,
@@ -8663,7 +9377,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
 
   border-radius: 4px;
   border: 1px solid var(--Error-200, #fecdca);
@@ -8683,7 +9398,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
 
   border-radius: 4px;
   border: 1px solid var(--Success-200, #a9efc5);
@@ -8703,7 +9419,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
 
   border-radius: 4px;
   border: 1px solid var(--Primary-600, #158ecc);
@@ -8724,7 +9441,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  /* 142.857% */
 
   border-radius: 4px;
   border: 1px solid var(--Error-600, #d92d20);
@@ -8739,7 +9457,8 @@ ul.activeListPassword li.active svg {
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 22px; /* 157.143% */
+  line-height: 22px;
+  /* 157.143% */
   letter-spacing: 0.14px;
 }
 
