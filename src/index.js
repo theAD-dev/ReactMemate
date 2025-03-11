@@ -28,3 +28,23 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+// import React from 'react';
+// import 'react-international-phone/style.css';
+// import ReactDOM from 'react-dom/client';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import './prime.css';
+// import './index.css';
+// import './App.css';
+// import './global.scss';
+// import "@fontsource/inter";
+// import "@fontsource/roboto";
+// import App from './app/_app';
+
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// root.render(
+//   <React.StrictMode>
+//     <App />
+//   </React.StrictMode>
+// );

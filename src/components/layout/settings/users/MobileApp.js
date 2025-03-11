@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Building, Person, Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
+import { Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -15,12 +15,8 @@ import style from './users.module.scss';
 import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../../../APIs/settings-user-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
+import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
 import Sidebar from '../Sidebar';
-
-
-
-
-
 
 
 const MobileApp = React.memo(() => {
@@ -38,12 +34,12 @@ const MobileApp = React.memo(() => {
 
     const nameBody = (data) => {
         return <div className='d-flex align-items-center justify-content-between'>
-            <div className='d-flex justify-content-center align-items-center'><div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.userImg} ${data.is_business ? "" : "rounded-circle"}`}>
-                {data.photo ? <img src={data.photo} alt='clientImg' className='w-100' /> : data.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
-            </div>
+            <div className='d-flex justify-content-center align-items-center'>
+                <ImageAvatar has_photo={data.has_photo} photo={data.photo} is_business={false} />
                 <div className='d-flex flex-column gap-1'>
                     <div className={`${style.ellipsis}`}>{data?.first_name} {data?.last_name}</div>
-                </div></div>
+                </div>
+            </div>
         </div>;
     };
 

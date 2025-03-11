@@ -18,7 +18,6 @@ import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
 import ZapCircle from "../../../assets/images/icon/zap.png";
 import homeBoxImg04 from "../../../assets/images/img/homeboxImg04.png";
 import LenderPanel from "../../../assets/images/img/lender-panel03.png";
-import "./style-model.css";
 
 const AccountingContact = () => {
   const [open, setOpen] = useState(false);

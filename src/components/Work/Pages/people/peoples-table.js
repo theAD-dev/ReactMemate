@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Chat, Envelope, Person, Plus, Telephone } from 'react-bootstrap-icons';
+import { Chat, Envelope, Plus, Telephone } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
@@ -10,8 +10,7 @@ import { DataTable } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
 import style from './people.module.scss';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
-
-
+import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 const PeoplesTable = () => {
@@ -37,9 +36,7 @@ const PeoplesTable = () => {
 
     const nameBody = (rowdata) => {
         return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
-            <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} rounded-circle}`}>
-                {rowdata.photo ? <img src={rowdata.photo} alt='clientImg' className='w-100' /> : <Person color='#667085' />}
-            </div>
+            <ImageAvatar has_photo={rowdata.has_photo} photo={rowdata.photo} is_business={false}/>
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
                 {rowdata?.first_name} {rowdata?.last_name}
             </div>

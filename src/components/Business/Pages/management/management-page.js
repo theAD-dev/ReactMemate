@@ -1,6 +1,5 @@
 
 import { EventScheduler } from "./event-scheduler";
-import "./calendar.css";
 
 const Management = () => {
     return (

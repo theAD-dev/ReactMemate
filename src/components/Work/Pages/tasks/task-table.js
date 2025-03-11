@@ -8,6 +8,7 @@ import { DataTable } from 'primereact/datatable';
 import style from './task.module.scss';
 import { getListOfTasks } from '../../../../APIs/task-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ViewTaskModal from '../../features/task/view-task/view-task';
 
@@ -94,10 +95,13 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
     const nameBody = (rowData) => {
         const name = `${rowData?.user.full_name}`;
-        const initials = `${rowData?.alias}`;
+        const initials = `${rowData?.user?.alias}`;
         return <div className='d-flex align-items-center'>
             <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>
-                {rowData?.user?.photo ? <img src={rowData?.user?.photo} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /> : initials}
+                {rowData?.user?.has_photo
+                    ? <FallbackImage has_photo={rowData?.user?.has_photo} photo={rowData?.user?.photo} is_business={false}/>
+                    : initials
+                }
             </div>
             {name}
         </div>;
@@ -154,7 +158,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}
@@ -169,7 +173,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 <Column field="from_date" header="Start Date" body={startBody} style={{ minWidth: '100px' }} sortable></Column>
                 <Column field="to_date" header="Due Date" body={endBody} style={{ minWidth: '100px' }} sortable></Column>
             </DataTable>
-            <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitilize={()=> setRefetch((refetch)=> !refetch)}/>
+            <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitilize={() => setRefetch((refetch) => !refetch)} />
         </>
     );
 });

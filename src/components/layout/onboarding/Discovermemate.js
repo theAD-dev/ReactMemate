@@ -9,7 +9,6 @@ import exclamationCircle from "../../../assets/images/icon/exclamation-circle.sv
 import LinepatternBottom from "../../../assets/images/icon/Linepattern.png";
 import Linepatterntop from "../../../assets/images/icon/Linepatterntop.png";
 import LoinLogo from "../../../assets/images/logo.svg";
-import "./org.css";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISH_KEY);
 

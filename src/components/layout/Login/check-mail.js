@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-
-import "../Login/login.css";
 import { ArrowLeftShort } from "react-bootstrap-icons";
 import { useLocation } from "react-router-dom";
-
-// import arrowRight from "../../../assets/images/icon/arrow.svg";
 import { Link } from "react-router-dom";
 import mail01 from "../../../assets/images/icon/mail-01.png";
 import checkemail from "../../../assets/images/img/checkemail.jpg";
@@ -12,12 +8,6 @@ import LoinLogo from "../../../assets/images/logo.svg";
 
 const CheckMail = () => {
   const [email, setEmail] = useState("");
-  // const navigate = useNavigate();
-
-  // const handleResetmain = (e) => {
-  //   e.preventDefault();
-  //   navigate("/confirm-password");
-  // };
 
   const location = useLocation();
 
@@ -46,9 +36,6 @@ const CheckMail = () => {
                 <label>
                   We sent a password reset link to <strong>{email}</strong>
                 </label>
-                {/* <button className="fillbtn flexcenterbox" type="submit">
-                  Next <img src={arrowRight} alt="Arrow Right" />
-                </button> */}
                 <div className="linkBottom">
                   <p>
                     Didn’t receive the email?{" "}

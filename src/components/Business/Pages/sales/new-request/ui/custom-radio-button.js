@@ -1,5 +1,4 @@
 import React from 'react';
-import './customradiobutton.css';
 
 const CustomRadioButton = ({ label, name, value, checked, onChange, disabled }) => {
   return (

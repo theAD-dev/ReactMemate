@@ -8,7 +8,6 @@ import EditTask from './edit-task';
 import { fetchTasksRead, TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import taskdetails from '../../../../../assets/images/task-details.svg';
-import './task.css';
 
 const TaskLoadingView = () => {
   return (

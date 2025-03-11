@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { requestDemoCreate } from "../../../APIs/OnboardingApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./requestademo.css";
 import request04 from "../../../assets/images/img/request04.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
 

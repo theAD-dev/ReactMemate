@@ -18,7 +18,6 @@ import MessageChatCircle from "../../../assets/images/icon/message-chat-circle.p
 import ZapCircle from "../../../assets/images/icon/zap.png";
 import homeboxImg01 from "../../../assets/images/img/homeboxImg01.png";
 import LenderPanel from "../../../assets/images/img/lender-panel 1.png";
-import "./style-model.css";
 
 const ModalSalesContactFinance = () => {
   const [open, setOpen] = useState(false);

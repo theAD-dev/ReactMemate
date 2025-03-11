@@ -8,7 +8,6 @@ import { getTask } from '../../../../../APIs/task-api';
 import { TaskCompleteJob } from '../../../../../APIs/TasksApi';
 import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import taskdetails from '../../../../../assets/images/task-details.svg';
-import '../../../../Business/Pages/management/task/task.css';
 import CreateTask from '../create-task/create-task';
 
 const TaskLoadingView = () => {

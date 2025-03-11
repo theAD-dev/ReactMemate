@@ -1,6 +1,4 @@
 import React from "react";
-
-import "../Login/login.css";
 import { ArrowLeftShort, CheckCircle } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";

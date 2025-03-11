@@ -37,3 +37,15 @@
   .paddingLR_24 {
     padding: 0 24px 24px;
 }
+
+.imgBox {
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  position: relative;
+  border: 1px solid #dedede;
+}

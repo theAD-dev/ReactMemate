@@ -5,7 +5,6 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SelectLocation from "./components/location-selection";
 import ProfileInfo from "./components/profile-info";
 import style from './header.module.scss';
-import { fetchProfile } from "../../../APIs/ProfileApi";
 import { useAuth } from "../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import bookSquare from "../../../assets/images/icon/book-square.svg";
@@ -33,22 +32,15 @@ const Header = () => {
     const { session } = useAuth();
     const { setTrialHeight } = useTrialHeight();
     const [isVisibleTrial, setIsVisibleTrial] = useState(false);
-    const [menuswitch, SetMenuSwitch] = useState(true);
+    const [menuSwitch, SetMenuSwitch] = useState(true);
     const isSuspended = session?.is_suspended ? true : false;
     if (isSuspended) navigate("/suspended");
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchProfile();
-                setIsVisibleTrial(data?.is_trial || false);
-            } catch (error) {
-                console.error("Error fetching profile:", error);
-            }
-        };
-
-        fetchData();
-    }, []);
+        if (session) {
+            setIsVisibleTrial(session?.is_trial || false);
+        }
+    }, [session]);
 
     useEffect(() => {
         if (location.pathname.startsWith("/work")) {
@@ -60,7 +52,7 @@ const Header = () => {
 
     useEffect(() => {
         setTrialHeight(isVisibleTrial ? 30 : 0);
-    }, [isVisibleTrial]);
+    }, [isVisibleTrial, setTrialHeight]);
 
     return (
         <>
@@ -77,7 +69,7 @@ const Header = () => {
             )}
 
             <div className="headerNav1">
-                {menuswitch ?
+                {menuSwitch ?
                     <>
                         <div className="headerTop business" style={{ whiteSpace: 'nowrap' }}>
                             <Container fluid>
@@ -111,9 +103,9 @@ const Header = () => {
                                                         </NavLink>
                                                     </li>
                                                     <li>
-                                                        <a href="/">
+                                                        <NavLink to="/">
                                                             <img src={Logo} alt="Logo" />
-                                                        </a>
+                                                        </NavLink>
                                                     </li>
                                                     {
                                                         session?.has_work_subscription &&
@@ -282,9 +274,9 @@ const Header = () => {
                                                         </NavLink>
                                                     </li>
                                                     <li>
-                                                        <a href="/">
+                                                        <NavLink to="/">
                                                             <img src={Logo} alt="Logo" />
-                                                        </a>
+                                                        </NavLink>
                                                     </li>
                                                     {
                                                         session?.has_work_subscription &&

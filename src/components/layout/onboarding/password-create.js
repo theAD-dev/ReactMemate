@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { OnboardingCreatePassword } from '../../../APIs/OnboardingApi';
 import createPasswordImg from "../../../assets/images/create-password.png";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import "./org.css";
 import LoinLogo from "../../../assets/images/logo.svg";
 
 const PasswordCreate = () => {

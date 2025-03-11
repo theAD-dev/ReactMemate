@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import CreateTask from '../task/create-task';
-import '../task/task.css';
 
 const NewTask = ({ project, reInitilize, projectCardData }) => {
     console.log('project: ', project);

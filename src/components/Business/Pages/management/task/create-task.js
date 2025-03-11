@@ -12,9 +12,6 @@ import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 import newTask from '../../../../../assets/images/new-task.svg';
 
 
-import './task.css';
-
-
 const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) => {
     const dropdownRef = useRef(null);
     const [taskTitle, setTaskTitle] = useState('');

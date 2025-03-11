@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
 import SelectComponent from './select-component';
 import { getCalculationByReferenceId, getDepartments } from '../../../../../../APIs/CalApi';
-import './select-component.css';
 import { formatAUD } from '../../../../../../shared/lib/format-aud';
 import CreateMergeCalculation from '../../../../features/sales-features/merges-calculation/create-merge-calculation';
 import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
@@ -414,6 +413,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     item.calculator = item.id;
                     item.index = subItem;
                     item.discount = defaultDiscount;
+                    item.quantity = parseFloat(parseFloat(item.quantity) || 1).toFixed(2);
                     item.unit_price = calculateUnitPrice(item);
                     item.total = calculateTotal(item);
                 });
@@ -422,7 +422,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     label: subItemLabel,
                     calculator: data.id,
                     index: subItem,
-                    discount: defaultDiscount
+                    discount: defaultDiscount,
+                    quantity: parseFloat(parseFloat(data.quantity) || 1).toFixed(2),
                 });
             }
 

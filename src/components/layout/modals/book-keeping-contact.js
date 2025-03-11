@@ -18,7 +18,6 @@ import LockZapCircle from "../../../assets/images/icon/lock-icon.png";
 import ZapCircle from "../../../assets/images/icon/zap.png";
 import homeboxImg02 from "../../../assets/images/img/homeboxImg02.png";
 import LenderPanel from "../../../assets/images/img/lender-panel01.png";
-import "./style-model.css";
 
 const BookkeepingContact = ({ onAdd }) => {
   const [open, setOpen] = useState(false);

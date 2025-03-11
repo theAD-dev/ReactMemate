@@ -18,7 +18,6 @@ import ClipboardCircle from "../../../assets/images/icon/clipboard-ch.png";
 import PersonIconCircle from "../../../assets/images/icon/personIcon.png";
 import homeboxImg03 from "../../../assets/images/img/homeboxImg03.png";
 import LenderPanel from "../../../assets/images/img/lender-panel02.png";
-import "./style-model.css";
 
 const InsuranceContact = () => {
   const [open, setOpen] = useState(false);

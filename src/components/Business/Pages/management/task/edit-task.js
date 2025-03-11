@@ -6,7 +6,6 @@ import { Dropdown } from 'primereact/dropdown';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import './task.css';
 import SelectDate from './select-date';
 import { getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../APIs/TasksApi';

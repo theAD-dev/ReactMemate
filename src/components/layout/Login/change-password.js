@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-
-import "../Login/login.css";
 import { ArrowLeftShort, CheckCircleFill,Eye,EyeSlash } from "react-bootstrap-icons";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { Link } from "react-router-dom";

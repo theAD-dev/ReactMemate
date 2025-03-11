@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { Plus } from 'react-bootstrap-icons';
-import { Building, Person } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -14,6 +13,7 @@ import CreateDesktopUser from './features/create-desktop-user';
 import style from './users.module.scss';
 import { deleteDesktopUser, getDesktopUserList, getPrivilegesList, restoreDesktopUser } from '../../../../APIs/settings-user-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 const Desktop = ({ visible, setVisible }) => {
@@ -64,12 +64,12 @@ const Desktop = ({ visible, setVisible }) => {
 
     const nameBody = (data) => {
         return <div className='d-flex align-items-center justify-content-between show-on-hover'>
-            <div className='d-flex justify-content-center align-items-center'><div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.userImg} ${data.is_business ? "" : "rounded-circle"}`}>
-                {data.photo ? <img src={data.photo} alt='clientImg' className='w-100' /> : data.is_business ? <Building color='#667085' /> : <Person color='#667085' />}
-            </div>
+            <div className='d-flex justify-content-center align-items-center'>
+                <ImageAvatar has_photo={data.has_photo} photo={data.photo} is_business={false} />
                 <div className='d-flex flex-column gap-1'>
                     <div className={`${style.ellipsis}`}>{data.first_name} {data.last_name}</div>
-                </div></div>
+                </div>
+            </div>
             <Button label="Edit" onClick={() => {
                 if (data?.privilege_name === "Admin") {
                     navigate('/settings/generalinformation/profile');
