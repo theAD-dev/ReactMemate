@@ -1639,15 +1639,15 @@ p.flexEndStyle strong {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -243px;
+  bottom: -225px;
 }
 
 .my-component.show {
-  bottom: -243px;
+  bottom: 0px;
 }
 
 .my-component.hide {
-  bottom: 0px;
+  bottom: -225px;
 }
 
 .my-component .downArrowIcon {
