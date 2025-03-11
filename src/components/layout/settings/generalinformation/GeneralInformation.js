@@ -13,8 +13,8 @@ import Sidebar from '.././Sidebar';
 import { SettingsGeneralInformation, updateGeneralInformation } from '../../../../APIs/SettingsGeneral';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
-import AvatarImg from "../../../../assets/images/img/Avatar.png";
 import FileUploader from '../../../../ui/file-uploader/file-uploader';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 
@@ -353,13 +353,9 @@ function GeneralInformation() {
                       <div className={styles.editinfo}>
                         <span>Company Logo for Documentation</span>
                         {!isEditingGroup ? (
-                          <strong>
-                            {data.company_logo ? (
-                              <img src={data.company_logo} width={76} alt="Company Logo" />
-                            ) : (
-                              <img src={AvatarImg} alt="DummyImg" />
-                            )}
-                          </strong>
+                          <div className='d-flex justify-content-center align-items-center' style={{ border: '1px solid #dedede', width: '50px', height: '50px', borderRadius: '6px', overflow: 'hidden' }}>
+                            <FallbackImage photo={data.company_logo} has_photo={data.has_photo} is_business={true} size={28} />
+                          </div>
                         ) : (
 
                           <div className="upload-btn-wrapper">

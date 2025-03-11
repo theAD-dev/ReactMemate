@@ -10,6 +10,7 @@ import SelectDate from './select-date';
 import { getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 import newTask from '../../../../../assets/images/new-task.svg';
+import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) => {
@@ -143,14 +144,15 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
                             value: user?.id,
                             label: user?.name || "-",
                             photo: user?.photo || "",
+                            has_photo: user?.has_photo
                         })) || []}
                         onChange={(e) => {
                             setUser(e.value);
                         }}
                         valueTemplate={(option) => {
                             return <div className='d-flex gap-2 align-items-center'>
-                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
-                                    {option?.photo && <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />}
+                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                    <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
                                 </div>
                                 {option?.label}
                             </div>;
@@ -158,8 +160,8 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
                         itemTemplate={(option) => {
                             return (
                                 <div className='d-flex gap-2 align-items-center'>
-                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
-                                        <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                        <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
                                     </div>
                                     {option?.label}
                                 </div>

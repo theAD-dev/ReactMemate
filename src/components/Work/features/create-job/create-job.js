@@ -20,6 +20,7 @@ import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template
 import { createNewJob } from '../../../../APIs/jobs-api';
 import { getManagement } from '../../../../APIs/management-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 function getFileIcon(fileType) {
@@ -184,8 +185,9 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     const itemTemplate = (option) => {
         return (
             <div className="d-flex gap-2 align-items-center">
-                <img alt={option.label}
-                    src={option.image} style={{ width: '18px', borderRadius: '50%' }} />
+                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                    <FallbackImage photo={option?.image} has_photo={option?.has_photo} is_business={false} size={17} />
+                </div>
                 <div>{option.label}</div>
             </div>
         );
@@ -195,8 +197,9 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         if (option) {
             return (
                 <div className="d-flex gap-2 align-items-center">
-                    <img alt={option.label}
-                        src={option.image} style={{ width: '18px', borderRadius: '50%' }} />
+                    <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                        <FallbackImage photo={option?.image} has_photo={option?.has_photo} is_business={false} size={17} />
+                    </div>
                     <div>{option.label}</div>
                 </div>
             );
@@ -414,13 +417,14 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 hourlyRate: parseFloat(user?.hourly_rate || 0).toFixed(2),
                 paymentCycle: paymentCycleObj[user?.payment_cycle] || "",
                 image: user?.photo || "",
+                has_photo: user?.has_photo,
                 name: `${user.first_name} ${user.last_name}`,
             });
         }
 
     };
 
-    useEffect(()=> {
+    useEffect(() => {
         if (workerId) {
             setUserId(+workerId);
             workerDetailsSet(+workerId);
@@ -540,7 +544,8 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                         mobileuserQuery.data?.users?.filter((user) => user.status !== 'disconnected')?.map((user) => ({
                                                             value: user.id,
                                                             label: `${user.first_name} ${user.last_name}`,
-                                                            image: user?.photo
+                                                            image: user?.photo,
+                                                            has_photo: user?.has_photo
                                                         }))) ||
                                                     []
                                                 }
@@ -572,8 +577,8 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                     <Col sm={7}>
                                         <Row className={clsx(style.chooseUserBox, 'flex-nowrap')}>
                                             <Col sm={2} className='p-0'>
-                                                <div className='d-flex justify-content-center align-items-center' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
-                                                    {selectedUserInfo?.image && <img src={selectedUserInfo?.image} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />}
+                                                <div className='d-flex justify-content-center align-items-center' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                    <FallbackImage photo={selectedUserInfo?.image} has_photo={selectedUserInfo?.has_photo} is_business={false} size={40} />
                                                 </div>
                                             </Col>
                                             <Col sm={5} className='pe-0 ps-0'>

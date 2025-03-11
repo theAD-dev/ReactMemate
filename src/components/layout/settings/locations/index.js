@@ -15,6 +15,7 @@ import { getDesktopUserList, getLocation, getLocationList, userAssigned, userUna
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import GoogleMap from "../../../../assets/images/icon/google_maps_ico.png";
 import Sidebar from '../Sidebar';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 const Location = () => {
     const { trialHeight } = useTrialHeight();
@@ -208,13 +209,14 @@ const Location = () => {
                                                     value: user?.id,
                                                     label: user?.name || "-",
                                                     photo: user?.photo || "",
+                                                    has_photo: user?.has_photo
                                                 }))}
                                                 placeholder="Select Desktop User"
                                                 itemTemplate={(option) => {
                                                     return (
                                                         <div className='d-flex gap-2 align-items-center'>
-                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
-                                                                <img src={option?.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                                <FallbackImage photo={option?.photo} has_photo={option.has_photo} is_business={false} size={17} />
                                                             </div>
                                                             {option?.label}
                                                         </div>
@@ -245,8 +247,8 @@ const Location = () => {
                                                 <tr key={user.id}>
                                                     <td>
                                                         <div className='d-flex gap-2 align-items-center'>
-                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden' }}>
-                                                                <img src={user.photo} alt='user-img' style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+                                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                                <FallbackImage photo={user?.photo} has_photo={user.has_photo} is_business={false} size={17} />
                                                             </div>
                                                             {user.first_name} {user.last_name}
                                                         </div>

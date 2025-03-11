@@ -22,10 +22,7 @@ import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-
 import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
-
-
-
-
+import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar'
 
 
 function debounce(fn, delay) {
@@ -242,6 +239,16 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             dropdownAutoFocus
                             field="name"
                             suggestions={suppliers}
+                            itemTemplate={(option) => {
+                                return (
+                                    <div className='d-flex gap-2 align-items-center'>
+                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                            <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
+                                        </div>
+                                        {option?.name}
+                                    </div>
+                                );
+                            }}
                             onClick={onFocus}
                             onFocus={onFocus}
                             onBlur={() => {

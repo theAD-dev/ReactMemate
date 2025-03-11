@@ -10,16 +10,16 @@ import { Controller, useForm } from "react-hook-form";
 import { PhoneInput } from "react-international-phone";
 import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import * as yup from "yup";
 import styles from "./setting.profile.module.scss";
 import Sidebar from "./Sidebar";
 import { fetchProfile, updateProfile } from "../../../APIs/ProfileApi";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import AvatarImg from "../../../assets/images/img/Avatar.png";
 import ChangePassword from "../../../features/settings/profile/change-passowrd/change-password";
 import FileUploader from "../../../ui/file-uploader/file-uploader";
+import { FallbackImage } from "../../../shared/ui/image-with-fallback/image-avatar";
 
 
 const schema = yup.object().shape({
@@ -206,19 +206,9 @@ function MyProfile() {
                       <div className={styles.editinfo}>
                         <span>User picture</span>
                         {!isEditingGroup ? (
-                          <strong>
-                            {data.photo ? (
-                              <div style={{ width: '64px', height: '64px', borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <img
-                                  src={data.photo}
-                                  width={76}
-                                  alt="Company Logo"
-                                />
-                              </div>
-                            ) : (
-                              <img src={AvatarImg} alt="DummyImg" />
-                            )}
-                          </strong>
+                          <div className='d-flex justify-content-center align-items-center' style={{ border: '1px solid #dedede', width: '50px', height: '50px', borderRadius: '50%', overflow: 'hidden' }}>
+                            <FallbackImage photo={data.photo} has_photo={data.has_photo} is_business={false} size={28} />
+                          </div>
                         ) : (
                           <div className="upload-btn-wrapper">
                             <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
