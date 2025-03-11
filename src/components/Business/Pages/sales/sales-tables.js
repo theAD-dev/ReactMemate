@@ -5,6 +5,7 @@ import {
   FilePdf,
   Link45deg,
   Check,
+  Person,
 } from "react-bootstrap-icons";
 import { Resizable } from 'react-resizable';
 import { Link } from "react-router-dom";
@@ -25,7 +26,6 @@ import NoDataFoundTemplate from "../../../../ui/no-data-template/no-data-found-t
 
 
 
-
 const CustomAvatarGroup = ({ params }) => {
   const op = useRef(null);
 
@@ -36,12 +36,17 @@ const CustomAvatarGroup = ({ params }) => {
   return (
     <div>
       <AvatarGroup onClick={handleAvatarGroupClick} style={{ cursor: "pointer" }}>
-        {params?.value?.slice(0, 3).map((data, index) => (
-          <ImageAvatar key={`${data.email}-${index}`} has_photo={data.has_photo} photo={data.photo} is_business={false} />
+        {params?.value?.slice(0, 2).map((data, index) => (
+          <Avatar key={`${data.email}-${index}`}
+            shape="circle"
+            image={data.has_photo && data.photo ? data.photo : null}
+            icon={!data.has_photo || !data.photo ? <Person color="#667085" size={20} /> : null}
+            style={{ background: '#fff', border: '1px solid #dedede' }}
+          />
         ))}
-        {params?.value?.length > 3 && (
+        {params?.value?.length > 2 && (
           <Avatar
-            label={`+${params.value.length - 3}`}
+            label={`+${params.value.length - 2}`}
             shape="circle"
             size="small"
             style={{ fontSize: '14px' }}
@@ -52,7 +57,12 @@ const CustomAvatarGroup = ({ params }) => {
       <OverlayPanel className="salesOverlay" ref={op}>
         {params?.value?.map((data, index) => (
           <div key={index} style={{ padding: "0.5rem", display: "flex", alignItems: "center" }}>
-            <Avatar image={data?.photo} shape="circle" />
+            <Avatar
+              image={data.has_photo && data.photo ? data.photo : null}
+              icon={!data.has_photo || !data.photo ? <Person color="#667085" size={20} /> : null}
+              style={{ background: '#fff', border: '1px solid #dedede' }}
+              shape="circle" 
+            />
             <div style={{ marginLeft: "0.5rem" }}>
               <div className="fullnameText">{data?.full_name}</div>
             </div>

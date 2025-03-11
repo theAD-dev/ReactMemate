@@ -65,6 +65,7 @@ const QuotationEmail = () => {
             await quotationChanges(id, { changes: updateDis });
             toast.success("Quotation changes request has been sent");
             setVisible(false);
+            fetchData();
         } catch (error) {
             console.error('Error sending the Quotation changes: ', error);
             toast.error("Failed to sent the Quotation changes request. Please try again.");
@@ -94,10 +95,8 @@ const QuotationEmail = () => {
 
     const ServicesBody = (rowData) => (
         <div className={style.qupteMainColWrap}>
-            <h2>{rowData?.index}</h2>
             <ul>
                 <p>{rowData?.description}</p>
-                <li>{rowData?.subindex}</li>
             </ul>
         </div>
     );

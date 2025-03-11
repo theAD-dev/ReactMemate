@@ -17,7 +17,6 @@ import {
   Headset,
 } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
-import "./settings.css";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import LogoutButton from "../Login/logout-button";
 const Sidebar = ({ activeTab, setActiveTab }) => {

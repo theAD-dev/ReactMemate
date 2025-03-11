@@ -1,8 +1,9 @@
 import JobSchedulerCalendarModule from "../features/job-scheduler-calendar";
 
-const Dashboard = () => {
+const WorkDashboard = () => {
   return (
     <JobSchedulerCalendarModule />
   );
 };
-export default Dashboard;
+
+export default WorkDashboard;

@@ -5,7 +5,6 @@ import { useLocation } from "react-router-dom";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import "./requestademo.css";
 import request03 from "../../../assets/images/img/request03.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
 

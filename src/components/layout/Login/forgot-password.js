@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import "../Login/login.css";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { resetEmail } from '../../../APIs/ProfileResetPasswordApi';
 import arrowRight from "../../../assets/images/icon/arrow.svg";

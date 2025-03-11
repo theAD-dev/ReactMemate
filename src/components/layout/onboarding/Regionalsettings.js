@@ -7,7 +7,6 @@ import { OnboardingCreateOrganisation } from "../../../APIs/OnboardingApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import RegionalSettings from "../../../assets/images/img/emailSlider03.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
-import "./org.css";
 
 const Regionalsettings = () => {
   const navigate = useNavigate();

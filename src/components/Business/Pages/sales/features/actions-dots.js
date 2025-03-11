@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash, Printer, Postcard } from "react-bootstrap-icons";
+import { ThreeDotsVertical, Layers, Tag, ClockHistory, Send, Trash, Postcard } from "react-bootstrap-icons";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";

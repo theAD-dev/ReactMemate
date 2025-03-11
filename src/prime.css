@@ -201,6 +201,14 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
   border: 1px solid var(--Border, #d0d5dd);
 }
 
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  white-space: nowrap;
+  max-width: 500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
 .p-tieredmenu .p-menuitem-content {
   background: transparent;
 }

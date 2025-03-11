@@ -11,6 +11,7 @@ import { DataTable } from 'primereact/datatable';
 import style from './people.module.scss';
 import { getPrivilegesList } from '../../../../APIs/settings-user-api';
 import { getTeamDesktopUser } from '../../../../APIs/team-api';
+import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 const DesktopPeoplesTable = () => {
     const [loading, setLoading] = useState(false);
@@ -36,9 +37,7 @@ const DesktopPeoplesTable = () => {
 
     const nameBody = (rowdata) => {
         return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
-            <div style={{ overflow: 'hidden' }} className={`d-flex justify-content-center align-items-center ${style.clientImg} rounded-circle}`}>
-                {rowdata.photo ? <img src={rowdata.photo} alt='clientImg' className='w-100' /> : <Person color='#667085' />}
-            </div>
+            <ImageAvatar has_photo={rowdata.has_photo} photo={rowdata.photo} is_business={false} />
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
                 {rowdata?.first_name} {rowdata?.last_name}
             </div>
@@ -96,11 +95,11 @@ const DesktopPeoplesTable = () => {
 
     return (
         <>
-           <h1 className={clsx(style.tableCaption, 'mt-2')}>Desktop User</h1>
+            <h1 className={clsx(style.tableCaption, 'mt-2')}>Desktop User</h1>
             <DataTable value={peoples}
                 scrollable selectionMode={'checkbox'} removableSort
                 columnResizeMode="expand" resizableColumns showGridlines
-                size={'large'}  className="border" selection={selectedPeoples}
+                size={'large'} className="border" selection={selectedPeoples}
                 onSelectionChange={(e) => setSelectedPeoples(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./org.css";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import BusinessProfile from "../../../assets/images/img/emailSlider02.png";
 import LoinLogo from "../../../assets/images/logo.svg";

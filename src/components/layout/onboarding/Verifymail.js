@@ -9,8 +9,6 @@ import mail01 from "../../../assets/images/icon/mail-01.png";
 import login_slider1 from "../../../assets/images/img/emailSlider01.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 
-import "./org.css";
-
 const Verifymail = () => {
   const navigate = useNavigate();
   const { uuid } = useParams();

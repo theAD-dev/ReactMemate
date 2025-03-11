@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import VideoPlayer from './VideoPlayer';
-import { OnboardingCreateApi, onboardingNextStep } from "../../../APIs/OnboardingApi";
+import { onboardingNextStep } from "../../../APIs/OnboardingApi";
 import businessVideo from "../../../assets/images/businessVideo.mp4";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import "./org.css";
 import LoinLogo from "../../../assets/images/logo.svg";
 
 

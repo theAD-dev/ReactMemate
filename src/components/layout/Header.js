@@ -183,9 +183,9 @@ const Header = () => {
                             </NavLink>
                           </li>
                           <li>
-                            <a href="/">
+                            <NavLink to="/">
                               <img src={Logo} alt="Logo" />
-                            </a>
+                            </NavLink>
                           </li>
                           {
                             profileData?.has_work_subscription &&
@@ -354,9 +354,9 @@ const Header = () => {
                             </NavLink>
                           </li>
                           <li>
-                            <a href="/">
+                          <NavLink to="/">
                               <img src={Logo} alt="Logo" />
-                            </a>
+                            </NavLink>
                           </li>
                           {
                             profileData?.has_work_subscription &&

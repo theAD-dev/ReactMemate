@@ -5,7 +5,7 @@ import { PrimeReactProvider } from "primereact/api";
 import { Toaster } from "sonner";
 import { AuthProvider } from "./providers/auth-provider";
 import { ReactQueryProvider } from "./providers/query-client-provider";
-import "./global.scss";
+import { TrialHeightProvider } from "./providers/trial-height-provider";
 import routes from "./router";
 
 const App = () => {
@@ -20,8 +20,10 @@ const App = () => {
         <PrimeReactProvider>
           <ReactQueryProvider>
             <AuthProvider>
-              <Toaster expand={true} richColors closeButton position="top-right" />
-              <RouterProvider router={content} />
+              <TrialHeightProvider>
+                <Toaster expand={true} richColors closeButton position="top-right" />
+                <RouterProvider router={content} />
+              </TrialHeightProvider>
             </AuthProvider>
           </ReactQueryProvider>
         </PrimeReactProvider>

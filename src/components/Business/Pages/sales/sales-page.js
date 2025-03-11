@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./sales-style.css";
 import { Spinner } from "react-bootstrap";
 import SalesTables from "./sales-tables";
 import { fetchSales } from "../../../../APIs/SalesApi";

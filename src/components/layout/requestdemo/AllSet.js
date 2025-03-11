@@ -3,7 +3,6 @@ import React from 'react';
 import { CheckCircle } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
-import "./requestademo.css";
 import request05 from "../../../assets/images/img/request05.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
 

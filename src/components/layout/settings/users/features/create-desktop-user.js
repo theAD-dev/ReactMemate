@@ -21,28 +21,46 @@ import { getDesktopUser } from '../../../../../APIs/settings-user-api';
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 import style from '../users.module.scss';
 
-const schema = yup
-    .object({
+const getSchema = (isEditMode) => {
+    return yup.object({
         firstName: yup.string().required('First Name is required'),
         lastName: yup.string().required('Last Name is required'),
         email: yup.string().email('Invalid email address').required('Email is required'),
         phone: yup.string().optional(),
         role: yup.string().required('Role is required'),
         privilege: yup.string().required('Privilege is required'),
-        password: yup.string().required('Password is required'),
-        repeatPassword: yup
-            .string()
-            .oneOf([yup.ref('password'), null], 'Passwords must match')
-            .required('Repeat Password is required'),
-    })
-    .required();
+        password: isEditMode
+            ? yup.string().notRequired()
+            : yup.string().required('Password is required'),
+        repeatPassword: yup.string()
+            .when('password', {
+                is: (password) => isEditMode ? !!password : true,
+                then: (schema) =>
+                    schema
+                        .required('Repeat Password is required')
+                        .oneOf([yup.ref('password')], 'Passwords must match'),
+                otherwise: (schema) =>
+                    schema.notRequired().nullable()
+            }),
+    }).required();
+};
 
 const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, privilegeOptions }) => {
     const [show, setShow] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const { control, register, reset, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(schema)
+        resolver: yupResolver(getSchema(!!id)),
+        defaultValues: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            role: '',
+            privilege: '',
+            password: '',
+            repeatPassword: ''
+        }
     });
 
     const readDesktopUserQuery = useQuery({
@@ -74,11 +92,11 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
 
         formData.append("first_name", data.firstName);
         formData.append("last_name", data.lastName);
-        formData.append("email", data.email);
+        if (!id) formData.append("email", data.email);
         formData.append("phone", data.phone);
         formData.append("role", data.role);
         formData.append("privilege", data.privilege);
-        formData.append("password", data.password);
+        if (data.password) formData.append("password", data.password);
 
         if (photo?.croppedImageBlob) {
             const photoHintId = nanoid(6);
@@ -133,7 +151,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
                 "privilege": readDesktopUserQuery?.data?.['privilege'],
             });
 
-            if (readDesktopUserQuery?.data?.photo) {
+            if (readDesktopUserQuery?.data?.photo && readDesktopUserQuery?.data?.has_photo) {
                 setPhoto(readDesktopUserQuery?.data?.photo);
             }
         } else {
@@ -149,7 +167,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
                 "repeatPassword": ""
             });
         }
-    }, [readDesktopUserQuery?.data]);
+    }, [readDesktopUserQuery?.data, id, reset]);
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -238,7 +256,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
                                     <label className={clsx(style.label)}>Email</label>
                                     <IconField iconPosition="left">
                                         <InputIcon><Envelope style={{ position: 'relative', top: '-5px' }} size={20} color='#667085' /></InputIcon>
-                                        <InputText {...register("email")} style={{ paddingLeft: '38px' }} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.email })} placeholder='company@email.com' />
+                                        <InputText {...register("email")} disabled={!!id} style={{ paddingLeft: '38px' }} className={clsx(style.inputText, "outline-none", { [style.error]: errors?.email })} placeholder='company@email.com' />
                                     </IconField>
                                     {errors?.email && <p className="error-message">{errors?.email?.message}</p>}
                                 </div>

@@ -35,6 +35,7 @@ import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
   const navigate = useNavigate();
+  const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [cardData, setCardData] = useState(null);
@@ -374,7 +375,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
               <Button variant="light" className='rounded-circle px-2'><Tag color="#344054" size={20} /></Button>
             </Link>
-            
+
             <div className='selectButStatus'>
               {
                 isFetching ? (
@@ -729,7 +730,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 }
                 <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
-                <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
+                {
+                  profileData?.has_work_subscription &&
+                  <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
+                }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 {/* <FilesModel /> */}
                 <Button className='calenBut calenActive'>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button>

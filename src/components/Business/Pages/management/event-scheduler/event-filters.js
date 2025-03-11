@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
-import './event-filter.css';
 
 const EventFilters = () => {
   const ref = useRef(null);

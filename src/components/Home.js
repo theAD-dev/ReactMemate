@@ -9,11 +9,11 @@ import Container from 'react-bootstrap/Container';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { fetchHomePage } from "../APIs/HomeApi";
 import AccountingContact from './layout/modals/accounting-contact';
 import BookkeepingContact from './layout/modals/book-keeping-contact';
 import InsuranceContact from './layout/modals/insurance-contact';
 import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
-import { fetchHomePage } from "../APIs/HomeApi";
 
 const Home = () => {
     const [selectedOption, setSelectedOption] = useState('');

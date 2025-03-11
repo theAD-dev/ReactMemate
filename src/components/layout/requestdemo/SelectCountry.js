@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 import Select from 'react-select';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
-import "./requestademo.css";
 import request02 from "../../../assets/images/img/request02.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
 import 'react-international-phone/style.css';
