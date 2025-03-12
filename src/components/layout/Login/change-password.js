@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeftShort, CheckCircleFill,Eye,EyeSlash } from "react-bootstrap-icons";
+import { ArrowLeftShort, CheckCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ const ChangePassword = () => {
 
   const { token } = useParams();
   console.log('token: ', token);
-  
+
   const tokenId = `profile/change-password/${token}`;
 
 
@@ -33,9 +33,9 @@ const ChangePassword = () => {
     setPasswordsMatch(e.target.value === confirmPassword);
     setValidPassword(
       /\d/.test(e.target.value) && // Must contain at least one digit
-        /[A-Z]/.test(e.target.value) && // Must contain at least one uppercase character
-        /[\W_]/.test(e.target.value) && // Must contain at least one special character
-        e.target.value.length >= 20 // Must be at least 20 characters long
+      /[A-Z]/.test(e.target.value) && // Must contain at least one uppercase character
+      /[\W_]/.test(e.target.value) && // Must contain at least one special character
+      e.target.value.length >= 20 // Must be at least 20 characters long
     );
   };
 
@@ -47,10 +47,10 @@ const ChangePassword = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-    // Toggle visibility of confirm password
-    const toggleConfirmPasswordVisibility = () => {
-      setShowConfirmPassword(!showConfirmPassword);
-    };
+  // Toggle visibility of confirm password
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const handleSubmit = () => {
     // Add your password reset logic here
@@ -59,12 +59,12 @@ const ChangePassword = () => {
       if (password !== confirmPassword) {
         alert("Passwords do not match");
       } else if (!validPassword) {
-        ProfileChangePassword(password,tokenId);
+        ProfileChangePassword(password, tokenId);
         navigate("/password-reset");
       }
-       
+
     }
-    
+
   };
 
   return (
@@ -82,10 +82,10 @@ const ChangePassword = () => {
                 alt="Featuredlockicon"
               />
               <h2>
-              
+
                 Set new <span>Password</span>
               </h2>
-             
+
               <p>
                 Your new password must be different from previously used
                 passwords.
@@ -105,14 +105,14 @@ const ChangePassword = () => {
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
-            <>
-              <EyeSlash color="#98A2B3" size={20} />
-            </>
-          ) : (
-            <>
-             <Eye color="#98A2B3" size={20} />
-            </>
-          )}
+                    <>
+                      <EyeSlash color="#98A2B3" size={20} />
+                    </>
+                  ) : (
+                    <>
+                      <Eye color="#98A2B3" size={20} />
+                    </>
+                  )}
                 </button>
               </div>
               <PasswordStrengthBar
@@ -138,19 +138,19 @@ const ChangePassword = () => {
                   onChange={handleConfirmPasswordChange}
                   placeholder="Confirm password"
                 />
-                   <button
+                <button
                   className="eyeButton"
                   onClick={toggleConfirmPasswordVisibility}
                 >
                   {showConfirmPassword ? (
-            <>
-              <EyeSlash color="#98A2B3" size={20} />
-            </>
-          ) : (
-            <>
-             <Eye color="#98A2B3" size={20} />
-            </>
-          )}
+                    <>
+                      <EyeSlash color="#98A2B3" size={20} />
+                    </>
+                  ) : (
+                    <>
+                      <Eye color="#98A2B3" size={20} />
+                    </>
+                  )}
                 </button>
               </div>
               {passwordsMatch ? null : (

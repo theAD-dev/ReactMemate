@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Table } from "react-bootstrap";
 import {
   PlusSlashMinus,
@@ -61,7 +61,7 @@ const CustomAvatarGroup = ({ params }) => {
               image={data.has_photo && data.photo ? data.photo : null}
               icon={!data.has_photo || !data.photo ? <Person color="#667085" size={20} /> : null}
               style={{ background: '#fff', border: '1px solid #dedede' }}
-              shape="circle" 
+              shape="circle"
             />
             <div style={{ marginLeft: "0.5rem" }}>
               <div className="fullnameText">{data?.full_name}</div>
@@ -83,13 +83,13 @@ const formatDate = (timestamp) => {
   return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const createSalesNote = (noteData, saleUniqueId) => (
+const createSalesNote = (noteData, saleUniqueId, refreshData) => (
   <>
-    <SalesNote noteData={noteData} saleUniqueId={saleUniqueId} />
+    <SalesNote noteData={noteData} saleUniqueId={saleUniqueId} refreshData={refreshData} />
   </>
 );
 
-export const mapSalesData = (salesData) => {
+export const mapSalesData = (salesData, refreshData) => {
   return salesData.map((sale) => ({
     unique_id: sale.unique_id,
     id: sale.id,
@@ -105,7 +105,7 @@ export const mapSalesData = (salesData) => {
     Calculation: sale.calculation,
     CalculationPDF: sale.quote_url,
     CalculationURL: sale.unique_url,
-    Note: createSalesNote(sale.sales_note, sale.unique_id),
+    Note: createSalesNote(sale.sales_note, sale.unique_id, refreshData),
     User: sale.managers,
     fullName: sale.manager.full_name,
     Contact: sale.sales_contacts,
@@ -125,13 +125,13 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   const [rows, setRows] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const removeRow = async () => {
-    fetchData();
-  };
+  const removeRow = useCallback(async () => {
+    await fetchData();
+  }, [fetchData]);
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     fetchData();
-  };
+  }, [fetchData]);
 
   const handleSelectAllCheckboxChange = () => {
     const allRowIds = salesData && salesData.length && salesData.map((sale) => sale.id) || [];
@@ -156,7 +156,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       renderCell: (params) => (
         <div className="innerFlex styleColor2 d-flex justify-content-between">
           <div className="styleColor1">
-            <strong>{params.value}</strong>
+            <strong className="ellipsis-width" style={{ maxWidth: '85px' }} title={params.value}>{params.value}</strong>
             <p>{formatDate(params.row.created)}</p>
           </div>
           <Link to={`/sales/quote-calculation/${params.row.unique_id}`}><Button className="linkByttonStyle" variant="link">Open</Button></Link>
@@ -335,7 +335,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
   ];
 
   useEffect(() => {
-    const rows = mapSalesData(salesData);
+    const rows = mapSalesData(salesData, refreshData);
     setRows(rows);
   }, [salesData, selectedRows]);
 

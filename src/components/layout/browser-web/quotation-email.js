@@ -100,24 +100,20 @@ const QuotationEmail = () => {
             </ul>
         </div>
     );
+
     const unitPriceBody = (rowData) => (
         <>${formatAUD(rowData?.unit_price)}</>
     );
+
     const discountBody = (rowData) => (
         <>{rowData?.discount}%</>
     );
+
     const TotalBody = (rowData) => (
         <>${formatAUD(rowData?.total)} </>
     );
 
-    const noteBody = () => (
-        <div className={style.qupteMainColWrap}>
-            <h2>Note</h2>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-        </div>
-    );
-
-    const handleClose = (e) => {
+    const handleClose = () => {
         setVisible(false);
     };
 

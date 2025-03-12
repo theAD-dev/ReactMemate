@@ -2,7 +2,6 @@ import { useState } from 'react';
 import CreateTask from '../task/create-task';
 
 const NewTask = ({ project, reInitilize, projectCardData }) => {
-    console.log('project: ', project);
     const [viewShow, setViewShow] = useState(false);
     const handleShow = () => setViewShow(true);
     

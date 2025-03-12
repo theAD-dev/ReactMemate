@@ -8,7 +8,7 @@ export const getDepartments = async (all) => {
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   if (all === 1) url.searchParams.append('all', 1);
-  
+
   return fetchAPI(url.toString(), options);
 };
 
@@ -18,7 +18,10 @@ export const getCalculationByReferenceId = async (id) => {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+  const result = await fetchAPI(url.toString(), options);
+  return Array.isArray(result)
+    ? result.filter(item => !item.deleted)
+    : result && !result.deleted ? result : null;
 };
 
 export const getQuoteByUniqueId = async (unique_id) => {
@@ -41,7 +44,7 @@ export const createNewCalculationQuoteRequest = async (data) => {
 };
 
 export const updateNewCalculationQuoteRequest = async (unique_id, data) => {
-  if(!unique_id) throw new Error("No id found");
+  if (!unique_id) throw new Error("No id found");
 
   const endpoint = `/sales/projects/${unique_id}/`;
   const options = {

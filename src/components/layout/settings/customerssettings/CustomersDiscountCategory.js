@@ -11,15 +11,15 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import * as yup from 'yup';
 import style from './customer.module.scss';
-import { getCategoriesList, newCategories, readCategories, updateCategories,deleteCategories } from '../../../../APIs/industrieslist-api';
+import { getCategoriesList, newCategories, readCategories, updateCategories, deleteCategories } from '../../../../APIs/industrieslist-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
 
 const CustomersDiscountCategory = () => {
-     const { trialHeight } = useTrialHeight();
+    const { trialHeight } = useTrialHeight();
     const [activeTab, setActiveTab] = useState('industries');
     const [selectedIndustryId, setSelectedIndustryId] = useState(null);
-    
+
     const { data: industriesList, refetch } = useQuery({
         queryKey: ['industriesList'],
         queryFn: getCategoriesList,
@@ -88,11 +88,11 @@ const CustomersDiscountCategory = () => {
             if (!id) {
                 throw new Error('Industry ID is missing');
             }
-            return await deleteCategories(id); 
+            return await deleteCategories(id);
         },
         onSuccess: () => {
-            refetch(); 
-            handleClose();  
+            refetch();
+            handleClose();
         },
     });
 
@@ -149,8 +149,8 @@ const CustomersDiscountCategory = () => {
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
             <Button className='outline-button' onClick={() => deleteIndustryMutation.mutate(selectedIndustryId)}>
-            Delete
-        </Button>
+                Delete
+            </Button>
             <Button className='solid-button' style={{ width: '132px' }} onClick={handleSubmit(onSubmit)}>Save Details</Button>
         </div>
     );
@@ -161,9 +161,10 @@ const CustomersDiscountCategory = () => {
         </div>
     );
 
-    const editBody = (rowData) => (
-        <PencilSquare onClick={() => handleEditClick(rowData.id)} style={{ cursor: 'pointer' }} size={24} color="#667085" />
-    );
+    const editBody = (rowData) => {
+        if (rowData.name === "Regular" || rowData.name === "regular") return "";
+        return <PencilSquare onClick={() => handleEditClick(rowData.id)} style={{ cursor: 'pointer' }} size={24} color="#667085" />;
+    };
 
     return (
         <>

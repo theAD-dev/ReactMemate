@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import style from './add-remove-company-user.module.scss';
 import { deleteDesktopUser, updateUserPrice } from "../../../../../APIs/settings-user-api";
 import { formatAUD } from "../../../../../shared/lib/format-aud";
+import { FallbackImage } from "../../../../../shared/ui/image-with-fallback/image-avatar";
 
 
 const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visible, setVisible, additionalUser }) => {
@@ -80,8 +81,10 @@ const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visib
       <div className='d-flex gap-2 justify-content-center align-items-center'>
         <div style={{ overflow: 'hidden', width: '24px', height: '24px' }} className={`d-flex justify-content-center align-items-center ${style.userImg} ${data.is_business ? "" : "rounded-circle"}`}>
           {
-            data?.photo ?
-              <img src={data.photo} alt='clientImg' className='w-100' /> :
+            data?.has_photo ?
+              <div className="d-flex justify-content-center align-items-center" style={{ border: '1px solid #dedede', width: '100%', height: '100%', borderRadius: '50%' }}>
+                <FallbackImage photo={data.photo} is_business={false} has_photo={data?.has_photo} size={20} />
+              </div> :
               <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="0.757812" y="0.5" width="31" height="31" rx="15.5" stroke="#98A2B3" strokeDasharray="2 2" />
                 <path d="M16.2578 16C18.7431 16 20.7578 13.9853 20.7578 11.5C20.7578 9.01472 18.7431 7 16.2578 7C13.7725 7 11.7578 9.01472 11.7578 11.5C11.7578 13.9853 13.7725 16 16.2578 16ZM19.2578 11.5C19.2578 13.1569 17.9147 14.5 16.2578 14.5C14.601 14.5 13.2578 13.1569 13.2578 11.5C13.2578 9.84315 14.601 8.5 16.2578 8.5C17.9147 8.5 19.2578 9.84315 19.2578 11.5Z" fill="#667085" />

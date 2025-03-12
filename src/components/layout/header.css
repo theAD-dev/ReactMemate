@@ -88,7 +88,7 @@
 }
 
 .SelectOptionHead {
-    margin-left: 16px;
+    margin-left: 8px;
     min-width: 196px;
 }
 
@@ -138,7 +138,8 @@
     color: #158ECC;
 }
 
-.managementMain:hover {
+.managementMain:hover,
+.managementMain1:hover {
     background: #e6f4fd;
     color: #158ECC;
 }
@@ -184,8 +185,7 @@
 
 .clients:hover {
     background: linear-gradient(135deg, rgba(114, 237, 242, 0.10) 0%, rgba(81, 81, 229, 0.10) 100%);
-    /* color: #5C83EA; */
-    color: #222;
+    color: #5C83EA;
 }
 
 .menuActive.expense {
@@ -322,7 +322,7 @@
     background: var(--colorG2);
     width: 1px;
     height: 38px;
-    top: -5px;
+    top: 0px;
     right: -10px;
 }
 

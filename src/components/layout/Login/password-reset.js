@@ -8,7 +8,7 @@ import LoinLogo from "../../../assets/images/logo.svg";
 
 const PasswordReset = () => {
   const navigate = useNavigate();
-  const handlePassDone = (e) => {
+  const handlePassDone = () => {
     navigate("/login");
   };
   return (

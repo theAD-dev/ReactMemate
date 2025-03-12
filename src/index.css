@@ -507,7 +507,7 @@ button {
   opacity: 1;
 }
 
-.inputInfo.error-border {
+.inputInfo.error-border, .error-border {
   border-radius: 4px;
   border: 1px solid #fda29b !important;
 }
@@ -1636,18 +1636,19 @@ p.flexEndStyle strong {
 .my-component {
   transition: all 0.5s ease;
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
-  bottom: -243px;
+  bottom: -225px;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 4px 0px inset;
 }
 
 .my-component.show {
-  bottom: -243px;
+  bottom: 0px;
 }
 
 .my-component.hide {
-  bottom: 0px;
+  bottom: -225px;
 }
 
 .my-component .downArrowIcon {

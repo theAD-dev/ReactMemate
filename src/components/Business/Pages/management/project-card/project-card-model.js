@@ -50,7 +50,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const le = parseFloat(cardData?.labor_expenses) || 0;
   const oe = parseFloat(cardData?.operating_expense) || 0;
   const RealCost = cs + le + oe;
-  const formattedRealCost = RealCost.toFixed(2);
+  const formattedRealCost = parseFloat(RealCost).toFixed(2);
 
   const handleClose = () => {
     setViewShow(false);
@@ -765,7 +765,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </div>
               </Col>
               <Col className='proProfit projectColBg'>
-                <span>Operational Profit <InfoCircle size={16} color='#1D2939' /></span><strong>${formatAUD(cardData?.operating_expense)}</strong>
+                <span>Operational Profit <InfoCircle size={16} color='#1D2939' /></span>
+                <strong>${formatAUD(cardData?.operational_profit)}</strong>
               </Col>
             </Row>
             <Row className='projectCardactionBut'>

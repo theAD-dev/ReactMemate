@@ -27,7 +27,7 @@ const AllSet = () => {
                   <div>
                     <form >
                       <p>One of our team members will reach out to you shortly.</p>
-                      <Link className="fillbtn flexcenterbox" to="/login">Continue <img src={arrowRight} alt="Arrow Right" /></Link>
+                      <Link className="fillbtn flexcenterbox" to="https://memate.com.au/">Continue <img src={arrowRight} alt="Arrow Right" /></Link>
                     </form>
                   </div>
                 </div>

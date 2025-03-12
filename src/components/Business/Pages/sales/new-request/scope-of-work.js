@@ -145,7 +145,7 @@ const ScopeOfWorkComponent = () => {
                                 <Row className='text-left'>
                                     <Col sm={12}>
                                         <div className="formgroup mb-3 mt-0">
-                                            <label>Project Reference </label>
+                                            <label>Project Reference<span className='required'>*</span></label>
                                             <div className={`inputInfo ${errors.reference ? 'error-border' : ''}`}>
                                                 <input {...register("reference")} placeholder='Add Reference for your Project' />
                                                 {errors.reference && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
@@ -156,7 +156,7 @@ const ScopeOfWorkComponent = () => {
 
                                     <Col sm={12}>
                                         <div className="formgroup mb-2 mt-0">
-                                            <label>Describe requirements for the order below <br />
+                                            <label>Describe requirements for the order below<span className='required'>*</span><br />
                                                 <small style={{ color: '#475467', fontWeight: 400 }}>Use for organisation. Not customer-facing.</small>
                                             </label>
                                             <div style={{ position: 'relative' }} className={`inputInfo textarea ${errors.requirements ? 'error-border' : ''}`}>

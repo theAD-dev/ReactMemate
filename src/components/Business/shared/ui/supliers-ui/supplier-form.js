@@ -22,7 +22,19 @@ import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  // website: yup.string().url('Invalid URL').required('URL is required'),
+  website: yup
+    .string()
+    .nullable() // Allows the field to be null or empty if not required
+    .transform((value) => (value === "" ? null : value)) // Converts empty string to null
+    .matches(
+      /^https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+      "Website must be a valid URL starting with https://"
+    )
+    .test(
+      'is-https',
+      'Website must start with https://',
+      value => !value || value.startsWith('https://')
+    ),
   abn: yup.string().required('ABN is required'),
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   services: yup.string().required('Services is required'),
@@ -125,7 +137,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Company Name</label>
+            <label className={clsx(styles.lable)}>Company Name<span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.name && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("name")} className={clsx(styles.inputText, { [styles.error]: errors.name })} placeholder='Enter company name' />
@@ -136,7 +148,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.lable)}>Email</label>
+            <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
@@ -158,7 +170,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.lable)}>Phone number</label>
+            <label className={clsx(styles.lable)}>Phone number<span className='required'>*</span></label>
             <Controller
               name="phone"
               control={control}
@@ -178,7 +190,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1">
-            <label className={clsx(styles.lable)}>ABN</label>
+            <label className={clsx(styles.lable)}>ABN<span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.abn && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("abn")} className={clsx(styles.inputText, { [styles.error]: errors.abn })} placeholder='32 635 443 221' />
@@ -192,7 +204,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
       <Row className={clsx(styles.bgGreay, '')}>
         <Col>
           <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.label)}>Services</label>
+            <label className={clsx(styles.label)}>Services<span className='required'>*</span></label>
             <Controller
               name="services"
               control={control}

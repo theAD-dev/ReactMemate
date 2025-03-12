@@ -45,7 +45,7 @@ const Regionalsettings = () => {
 
     try {
       const data = { name: company_name, country, timezone };
-      const response = await OnboardingCreateOrganisation(uuid, data);
+      await OnboardingCreateOrganisation(uuid, data);
       navigate(`/discover-memate/${uuid}`);
     } catch (error) {
       setError(error.message || "Failed to proceed. Please try again.");

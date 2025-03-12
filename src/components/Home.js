@@ -51,17 +51,24 @@ const Home = () => {
     };
 
 
-    const [isVisible, setIsVisible] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
 
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
+    };
+
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good morning';
+        if (hour < 17) return 'Good afternoon';
+        return 'Good evening';
     };
 
     return (
         <div style={{ position: 'relative' }}>
             <div className='HomePageWrap'>
                 <div className="goodHeading" >
-                    <h1>Hi, {profileData ? profileData.full_name : 'Guest'} 👋</h1>
+                    <h1 style={{ fontSize: '26px' }}>{getGreeting()}, {profileData?.first_name ? profileData.first_name : 'Guest'} 👋</h1>
                 </div>
                 <div className='d-flex justify-content-center px-5'>
                     <Row className='d-flex flex-nowrap'>
@@ -317,7 +324,7 @@ const Home = () => {
             </div>
 
             <div className={`my-component homeBottom ${isVisible ? 'show' : 'hide'}`}>
-                <button className='downArrowIcon' onClick={toggleVisibility}>
+                <button className='downArrowIcon' style={{ position: 'relative', top: '5px' }} onClick={toggleVisibility}>
 
                     Additional Services {isVisible ? (
                         <ChevronDoubleUp size={20} color="#6941C6" />

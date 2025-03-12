@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
@@ -9,34 +9,6 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 
 const StatisticsPage = () => {
     const { trialHeight } = useTrialHeight();
-    const [selectedYear, setSelectedYear] = useState(2025);
-    const [selectedMonth, setSelectedMonth] = useState('Mar');
-
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
-
-    // List of months
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    // Determine if a month should be disabled (future months in the current year)
-    const currentDate = new Date('2025-03-03'); // Current date as per system info
-    const currentMonthIndex = currentDate.getMonth(); // 2 (March)
-    const isMonthDisabled = (month, year) => {
-        const monthIndex = months.indexOf(month);
-        return year === currentDate.getFullYear() && monthIndex > currentMonthIndex;
-    };
-
-    const handleYearSelect = (year) => {
-        setSelectedYear(year);
-        // Optionally update progress based on year selection
-        // e.g., fetch data and setOuterProgress/setInnerProgress here
-    };
-
-    const handleMonthSelect = (month) => {
-        if (!isMonthDisabled(month, selectedYear)) {
-            setSelectedMonth(month);
-        }
-    };
 
     return (
         <PrimeReactProvider className='peoples-page'>
@@ -101,7 +73,7 @@ const StatisticsPage = () => {
                         <div className={clsx(style.executiveBox, style.executiveBox4)}>
                             <WindowDesktop color='#667085' size={40} />
                         </div>
-                        <h4 className={style.boxTitle}>Objectives</h4>
+                        <h4 className={style.boxTitle}>Key Results</h4>
                         <p className={style.boxSubtitle}>
                             Sets monthly targets and tracks month-to-month invoice volume or income, segmented by departments.
                         </p>

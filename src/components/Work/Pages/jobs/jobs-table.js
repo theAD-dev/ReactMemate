@@ -13,6 +13,7 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import JobDetails from '../../features/job-table-actions/job-details-dialog';
 import ViewJob from '../../features/view-job/view-job';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 export const formatDate = (timestamp) => {
@@ -108,7 +109,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const jobIDTemplate = (rowdata) => {
     return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
       <span>{rowdata.number}</span>
-      <Button label="Open" onClick={() => setShow({jobId: rowdata.id, visible: true }) } className='primary-text-button ms-3 show-on-hover-element' text />
+      <Button label="Open" onClick={() => setShow({ jobId: rowdata.id, visible: true })} className='primary-text-button ms-3 show-on-hover-element' text />
     </div>;
   };
 
@@ -130,7 +131,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const clientBody = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
-        {rowData?.client?.has_photo ? <img src={rowData?.client?.photo} /> : <Person color='#667085' />}
+        <FallbackImage photo={rowData?.client?.photo} is_business={false} has_photo={rowData?.client?.has_photo || false} />
       </div>
       {rowData?.client?.name}
     </div>;
@@ -141,7 +142,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     const initials = name.split(' ').map(word => word[0]).join('');
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>
-        {rowData?.worker?.photo ? <img src={rowData?.worker?.photo} style={{ width: '100%', height: '100%', borderRadius: '50%' }} /> : initials}
+        <FallbackImage photo={rowData?.worker?.photo} is_business={false} has_photo={!!(rowData?.worker?.photo) || false} />
       </div>
       {name}
     </div>;
@@ -225,7 +226,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         onSelectionChange={(e) => setSelected(e.value)}
         loading={loading}
         loadingIcon={loadingIconTemplate}
-        emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
+        emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
         sortField={sort?.sortField}
         sortOrder={sort?.sortOrder}
         onSort={onSort}
@@ -248,7 +249,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
-      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others)=> ({...others, visible: bool }) )}/>
+      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} />
     </>
   );
 });

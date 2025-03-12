@@ -92,7 +92,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
 
         formData.append("first_name", data.firstName);
         formData.append("last_name", data.lastName);
-        if (!id) formData.append("email", data.email);
+        formData.append("email", data.email.toLowerCase());
         formData.append("phone", data.phone);
         formData.append("role", data.role);
         formData.append("privilege", data.privilege);
