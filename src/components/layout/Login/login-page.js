@@ -17,33 +17,52 @@ const Login = () => {
     localStorage.getItem("isLoggedIn") === "true"
   );
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [authError, setAuthError] = useState(null); // For API-level errors
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent form submission and page refresh
+
+    // Reset errors
+    setEmailError(null);
+    setPasswordError(null);
+    setAuthError(null);
+
+    // Email validation
+    let isValid = true;
+    if (!email.trim()) {
+      setEmailError("Email is required.");
+      isValid = false;
+    }
+
+    // Password validation
+    if (!password.trim()) {
+      setPasswordError("Password is required.");
+      isValid = false;
+    }
+
+    if (!isValid) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       setIsLoading(true);
-      setError(null);
-
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        setError("Invalid email address.");
-        setIsLoading(false);
-        return;
-      }
 
       const { success } = await authenticateUser(email, password);
-      console.log('success: ', success);
+      console.log("success: ", success);
 
       if (success) {
         localStorage.setItem("isLoggedIn", "true");
         setIsLoggedIn(true);
-        navigate('/'); // Redirect or handle successful login
+        navigate("/"); // Redirect to home page
       } else {
-        setError("Invalid credentials.");
+        setAuthError("Invalid email or password.");
       }
     } catch (error) {
-      setError("An error occurred during login");
+      setAuthError("An error occurred during login. Please try again.");
+      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -53,6 +72,7 @@ const Login = () => {
     localStorage.removeItem("isLoggedIn");
     setIsLoggedIn(false);
   };
+
   return (
     <>
       {isLoggedIn ? (
@@ -61,7 +81,7 @@ const Login = () => {
         </div>
       ) : (
         <>
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="loginPage">
               <div className="boxinfo">
                 <div className="logohead">
@@ -74,18 +94,16 @@ const Login = () => {
                   <div className="formgroup">
                     <label>Email</label>
                     <div
-                      className={`inputInfo ${
-                        error ? "error-border" : email ? "successBorder" : ""
-                      }`}
+                      className={`inputInfo ${emailError ? "error-border" : email ? "successBorder" : ""
+                        }`}
                     >
                       <img src={envelopeIcon} alt="Envelope Icon" />
                       <input
                         type="text"
                         placeholder="Enter email"
                         value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                        }}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={isLoading}
                       />
                       <img
                         className="ExclamationCircle"
@@ -93,22 +111,21 @@ const Login = () => {
                         alt="Exclamation Circle"
                       />
                     </div>
+                    {emailError && <p className="error-message">{emailError}</p>}
                   </div>
                   <div className="formgroup">
                     <label>Password</label>
                     <div
-                      className={`inputInfo ${
-                        error ? "error-border" : email ? "successBorder" : ""
-                      }`}
+                      className={`inputInfo ${passwordError ? "error-border" : email ? "successBorder" : ""
+                        }`}
                     >
                       <img src={unlockIcon} alt="Unlock Icon" />
                       <input
                         type="password"
                         placeholder="Enter password"
                         value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                        }}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={isLoading}
                       />
                       <img
                         className="ExclamationCircle"
@@ -116,21 +133,15 @@ const Login = () => {
                         alt="Exclamation Circle"
                       />
                     </div>
-                    {error && <p className="error-message">{error}</p>}
-                    {/* {error && (
-                      <p className="error-message">
-                        {error.includes('email') && 'Invalid email address.'}
-                        {error.includes('password') && 'Invalid password.'}
-                        {!error.includes('email') && !error.includes('password') && error}
-                      </p>
-                    )} */}
+                    {passwordError && <p className="error-message">{passwordError}</p>}
+                    {authError && <p className="error-message">{authError}</p>}
                   </div>
                   <Link to="forgot-password" className="textbtn">
                     Forgot password
                   </Link>
                   <button
+                    type="submit"
                     className="fillbtn flexcenterbox"
-                    onClick={handleLogin}
                     disabled={isLoading}
                   >
                     {isLoading ? "Logging in..." : "Login"}
@@ -148,7 +159,7 @@ const Login = () => {
                   backgroundImage: `url(${loginSlide})`,
                   backgroundSize: "cover",
                   backgroundRepeat: "no-repeat",
-                  backgroundPosition: 'bottom'
+                  backgroundPosition: "bottom",
                 }}
               >
                 <p>Reduce admin work at every stage.</p>
