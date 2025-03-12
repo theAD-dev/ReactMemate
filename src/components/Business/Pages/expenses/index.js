@@ -3,8 +3,6 @@ import { Button } from 'react-bootstrap';
 import { CheckCircle, Download, Filter, Send, XCircle } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { TieredMenu } from 'primereact/tieredmenu';
@@ -87,7 +85,7 @@ const ExpensesPage = () => {
     };
 
     return (
-        <PrimeReactProvider className='peoples-page'>
+        <div className='peoples-page'>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -148,7 +146,7 @@ const ExpensesPage = () => {
                 setRefetch={setRefetch}
             />
             <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
-        </PrimeReactProvider>
+        </div>
     );
 };
 

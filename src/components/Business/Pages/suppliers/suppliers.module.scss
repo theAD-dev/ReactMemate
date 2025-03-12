@@ -25,8 +25,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 40px;
-  border: 1px solid var(--Primary-600, #158ecc);
-  background: var(--Primary-600, #158ecc);
+  padding-top: 1px !important;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
+  background: var(--Primary-600, #158ecc) !important;
 }
 
 .total {

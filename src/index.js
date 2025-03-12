@@ -4,6 +4,8 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'sonner';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { PrimeReactProvider } from "primereact/api";
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 import './prime.css';
 import './index.css';
 import './App.css';
@@ -19,12 +21,14 @@ const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <TrialHeightProvider>
-        <QueryClientProvider client={queryClient}>
-          <Toaster expand={true} richColors closeButton position="top-right" />
-          <App />
-        </QueryClientProvider>
-      </TrialHeightProvider>
+      <PrimeReactProvider>
+        <TrialHeightProvider>
+          <QueryClientProvider client={queryClient}>
+            <Toaster expand={true} richColors closeButton position="top-right" />
+            <App />
+          </QueryClientProvider>
+        </TrialHeightProvider>
+      </PrimeReactProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
@@ -33,6 +37,7 @@ root.render(
 // import 'react-international-phone/style.css';
 // import ReactDOM from 'react-dom/client';
 // import 'bootstrap/dist/css/bootstrap.min.css';
+// import "primereact/resources/themes/lara-light-cyan/theme.css";
 // import './prime.css';
 // import './index.css';
 // import './App.css';

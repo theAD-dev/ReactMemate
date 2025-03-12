@@ -2,8 +2,6 @@ import React from 'react';
 import { ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
@@ -11,7 +9,7 @@ const StatisticsPage = () => {
     const { trialHeight } = useTrialHeight();
 
     return (
-        <PrimeReactProvider className='peoples-page'>
+        <div className='peoples-page'>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <Link to={"/statistics/executive"} className='d-flex align-items-center px-2 py-1'>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
@@ -98,7 +96,7 @@ const StatisticsPage = () => {
                     </Link>
                 </div>
             </div>
-        </PrimeReactProvider>
+        </div>
     );
 };
 

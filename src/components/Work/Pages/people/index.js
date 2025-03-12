@@ -1,7 +1,5 @@
 import React from 'react';
 import { Filter } from 'react-bootstrap-icons';
-import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import DesktopPeoplesTable from './desktop-user-table';
 import style from './people.module.scss';
 import PeoplesTable from './peoples-table';
@@ -10,13 +8,13 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 
 const PeoplePage = () => {
     const { trialHeight } = useTrialHeight();
-    const handleSearch = (e) => { };
+    const handleSearch = () => { };
     return (
-        <PrimeReactProvider className='peoples-page'>
+        <div className='peoples-page'>
             <div className="topbar border-bottom" style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>
-                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
+                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
                     </div>
                     <div className="searchBox" style={{ position: 'relative' }}>
                         <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
@@ -38,7 +36,7 @@ const PeoplePage = () => {
                 <DesktopPeoplesTable />
                 <PeoplesTable />
             </div>
-        </PrimeReactProvider>
+        </div>
     );
 };
 export default PeoplePage;

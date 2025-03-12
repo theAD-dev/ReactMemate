@@ -1,9 +1,7 @@
 import React, { useRef, useState } from 'react';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { ChevronLeft, Download } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { PrimeReactProvider } from 'primereact/api';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import { Sidebar } from 'primereact/sidebar';
@@ -40,7 +38,7 @@ const ClientOrderHistory = () => {
         navigate('/clients');
     }
     return (
-        <PrimeReactProvider className='client-order-history-page'>
+        <div className='client-order-history-page'>
             <div className='client-order-history' style={{ width: visible ? 'calc(100% - 559px)' : '100%' }}>
                 <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                     <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
@@ -86,7 +84,7 @@ const ClientOrderHistory = () => {
                             : <SidebarClientLoading />
                 )}
             ></Sidebar>
-        </PrimeReactProvider>
+        </div>
     );
 };
 
