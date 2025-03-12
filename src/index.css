@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-body {
+body, html {
+  height: 100vh;
+  height: 100dvh;
   margin: 0;
   font-family: "Inter", sans-serif;
   overflow: hidden;
@@ -57,10 +59,7 @@ table thead tr th {
   color: #475467 !important;
 }
 
-table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar)
-  tbody
-  tr
-  td {
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -263,11 +262,11 @@ table.innerTableStyle {
   line-height: 20px;
 }
 
-.btn-check:checked + .btn,
+.btn-check:checked+.btn,
 .btn.active,
 .btn.show,
 .btn:first-child:active,
-:not(.btn-check) + .btn:active {
+:not(.btn-check)+.btn:active {
   border-color: transparent;
 }
 
@@ -507,7 +506,8 @@ button {
   opacity: 1;
 }
 
-.inputInfo.error-border, .error-border {
+.inputInfo.error-border,
+.error-border {
   border-radius: 4px;
   border: 1px solid #fda29b !important;
 }
@@ -744,18 +744,15 @@ ul.listStyle li:last-child {
 
 .tobePaidWrap .tobePaidH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(
-    135deg,
-    rgba(247, 79, 172, 0.15) 0%,
-    rgba(252, 178, 79, 0.15) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(247, 79, 172, 0.15) 0%,
+      rgba(252, 178, 79, 0.15) 100%);
 }
 
 .TooltipOverlay [data-popper-placement^="top"] .tooltip-arrow::before,
 .TooltipOverlay .tooltip-arrow::before {
   top: -1px;
-  border-width: var(--bs-tooltip-arrow-height)
-    calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-top-color: #fff;
 }
 
@@ -779,13 +776,14 @@ ul.listStyle li:last-child {
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 18px; /* 150% */
+  line-height: 18px;
+  /* 150% */
   padding: 10px;
 }
 
 .TooltipOverlay.width-300 .tooltip-inner {
   min-width: 300px;
-} 
+}
 
 .tooltip.show {
   opacity: 1 !important;
@@ -835,20 +833,16 @@ ul.listStyle li:last-child {
 
 .countNoBox.tobePaidH {
   border-radius: 4px;
-  background: linear-gradient(
-    135deg,
-    rgba(247, 79, 172, 0.15) 0%,
-    rgba(252, 178, 79, 0.15) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(247, 79, 172, 0.15) 0%,
+      rgba(252, 178, 79, 0.15) 100%);
 }
 
 .countNoBox.invoiceDueH {
   border-radius: 4px;
-  background: linear-gradient(
-    45deg,
-    rgba(74, 135, 154, 0.15) 0%,
-    rgba(197, 237, 245, 0.15) 100%
-  );
+  background: linear-gradient(45deg,
+      rgba(74, 135, 154, 0.15) 0%,
+      rgba(197, 237, 245, 0.15) 100%);
 }
 
 .tobePaidH span {
@@ -892,38 +886,30 @@ ul.listStyle li:last-child {
 
 .jobScheduledH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(
-    180deg,
-    rgba(186, 232, 255, 0.15) 0%,
-    rgba(16, 107, 153, 0.15) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(186, 232, 255, 0.15) 0%,
+      rgba(16, 107, 153, 0.15) 100%);
 }
 
 .ActiveProjectH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(
-    135deg,
-    rgba(137, 247, 254, 0.15) 0%,
-    rgba(102, 166, 255, 0.15) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(137, 247, 254, 0.15) 0%,
+      rgba(102, 166, 255, 0.15) 100%);
 }
 
 .jobWaitingH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(
-    45deg,
-    rgba(255, 184, 0, 0.15) 0%,
-    rgba(255, 245, 0, 0.15) 100%
-  );
+  background: linear-gradient(45deg,
+      rgba(255, 184, 0, 0.15) 0%,
+      rgba(255, 245, 0, 0.15) 100%);
 }
 
 .activeQouteH {
   border-radius: var(--radius-xs, 4px);
-  background: linear-gradient(
-    180deg,
-    rgba(186, 232, 255, 0.15) 0%,
-    rgba(16, 107, 153, 0.15) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(186, 232, 255, 0.15) 0%,
+      rgba(16, 107, 153, 0.15) 100%);
 }
 
 .goodHeading {
@@ -1025,11 +1011,9 @@ ul.listStyle li:last-child {
 .imageBoxHome:before {
   position: absolute;
   content: "";
-  background: linear-gradient(
-      0deg,
+  background: linear-gradient(0deg,
       rgba(0, 0, 0, 0.4) -48.32%,
-      rgba(0, 0, 0, 0) 103.16%
-    ),
+      rgba(0, 0, 0, 0) 103.16%),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
   top: 0;
   bottom: 0;
@@ -1299,11 +1283,11 @@ ul.listStyle li:last-child {
   opacity: 0;
 }
 
-.tab-content .customCheckBox input:checked ~ .checkmark svg {
+.tab-content .customCheckBox input:checked~.checkmark svg {
   opacity: 1;
 }
 
-.tab-content .customCheckBox input:checked ~ .checkmark:after {
+.tab-content .customCheckBox input:checked~.checkmark:after {
   display: block;
 }
 
@@ -1312,7 +1296,7 @@ ul.listStyle li:last-child {
   border: 0 solid var(--Gray-300, #d0d5dd);
 }
 
-.tab-content .customCheckBox input:checked ~ .checkmark {
+.tab-content .customCheckBox input:checked~.checkmark {
   border: 0 !important;
   background: transparent;
 }
@@ -1364,8 +1348,7 @@ ul.listStyle li:last-child {
   border: 1px solid #f2f4f7;
   border: 1px solid var(--Gray-100, #f2f4f7);
   border-radius: 0 8px 8px 8px;
-  border-radius: 0 var(--radius-md, 8px) var(--radius-md, 8px)
-    var(--radius-md, 8px);
+  border-radius: 0 var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
   min-width: 278px;
   position: absolute;
   left: 255px;
@@ -1388,9 +1371,7 @@ ul.listStyle li:last-child {
   white-space: noWrap;
 }
 
-.flatpickr-current-month
-  .flatpickr-monthDropdown-months
-  .flatpickr-monthDropdown-month {
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
   background-color: #ffffff !important;
   outline: none;
   padding: 0;
@@ -1484,10 +1465,7 @@ div#controlled-tab-example-tabpane-Status span.checkmark {
   border: 1px solid var(--Gray-300, #d0d5dd);
 }
 
-div#controlled-tab-example-tabpane-Status
-  .customCheckBox
-  input:checked
-  ~ .checkmark {
+div#controlled-tab-example-tabpane-Status .customCheckBox input:checked~.checkmark {
   border-radius: var(--radius-sm, 6px) !important;
   border: 1px solid var(--Primary-500, #9e77ed) !important;
   background: var(--Primary-50, #f9f5ff) !important;
@@ -1682,6 +1660,7 @@ input:focus::-webkit-input-placeholder {
 }
 
 @media only screen and (max-width: 1600px) and (min-width: 1280px) {
+
   table thead tr th,
   table tbody tr td {
     border-right: 1px solid var(--Gray-200, #eaecf0);
