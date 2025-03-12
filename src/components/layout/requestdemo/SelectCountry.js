@@ -121,7 +121,7 @@ const SelectCountry = () => {
                     Next Step
                     <img src={arrowRight} alt="Arrow Right" />
                   </button>
-                  <div className="linkBottom"><p>Already have an account? <Link to="set-new-password">Sign in</Link></p></div>
+                  <div className="linkBottom"><p>Already have an account? <Link to="/login">Sign in</Link></p></div>
                 </div>
               </div>
               <div className="sliderRight SinglBgRight" style={{

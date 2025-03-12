@@ -193,9 +193,9 @@ const Home = () => {
                                     ))}
                                 </div>
                                 <h3>Expense to be paid</h3>
-                                <div className='countNoBox tobePaidH'> <span><CountUp start={0} end={homeData.expense.cnt != null ? homeData.expense.cnt : 0} duration={10} /></span>
+                                <div className='countNoBox tobePaidH'> <span><CountUp start={0} end={homeData?.expense?.cnt != null ? homeData?.expense?.cnt : 0} duration={10} /></span>
                                 </div>
-                                <h4>{formatCurrency(homeData.expense.sum || 0)}</h4>
+                                <h4>{formatCurrency(homeData?.expense?.sum || 0)}</h4>
                             </div>
                         </Col>
                         <Col className='mt-4'>
@@ -216,8 +216,8 @@ const Home = () => {
                                     ))}
                                 </div>
                                 <h3>Invoices Due</h3>
-                                <div className='countNoBox invoiceDueH'> <span> <CountUp start={0} end={homeData.invoices_due.cnt} duration={9} /></span></div>
-                                <h4>{formatCurrency(homeData.invoices_due.sum)}</h4>
+                                <div className='countNoBox invoiceDueH'> <span> <CountUp start={0} end={homeData?.invoices_due?.cnt} duration={9} /></span></div>
+                                <h4>{formatCurrency(homeData?.invoices_due?.sum)}</h4>
                             </div>
                         </Col>
                     </Row>
@@ -242,8 +242,8 @@ const Home = () => {
                                 <h3>Jobs scheduled this week</h3>
                                 <div className='countNoBox jobScheduledH'>
                                     <div className='pluslgIcon'><PlusLg size={20} color="#106B99" /></div>
-                                    <span><CountUp start={0} end={homeData.quote_this_week.cnt} duration={2} /></span></div>
-                                <h4>{formatCurrency(homeData.quote_this_week.sum)}</h4>
+                                    <span><CountUp start={0} end={homeData?.quote_this_week?.cnt} duration={2} /></span></div>
+                                <h4>{formatCurrency(homeData?.quote_this_week?.sum)}</h4>
                             </div>
                         </Col>
                         <Col className='mt-4'>
@@ -267,8 +267,8 @@ const Home = () => {
                                 <div className='countNoBox activeQouteH'>
                                     <Link to="/sales">
                                         <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div></Link>
-                                    <span> <CountUp start={0} end={homeData.active_quotes.cnt} duration={5} /></span></div>
-                                <h4>{formatCurrency(homeData.active_quotes.sum)}</h4>
+                                    <span> <CountUp start={0} end={homeData?.active_quotes?.cnt} duration={5} /></span></div>
+                                <h4>{formatCurrency(homeData?.active_quotes?.sum)}</h4>
                             </div>
                         </Col>
                         <Col className='mt-4'>
@@ -289,8 +289,8 @@ const Home = () => {
                                     ))}
                                 </div>
                                 <h3>Job waiting for approval</h3>
-                                <div className='countNoBox jobWaitingH'> <span> <CountUp start={0} end={homeData.waiting_for_approval.count} duration={8} /></span></div>
-                                <h4>{formatCurrency(homeData.waiting_for_approval.sum)}</h4>
+                                <div className='countNoBox jobWaitingH'> <span> <CountUp start={0} end={homeData?.waiting_for_approval?.count} duration={8} /></span></div>
+                                <h4>{formatCurrency(homeData?.waiting_for_approval?.sum)}</h4>
                             </div>
                         </Col>
                         <Col className='mt-4'>
@@ -312,10 +312,9 @@ const Home = () => {
                                 </div>
                                 <h3>Active Projects</h3>
                                 <div className='countNoBox ActiveProjectH'> <span>
-                                    <CountUp start={0} end={homeData.projects.cnt} duration={4} />
-                                    {/* <CountUp start={0} end={homeData.projects.cnt} duration={4} formattingFn={formatter}  /> */}
+                                    <CountUp start={0} end={homeData?.projects?.cnt} duration={4} />
                                 </span></div>
-                                <h4>{formatCurrency(homeData.projects.sum)}</h4>
+                                <h4>{formatCurrency(homeData?.projects?.sum)}</h4>
                             </div>
                         </Col>
                     </Row>

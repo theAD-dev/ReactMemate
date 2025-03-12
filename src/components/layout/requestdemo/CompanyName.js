@@ -202,7 +202,7 @@ const CompanyName = () => {
                   <div className="linkBottom">
                     <p>
                       Already have an account?{" "}
-                      <Link to="set-new-password">Sign in</Link>
+                      <Link to="/login">Sign in</Link>
                     </p>
                   </div>
                 </div>
