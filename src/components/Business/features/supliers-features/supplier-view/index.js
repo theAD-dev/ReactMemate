@@ -53,11 +53,11 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                     <DeleteSupplier id={id} />
                     {
                         isEdit ? <div className='d-flex align-items-center gap-3'>
-                            <Button type='button' onClick={(e) => setIsEdit(false)} className='outline-button'>Cancel</Button>
+                            <Button type='button' onClick={() => setIsEdit(false)} className='outline-button'>Cancel</Button>
                             <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '75px' }}>{isPending ? "Loading..." : "Save"}</Button>
                         </div>
                             : <div className='d-flex align-items-center gap-3'>
-                                <Button type='button' onClick={(e) => setIsEdit(true)} className='solid-button'>Edit</Button>
+                                <Button type='button' onClick={() => setIsEdit(true)} className='solid-button'>Edit</Button>
                             </div>
                     }
                 </div>

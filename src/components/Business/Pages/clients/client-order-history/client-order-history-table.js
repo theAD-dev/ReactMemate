@@ -59,16 +59,16 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
 
   const InvoiceBodyTemplate = (rowData) => {
     return <div className='d-flex align-items-center justify-content-center gap-4'>
-      <Link to={rowData.invoice_url}><FilePdf color='#FF0000' size={16} /></Link>
-      <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16} /></Link>
+      <Link to={`${process.env.REACT_APP_URL}/${rowData.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+      <Link to={`/invoice/${rowData.unique_id}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
     </div>;
   };
 
   const quoteBodyTemplate = (rowData) => {
     return <div className='d-flex align-items-center justify-content-center gap-4'>
-      <Link to={"#"}><div><PlusSlashMinus color='#FDB022' size={16} /></div></Link>
-      <Link to={rowData.quote_url}><FilePdf color='#FF0000' size={16} /></Link>
-      <Link to={rowData.unique_url}><Link45deg color='#3366CC' size={16} /></Link>
+      <Link to={`/sales/quote-calculation/${rowData.unique_id}`} target='_blank'><div><PlusSlashMinus color='#FDB022' size={16} /></div></Link>
+      <Link to={`${process.env.REACT_APP_URL}/${rowData.quote_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+      <Link to={`/quote/${rowData.unique_id}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
     </div>;
   };
 
@@ -245,7 +245,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
       scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
       loading={isPending}
-      emptyMessage={<NoDataFoundTemplate isDataExist={!!clientOrders.length}/>}
+      emptyMessage={<NoDataFoundTemplate isDataExist={!!clientOrders.length} />}
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
       <Column field="number" header="Project ID" frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>

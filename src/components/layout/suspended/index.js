@@ -1,15 +1,17 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import styles from './suspended.module.scss';
 import suspendedImage from '../../../assets/suspended-mask.svg';
 
 const Suspended = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
-    const isAdmin = !(profileData?.type === "Admin") ? true : false;
+    const isSuspended = profileData?.is_suspended ? true : false;
+    const isAdmin = (profileData?.type === "Admin") ? true : false;
 
+    if (!isSuspended) return <Navigate to={"/"} replace />; //TODO: not
     return (
-        <Row>
+        <Row className='w-100 m-0 p-0'>
             <Col sm={6} className={styles.leftSection}>
                 <div className="logohead"><img src="/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt="Loin Logo" /></div>
                 <div style={{ width: '568px', maxWidth: "calc(100% - 0px)" }} className='d-flex flex-column align-items-center text-center m-auto'>
