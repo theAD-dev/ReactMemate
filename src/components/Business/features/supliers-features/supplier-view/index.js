@@ -99,7 +99,14 @@ const ViewSection = ({ data }) => {
             <Row>
                 <Col>
                     <label className={clsx(style.label)}>Website</label>
-                    <Link to={`${data?.website}`}
+                    <Link
+                        to={
+                            data?.website
+                                ? data.website.startsWith('http://') || data.website.startsWith('https://')
+                                    ? data.website
+                                    : `https://${data.website}`
+                                : '#'
+                        }
                         target="_blank"
                     >
                         <div className='d-flex align-items-center' style={{ color: '#1AB2FF', fontSize: '16px', }}>

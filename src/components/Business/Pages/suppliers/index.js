@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
-import { PrimeReactProvider } from 'primereact/api';
 import { useDebounce } from 'primereact/hooks';
 import { SupplierTable } from './supplier-table';
 import style from './suppliers.module.scss';
@@ -25,7 +23,7 @@ const SupplierPage = () => {
     };
 
     return (
-        <PrimeReactProvider className='peoples-page'>
+        <div className='peoples-page'>
             <div className={`topbar ${selectedSuppliers?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -67,7 +65,7 @@ const SupplierPage = () => {
             </div>
             <SupplierTable ref={dt} searchValue={debouncedValue} setTotalSuppliers={setTotalSuppliers} selectedSuppliers={selectedSuppliers} setSelectedSuppliers={setSelectedSuppliers} refetch={refetch} />
             <SupplierCreate visible={visible} setVisible={setVisible} refetch={setRefetch} />
-        </PrimeReactProvider>
+        </div>
     );
 };
 

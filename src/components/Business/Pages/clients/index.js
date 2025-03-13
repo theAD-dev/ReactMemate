@@ -2,8 +2,6 @@ import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Download, Eye, EyeSlash, Filter } from 'react-bootstrap-icons';
 import clsx from 'clsx';
-import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
 import ClientTable from './client-table';
@@ -29,7 +27,7 @@ const ClientPage = () => {
     };
 
     return (
-        <PrimeReactProvider className='peoples-page'>
+        <div className='peoples-page'>
             <div className={`topbar ${selectedClients?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -44,7 +42,7 @@ const ClientPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20}/></button>
+                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20} /></button>
                                         <TieredMenu model={[{
                                             label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
                                                 {
@@ -77,9 +75,9 @@ const ClientPage = () => {
                     <div className={`${style.totalCount}`}>{totalClients} Clients</div>
                 </div>
             </div>
-            <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} refetch={refetch}/>
-            <NewClientCreate visible={visible} setVisible={setVisible} refetch={setRefetch}/>
-        </PrimeReactProvider>
+            <ClientTable ref={dt} searchValue={debouncedValue} setTotalClients={setTotalClients} selectedClients={selectedClients} setSelectedClients={setSelectedClients} isShowDeleted={isShowDeleted} refetch={refetch} />
+            <NewClientCreate visible={visible} setVisible={setVisible} refetch={setRefetch} />
+        </div>
     );
 };
 

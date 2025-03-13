@@ -46,15 +46,15 @@ const SelectDate = () => {
   return (
     <>
       <div className='requestDemoWrap request-calendly-date'>
-        <div className="logohead">
-          <img src={LoinLogo} alt="Loin Logo" />
-        </div>
-        <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
           <form>
             <div className="loginPage">
-              <div className="boxinfo">
-                <div className="boxLogin">
+              <div className="boxinfo" style={{ flexDirection: 'column', overflow: 'auto' }}>
+                <div className="w-100 p-4">
+                  <img src={LoinLogo} alt="Loin Logo" />
+                </div>
+
+                <div className="boxLogin w-100">
                   <h2>
                     Yes, I want to <span>sign up</span><br></br> for a demo
                   </h2>
@@ -66,25 +66,33 @@ const SelectDate = () => {
                     <div className="step" ></div>
                   </div>
 
-                  <InlineWidget
-                    url="https://calendly.com/memate/memate-demo"
-                    styles={{ height: '700px' }}
-                    prefill={{
-                      name: `${first_name} ${last_name}`,
-                      email: email,
-                    }}
-                  />
-
+                  <div className='calendly-container' style={{ padding: '0px 60px' }}>
+                    <InlineWidget
+                      url="https://calendly.com/memate/memate-demo"
+                      styles={{
+                        width: '100%', border: '1px solid #f2f2f2',
+                      }}
+                      prefill={{
+                        name: `${first_name} ${last_name}`,
+                        email: email,
+                      }}
+                    />
+                  </div>
                   <button
                     type='button'
-                    className="fillbtn flexcenterbox"
+                    className="fillbtn flexcenterbox mt-3"
                     onClick={handleStepOne}>
                     Next Step
                     <img src={arrowRight} alt="Arrow Right" />
                   </button>
-                  <div className="linkBottom"><p>Already have an account? <Link to="set-new-password">Sign in</Link></p></div>
+                  <div className="linkBottom"><p>Already have an account? <Link to="/login">Sign in</Link></p></div>
+                </div>
+
+                <div className="w-100 p-4 footer-copyright">
+                  <span className="font-14" style={{ color: '#212529' }}>© Memate {new Date().getFullYear()}</span>
                 </div>
               </div>
+
               <div className="sliderRight SinglBgRight" style={{
                 backgroundImage: `url(${request04})`,
                 backgroundSize: 'cover',

@@ -28,7 +28,7 @@ const NotFoundTemplate = () => {
             <p className={clsx(style.subTitle)}>
                 Sorry, the page you are looking for doesn't exist or has been moved. Try searching our site:
             </p>
-            <Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button>
+            <Link to={"/"}><Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button></Link>
             <Link to={"#"}><span className={clsx(style.supportext)}>Support</span></Link>
         </div>
     );

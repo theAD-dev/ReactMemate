@@ -10,7 +10,6 @@ const ExpensesPage = LazyLoader(lazy(() => import('../components/Business/Pages/
 const InvoicePage = LazyLoader(lazy(() => import('../components/Business/Pages/invoices')));
 const PublicInvoice = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/public-invoice/public-invoice')));
 const Management = LazyLoader(lazy(() => import('../components/Business/Pages/management/management-page')));
-const DemoTable = LazyLoader(lazy(() => import('../components/Business/Pages/management/project-card/DemoTable')));
 const OrderPage = LazyLoader(lazy(() => import('../components/Business/Pages/orders')));
 const BusinessClientInformation = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/business-client-information')));
 const CalculateQuote = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/calculate-quote')));
@@ -34,7 +33,8 @@ const ForgotPassword = LazyLoader(lazy(() => import('../components/layout/Login/
 const Login = LazyLoader(lazy(() => import('../components/layout/Login/login-page')));
 const PasswordReset = LazyLoader(lazy(() => import('../components/layout/Login/password-reset')));
 const Profile = LazyLoader(lazy(() => import('../components/layout/Login/profile')));
-const CompanyName = LazyLoader(lazy(() => import('../components/layout/onboarding/Companyname')));
+const Companyname = LazyLoader(lazy(() => import('../components/layout/onboarding/Companyname')));
+const CompanyName = LazyLoader(lazy(() => import('../components/layout/requestdemo/CompanyName')));
 const Create = LazyLoader(lazy(() => import('../components/layout/onboarding/Create')));
 const DiscovermemateWrapper = LazyLoader(lazy(() => import('../components/layout/onboarding/Discovermemate')));
 const PasswordCreate = LazyLoader(lazy(() => import('../components/layout/onboarding/password-create')));
@@ -160,10 +160,10 @@ const routes = [
         path: "/verify-mail/:uuid",
         element: <Verifymail />
     },
-    // {
-    //     path: "/company-name/:uuid",
-    //     element: <Companyname />
-    // },
+    {
+        path: "/company-name/:uuid",
+        element: <Companyname />
+    },
     {
         path: "/regional-settings/:uuid",
         element: <Regionalsettings />
@@ -184,7 +184,6 @@ const routes = [
         path: "/demo",
         element: <Demo />
     },
-
     {
         path: "/quote/:id",
         element: <QuotationEmail />
@@ -272,12 +271,19 @@ const routes = [
             },
             {
                 path: "sales",
-                element: <ProtectedRoute permission={""}><Sales /></ProtectedRoute>,
                 children: [
                     {
+                        path: "",
+                        element: <ProtectedRoute permission={""}><Sales /></ProtectedRoute>,
+                    },
+                    {
                         path: "newquote/selectyourclient",
-                        element: <ProtectedRoute permission={""}><SelectClientType /></ProtectedRoute>,
                         children: [
+
+                            {
+                                path: "",
+                                element: <ProtectedRoute permission={""}><SelectClientType /></ProtectedRoute>
+                            },
                             {
                                 path: "existing-clients",
                                 element: <ProtectedRoute permission={""}><ExistingClients /></ProtectedRoute>,
@@ -580,10 +586,6 @@ const routes = [
                 ],
             },
         ],
-    },
-    {
-        path: "/demo",
-        element: <ProtectedRoute permission={""}><DemoTable /></ProtectedRoute>,
     },
     {
         path: "*",

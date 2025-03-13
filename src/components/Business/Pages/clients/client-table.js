@@ -132,7 +132,19 @@ const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients,
     };
 
     const websiteBody = (rowData) => {
-        return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-";
+        return rowData.website ?
+            <Link
+                to={
+                    rowData.website
+                        ? rowData.website.startsWith('http://') || rowData.website.startsWith('https://')
+                            ? rowData.website
+                            : `https://${rowData.website}`
+                        : '#'
+                }
+                target="_blank"
+            >
+                <Globe className='show-on-hover-element' color='#98A2B3' />
+            </Link> : "-";
     };
 
     const loadingIconTemplate = () => {

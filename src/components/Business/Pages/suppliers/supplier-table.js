@@ -166,7 +166,19 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     };
 
     const websiteBody = (rowData) => {
-        return rowData.website ? <Link to={rowData.website} target="_blank"><Globe className='show-on-hover-element' color='#98A2B3' /></Link> : "-";
+        return rowData.website ?
+            <Link
+                to={
+                    rowData.website
+                        ? rowData.website.startsWith('http://') || rowData.website.startsWith('https://')
+                            ? rowData.website
+                            : `https://${rowData.website}`
+                        : '#'
+                }
+                target="_blank"
+            >
+                <Globe className='show-on-hover-element' color='#98A2B3' />
+            </Link> : "-";
     };
 
     const totalSpentBody = (rowData) => {
@@ -201,7 +213,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             onSelectionChange={(e) => setSelectedSuppliers(e.value)}
             loading={loading}
             loadingIcon={loadingIconTemplate}
-            emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
+            emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
             sortField={sort?.sortField}
             sortOrder={sort?.sortOrder}
             onSort={onSort}

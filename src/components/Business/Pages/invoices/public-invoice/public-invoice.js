@@ -111,10 +111,8 @@ const PublicInvoice = () => {
 
     const ServicesBody = (rowData) => (
         <div className={style.qupteMainColWrap}>
-            <h2>{rowData?.index}</h2>
             <ul>
                 <p>{rowData?.description}</p>
-                <li>{rowData?.subindex}</li>
             </ul>
         </div>
     );
@@ -317,16 +315,23 @@ const PublicInvoice = () => {
                                     <div style={{ fontSize: '18px', color: '#1D2939' }}>${formatAUD(invoice?.subtotal)}</div>
                                 </div>
                                 <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
-                                    <div style={{ fontSize: '14px', }}>Tax (10%)</div>
+                                    <div style={{ fontSize: '14px', }}>
+                                        {invoice?.xero_tax === "in"
+                                            ? "Tax Inclusive (10%)"
+                                            : invoice?.xero_tax === "ex"
+                                                ? "Tax Exclusive (10%)"
+                                                : "Tax"
+                                        }
+                                    </div>
                                     <div style={{ fontSize: '18px', }}>${formatAUD(invoice?.gst)}</div>
-                                </div>
-                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
-                                    <div style={{ fontSize: '14px', }}>Deposit</div>
-                                    <div style={{ fontSize: '18px', }}>${formatAUD(invoice?.deposit)}</div>
                                 </div>
                                 <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', }}>Total</div>
                                     <div style={{ fontSize: '18px' }}>${formatAUD(invoice?.total)}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>Deposit</div>
+                                    <div style={{ fontSize: '18px', }}>- ${formatAUD(invoice?.deposit)}</div>
                                 </div>
                                 <div className='py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', fontWeight: 600 }}>Amount due</div>
@@ -561,7 +566,7 @@ const PublicInvoice = () => {
                         <Card className='mt-2' style={{ border: '1px solid #EAECF0' }}>
                             <Card.Body className='border-0'>
                                 <p className='mb-0' style={{ color: '#475467', fontSize: '16px' }}>{invoice?.number}</p>
-                                <p className='mb-0' style={{ color: '#1D2939', fontSize: '42px' }}>${formatAUD(invoice?.outstanding_amount)}</p>
+                                <p className='mb-0' style={{ color: '#1D2939', fontSize: '42px' }}>${formatAUD(invoice?.outstanding_amount + invoice?.commission)}</p>
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
                                     <span className='font-14' style={{ color: '#1D2939' }}>Subtotal</span>
@@ -569,13 +574,15 @@ const PublicInvoice = () => {
                                 </div>
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
-                                    <span className='font-14' style={{ color: '#1D2939' }}>Tax (0%)</span>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>
+                                        {invoice?.xero_tax === "in"
+                                            ? "Tax Inclusive (10%)"
+                                            : invoice?.xero_tax === "ex"
+                                                ? "Tax Exclusive (10%)"
+                                                : "Tax"
+                                        }
+                                    </span>
                                     <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.gst)}</span>
-                                </div>
-                                <Divider />
-                                <div className='d-flex justify-content-between'>
-                                    <span className='font-14' style={{ color: '#1D2939' }}>Deposit</span>
-                                    <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.deposit)}</span>
                                 </div>
                                 <Divider />
                                 <div className='d-flex justify-content-between'>
@@ -583,9 +590,19 @@ const PublicInvoice = () => {
                                     <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.total)}</span>
                                 </div>
                                 <Divider />
+                                <div className='d-flex justify-content-between'>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>Deposit</span>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>- ${formatAUD(invoice?.deposit)}</span>
+                                </div>
+                                <Divider />
+                                <div className='d-flex justify-content-between'>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>Processing Fee</span>
+                                    <span className='font-14' style={{ color: '#1D2939' }}>${formatAUD(invoice?.commission)}</span>
+                                </div>
+                                <Divider />
                                 <div className='d-flex justify-content-between mb-3'>
                                     <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>Amount due</span>
-                                    <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>${formatAUD(invoice?.outstanding_amount)}</span>
+                                    <span className='font-14' style={{ color: '#1D2939', fontWeight: 600 }}>${formatAUD(invoice?.outstanding_amount + invoice?.commission)}</span>
                                 </div>
                             </Card.Body>
                         </Card>

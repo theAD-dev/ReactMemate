@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Download, Filter } from 'react-bootstrap-icons';
 import clsx from 'clsx';
-import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
 import OrdersTable from './order-table';
@@ -25,7 +23,7 @@ const OrderPage = () => {
     };
 
     return (
-        <PrimeReactProvider className='peoples-page'>
+        <div className='peoples-page'>
             <div className={`topbar ${selectedOrder?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -65,7 +63,7 @@ const OrderPage = () => {
             </div>
             <OrdersTable ref={dt} searchValue={debouncedValue}  selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
        
-        </PrimeReactProvider>
+        </div>
     );
 };
 

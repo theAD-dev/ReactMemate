@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './components/Auth';
 import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
 import QuotationEmail from './components/layout/browser-web/quotation-email';
@@ -26,16 +26,18 @@ import AccountOverdue from './pages/account-overdue/account-overdue';
 import Logout from './pages/setting/logout/logout';
 import StripeContainer from './ui/strip-payment/strip-payment';
 import Components from '../src/ui/memate-select';
+import { protectedRoutes } from './components/layout/Header';
+import NotFoundTemplate from './ui/404-template/not-found-template';
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="*" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path='/logout' element={<Logout />} />
-        <Route path='/suspended' element={<Suspended/> }/>
-        <Route path="/account-overdue" element={<AccountOverdue />}/>
-        
+        <Route path='/suspended' element={<Suspended />} />
+        <Route path="/account-overdue" element={<AccountOverdue />} />
+
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/check-mail" element={<CheckMail />} />
         <Route path="/password-reset" element={<PasswordReset />} />
@@ -57,7 +59,11 @@ function App() {
         <Route path="/ui/components" element={<Components />} />
         <Route path="/quote/:id" element={<QuotationEmail />} />
         <Route path="/invoice/:id" element={<PublicInvoice />} />
-        <Route path='/payment/:clientSecret/:publishKey' element={<StripeContainer />}/>
+        <Route path='/payment/:clientSecret/:publishKey' element={<StripeContainer />} />
+        <Route path="/404" element={<NotFoundTemplate />} />
+        <Route path="*" element={<Navigate to={"/404"} />} />
+
+        {protectedRoutes}
       </Routes>
     </AuthProvider>
   );

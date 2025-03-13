@@ -1,11 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
-import { PrimeReactProvider } from 'primereact/api';
 import { useDebounce } from 'primereact/hooks';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-
 import TaskTable from './task-table';
 import style from './task.module.scss';
 import CreateTask from '../../features/task/create-task/create-task';
@@ -26,7 +22,7 @@ const TaskPage = () => {
         }
     };
     return (
-        <PrimeReactProvider className='jobs-page'>
+        <div className='jobs-page'>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -40,7 +36,7 @@ const TaskPage = () => {
                         ) : (
                             <>
                                 <div className='filtered-box'>
-                                    <button className={`${style.filterBox}`} onClick={(e) => {}}><Filter size={20}/></button>
+                                    <button className={`${style.filterBox}`} onClick={() => {}}><Filter size={20}/></button>
                                 </div>
                                 <div className="searchBox" style={{ position: 'relative' }}>
                                     <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
@@ -66,7 +62,7 @@ const TaskPage = () => {
             </div>
             <TaskTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch}/>
             <CreateTask show={visible} setShow={setVisible} refetch={() => setRefetch((refetch)=> !refetch)}/>
-        </PrimeReactProvider>
+        </div>
     );
 };
 

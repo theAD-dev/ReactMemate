@@ -23,13 +23,14 @@
 .newButton:focus {
   gap: 8px;
   display: flex;
+  font-size: 14px;
   padding: 4px 14px;
   border-radius: 4px;
   align-items: center;
+  border-radius: 40px;
   justify-content: center;
   border: 1px solid var(--Primary-600, #158ecc);
-  background: var(--Primary-600, #158ecc);
-  border-radius: 40px;
+  background: var(--Primary-600, #158ecc) !important;
 }
 
 .total {

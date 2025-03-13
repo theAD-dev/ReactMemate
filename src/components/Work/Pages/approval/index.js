@@ -1,14 +1,12 @@
 import React from 'react';
 import { Filter } from 'react-bootstrap-icons';
-import { PrimeReactProvider } from 'primereact/api';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
 
 const ApprovalPage = () => {
     const handleSearch = (e) => { };
     return (
-        <PrimeReactProvider className='approval-page'>
+        <div className='approval-page'>
             <div className="topbar" style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>
@@ -52,7 +50,7 @@ const ApprovalPage = () => {
                 </div>
             </div>
             <ApprovalTable />
-        </PrimeReactProvider>
+        </div>
     );
 };
 

@@ -1,12 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
-import { PrimeReactProvider } from 'primereact/api';
 import { useDebounce } from 'primereact/hooks';
 import JobsTable from './jobs-table';
 import style from './jobs.module.scss';
-
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import CreateJob from '../../features/create-job/create-job';
 import JobChat from '../../features/job-chat';
 
@@ -26,7 +23,7 @@ const JobsPage = () => {
         }
     };
     return (
-        <PrimeReactProvider className='jobs-page'>
+        <div className='jobs-page'>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -68,7 +65,7 @@ const JobsPage = () => {
                 setRefetch={setRefetch} />
             <JobChat />
             <CreateJob visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
-        </PrimeReactProvider>
+        </div>
     );
 };
 

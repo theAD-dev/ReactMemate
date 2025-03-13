@@ -31,7 +31,7 @@ const CustomersDiscountCategory = () => {
         value: yup.string().required("Value is required"),
     }).required();
 
-    const { control, register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues: { name: '', value: '' },
     });

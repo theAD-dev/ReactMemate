@@ -5,7 +5,7 @@ const LogoutButton = () => {
     window.localStorage.removeItem('access_token');
     window.localStorage.removeItem('refresh_token');
     window.localStorage.removeItem('isLoggedIn');
-    window.location.href = "/login";
+    window.location.replace("/login");
   };
 
   return (

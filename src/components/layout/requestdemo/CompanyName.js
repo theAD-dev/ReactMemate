@@ -63,14 +63,14 @@ const CompanyName = () => {
   return (
     <>
       <div className="requestDemoWrap">
-        <div className="logohead">
-          <img src={LoinLogo} alt="Loin Logo" />
-        </div>
-        <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className="OnboardingStep1">
           <form>
             <div className="loginPage">
-              <div className="boxinfo">
+              <div className="boxinfo" style={{ overflow: 'auto', flexDirection: 'column' }}>
+                <div className="w-100 p-4">
+                  <img src={LoinLogo} alt="Loin Logo" />
+                </div>
+
                 <div className="boxLogin">
                   <h2>
                     Yes, I want to <span>sign up</span>
@@ -202,11 +202,16 @@ const CompanyName = () => {
                   <div className="linkBottom">
                     <p>
                       Already have an account?{" "}
-                      <Link to="set-new-password">Sign in</Link>
+                      <Link to="/login">Sign in</Link>
                     </p>
                   </div>
                 </div>
+
+                <div className="w-100 p-4 footer-copyright">
+                  <span className="font-14" style={{ color: '#212529' }}>© Memate {new Date().getFullYear()}</span>
+                </div>
               </div>
+
               <div
                 className="sliderRight SinglBgRight"
                 style={{

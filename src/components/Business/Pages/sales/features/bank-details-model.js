@@ -8,7 +8,6 @@ import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import NewQuoteImg from "../../../../../assets/images/img/newQuote.png";
-import "../new-request/new-request.css";
 
 const BankDetailsModel = () => {
   const [open, setOpen] = useState(false);

@@ -26,19 +26,6 @@ const schema = yup.object({
   abn: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^\d{11}$/, "ABN must be an 11-digit number").notRequired(),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  website: yup
-    .string()
-    .nullable() // Allows the field to be null or empty if not required
-    .transform((value) => (value === "" ? null : value)) // Converts empty string to null
-    .matches(
-      /^https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
-      "Website must be a valid URL starting with https://"
-    )
-    .test(
-      'is-https',
-      'Website must start with https://',
-      value => !value || value.startsWith('https://')
-    ),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
 

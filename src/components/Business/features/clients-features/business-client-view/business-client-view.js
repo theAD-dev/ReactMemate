@@ -172,7 +172,16 @@ const ViewSection = ({ client, industries, refetch }) => {
           </Col>
           <Col sm={6}>
             <label className={clsx(style.label)}>Website</label>
-            <Link to={client?.website || "#"} target='_blank'>
+            <Link
+              to={
+                client?.website
+                  ? client.website.startsWith('http://') || client.website.startsWith('https://')
+                    ? client.website
+                    : `https://${client.website}`
+                  : '#'
+              }
+              target='_blank'
+            >
               <div className='d-flex align-items-center' style={{ color: '#106B99', fontSize: '16px', }}>
                 <div className='ellipsis-width' title={client?.website}>{client?.website || "-"}&nbsp;</div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
