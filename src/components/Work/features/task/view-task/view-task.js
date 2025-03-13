@@ -78,7 +78,7 @@ const TaskLoadingView = () => {
 
 const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitilize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
-  const { isFetching: isLoading, data, isError, refetch } = useQuery({
+  const { isFetching: isLoading, data } = useQuery({
     queryKey: ['taskId', taskId],
     queryFn: () => getTask(taskId),
     enabled: !!taskId,

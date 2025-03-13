@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
+import { PrimeReactProvider } from "primereact/api";
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'sonner';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import './prime.css';
 import './index.css';

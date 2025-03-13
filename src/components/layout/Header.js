@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Placeholder } from "react-bootstrap";
 import { XCircle } from "react-bootstrap-icons";
-import { useLocation, NavLink, Outlet, Route, useNavigate } from "react-router-dom";
+import { useLocation, NavLink, Outlet, Route, useNavigate, Navigate } from "react-router-dom";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -101,10 +101,11 @@ import { Work } from "../Work/Pages/Work";
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
   const { setTrialHeight } = useTrialHeight();
   const [isVisibleTrial, setIsVisibleTrial] = useState(false);
   const [profileData, setProfileData] = useState(null);
-  const [menuswitch, SetMenuSwitch] = useState(true);
+  const [menuSwitch, SetMenuSwitch] = useState(true);
 
   const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const isSuspended = profileDataLocal?.is_suspended ? true : false;
@@ -137,6 +138,8 @@ const Header = () => {
     setTrialHeight(isVisibleTrial ? 30 : 0);
   }, [isVisibleTrial]);
 
+  if (!isLoggedIn) return <Navigate to={"/login"} replace />;
+
   return (
     <>
       {
@@ -147,7 +150,7 @@ const Header = () => {
       }
 
       <div className="headerNav1">
-        {menuswitch ?
+        {menuSwitch ?
           <>
             <div className="headerTop business" style={{ whiteSpace: 'nowrap' }}>
               <Container fluid>
@@ -566,6 +569,6 @@ export const protectedRoutes = (
     <Route path="/settings/templates/edit-signatures/" element={<EditSignatures />} />
     <Route path="/settings/templates/edit-proposal/" element={<EditProposal />} />
   </Route>
-)
+);
 
 export default Header;

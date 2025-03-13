@@ -67,11 +67,13 @@ img {
 }
 
 table thead tr th {
-  background: linear-gradient(to top,
-      #eaecf0,
-      #eaecf0 1px,
-      #ffffff 1px,
-      #ffffff 100%);
+  background: linear-gradient(
+    to top,
+    #eaecf0,
+    #eaecf0 1px,
+    #ffffff 1px,
+    #ffffff 100%
+  );
   border-bottom: 0;
 }
 
@@ -88,8 +90,14 @@ table tbody tr td {
   padding-bottom: 2px;
 }
 
-table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) thead tr th:first-child,
-table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar) tbody tr td:first-child {
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar)
+  thead
+  tr
+  th:first-child,
+table:not(.p-datatable-table):not(.custom-table):not(.p-datepicker-calendar)
+  tbody
+  tr
+  td:first-child {
   position: sticky;
   left: 0;
   width: 40px;
@@ -116,10 +124,26 @@ table tbody tr.selected-row .linkByttonStyle {
   opacity: 1;
 }
 
-table thead tr th:nth-child(4) span.react-resizable-handle.react-resizable-handle-se,
-table thead tr th:nth-child(3) span.react-resizable-handle.react-resizable-handle-se,
-table thead tr th:nth-child(2) span.react-resizable-handle.react-resizable-handle-se,
-table thead tr th:nth-child(1) span.react-resizable-handle.react-resizable-handle-se {
+table
+  thead
+  tr
+  th:nth-child(4)
+  span.react-resizable-handle.react-resizable-handle-se,
+table
+  thead
+  tr
+  th:nth-child(3)
+  span.react-resizable-handle.react-resizable-handle-se,
+table
+  thead
+  tr
+  th:nth-child(2)
+  span.react-resizable-handle.react-resizable-handle-se,
+table
+  thead
+  tr
+  th:nth-child(1)
+  span.react-resizable-handle.react-resizable-handle-se {
   display: none;
 }
 
@@ -155,7 +179,7 @@ span.react-resizable-handle.react-resizable-handle-se:hover {
   opacity: 1;
 }
 
-.table>thead tr th .react-resizable-handle-se:before:hover {
+.table > thead tr th .react-resizable-handle-se:before:hover {
   opacity: 1;
 }
 
@@ -197,7 +221,7 @@ tr.selected-row td {
   justify-content: center;
 }
 
-.customCheckBox input:checked~.checkmark {
+.customCheckBox input:checked ~ .checkmark {
   border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--Primary-500, #1ab2ff);
   background: var(--Primary-50, #ebf8ff);
@@ -213,11 +237,11 @@ tr.selected-row td {
   display: none;
 }
 
-.customCheckBox input:checked~.checkmark:after {
+.customCheckBox input:checked ~ .checkmark:after {
   display: block;
 }
 
-.customCheckBox input:checked~.checkmark svg {
+.customCheckBox input:checked ~ .checkmark svg {
   opacity: 1;
 }
 
@@ -422,16 +446,17 @@ span.lightColorStyle {
   border: 1px solid var(--Border, #d0d5dd);
 }
 
-.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
   border-color: #106b99 !important;
   border-width: 1px !important;
 }
 
-.radioSelectButton .btn-check:checked+.btn,
+.radioSelectButton .btn-check:checked + .btn,
 .radioSelectButton .btn.active,
 .radioSelectButton .btn.show,
 .radioSelectButton .btn:first-child:active,
-.radioSelectButton :not(.btn-check)+.btn:active {
+.radioSelectButton :not(.btn-check) + .btn:active {
   color: #106b99;
   border-color: #a3e0ff;
   border: 1px solid !important;
@@ -588,7 +613,9 @@ table.department-calculation tbody tr.selected td {
   background-color: #f2faff !important;
 }
 
-.checkbox:has(table.department-calculation tbody tr input[type="checkbox"]:checked) {
+.checkbox:has(
+    table.department-calculation tbody tr input[type="checkbox"]:checked
+  ) {
   visibility: visible !important;
 }
 
@@ -1984,7 +2011,8 @@ strong.dollorIcon {
   width: 263px;
   z-index: 1000;
   right: 0;
-  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px) var(--radius-xs, 4px);
+  border-radius: 0px var(--radius-xs, 4px) var(--radius-xs, 4px)
+    var(--radius-xs, 4px);
   border: 1px solid var(--Gray-200, #eaecf0);
   background: var(--Base-White, #fff);
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
@@ -2399,9 +2427,15 @@ color: #4285F4;
   border-radius: 40px;
 }
 
-.salesTableWrap .flatpickr-day.selected.startRange+.endRange:not(:nth-child(7n + 1)),
-.salesTableWrap .flatpickr-day.startRange.startRange+.endRange:not(:nth-child(7n + 1)),
-.salesTableWrap .flatpickr-day.endRange.startRange+.endRange:not(:nth-child(7n + 1)) {
+.salesTableWrap
+  .flatpickr-day.selected.startRange
+  + .endRange:not(:nth-child(7n + 1)),
+.salesTableWrap
+  .flatpickr-day.startRange.startRange
+  + .endRange:not(:nth-child(7n + 1)),
+.salesTableWrap
+  .flatpickr-day.endRange.startRange
+  + .endRange:not(:nth-child(7n + 1)) {
   box-shadow: -13px 0 0 #7f56d9c7, 13px 0 0 #7f56d9c7 !important;
 }
 
@@ -2856,10 +2890,13 @@ div#popoverStyleChange {
   border-bottom-color: #434a54;
 }
 
-.salesTableWrap #tooltip-top-start[data-popper-placement^="top"] .tooltip-arrow::before,
+.salesTableWrap
+  #tooltip-top-start[data-popper-placement^="top"]
+  .tooltip-arrow::before,
 .salesTableWrap #tooltip-top-start .tooltip-arrow::before {
   top: -1px;
-  border-width: var(--bs-tooltip-arrow-height) calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
+  border-width: var(--bs-tooltip-arrow-height)
+    calc(var(--bs-tooltip-arrow-width) * 0.5) 0;
   border-top-color: #fff;
 }
 
@@ -2971,7 +3008,7 @@ div#popoverStyleChange {
   left: 0;
 }
 
-.salesTableWrap .progress>span {
+.salesTableWrap .progress > span {
   width: 50%;
   height: 100%;
   overflow: hidden;
@@ -4483,7 +4520,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
   text-align: center;
 } */
 
-.salesTableWrap .checkbox-custom:checked+.checkbox-custom-label:before {
+.salesTableWrap .checkbox-custom:checked + .checkbox-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -4491,13 +4528,13 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
+.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
   border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--primary-500, #9e77ed);
   background: var(--primary-50, #f9f5ff);
 }
 
-.salesTableWrap .radio-custom:checked+.radio-custom-label:before {
+.salesTableWrap .radio-custom:checked + .radio-custom-label:before {
   content: "";
   color: #bbb;
   background: url(/src/assets/images/icon/check.png);
@@ -4505,8 +4542,8 @@ Due to the split circle of progress-left and progress right, we must use the ani
   background-position: center;
 }
 
-.salesTableWrap .checkbox-custom:focus+.checkbox-custom-label,
-.salesTableWrap .radio-custom:focus+.radio-custom-label {
+.salesTableWrap .checkbox-custom:focus + .checkbox-custom-label,
+.salesTableWrap .radio-custom:focus + .radio-custom-label {
   outline: 1px solid #ddd;
 }
 
@@ -4864,8 +4901,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 
 .salesTableWrap .stepBoxStyle ul li strong {
   border-radius: var(--radius-lg, 10px);
-  border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border,
-      #eaecf0);
+  border: 1px solid
+    var(
+      --Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border,
+      #eaecf0
+    );
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   width: 48px;
   height: 48px;
@@ -4922,7 +4962,9 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin-bottom: 3px;
 }
 
-.salesTableWrap .datepickerField .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+.salesTableWrap
+  .datepickerField
+  .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 16.5px 14px;
   padding-right: 0;
   color: #475467;
@@ -5245,7 +5287,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 
 .salesTableWrap .colfilterbig {
-  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
+  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px)
+    var(--radius-md, 8px);
   border: 1px solid var(--Gray-100, #f2f4f7);
   background: var(--Base-White, #fff);
   padding: 16px 0px 0;
@@ -5303,7 +5346,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   align-items: center;
 }
 
-.salesTableWrap .ProgressTag .option input:checked~.checkmark {
+.salesTableWrap .ProgressTag .option input:checked ~ .checkmark {
   border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--Primary-500, #9e77ed) !important;
   background: var(--Primary-50, #f9f5ff);
@@ -5357,11 +5400,15 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   margin: 0 auto;
 }
 
-.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+.SalesContact
+  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-error
+  .MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd;
 }
 
-.SalesContact .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+.SalesContact
+  .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
   border-color: #d0d5dd;
 }
 
@@ -5544,7 +5591,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   justify-content: flex-end;
 }
 
-.custom-radio-button input:checked~.custom-radio-button__checkmark {
+.custom-radio-button input:checked ~ .custom-radio-button__checkmark {
   border-radius: var(--radius-lg, 10px);
   border: 1px solid var(--Gray-300, #1ab2ff);
   background: var(--Base-White, #ebf8ff);
@@ -5559,7 +5606,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   display: none;
 }
 
-.custom-radio-button input:checked~.custom-radio-button__checkmark:after {
+.custom-radio-button input:checked ~ .custom-radio-button__checkmark:after {
   display: block;
 }
 
@@ -5761,9 +5808,11 @@ li.szh-menu__item:hover {
   align-items: center;
   border-radius: var(--radius-xs, 4px);
   border: 2px solid #1ab2ff;
-  background: radial-gradient(2061.16% 127.06% at -1.24% 2.75%,
+  background: radial-gradient(
+      2061.16% 127.06% at -1.24% 2.75%,
       #1ab2ff 0%,
-      #ffb258 100%),
+      #ffb258 100%
+    ),
     #fff;
 }
 
@@ -5818,7 +5867,7 @@ li.szh-menu__item:hover {
   color: #98a2b3;
 }
 
-.basic-multi-select>* {
+.basic-multi-select > * {
   border: none !important;
   outline: none !important;
 }
@@ -5861,7 +5910,7 @@ ul.szh-menu {
   text-align: left;
 }
 
-.szh-menu__submenu>.szh-menu__item::after {
+.szh-menu__submenu > .szh-menu__item::after {
   right: 0.5rem !important;
 }
 
@@ -5904,7 +5953,9 @@ ul.szh-menu {
   margin: 0 8px;
 }
 
-.requestDemoWrap .react-international-phone-input-container .react-international-phone-input {
+.requestDemoWrap
+  .react-international-phone-input-container
+  .react-international-phone-input {
   border: 0px solid !important;
 }
 
@@ -6173,9 +6224,11 @@ ul.szh-menu {
 }
 
 .requestDemoWrap .SinglBgRight:before {
-  background: linear-gradient(0deg,
+  background: linear-gradient(
+      0deg,
       rgba(0, 0, 0, 0.4) -14.5%,
-      rgba(0, 0, 0, 0) 23.66%),
+      rgba(0, 0, 0, 0) 23.66%
+    ),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
   position: absolute;
   content: "";
@@ -6335,12 +6388,12 @@ ul.szh-menu {
   border: 1px solid var(--colorG5);
 }
 
-.inputInfocheckbox:hover input~.checkmarkdata {
+.inputInfocheckbox:hover input ~ .checkmarkdata {
   background-color: #fafafa;
   border: 1px solid var(--colorG5);
 }
 
-.inputInfocheckbox input:checked~.checkmarkdata {
+.inputInfocheckbox input:checked ~ .checkmarkdata {
   background-color: #fafafa;
   border: 1px solid var(--colorG5);
 }
@@ -6351,7 +6404,7 @@ ul.szh-menu {
   display: none;
 }
 
-.inputInfocheckbox input:checked~.checkmarkdata:after {
+.inputInfocheckbox input:checked ~ .checkmarkdata:after {
   display: block;
 }
 
@@ -7253,9 +7306,11 @@ button.cancel {
 
 .progressSubsIcon {
   border-radius: var(--radius-full, 9999px);
-  background: linear-gradient(135deg,
-      rgba(114, 237, 242, 0.15) 0%,
-      rgba(81, 81, 229, 0.15) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(114, 237, 242, 0.15) 0%,
+    rgba(81, 81, 229, 0.15) 100%
+  );
   display: flex;
   width: 40px;
   height: 40px;
@@ -8500,6 +8555,23 @@ ul.activeListPassword li.active {
   margin-top: 41px;
 }
 
+.calendly-container .calendly-inline-widget {
+  height: 1080px;
+}
+
+@media (min-width: 2242px) {
+  .calendly-container .calendly-inline-widget {
+    height: 700px;
+    border: 0px solid #f2f2f2 !important;
+  }
+
+  .footer-copyright {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+  }
+}
+
 .inputInfo img {
   margin-right: 9px;
 }
@@ -8593,13 +8665,15 @@ ul.activeListPassword li.active {
   content: "";
   width: 100%;
   height: 100vh;
-  background: linear-gradient(0deg,
+  background: linear-gradient(
+      0deg,
       rgba(0, 0, 0, 0.4) -14.5%,
-      rgba(0, 0, 0, 0) 23.66%),
+      rgba(0, 0, 0, 0) 23.66%
+    ),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
 }
 
-.react-slideshow-container+ul.indicators {
+.react-slideshow-container + ul.indicators {
   display: flex;
   justify-content: center;
   margin-top: 20px;
@@ -8619,7 +8693,7 @@ ul.activeListPassword li.active {
   left: 40% !important;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator:before {
+.react-slideshow-container + ul.indicators .each-slideshow-indicator:before {
   width: 10px !important;
   height: 10px !important;
   background: #ffffff !important;
@@ -8629,17 +8703,19 @@ ul.indicators li {
   margin: 0 4px !important;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator {
+.react-slideshow-container + ul.indicators .each-slideshow-indicator {
   opacity: 1 !important;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator:hover,
-.react-slideshow-container+ul.indicators .each-slideshow-indicator.active {
+.react-slideshow-container + ul.indicators .each-slideshow-indicator:hover,
+.react-slideshow-container + ul.indicators .each-slideshow-indicator.active {
   opacity: 1 !important;
   outline: 0;
 }
 
-.react-slideshow-container+ul.indicators .each-slideshow-indicator.active:before {
+.react-slideshow-container
+  + ul.indicators
+  .each-slideshow-indicator.active:before {
   background: #9e77ed !important;
 }
 
@@ -9073,9 +9149,11 @@ ul.activeListPassword li.active svg {
 }
 
 .onboardingWrap .SinglBgRight:before {
-  background: linear-gradient(0deg,
+  background: linear-gradient(
+      0deg,
       rgba(0, 0, 0, 0.4) -14.5%,
-      rgba(0, 0, 0, 0) 23.66%),
+      rgba(0, 0, 0, 0) 23.66%
+    ),
     linear-gradient(180deg, rgba(0, 0, 0, 0) 70.94%, rgba(0, 0, 0, 0.4) 100%);
   position: absolute;
   content: "";
@@ -9301,7 +9379,8 @@ ul.activeListPassword li.active svg {
   border: unset !important;
 }
 
-#viewtask {}
+#viewtask {
+}
 
 .edit-button,
 .edit-button:hover {
@@ -9470,7 +9549,8 @@ ul.activeListPassword li.active svg {
 }
 
 .select-date-range {
-  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px) var(--radius-md, 8px);
+  border-radius: 0px var(--radius-md, 8px) var(--radius-md, 8px)
+    var(--radius-md, 8px);
   border: 1px solid var(--Gray-100, #f2f4f7);
   background: #fff;
 
@@ -9646,12 +9726,17 @@ ul.activeListPassword li.active svg {
 }
 
 .newQuoteContent .react-international-phone-country-selector-button {
-  border: 0px solid var(--react-international-phone-country-selector-border-color,
-      var(--react-international-phone-border-color, gainsboro));
+  border: 0px solid
+    var(
+      --react-international-phone-country-selector-border-color,
+      var(--react-international-phone-border-color, gainsboro)
+    );
   margin: 0;
 }
 
-.newQuoteContent .react-international-phone-input-container .react-international-phone-input {
+.newQuoteContent
+  .react-international-phone-input-container
+  .react-international-phone-input {
   border: 0px solid var(--react-international-phone-border-color, gainsboro);
 }
 
@@ -9978,7 +10063,9 @@ button.CustonCloseModal {
   padding: 0;
 }
 
-.customerCategory .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.customerCategory
+  .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
   border-color: #1976d2;
   border-width: 0px;
 }
@@ -10496,7 +10583,7 @@ table.department-calculation tbody tr:hover td:first-child svg {
 /* .calMainWrap .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
     padding: 0;
 } */
-.toggle-switch input[type="checkbox"]:checked+.switch::before {
+.toggle-switch input[type="checkbox"]:checked + .switch::before {
   transform: translateX(20px);
   background: var(--Base-White, #1ab2ff);
 
@@ -10505,7 +10592,7 @@ table.department-calculation tbody tr:hover td:first-child svg {
     0px 1px 2px 0px rgba(16, 24, 40, 0.06);
 }
 
-.toggle-switch input[type="checkbox"]:checked+.switch {
+.toggle-switch input[type="checkbox"]:checked + .switch {
   background-color: #ebf8ff;
 }
 
@@ -10801,7 +10888,9 @@ table.department-calculation tbody tr:hover td:first-child svg {
   padding: 6px 13px;
 }
 
-.phoneInputBoxStyle .inputInfo button.react-international-phone-country-selector-button {
+.phoneInputBoxStyle
+  .inputInfo
+  button.react-international-phone-country-selector-button {
   border: 0;
 }
 
@@ -11426,12 +11515,12 @@ ul.client {
   background: var(--Base-White, #fff);
 }
 
-.formgroupboxs .inputInfo>*,
-.formgroupboxs .inputInfo .MuiInputBase-root.MuiOutlinedInput-root>* {
+.formgroupboxs .inputInfo > *,
+.formgroupboxs .inputInfo .MuiInputBase-root.MuiOutlinedInput-root > * {
   color: #101828 !important;
 }
 
-.formgroupboxs .inputInfo>*::placeholder {
+.formgroupboxs .inputInfo > *::placeholder {
   color: #667085 !important;
 }
 

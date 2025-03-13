@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { authenticateUser } from "../../../APIs/LoginApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
@@ -7,19 +7,18 @@ import exclamationCircle from "../../../assets/images/icon/exclamation-circle.sv
 import unlockIcon from "../../../assets/images/icon/unlock.svg";
 import loginSlide from "../../../assets/images/img/loginslidebg.png";
 import LoinLogo from "../../../assets/images/logo.svg";
-import Header from "../Header";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
-  const [authError, setAuthError] = useState(null); // For API-level errors
+  const [authError, setAuthError] = useState(null);
+
+  if (isLoggedIn) return <Navigate to={"/"} replace />;
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent form submission and page refresh
@@ -49,14 +48,10 @@ const Login = () => {
 
     try {
       setIsLoading(true);
-
       const { success } = await authenticateUser(email, password);
-      console.log("success: ", success);
-
       if (success) {
-        localStorage.setItem("isLoggedIn", "true");
-        setIsLoggedIn(true);
-        navigate("/"); // Redirect to home page
+        localStorage.setItem("isLoggedIn", true);
+        navigate("/", { replace: true });
       } else {
         setAuthError("Invalid email or password.");
       }
@@ -66,11 +61,6 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    setIsLoggedIn(false);
   };
 
   return (

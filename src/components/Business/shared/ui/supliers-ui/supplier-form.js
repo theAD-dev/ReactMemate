@@ -22,19 +22,6 @@ import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  website: yup
-    .string()
-    .nullable() // Allows the field to be null or empty if not required
-    .transform((value) => (value === "" ? null : value)) // Converts empty string to null
-    .matches(
-      /^https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
-      "Website must be a valid URL starting with https://"
-    )
-    .test(
-      'is-https',
-      'Website must start with https://',
-      value => !value || value.startsWith('https://')
-    ),
   abn: yup.string().required('ABN is required'),
   phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   services: yup.string().required('Services is required'),
