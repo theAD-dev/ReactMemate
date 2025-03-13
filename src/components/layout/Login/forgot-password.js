@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { resetEmail } from '../../../APIs/ProfileResetPasswordApi';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
@@ -7,6 +7,7 @@ import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import forgetyourpass from "../../../assets/images/img/forgetyourpass.jpg";
 import LoinLogo from "../../../assets/images/logo.svg";
+import { ArrowLeftShort } from "react-bootstrap-icons";
 
 
 const ForgotPassword = () => {
@@ -69,6 +70,10 @@ const ForgotPassword = () => {
                     : <>Reset Password <img src={arrowRight} alt="Arrow Right" /></>}
                 </button>
               </form>
+              <Link className="backToLogin" to="/login" style={{ color: '#475467', fontWeight: '600', fontSize: '14px', marginTop: '32px' }}>
+                <ArrowLeftShort color="#475467" size={20} />
+                Back to log in
+              </Link>
             </div>
           </div>
           <div className="copywrite">
