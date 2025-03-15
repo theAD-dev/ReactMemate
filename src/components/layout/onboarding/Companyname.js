@@ -45,7 +45,7 @@ const CompanyName = () => {
                     <div className="step"></div>
                   </div>
                   <div className="formgroup">
-                    <label>Company Legal Name</label>
+                    <label>Company Legal Name<span style={{ color: "#f04438" }}>*</span></label>
                     <div className={`inputInfo ${firstcmError ? 'error-border' : ''}`}>
                       <input
                         type="text"

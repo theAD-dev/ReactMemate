@@ -6326,7 +6326,7 @@ ul.szh-menu {
 
 .requestDemoWrap .boxinfo .boxLogin {
   width: 380px;
-  margin: 0 auto;
+  margin: auto auto;
 }
 
 .request-calendly-date h2 {

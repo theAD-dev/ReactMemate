@@ -86,7 +86,7 @@ const SelectCountry = () => {
                     <div className="step"></div>
                   </div>
                   <div className="formgroup timezoneWrapGroup">
-                    <label>Country</label>
+                    <label>Country<span style={{ color: "#f04438" }}>*</span></label>
                     <div className={`inputInfo `}>
                       <Select
                         value={selectedCountry}
@@ -99,7 +99,7 @@ const SelectCountry = () => {
                     </div>
                   </div>
                   <div className="formgroup">
-                    <label>Phone number</label>
+                    <label>Phone number<span style={{ color: "#f04438" }}>*</span></label>
                     <div className={`inputInfo `}>
                       <PhoneInput
                         country={countryCode}

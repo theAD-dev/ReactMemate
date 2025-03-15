@@ -92,7 +92,7 @@ const PasswordCreate = () => {
                                     <p className='emailDis'>Your new password must be different from previously used passwords.</p>
                                 </div>
                                 <div className="formgroup">
-                                    <label>Password</label>
+                                    <label>Password<span style={{ color: "#f04438" }}>*</span></label>
                                     <div className={`inputInfo ${passwordError ? 'error-border' : ''}`}>
                                         <input
                                             type="password"
@@ -114,7 +114,7 @@ const PasswordCreate = () => {
                                     </div>
                                 </div>
                                 <div className="formgroup">
-                                    <label>Confirm Password</label>
+                                    <label>Confirm Password<span style={{ color: "#f04438" }}>*</span></label>
                                     <div className={`inputInfo ${passwordError ? 'error-border' : ''}`}>
                                         <input
                                             type="password"

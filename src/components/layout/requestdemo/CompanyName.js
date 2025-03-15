@@ -85,7 +85,7 @@ const CompanyName = () => {
                   </div>
 
                   <div className="formgroup">
-                    <label>Email</label>
+                    <label>Email<span style={{ color: "#f04438" }}>*</span></label>
                     <div
                       className={`inputInfo ${emailError ? "error-border" : ""
                         }`}

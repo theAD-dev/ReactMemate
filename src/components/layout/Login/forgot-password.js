@@ -53,7 +53,7 @@ const ForgotPassword = () => {
             <h2>Forgot your <span>Password</span></h2>
             <div className="formgroup">
               <form onSubmit={handleResetPassword} >
-                <label>Email</label>
+                <label>Email<span style={{ color: "#f04438" }}>*</span></label>
                 <div className={`inputInfo ${error ? "error-border" : email ? "successBorder" : ""}`}>
                   <img src={envelopeIcon} alt="Envelope Icon" />
                   <input

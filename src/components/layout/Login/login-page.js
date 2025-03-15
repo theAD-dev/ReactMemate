@@ -51,7 +51,8 @@ const Login = () => {
       const { success } = await authenticateUser(email, password);
       if (success) {
         localStorage.setItem("isLoggedIn", true);
-        navigate("/", { replace: true });
+        // navigate("/", { replace: true });
+        window.location.href = "/";
       } else {
         setAuthError("Invalid email or password.");
       }
@@ -76,7 +77,7 @@ const Login = () => {
                 Login to <span>MeMate</span>
               </h2>
               <div className="formgroup">
-                <label>Email</label>
+                <label>Email<span style={{ color: "#f04438" }}>*</span></label>
                 <div
                   className={`inputInfo ${emailError ? "error-border" : email ? "successBorder" : ""
                     }`}
@@ -98,7 +99,7 @@ const Login = () => {
                 {emailError && <p className="error-message">{emailError}</p>}
               </div>
               <div className="formgroup">
-                <label>Password</label>
+                <label>Password<span style={{ color: "#f04438" }}>*</span></label>
                 <div
                   className={`inputInfo ${passwordError ? "error-border" : email ? "successBorder" : ""
                     }`}
