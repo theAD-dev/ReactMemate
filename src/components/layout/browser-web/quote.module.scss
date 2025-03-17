@@ -29,29 +29,30 @@
     z-index: 9;
     position: relative;
     .quotationHead {
+      gap: 50px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       .left {
         h1 {
           margin: 0;
-          color: var(--Gray-900, #1A1C21);
-          font-size: 48px;
+          color: var(--Gray-900, #1a1c21);
+          font-size: 35px;
           font-style: normal;
           font-weight: 600;
-          line-height: 55.072px; 
+          line-height: 45px;
           text-transform: capitalize;
         }
-        span {
+        .invoiceNumber span {
           background: var(--Gray-800, #1d2939);
           padding: 2px 6.884px;
           color: var(--Colors-Foreground-fg-white, #fff);
-          color: var(--Colors-Foreground-fg-white, #FFF);
+          color: var(--Colors-Foreground-fg-white, #fff);
           font-family: Inter;
           font-size: 18.931px;
           font-style: normal;
           font-weight: 500;
-          line-height: 27.536px; 
+          line-height: 27.536px;
           letter-spacing: 0.568px;
           text-transform: uppercase;
         }
@@ -121,19 +122,19 @@
 }
 
 .text.Accepted {
-    color: var(--Success-900, #074d31);
-} 
+  color: var(--Success-900, #074d31);
+}
 
 .text.Declined {
-    color: #7A271A;
+  color: #7a271a;
 }
 
 .text.Review {
-    color: #593812;
+  color: #593812;
 }
 
 .text.Completed {
-    color: #101828;
+  color: #101828;
 }
 
 .quotationRefress {
@@ -145,20 +146,20 @@
     width: 50%;
     p {
       margin: 0;
-      color: var(--Gray-800, #1D2939);
+      color: var(--Gray-800, #1d2939);
       font-family: Inter;
       font-size: 12px;
       font-style: normal;
       font-weight: 500;
-      line-height: 22px; 
+      line-height: 22px;
       letter-spacing: 0.12px;
-      span{
-        color: var(--Gray-800, #1D2939);
+      span {
+        color: var(--Gray-800, #1d2939);
         font-family: Inter;
         font-size: 12px;
         font-style: normal;
         font-weight: 500;
-        line-height: 22px; 
+        line-height: 22px;
         letter-spacing: 0.12px;
       }
     }
@@ -167,19 +168,19 @@
     width: 50%;
     p {
       margin: 0;
-      color: var(--Gray-800, #1D2939);
+      color: var(--Gray-800, #1d2939);
       font-family: Inter;
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      line-height: 24.094px; 
+      line-height: 24.094px;
       strong {
-        color: var(--Gray-800, #1D2939);
+        color: var(--Gray-800, #1d2939);
         font-family: Inter;
         font-size: 14px;
         font-style: normal;
         font-weight: 600;
-        line-height: 24.094px; 
+        line-height: 24.094px;
       }
     }
   }
@@ -198,25 +199,25 @@
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
-      line-height: 24px; 
+      line-height: 24px;
     }
     ul {
       li {
-        color: var(--Gray-800, #1D2939);
+        color: var(--Gray-800, #1d2939);
         font-family: Inter;
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: 24px; 
+        line-height: 24px;
         letter-spacing: 0.16px;
         padding: 3px 0;
         strong {
-          color: var(--Gray-800, #1D2939);
+          color: var(--Gray-800, #1d2939);
           font-family: Inter;
           font-size: 16px;
           font-style: normal;
           font-weight: 600;
-          line-height: 24px; 
+          line-height: 24px;
           letter-spacing: 0.2px;
         }
       }
@@ -234,21 +235,21 @@
     }
     ul {
       li {
-        color: var(--Gray-800, #1D2939);
+        color: var(--Gray-800, #1d2939);
         font-family: Inter;
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: 24px; 
+        line-height: 24px;
         letter-spacing: 0.16px;
         padding: 3px 0;
         strong {
-          color: var(--Gray-800, #1D2939);
+          color: var(--Gray-800, #1d2939);
           font-family: Inter;
           font-size: 16px;
           font-style: normal;
           font-weight: 600;
-          line-height: 24px; 
+          line-height: 24px;
           letter-spacing: 0.2px;
         }
       }
@@ -257,13 +258,29 @@
 }
 
 .quotationtable {
-  margin: 30px auto 0;
+  margin: 10px auto 0;
   background: #fff;
   border-radius: 0 0 4px 4px;
   background: #fff;
   z-index: 9;
   position: relative;
-  // box-shadow: 0px 20.652px 27.536px -6.884px rgba(16, 24, 40, 0.08), 0px 6.884px 10.326px -3.442px rgba(16, 24, 40, 0.03);
+  padding-bottom: 80px !important;
+  overflow: visible !important;
+
+  tbody tr:last-child td {
+    border-bottom: 1px solid #dedede !important;
+  }
+
+  tfoot tr td {
+    padding: 10px 17px !important;
+  }
+
+  th {
+    padding: 0px 17px !important;
+    border-bottom: 1px solid #dedede !important;
+  }
+
+  
 }
 
 .quotationfooter {
@@ -321,7 +338,7 @@
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 24px; 
+    line-height: 24px;
     letter-spacing: 0.16px;
     margin: 0;
   }
@@ -332,7 +349,7 @@
       font-size: 14px;
       font-style: normal;
       font-weight: 400;
-      line-height: 20px; 
+      line-height: 20px;
       letter-spacing: 0.14px;
       margin: 0;
     }
@@ -343,7 +360,7 @@
       font-style: normal;
       list-style: disc;
       font-weight: 400;
-      line-height: 20px; 
+      line-height: 20px;
       letter-spacing: 0.14px;
       position: relative;
       margin-left: 15px;
@@ -362,7 +379,7 @@
       font-size: 12px !important;
       font-style: normal;
       font-weight: 400;
-      line-height: 24.094px; 
+      line-height: 24.094px;
     }
   }
   tr {
@@ -383,12 +400,12 @@
 
 .qupteMainColFooter {
   h2 {
-    color: var(--Gray-800, #1D2939);
+    color: var(--Gray-800, #1d2939);
     font-family: Inter;
     font-size: 17.21px;
     font-style: normal;
     font-weight: 600;
-    line-height: 24px; 
+    line-height: 24px;
     letter-spacing: 0.215px;
   }
   p {
@@ -397,7 +414,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; 
+    line-height: 20px;
     letter-spacing: 0.14px;
   }
 }
@@ -413,7 +430,7 @@
 }
 .footerBoldText {
   color: var(--Gray-900, #101828) !important;
-  font-size: 14px !important;
+  font-size: 20px !important;
   font-style: normal !important;
   font-weight: 600 !important;
   line-height: 14px !important;
@@ -425,14 +442,14 @@
   font-weight: 400 !important;
   line-height: 14px !important;
 }
-.footerBoldTextLight1{
-  color: var(--Gray-800, #1D2939);
-text-align: right!important;
-font-family: Inter!important;
-font-size: 18px!important;
-font-style: normal!important;
-font-weight: 400;
-line-height: 24px!important;
+.footerBoldTextLight1 {
+  color: var(--Gray-800, #1d2939);
+  text-align: right !important;
+  font-family: Inter !important;
+  font-size: 18px !important;
+  font-style: normal !important;
+  font-weight: 400;
+  line-height: 24px !important;
 }
 .logoWrapperFooter {
   display: flex;

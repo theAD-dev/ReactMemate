@@ -20,7 +20,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         category: '',
         phone: { country: '', number: '' },
         contact_persons: [{}],
-        addresses: [{ country: 1 }],
+        addresses: [{ title: "Main Location", country: 1 }],
     });
     const [individualDefaultValues, ] = useState({
         payment_terms: 1,

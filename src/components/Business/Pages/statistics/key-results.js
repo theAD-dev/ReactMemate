@@ -88,7 +88,6 @@ const KeyResultsPage = () => {
     // Sort statistics by sum (descending) and take top 4
     const statistics = keyResultStaticsQuery?.data?.statistics || [];
     const topStatistics = [...statistics]
-        .filter(stat => parseFloat(stat.target_value) > 0)
         .sort((a, b) => parseFloat(b.sum) - parseFloat(a.sum));
     // .slice(0, 4);
 

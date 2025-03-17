@@ -195,7 +195,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 <Column field='average_pd' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
                 <Column field='department' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
-                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}></Column>
+                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}  bodyClassName='shadowLeft' headerClassName="shadowLeft" frozen alignFrozen='right'></Column>
             </DataTable>
             <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
             <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />

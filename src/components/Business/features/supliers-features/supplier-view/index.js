@@ -139,6 +139,11 @@ const ViewSection = ({ data }) => {
             </div>
         </div>
 
+        <h5 className={clsx(style.boxLabel)}>Note</h5>
+        <div className={clsx(style.box)}>
+            {data?.note}
+        </div>
+
         <h5 className={clsx(style.boxLabel)}>Contact Person</h5>
         {
             data?.contact_persons?.map((contact) => (
