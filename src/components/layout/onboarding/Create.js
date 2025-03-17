@@ -117,7 +117,7 @@ const Create = () => {
                   <div className="step"></div>
                 </div>
                 <div className="formgroup">
-                  <label>First Name</label>
+                  <label>First Name<span style={{ color: "#f04438" }}>*</span></label>
                   <div className={`inputInfo ${errors.first_name ? "error-border" : ""}`}>
                     <input
                       type="text"
@@ -130,7 +130,7 @@ const Create = () => {
                   {errors.first_name && <p className="error-message">{errors.first_name}</p>}
                 </div>
                 <div className="formgroup">
-                  <label>Last Name</label>
+                  <label>Last Name<span style={{ color: "#f04438" }}>*</span></label>
                   <div className={`inputInfo ${errors.last_name ? "error-border" : ""}`}>
                     <input
                       type="text"
@@ -143,7 +143,7 @@ const Create = () => {
                   {errors.last_name && <p className="error-message">{errors.last_name}</p>}
                 </div>
                 <div className="formgroup">
-                  <label>Email</label>
+                  <label>Email<span style={{ color: "#f04438" }}>*</span></label>
                   <div className={`inputInfo ${errors.email ? "error-border" : ""}`}>
                     <img src={envelopeIcon} alt="Envelope Icon" />
                     <input

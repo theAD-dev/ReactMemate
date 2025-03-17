@@ -50,8 +50,9 @@
 
 .rightSection {
   height: 100dvh;
-  position: relative;
   display: flex;
+  overflow: hidden;
+  position: relative;
   align-items: center;
   justify-content: center;
   background: linear-gradient(45deg, #1ab2ff 7.86%, #ffb258 94.98%);

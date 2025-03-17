@@ -6326,7 +6326,7 @@ ul.szh-menu {
 
 .requestDemoWrap .boxinfo .boxLogin {
   width: 380px;
-  margin: 0 auto;
+  margin: auto auto;
 }
 
 .request-calendly-date h2 {
@@ -8730,7 +8730,7 @@ ul.indicators li {
   height: 100vh;
   display: flex;
   align-items: center;
-  background: url(./assets/images/background-pattern-decorative.png);
+  background: url(/src/assets/images/background-pattern-decorative.png);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: contain;

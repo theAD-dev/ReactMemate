@@ -36,7 +36,7 @@ const ResendEmail = () => {
 
                   </div>
                   <div className="formgroup">
-                    <label>Email</label>
+                    <label>Email<span style={{ color: "#f04438" }}>*</span></label>
                     <div className={`inputInfo ${emailError ? 'error-border' : ''}`}>
                       <img src={envelopeIcon} alt="Envelope Icon" />
                       <input

@@ -60,7 +60,6 @@ const schema = yup.object({
 
 const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, ref) => {
   const [show, setShow] = useState(false);
-  const [servicesTag, setServiceTag] = useState([]);
   const [addressIndex, setAddressIndex] = useState(0);
 
   const [countryId, setCountryId] = useState('');
@@ -83,7 +82,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
     if (stateId) fetchCities(stateId);
   }, [stateId]);
 
-  const { control, register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+  const { control, register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues
   });

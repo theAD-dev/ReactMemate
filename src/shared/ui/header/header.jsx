@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Placeholder, Row } from "react-bootstrap";
 import { XCircle } from "react-bootstrap-icons";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
 import SelectLocation from "./components/location-selection";
 import ProfileInfo from "./components/profile-info";
 import style from './header.module.scss';
@@ -33,8 +33,8 @@ const Header = () => {
     const { setTrialHeight } = useTrialHeight();
     const [isVisibleTrial, setIsVisibleTrial] = useState(false);
     const [menuSwitch, SetMenuSwitch] = useState(true);
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
     const isSuspended = session?.is_suspended ? true : false;
-    if (isSuspended) navigate("/suspended");
 
     useEffect(() => {
         if (session) {
@@ -53,6 +53,9 @@ const Header = () => {
     useEffect(() => {
         setTrialHeight(isVisibleTrial ? 30 : 0);
     }, [isVisibleTrial, setTrialHeight]);
+
+    if (!isLoggedIn) return <Navigate to={"/login"} replace />;
+    if (isSuspended) return <Navigate to={"/suspended"} replace />;
 
     return (
         <>

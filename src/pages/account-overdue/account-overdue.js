@@ -33,10 +33,10 @@ const AccountOverdue = () => {
     const handleRetryPayment = () => mutation.mutate();
     return (
         <>
-            <Row>
+            <Row className='w-100 p-0 m-0'>
                 <Col sm={6} className={styles.leftSection}>
                     <div className="logohead"><img src="/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt="Loin Logo" /></div>
-                    <div style={{ width: 'fit-content', maxWidth: "calc(100% - 0px)" }} className='d-flex flex-column text-center mx-auto'>
+                    <div style={{ width: 'fit-content', maxWidth: "calc(100% - 0px)" }} className='d-flex flex-column justify-content-center text-center mx-auto'>
                         <div className={styles.topHeading}>
                             <h1 className={styles.heading}>Your Account Overdue</h1>
                         </div>

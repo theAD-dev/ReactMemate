@@ -1,21 +1,25 @@
 import React from "react";
 import { Placeholder } from "react-bootstrap";
-import { QuestionCircle, Search, PlusLg } from "react-bootstrap-icons";
+import { QuestionCircle, Search, PlusLg, Bell } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
+import style from '../header.module.scss';
 
 const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
     return (
         <>
             <div className="avatar-wrap flexEndbox colMinWidth">
                 <ul className="d-flex flex-nowrap">
-                    <li>
+                    <li className={style.navbarActionIcon}>
+                        <Bell color="#667085" size={20} />
+                    </li>
+                    <li className={style.navbarActionIcon}>
                         <PlusLg color="#667085" size={20} />
                     </li>
-                    <li>
+                    <li className={style.navbarActionIcon}>
                         <Search color="#667085" size={20} />
                     </li>
-                    <li>
+                    <li className={style.navbarActionIcon}>
                         <QuestionCircle color="#667085" size={20} />
                     </li>
                 </ul>

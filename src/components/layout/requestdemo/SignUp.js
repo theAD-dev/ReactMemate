@@ -50,7 +50,7 @@ const SignUp = () => {
                     <div className="step"></div>
                   </div>
                   <div className="formgroup">
-                    <label>First Name</label>
+                    <label>First Name<span style={{ color: "#f04438" }}>*</span></label>
                     <div className={`inputInfo ${firstNameError ? 'error-border' : ''}`}>
                       <input
                         type="text"

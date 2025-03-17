@@ -71,7 +71,7 @@ const Discovermemate = () => {
                   <div className="step active"></div>
                 </div>
                 <div className="formgroup mb-3">
-                  <label>Name on card</label>
+                  <label>Name on card<span style={{ color: "#f04438" }}>*</span></label>
                   <div className={`inputInfo ${error ? "error-border" : name ? "successBorder" : ""}`}>
                     <input
                       type="text"
@@ -82,7 +82,7 @@ const Discovermemate = () => {
                     <img className="ExclamationCircle" src={exclamationCircle} alt="Error" />
                   </div>
                 </div>
-                <label>Card</label>
+                <label>Card<span style={{ color: "#f04438" }}>*</span></label>
                 <div className="border rounded" style={{ padding: '13px 15px' }}>
                   <CardElement
                     options={{

@@ -77,7 +77,7 @@ const Regionalsettings = () => {
                     <div className="step"></div>
                   </div>
                   <div className="formgroup timezoneWrapGroup">
-                    <label>Country</label>
+                    <label>Country<span style={{ color: "#f04438" }}>*</span></label>
                     <Dropdown
                       value={country}
                       options={timezones.map((timezone) => ({ value: timezone.name, label: timezone.name }))}
@@ -88,7 +88,7 @@ const Regionalsettings = () => {
                     />
                   </div>
                   <div className="formgroup removeBorder1">
-                    <label>Timezone</label>
+                    <label>Timezone<span style={{ color: "#f04438" }}>*</span></label>
                     <Dropdown
                       value={timezone}
                       options={timezonesOptions.map((option) => ({ value: option, label: option }))}
