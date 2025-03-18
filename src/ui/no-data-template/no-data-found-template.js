@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { ChevronLeft } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import style from './no-data-found-template.module.scss';
 import NodataImg from "../../assets/images/img/NodataImg.png";
+import Support from '../../shared/ui/support/support';
 
 
 const NoDataFoundTemplate = ({ isDataExist = true }) => {
+    const [visible, setVisible] = useState(false);
     return (
         <div className={clsx(style.noDataBox)}>
             <div className='position-relative d-flex flex-column'>
@@ -21,7 +23,7 @@ const NoDataFoundTemplate = ({ isDataExist = true }) => {
                             The user you are looking for doesn't exist. <br />Here are some helpful links:
                         </p>
                         <Link to={"/"}><Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button></Link>
-                        <Link to={"#"}><span className={clsx(style.supportext)}>Support</span></Link>
+                        <Link onClick={() => setVisible(true)} to={"#"}><span className={clsx(style.supportext)}>Support</span></Link>
                     </>
                 ) : (
                     <>
@@ -29,7 +31,7 @@ const NoDataFoundTemplate = ({ isDataExist = true }) => {
                     </>
                 )
             }
-
+            <Support setVisible={setVisible} visible={visible} />
         </div>
     );
 };

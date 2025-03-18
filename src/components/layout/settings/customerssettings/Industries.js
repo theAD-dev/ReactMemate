@@ -27,10 +27,6 @@ const CustomersIndustries = () => {
         enabled: true,
     });
 
-    const schema = yup.object({
-        name: yup.string().required("Name is required"),
-    }).required();
-
     const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         resolver: yupResolver(yup.object({
             name: yup.string().required("Name is required"),

@@ -1,7 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { ThreeDotsVertical, Trash } from 'react-bootstrap-icons';
-import { ControlledMenu, useClick } from '@szhsin/react-menu';
+import { Trash } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -139,24 +138,17 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
     const xeroBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-center`}>
             {
-                rowData?.xero_status === "in_progress" 
-                ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
-                : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
+                rowData?.xero_status === "in_progress"
+                    ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
+                    : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
             }
         </div>;
     };
-    
+
     const StatusBody = (rowData) => {
         if (rowData.paid)
-            return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='success-outline-button font-14' style={{ width: '86px', height: '36px' }}>Paid</Button>;
-        return <Button onClick={() => setShowDialog({ data: rowData, show: true })}  className='danger-outline-button font-14' style={{ width: '86px', height: '36px' }}>Not Paid</Button>;
-
-        //  <div className={`${style.status} ${style.inactive}`}>
-        //     Not Paid <Badge severity="danger"></Badge>
-        // </div>
-        // <div className={`${style.status} ${style.active}`}>
-        //     <Badge severity="success"></Badge> Paid
-        // </div>
+            return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='success-outline-button font-14' style={{ width: '86px', height: '36px' }}>Paid</Button>;
+        return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='danger-outline-button font-14' style={{ width: '86px', height: '36px' }}>Not Paid</Button>;
     };
 
     const loadingIconTemplate = () => {
@@ -182,30 +174,15 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
     });
 
     const ActionBody = (rowData) => {
-            const ref = useRef(null);
-            const [isOpen, setOpen] = useState(false);
-            const anchorProps = useClick(isOpen, setOpen);
-    
-            return <React.Fragment>
-                <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
-    
-                <ControlledMenu
-                    state={isOpen ? 'open' : 'closed'}
-                    anchorRef={ref}
-                    onClose={() => setOpen(false)}
-                    className={"threeDots"}
-                    menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
-                >
-                    <div className='d-flex flex-column gap-2'>
-                        <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
-                            <Trash color='#B42318' size={20} />
-                            <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete expense</span>
-                            {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
-                        </div>
-                    </div>
-                </ControlledMenu>
-            </React.Fragment>;
-        };
+        return (
+            <div className='d-flex justify-content-center align-items-center w-100 h-100'>
+                {deleteMutation?.variables &&
+                    (deleteMutation?.variables === rowData.id)
+                    ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner>
+                    : <Trash color='#667085' size={20} className='cursor-pointer' onClick={async () => { await deleteMutation.mutateAsync(rowData.id); }} />}
+            </div>
+        );
+    };
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
 
@@ -224,7 +201,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}
@@ -240,9 +217,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 <Column field='average_pd' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
                 <Column field='department' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
-                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }}  bodyClassName='shadowLeft' headerClassName="shadowLeft" frozen alignFrozen='right'></Column>
-                <Column header="Actions" body={""} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
-                
+                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft' headerClassName="shadowLeft" frozen alignFrozen='right'></Column>
+                <Column header="Actions" body={ActionBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
             </DataTable>
             <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
             <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />

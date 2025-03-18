@@ -191,13 +191,13 @@ const Header = () => {
                                         </li>
                                         <li>
                                             <NavLink
-                                                to="/orders"
+                                                to="/projects"
                                                 className={({ isActive }) =>
                                                     (isActive ? "menuActive" : "link") + " orders"
                                                 }
                                             >
                                                 <img src={OrdersIcon} alt="OrdersIcon" />
-                                                Orders
+                                                Projects
                                             </NavLink>
                                         </li>
                                         <li>

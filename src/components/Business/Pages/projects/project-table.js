@@ -7,7 +7,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from "primereact/dialog";
 import { Tag } from 'primereact/tag';
-import style from './order.module.scss';
+import style from './project.module.scss';
 import { getListOfOrder } from '../../../../APIs/OrdersApi';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
@@ -116,9 +116,9 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       <div className='d-flex align-items-center'>
         <div className={`d-flex justify-content-center align-items-center`}>
           {rowData.status === "In progress" ? (
-            <span className={style.statusComplete}> Complete </span>
+            <span className={style.lostProfit}>{rowData.status}</span>
           ) : (
-            <span className={style.lostProfit}>In Complete <span className="dots"></span></span>
+            <span className={style.statusComplete}>{rowData.status}<span className="dots"></span></span>
           )}
         </div>
       </div>
@@ -280,10 +280,10 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         onSort={onSort}
         rowClassName={rowClassName}
       >
-        <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem', zIndex: 1 }} frozen></Column>
-        <Column field="number" header="Order #" body={orderBody} style={{ minWidth: '155px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
+        <Column selectionMode="multiple" bodyClassName={'show-on-hover border-end-0'} headerClassName='border-end-0' headerStyle={{ width: '3rem', zIndex: 1 }} frozen></Column>
+        <Column field="number" header="Project #" body={orderBody} style={{ minWidth: '155px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>
         <Column field="client.name" header="Customer" body={customerBody} style={{ minWidth: '224px' }} sortable></Column>
-        <Column field="reference" header="Order Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '400px' }}>{rowData.reference}</div>} style={{ minWidth: '400px' }} ></Column>
+        <Column field="reference" header="Project Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '400px' }}>{rowData.reference}</div>} style={{ minWidth: '400px' }} ></Column>
         <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
         <Column field="budget" header="Budget" body={(rowData) => `$${formatAUD(rowData.budget)}`} style={{ minWidth: '110px' }} className='text-end' sortable></Column>

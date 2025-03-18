@@ -10,7 +10,7 @@ const ExpensesPage = LazyLoader(lazy(() => import('../components/Business/Pages/
 const InvoicePage = LazyLoader(lazy(() => import('../components/Business/Pages/invoices')));
 const PublicInvoice = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/public-invoice/public-invoice')));
 const Management = LazyLoader(lazy(() => import('../components/Business/Pages/management/management-page')));
-const OrderPage = LazyLoader(lazy(() => import('../components/Business/Pages/orders')));
+const ProjectPage = LazyLoader(lazy(() => import('../components/Business/Pages/projects')));
 const BusinessClientInformation = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/business-client-information')));
 const CalculateQuote = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/calculate-quote')));
 const ExistingClients = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/existing-clients')));
@@ -241,8 +241,8 @@ const routes = [
                 element: <ProtectedRoute permission={""}><InvoicePage /></ProtectedRoute>,
             },
             {
-                path: "orders",
-                element: <ProtectedRoute permission={""}><OrderPage /></ProtectedRoute>,
+                path: "projects",
+                element: <ProtectedRoute permission={""}><ProjectPage /></ProtectedRoute>,
             },
             {
                 path: "statistics",

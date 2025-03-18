@@ -81,9 +81,6 @@ const TableTopBar = ({
   const filterDropdownRef = useRef(null);
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
-  console.log("rows: ", rows);
-  console.log("filterState: ", filterState);
-
   const projectManagerQuery = useQuery({ queryKey: ['project-manager'], queryFn: getProjectManager });
 
   const handleMoveToWon = async () => {
