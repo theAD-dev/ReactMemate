@@ -2,8 +2,9 @@
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  border: 0.75px solid #ccc;
+  overflow: hidden;
   margin-right: 10px;
   border-radius: 4px;
+  border: 0.75px solid #ccc;
   background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
 }
