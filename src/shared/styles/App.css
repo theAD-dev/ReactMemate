@@ -1163,7 +1163,7 @@ strong.dollorIcon {
   align-items: center;
   justify-content: center;
   position: relative;
-  top: -3px;
+  top: -2px;
 }
 
 .projectCardModel .cardId {
@@ -11599,4 +11599,8 @@ ul.client {
 
 .mergeForm .modal-content {
   border-radius: 10px;
+}
+
+.quotationtable .p-datatable-wrapper {
+  overflow: visible !important;
 }

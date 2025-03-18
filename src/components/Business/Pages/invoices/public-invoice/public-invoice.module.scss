@@ -30,6 +30,7 @@
     z-index: 9;
     position: relative;
     .quotationHead {
+      gap: 50px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -37,13 +38,13 @@
         h1 {
           margin: 0;
           color: var(--Gray-900, #1a1c21);
-          font-size: 48px;
+          font-size: 35px;
           font-style: normal;
           font-weight: 600;
-          line-height: 55.072px;
+          line-height: 45px;
           text-transform: capitalize;
         }
-        span {
+        .invoiceNumber span {
           background: var(--Gray-800, #1d2939);
           padding: 2px 6.884px;
           color: var(--Colors-Foreground-fg-white, #fff);
@@ -272,12 +273,18 @@
 }
 
 .quotationtable {
-  margin: 30px auto 0;
+  margin: 10px auto 0;
   background: #fff;
   border-radius: 0 0 4px 4px;
   background: #fff;
   z-index: 9;
   position: relative;
+  border-bottom: 1px solid #dedede !important;
+
+  th {
+    padding: 0px 17px !important;
+    border-bottom: 1px solid #dedede !important;
+  }
   // box-shadow: 0px 20.652px 27.536px -6.884px rgba(16, 24, 40, 0.08), 0px 6.884px 10.326px -3.442px rgba(16, 24, 40, 0.03);
 }
 

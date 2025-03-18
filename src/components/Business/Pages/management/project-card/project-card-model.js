@@ -317,8 +317,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         animation={false}
       >
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
-          <div className="modelHeader">
-            <ul className='d-flex justify-content-between align-items-center '>
+          <div className="modelHeader" style={{ flex: '1', maxWidth: "calc(100% - 350px)" }}>
+            <ul className='d-flex align-items-center'>
               <li className='me-1 d-flex align-items-center'>
                 <strong className='dollorIcon' style={{
                   background: !cardData?.invoice_created ? '#F9FAFB'
@@ -336,10 +336,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     <Placeholder as="span" animation="wave" className="ms-2 me-2">
                       <Placeholder xs={12} bg="secondary" size='md' style={{ width: '120px' }} />
                     </Placeholder>
-                  ) : <span className='cardId'>{cardData?.number} &nbsp;</span>
+                  ) : <span className='cardId text-nowrap'>{cardData?.number} &nbsp;</span>
                 }
               </li>
-              <li className='refrencesTag mt-1'>
+              <li className='refrencesTag mt-1' style={{ width: "calc(100% - 120px)" }}>
                 Reference:&nbsp;
                 {isFetching ? (
                   <Placeholder as="p" animation="wave" className="mb-0 mt-1">
@@ -352,7 +352,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     onChange={handleReferenceChange}
                     onBlur={handleSaveReference}
                     autoFocus
-                    className='border rounded'
+                    className='border rounded w-100'
+                    style={{ maxWidth: "calc(100% - 120px)" }}
                   />
                 ) : (
                   <>
@@ -360,7 +361,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       referencemutation.isPending
                         ? <div className="dot-flashing ms-5 mt-1"></div>
                         : <>
-                          <small style={{ color: '#1D2939', fontSize: '16px' }}> {cardData?.reference}</small>
+                          <small className='ellipsis-width' style={{ color: '#1D2939', fontSize: '16px', maxWidth: "calc(100% - 220px)" }}> {cardData?.reference}</small>
                           <span> <PencilSquare size={16} color='#106B99' onClick={handleEditReference} style={{ cursor: 'pointer' }} /></span>
                         </>
                     }

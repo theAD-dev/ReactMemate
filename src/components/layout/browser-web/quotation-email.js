@@ -14,6 +14,17 @@ import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } fr
 import googleReview from "../../../assets/images/icon/checbold.svg";
 import { formatAUD } from '../../../shared/lib/format-aud';
 
+const formatTimeStamp = (timestamp) => {
+    if (!timestamp) return "-";
+
+    const date = new Date(+timestamp * 1000);
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+        month: "long",
+    }).format(date);
+    const year = date.getFullYear();
+    return `${monthAbbreviation} ${day}, ${year}`;
+};
 
 const QuotationEmail = () => {
     const { id } = useParams();
@@ -140,33 +151,26 @@ const QuotationEmail = () => {
     const CounterBody = (rowData, { rowIndex }) => <span>{rowIndex + 1}</span>;
 
     const footerGroup = (
-        <ColumnGroup>
+        <ColumnGroup className="pe-4">
             <Row>
-                <Column colSpan={4} />
+                <Column colSpan={4} style={{ position: 'relative' }} footer={
+                    <div className='pe-4' style={{ position: 'absolute' }}>
+                        <b>Note:</b>
+                        <p className='mt-3' style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
+                    </div>
+                } />
                 <Column footer="Subtotal" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
                 <Column footer={`\$${formatAUD(quote?.subtotal)}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column colSpan={4} />
-                <Column footer="GST (10%)" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
+                <Column footer="Tax" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
                 <Column footer={`\$${formatAUD(quote?.gst)}`} className={`${style.footerBoldTextLight} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
             </Row>
             <Row>
                 <Column colSpan={4} />
                 <Column footer="Total" className={`${style.footerBoldText} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />
-                <Column footer={`\$${formatAUD(quote?.total)}`} className={`${style.footerBoldText} ${style.footerBoldTextLight1} ${style.footerBorder}`} />
-            </Row>
-            <Row>
-                <Column
-                    footer={(
-                        <div className={style.qupteMainColFooter}>
-                            <h2>Note</h2>
-                            <p>{quote?.note}</p>
-                        </div>
-                    )}
-                    colSpan={6}
-                    footerStyle={{ textAlign: 'left' }}
-                />
+                <Column footer={`\$${formatAUD(quote?.total)}`} className={`${style.footerBoldText} ${style.footerBorder}`} />
             </Row>
         </ColumnGroup>
     );
@@ -189,56 +193,75 @@ const QuotationEmail = () => {
 
                     <div className={clsx(style.quotationWrapper, style[quote?.status])}>
                         <div className={style.quotationHead}>
-                            <div className={style.left}>
-                                <h1>Quotation</h1>
-                                <p className='mb-2 mt-2'> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
+                            <div className={style.left} style={{ width: '50%' }}>
+                                <div className='d-flex align-items-center gap-3'>
+                                    <div className='logo-section'>
+                                        {
+                                            quote?.organization?.logo &&
+                                            <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ width: '150px' }} />
+                                        }
+                                    </div>
+                                    <div className='title-sections'>
+                                        <h1>Tax Invoice</h1>
+                                        <p className={clsx(style.invoiceNumber, 'mb-2 mt-2')}> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div className={style.right}>
-                                {
-                                    quote?.organization?.logo && <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ width: '100px' }} />
-                                }
+                            <div className={style.right} style={{ width: '50%' }}>
+                                <div className={style.quotationRefress}>
+                                    <div className={style.left}>
+                                        <p className='d-flex gap-2 align-items-center text-nowrap'>Date of issue:
+                                            {isLoading ? <Skeleton width="6rem" height='12px' className='mb-0 rounded'></Skeleton> : <span>{formatTimeStamp(quote?.date)}</span>}
+                                        </p>
+                                        <p className='d-flex gap-2 align-items-center text-nowrap'>Date due:
+                                            {isLoading ? <Skeleton width="6rem" height='12px' className='mb-0 rounded'></Skeleton> : <span>{formatDate(quote?.due_date)}</span>}
+                                        </p>
+                                    </div>
+                                    <div className={style.right}>
+                                        <p>PO: </p>
+                                        {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{quote?.purchase_order || "-"}</strong></p>}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div className={style.quotationRefress}>
-                            <div className={style.left}>
-                                <p className='d-flex gap-2 align-items-center'>Date of issue:
-                                    {isLoading ? <Skeleton width="6rem" height='12px' className='mb-0 rounded'></Skeleton> : <span>{formatDate(quote?.due_date)}</span>}
-                                </p>
-                            </div>
-                            <div className={style.right}>
-                                <p>Reference</p>
-                                {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{quote?.reference}</strong></p>}
-
-                                <p className='mt-4'>PO:</p>
-                                {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{quote?.purchase_order || "-"}</strong></p>}
-                            </div>
-                        </div>
+                        <div style={{ border: "1px solid #dedede", width: '100%' }}></div>
 
                         <div className={style.quotationAddress}>
                             <div className={style.left}>
-                                <p>From:</p>
+                                <p style={{ textDecoration: "underline" }}>To</p>
                                 <ul>
-                                    <li>
-                                        {isLoading ? <Skeleton width="10rem" height='15px' className='rounded'></Skeleton> : <strong>{quote?.organization.account_name}</strong>}
-                                    </li>
-                                    <li>ABN:{quote?.organization.abn}</li>
-                                    <li>Address:{quote?.organization.address}</li>
-                                    <li>Phone:{quote?.organization.phone}</li>
-                                    <li>Email:{quote?.organization.email}</li>
+                                    <li style={{ lineHeight: '16px' }}><strong style={{ lineHeight: '16px' }}>{quote?.client.name}</strong></li>
+                                    <li style={{ lineHeight: '16px' }}>ABN: {quote?.client.abn}</li>
+                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.address || "-"}</li>
+                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.city || "-"}</li>
+                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.state || "-"}</li>
+                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.country || "-"}</li>
+                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.postcode || "-"}</li>
+                                    <li style={{ lineHeight: '16px' }}>{quote?.client.phone}</li>
                                 </ul>
                             </div>
                             <div className={style.right}>
-                                <p>To:</p>
+                                <p style={{ textDecoration: "underline" }}>Issued by</p>
                                 <ul>
-                                    <li><strong>{quote?.client.name}</strong></li>
-                                    <li>{quote?.client.email}</li>
-                                    <li>{quote?.client.phone}</li>
+                                    <li style={{ lineHeight: '16px' }}>
+                                        {isLoading ? <Skeleton width="10rem" height='15px' className='rounded'></Skeleton> : <strong style={{ lineHeight: '16px' }}>{quote?.organization.account_name}</strong>}
+                                    </li>
+                                    <li style={{ lineHeight: '18px' }}>ABN:{quote?.organization.abn}</li>
+                                    <li style={{ lineHeight: '18px' }}>{quote?.organization.address}</li>
+                                    <li style={{ lineHeight: '18px' }}>{quote?.organization.phone}</li>
+                                    <li style={{ lineHeight: '18px' }}>{quote?.organization.email}</li>
                                 </ul>
                             </div>
                         </div>
 
-                        <div className={style.quotationtable}>
+                        <div className='my-3' style={{ border: "1px solid #dedede", width: '100%' }}></div>
+
+                        <div className={style.quotationRefress}>
+                            <p>Reference: {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 rounded'></Skeleton> : <span><strong>{quote?.reference}</strong></span>}</p>
+                        </div>
+
+                        <div className={clsx(style.quotationtable, 'quotationtable')}>
                             <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable}>
                                 <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} />
                                 <Column field="index" body={ServicesBody} header="Services" style={{ width: '456px' }} />

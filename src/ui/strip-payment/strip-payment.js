@@ -22,7 +22,7 @@ const StripPayment = forwardRef(({ setIsPaymentProcess }, ref) => {
         const resp = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: '/',
+                return_url: window.location.href,
             },
         });
 

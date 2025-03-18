@@ -93,3 +93,12 @@ export const sendExpenseToXeroApi = async (data) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 };
+
+export const deleteExpense = async (uniqueId) => {
+  const endpoint = `/expenses/delete/${uniqueId}/`;
+  const options = {
+    method: 'DELETE'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};

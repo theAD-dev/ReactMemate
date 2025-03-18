@@ -22,8 +22,8 @@ import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  abn: yup.string().required('ABN is required'),
-  phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
+  // abn: yup.string().required('ABN is required'),
+  // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   services: yup.string().required('Services is required'),
   // note: yup.string().required('Note is required'),
   contact_persons: yup.array().of(
@@ -156,7 +156,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.lable)}>Phone number<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Phone number</label>
             <Controller
               name="phone"
               control={control}
@@ -176,7 +176,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1">
-            <label className={clsx(styles.lable)}>ABN<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>ABN</label>
             <IconField>
               <InputIcon>{errors.abn && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("abn")} className={clsx(styles.inputText, { [styles.error]: errors.abn })} placeholder='32 635 443 221' />
