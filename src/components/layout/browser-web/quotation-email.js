@@ -198,7 +198,7 @@ const QuotationEmail = () => {
                                     <div className='logo-section'>
                                         {
                                             quote?.organization?.logo &&
-                                            <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ width: '150px' }} />
+                                            <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ maxWidth: '150px', maxHeight: '100px' }} />
                                         }
                                     </div>
                                     <div className='title-sections'>

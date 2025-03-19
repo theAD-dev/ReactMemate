@@ -4,7 +4,8 @@ import {
   X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
   Envelope,
   Tag,
-  Postcard
+  Postcard,
+  PlusCircle
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -106,9 +107,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     }
   });
 
-  const handleSaveReference = () => {
+  const handleSaveReference = async () => {
     setIsEditingReference(false);
-    referencemutation.mutate({ reference: editedReference });
+    await referencemutation.mutateAsync({ reference: editedReference });
+    await createInvoiceById(projectId);
   };
 
   const formatTimestamp = (timestamp) => {
@@ -741,10 +743,33 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               </Col>
             </Row>
             <Row className='projectCardCalculation'>
-              <Col className='proBuget projectColBg'>
-                <div>
-                  <h5>Budget</h5>
-                  <p>${formatAUD(cardData?.budget)}</p>
+              <Col className='proCostSale projectColBg'>
+                <div style={{ position: 'relative', left: '20px' }}>
+                  <h5>Cost Of Sale</h5>
+                  <p>${formatAUD(cardData?.cost_of_sale)}</p>
+                </div>
+                <div className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', borderRadius: '40px', border: '1px solid #D0D5DD', background: '#fff', boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)', position: 'relative', left: '42px' }}>
+                  <PlusCircle size={20} color='#344054' />
+                </div>
+              </Col>
+              <Col className='proLabour projectColBg'>
+                <div style={{ position: 'relative', left: '20px' }}>
+                  <h5>Labour</h5>
+                  <p>${formatAUD(cardData?.labor_expenses)}</p>
+                </div>
+                <div className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', borderRadius: '40px', border: '1px solid #D0D5DD', background: '#fff', boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)', position: 'relative', left: '42px' }}>
+                  <PlusCircle size={20} color='#344054' />
+                </div>
+              </Col>
+              <Col className='proOperatingExpense projectColBg'>
+                <div style={{ position: 'relative', left: '20px' }}>
+                  <h5>Operating Expense</h5>
+                  <p>${formatAUD(cardData?.operating_expense)}</p>
+                </div>
+                <div className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', borderRadius: '40px', border: '1px solid #D0D5DD', background: '#fff', boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)', position: 'relative', left: '42px' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                    <path d="M4.16675 8H15.8334M4.16675 13H15.8334" stroke="#344054" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
               </Col>
               <Col className='proRealCost projectColBg'>
@@ -753,21 +778,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <p>${formatAUD(formattedRealCost)}</p>
                 </div>
               </Col>
-              <Col className='proCostSale projectColBg'>
+              <Col className='proBuget projectColBg'>
                 <div>
-                  <h5>Cost Of Sale</h5>
-                  <p>${formatAUD(cardData?.cost_of_sale)}</p>
+                  <h5>Budget</h5>
+                  <p>${formatAUD(cardData?.budget)}</p>
                 </div>
-              </Col>
-              <Col className='proLabour projectColBg'>
-                <div>
-                  <h5>Labour</h5>
-                  <p>${formatAUD(cardData?.labor_expenses)}</p>
-                </div>
-              </Col>
-              <Col className='proProfit projectColBg'>
-                <span>Operational Profit <InfoCircle size={16} color='#1D2939' /></span>
-                <strong>${formatAUD(cardData?.operational_profit)}</strong>
               </Col>
             </Row>
             <Row className='projectCardactionBut'>

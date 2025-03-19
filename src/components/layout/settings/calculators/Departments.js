@@ -107,88 +107,91 @@ const Departments = () => {
                                             </div>}
                                         >
                                             {
-                                                departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => (
-                                                    <AccordionTab
-                                                        className={clsx(style.accorHeadbox, 'main-accordion-header')}
-                                                        key={department.id}
-                                                        header={
-                                                            <span className="d-flex align-items-center justify-content-between">
-                                                                <div className='d-flex align-items-center'>
-                                                                    <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
-                                                                    <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
-                                                                        <PencilSquare color="#106B99" size={16} />
+                                                departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => {
+                                                    const subDepartment = department?.subindexes?.filter((data) => !data?.deleted);
+                                                    return (
+                                                        <AccordionTab
+                                                            className={clsx(style.accorHeadbox, 'main-accordion-header')}
+                                                            key={department.id}
+                                                            header={
+                                                                <span className="d-flex align-items-center justify-content-between">
+                                                                    <div className='d-flex align-items-center'>
+                                                                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
+                                                                        <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
+                                                                            <PencilSquare color="#106B99" size={16} />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
-                                                                    <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
-                                                                    <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
-                                                                </div>
-                                                            </span>
-                                                        }
-                                                    >
-                                                        <Accordion
-                                                            activeIndex={AccordionActiveTab2}
-                                                            onTabChange={(e) => setAccordionActiveTab2(e.index)}
-                                                            className='innnerAccordian'
-                                                            expandIcon={<div className={clsx(style.innerExpandIcon)}>
-                                                                <ChevronUp size={16} color='#344054' />
-                                                            </div>}
-                                                            collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
-                                                                <ChevronDown size={16} color='#106B99' />
-                                                            </div>}
-                                                            onTabOpen={(e) => {
-                                                                const subindexId = department.subindexes[e.index].id;
-                                                                getCalculator(subindexId);
-                                                            }}
-                                                            onTabClose={(e) => {
-                                                                return false;
-                                                            }}
-                                                        >
-                                                            {
-                                                                department?.subindexes?.filter((data) => !data?.deleted)?.map((subindex, i) => (
-                                                                    <AccordionTab
-                                                                        className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
-                                                                        key={subindex.id}
-                                                                        header={(
-                                                                            <span className="d-flex align-items-center justify-content-between">
-                                                                                <div className='d-flex align-items-center'>
-                                                                                    <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
-                                                                                    <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
-                                                                                        <PencilSquare color="#106B99" size={16} />
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
-                                                                                    <DeleteConfirmationModal title={"Sub Department"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
-                                                                                    <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
-                                                                                </div>
-                                                                            </span>
-                                                                        )}
-                                                                    >
-                                                                        {
-                                                                            activeCalculations[subindex.id] ? (
-                                                                                <>
-                                                                                    {
-                                                                                        editSubIndex === subindex.id
-                                                                                            ? <EditCalculators editSubIndex={editSubIndex} calculators={activeCalculations[subindex.id]} />
-                                                                                            : <ViewCalculators index={subindex.id}
-                                                                                                isNewCreate={createCalculatorId === subindex.id}
-                                                                                                cancelCreateCalculator={setCreateCalculatorId}
-                                                                                                refetch={getCalculator}
-                                                                                                calculators={activeCalculations[subindex.id]}
-                                                                                                name={subindex.name}
-                                                                                            />
-                                                                                    }
-                                                                                </>
-                                                                            ) : <LoadingCalculator />
-                                                                        }
-
-                                                                    </AccordionTab>
-                                                                ))
+                                                                    <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
+                                                                        <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
+                                                                        <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
+                                                                    </div>
+                                                                </span>
                                                             }
-                                                        </Accordion>
-                                                    </AccordionTab>
-                                                ))
+                                                        >
+                                                            <Accordion
+                                                                activeIndex={AccordionActiveTab2}
+                                                                onTabChange={(e) => setAccordionActiveTab2(e.index)}
+                                                                className='innnerAccordian'
+                                                                expandIcon={<div className={clsx(style.innerExpandIcon)}>
+                                                                    <ChevronUp size={16} color='#344054' />
+                                                                </div>}
+                                                                collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
+                                                                    <ChevronDown size={16} color='#106B99' />
+                                                                </div>}
+                                                                onTabOpen={(e) => {
+                                                                    const subindexId = subDepartment[e.index].id;
+                                                                    getCalculator(subindexId);
+                                                                }}
+                                                                onTabClose={() => {
+                                                                    return false;
+                                                                }}
+                                                            >
+                                                                {
+                                                                    subDepartment?.map((subindex, i) => (
+                                                                        <AccordionTab
+                                                                            className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
+                                                                            key={subindex.id}
+                                                                            header={(
+                                                                                <span className="d-flex align-items-center justify-content-between">
+                                                                                    <div className='d-flex align-items-center'>
+                                                                                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
+                                                                                        <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
+                                                                                            <PencilSquare color="#106B99" size={16} />
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
+                                                                                        <DeleteConfirmationModal title={"Sub Department"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
+                                                                                        <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
+                                                                                    </div>
+                                                                                </span>
+                                                                            )}
+                                                                        >
+                                                                            {
+                                                                                activeCalculations[subindex.id] ? (
+                                                                                    <>
+                                                                                        {
+                                                                                            editSubIndex === subindex.id
+                                                                                                ? <EditCalculators editSubIndex={editSubIndex} calculators={activeCalculations[subindex.id]} />
+                                                                                                : <ViewCalculators index={subindex.id}
+                                                                                                    isNewCreate={createCalculatorId === subindex.id}
+                                                                                                    cancelCreateCalculator={setCreateCalculatorId}
+                                                                                                    refetch={getCalculator}
+                                                                                                    calculators={activeCalculations[subindex.id]}
+                                                                                                    name={subindex.name}
+                                                                                                />
+                                                                                        }
+                                                                                    </>
+                                                                                ) : <LoadingCalculator />
+                                                                            }
+
+                                                                        </AccordionTab>
+                                                                    ))
+                                                                }
+                                                            </Accordion>
+                                                        </AccordionTab>
+                                                    );
+                                                })
                                             }
                                         </Accordion>
                                     </div>
@@ -430,7 +433,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <div className='d-flex justify-content-between align-items-center mt-4'>
                             <span></span>
                             <div className={clsx(style.RItem)}>
-                                <Button className={style.delete} onClick={(e) => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
+                                <Button className={style.delete} onClick={() => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
                                 <Button className={style.create} onClick={saveCalculator}>
                                     {
                                         isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
@@ -453,7 +456,16 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
                             <Col>
                                 <label>Margin/Markup</label>
-                                <strong>{parseFloat(calculator?.profit_type_value || 0).toFixed(2)}{calculator?.profit_type === "AMN" ? "$" : "%"}</strong>
+                                <strong>
+                                    {parseFloat(calculator?.profit_type_value || 0).toFixed(2)}{" "}
+                                    {
+                                        calculator?.profit_type === "AMN"
+                                            ? "AMT $"
+                                            : calculator?.profit_type === "MRG"
+                                                ? "MRG %"
+                                                : "MRK %"
+                                    }
+                                </strong>
                             </Col>
                             <Col>
                                 <label>Unit Price</label>
@@ -661,7 +673,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
             <div className='d-flex justify-content-between align-items-center mt-4'>
                 <span></span>
                 <div className={clsx(style.RItem)}>
-                    <Button className={style.delete} onClick={(e) => cancelCreateCalculator(null)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
+                    <Button className={style.delete} onClick={() => cancelCreateCalculator(null)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
                     <Button className={style.create} onClick={saveCalculator}>
                         {
                             isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
@@ -737,7 +749,7 @@ const EditCalculators = ({ editSubIndex, calculators }) => {
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='left'>
                                         <label>Cost</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.cost || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.cost || 0))} onValueChange={() => { }} maxFractionDigits={2} />
                                     </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
                                         <X color='#1AB2FF' size={12} />
@@ -748,7 +760,7 @@ const EditCalculators = ({ editSubIndex, calculators }) => {
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='left'>
                                         <label>Margin</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={() => { }} maxFractionDigits={2} />
                                     </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
                                         <X color='#1AB2FF' size={12} />
@@ -759,7 +771,7 @@ const EditCalculators = ({ editSubIndex, calculators }) => {
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='left'>
                                         <label>Margin</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={() => { }} maxFractionDigits={2} />
                                     </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
                                         <X color='#1AB2FF' size={12} />
@@ -770,7 +782,7 @@ const EditCalculators = ({ editSubIndex, calculators }) => {
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='left'>
                                         <label>Budget</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.quantity || 0))} onValueChange={(e) => { }} maxFractionDigits={2} />
+                                        <InputNumber prefix="$" value={parseFloat((calculator?.quantity || 0))} onValueChange={() => { }} maxFractionDigits={2} />
                                     </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
                                         =
@@ -858,7 +870,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
             setDepartment(editDepartment?.name);
     }, [editDepartment?.name]);
 
-    const handleClose = (e) => {
+    const handleClose = () => {
         setVisible(false);
         setDepartment("");
         setEditDepartment({ id: null, name: null });
@@ -940,7 +952,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
             setSubDepartment(editSubDepartment?.name);
     }, [editSubDepartment?.name]);
 
-    const handleClose = (e) => {
+    const handleClose = () => {
         setVisible2(false);
         setSubDepartment("");
         setEditSubDepartment({ id: null, name: null, parent: null });

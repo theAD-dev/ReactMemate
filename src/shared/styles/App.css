@@ -1600,7 +1600,7 @@ strong.dollorIcon {
 
 .proBuget {
   background: var(--Gray-50, #f9fafb);
-  max-width: 236.75px;
+  max-width: 256px;
 }
 
 .proBuget h5,
@@ -1610,7 +1610,7 @@ strong.dollorIcon {
 
 .proRealCost {
   background: #f3ffff;
-  max-width: 236.75px;
+  max-width: 256px;
 }
 
 .proRealCost h5,
@@ -1620,7 +1620,7 @@ strong.dollorIcon {
 
 .proCostSale {
   background: var(--Error-50, #fef3f2);
-  max-width: 236.75px;
+  max-width: 256px;
 }
 
 .proCostSale h5,
@@ -1630,12 +1630,22 @@ strong.dollorIcon {
 
 .proLabour {
   background: var(--Warning-50, #fffaeb);
-  max-width: 236.75px;
+  max-width: 256px;
 }
 
 .proLabour h5,
 .proLabour p {
   color: #93370d;
+}
+
+.proOperatingExpense {
+  max-width: 256px;
+  background: var(--Primary-50, #EBF8FF);
+}
+
+.proOperatingExpense h5,
+.proOperatingExpense p {
+  color: #158ECC;
 }
 
 .proProfit {

@@ -19,7 +19,6 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
   const [note, setNote] = useState('');
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
-  console.log('errors: ', errors);
   const [isLoading, setIsLoading] = useState(false);
 
   const MAX_NOTE_LENGTH = 500;

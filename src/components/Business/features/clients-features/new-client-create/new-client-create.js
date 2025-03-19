@@ -31,7 +31,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         console.log('indivisualFormSubmit: ', data);
 
         const formData = createFormData(data, photo);
-        const onSuccess = (response) => {
+        const onSuccess = () => {
             toast.success(`New client created successfully`);
             setVisible(false);
             refetch((prev) => !prev);

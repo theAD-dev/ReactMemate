@@ -3,10 +3,10 @@ import { Download, Filter } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
-import OrdersTable from './order-table';
-import style from './order.module.scss';
+import ProjectsTable from './project-table';
+import style from './project.module.scss';
 
-const OrderPage = () => {
+const ProjectPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
  
@@ -56,15 +56,14 @@ const OrderPage = () => {
                 </div>
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Order</h1>
+                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Projects</h1>
                 
                 </div>
                
             </div>
-            <OrdersTable ref={dt} searchValue={debouncedValue}  selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
-       
+            <ProjectsTable ref={dt} searchValue={debouncedValue}  selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
         </div>
     );
 };
 
-export default OrderPage;
+export default ProjectPage;

@@ -64,7 +64,7 @@ import ClientOrderHistory from "../Business/Pages/clients/client-order-history";
 import ExpensesPage from "../Business/Pages/expenses";
 import InvoicePage from "../Business/Pages/invoices";
 import Management from "../Business/Pages/management/management-page";
-import OrderPage from "../Business/Pages/orders";
+import ProjectPage from "../Business/Pages/projects";
 import ClientLayout from "../Business/Pages/sales/new-request";
 import BusinessClientInformation from "../Business/Pages/sales/new-request/business-client-information";
 import CalculateQuote from "../Business/Pages/sales/new-request/calculate-quote";
@@ -269,13 +269,13 @@ const Header = () => {
                     </li>
                     <li>
                       <NavLink
-                        to="/orders"
+                        to="/projects"
                         className={({ isActive }) =>
                           (isActive ? "menuActive" : "link") + " orders"
                         }
                       >
                         <img src={OrdersIcon} alt="OrdersIcon" />
-                        Orders
+                        Projects
                       </NavLink>
                     </li>
                     <li>
@@ -492,7 +492,7 @@ export const protectedRoutes = (
     <Route path="/expenses" element={<ExpensesPage />} />
     <Route path="/invoices" element={<InvoicePage />} />
 
-    <Route path="/orders" element={<OrderPage />} />
+    <Route path="/projects" element={<ProjectPage />} />
 
     <Route path="/statistics" element={<StatisticsPage />} />
     <Route path="/statistics/key-results" element={<KeyResultsPage />} />
