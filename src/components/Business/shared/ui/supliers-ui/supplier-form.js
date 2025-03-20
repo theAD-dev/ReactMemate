@@ -82,7 +82,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
     if (stateId) fetchCities(stateId);
   }, [stateId]);
 
-  const { control, register, handleSubmit, watch, formState: { errors } } = useForm({
+  const { control, register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
     defaultValues
   });
@@ -179,7 +179,21 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
             <label className={clsx(styles.lable)}>ABN</label>
             <IconField>
               <InputIcon>{errors.abn && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
-              <InputText {...register("abn")} className={clsx(styles.inputText, { [styles.error]: errors.abn })} placeholder='32 635 443 221' />
+              <InputText
+                {...register("abn", {
+                  onChange: (e) => {
+                    const sanitizedValue = e.target.value.replace(/\D/g, "");
+                    setValue("abn", sanitizedValue, { shouldValidate: true });
+                  },
+                  onPaste: (e) => {
+                    e.preventDefault();
+                    const pastedText = e.clipboardData.getData("text").replace(/\D/g, "");
+                    setValue("abn", pastedText, { shouldValidate: true });
+                  },
+                })}
+                className={clsx(styles.inputText, { [styles.error]: errors.abn })}
+                placeholder='32 635 443 221'
+              />
             </IconField>
             {errors.abn && <p className="error-message">{errors.abn.message}</p>}
           </div>

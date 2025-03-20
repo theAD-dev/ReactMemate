@@ -19,6 +19,7 @@ const BillingInfo = () => {
   const [generalData, setGeneralData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const billingInfoQuery = useQuery({
     queryKey: ['getBillingPersonalInfo'],
@@ -45,20 +46,40 @@ const BillingInfo = () => {
     }
   });
 
-  const updateBillingPaymentInfo = () => {
-    if (!generalData?.payment_name) return toast.error("Business name is required.");
-    if (!generalData?.abn) return toast.error("ABN number is not valid");
-    if (generalData?.abn?.length < 11) return toast.error("Enter 11 digit ABN number.");
+  const validateForm = () => {
+    let newErrors = {};
 
-    mutation.mutate(generalData);
+    if (!generalData?.payment_name) {
+      newErrors.payment_name = "Business name is required";
+    }
+
+    if (!generalData?.abn) {
+      newErrors.abn = "ABN number is required";
+    } else if (generalData?.abn?.length !== 11) {
+      newErrors.abn = "Enter 11 digit ABN number";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const updateBillingPaymentInfo = () => {
+    if (validateForm()) {
+      mutation.mutate(generalData);
+    }
   };
 
   const handleInfoDetails = (e) => {
     const { name, value } = e.target;
+    const sanitizedValue = name === "abn" ? value.replace(/\D/g, "") : value;
     setGeneralData(prev => ({
       ...prev,
-      [name]: value
+      [name]: sanitizedValue
     }));
+
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   useEffect(() => {
@@ -131,14 +152,28 @@ const BillingInfo = () => {
                               <div className="form-group">
                                 <label className="lable d-block">Business Name</label>
                                 {
-                                  isEdit ? <InputText value={generalData?.payment_name} className="border py-2" name="payment_name" onChange={handleInfoDetails} placeholder="Business name" />
-                                    : <p className="mb-0 font-16 font-600">
+                                  isEdit ? (
+                                    <div>
+                                      <InputText
+                                        value={generalData?.payment_name || ""}
+                                        className={`border py-2 ${errors.payment_name ? 'p-invalid' : ''}`}
+                                        name="payment_name"
+                                        onChange={handleInfoDetails}
+                                        placeholder="Business name"
+                                      />
+                                      {errors.payment_name && (
+                                        <small className="p-error d-block mt-1">{errors.payment_name}</small>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="mb-0 font-16 font-600">
                                       {
                                         billingInfoQuery?.isFetching
                                           ? <Skeleton width="6rem" className="mb-2 mt-1"></Skeleton>
                                           : (billingInfoQuery?.data?.payment_name || "-")
                                       }
                                     </p>
+                                  )
                                 }
                               </div>
                             </Col>
@@ -146,15 +181,34 @@ const BillingInfo = () => {
                               <div className="form-group">
                                 <label className="lable d-block mb-1">Australian Business Number</label>
                                 {
-                                  isEdit ? <InputText value={generalData?.abn} className="border py-2" name="abn" onChange={handleInfoDetails} placeholder="ABN" />
-                                    : <p className="mb-0 font-16 font-600">
+                                  isEdit ? (
+                                    <div>
+                                      <InputText
+                                        value={generalData?.abn || ""}
+                                        className={`border py-2 ${errors.abn ? 'p-invalid' : ''}`}
+                                        name="abn"
+                                        onChange={handleInfoDetails}
+                                        onPaste={(e) => {
+                                          e.preventDefault();
+                                          const pastedText = e.clipboardData.getData("text").replace(/\D/g, "");
+                                          setGeneralData((prev) => ({ ...prev, abn: pastedText }));
+                                        }}
+                                        placeholder="ABN"
+                                        maxLength={11}
+                                      />
+                                      {errors.abn && (
+                                        <small className="p-error d-block mt-1">{errors.abn}</small>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="mb-0 font-16 font-600">
                                       {
                                         billingInfoQuery?.isFetching
                                           ? <Skeleton width="10rem" className="mb-2 mt-1"></Skeleton>
                                           : (billingInfoQuery?.data?.abn || "-")
                                       }
                                     </p>
-                                }
+                                  )}
                               </div>
                             </Col>
                           </Row>

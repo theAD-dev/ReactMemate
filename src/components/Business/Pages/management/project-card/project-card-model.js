@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Placeholder, Table } from 'react-bootstrap';
 import {
-  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, InfoCircle, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
+  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
   Envelope,
   Tag,
   Postcard,
