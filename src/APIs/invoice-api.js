@@ -3,7 +3,7 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
 export const getListOfInvoice = async (page, limit, name = "", order = "", isShowDeleted) => {
   const offset = (page - 1) * limit;
-  const endpoint = `/invoices/`;
+  const endpoint = isShowDeleted ? `/invoices/unpaid/` : `/invoices/`;
   const options = {
     method: 'GET',
   };
@@ -12,7 +12,6 @@ export const getListOfInvoice = async (page, limit, name = "", order = "", isSho
   url.searchParams.append("offset", offset);
   if (name) url.searchParams.append("name", name);
   if (order) url.searchParams.append("ordering", order);
-  if (isShowDeleted) url.searchParams.append('deleted', 1);
 
   return fetchAPI(url.toString(), options);
 };

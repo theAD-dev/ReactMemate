@@ -17,10 +17,16 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
     const projectId = params.get('projectId');
     if (projectId) setVisible(true);
 
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
     const formRef = useRef(null);
-    const [defaultValues, setDefaultValues] = useState({
+    const [defaultValues, ] = useState({
         option: 'Assign to order',
-        notification: false
+        notification: false,
+        date: today,
+        due_date: tomorrow
     });
     const mutation = useMutation({
         mutationFn: (data) => createNewExpense(data),
@@ -80,7 +86,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
                             <h5>Supplier Details</h5>
                         </div>
-                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} setVisible={setVisible} projectId={projectId}/>
+                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} setVisible={setVisible} projectId={projectId} />
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>

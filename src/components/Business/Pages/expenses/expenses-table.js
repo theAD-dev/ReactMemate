@@ -151,6 +151,11 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
         return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='danger-outline-button font-14' style={{ width: '86px', height: '36px' }}>Not Paid</Button>;
     };
 
+    const intervalProjectBody = (rowData) => {
+        if (!rowData.order) return rowData.type;
+        return rowData?.order.number || "-";
+    };
+
     const loadingIconTemplate = () => {
         return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
             <Spinner animation="border" role="status">
@@ -213,7 +218,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 <Column field="invoice_reference" header="Reference" style={{ minWidth: '94px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
-                <Column field='type' header="Interval/Order" style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
+                <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
                 <Column field='average_pd' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
                 <Column field='department' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
