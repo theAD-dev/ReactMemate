@@ -26,11 +26,11 @@ import SelectStatus from './select-status';
 import SendSMS from './send-sms/send-sms';
 import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
-import placeholderUser from '../../../../../assets/images/Avatar.svg';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
+import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 
@@ -567,7 +567,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                 {
                                   data?.type === 'job'
                                     ? <Github size={24} color='#101828' />
-                                    : (<img src={data?.supplier?.photo || placeholderUser} alt='supplier' style={{ width: '24px', height: '24px', borderRadius: '50%', }} />)
+                                    : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true}/>)
                                 }
                               </td>
                               <td>${formatAUD(data?.total) || "-"}</td>

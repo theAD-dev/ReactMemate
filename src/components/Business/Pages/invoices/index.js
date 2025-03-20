@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Download, Filter, Printer, Send } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { TieredMenu } from 'primereact/tieredmenu';
@@ -109,6 +110,9 @@ const InvoicePage = () => {
                     <h1 className="title p-0">Invoices</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
+                    <Button className='bg-transparent py-0 border-0' style={{ color: isShowDeleted ? 'red' : 'grey' }} onClick={()=> setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
+                    <h1 className={`${style.total} mb-0`}>Total</h1>
+                    <div className={`${style.totalCount}`}>{total} Invoice</div>
                 </div>
             </div>
             <InvoiceTable ref={dt} searchValue={debouncedValue} setTotal={setTotal}

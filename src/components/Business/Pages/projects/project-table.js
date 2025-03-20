@@ -125,8 +125,9 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     );
   };
 
-  const reaclCost = (rowData) => {
-    const realCostPercentage = getPercentage(rowData.real_cost, rowData.budget);
+  const realCost = (rowData) => {
+    const real_cost = rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense;
+    const realCostPercentage = getPercentage(real_cost, rowData.budget);
 
     return <div
       className={`d-flex align-items-center ${style.piCircleStyle} ${style.RealCostCircleStyle}`}
@@ -146,7 +147,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
           })}
         />
       </div>
-      <span>${formatAUD(rowData.real_cost)}</span>
+      <span>${formatAUD(real_cost)}</span>
     </div>;
   };
 
@@ -287,7 +288,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
         <Column field="budget" header="Budget" body={(rowData) => `$${formatAUD(rowData.budget)}`} style={{ minWidth: '110px' }} className='text-end' sortable></Column>
-        <Column field="realcost" header="Real Cost" body={reaclCost} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column>
+        <Column field="realcost" header="Real Cost" body={realCost} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column>
         <Column field="labor_expenses" header="Labour" body={labourBody} style={{ minWidth: '149px', textAlign: 'right' }} sortable></Column>
         <Column field="cost_of_sale" header="Cost of Sale" body={costofSaleBody} style={{ minWidth: '146x', textAlign: 'center' }} sortable></Column>
         <Column field="operating_expense" header="Operating Expense" body={OperatingExpenseBody} style={{ minWidth: '152x', textAlign: 'center' }} sortable></Column>

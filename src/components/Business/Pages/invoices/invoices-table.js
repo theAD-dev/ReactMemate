@@ -51,7 +51,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch]);
+    }, [searchValue, refetch, isShowDeleted]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -79,7 +79,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch]);
+    }, [page, searchValue, tempSort, refetch, isShowDeleted]);
 
     useEffect(() => {
         if (clients.length > 0 && hasMoreData) {
@@ -328,7 +328,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted}/>}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}
