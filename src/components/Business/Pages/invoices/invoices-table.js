@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { CloseButton, Spinner } from 'react-bootstrap';
-import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event } from 'react-bootstrap-icons';
+import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
@@ -225,18 +225,18 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                     {
                         rowData?.billing_history.map((history, index) =>
                             <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-around py-1 px-2 rounded mb-2'>
-                                <div className='d-flex gap-2 align-items-center'>
-                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '50%', overflow: 'hidden' }}>
-                                        <img src={history?.manager?.photo} style={{ widows: '20px' }} />
-                                    </div>
-                                    <span className='font-14'>{history?.manager?.name}</span>
+                                <div className='d-flex align-items-center'>
+                                    <ImageAvatar has_photo={history?.manager?.has_photo} photo={history?.manager?.photo} is_business={false} />
+                                    <div className='font-14 ellipsis-width' style={{ width: '120px', maxWidth: '120px' }}>{history?.manager?.name}</div>
                                 </div>
                                 <div className='d-flex gap-2 align-items-center'>
                                     <Coin color='#98A2B3' size={14} />
                                     <span style={{ fontWeight: 600, fontSize: 16 }}>${parseFloat(history.deposit || 0).toFixed(2)}</span>
                                 </div>
                                 <div className='d-flex gap-2 align-items-center'>
-                                    <Coin color='#98A2B3' size={14} />
+                                    {history?.type === 2 ? <Bank size={14} color='#98A2B3' />
+                                        : history.type === 1 ? <Cash size={14} color="#98A2B3" />
+                                            : <Stripe size={14} color="#98A2B3" />}
                                     <div className='border rounded font-12 px-1'>
                                         {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : "Strip"}
                                     </div>
@@ -328,14 +328,14 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted}/>}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}
                 rowClassName={rowClassName}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-                <Column field="id" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
                 <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px' }} frozen></Column>
                 <Column field="client.name" header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>

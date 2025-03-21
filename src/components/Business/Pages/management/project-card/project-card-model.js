@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Placeholder, Table } from 'react-bootstrap';
+import { OverlayTrigger, Placeholder, Table, Tooltip } from 'react-bootstrap';
 import {
   X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
   Envelope,
@@ -564,11 +564,23 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                 </div>
                               </td>
                               <td>
-                                {
-                                  data?.type === 'job'
-                                    ? <Github size={24} color='#101828' />
-                                    : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true}/>)
-                                }
+                                <OverlayTrigger
+                                  key={'top'}
+                                  placement={'top'}
+                                  overlay={
+                                    <Tooltip className='TooltipOverlay' id={`tooltip-${top}`}>
+                                      {data?.supplier?.name || "Job"}
+                                    </Tooltip>
+                                  }
+                                >
+                                  <div className='mx-auto ps-2' title={data?.supplier?.name} style={{ width: 'fit-content' }}>
+                                    {
+                                      data?.type === 'job'
+                                        ? <Github size={24} color='#101828' />
+                                        : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true} />)
+                                    }
+                                  </div>
+                                </OverlayTrigger>
                               </td>
                               <td>${formatAUD(data?.total) || "-"}</td>
                               <td className='status'>

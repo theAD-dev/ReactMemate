@@ -33,8 +33,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
     const { trialHeight } = useTrialHeight();
     const [clients, setCients] = useState([]);
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
-    const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
+    const [sort, setSort] = useState({ sortField: '', sortOrder: 0 });
+    const [tempSort, setTempSort] = useState({ sortField: '', sortOrder: 0 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
@@ -213,15 +213,15 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
                 rowClassName={rowClassName}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-                <Column field="id" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
+                <Column field="number" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field="supplier.name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
                 <Column field="invoice_reference" header="Reference" style={{ minWidth: '94px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
-                <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
-                <Column field='average_pd' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
-                <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }} sortable></Column>
-                <Column field='department' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
+                <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'right' }}></Column>
+                <Column field='account_code.code' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
+                <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
+                <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft' headerClassName="shadowLeft" frozen alignFrozen='right'></Column>
                 <Column header="Actions" body={ActionBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
             </DataTable>

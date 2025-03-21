@@ -13,6 +13,7 @@ import Loader from '../../../../shared/ui/loader/loader';
 
 const KeyResultsPage = () => {
     const { trialHeight } = useTrialHeight();
+    const [selectedType, setSelectedType] = useState("Invoice Generated");
     const [selectedYear, setSelectedYear] = useState('');
     const [selectedMonth, setSelectedMonth] = useState('');
     const [outerProgress, setOuterProgress] = useState(0);
@@ -51,6 +52,10 @@ const KeyResultsPage = () => {
         setSelectedYear(year);
     };
 
+    const handleTypeSelect = (type) => {
+        setSelectedType(type);
+    };
+
     const handleMonthSelect = (month) => {
         if (!isMonthDisabled(month, selectedYear)) {
             setSelectedMonth(month);
@@ -85,11 +90,9 @@ const KeyResultsPage = () => {
     const outerDashOffset = outerPathLength * (1 - outerProgress / 100);
     const innerDashOffset = innerPathLength * (1 - innerProgress / 100);
 
-    // Sort statistics by sum (descending) and take top 4
     const statistics = keyResultStaticsQuery?.data?.statistics || [];
     const topStatistics = [...statistics]
         .sort((a, b) => parseFloat(b.sum) - parseFloat(a.sum));
-    // .slice(0, 4);
 
     return (
         <div className='peoples-page'>
@@ -131,24 +134,51 @@ const KeyResultsPage = () => {
                 >
                     <h2 className={clsx(style.keyResultsTitle)}>Key Results</h2>
                 </OverlayTrigger>
-                <Dropdown>
-                    <Dropdown.Toggle as={Button} className={clsx(style.button, "outline-button mx-auto")}>
-                        <CalendarIcon color='#475467' size={16} />
-                        {selectedYear}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        {years.map((year) => (
+
+                <div className='d-flex justify-content-center gap-3'>
+                    <Dropdown>
+                        <Dropdown.Toggle as={Button} className={clsx(style.button, "outline-button mx-auto")}>
+                            <CalendarIcon color='#475467' size={16} />
+                            {selectedYear}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {years.map((year) => (
+                                <Dropdown.Item
+                                    key={year}
+                                    eventKey={year}
+                                    active={year === selectedYear}
+                                    onClick={() => handleYearSelect(year)}
+                                >
+                                    {year}
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
+
+                    <Dropdown>
+                        <Dropdown.Toggle as={Button} className={clsx(style.button, "outline-button mx-auto")}>
+                            {selectedType}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
                             <Dropdown.Item
-                                key={year}
-                                eventKey={year}
-                                active={year === selectedYear}
-                                onClick={() => handleYearSelect(year)}
+                                key={'Invoice Generated'}
+                                eventKey={'Invoice Generated'}
+                                active={selectedType === 'Invoice Generated'}
+                                onClick={() => handleTypeSelect('Invoice Generated')}
                             >
-                                {year}
+                                Invoice Generated
                             </Dropdown.Item>
-                        ))}
-                    </Dropdown.Menu>
-                </Dropdown>
+                            <Dropdown.Item
+                                key={'Generated revenue'}
+                                eventKey={'Generated revenue'}
+                                active={selectedType === 'Generated revenue'}
+                                onClick={() => handleTypeSelect('Generated revenue')}
+                            >
+                                Generated revenue
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
 
                 <div className='d-flex justify-content-center gap-0' style={{ marginTop: '16px', borderBottom: "1px solid var(--Gray-200, #EAECF0)" }}>
                     {months.map((month) => (
