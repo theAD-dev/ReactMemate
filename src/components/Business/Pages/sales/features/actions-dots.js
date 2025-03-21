@@ -35,6 +35,8 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory
       setAnchorEl(null);
     } else if (option.label === 'Print Label') {
       window.open(`/api/v1/sales/${saleUniqueId}/label/`, '_blank');
+    } else if (option.label === 'Project Card') {
+      window.open(`/api/v1/project-card/${saleUniqueId}/pdf/`, '_blank');
     } else if (option.label === 'Delete' && saleUniqueId) {
       setLoading(5);
       await deleteMutations.mutateAsync(saleUniqueId);
