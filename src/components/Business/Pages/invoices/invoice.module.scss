@@ -269,3 +269,33 @@
     transform: translateX(0);
   }
 }
+
+.allInvoice {
+  gap: 8px;
+  display: flex;
+  font-size: 14px;
+  color: #424242;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 4px;
+  background: #fff;
+  align-items: center;
+  border-radius: 40px;
+  justify-content: center;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+}
+
+.unpaidInvoice {
+  gap: 8px;
+  display: flex;
+  font-size: 14px;
+  color: #b42318;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 4px;
+  align-items: center;
+  border-radius: 40px;
+  justify-content: center;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
+}

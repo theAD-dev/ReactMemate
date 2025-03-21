@@ -182,7 +182,17 @@ function GeneralInformation() {
                           <div>
                             <div className={`inputInfo ${errors.abn ? 'error-border' : ''}`}>
                               <input
-                                {...register("abn")}
+                                {...register("abn", {
+                                  onChange: (e) => {
+                                    const sanitizedValue = e.target.value.replace(/\D/g, "");
+                                    setValue("abn", sanitizedValue, { shouldValidate: true });
+                                  },
+                                  onPaste: (e) => {
+                                    e.preventDefault();
+                                    const pastedText = e.clipboardData.getData("text").replace(/\D/g, "");
+                                    setValue("abn", pastedText, { shouldValidate: true });
+                                  },
+                                })}
                                 placeholder='Enter ABN'
                                 defaultValue={data.abn}
                               />

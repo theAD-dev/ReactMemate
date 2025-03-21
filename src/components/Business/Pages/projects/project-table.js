@@ -103,14 +103,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     </div>;
   };
 
-  const totalInvoice = (rowData) => {
-    return <div className='d-flex align-items-center'>
-      <div className={`d-flex justify-content-center align-items-center`}>
-        ${formatAUD(rowData.total)}
-      </div>
-    </div>;
-  };
-
   const statusBody = (rowData) => {
     return (
       <div className='d-flex align-items-center'>
@@ -125,84 +117,86 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     );
   };
 
-  const realCost = (rowData) => {
+  const redCircularProgressbar = (percentage) => {
+    return <CircularProgressbar
+      value={percentage}
+      text={`${percentage}%`}
+      strokeWidth={11}
+      styles={buildStyles({
+        pathColor: '#F04438',
+        trailColor: '#EAECF0',
+        textColor: '#667085',
+        textSize: '25px',
+        pathTransitionDuration: 0.5,
+      })}
+    />;
+  };
+
+  const yellowCircularProgressbar = (percentage) => {
+    return <CircularProgressbar
+      value={percentage}
+      text={`${percentage}%`}
+      strokeWidth={11}
+      styles={buildStyles({
+        pathColor: '#F79009',
+        trailColor: '#EAECF0',
+        textColor: '#667085',
+        textSize: '25px',
+        pathTransitionDuration: 0.5,
+      })}
+    />;
+  };
+
+  const greenCircularProgressbar = (percentage) => {
+    return <CircularProgressbar
+      value={percentage}
+      text={`${percentage}%`}
+      strokeWidth={11}
+      styles={buildStyles({
+        pathColor: '#17B26A',
+        trailColor: '#EAECF0',
+        textColor: '#667085',
+        textSize: '25px',
+        pathTransitionDuration: 0.5,
+      })}
+    />;
+  };
+
+  const costOfSaleBody = (rowData) => {
     const real_cost = rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense;
-    const realCostPercentage = getPercentage(real_cost, rowData.budget);
+    const cost_of_sale_percentage = getPercentage(rowData.cost_of_sale, real_cost);
 
-    return <div
-      className={`d-flex align-items-center ${style.piCircleStyle} ${style.RealCostCircleStyle}`}
-      style={{ whiteSpace: "normal", textAlign: "left" }}
-    >
-      <div style={{ width: 32, height: 32 }}>
-        <CircularProgressbar
-          value={realCostPercentage}
-          text={`${realCostPercentage}%`}
-          strokeWidth={11}
-          styles={buildStyles({
-            pathColor: '#F79009',
-            trailColor: '#EAECF0',
-            textColor: '#667085',
-            textSize: '25px',
-            pathTransitionDuration: 0.5,
-          })}
-        />
-      </div>
-      <span>${formatAUD(real_cost)}</span>
-    </div>;
-  };
-
-  const labourBody = (rowData) => {
-    const labor_expenses_percentage = getPercentage(rowData.labor_expenses, rowData.budget);
-    return <div
-      className={`d-flex align-items-center ${style.piCircleStyle} ${style.labourCostCircleStyle}`}
-      style={{ whiteSpace: "normal", textAlign: "left" }}
-    >
-
-      <div style={{ width: 32, height: 32 }}>
-        <CircularProgressbar
-          value={labor_expenses_percentage}
-          text={`${labor_expenses_percentage}%`}
-          strokeWidth={11}
-          styles={buildStyles({
-            pathColor: '#F79009',
-            trailColor: '#EAECF0',
-            textColor: '#667085',
-            textSize: '25px',
-            pathTransitionDuration: 0.5,
-          })}
-        />
-      </div>
-      <span>${formatAUD(rowData.labor_expenses)}</span>
-    </div>;
-  };
-
-  const costofSaleBody = (rowData) => {
-    const cost_of_sale_percentage = getPercentage(rowData.cost_of_sale, rowData.budget);
     return <div
       className={`d-flex align-items-center ${style.piCircleStyle} ${style.saleCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
       <div style={{ width: 32, height: 32 }}>
-        <CircularProgressbar
-          value={cost_of_sale_percentage}
-          text={`${cost_of_sale_percentage}%`}
-          strokeWidth={11}
-          styles={buildStyles({
-            pathColor: '#F04438',
-            trailColor: '#EAECF0',
-            textColor: '#667085',
-            textSize: '25px',
-            pathTransitionDuration: 0.5,
-          })}
-        />
+        {redCircularProgressbar(cost_of_sale_percentage)}
       </div>
       <span>${formatAUD(rowData.cost_of_sale)}</span>
     </div>;
   };
 
+  const labourBody = (rowData) => {
+    const real_cost = rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense;
+    const labor_expenses_percentage = getPercentage(rowData.labor_expenses, real_cost);
+
+    return <div
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.labourCostCircleStyle}`}
+      style={{ whiteSpace: "normal", textAlign: "left" }}
+    >
+      <div style={{ width: 32, height: 32 }}>
+        {yellowCircularProgressbar(labor_expenses_percentage)}
+      </div>
+      <span>${formatAUD(rowData.labor_expenses)}</span>
+    </div>;
+  };
+
   const OperatingExpenseBody = (rowData) => {
-    const operating_expense_percentage = getPercentage(rowData.operating_expense, rowData.budget);
-    return <div onClick={setVisible}
+    const real_cost = rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense;
+    const operating_expense_percentage = getPercentage(rowData.operating_expense, real_cost);
+
+    return <div
       className={`d-flex align-items-center ${style.piCircleStyle} ${style.operCircleStyle}`}
       style={{ whiteSpace: "normal", textAlign: "left" }}
     >
@@ -224,18 +218,51 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     </div>;
   };
 
+  const realCost = (rowData) => {
+    const real_cost = rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense;
+
+    return <div
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.RealCostCircleStyle}`}
+      style={{ whiteSpace: "normal", textAlign: "left" }}
+    >
+      <span>${formatAUD(real_cost)}</span>
+    </div>;
+  };
+
+  const budget = (rowData) => {
+    return <div
+      className={`d-flex align-items-center ${style.piCircleStyle} ${style.budgetStyle}`}
+      style={{ whiteSpace: "normal", textAlign: "left" }}
+    >
+      <span>${formatAUD(rowData.budget)}</span>
+    </div>;
+  };
+
+  const totalInvoice = (rowData) => {
+    return <div className='d-flex align-items-center'>
+      <div className={`d-flex justify-content-center align-items-center`}>
+        ${formatAUD(rowData.total)}
+      </div>
+    </div>;
+  };
+
+
   const profitBodyTemplate = (rowData) => {
-    const status = rowData.status;
-    switch (status) {
-      case 'In progress':
-        return <Tag className={`profit ${style.inProgressProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
-      case 'Complete':
-        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
-      case 'Lost':
-        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
-      default:
-        return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />;
-    }
+    const real_cost = rowData.labor_expenses + rowData.cost_of_sale + rowData.operating_expense;
+    const profit = rowData.total - real_cost;
+    const profitPercentage = getPercentage(profit, rowData.total);
+
+
+    return <div className={`d-flex align-items-center gap-2`}>
+      <div style={{ width: 32, height: 32 }}>
+        {profitPercentage < 0 ? redCircularProgressbar(profitPercentage)
+          : profitPercentage < 10 ? yellowCircularProgressbar(profitPercentage)
+            : greenCircularProgressbar(profitPercentage)}
+      </div>
+      {profitPercentage < 0 ? <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
+        : profitPercentage < 10 ? <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />
+          : <Tag className={`profit ${style.inProgressProfit} rounded`} value={`$ ${formatAUD(rowData.profit)}`} />}
+    </div>;
   };
 
   const loadingIconTemplate = () => {
@@ -287,11 +314,14 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         <Column field="reference" header="Project Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '400px' }}>{rowData.reference}</div>} style={{ minWidth: '400px' }} ></Column>
         <Column header="Info" body={<InfoCircle color='#667085' size={16} />} bodyClassName={"text-center"} style={{ minWidth: '68px' }}></Column>
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '113px' }} sortable></Column>
-        <Column field="budget" header="Budget" body={(rowData) => `$${formatAUD(rowData.budget)}`} style={{ minWidth: '110px' }} className='text-end' sortable></Column>
-        <Column field="realcost" header="Real Cost" body={realCost} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column>
+
+        <Column field="cost_of_sale" header="Cost of Sale" body={costOfSaleBody} style={{ minWidth: '146x', textAlign: 'center' }} sortable></Column>
         <Column field="labor_expenses" header="Labour" body={labourBody} style={{ minWidth: '149px', textAlign: 'right' }} sortable></Column>
-        <Column field="cost_of_sale" header="Cost of Sale" body={costofSaleBody} style={{ minWidth: '146x', textAlign: 'center' }} sortable></Column>
         <Column field="operating_expense" header="Operating Expense" body={OperatingExpenseBody} style={{ minWidth: '152x', textAlign: 'center' }} sortable></Column>
+
+        <Column field="realcost" header="Real Cost" body={realCost} style={{ minWidth: '113px', textAlign: 'right' }} sortable></Column>
+        <Column field="budget" header="Budget" body={budget} style={{ minWidth: '110px' }} className='text-end' sortable></Column>
+
         <Column field="total" body={totalInvoice} header="Total Invoice" style={{ minWidth: '101x', textAlign: 'center' }} sortable></Column>
         <Column field='profit' header="Operational Profit" body={profitBodyTemplate} bodyClassName={"text-end"} style={{ minWidth: '150px' }} sortable></Column>
       </DataTable>
