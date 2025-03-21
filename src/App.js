@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './components/Auth';
 import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
 import QuotationEmail from './components/layout/browser-web/quotation-email';
 import ChangePassword from './components/layout/Login/change-password';
@@ -31,41 +30,39 @@ import NotFoundTemplate from './ui/404-template/not-found-template';
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path='/logout' element={<Logout />} />
-        <Route path='/suspended' element={<Suspended />} />
-        <Route path="/account-overdue" element={<AccountOverdue />} />
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path='/logout' element={<Logout />} />
+      <Route path='/suspended' element={<Suspended />} />
+      <Route path="/account-overdue" element={<AccountOverdue />} />
 
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/check-mail" element={<CheckMail />} />
-        <Route path="/password-reset" element={<PasswordReset />} />
-        <Route path="/profile/change-password/:token" element={<ChangePassword />} />
-        <Route path="/requestdemo" element={<SignUp />} />
-        <Route path="/select-country" element={<SelectCountry />} />
-        <Route path="/companyname" element={<CompanyName />} />
-        <Route path="/selectdate" element={<SelectDate />} />
-        <Route path="/allset" element={<AllSet />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/check-mail" element={<CheckMail />} />
+      <Route path="/password-reset" element={<PasswordReset />} />
+      <Route path="/profile/change-password/:token" element={<ChangePassword />} />
+      <Route path="/requestdemo" element={<SignUp />} />
+      <Route path="/select-country" element={<SelectCountry />} />
+      <Route path="/companyname" element={<CompanyName />} />
+      <Route path="/selectdate" element={<SelectDate />} />
+      <Route path="/allset" element={<AllSet />} />
 
-        <Route path="/onboarding" element={<Create />} />
-        <Route path="/verify-mail/:uuid" element={<Verifymail />} />
-        <Route path="/company-name/:uuid" element={<Companyname />} />
-        <Route path="/regional-settings/:uuid" element={<Regionalsettings />} />
-        <Route path="/discover-memate/:uuid" element={<Discovermemate />} />
-        <Route path="/create-password/:uuid" element={<PasswordCreate />} />
-        <Route path="/resend-email" element={<ResendEmail />} />
-        <Route path="/demo" element={<Demo />} />
-        <Route path="/ui/components" element={<Components />} />
-        <Route path="/quote/:id" element={<QuotationEmail />} />
-        <Route path="/invoice/:id" element={<PublicInvoice />} />
-        <Route path='/payment/:clientSecret/:publishKey' element={<StripeContainer />} />
-        <Route path="/404" element={<NotFoundTemplate />} />
-        <Route path="*" element={<Navigate to={"/404"} />} />
+      <Route path="/onboarding" element={<Create />} />
+      <Route path="/verify-mail/:uuid" element={<Verifymail />} />
+      <Route path="/company-name/:uuid" element={<Companyname />} />
+      <Route path="/regional-settings/:uuid" element={<Regionalsettings />} />
+      <Route path="/discover-memate/:uuid" element={<Discovermemate />} />
+      <Route path="/create-password/:uuid" element={<PasswordCreate />} />
+      <Route path="/resend-email" element={<ResendEmail />} />
+      <Route path="/demo" element={<Demo />} />
+      <Route path="/ui/components" element={<Components />} />
+      <Route path="/quote/:id" element={<QuotationEmail />} />
+      <Route path="/invoice/:id" element={<PublicInvoice />} />
+      <Route path='/payment/:clientSecret/:publishKey' element={<StripeContainer />} />
+      <Route path="/404" element={<NotFoundTemplate />} />
+      <Route path="*" element={<Navigate to={"/404"} />} />
 
-        {protectedRoutes}
-      </Routes>
-    </AuthProvider>
+      {protectedRoutes}
+    </Routes>
   );
 }
 

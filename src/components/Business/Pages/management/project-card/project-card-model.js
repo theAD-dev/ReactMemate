@@ -373,7 +373,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </ul>
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
-            <Button variant="light" className='rounded-circle px-2' title='Project Card'><Postcard color="#344054" size={20} /></Button>
+            <Link to={`/api/v1/project-card/${projectId}/pdf/`}>
+              <Button variant="light" className='rounded-circle px-2' title='Project Card'><Postcard color="#344054" size={20} /></Button>
+            </Link>
 
             <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
               <Button variant="light" className='rounded-circle px-2'><Tag color="#344054" size={20} /></Button>
