@@ -36,3 +36,12 @@ export const getSubscriptionsBills = async ({ limit, offset }) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const cancelSubscription = async () => {
+    const endpoint = `/subscriptions/cancel/`;
+    const options = {
+        method: 'POST',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

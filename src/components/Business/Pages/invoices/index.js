@@ -11,6 +11,7 @@ import style from './invoice.module.scss';
 import InvoiceTable from './invoices-table';
 import { paidExpense } from '../../../../APIs/expenses-api';
 import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
 
 
@@ -19,6 +20,7 @@ const InvoicePage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
     const [total, setTotal] = useState(0);
+    const [totalMoney, setTotalMoney] = useState(0);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
@@ -110,12 +112,13 @@ const InvoicePage = () => {
                     <h1 className="title p-0">Invoices</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <Button className={isShowDeleted ? style.unpaidInvoice : style.allInvoice} onClick={()=> setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
+                    <Button className={isShowDeleted ? style.unpaidInvoice : style.allInvoice} onClick={() => setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Invoice</div>
+                    <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>
                 </div>
             </div>
-            <InvoiceTable ref={dt} searchValue={debouncedValue} setTotal={setTotal}
+            <InvoiceTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}
                 selected={selected} setSelected={setSelected}
                 isShowDeleted={isShowDeleted}
                 refetch={refetch}

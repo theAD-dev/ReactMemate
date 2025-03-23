@@ -60,6 +60,17 @@
   background: var(--Primary-50, #ebf8ff);
 }
 
+.totalMoney {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  font-family: Inter;
+  font-style: normal;
+  margin-bottom: 0px;
+  letter-spacing: 0.08px;
+  color: rgb(7, 148, 85);
+}
+
 .clientImg {
   width: 24px;
   height: 24px;
@@ -106,11 +117,11 @@
 }
 
 .paidRow td {
-  background-color: #ECFDF3 !important;
+  background-color: #ecfdf3 !important;
 }
 
 .unpaidRow td {
-  background-color: #FEF3F2 !important;
+  background-color: #fef3f2 !important;
 }
 
 .fontStanderdSize {
@@ -187,7 +198,7 @@
     var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
   align-items: center;
   gap: var(--spacing-xs, 4px);
-  color: #B42318;
+  color: #b42318;
   text-align: center;
   /* Text xs/Medium */
   font-family: Inter;
@@ -196,11 +207,45 @@
   font-weight: 500;
   line-height: 18px; /* 150% */
   border-radius: 16px;
-  border: 1px solid var(--Error-200, #FECDCA);
-  background: var(--Error-50, #FEF3F2);
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
 }
 
 .actionButton {
   font-size: 14px !important;
   padding: 8px 14px !important;
+}
+
+.allMoneyButton,
+.allMoneyButton:hover,
+.allMoneyButton:focus {
+  gap: 8px;
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 4px;
+  align-items: center;
+  border-radius: 40px;
+  justify-content: center;
+  color: #424242 !important;
+  background: #fff !important;
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+}
+
+.unpaidMoneyButton,
+.unpaidMoneyButton:hover,
+.unpaidMoneyButton:focus {
+  gap: 8px;
+  display: flex;
+  font-size: 14px;
+  color: #b42318;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 4px;
+  align-items: center;
+  border-radius: 40px;
+  justify-content: center;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
 }

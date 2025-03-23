@@ -24,7 +24,8 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
 
     const [suppliers, setSuppliers] = useState([]);
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState({ sortField: null, sortOrder: null });
+    const [sort, setSort] = useState({ sortField: 'number', sortOrder: -1 });
+    const [tempSort, setTempSort] = useState({ sortField: 'number', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
@@ -36,9 +37,10 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
+
             let order = "";
-            if (sort?.sortOrder === 1) order = `${sort.sortField}`;
-            else if (sort?.sortOrder === -1) order = `-${sort.sortField}`;
+            if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
+            else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
             const data = await getListOfSuppliers(page, limit, searchValue, order);
             setTotalSuppliers(() => (data?.count || 0));
@@ -51,13 +53,14 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
                         return [...prev, ...newSuppliers];
                     });
             }
+            setSort(tempSort);
             setHasMoreData(data.count !== suppliers.length);
             setLoading(false);
         };
 
         loadData();
 
-    }, [page, searchValue, sort, refetch]);
+    }, [page, searchValue, tempSort, refetch]);
 
     useEffect(() => {
         if (suppliers.length > 0 && hasMoreData) {
@@ -198,14 +201,13 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     };
 
     const onSort = (event) => {
-        console.log('event: ', event);
         const { sortField, sortOrder } = event;
+        setTempSort({ sortField, sortOrder });
         setPage(1);  // Reset to page 1 whenever searchValue changes
-        setSort({ sortField, sortOrder });
     };
 
     return (
-        <DataTable ref={ref} value={suppliers} scrollable selectionMode={'checkbox'} removableSort
+        <DataTable ref={ref} value={suppliers} scrollable selectionMode={'checkbox'}
             columnResizeMode="expand" resizableColumns
             onColumnResizeEnd={onResizeColumn}
             showGridlines size={'large'}
@@ -219,7 +221,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             onSort={onSort}
         >
             <Column selectionMode="multiple" headerClassName='border-end-0 ps-4' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-            <Column field="id" header="Supplier ID" body={supplierIdBodyTemplate} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
+            <Column field="number" header="Supplier ID" body={supplierIdBodyTemplate} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
             <Column field="name" header="Supplier A→Z" body={nameBodyTemplate} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '254px' }} frozen sortable></Column>
             <Column field="services" header="Supplier Services" body={ServicesBodyTemplate} style={{ minWidth: '469px' }}></Column>
             <Column field="email" header="Email" body={emailBodyTemplate} style={{ minWidth: '68px' }}></Column>
