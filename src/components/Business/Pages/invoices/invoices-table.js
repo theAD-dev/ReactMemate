@@ -26,13 +26,18 @@ import ResendInvoiceEmail from '../../features/invoice-features/resend-email/res
 
 
 const formatDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    const day = date.getDate();
-    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-        month: "short",
-    }).format(date);
-    const year = date.getFullYear();
-    return `${day} ${monthAbbreviation} ${year}`;
+    try {
+        const date = new Date(timestamp * 1000);
+        const day = date.getDate();
+        const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+            month: "short",
+        }).format(date);
+        const year = date.getFullYear();
+        return `${day} ${monthAbbreviation} ${year}`;
+    } catch (error) {
+        console.log('error: ', error);
+        return '';
+    }
 };
 
 const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
