@@ -9,7 +9,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './expenses.module.scss';
-import { deleteExpense, getListOfExpensens } from "../../../../APIs/expenses-api";
+import { deleteExpense, getListOfExpense } from "../../../../APIs/expenses-api";
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
@@ -28,13 +28,13 @@ const formatDate = (timestamp) => {
     return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
+const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
     const observerRef = useRef(null);
     const { trialHeight } = useTrialHeight();
-    const [clients, setCients] = useState([]);
+    const [expenses, setExpenses] = useState([]);
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState({ sortField: '', sortOrder: 0 });
-    const [tempSort, setTempSort] = useState({ sortField: '', sortOrder: 0 });
+    const [sort, setSort] = useState({ sortField: 'number', sortOrder: -1 });
+    const [tempSort, setTempSort] = useState({ sortField: 'number', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
@@ -45,7 +45,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch]);
+    }, [searchValue, refetch, isShowDeleted]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -55,28 +55,29 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            const data = await getListOfExpensens(page, limit, searchValue, order, isShowDeleted);
+            const data = await getListOfExpense(page, limit, searchValue, order, isShowDeleted);
             setTotal(() => (data?.count || 0));
-            if (page === 1) setCients(data.results);
+            setTotalMoney(data?.total_amount || 0);
+            if (page === 1) setExpenses(data.results);
             else {
                 if (data?.results?.length > 0)
-                    setCients(prev => {
+                    setExpenses(prev => {
                         const existingClientIds = new Set(prev.map(client => client.id));
                         const newClients = data.results.filter(client => !existingClientIds.has(client.id));
                         return [...prev, ...newClients];
                     });
             }
             setSort(tempSort);
-            setHasMoreData(data.count !== clients.length);
+            setHasMoreData(data.count !== expenses.length);
             setLoading(false);
         };
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch]);
+    }, [page, searchValue, tempSort, refetch, isShowDeleted]);
 
     useEffect(() => {
-        if (clients.length > 0 && hasMoreData) {
+        if (expenses.length > 0 && hasMoreData) {
             observerRef.current = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting) setPage(prevPage => prevPage + 1);
             });
@@ -88,7 +89,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
         return () => {
             if (observerRef.current) observerRef.current.disconnect();
         };
-    }, [clients, hasMoreData]);
+    }, [expenses, hasMoreData]);
 
     const ExpensesIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
@@ -200,13 +201,13 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, selected, setSelected
 
     return (
         <>
-            <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
+            <DataTable ref={ref} value={expenses} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
                 scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={loadingIconTemplate}
-                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}

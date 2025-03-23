@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
 import AddRemoveMobileUser from "./features/add-remove-mobile-user";
 import styles from "./subscription.module.scss";
-import { activeWorkSubscription, cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
+import { activeWorkSubscription, cancelSubscription, cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 import ThemeImages from '../../../../assets/imgconstant';
@@ -49,6 +49,18 @@ const Subscription = () => {
     onError: (error) => {
       console.error("Error canceling work subscription:", error);
       toast.error("Failed to cancel work subscription. Please try again.");
+    },
+  });
+
+  const cancelSubscriptionMutation = useMutation({
+    mutationFn: cancelSubscription,
+    onSuccess: () => {
+      toast.success("Subscription canceled successfully!");
+      window.location.reload();
+    },
+    onError: (error) => {
+      console.error("Error canceling subscription:", error);
+      toast.error("Failed to cancel subscription. Please try again.");
     },
   });
 
@@ -249,8 +261,9 @@ const Subscription = () => {
                       </div>
                     </li>
 
-                    <button className="closeSubscription">
+                    <button className="closeSubscription" disabled={cancelSubscriptionMutation.isPending} onClick={() => cancelSubscriptionMutation.mutate()}>
                       Cancel Subscription
+                      {cancelSubscriptionMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
                     </button>
                   </ul>
                 </div>

@@ -35,14 +35,14 @@ const formatDate = (timestamp) => {
     return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
+const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
     const observerRef = useRef(null);
     const navigate = useNavigate();
     const { trialHeight } = useTrialHeight();
-    const [clients, setCients] = useState([]);
+    const [invoices, setInvoices] = useState([]);
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
-    const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
+    const [sort, setSort] = useState({ sortField: 'number', sortOrder: -1 });
+    const [tempSort, setTempSort] = useState({ sortField: 'number', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -63,17 +63,18 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
             const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted);
             setTotal(() => (data?.count || 0));
-            if (page === 1) setCients(data.results);
+            setTotalMoney(data?.total_amount || 0);
+            if (page === 1) setInvoices(data.results);
             else {
                 if (data?.results?.length > 0)
-                    setCients(prev => {
+                    setInvoices(prev => {
                         const existingClientIds = new Set(prev.map(client => client.id));
                         const newClients = data.results.filter(client => !existingClientIds.has(client.id));
                         return [...prev, ...newClients];
                     });
             }
             setSort(tempSort);
-            setHasMoreData(data.count !== clients.length);
+            setHasMoreData(data.count !== invoices.length);
             setLoading(false);
         };
 
@@ -82,7 +83,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
     }, [page, searchValue, tempSort, refetch, isShowDeleted]);
 
     useEffect(() => {
-        if (clients.length > 0 && hasMoreData) {
+        if (invoices.length > 0 && hasMoreData) {
             observerRef.current = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting) setPage(prevPage => prevPage + 1);
             });
@@ -94,7 +95,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
         return () => {
             if (observerRef.current) observerRef.current.disconnect();
         };
-    }, [clients, hasMoreData]);
+    }, [invoices, hasMoreData]);
 
     const InvoiceIDBody = (rowData) => {
         return <div className={`d-flex align-items-center gap-2 justify-content-between show-on-hover`}>
@@ -133,7 +134,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                     </div>
             }
 
-            {formatDate(rowData.created)}
+            {formatDate(rowData.due_date)}
             <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={false} />
         </div>;
     };
@@ -224,16 +225,29 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                     </div>
                     {
                         rowData?.billing_history.map((history, index) =>
-                            <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-around py-1 px-2 rounded mb-2'>
+                            <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-start py-1 px-2 rounded mb-2'>
                                 <div className='d-flex align-items-center'>
-                                    <ImageAvatar has_photo={history?.manager?.has_photo} photo={history?.manager?.photo} is_business={false} />
-                                    <div className='font-14 ellipsis-width' style={{ width: '120px', maxWidth: '120px' }}>{history?.manager?.name}</div>
+                                    {
+                                        history?.type === 0 ? (
+                                            <>
+                                                <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '24px', height: '24px', background: 'linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%)', marginRight: '10px' }}>
+                                                    <Stripe size={14} color="#98A2B3" />
+                                                </div>
+                                                <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>Strip</div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <ImageAvatar has_photo={history?.manager?.has_photo} photo={history?.manager?.photo} is_business={false} />
+                                                <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>{history?.manager?.name}</div>
+                                            </>
+                                        )
+                                    }
                                 </div>
-                                <div className='d-flex gap-2 align-items-center'>
+                                <div className='d-flex gap-2 align-items-center justify-content-start' style={{ width: '150px' }}>
                                     <Coin color='#98A2B3' size={14} />
                                     <span style={{ fontWeight: 600, fontSize: 16 }}>${parseFloat(history.deposit || 0).toFixed(2)}</span>
                                 </div>
-                                <div className='d-flex gap-2 align-items-center'>
+                                <div className='d-flex gap-2 align-items-center justify-content-start'>
                                     {history?.type === 2 ? <Bank size={14} color='#98A2B3' />
                                         : history.type === 1 ? <Cash size={14} color="#98A2B3" />
                                             : <Stripe size={14} color="#98A2B3" />}
@@ -322,7 +336,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
 
     return (
         <>
-            <DataTable ref={ref} value={clients} scrollable selectionMode={'checkbox'}
+            <DataTable ref={ref} value={invoices} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
                 scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
@@ -338,7 +352,8 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, selected, setSelected,
                 <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
                 <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px' }} frozen></Column>
                 <Column field="client.name" header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-                <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
+                <Column field="due_date" header="Created at" body={(rowData) => formatDate(rowData.invoice_create_date)} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
+                <Column field="due_date" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
                 <Column field='amount' header="Amount + GST" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
                 <Column field='deposit' header="Deposit/Payment" body={depositBody} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>

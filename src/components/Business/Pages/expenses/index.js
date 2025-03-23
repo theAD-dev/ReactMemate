@@ -10,12 +10,14 @@ import { toast } from 'sonner';
 import ExpensesTable from './expenses-table';
 import style from './expenses.module.scss';
 import { paidExpense, sendExpenseToXeroApi, unpaidExpense } from '../../../../APIs/expenses-api';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
 
 const ExpensesPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
     const [total, setTotal] = useState(0);
+    const [totalMoney, setTotalMoney] = useState(0);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
@@ -135,11 +137,13 @@ const ExpensesPage = () => {
                     )
                 }
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
+                    <Button className={isShowDeleted ? style.unpaidMoneyButton : style.allMoneyButton} onClick={() => setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Expenses</div>
+                    <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>
                 </div>
             </div>
-            <ExpensesTable ref={dt} searchValue={debouncedValue} setTotal={setTotal}
+            <ExpensesTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}
                 selected={selected} setSelected={setSelected}
                 isShowDeleted={isShowDeleted}
                 refetch={refetch}

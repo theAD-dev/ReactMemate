@@ -23,8 +23,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const [orders, setOrders] = useState([]);
 
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
-  const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
+  const [sort, setSort] = useState({ sortField: 'number', sortOrder: -1 });
+  const [tempSort, setTempSort] = useState({ sortField: 'number', sortOrder: -1 });
   const [hasMoreData, setHasMoreData] = useState(true);
   const [loading, setLoading] = useState(false);
   const limit = 25;
