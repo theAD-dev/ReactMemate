@@ -3,6 +3,7 @@ import { Spinner } from "react-bootstrap";
 import { initDaypilot, reInitilizeData } from "./utils";
 import { getManagement } from "../../../../../APIs/management-api";
 import { ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
+import { useTrialHeight } from "../../../../../app/providers/trial-height-provider";
 import ProjectCardModel from "../project-card/project-card-model";
 import CreateTask from "../task/create-task";
 import ViewTask from "../task/view-task";
@@ -10,6 +11,7 @@ import ViewTask from "../task/view-task";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
+  const { trialHeight } = useTrialHeight();
   const [management, setManagement] = useState([]);
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
@@ -20,6 +22,7 @@ function EventScheduler() {
   const [projectId, setProjectId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
 
+
   // show project model from invoice 
   const url = window.location.href;
   const urlObj = new URL(url);
@@ -27,7 +30,7 @@ function EventScheduler() {
   const unique_id = params.get('unique_id');
   if (unique_id && !projectId) {
     setProjectId(unique_id);
-    
+
     const reference = params.get('reference');
     const number = params.get('number');
     setProjectDetails({ number: number || "", reference, value: unique_id });
@@ -171,14 +174,13 @@ function EventScheduler() {
     }
 
     timeoutRef.current = setTimeout(() => {
-      console.log('Debounced search: ', search);
       let filteredResponse = management.filter((data) => {
         if (
-          (data?.number?.toLowerCase()?.startsWith(search?.toLowerCase() || ""))
+          (data?.number?.toLowerCase()?.includes(search?.toLowerCase() || ""))
           ||
-          (data?.reference?.toLowerCase()?.startsWith(search?.toLowerCase() || ""))
+          (data?.reference?.toLowerCase()?.includes(search?.toLowerCase() || ""))
           ||
-          (data?.client?.name.toLowerCase()?.startsWith(search?.toLowerCase() || ""))
+          (data?.client?.name.toLowerCase()?.includes(search?.toLowerCase() || ""))
         ) return true;
         else return false;
       });
@@ -204,13 +206,16 @@ function EventScheduler() {
       </div>
     </div>
 
-    <div id={CALENDAR_ID}>
-      <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
+    <div className={trialHeight && 'trial-height-added'}>
+      <div id={CALENDAR_ID}>
+        <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
       </div>
     </div>
+
 
     <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize} />
     <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize} />

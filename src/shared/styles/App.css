@@ -639,6 +639,12 @@ table.department-calculation tbody tr.selected td {
   height: calc(100dvh -234px) !important;
 }
 
+.trial-height-added #calender .scheduler_default_rowheader_scroll,
+.trial-height-added #calender .scheduler_default_scrollable {
+  height: calc(100vh - 264px) !important;
+  height: calc(100dvh -264px) !important;
+}
+
 #calender .scheduler_default_rowheader_inner_text h2 {
   color: var(--Gray-600, #475467);
   font-family: Inter;
@@ -2174,9 +2180,9 @@ strong.dollorIcon {
   background: transparent !important;
 }
 
-#calender {
+/* #calender {
   height: auto !important;
-}
+} */
 
 .refrencesTag span {
   border-radius: 300px;

@@ -13,7 +13,7 @@ import SidebarClientLoading from '../sidebar-client-loading/sidebar-client-loadi
 const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }) => {
   const formRef = useRef(null);
   const [defaultValues, setDefaultValues] = useState({});
-  const expense = useQuery({ queryKey: ['getExpense'], queryFn: () => getExpense(id), enabled: !!id });
+  const expense = useQuery({ queryKey: ['getExpense', id], queryFn: () => getExpense(id), enabled: !!id });
   const mutation = useMutation({
     mutationFn: (data) => updateExpense(id, data),
     onSuccess: (response) => {
@@ -92,6 +92,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
 
       setDefaultValues((others) => ({
         ...others,
+        note: expense?.data?.note,
         supplier: expense?.data?.supplier,
         invoice_reference: expense?.data?.invoice_reference,
         date: new Date(+expense?.data?.date * 1000),
@@ -138,7 +139,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
               ? <>
                 <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
                   <h5>Supplier Details</h5>
-                  <h6>Expense ID: {id || "-"}</h6>
+                  <h6>Expense ID: {expense?.data?.number || "-"}</h6>
                 </div>
                 <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} />
               </>

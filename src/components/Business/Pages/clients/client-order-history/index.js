@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ChevronLeft, Download } from 'react-bootstrap-icons';
+import { BoxArrowLeft, ChevronLeft, Download } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
@@ -70,15 +70,19 @@ const ClientOrderHistory = () => {
                         <h1 onClick={() => { setVisible(true); }} className={`${style.clientName} m-0 p-0 cursor-pointer`} title={clientDetails?.data?.name}>{clientDetails?.data?.name || ""}</h1>
                     </div>
                     <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                        <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
+                        <Button label={
+                            <>
+                                <BoxArrowLeft color='#1ab2ff' size={20} /> &nbsp; <span style={{ position: 'relative', top: '2px' }}>Open</span>
+                            </>
+                        } onClick={() => setVisible(true)} className='primary-text-button' text />
                     </div>
                 </div>
-                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} setVisible={setVisible}/>
+                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} setVisible={setVisible} />
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
                     clientDetails?.data?.is_business
-                        ? <BusinessClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} setVisible={setVisible}/>
+                        ? <BusinessClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} setVisible={setVisible} />
                         : clientDetails?.data?.is_business === false
                             ? <IndivisualClientView client={clientDetails?.data || {}} refetch={clientDetails?.refetch} closeIconRef={closeIconRef} hide={hide} />
                             : <SidebarClientLoading />

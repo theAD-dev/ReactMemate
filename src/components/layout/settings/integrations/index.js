@@ -149,7 +149,7 @@ const Integrations = () => {
                         </div>
                         <div className={style.body}>
                           <h3>{"Twilio"}</h3>
-                          <p>{"Incorporate your Google Review link  to easily send emails to customers requesting Google reviews with just one click."}</p>
+                          <p>{"Integrate Twilio to send SMS notifications to your customers directly from the platform."}</p>
                         </div>
                         <div className={style.bottom}>
                           <button className={style.infoButton} onClick={() => { setTwilioVisible(true); }}>

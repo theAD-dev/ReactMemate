@@ -13,6 +13,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
+import { InputTextarea } from 'primereact/inputtextarea';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tooltip } from 'primereact/tooltip';
 import * as yup from 'yup';
@@ -464,6 +465,18 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 }
             </Row>
 
+            <Row className={clsx(styles.bgGreay)}>
+                <Col sm={12}>
+                    <div className="d-flex flex-column gap-1">
+                        <label className={clsx(styles.lable)}>Notes</label>
+                        <IconField>
+                            <InputIcon style={{ top: '75%' }}>{errors.note && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
+                            <InputTextarea {...register("note")} rows={3} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.note })} style={{ resize: 'none' }} placeholder='Enter a note...' />
+                        </IconField>
+                        {errors.note && <p className="error-message">{errors.note.message}</p>}
+                    </div>
+                </Col>
+            </Row>
 
             <Row className={clsx(styles.bgGreay)}>
                 <Col sm={6}>

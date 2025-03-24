@@ -35,9 +35,9 @@ const ProjectStatus = () => {
             setIsCreating(true);
             const data = await ProjectStatusesList();
             setOptions(prev => {
-                const unsavedOptions = prev.filter(opt => opt.isNew);
+                const unsavedNewOptions = prev.filter(opt => opt.isNew);
                 const fetchedOptions = data.map(item => ({ ...item, isChanged: false, isNew: false }));
-                return [...fetchedOptions, ...unsavedOptions];
+                return [...fetchedOptions, ...unsavedNewOptions];
             });
         } catch (error) {
             console.error("Error fetching project status data:", error);
@@ -51,7 +51,6 @@ const ProjectStatus = () => {
         mutationFn: (data) => updateProjectStatusById(data.id, data),
         onSuccess: async () => {
             toast.success('The project status has been successfully updated.');
-            await fetchData();
         },
         onError: (error) => {
             console.error('Error updating status:', error);
@@ -130,7 +129,15 @@ const ProjectStatus = () => {
                 return [...unsavedOptions];
             });
         } else {
-            updateMutation.mutate(dataToSave);
+            await updateMutation.mutateAsync(dataToSave);
+            setOptions(prev => {
+                return prev.map(opt => {
+                    if (opt.id === id) {
+                        return { ...dataToSave, isChanged: false };
+                    }
+                    return opt;
+                });
+            });
         }
     };
 
