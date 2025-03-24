@@ -36,7 +36,7 @@ export const getProjectsList = async () => {
 };
 
 export const getExpense = async (id) => {
-  const endpoint = `/expenses/update/${id}`;
+  const endpoint = `/expenses/update/${id}/`;
   const options = {
     method: 'GET'
   };
@@ -55,7 +55,7 @@ export const createNewExpense = async (data) => {
 };
 
 export const updateExpense = async (id, data) => {
-  const endpoint = `/expenses/update/${id}`;
+  const endpoint = `/expenses/update/${id}/`;
   const options = {
     method: 'PUT',
     body: data

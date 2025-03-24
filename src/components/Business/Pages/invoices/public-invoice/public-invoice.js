@@ -247,8 +247,8 @@ const PublicInvoice = () => {
                                         </p>
                                     </div>
                                     <div className={style.right}>
-                                        <p>PO: </p>
-                                        {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{invoice?.purchase_order || "-"}</strong></p>}
+                                        {invoice?.purchase_order && <p>PO: </p>}
+                                        {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{invoice?.purchase_order}</strong></p>}
                                     </div>
                                 </div>
                             </div>
@@ -260,26 +260,100 @@ const PublicInvoice = () => {
                             <div className={style.left}>
                                 <p style={{ textDecoration: "underline" }}>To</p>
                                 <ul>
-                                    <li style={{ lineHeight: '16px' }}><strong style={{ lineHeight: '16px' }}>{invoice?.client.name}</strong></li>
-                                    <li style={{ lineHeight: '16px' }}>ABN: {invoice?.client.abn}</li>
-                                    <li style={{ lineHeight: '16px' }}>{invoice?.client?.addresses[0]?.address || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{invoice?.client?.addresses[0]?.city || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{invoice?.client?.addresses[0]?.state || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{invoice?.client?.addresses[0]?.country || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{invoice?.client?.addresses[0]?.postcode || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{invoice?.client.phone}</li>
+                                    {isLoading ? (
+                                        <>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {invoice?.client.name && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    <strong style={{ lineHeight: '16px' }}>{invoice.client.name}</strong>
+                                                </li>
+                                            )}
+                                            {invoice?.client.abn && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    ABN: {invoice.client.abn}
+                                                </li>
+                                            )}
+                                            {invoice?.client?.addresses[0]?.address && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {invoice.client.addresses[0].address}
+                                                </li>
+                                            )}
+                                            {invoice?.client?.addresses[0]?.city && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {invoice.client.addresses[0].city}
+                                                </li>
+                                            )}
+                                            {invoice?.client?.addresses[0]?.state && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {invoice.client.addresses[0].state}
+                                                </li>
+                                            )}
+                                            {invoice?.client?.addresses[0]?.country && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {invoice.client.addresses[0].country}
+                                                </li>
+                                            )}
+                                            {invoice?.client?.addresses[0]?.postcode && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {invoice.client.addresses[0].postcode}
+                                                </li>
+                                            )}
+                                            {invoice?.client.phone && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {invoice.client.phone}
+                                                </li>
+                                            )}
+                                        </>
+                                    )}
                                 </ul>
                             </div>
                             <div className={style.right}>
                                 <p style={{ textDecoration: "underline" }}>Issued by</p>
                                 <ul>
-                                    <li style={{ lineHeight: '16px' }}>
-                                        {isLoading ? <Skeleton width="10rem" height='15px' className='rounded'></Skeleton> : <strong style={{ lineHeight: '16px' }}>{invoice?.organization.account_name}</strong>}
-                                    </li>
-                                    <li style={{ lineHeight: '18px' }}>ABN:{invoice?.organization.abn}</li>
-                                    <li style={{ lineHeight: '18px' }}>{invoice?.organization.address}</li>
-                                    <li style={{ lineHeight: '18px' }}>{invoice?.organization.phone}</li>
-                                    <li style={{ lineHeight: '18px' }}>{invoice?.organization.email}</li>
+                                    {isLoading ? (
+                                        <>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {invoice?.organization.account_name && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    <strong style={{ lineHeight: '16px' }}>{invoice.organization.account_name}</strong>
+                                                </li>
+                                            )}
+                                            {invoice?.organization.abn && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    ABN: {invoice.organization.abn}
+                                                </li>
+                                            )}
+                                            {invoice?.organization.address && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {invoice.organization.address}
+                                                </li>
+                                            )}
+                                            {invoice?.organization.phone && (
+                                                <li style={{ lineHeight: '18px' }}>
+                                                    {invoice.organization.phone}
+                                                </li>
+                                            )}
+                                            {invoice?.organization.email && (
+                                                <li style={{ lineHeight: '18px' }}>
+                                                    {invoice.organization.email}
+                                                </li>
+                                            )}
+                                        </>
+                                    )}
                                 </ul>
                             </div>
                         </div>

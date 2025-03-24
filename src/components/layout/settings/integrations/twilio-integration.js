@@ -85,7 +85,7 @@ const TwilioIntegrations = ({ visible, setVisible, twilio, refetch }) => {
         <div className={`${style.modalHeader}`}>
             <div className="d-flex align-items-center gap-2">
                 <img src={twilioLogo} style={{ width: '60px', position: 'relative', left: '-10px' }} alt="Twilio Logo" />
-                <span style={{ position: 'relative', left: '-20px' }}>Twilio Settings</span> 
+                <span style={{ position: 'relative', left: '-20px' }}>Twilio Settings</span>
             </div>
         </div>
     );
@@ -179,21 +179,22 @@ const TwilioIntegrations = ({ visible, setVisible, twilio, refetch }) => {
                 </form>
                 <div className={style.tmsCondition}>
                     <ul>
-                        <h3 className="mt-0">Step 1: Sign in to Your Stripe Account</h3>
-                        <li>Access Your Stripe Account: Log in to your Stripe account at stripe.com. If you don’t have an account yet, create and verify one.</li>
+                        <h3 className="mt-0">Step 1: Sign in to Your Twilio Account</h3>
+                        <li>Access Your Twilio Account: Log in to your Twilio account at twilio.com. If you don’t have an account yet, create and verify one.</li>
                         <h3>Step 2: Navigate to API Keys</h3>
-                        <li>Dashboard: In your Stripe dashboard, go to the “Developers” section.</li>
-                        <li>API Keys: Click on “API keys” to find your publishable and secret keys.</li>
-                        <h3>Step 3: Connect Stripe to Your App</h3>
+                        <li>Dashboard: In your Twilio dashboard, go to the “Settings” section.</li>
+                        <li>API Keys: Click on “API keys” to find your Account SID and Auth Token.</li>
+                        <h3>Step 3: Connect Twilio to Your App</h3>
                         <li>Open Your App Settings: Go to the settings section in your app.</li>
-                        <li>Find Stripe Integration: Look for the Stripe integration under “Payment Settings” or “Integrations”.</li>
-                        <h3>Step 4: Enter Your Stripe API Keys</h3>
-                        <li>Publishable Key: Copy the publishable key from Stripe and paste it into your app settings.</li>
-                        <li>Secret Key: Copy the secret key and paste it into your app settings.</li>
-                        <li>Save Your Settings: Click “Save” or “Connect” to link your Stripe account.</li>
+                        <li>Find Twilio Integration: Look for the Twilio integration under “Communication Settings” or “Integrations”.</li>
+                        <h3>Step 4: Enter Your Twilio API Keys</h3>
+                        <li>Account SID: Copy the Account SID from Twilio and paste it into your app settings.</li>
+                        <li>Auth Token: Copy the Auth Token and paste it into your app settings.</li>
+                        <li>Twilio Phone Number: Enter your Twilio phone number into your app settings.</li>
+                        <li>Save Your Settings: Click “Save” or “Connect” to link your Twilio account.</li>
                         <h3>Step 5: Test the Integration</h3>
-                        <li>Test Mode: Run test transactions using Stripe’s test keys.</li>
-                        <li>Live Mode: Replace test keys with live keys once testing is successful.</li>
+                        <li>Test Mode: Run test SMS messages using Twilio’s test credentials.</li>
+                        <li>Live Mode: Replace test credentials with live credentials once testing is successful.</li>
                     </ul>
                 </div>
             </div>

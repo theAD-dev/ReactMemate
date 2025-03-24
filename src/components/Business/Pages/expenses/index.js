@@ -140,7 +140,7 @@ const ExpensesPage = () => {
                     <Button className={isShowDeleted ? style.unpaidMoneyButton : style.allMoneyButton} onClick={() => setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
                     <h1 className={`${style.total} mb-0`}>Total</h1>
                     <div className={`${style.totalCount}`}>{total} Expenses</div>
-                    <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>
+                    {isShowDeleted && <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>}
                 </div>
             </div>
             <ExpensesTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}

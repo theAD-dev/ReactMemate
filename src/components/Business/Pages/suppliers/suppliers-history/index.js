@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ChevronLeft, Download } from 'react-bootstrap-icons';
+import { BoxArrowLeft, ChevronLeft, Download } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
@@ -69,7 +69,11 @@ const SupplierHistoryPage = () => {
             <h1 onClick={() => { setVisible(true); }} className={`${style.supplierName} m-0 p-0 cursor-pointer`} title={supplierDetails?.data?.name}>{supplierDetails?.data?.name || ""}</h1>
           </div>
           <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-            <Button label="Download" onClick={() => exportCSV(false)} className='primary-text-button' text />
+            <Button label={
+              <>
+                <BoxArrowLeft color='#1ab2ff' size={20} /> &nbsp; <span style={{ position: 'relative', top: '2px' }}>Open</span>
+              </>
+            } onClick={() => setVisible(true)} className='primary-text-button' text />
           </div>
         </div>
         <SupplierHistoryTable ref={dt} selected={selected} setSelected={setSelected} />

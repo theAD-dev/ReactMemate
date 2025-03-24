@@ -218,8 +218,8 @@ const QuotationEmail = () => {
                                         </p>
                                     </div>
                                     <div className={style.right}>
-                                        <p>PO: </p>
-                                        {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{quote?.purchase_order || "-"}</strong></p>}
+                                        {quote?.purchase_order && <p>PO: </p>}
+                                        {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 mt-1 rounded'></Skeleton> : <p><strong>{quote?.purchase_order}</strong></p>}
                                     </div>
                                 </div>
                             </div>
@@ -231,26 +231,101 @@ const QuotationEmail = () => {
                             <div className={style.left}>
                                 <p style={{ textDecoration: "underline" }}>To</p>
                                 <ul>
-                                    <li style={{ lineHeight: '16px' }}><strong style={{ lineHeight: '16px' }}>{quote?.client.name}</strong></li>
-                                    <li style={{ lineHeight: '16px' }}>ABN: {quote?.client.abn}</li>
-                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.address || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.city || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.state || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.country || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{quote?.client?.addresses[0]?.postcode || "-"}</li>
-                                    <li style={{ lineHeight: '16px' }}>{quote?.client.phone}</li>
+                                    {isLoading ?
+                                        <>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                        </>
+                                        :
+                                        <>
+                                            {quote?.client.name && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    <strong style={{ lineHeight: '16px' }}>{quote.client.name}</strong>
+                                                </li>
+                                            )}
+                                            {quote?.client.abn && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    ABN: {quote.client.abn}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.address && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].address}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.city && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].city}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.state && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].state}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.country && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].country}
+                                                </li>
+                                            )}
+                                            {quote?.client?.addresses[0]?.postcode && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.addresses[0].postcode}
+                                                </li>
+                                            )}
+                                            {quote?.client.phone && (
+                                                <li style={{ lineHeight: '16px' }}>
+                                                    {quote.client.phone}
+                                                </li>
+                                            )}
+                                        </>
+                                    }
                                 </ul>
                             </div>
                             <div className={style.right}>
                                 <p style={{ textDecoration: "underline" }}>Issued by</p>
                                 <ul>
-                                    <li style={{ lineHeight: '16px' }}>
-                                        {isLoading ? <Skeleton width="10rem" height='15px' className='rounded'></Skeleton> : <strong style={{ lineHeight: '16px' }}>{quote?.organization.account_name}</strong>}
-                                    </li>
-                                    <li style={{ lineHeight: '18px' }}>ABN:{quote?.organization.abn}</li>
-                                    <li style={{ lineHeight: '18px' }}>{quote?.organization.address}</li>
-                                    <li style={{ lineHeight: '18px' }}>{quote?.organization.phone}</li>
-                                    <li style={{ lineHeight: '18px' }}>{quote?.organization.email}</li>
+                                    {isLoading ? (
+                                        <>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                            <Skeleton width="10rem" height='15px' className='rounded mb-1'></Skeleton>
+                                        </>
+                                    ) : (
+                                        quote?.organization.account_name && (
+                                            <li style={{ lineHeight: '16px' }}>
+                                                <strong style={{ lineHeight: '16px' }}>{quote.organization.account_name}</strong>
+                                            </li>
+                                        )
+                                    )}
+                                    {quote?.organization.abn && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            ABN: {quote.organization.abn}
+                                        </li>
+                                    )}
+                                    {quote?.organization.address && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            {quote.organization.address}
+                                        </li>
+                                    )}
+                                    {quote?.organization.phone && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            {quote.organization.phone}
+                                        </li>
+                                    )}
+                                    {quote?.organization.email && (
+                                        <li style={{ lineHeight: '18px' }}>
+                                            {quote.organization.email}
+                                        </li>
+                                    )}
                                 </ul>
                             </div>
                         </div>

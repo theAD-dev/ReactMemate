@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Placeholder } from "react-bootstrap";
-import { PencilSquare } from "react-bootstrap-icons";
+import { BoxArrowUpRight, PencilSquare } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 import clsx from 'clsx';
@@ -17,6 +17,7 @@ import Sidebar from '../Sidebar';
 
 
 const TermsConditionsInvoice = () => {
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [activeTab, setActiveTab] = useState('terms-and-conditions');
     const [edit, setEdit] = useState(false);
     const [terms, setTerms] = useState('');
@@ -84,16 +85,23 @@ const TermsConditionsInvoice = () => {
                     <div className="content_wrap_main">
                         <div className='content_wrapper'>
                             <div className="listwrapper">
-                                <div className={`topHeadStyle pb-4 ${style.topHeadStyle}`}>
-                                    <div>
+                                <div className={`topHeadStyle pb-4 flex-column ${style.topHeadStyle}`}>
+                                    <div className='w-100 d-flex gap-2 justify-content-end align-items-center'>
+                                        {!edit && (
+                                            <>
+                                                <button onClick={handleEditClick} className='text-nowrap'>
+                                                    Edit &nbsp; <PencilSquare color="#344054" size={20} />
+                                                </button>
+                                                <Link to={`${process.env.REACT_APP_URL}/media/organization_${profileData?.organization?.id}/terms_and_conditions.pdf`} style={{ padding: '10px 18px' }} target='_blank'>
+                                                    Preview &nbsp; <BoxArrowUpRight color="#344054" size={20} />
+                                                </Link>
+                                            </>
+                                        )}
+                                    </div>
+                                    <div className='w-100 text-start'>
                                         <h2>Terms and Conditions Invoice</h2>
                                         <p>Please,fill up your Company Terms and Conditions for Subcontractors which they going to follow by using the MeMate Application.</p>
                                     </div>
-                                    {!edit && (
-                                        <button onClick={handleEditClick} className='text-nowrap'>
-                                            Edit &nbsp; <PencilSquare color="#344054" size={20} />
-                                        </button>
-                                    )}
                                 </div>
 
                                 <div>
