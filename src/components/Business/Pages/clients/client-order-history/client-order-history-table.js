@@ -320,7 +320,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
       onSelectionChange={(e) => setSelected(e.value)}
       loading={loading}
       loadingIcon={loadingIconTemplate}
-      emptyMessage={<NoDataFoundTemplate isDataExist={!!clientOrders.length} />}
+      emptyMessage={<NoDataFoundTemplate isDataExist={!!clientOrders?.length} />}
       sortField={sort?.sortField}
       sortOrder={sort?.sortOrder}
       onSort={onSort}
