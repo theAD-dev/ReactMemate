@@ -102,7 +102,7 @@ export const clientEditApi = async (id) => {
   return fetchAPI(url.toString(), options);
 };
 
-export const getListOfClients = async (page, limit, name="", order="", isShowDeleted) => {
+export const getListOfClients = async (page, limit, name = "", order = "", isShowDeleted) => {
   const offset = (page - 1) * limit;
   const endpoint = `/clients/`;
   const options = {
@@ -118,12 +118,18 @@ export const getListOfClients = async (page, limit, name="", order="", isShowDel
   return fetchAPI(url.toString(), options);
 };
 
-export const clientOrderHistory = async (id) => {
+export const clientOrderHistory = async (id, page, limit, search = "", order = "",) => {
+  const offset = (page - 1) * limit;
   const endpoint = `/clients/${id}/orders/`;
   const options = {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  if (search) url.searchParams.append("number", search);
+  if (order) url.searchParams.append("ordering", order);
+  
   return fetchAPI(url.toString(), options);
 };
 
@@ -202,8 +208,8 @@ export const fetchClients = async (limit, offset) => {
 export const bringBack = async (id) => {
   const endpoint = `/projects/back/`;
   const options = {
-      method: 'PUT',
-      body: { unique_id: id }
+    method: 'PUT',
+    body: { unique_id: id }
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);

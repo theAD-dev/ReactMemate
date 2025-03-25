@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { CloseButton, Spinner } from 'react-bootstrap';
-import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash } from 'react-bootstrap-icons';
+import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash, CreditCard } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
@@ -252,12 +252,13 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                                     <Coin color='#98A2B3' size={14} />
                                     <span style={{ fontWeight: 600, fontSize: 16 }}>${parseFloat(history.deposit || 0).toFixed(2)}</span>
                                 </div>
-                                <div className='d-flex gap-2 align-items-center justify-content-start'>
+                                <div className='d-flex gap-2 align-items-center justify-content-start' style={{ width: '150px' }}>
                                     {history?.type === 2 ? <Bank size={14} color='#98A2B3' />
                                         : history.type === 1 ? <Cash size={14} color="#98A2B3" />
-                                            : <Stripe size={14} color="#98A2B3" />}
+                                            : history.type === 4 ? <CreditCard size={14} color="#98A2B3" />
+                                                : <Stripe size={14} color="#98A2B3" />}
                                     <div className='border rounded font-12 px-1'>
-                                        {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : "Strip"}
+                                        {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : history.type === 4 ? "EFTPOS" : "Strip"}
                                     </div>
                                 </div>
                                 <div className='d-flex gap-2 align-items-center'>
