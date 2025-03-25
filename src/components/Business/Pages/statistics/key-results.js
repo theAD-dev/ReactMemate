@@ -64,10 +64,12 @@ const KeyResultsPage = () => {
 
     useEffect(() => {
         if (keyResultStaticsQuery.data) {
-            const statisticsData = keyResultStaticsQuery.data || {};
-            const totalTarget = statisticsData.statistics.reduce((acc, curr) =>
+            let statisticsData = keyResultStaticsQuery?.data?.statistics || [];
+            if (selectedType === 'Generated revenue') statisticsData = keyResultStaticsQuery?.data?.revenue || [];
+
+            const totalTarget = statisticsData.reduce((acc, curr) =>
                 acc + parseFloat(curr.target_value), 0);
-            const totalSum = statisticsData.statistics.reduce((acc, curr) =>
+            const totalSum = statisticsData.reduce((acc, curr) =>
                 acc + parseFloat(curr.sum), 0);
             const progress = totalTarget > 0 ? (totalSum / totalTarget) * 100 : 0;
             setOuterProgress(progress);
@@ -78,7 +80,7 @@ const KeyResultsPage = () => {
         // Update inner progress based on days
         const daysProgress = daysInMonth > 0 ? (daysCompleted / daysInMonth) * 100 : 0;
         setInnerProgress(daysProgress);
-    }, [keyResultStaticsQuery.data, selectedMonth, selectedYear, daysCompleted, daysInMonth]);
+    }, [keyResultStaticsQuery.data, selectedMonth, selectedYear, daysCompleted, daysInMonth, selectedType]);
 
     useEffect(() => {
         const currentDate = new Date();
@@ -90,7 +92,7 @@ const KeyResultsPage = () => {
     const outerDashOffset = outerPathLength * (1 - outerProgress / 100);
     const innerDashOffset = innerPathLength * (1 - innerProgress / 100);
 
-    const statistics = keyResultStaticsQuery?.data?.statistics || [];
+    const statistics = selectedType === 'Generated revenue' ? (keyResultStaticsQuery?.data?.revenue || []) : (keyResultStaticsQuery?.data?.statistics || []);
     const topStatistics = [...statistics]
         .sort((a, b) => parseFloat(b.sum) - parseFloat(a.sum));
 

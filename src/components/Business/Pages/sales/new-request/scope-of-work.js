@@ -17,8 +17,7 @@ import exclamationCircle from "../../../../../assets/images/icon/exclamation-cir
 
 const schema = yup
     .object({
-        reference: yup.string().required("Project reference is required"),
-        requirements: yup.string().required("Description is required"),
+        reference: yup.string().required("Project reference is required")
     })
     .required();
 
@@ -156,7 +155,7 @@ const ScopeOfWorkComponent = () => {
 
                                     <Col sm={12}>
                                         <div className="formgroup mb-2 mt-0">
-                                            <label>Describe requirements for the order below<span className='required'>*</span><br />
+                                            <label>Describe requirements for the order below<br />
                                                 <small style={{ color: '#475467', fontWeight: 400 }}>Use for organisation. Not customer-facing.</small>
                                             </label>
                                             <div style={{ position: 'relative' }} className={`inputInfo textarea ${errors.requirements ? 'error-border' : ''}`}>
