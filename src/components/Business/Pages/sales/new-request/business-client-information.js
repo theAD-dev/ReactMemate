@@ -14,10 +14,10 @@ const BusinessClientInformation = () => {
   const [isPending, setIsPending] = useState(false);
   const [businessDefaultValues,] = useState({
     payment_terms: 1,
-    category: 1,
+    category: '',
     phone: { country: '', number: '' },
     contact_persons: [{}],
-    addresses: [{ country: 1 }],
+    addresses: [{ title: "Main Location", country: 1 }],
   });
 
   const handleExternalSubmit = () => {
