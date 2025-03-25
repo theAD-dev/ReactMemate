@@ -26,7 +26,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
   const [tempSort, setTempSort] = useState({ sortField: 'number', sortOrder: -1 });
   const [hasMoreData, setHasMoreData] = useState(true);
   const [loading, setLoading] = useState(false);
-  const limit = 2;
+  const limit = 25;
   const [isDuplicating, setIsDuplicating] = useState(null);
   const [isBringBack, setIsBringBack] = useState(null);
 
