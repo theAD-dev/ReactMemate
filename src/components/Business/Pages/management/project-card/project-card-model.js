@@ -787,9 +787,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </div>
               </Col>
               <Col className='proRealCost projectColBg'>
-                <div>
+                <div style={{ position: 'relative', left: '20px' }}>
                   <h5>Real Cost</h5>
                   <p>${formatAUD(formattedRealCost)}</p>
+                </div>
+                <div className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', borderRadius: '40px', border: '1px solid #D0D5DD', background: '#fff', boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)', position: 'relative', left: '42px' }}>
+                  <span className='font-14'>VS</span>
                 </div>
               </Col>
               <Col className='proBuget projectColBg'>
