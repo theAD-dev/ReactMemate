@@ -44,7 +44,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
       else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
       const data = await clientOrderHistory(id, page, limit, searchValue, order);
-      if (page === 1) setClientOrders(data.results);
+      if (page === 1) setClientOrders(data?.results || []);
       else {
         if (data?.results?.length > 0)
           setClientOrders(prev => {
@@ -54,7 +54,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
           });
       }
       setSort(tempSort);
-      setHasMoreData(data.count !== clientOrders.length);
+      setHasMoreData(data?.count !== clientOrders?.length);
       setLoading(false);
     };
 
@@ -62,7 +62,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
   }, [id, page, searchValue, tempSort]);
 
   useEffect(() => {
-    if (clientOrders.length > 0 && hasMoreData) {
+    if (clientOrders?.length > 0 && hasMoreData) {
       observerRef.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) setPage(prevPage => prevPage + 1);
       });
