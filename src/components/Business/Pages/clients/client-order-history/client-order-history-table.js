@@ -1,7 +1,7 @@
-import React, { forwardRef, useRef, useState } from 'react';
-import { CloseButton } from 'react-bootstrap';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { CloseButton, Spinner } from 'react-bootstrap';
 import { ArrowLeftCircle, CardChecklist, Check2Circle, FileEarmark, FilePdf, Files, FileText, InfoCircle, Link45deg, ListCheck, ListUl, PhoneVibrate, PlusSlashMinus } from 'react-bootstrap-icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import clsx from 'clsx';
 import '@szhsin/react-menu/dist/index.css';
@@ -11,15 +11,71 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './client-order-history.module.scss';
-import { bringBack } from '../../../../../APIs/ClientsApi';
+import { bringBack, clientOrderHistory } from '../../../../../APIs/ClientsApi';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
 
-const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrders, isPending }, ref) => {
+const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue }, ref) => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const observerRef = useRef(null);
+  const [clientOrders, setClientOrders] = useState([]);
+  const [page, setPage] = useState(1);
+  const [sort, setSort] = useState({ sortField: 'number', sortOrder: -1 });
+  const [tempSort, setTempSort] = useState({ sortField: 'number', sortOrder: -1 });
+  const [hasMoreData, setHasMoreData] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const limit = 2;
   const [isDuplicating, setIsDuplicating] = useState(null);
   const [isBringBack, setIsBringBack] = useState(null);
+
+  useEffect(() => {
+    setHasMoreData(true);
+    setPage(1);  // Reset to page 1 whenever searchValue changes
+  }, [searchValue]);
+
+  useEffect(() => {
+    const fetchClientOrders = async () => {
+      setLoading(true);
+
+      let order = "";
+      if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
+      else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
+
+      const data = await clientOrderHistory(id, page, limit, searchValue, order);
+      if (page === 1) setClientOrders(data.results);
+      else {
+        if (data?.results?.length > 0)
+          setClientOrders(prev => {
+            const existingIds = new Set(prev.map(history => history.unique_id));
+            const newData = data.results.filter(history => !existingIds.has(history.unique_id));
+            return [...prev, ...newData];
+          });
+      }
+      setSort(tempSort);
+      setHasMoreData(data.count !== clientOrders.length);
+      setLoading(false);
+    };
+
+    if (id) fetchClientOrders();
+  }, [id, page, searchValue, tempSort]);
+
+  useEffect(() => {
+    if (clientOrders.length > 0 && hasMoreData) {
+      observerRef.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) setPage(prevPage => prevPage + 1);
+      });
+
+      const lastRow = document.querySelector('.p-datatable-tbody tr:not(.p-datatable-emptymessage):last-child');
+      if (lastRow) observerRef.current.observe(lastRow);
+    }
+
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [clientOrders, hasMoreData]);
+
 
   const statusBodyTemplate = (rowData) => {
     const status = rowData.status;
@@ -58,10 +114,12 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
   };
 
   const InvoiceBodyTemplate = (rowData) => {
-    return <div className='d-flex align-items-center justify-content-center gap-4'>
-      <Link to={`${process.env.REACT_APP_URL}/${rowData.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
-      <Link to={`/invoice/${rowData.unique_id}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
-    </div>;
+    if (rowData.has_invoice)
+      return <div className='d-flex align-items-center justify-content-center gap-4'>
+        <Link to={`${process.env.REACT_APP_URL}/${rowData.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+        <Link to={`/invoice/${rowData.unique_id}`} target='_blank'><Link45deg color='#3366CC' size={16} /></Link>
+      </div>;
+    else return "";
   };
 
   const quoteBodyTemplate = (rowData) => {
@@ -239,13 +297,33 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, clientOrder
     </>;
   };
 
+  const loadingIconTemplate = () => {
+    return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </div>;
+  };
+
+  const onSort = (event) => {
+    const { sortField, sortOrder } = event;
+
+    setPage(1);  // Reset to page 1 whenever searchValue changes
+    setHasMoreData(true);
+    setTempSort({ sortField, sortOrder });
+  };
+
   return (
-    <DataTable ref={ref} value={clientOrders} scrollable selectionMode={'checkbox'} removableSort
+    <DataTable ref={ref} value={clientOrders} scrollable selectionMode={'checkbox'}
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
       scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
-      loading={isPending}
+      loading={loading}
+      loadingIcon={loadingIconTemplate}
       emptyMessage={<NoDataFoundTemplate isDataExist={!!clientOrders.length} />}
+      sortField={sort?.sortField}
+      sortOrder={sort?.sortOrder}
+      onSort={onSort}
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
       <Column field="number" header="Project ID" frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>

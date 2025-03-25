@@ -8,7 +8,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import ClientOrderHistoryTable from './client-order-history-table';
 import style from './client-order-history.module.scss';
-import { clientOrderHistory, getClientById } from '../../../../../APIs/ClientsApi';
+import { getClientById } from '../../../../../APIs/ClientsApi';
 import BusinessClientView from '../../../features/clients-features/business-client-view/business-client-view';
 import IndivisualClientView from '../../../features/clients-features/indivisual-client-view/indivisual-client-view';
 import SidebarClientLoading from '../../../features/clients-features/sidebar-client-loading/sidebar-client-loading';
@@ -23,7 +23,6 @@ const ClientOrderHistory = () => {
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
     const clientDetails = useQuery({ queryKey: ['client-read'], queryFn: () => getClientById(id), enabled: !!id, retry: 1 });
-    const clientOrders = useQuery({ queryKey: ['client-order'], queryFn: () => clientOrderHistory(id), enabled: !!id, retry: 1 });
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -77,7 +76,7 @@ const ClientOrderHistory = () => {
                         } onClick={() => setVisible(true)} className='primary-text-button' text />
                     </div>
                 </div>
-                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} clientOrders={clientOrders?.data || []} isPending={clientOrders?.isPending} setVisible={setVisible} />
+                <ClientOrderHistoryTable ref={dt} selected={selected} setSelected={setSelected} searchValue={debouncedValue} setVisible={setVisible} />
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (

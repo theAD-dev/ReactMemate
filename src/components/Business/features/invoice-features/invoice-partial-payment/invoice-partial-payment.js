@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
-import { Bank, Cash, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
+import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -35,6 +35,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
     const options = [
         { icon: <Bank size={20} />, label: 'Bank', value: 2 },
         { icon: <Cash size={20} />, label: 'Cash', value: 1 },
+        { icon: <CreditCard size={20} />, label: 'EFTPOS', value: 4 },
     ];
     const justifyTemplate = (option) => {
         return <div className='d-flex align-items-center gap-2'>
@@ -165,7 +166,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
             <Card className={clsx(style.border, 'mb-3')}>
                 <Card.Body className='d-flex justify-content-end gap-2'>
                     <Button className='outline-button' onClick={() => setShow(false)}>Cancel</Button>
-                    <Button className='success-button' onClick={onsubmit}>Process Payment
+                    <Button className='success-button' onClick={onsubmit}>Submit Payment
                         {mutation?.isPending && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
@@ -212,6 +213,11 @@ const InvoiceHistory = ({ history }) => {
             return <div className='d-flex align-items-center gap-2'>
                 <Stripe size={18} />
                 <span>Strip</span>
+            </div>;
+        } else if (type === 4) {
+            return <div className='d-flex align-items-center gap-2'>
+                <CreditCard size={18} />
+                <span>EFTPOS</span>
             </div>;
         }
 
