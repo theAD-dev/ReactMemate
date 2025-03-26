@@ -6,7 +6,6 @@ import {
   ChevronLeft,
 } from "react-bootstrap-icons";
 import { NavLink } from "react-router-dom";
-import { ExistingClientsSearch } from "./existing-clients";
 
 const SelectClientType = () => {
   try {
@@ -16,32 +15,29 @@ const SelectClientType = () => {
     console.error('Failed to parse form data from sessionStorage', error);
   }
   return (
-    <div className="newQuotePage existingClients p-0 pt-4" style={{ height: 'calc(100vh - 152px)'}}>
-      <div className="dFlex h-100 m-0 p-0" style={{ overflowY: 'hidden' }}>
+    <div className="newQuotePage existingClients">
+      <div className="dFlex">
         <div className="newQuoteBack">
           <button><NavLink to="/sales">
             <ChevronLeft color="#000000" size={20} /> Go Back{" "}
           </NavLink></button>
         </div>
-        <div className="newQuoteContent mb-0">
-          <h3>Select Client Type</h3>
-
-          <div className="formgroupWrap1">
-            <ul className="mt-3" style={{ opacity: '.6', cursor: 'not-allowed' }}>
+        <div className="newQuoteContent">
+          <h3> Select Client Type </h3>
+          <div className="formgroupWrap">
+            <ul className="mt-3">
               <li>
-                <NavLink className="ActiveClient" to="#" style={{ cursor: 'not-allowed' }}>
+                <NavLink
+                  className="ActiveClient"
+                  to="/sales/newquote/selectyourclient/existing-clients"
+                >
                   <span>
-                    <HouseDoor color="#667085" size={24} />
+                    <People color="#1AB2FF" size={24} />
                   </span>{" "}
-                  Internal Project
+                  Existing Client{" "}
                 </NavLink>
               </li>
-            </ul>
-          </div>
-
-          <div className="formgroupWrap">
-            <ul className="mt-2">
-              <li className="w-100">
+              <li>
                 <NavLink
                   className="ActiveClient"
                   to="/sales/newquote/selectyourclient/new-clients"
@@ -54,24 +50,18 @@ const SelectClientType = () => {
               </li>
             </ul>
           </div>
-
-          <div className="formgroupWrap">
-            <ul className="mt-2">
-              <li className="w-100">
-                <NavLink
-                  className="ActiveClient"
-                  to="#"
-                >
+          <div className="formgroupWrap1">
+            <ul className="mt-4" style={{ opacity: '.6', cursor: 'not-allowed' }}>
+              <li>
+                <NavLink className="ActiveClient" to="#" style={{ cursor: 'not-allowed' }}>
                   <span>
-                    <People color="#1AB2FF" size={24} />
+                    <HouseDoor color="#667085" size={24} />
                   </span>{" "}
-                  Existing Client{" "}
+                  Internal Project
                 </NavLink>
               </li>
             </ul>
           </div>
-
-          <ExistingClientsSearch />
         </div>
       </div>
     </div>
