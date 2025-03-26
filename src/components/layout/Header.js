@@ -107,7 +107,15 @@ const Header = () => {
   const [profileData, setProfileData] = useState(null);
   const [menuSwitch, SetMenuSwitch] = useState(true);
 
-  const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+  let profileDataLocal = {};
+  try {
+    profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+  } catch (error) {
+    console.error('Error parsing profileData from localStorage:', error);
+    window.localStorage.clear();
+    window.sessionStorage.clear();
+    navigate("/login");
+  }
   const isSuspended = profileDataLocal?.is_suspended ? true : false;
   if (isSuspended) navigate("/suspended");
 

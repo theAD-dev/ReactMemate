@@ -15,9 +15,8 @@ export const fetchProfile = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/profile/`, requestOptions);
     if (response.status === 401) {
-      window.localStorage.removeItem('access_token');
-      window.localStorage.removeItem('refresh_token');
-      window.localStorage.removeItem('isLoggedIn');
+      window.localStorage.clear();
+      window.sessionStorage.clear();
       window.location.replace("/login");
     }
 
