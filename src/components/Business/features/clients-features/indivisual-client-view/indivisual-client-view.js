@@ -47,7 +47,7 @@ const IndivisualClientView = ({ client, refetch, closeIconRef, hide }) => {
         <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
           <div className='d-flex align-items-center justify-content-between'>
             <h5 className={clsx(style.boxLabel)}>Client Details</h5>
-            <h6 className={clsx(style.boxLabel2)}>Client ID: {client.id}</h6>
+            <h6 className={clsx(style.boxLabel2)}>Client ID: {client?.number}</h6>
           </div>
           {
             isEdit ? <IndivisualClientEdit ref={formRef} refetch={refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} client={client} setIsEdit={setIsEdit} />
