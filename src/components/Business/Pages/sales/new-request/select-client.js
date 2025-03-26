@@ -7,8 +7,10 @@ import {
 } from "react-bootstrap-icons";
 import { NavLink } from "react-router-dom";
 import { ExistingClientsSearch } from "./existing-clients";
+import { useTrialHeight } from "../../../../../app/providers/trial-height-provider";
 
 const SelectClientType = () => {
+  const { trialHeight } = useTrialHeight();
   try {
     const storedData = window.sessionStorage.getItem(`new-request`);
     if (storedData) window.sessionStorage.removeItem('new-request');
@@ -16,7 +18,7 @@ const SelectClientType = () => {
     console.error('Failed to parse form data from sessionStorage', error);
   }
   return (
-    <div className="newQuotePage existingClients p-0 pt-4" style={{ height: 'calc(100vh - 152px)'}}>
+    <div className="newQuotePage existingClients p-0 pt-4" style={{ height: `calc(100vh - 130px - ${trialHeight}px)` }}>
       <div className="dFlex h-100 m-0 p-0" style={{ overflowY: 'hidden' }}>
         <div className="newQuoteBack">
           <button><NavLink to="/sales">
