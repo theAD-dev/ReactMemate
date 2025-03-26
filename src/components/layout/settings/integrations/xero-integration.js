@@ -6,15 +6,10 @@ import { toast } from "sonner";
 import style from "./integration.module.scss";
 import { disconnectXeroIntegrations } from "../../../../APIs/integrations-api";
 
-
-
-const CLIENT_ID = "743BAB12B3A24534889C5C803A35E12C";
-// const REDIRECT_URI = "http://localhost:3000/settings/integrations";
-
 const XeroIntegration = ({ connected, refetch }) => {
   console.log('connected: ', connected);
   const REDIRECT_URI = window.location.href;
-  const authorizationUrl = `https://login.xero.com/identity/connect/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=openid profile email offline_access accounting.transactions accounting.contacts accounting.settings&state=111`;
+  const authorizationUrl = `https://login.xero.com/identity/connect/authorize?response_type=code&client_id=${process.env.REACT_APP_XERO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=openid profile email offline_access accounting.transactions accounting.contacts accounting.settings&state=111`;
 
   const processedCodes = new Set();
   const exchangeCodeForToken = async (code) => {
