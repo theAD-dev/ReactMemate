@@ -30,6 +30,7 @@ const XeroIntegration = ({ connected, refetch }) => {
         toast.error(data?.error);
         return;
       }
+      refetch();
       toast.success("Xero code has been sent successfully!");
     } catch (error) {
       console.error("Error saving template:", error);
@@ -94,7 +95,7 @@ const XeroIntegration = ({ connected, refetch }) => {
         {
           !connected ?
             <button onClick={handleButtonClick} className={style.infoButton}>Connect</button>
-            : <Button onClick={() => mutation?.mutate()} className="danger-outline-button">
+            : <Button  disabled={mutation?.isPending} onClick={() => mutation?.mutate()} className="danger-outline-button">
               Disconnect
               {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
             </Button>

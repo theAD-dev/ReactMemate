@@ -148,7 +148,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
               <Button variant="outline-danger" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button variant="primary save d-flex align-items-center gap-2" onClick={handleSubmit}>
+              <Button disabled={mutation?.isPending} variant="primary save d-flex align-items-center gap-2" onClick={handleSubmit}>
                 Save 
                 {
                   mutation?.isPending && <ProgressSpinner style={{ width: '15px', height: '15px' }} />

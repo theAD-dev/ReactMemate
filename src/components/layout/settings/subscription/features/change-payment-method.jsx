@@ -76,7 +76,7 @@ const Wrapper = ({ setVisible, refetch }) => {
         <Divider className="mt-5" />
         <div className="d-flex justify-content-between gap-2">
           <Button type='button' className='text-button text-danger bg-transparent' style={{ minWidth: '70px', borderRadius: '28px' }}>Cancel</Button>
-          <Button type='submit' className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }}>
+          <Button disabled={isPending} type='submit' className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }}>
             Save Details
             {isPending && <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />}
           </Button>

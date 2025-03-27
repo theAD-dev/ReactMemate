@@ -146,7 +146,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
             <Button className="outline-button" onClick={() => setShow(false)}>
                 Cancel
             </Button>
-            <Button className="solid-button" onClick={onSubmit}>
+            <Button disabled={isLoading} className="solid-button" onClick={onSubmit}>
                 Send{" "}
                 {isLoading && (
                     <ProgressSpinner

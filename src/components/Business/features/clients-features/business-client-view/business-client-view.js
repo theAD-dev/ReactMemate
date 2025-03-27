@@ -212,12 +212,12 @@ const ViewSection = ({ client, industries, refetch }) => {
         contacts?.map((contact) => (
           <div key={contact.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
-              <div className={clsx(style.iconBox, 'cursor-pointer')} onClick={() => markContactPersonMain(contact.id)}>
+              <button className={clsx(style.iconBox, 'cursor-pointer')} disabled={isMainLoading === contact.id} onClick={() => markContactPersonMain(contact.id)}>
                 {
                   (isMainLoading === contact.id) ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
                     : <StarFill color={contact.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
                 }
-              </div>
+              </button>
             </div>
             <Row>
               <Col sm={6}>
@@ -275,12 +275,12 @@ const ViewSection = ({ client, industries, refetch }) => {
         addresses?.map((address) => (
           <div key={address.id} className={clsx(style.box)}>
             <div className={clsx(style.iconBoxsContainer)}>
-              <div className={clsx(style.iconBox, 'cursor-pointer')} onClick={() => markAddressMain(address.id)}>
+              <button className={clsx(style.iconBox, 'cursor-pointer')} disabled={isMainLoading === address.id} onClick={() => markAddressMain(address.id)}>
                 {
                   (isMainLoading === address.id) ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
                     : <StarFill color={address.is_main ? "#FFCB45" : "#D0D5DD"} size={16} />
                 }
-              </div>
+              </button>
               <div className={clsx(style.iconBox)}>
                 <Link to={`http://maps.google.com/?q=${address.address}`} target='_blank'><img src={mapicon} alt='map' /></Link>
               </div>

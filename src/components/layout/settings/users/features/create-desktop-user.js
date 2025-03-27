@@ -192,7 +192,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
             <span></span>
             <div className='d-flex justify-content-end gap-2'>
                 <Button className='outline-button' onClick={handleClose}>Cancel</Button>
-                <Button type='submit' onClick={handleSubmit(onSubmit)} className='solid-button'>
+                <Button type='submit' disabled={isLoading} onClick={handleSubmit(onSubmit)} className='solid-button'>
                     {id ? "Update" : "Save"} Details
                     {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                 </Button>

@@ -96,11 +96,11 @@ const Desktop = ({ visible, setVisible }) => {
             {
                 data?.is_active
                     ?
-                    <Button onClick={() => { deleteMutation.mutate(data?.id); }} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
+                    <Button disabled={deleteMutation?.variables === data?.id} onClick={() => { deleteMutation.mutate(data?.id); }} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
                         Delete
                         {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </Button>
-                    : <Button onClick={() => restore(data?.id)} className={clsx(style.successTextButton, 'text-button')} style={{ width: '120px', color: '#067647' }}>
+                    : <Button disabled={restoreMutation?.variables === data?.id} onClick={() => restore(data?.id)} className={clsx(style.successTextButton, 'text-button')} style={{ width: '120px', color: '#067647' }}>
                         Restore
                         {restoreMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                     </Button>

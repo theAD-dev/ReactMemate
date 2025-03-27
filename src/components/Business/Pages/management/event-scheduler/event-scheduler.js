@@ -12,6 +12,7 @@ import ViewTask from "../task/view-task";
 const CALENDAR_ID = "calender";
 function EventScheduler() {
   const { trialHeight } = useTrialHeight();
+  const [search, setSearch] = useState("");
   const [management, setManagement] = useState([]);
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
@@ -136,7 +137,8 @@ function EventScheduler() {
       setIsReinitilize(true);
       const response = await getManagement();
       setManagement(response);
-      reInitilizeData(response);
+      if (search) searchData(search, response);
+      else reInitilizeData(response);
       setIsReinitilize(false);
     } catch (error) {
       console.error("Error initializing DayPilot:", error);
@@ -165,16 +167,14 @@ function EventScheduler() {
     };
   }, []);
 
-  const timeoutRef = useRef(null);
-  const handleSearch = (e) => {
-    const search = e.target.value;
-
+  const searchData = (search, newData) => {
+    const managementData = newData || management;
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
     timeoutRef.current = setTimeout(() => {
-      let filteredResponse = management.filter((data) => {
+      let filteredResponse = managementData.filter((data) => {
         if (
           (data?.number?.toLowerCase()?.includes(search?.toLowerCase() || ""))
           ||
@@ -186,6 +186,13 @@ function EventScheduler() {
       });
       reInitilizeData(filteredResponse || []);
     }, 600);
+  };
+
+  const timeoutRef = useRef(null);
+  const handleSearch = (e) => {
+    const search = e.target.value;
+    setSearch(search);
+    searchData(search);
   };
 
   return <React.Fragment>

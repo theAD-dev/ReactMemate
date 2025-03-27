@@ -163,7 +163,7 @@ const RegionLanguage = () => {
               <button className="cancel" onClick={handleCancel}>
                 Cancel
               </button>
-              <button className="save" onClick={handleUpdate}>
+              <button className="save" disabled={mutation?.isPending} onClick={handleUpdate}>
                 Save {" "}
                 {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
               </button>

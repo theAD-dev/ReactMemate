@@ -126,7 +126,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
     const footerContent = (
         <div className='d-flex justify-content-between'>
             {id
-                ? <Button onClick={() => deleteMutation.mutate()} className='danger-outline-button' >
+                ? <Button disabled={deleteMutation.isPending} onClick={() => deleteMutation.mutate()} className='danger-outline-button' >
                     Delete
                     {deleteMutation.isPending && (<ProgressSpinner style={{ width: '20px', height: '20px' }} />)}
                 </Button>
@@ -134,7 +134,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
             }
             <div className='d-flex justify-content-end gap-2'>
                 <Button className='outline-button' onClick={handleClose}>Cancel</Button>
-                <Button type='submit' onClick={handleSubmit(onSubmit)} className='solid-button'>
+                <Button type='submit' disabled={mutation?.isPending} onClick={handleSubmit(onSubmit)} className='solid-button'>
                     {id ? "Update" : "Save"} Details
                     {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                 </Button>

@@ -144,7 +144,7 @@ const Header = () => {
 
   useEffect(() => {
     setTrialHeight(isVisibleTrial ? 30 : 0);
-  }, [isVisibleTrial]);
+  }, [isVisibleTrial, setTrialHeight]);
 
   if (!isLoggedIn) return <Navigate to={"/login"} replace />;
 

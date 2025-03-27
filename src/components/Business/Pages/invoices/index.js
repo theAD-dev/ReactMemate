@@ -75,7 +75,7 @@ const InvoicePage = () => {
                             <>
                                 <h6 className={style.selectedCount}>Selected: {selected?.length}</h6>
                                 <div className='filtered-box d-flex align-items-center gap-2'>
-                                    <button className={`outline-button ${style.actionButton}`} onClick={sendInvoiceToXero}>Send to Xero/MYOB
+                                    <button className={`outline-button ${style.actionButton}`} disabled={sendInvoiceToXeroMutation.isPending} onClick={sendInvoiceToXero}>Send to Xero/MYOB
                                         {
                                             sendInvoiceToXeroMutation.isPending
                                                 ? <ProgressSpinner
@@ -113,9 +113,12 @@ const InvoicePage = () => {
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <Button className={isShowDeleted ? style.unpaidInvoice : style.allInvoice} onClick={() => setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
-                    <h1 className={`${style.total} mb-0`}>Total</h1>
-                    <div className={`${style.totalCount}`}>{total} Invoice</div>
-                    {isShowDeleted && <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>}
+                    {isShowDeleted && <>
+                        <h1 className={`${style.total} mb-0`}>Total</h1>
+                        <div className={`${style.totalCount}`}>{total} Invoice</div>
+                        <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>
+                    </>
+                    }
                 </div>
             </div>
             <InvoiceTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}

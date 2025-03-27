@@ -467,7 +467,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                     <Button className="outline-button" onClick={handleClose}>
                         Cancel{" "}
                     </Button>
-                    <Button className="solid-button" onClick={onSubmit}>
+                    <Button disabled={mutation?.isPending} className="solid-button" onClick={onSubmit}>
                         Send{" "}
                         {mutation?.isPending && (
                             <ProgressSpinner
