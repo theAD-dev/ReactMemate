@@ -43,7 +43,7 @@ const DeleteClient = ({ id }) => {
     return (
         <>
             <ConfirmPopup />
-            <Button type='button' onClick={handleDeleteClient} className='outline-button'>
+            <Button type='button' onClick={handleDeleteClient} disabled={deleteMutation.isPending} className='outline-button'>
                 {
                     deleteMutation.isPending ? (
                         <ProgressSpinner style={{ width: '20px', height: '20px' }} />

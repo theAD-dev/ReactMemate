@@ -304,19 +304,19 @@ const CalculateQuote = () => {
                         }
                     </div>
                     <div className='d-flex align-items-center' style={{ gap: '8px' }}>
-                        <button type="button" onClick={() => createNewRequest('draft')} className="button-custom text-button">
+                        <button type="button" disabled={newRequestMutation.isPending || updateRequestMutation.isPending} onClick={() => createNewRequest('draft')} className="button-custom text-button">
                             Save Draft
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
                                 && (newRequestMutation?.variables?.action === "draft" || updateRequestMutation?.variables?.action === "draft")
                                 && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
-                        <button type="button" onClick={() => createNewRequest('save')} className="button-custom submit-button-light">
+                        <button type="button" disabled={newRequestMutation.isPending || updateRequestMutation.isPending} onClick={() => createNewRequest('save')} className="button-custom submit-button-light">
                             Save
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
                                 && (newRequestMutation?.variables?.action === "save" || updateRequestMutation?.variables?.action === "save")
                                 && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                         </button>
-                        <button type="button" onClick={() => createNewRequest('saveAndsend')} className="submit-button">
+                        <button type="button" disabled={newRequestMutation.isPending || updateRequestMutation.isPending} onClick={() => createNewRequest('saveAndsend')} className="submit-button">
                             Save and Send
                             {(newRequestMutation.isPending || updateRequestMutation.isPending)
                                 && (newRequestMutation?.variables?.action === "send" || updateRequestMutation?.variables?.action === "send")

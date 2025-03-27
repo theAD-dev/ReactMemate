@@ -305,6 +305,22 @@ tr.p-datatable-emptymessage td {
   flex-direction: column-reverse;
 }
 
+.ql-snow .ql-editor .ql-code-block-container {
+  background-color: #23241f;
+  color: #f8f8f2;
+  overflow: visible;
+}
+
+.ql-snow .ql-editor .ql-code-block-container {
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 5px 10px;
+}
+
+.ql-snow .ql-editor code, .ql-snow .ql-editor .ql-code-block-container {
+  border-radius: 3px;
+}
+
 .p-editor-toolbar.ql-toolbar.ql-snow {
   border-radius: 4px 4px 0px 0px !important;
   border-right: 1px solid #d0d5dd !important;

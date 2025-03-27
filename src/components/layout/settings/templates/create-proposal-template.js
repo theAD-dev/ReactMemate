@@ -257,7 +257,7 @@ const CreateProposalTemplate = () => {
 
                     <div className={style.bottom}>
                         {id ? (
-                            <Button onClick={handleDelete} className='danger-outline-button'>
+                            <Button onClick={handleDelete} disabled={deleteMutation.isPending} className='danger-outline-button'>
                                 Delete Template {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>
                         ) : (
@@ -267,7 +267,7 @@ const CreateProposalTemplate = () => {
                             <Link to={'/settings/templates/proposal-templates/'}>
                                 <Button className='outline-button'>Cancel</Button>
                             </Link>
-                            <Button onClick={handleSubmit} className='solid-button'>
+                            <Button onClick={handleSubmit} disabled={isLoading} className='solid-button'>
                                 Save Template {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>
                         </div>

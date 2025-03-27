@@ -275,7 +275,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
                 <Button className="btn info-button" onClick={handleAddSection}>
                     Add  New Section <PlusLg color='#106B99' />
                 </Button>
-                <Button className="outline-button" onClick={onSubmit}>
+                <Button className="outline-button" disabled={isLoading} onClick={onSubmit}>
                     Create & Save
                     {isLoading && (
                         <ProgressSpinner

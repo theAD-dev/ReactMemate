@@ -74,6 +74,8 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
 
     useEffect(() => {
         setErrors({});
+        setDeposit(0.00);
+        setType(2);
     }, [show]);
 
     return (
@@ -166,7 +168,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
             <Card className={clsx(style.border, 'mb-3')}>
                 <Card.Body className='d-flex justify-content-end gap-2'>
                     <Button className='outline-button' onClick={() => setShow(false)}>Cancel</Button>
-                    <Button className='success-button' onClick={onsubmit}>Submit Payment
+                    <Button className='success-button' disabled={mutation?.isPending} onClick={onsubmit}>Submit Payment
                         {mutation?.isPending && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}

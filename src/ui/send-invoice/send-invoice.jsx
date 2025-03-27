@@ -468,7 +468,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                 <div className="d-flex justify-content-end gap-2">
                     {
                         !isCreated && (
-                            <Button className="outline-button" onClick={create}>
+                            <Button disabled={isLoading} className="outline-button" onClick={create}>
                                 Create{" "}
                                 {isLoading && (
                                     <ProgressSpinner
@@ -479,7 +479,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                         )
                     }
 
-                    <Button className="solid-button" onClick={onSubmit}>
+                    <Button className="solid-button" disabled={mutation?.isPending} onClick={onSubmit}>
                         {isCreated ? "Resend" : "Create and Send"}{" "}
                         {
                             mutation?.isPending && (

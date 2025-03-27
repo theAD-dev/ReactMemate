@@ -218,7 +218,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                     state={isOpen ? 'open' : 'closed'}
                     anchorRef={ref}
                     onClose={() => setOpen(false)}
-                    menuStyle={{ padding: '24px 24px 20px 24px', width: '555px', marginTop: '45px' }}
+                    menuStyle={{ padding: '24px 24px 20px 24px', width: '555px', marginTop: '45px', maxHeight: '100%' }}
                 >
                     <div className='d-flex justify-content-between mb-4'>
                         <div className='BoxNo'>
@@ -228,46 +228,48 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                         </div>
                         <CloseButton onClick={() => setOpen(false)} />
                     </div>
-                    {
-                        rowData?.billing_history.map((history, index) =>
-                            <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-start py-1 px-2 rounded mb-2'>
-                                <div className='d-flex align-items-center'>
-                                    {
-                                        history?.type === 0 ? (
-                                            <>
-                                                <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '24px', height: '24px', background: 'linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%)', marginRight: '10px' }}>
-                                                    <Stripe size={14} color="#98A2B3" />
-                                                </div>
-                                                <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>Strip</div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <ImageAvatar has_photo={history?.manager?.has_photo} photo={history?.manager?.photo} is_business={false} />
-                                                <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>{history?.manager?.name}</div>
-                                            </>
-                                        )
-                                    }
-                                </div>
-                                <div className='d-flex gap-2 align-items-center justify-content-start' style={{ width: '150px' }}>
-                                    <Coin color='#98A2B3' size={14} />
-                                    <span style={{ fontWeight: 600, fontSize: 16 }}>${parseFloat(history.deposit || 0).toFixed(2)}</span>
-                                </div>
-                                <div className='d-flex gap-2 align-items-center justify-content-start' style={{ width: '150px' }}>
-                                    {history?.type === 2 ? <Bank size={14} color='#98A2B3' />
-                                        : history.type === 1 ? <Cash size={14} color="#98A2B3" />
-                                            : history.type === 4 ? <CreditCard size={14} color="#98A2B3" />
-                                                : <Stripe size={14} color="#98A2B3" />}
-                                    <div className='border rounded font-12 px-1'>
-                                        {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : history.type === 4 ? "EFTPOS" : "Strip"}
+                    <div style={{ width: '100%', maxHeight: '500px', overflow: 'auto' }}>
+                        {
+                            rowData?.billing_history.map((history, index) =>
+                                <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-start py-1 px-2 rounded mb-2' style={{ width: 'fit-content' }}>
+                                    <div className='d-flex align-items-center'>
+                                        {
+                                            history?.type === 0 ? (
+                                                <>
+                                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '24px', height: '24px', background: 'linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%)', marginRight: '10px' }}>
+                                                        <Stripe size={14} color="#98A2B3" />
+                                                    </div>
+                                                    <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>Strip</div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <ImageAvatar has_photo={history?.manager?.has_photo} photo={history?.manager?.photo} is_business={false} />
+                                                    <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>{history?.manager?.name}</div>
+                                                </>
+                                            )
+                                        }
+                                    </div>
+                                    <div className='d-flex gap-2 align-items-center justify-content-start'>
+                                        <Coin color='#98A2B3' size={14} />
+                                        <span style={{ fontWeight: 600, fontSize: 16 }}>${formatAUD(history.deposit)}</span>
+                                    </div>
+                                    <div className='d-flex gap-2 align-items-center justify-content-start'>
+                                        {history?.type === 2 ? <Bank size={14} color='#98A2B3' />
+                                            : history.type === 1 ? <Cash size={14} color="#98A2B3" />
+                                                : history.type === 4 ? <CreditCard size={14} color="#98A2B3" />
+                                                    : <Stripe size={14} color="#98A2B3" />}
+                                        <div className='border rounded font-12 px-1'>
+                                            {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : history.type === 4 ? "EFTPOS" : "Strip"}
+                                        </div>
+                                    </div>
+                                    <div className='d-flex gap-2 align-items-center'>
+                                        <Calendar3Event color='#98A2B3' size={14} />
+                                        <div className='font-14'>{formatDate(history.created)}</div>
                                     </div>
                                 </div>
-                                <div className='d-flex gap-2 align-items-center'>
-                                    <Calendar3Event color='#98A2B3' size={14} />
-                                    <div className='font-14'>{formatDate(history.created)}</div>
-                                </div>
-                            </div>
-                        )
-                    }
+                            )
+                        }
+                    </div>
 
                     {
                         rowData.paid

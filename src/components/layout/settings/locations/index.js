@@ -268,7 +268,7 @@ const Location = () => {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <Button onClick={() => unassignedMutation.mutate({ id: user.id })} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
+                                                        <Button disabled={!!(unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending)} onClick={() => unassignedMutation.mutate({ id: user.id })} className={clsx(style.dangerTextButton, 'text-button')} style={{ width: '120px' }}>
                                                             {
                                                                 (unassignedMutation?.variables?.id === user.id && unassignedMutation?.isPending)
                                                                     ? <ProgressSpinner style={{ width: '15px', height: '15px' }} />

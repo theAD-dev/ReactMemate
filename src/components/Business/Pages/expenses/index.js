@@ -95,9 +95,9 @@ const ExpensesPage = () => {
                             <>
                                 <h6 className={style.selectedCount}>Selected: {selected?.length}</h6>
                                 <div className='filtered-box d-flex align-items-center gap-2'>
-                                    <button className={`danger-outline-button ${style.actionButton}`} onClick={handleUnPaidExpense}>Mark as Unpaid {unpaidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <XCircle color='#B42318' size={20} />} </button>
-                                    <button className={`success-outline-button ${style.actionButton}`} onClick={handlePaidExpense}>Mark as Paid {paidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <CheckCircle color='#067647' size={20} />} </button>
-                                    <button className={`outline-button ${style.actionButton}`} onClick={sendExpenseToXero}>Send to Xero/MYOB
+                                    <button className={`danger-outline-button ${style.actionButton}`} onClick={handleUnPaidExpense} disabled={unpaidMutation?.isPending}>Mark as Unpaid {unpaidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <XCircle color='#B42318' size={20} />} </button>
+                                    <button className={`success-outline-button ${style.actionButton}`} onClick={handlePaidExpense} disabled={paidMutation?.isPending}>Mark as Paid {paidMutation?.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : <CheckCircle color='#067647' size={20} />} </button>
+                                    <button className={`outline-button ${style.actionButton}`} onClick={sendExpenseToXero} disabled={sendExpenseToXeroMutation.isPending}>Send to Xero/MYOB
                                         {
                                             sendExpenseToXeroMutation.isPending
                                                 ? <ProgressSpinner
@@ -138,9 +138,13 @@ const ExpensesPage = () => {
                 }
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <Button className={isShowDeleted ? style.unpaidMoneyButton : style.allMoneyButton} onClick={() => setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
-                    <h1 className={`${style.total} mb-0`}>Total</h1>
-                    <div className={`${style.totalCount}`}>{total} Expenses</div>
-                    {isShowDeleted && <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>}
+                    {isShowDeleted &&
+                        <>
+                            <h1 className={`${style.total} mb-0`}>Total</h1>
+                            <div className={`${style.totalCount}`}>{total} Expenses</div>
+                            <h1 className={style.totalMoney}>${formatAUD(totalMoney || 0.00)}</h1>
+                        </>
+                    }
                 </div>
             </div>
             <ExpensesTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}

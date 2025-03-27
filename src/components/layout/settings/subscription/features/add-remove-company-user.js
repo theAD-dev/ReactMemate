@@ -69,7 +69,7 @@ const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visib
   const footerContent = (
     <div className="d-flex justify-content-end align-items-center gap-3">
       <Button type='button' className='outline-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={() => setVisible(false)}>Close</Button>
-      <Button type='button' disabled={add === 0} className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={saveBusinessSubscription}>
+      <Button type='button' disabled={add === 0 || mutation?.isPending} className='solid-button' style={{ minWidth: '70px', borderRadius: '28px' }} onClick={saveBusinessSubscription}>
         Update
         {mutation?.isPending && <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />}
       </Button>
@@ -122,7 +122,7 @@ const AddRemoveCompanyUser = ({ users, defaultUser, refetch, total, price, visib
     if (!data?.id) return "";
     if (profileData.email === data?.email) return "-";
 
-    return <Button className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2" onClick={() => { deleteMutation.mutate(data?.id); }}>
+    return <Button disabled={deleteMutation?.variables === data?.id} className="btn font-14 text-danger outlined-button d-flex align-items-center gap-2" onClick={() => { deleteMutation.mutate(data?.id); }}>
       Remove
       {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
     </Button>;

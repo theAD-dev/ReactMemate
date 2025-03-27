@@ -146,7 +146,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
             <Button className="outline-button" onClick={() => setShow(false)}>
                 Cancel
             </Button>
-            <Button className="solid-button" onClick={onSubmit}>
+            <Button className="solid-button" disabled={isLoading} onClick={onSubmit}>
                 Send{" "}
                 {isLoading && (
                     <ProgressSpinner

@@ -434,7 +434,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             <span></span>
                             <div className={clsx(style.RItem)}>
                                 <Button className={style.delete} onClick={() => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
-                                <Button className={style.create} onClick={saveCalculator}>
+                                <Button className={style.create} disabled={isLoading} onClick={saveCalculator}>
                                     {
                                         isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
                                             : <Save color="#106B99" size={18} className='me-2' />
@@ -674,7 +674,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 <span></span>
                 <div className={clsx(style.RItem)}>
                     <Button className={style.delete} onClick={() => cancelCreateCalculator(null)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
-                    <Button className={style.create} onClick={saveCalculator}>
+                    <Button className={style.create} disabled={isLoading} onClick={saveCalculator}>
                         {
                             isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
                                 : <Save color="#106B99" size={18} className='me-2' />

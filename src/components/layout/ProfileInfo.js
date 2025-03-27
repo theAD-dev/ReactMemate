@@ -40,7 +40,7 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
               </span>
             </div>
             {
-              has_photo ? <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              has_photo ? <div style={{ width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%)', border: '0.75px solid #ccc' }}>
                 <FallbackImage has_photo={has_photo} photo={photo} is_business={false} />
               </div>
                 : <div className="userImageBox">{aliasName}</div>

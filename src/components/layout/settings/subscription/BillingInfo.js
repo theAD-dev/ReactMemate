@@ -137,7 +137,7 @@ const BillingInfo = () => {
                           {
                             isEdit ? <div className="d-flex align-items-center gap-3">
                               <button onClick={() => setIsEdit(false)} className="text-button p-0" style={{ fontSize: '13px' }}>Cancel</button>
-                              <button onClick={updateBillingPaymentInfo} className="text-button p-0">
+                              <button disabled={mutation?.isPending} onClick={updateBillingPaymentInfo} className="text-button p-0">
                                 {mutation?.isPending ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} /> : "Save"}
                               </button>
                             </div>

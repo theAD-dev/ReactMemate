@@ -46,7 +46,7 @@ const DeleteConfirmationModal = ({ title, api, refetch }) => {
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
             <Button className='outline-button' onClick={() => setVisible(false)}>Cancel</Button>
-            <Button className='danger-button' onClick={handleConfirm}>Delete {title} {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px', color: '#fff' }} />}</Button>
+            <Button className='danger-button' onClick={handleConfirm} disabled={isLoading}>Delete {title} {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px', color: '#fff' }} />}</Button>
         </div>
     );
     return (

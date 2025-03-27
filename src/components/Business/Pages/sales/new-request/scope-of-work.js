@@ -204,7 +204,7 @@ const ScopeOfWorkComponent = () => {
                             </Link>
 
                             <div className='d-flex' style={{ gap: '12px' }}>
-                                <button type="button" onClick={saveAsDraft} className="cancel-button">
+                                <button type="button" disabled={mutation.isPending} onClick={saveAsDraft} className="cancel-button">
                                     Save Draft {" "}
                                     {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}
                                 </button>

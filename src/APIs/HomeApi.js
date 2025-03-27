@@ -13,7 +13,7 @@
   
     try {
       const response = await fetch(`${API_BASE_URL}/home/`, requestOptions);
-      const result = await response.text();
+      const result = await response.json();
       return result;
     } catch (error) {
       console.error('Profile fetch error:', error);

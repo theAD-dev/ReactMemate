@@ -65,7 +65,7 @@ const ForgotPassword = () => {
                   <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />
                 </div>
                 {error && <div className="error-message">{error}</div>}
-                <button className="fillbtn flexcenterbox" type="submit" style={{ width: '340px', height: '49px' }}>
+                <button disabled={isLoading} className="fillbtn flexcenterbox" type="submit" style={{ width: '340px', height: '49px' }}>
                   {isLoading ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner>
                     : <>Reset Password <img src={arrowRight} alt="Arrow Right" /></>}
                 </button>

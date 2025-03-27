@@ -30,7 +30,7 @@ const Home = () => {
         const fetchData = async () => {
             try {
                 const result = await fetchHomePage();
-                setHomeData(JSON.parse(result));
+                setHomeData(result);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

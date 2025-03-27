@@ -804,7 +804,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </Row>
             <Row className='projectCardactionBut'>
               <Col className='actionLeftSide'>
-                <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined} className='declineAction'>
+                <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined || declinecOrderMutation.isPending} className='declineAction'>
                   <XCircle size={20} color='#912018' /> Decline Order
                   {
                     declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />

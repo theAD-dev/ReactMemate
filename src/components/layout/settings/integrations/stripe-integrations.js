@@ -98,7 +98,7 @@ const StripeIntegrations = ({ visible, setVisible, stripe, refetch }) => {
             <Button className="outline-button" onClick={handleClose}>
                 Cancel
             </Button>
-            <Button type="submit" className="solid-button" style={{ minWidth: "132px" }} onClick={handleSaveClick}>
+            <Button type="submit" disabled={mutation?.isPending} className="solid-button" style={{ minWidth: "132px" }} onClick={handleSaveClick}>
                 Save Details
                 {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
             </Button>
