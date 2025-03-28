@@ -5,9 +5,14 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import style from './not-found.module.scss';
 import SearchIcon from "../../../assets/images/icon/searchIcon.png";
+import Support from '../../../shared/ui/support/support';
 
 
 const NotFoundError = () => {
+    const [visible, setVisible] = React.useState(false);
+    const openSupportModal = () => {
+        setVisible(true);
+    };
     return (
         <div className={clsx(style.container)}>
             <div className='position-relative d-flex flex-column'>
@@ -29,7 +34,8 @@ const NotFoundError = () => {
                 Sorry, the page you are looking for doesn't exist or has been moved. Try searching our site:
             </p>
             <Link to={"/"}><Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button></Link>
-            <Link to={"#"}><span className={clsx(style.supportext)}>Support</span></Link>
+            <Link to={"#"} onClick={openSupportModal}><span className={clsx(style.supportext)}>Support</span></Link>
+            <Support visible={visible} setVisible={setVisible} />
         </div>
     );
 };

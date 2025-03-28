@@ -15,6 +15,8 @@ import Sidebar from '../Sidebar';
 
 const JobTemplates = () => {
     const { trialHeight } = useTrialHeight();
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const has_work_subscription = !!profileData?.has_work_subscription;
     const [activeTab, setActiveTab] = useState('job-templates');
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplates"],
@@ -30,15 +32,19 @@ const JobTemplates = () => {
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>
                             <ul>
-                                <li className='menuActive'><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                                 <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
                                 <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
                                 <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
+                                <li className='menuActive'><Link to="/settings/templates/job-templates">Job Templates</Link></li>
+                                <li><Link to="#">SMS Templates</Link></li>
                             </ul>
                         </div>
-                        <Link to={'/settings/templates/job-templates/new'}>
-                            <Button className='outline-button' style={{ position: 'absolute', right: 0, bottom: '16px' }}>Create New Template <PlusLg color='#344054' size={20} /></Button>
-                        </Link>
+                        {
+                            has_work_subscription &&
+                            <Link to={'/settings/templates/job-templates/new'}>
+                                <Button className='outline-button' style={{ position: 'absolute', right: 0, bottom: '16px' }}>Create New Template <PlusLg color='#344054' size={20} /></Button>
+                            </Link>
+                        }
                     </div>
                     <div className={`content_wrap_main mt-0`} style={{ paddingBottom: `${trialHeight}px` }}>
                         <div className='content_wrapper'>

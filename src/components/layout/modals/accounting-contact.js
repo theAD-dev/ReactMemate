@@ -105,7 +105,7 @@ const AccountingContact = () => {
                       <Row>
                         <Col sm={6}>
                           <div className="formgroup mb-2">
-                            <label>First Name</label>
+                            <label>First Name <span className="required">*</span></label>
                             <div className={`inputInfo ${errors.first_name ? 'error-border' : ''}`}>
                               <Controller
                                 name="first_name"
@@ -125,7 +125,7 @@ const AccountingContact = () => {
                         </Col>
                         <Col sm={6}>
                           <div className="formgroup mb-2">
-                            <label>Last Name</label>
+                            <label>Last Name <span className="required">*</span></label>
                             <div className={`inputInfo ${errors.last_name ? 'error-border' : ''}`}>
                               <Controller
                                 name="last_name"
@@ -145,7 +145,7 @@ const AccountingContact = () => {
                         </Col>
                         <Col sm={6}>
                           <div className="formgroup mb-2">
-                            <label>Work Email</label>
+                            <label>Work Email <span className="required">*</span></label>
                             <div className={`inputInfo ${errors.email ? 'error-border' : ''}`}>
                               <Controller
                                 name="email"
@@ -171,7 +171,7 @@ const AccountingContact = () => {
                         </Col>
                         <Col sm={6}>
                           <div className="formgroup mb-2">
-                            <label>Job Title</label>
+                            <label>Job Title <span className="required">*</span></label>
                             <div className={`inputInfo ${errors.job_title ? 'error-border' : ''}`}>
                               <Controller
                                 name="job_title"
@@ -211,7 +211,7 @@ const AccountingContact = () => {
                         </Col>
                         <Col sm={12}>
                           <div className="formgroup mb-2">
-                            <label>How can our team help you?</label>
+                            <label>How can our team help you? <span className="required">*</span></label>
                             <div className={`inputInfo ${errors.text ? 'error-border' : ''}`}>
                               <Controller
                                 name="text"

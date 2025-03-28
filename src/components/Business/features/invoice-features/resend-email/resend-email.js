@@ -19,7 +19,7 @@ const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
 
     const mutation = useMutation({
         mutationFn: (data) => resendInvoiceEmail(projectId, data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             setShow(false);
             toast.success(`Email resent successfully.`);
         },

@@ -43,7 +43,6 @@ const Integrations = () => {
   const [stripeVisible, setStripeVisible] = useState(false);
   const [twilioVisible, setTwilioVisible] = useState(false);
   const [emailVisible, setEmailVisible] = useState(false);
-  const [xeroVisible, setXeroVisible] = useState(false);
 
   const stripeIntegrationsQuery = useQuery({ queryKey: ['stripeIntegrations'], queryFn: getStripeIntegrations });
   const googleReviewIntegrationsQuery = useQuery({ queryKey: ['googleReviewIntegrations'], queryFn: getGoogleReviewIntegrations });

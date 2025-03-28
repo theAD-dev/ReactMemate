@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle } from "react-bootstrap-icons";
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -9,6 +10,7 @@ import Container from 'react-bootstrap/Container';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { getOutgoingEmail } from '../APIs/email-template';
 import { fetchHomePage } from "../APIs/HomeApi";
 import AccountingContact from './layout/modals/accounting-contact';
 import BookkeepingContact from './layout/modals/book-keeping-contact';
@@ -16,6 +18,7 @@ import InsuranceContact from './layout/modals/insurance-contact';
 import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
 
 const Home = () => {
+    const [isVisible, setIsVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [homeData, setHomeData] = useState({
@@ -26,6 +29,13 @@ const Home = () => {
         waiting_for_approval: {},
         projects: {}
     });
+
+    const outgoingEmailTemplateQuery = useQuery({
+        queryKey: ["getOutgoingEmail"],
+        queryFn: getOutgoingEmail
+    });
+    const isConnectedEmail = outgoingEmailTemplateQuery?.data?.outgoing_email !== 'no-reply@memate.com.au';
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -50,9 +60,6 @@ const Home = () => {
         }
     };
 
-
-    const [isVisible, setIsVisible] = useState(false);
-
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
     };
@@ -72,55 +79,63 @@ const Home = () => {
                 </div>
                 <div className='d-flex justify-content-center px-5'>
                     <Row className='d-flex flex-nowrap'>
-                        <Col style={{ minWidth: '306px' }}>
-                            <div className={classNames('grid-item', { 'active': selectedOption === 'option1' })}>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="option1"
-                                        checked={selectedOption === 'option1'}
-                                        onChange={handleOptionChange}
-                                    />
-                                    <div className='boxCheckNo'>
-                                        <div className='ckeckIcon'><CheckCircle size={16} color="#1AB2FF" /></div>
-                                        <span>1</span>
-                                    </div>
-                                    <div className='boxItem'>
-                                        <h2>Link Your Email</h2>
-                                        <p>Connect your email to manage communications.</p>
-                                    </div>
+                        {
+                            !isConnectedEmail &&
+                            <Col style={{ minWidth: '306px' }}>
+                                <div className={classNames('grid-item', { 'active': selectedOption === 'option1' })}>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="option1"
+                                            checked={selectedOption === 'option1'}
+                                            onChange={handleOptionChange}
+                                        />
+                                        <div className='boxCheckNo'>
+                                            <div className='ckeckIcon'><CheckCircle size={16} color="#1AB2FF" /></div>
+                                            <span>1</span>
+                                        </div>
+                                        <div className='boxItem'>
+                                            <h2>Link Your Email</h2>
+                                            <p>Connect your email to manage communications.</p>
+                                        </div>
 
-                                </label>
-                                <div className='boxItemBut'>
-                                    <Link to={"/settings/integrations?openEmail=true"}><Button variant="link">Connected</Button></Link>
+                                    </label>
+                                    <div className='boxItemBut'>
+                                        <Link to={"/settings/integrations?openEmail=true"}><Button variant="link">Connected</Button></Link>
+                                    </div>
                                 </div>
-                            </div>
-                        </Col>
-                        <Col style={{ minWidth: '306px' }}>
-                            <div className={classNames('grid-item', { 'active': selectedOption === 'option2' })}>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="option2"
-                                        checked={selectedOption === 'option2'}
-                                        onChange={handleOptionChange}
-                                    />
-                                    <div className='boxCheckNo'>
-                                        <div className='ckeckIcon'><CheckCircle size={16} color="#1AB2FF" /></div>
-                                        <span>2</span>
-                                    </div>
-                                    <div className='boxItem'>
-                                        <h2>Enter Bank Details</h2>
-                                        <p>Provide your bank details to secure transactions.</p>
-                                    </div>
+                            </Col>
+                        }
 
-                                </label>
-                                <div className='boxItemBut'>
-                                    <Link to="/settings/generalinformation/bank-details"><Button variant="link">Add Details</Button></Link>
+                        {
+                            !profileData?.bank_detail?.account_number &&
+                            <Col style={{ minWidth: '306px' }}>
+                                <div className={classNames('grid-item', { 'active': selectedOption === 'option2' })}>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="option2"
+                                            checked={selectedOption === 'option2'}
+                                            onChange={handleOptionChange}
+                                        />
+                                        <div className='boxCheckNo'>
+                                            <div className='ckeckIcon'><CheckCircle size={16} color="#1AB2FF" /></div>
+                                            <span>{isConnectedEmail ? 1 : 2}</span>
+                                        </div>
+                                        <div className='boxItem'>
+                                            <h2>Enter Bank Details</h2>
+                                            <p>Provide your bank details to secure transactions.</p>
+                                        </div>
+
+                                    </label>
+                                    <div className='boxItemBut'>
+                                        <Link to="/settings/generalinformation/bank-details"><Button variant="link">Add Details</Button></Link>
+                                    </div>
                                 </div>
-                            </div>
-                        </Col>
-                        <Col style={{ minWidth: '306px' }}>
+                            </Col>
+                        }
+
+                        {/* <Col style={{ minWidth: '306px' }}>
                             <div className={classNames('grid-item', { 'active': selectedOption === 'option3' })}>
                                 <label>
                                     <input
@@ -169,7 +184,7 @@ const Home = () => {
                                     <Link to="/sales/newquote/selectyourclient"><Button variant="link">Create New Request</Button></Link>
                                 </div>
                             </div>
-                        </Col>
+                        </Col> */}
                     </Row>
                 </div>
                 <Container>

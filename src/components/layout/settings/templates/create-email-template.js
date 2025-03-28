@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { ChevronLeft, PencilSquare } from "react-bootstrap-icons";
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -57,6 +57,8 @@ const header = renderHeader();
 
 const CreateEmailTemplate = () => {
     const { trialHeight } = useTrialHeight();
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const has_work_subscription = !!profileData?.has_work_subscription;
     const navigate = useNavigate();
     const { id } = useParams();
     const [searchParams] = useSearchParams();
@@ -171,10 +173,25 @@ const CreateEmailTemplate = () => {
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>
                             <ul>
-                                <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                                 <li className='menuActive'><Link to="/settings/templates/email-templates">Email Templates</Link></li>
                                 <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
                                 <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
+                                {!has_work_subscription ? (
+                                    <OverlayTrigger
+                                        key="top"
+                                        placement="top"
+                                        overlay={
+                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                                Work environment is not available for this subscription type
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">Job Templates</Link></li>
+                                    </OverlayTrigger>
+                                ) : (
+                                    <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
+                                )}
+                                <li><Link to="#">SMS Templates</Link></li>
                             </ul>
                         </div>
                     </div>

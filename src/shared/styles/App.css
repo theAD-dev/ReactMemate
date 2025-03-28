@@ -9406,7 +9406,7 @@ ul.activeListPassword li.active svg {
   justify-content: center;
   align-items: center;
 
-  border-radius: 4px;
+  border-radius: 40px;
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-50, #ebf8ff);
   color: var(--Primary-700, #106b99);
@@ -9435,7 +9435,7 @@ ul.activeListPassword li.active svg {
   line-height: 20px;
   /* 142.857% */
 
-  border-radius: 4px;
+  border-radius: 24px;
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
   color: var(--Error-700, #b42318);
@@ -9456,7 +9456,7 @@ ul.activeListPassword li.active svg {
   line-height: 20px;
   /* 142.857% */
 
-  border-radius: 4px;
+  border-radius: 40px;
   border: 1px solid var(--Success-200, #a9efc5);
   background: var(--Success-50, #ecfdf3);
   color: var(--Success-700, #067647);

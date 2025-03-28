@@ -34,7 +34,7 @@ import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avat
 
 
 
-const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitilize }) => {
+const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitialize }) => {
   const navigate = useNavigate();
   const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [isDuplicating, setIsDuplicating] = useState(false);
@@ -55,7 +55,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   const handleClose = () => {
     setViewShow(false);
-    reInitilize();
+    reInitialize();
   };
 
   const handleEditReference = () => {
@@ -607,7 +607,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <Row>
                   <Col className='tabModelMenu d-flex justify-content-between align-items-center p-0' >
                     <AddNote projectId={projectId} projectCardData={projectCardData} />
-                    <NewTask project={project} reInitilize={reInitilize} projectCardData={() => projectCardData(projectId)} />
+                    <NewTask project={project} reInitialize={reInitialize} projectCardData={() => projectCardData(projectId)} />
                     <SendSMS projectId={projectId} projectCardData={() => projectCardData(projectId)} />
                     <ComposeEmail clientId={cardData?.client} projectId={projectId} projectCardData={() => projectCardData(projectId)} />
                   </Col>

@@ -1,21 +1,43 @@
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 20px 20px 0px 20px;
+}
+
+.content {
+  background-color: #fcfcfd;
 }
 
 .field {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .field label {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+  color: #475467;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
 .field .p-button {
-    align-self: flex-end;
-    margin-top: 1rem;
+  align-self: flex-end;
+  margin-top: 1rem;
+}
+
+.circleDesignStyle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  .out {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 6px solid var(--Success-50, #ecfdf3);
+    background: var(--Success-100, #dcfae6);
+  }
 }
