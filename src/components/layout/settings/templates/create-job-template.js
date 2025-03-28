@@ -154,10 +154,11 @@ const CreateJobTemplate = () => {
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>
                             <ul>
-                                <li className='menuActive'><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                                 <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
                                 <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
                                 <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
+                                <li className='menuActive'><Link to="/settings/templates/job-templates">Job Templates</Link></li>
+                                <li><Link to="#">SMS Templates</Link></li>
                             </ul>
                         </div>
                     </div>

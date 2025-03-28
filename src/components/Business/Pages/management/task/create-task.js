@@ -13,7 +13,7 @@ import newTask from '../../../../../assets/images/new-task.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
 
-const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) => {
+const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) => {
     const dropdownRef = useRef(null);
     const [taskTitle, setTaskTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -43,7 +43,7 @@ const CreateTask = ({ show, setShow, project, reInitilize, projectCardData }) =>
         onSuccess: () => {
             setShow(false);
             reset();
-            reInitilize();
+            reInitialize();
             if (projectCardData) projectCardData();
         },
         onError: (error) => {

@@ -173,7 +173,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 <Column field="from_date" header="Start Date" body={startBody} style={{ minWidth: '100px' }} sortable></Column>
                 <Column field="to_date" header="Due Date" body={endBody} style={{ minWidth: '100px' }} sortable></Column>
             </DataTable>
-            <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitilize={() => setRefetch((refetch) => !refetch)} />
+            <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitialize={() => setRefetch((refetch) => !refetch)} />
         </>
     );
 });

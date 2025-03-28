@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { PlusLg, PencilSquare, GripVertical } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,6 +11,8 @@ import style from './job-template.module.scss';
 import Sidebar from '../Sidebar';
 
 const EmailSignatures = () => {
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const has_work_subscription = !!profileData?.has_work_subscription;
     const [activeTab, setActiveTab] = useState('job-templates');
     const [showModal, setShowModal] = useState(false);
     const [departments, setDepartments] = useState([]);
@@ -25,7 +28,7 @@ const EmailSignatures = () => {
     const editTemplateHandle = () => {
         navigate("/settings/templates/edit-signatures/");
     };
-    
+
     return (
         <>
             <div className='settings-wrap'>
@@ -36,10 +39,25 @@ const EmailSignatures = () => {
                             <h1>Templates</h1>
                             <div className='contentMenuTab'>
                                 <ul>
-                                    <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                                     <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
                                     <li className='menuActive'><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
                                     <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
+                                    {!has_work_subscription ? (
+                                        <OverlayTrigger
+                                            key="top"
+                                            placement="top"
+                                            overlay={
+                                                <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                                    Work environment is not available for this subscription type
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">Job Templates</Link></li>
+                                        </OverlayTrigger>
+                                    ) : (
+                                        <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
+                                    )}
+                                    <li><Link to="#">SMS Templates</Link></li>
                                 </ul>
                             </div>
                         </div>

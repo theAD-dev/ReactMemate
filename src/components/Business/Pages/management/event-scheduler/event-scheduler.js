@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Spinner } from "react-bootstrap";
-import { initDaypilot, reInitilizeData } from "./utils";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Button, Dropdown, Spinner } from "react-bootstrap";
+import clsx from "clsx";
+import { initDaypilot, reInitializeData } from "./utils";
 import { getManagement } from "../../../../../APIs/management-api";
 import { ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
 import { useTrialHeight } from "../../../../../app/providers/trial-height-provider";
@@ -11,18 +12,20 @@ import ViewTask from "../task/view-task";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
+  const timeoutRef = useRef(null);
   const { trialHeight } = useTrialHeight();
   const [search, setSearch] = useState("");
   const [management, setManagement] = useState([]);
   const [show, setShow] = useState(false);
   const [view, setView] = useState(false);
   const [viewProjectModel, setViewProjectModel] = useState(false);
-  const [isReinitilize, setIsReinitilize] = useState(false);
+  const [isReinitialize, setIsReinitialize] = useState(false);
   const [statusOptions, setStatusOptions] = useState([]);
   const [taskId, setTaskId] = useState(null);
   const [projectId, setProjectId] = useState(null);
   const [projectDetails, setProjectDetails] = useState({});
-
+  const [filterBy, setFilterBy] = useState("");
+  const [sortBy, setSortBy] = useState("");
 
   // show project model from invoice 
   const url = window.location.href;
@@ -39,8 +42,8 @@ function EventScheduler() {
   }
 
 
-  function viewTaskDetails(id, isjob = false, projectDetails) {
-    if (isjob) {
+  function viewTaskDetails(id, isJob = false, projectDetails) {
+    if (isJob) {
       setProjectId(id);
       setProjectDetails(projectDetails);
       setViewProjectModel(true);
@@ -132,14 +135,14 @@ function EventScheduler() {
   }, []);
 
 
-  const reInitilize = async () => {
+  const reInitialize = async () => {
     try {
-      setIsReinitilize(true);
+      setIsReinitialize(true);
       const response = await getManagement();
       setManagement(response);
       if (search) searchData(search, response);
-      else reInitilizeData(response);
-      setIsReinitilize(false);
+      else reInitializeData(response);
+      setIsReinitialize(false);
     } catch (error) {
       console.error("Error initializing DayPilot:", error);
     }
@@ -184,15 +187,65 @@ function EventScheduler() {
         ) return true;
         else return false;
       });
-      reInitilizeData(filteredResponse || []);
+      reInitializeData(filteredResponse || []);
     }, 600);
   };
 
-  const timeoutRef = useRef(null);
+  const applyFiltersAndSort = useCallback(() => {
+    let filteredData = [...management];
+
+    // Apply filters
+    if (filterBy === "Not Invoiced") {
+      filteredData = filteredData.filter((item) => !item.is_invoice_created);
+    } else if (filterBy === "Not Booked") {
+      filteredData = filteredData.filter((item) => !item.booking_start);
+    } else if (filterBy === "Not Paid") {
+      filteredData = filteredData.filter((item) => item.paid !== "PAID");
+    }
+
+    // Apply sorting
+    if (sortBy === "Date Due") {
+      filteredData.sort((a, b) => new Date(a.booking_end * 1000) - new Date(b.booking_end * 1000));
+    } else if (sortBy === "Date Accepted") {
+      filteredData.sort((a, b) => new Date(a.booking_start * 1000) - new Date(b.booking_start * 1000));
+    } else if (sortBy === "Job Number") {
+      filteredData.sort((a, b) => a.number.localeCompare(b.number));
+    } else if (sortBy === "Order Status") {
+      filteredData.sort((a, b) => (a.custom_status || "").localeCompare(b.custom_status || ""));
+    }
+
+    // Apply search
+    if (search) {
+      filteredData = filteredData.filter((data) => {
+        if (
+          (data?.number?.toLowerCase()?.includes(search?.toLowerCase() || ""))
+          ||
+          (data?.reference?.toLowerCase()?.includes(search?.toLowerCase() || ""))
+          ||
+          (data?.client?.name.toLowerCase()?.includes(search?.toLowerCase() || ""))
+        ) return true;
+        else return false;
+      });
+    }
+
+    reInitializeData(filteredData);
+  }, [management, filterBy, sortBy, search]);
+
+  useEffect(() => {
+    applyFiltersAndSort();
+  }, [filterBy, sortBy, search, applyFiltersAndSort]);
+
+  const handleFilterChange = (filter) => {
+    setFilterBy(filter);
+  };
+
+  const handleSortChange = (sort) => {
+    setSortBy(sort);
+  };
+
   const handleSearch = (e) => {
     const search = e.target.value;
     setSearch(search);
-    searchData(search);
   };
 
   return <React.Fragment>
@@ -208,8 +261,43 @@ function EventScheduler() {
       <div className="featureName" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
         <h1 className="title mx-0">Management</h1>
       </div>
-      <div className="filters">
-        {/* <EventFilters /> */}
+      <div className="d-flex gap-2 justify-content-end align-items-center">
+        <Dropdown>
+          <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px" }}>
+            <span className="font-14">{sortBy || "Sort By"}</span>
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item key={"Date Due"} eventKey={"Date Due"} active={sortBy === "Date Due"} onClick={() => handleSortChange("Date Due")}>
+              Date Due
+            </Dropdown.Item>
+            <Dropdown.Item key={"Date Accepted"} eventKey={"Date Accepted"} active={sortBy === "Date Accepted"} onClick={() => handleSortChange("Date Accepted")}>
+              Date Accepted
+            </Dropdown.Item>
+            <Dropdown.Item key={"Job Number"} eventKey={"Job Number"} active={sortBy === "Job Number"} onClick={() => handleSortChange("Job Number")}>
+              Job Number
+            </Dropdown.Item>
+            <Dropdown.Item key={"Order Status"} eventKey={"Order Status"} active={sortBy === "Order Status"} onClick={() => handleSortChange("Order Status")}>
+              Order Status
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+
+        <Dropdown>
+          <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px" }}>
+            <span className="font-14">{filterBy || "Filter By"}</span>
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item key={"Not Invoiced"} eventKey={"Not Invoiced"} active={filterBy === "Not Invoiced"} onClick={() => handleFilterChange("Not Invoiced")}>
+              Not Invoiced
+            </Dropdown.Item>
+            <Dropdown.Item key={"Not Booked"} eventKey={"Not Booked"} active={filterBy === "Not Booked"} onClick={() => handleFilterChange("Not Booked")}>
+              Not Booked
+            </Dropdown.Item>
+            <Dropdown.Item key={"Not Paid"} eventKey={"Not Paid"} active={filterBy === "Not Paid"} onClick={() => handleFilterChange("Not Paid")}>
+              Not Paid
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
     </div>
 
@@ -223,14 +311,13 @@ function EventScheduler() {
       </div>
     </div>
 
+    <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitialize={reInitialize} />
+    <CreateTask show={show} setShow={setShow} project={projectDetails} reInitialize={reInitialize} />
 
-    <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitilize={reInitilize} />
-    <CreateTask show={show} setShow={setShow} project={projectDetails} reInitilize={reInitilize} />
-
-    <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} statusOptions={statusOptions} reInitilize={reInitilize} />
+    <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} statusOptions={statusOptions} reInitialize={reInitialize} />
 
     {
-      isReinitilize && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+      isReinitialize && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
         <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
         </Spinner>

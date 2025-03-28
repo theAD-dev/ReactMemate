@@ -76,7 +76,7 @@ const TaskLoadingView = () => {
   );
 };
 
-const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitilize }) => {
+const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitialize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const { isFetching: isLoading, data } = useQuery({
     queryKey: ['taskId', taskId],
@@ -90,7 +90,7 @@ const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitilize }) => {
     onSuccess: () => {
       handleClose();
       setTaskId(null);
-      reInitilize();
+      reInitialize();
     },
     onError: (error) => {
       console.error('Error updating task:', error);
@@ -207,7 +207,7 @@ const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitilize }) => {
             </Modal.Footer>
         }
       </Modal>
-      <CreateTask show={showEditModal} setShow={setShowEditModal} taskId={taskId} setTaskId={setTaskId} defaultValue={data} refetch={reInitilize}/>
+      <CreateTask show={showEditModal} setShow={setShowEditModal} taskId={taskId} setTaskId={setTaskId} defaultValue={data} refetch={reInitialize}/>
     </>
   );
 };

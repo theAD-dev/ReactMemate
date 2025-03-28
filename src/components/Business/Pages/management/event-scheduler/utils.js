@@ -297,7 +297,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
   loadData(responses);
 }
 
-export function reInitilizeData(responses) {
+export function reInitializeData(responses) {
   try {
     loadData(responses);
   } catch (error) {
