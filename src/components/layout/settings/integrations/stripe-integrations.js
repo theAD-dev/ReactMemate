@@ -9,7 +9,7 @@ import Button from "react-bootstrap/Button";
 import { toast } from "sonner";
 import * as yup from "yup";
 import style from "./integration.module.scss";
-import { stripeIntegrationsSet } from "../../../../APIs/integrations-api";
+import { stripeIntegrationsDelete, stripeIntegrationsSet } from "../../../../APIs/integrations-api";
 import stripHeadLogo from "../../../../assets/images/icon/stripHeadLogo.png";
 
 
@@ -76,12 +76,35 @@ const StripeIntegrations = ({ visible, setVisible, stripe, refetch }) => {
             toast.success(`Stripe integration has been updated successfully.`);
         },
         onError: (error) => {
+            console.log('error: ', error);
             toast.error(`Failed to update stripe integration. Please try again.`);
+        }
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (data) => stripeIntegrationsDelete(data),
+        onSuccess: () => {
+            refetch();
+            handleClose();
+            toast.success(`Stripe integration has been deleted successfully.`);
+        },
+        onError: (error) => {
+            console.log('error: ', error);
+            toast.error(`Failed to delete stripe integration. Please try again.`);
         }
     });
 
     const onSubmit = (data) => {
         mutation.mutate(data);
+    };
+
+    const handleDelete = () => {
+        const data = {
+            stripe_secret_key: "",
+            stripe_public_key: "",
+            commission: 0,
+        };
+        deleteMutation.mutate(data);
     };
 
     const headerElement = (
@@ -94,14 +117,20 @@ const StripeIntegrations = ({ visible, setVisible, stripe, refetch }) => {
     );
 
     const footerContent = (
-        <div className="d-flex justify-content-end gap-2">
-            <Button className="outline-button" onClick={handleClose}>
-                Cancel
+        <div className="d-flex justify-content-between gap-2">
+            <Button className="text-button text-danger" disabled={deleteMutation.isPending} onClick={handleDelete}>
+                Delete {" "}
+                {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
             </Button>
-            <Button type="submit" disabled={mutation?.isPending} className="solid-button" style={{ minWidth: "132px" }} onClick={handleSaveClick}>
-                Save Details
-                {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
-            </Button>
+            <div className="d-flex align-items-center justify-content-end gap-2">
+                <Button className="outline-button" onClick={handleClose}>
+                    Cancel
+                </Button>
+                <Button type="submit" disabled={mutation?.isPending} className="solid-button" style={{ minWidth: "132px" }} onClick={handleSaveClick}>
+                    Save Details
+                    {mutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+                </Button>
+            </div>
         </div>
     );
 

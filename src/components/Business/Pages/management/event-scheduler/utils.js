@@ -1,3 +1,6 @@
+import { updateProjectScheduleById } from "../../../../../APIs/management-api";
+import { updateTask } from "../../../../../APIs/task-api";
+
 let dp;
 let DP;
 let expandRow;
@@ -33,7 +36,7 @@ function loadData(responses) {
       resource: data.unique_id,
       backColor: background,
       borderColor: color,
-      tag: { number: data.number, reference: data.reference, value: data.id },
+      tag: { number: data.number, reference: data.reference, value: data.id, type: 'job' },
       text: `<ul class="eventStyleCal">
         <li>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,7 +110,7 @@ function loadData(responses) {
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4 10.7813C4.14782 12.4484 5.51294 13.6306 7.59107 13.7837V15H8.63448V13.7837C10.9039 13.6051 12.3125 12.3463 12.3125 10.4836C12.3125 8.89307 11.3647 7.97448 9.35617 7.45565L8.63448 7.26853V3.46659C9.75615 3.57716 10.5126 4.18104 10.7039 5.08262H12.1734C12.0082 3.4836 10.6343 2.33536 8.63448 2.20778V1H7.59107V2.23329C5.65207 2.46294 4.32172 3.70474 4.32172 5.38882C4.32172 6.84326 5.28687 7.87242 6.98241 8.3062L7.59107 8.4678V12.4994C6.44332 12.3293 5.65207 11.6999 5.46077 10.7813H4ZM7.39108 6.94532C6.34767 6.68165 5.79119 6.12029 5.79119 5.32928C5.79119 4.38518 6.49549 3.68773 7.59107 3.50061V6.99635L7.39108 6.94532ZM8.98228 8.81652C10.2692 9.13973 10.8343 9.67558 10.8343 10.5857C10.8343 11.6829 10.0083 12.4143 8.63448 12.5249V8.73147L8.98228 8.81652Z" 
-          fill="${!data.is_invoice_created ? '#667085' : data.paid === "PAID" 
+          fill="${!data.is_invoice_created ? '#667085' : data.paid === "PAID"
           ? "#17B26A"
           : data.paid === "NOT PAID"
             ? "#F04438"
@@ -154,7 +157,8 @@ function loadData(responses) {
           resource: task.id,
           backColor: "#F2F4F7",
           borderColor: "#F2F4F7",
-          text: task.title
+          text: task.title,
+          tag: { type: "task", task: task }
         });
 
 
@@ -216,7 +220,6 @@ function loadData(responses) {
 }
 
 function startDaypilot(elementId, responses, viewTaskDetails) {
-  console.log("resource response: ", responses);
   const isDaypilotLoaded = typeof window !== undefined && Boolean(window.DayPilot);
   if (!isDaypilotLoaded) return;
 
@@ -232,7 +235,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     durationBarVisible: false,
     eventArrangement: "Cascade",
     eventMoveHandling: "Disabled",
-    eventResizeHandling: "Disabled",
+    eventResizingStartEndEnabled: true,
     timeRangeSelectedHandling: "Disabled",
     treeImageNoChildren: false,
     rowHeaderWidth: 324,
@@ -251,8 +254,6 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
   dp.onBeforeRowHeaderRender = function (args) {
     args.row.cssClass = "resourcesRow";
   };
-
-  dp.init();
 
   dp.onBeforeEventRender = function (args) {
     args.data.areas = [
@@ -294,12 +295,50 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     }
   };
 
+  dp.onEventResize = async function (args) {
+    const taskId = args.e.id();
+    const startDate = new Date(args.newStart).toISOString();
+    const endDate = new Date(args.newEnd).toISOString();
+
+    if (args.e.tag().type === "task") {
+      const task = args.e.tag().task;
+      try {
+        await updateTask(taskId, {
+          title: task.title,
+          description: task.description,
+          user: task.assigned_to.id,
+          from_date: startDate,
+          to_date: endDate,
+        });
+        dp.message("The task has been successfully updated.", { cssClass: "success_message" });
+      } catch (error) {
+        console.log(error);
+        dp.message("An error occurred while updating the task. Please try again.");
+      }
+    }
+
+    if (args.e.tag().type === "job") {
+      try {
+        await updateProjectScheduleById(taskId, {
+          booking_start: startDate,
+          booking_end: endDate,
+        });
+        dp.message("The project schedule has been successfully updated.", { cssClass: "success_message" });
+      } catch (error) {
+        console.log(error);
+        dp.message("An error occurred while updating the project schedule. Please try again.");
+      }
+    }
+  };
+
+  dp.init();
+
   loadData(responses);
 }
 
 export function reInitializeData(responses) {
   try {
-    loadData(responses);
+    if (dp) loadData(responses);
   } catch (error) {
     console.log(error);
   }

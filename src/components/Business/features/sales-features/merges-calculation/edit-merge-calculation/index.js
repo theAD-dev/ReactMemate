@@ -64,7 +64,7 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
         className={clsx('task-form', 'mergeForm')}
       >
         <Modal.Header closeButton>
-          <Modal.Title className='d-flex align-items-center' style={{ padding: '24px' }}>
+          <Modal.Title className='d-flex align-items-center'>
             <div className='d-flex justify-content-center align-items-center' style={{ width: '36px', height: '36px', borderRadius: '50%', border: '1px solid #EAECF0', background: '#F2F4F7', color: '#344054', fontSize: '14px', fontWeight: 600 }}>
               {romanNo}
             </div>

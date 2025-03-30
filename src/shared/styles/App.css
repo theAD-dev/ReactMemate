@@ -11620,3 +11620,8 @@ ul.client {
 .quotationtable .p-datatable-wrapper {
   overflow: visible !important;
 }
+
+.scheduler_default_message.success_message {
+  color: white;
+  background: #4CAF4F;
+}
