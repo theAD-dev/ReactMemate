@@ -18,7 +18,7 @@ export const getListOfTasks = async (page, limit, name = "", order = "", isShowD
 };
 
 export const getTask = async (id) => {
-    const endpoint = `/tasks/${id}`;
+    const endpoint = `/tasks/${id}/`;
     const options = {
         method: 'GET'
     };
@@ -37,7 +37,7 @@ export const createNewTask = async (data) => {
 };
 
 export const updateTask = async (id, data) => {
-    const endpoint = `/tasks/update/${id}`;
+    const endpoint = `/tasks/update/${id}/`;
     const options = {
         method: 'PUT',
         body: data

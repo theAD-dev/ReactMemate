@@ -136,7 +136,7 @@ function initDayPilot(elementId, data) {
     durationBarVisible: false,
     eventArrangement: "Cascade",
     eventMoveHandling: "Disabled",
-    eventResizeHandling: "Disabled",
+    eventResizeHandling: "Update",
     timeRangeSelectedHandling: "Disabled",
     treeImageNoChildren: false,
     rowHeaderWidth: 384,

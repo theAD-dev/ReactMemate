@@ -20,6 +20,16 @@ export const stripeIntegrationsSet = async (data) => {
     return fetchAPI(url.toString(), options);
 };
 
+export const stripeIntegrationsDelete = async (data) => {
+    const endpoint = '/settings/integrations/stripe/';
+    const options = {
+        method: 'PUT',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
 export const getGoogleReviewIntegrations = async () => {
     const endpoint = `/settings/integrations/google/review/`;
     const options = {

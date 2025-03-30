@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { initJobScheduler, reInitializeJobScheduler } from './job-scheduler-calendar';
-
 import './job-scheduler-calendar.scss';
 import style from './job-scheduler-calendar.scss';
 import { getJobDashboardData } from '../../../../APIs/jobs-api';
@@ -96,7 +95,7 @@ const JobSchedulerCalendarModule = () => {
                 </div>
             </div>
 
-            <CreateJob visible={visible} setVisible={setVisible} setRefetch={refetchAndReInit} workerId={workerId}/>
+            <CreateJob visible={visible} setVisible={setVisible} setRefetch={refetchAndReInit} workerId={workerId} />
         </React.Fragment>
     );
 };
