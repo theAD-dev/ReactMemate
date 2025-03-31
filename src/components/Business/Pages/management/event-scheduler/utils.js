@@ -245,7 +245,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     ],
     treeEnabled: true,
     progressiveRowRendering: true,
-    treePreventParentUsage: true,
+    treePreventParentUsage: false,
     scrollDelayEvents: 0,
     infiniteScrollingEnabled: true,
     infiniteScrollingStepDays: 100,
