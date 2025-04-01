@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ChevronDown } from 'react-bootstrap-icons';
 import { Menu, MenuItem, MenuButton, SubMenu } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 
-const SelectComponent = ({ departments, handleChange, isShowlabel = false, title }) => {
-    const [selectedOption, setSelectedOption] = useState(title || null);
+const SelectComponent = ({ departments, handleChange, title, keyValue }) => {
     const handleSubMenuClick = (label, value) => {
-        if (isShowlabel) setSelectedOption(label);
-        handleChange(value, label);
+        handleChange(value, label, keyValue);
     };
     return (
         <Menu
@@ -21,9 +19,9 @@ const SelectComponent = ({ departments, handleChange, isShowlabel = false, title
                     cursor: 'pointer',
                     background: 'transparent',
                     border: 'none',
-                    color: '#98A2B3'
+                    color: title ? '#101828' : '#98A2B3'
                 }}>
-                    <span>{selectedOption || "Department"}</span> <span><ChevronDown color="#98A2B3" size={15} /></span>
+                    <div className='ellipsis-width' title={title || "Department"}>{title || "Department"}</div> <span><ChevronDown color="#98A2B3" size={15} /></span>
                 </MenuButton>}
             overflow={"auto"}
             position={"anchor"}
