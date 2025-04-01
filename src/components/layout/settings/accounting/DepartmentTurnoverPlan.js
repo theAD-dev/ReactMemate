@@ -22,7 +22,7 @@ const schema = yup.object().shape({
 
 const DepartmentTurnoverPlan = () => {
     const { trialHeight } = useTrialHeight();
-    const [activeTab, setActiveTab] = useState('industries');
+    const [activeTab, setActiveTab] = useState('expenses');
     const [selectedData, setSelectedData] = useState(null);
     const [visible, setVisible] = useState(false);
     const accountingListQuery = useAccountingGetQuery();
@@ -86,8 +86,8 @@ const DepartmentTurnoverPlan = () => {
                             <h1>Accounting</h1>
                             <div className='contentMenuTab'>
                                 <ul>
-                                    <li><Link to="/settings/accounting/expenses">Expenses</Link></li>
                                     <li className='menuActive'><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
+                                    <li><Link to="/settings/accounting/expenses">Expenses</Link></li>
                                 </ul>
                             </div>
                         </div>

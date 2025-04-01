@@ -6,3 +6,31 @@
 .countrySelector {
   height: 46px;
 }
+
+
+.customLabel {
+  width: fit-content;
+  height: 24px;
+  display: flex;
+  padding: var(--spacing-xxs, 2px) var(--spacing-xs, 4px)
+    var(--spacing-xxs, 2px) 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  color: var(--Gray-700, #344054);
+  text-align: center;
+
+  /* Text sm/Medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  position: absolute;
+  top: 11px;
+  left: 14px;
+  z-index: 1;
+}

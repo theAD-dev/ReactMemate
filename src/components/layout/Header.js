@@ -26,17 +26,14 @@ import ProjectStatus from "./settings/projectstatus/ProjectStatus";
 import RecurringJobs from "./settings/quotesjobs/RecurringJobs";
 import RecurringQuotes from "./settings/quotesjobs/RecurringQuotes";
 import Subscription from "./settings/subscription/Subscription";
-import CreateEmailTemplate from "./settings/templates/create-email-template";
 import CreateJobTemplate from "./settings/templates/create-job-template";
 import CreateProposalTemplate from "./settings/templates/create-proposal-template";
-import EditEmail from "./settings/templates/edit-email";
-import EditProposal from "./settings/templates/edit-proposal";
-import EditSignatures from "./settings/templates/edit-signatures";
-import EditTemplates from "./settings/templates/edit-template";
-import EmailTemplates from "./settings/templates/email-templates";
-import EmailSignatures from "./settings/templates/EmailSignatures";
+import EmailSignatures from "./settings/templates/email-signatures";
+import CreateEmailTemplate from "./settings/templates/email-template/create-email-template";
+import EmailTemplates from "./settings/templates/email-template/email-templates";
 import JobTemplates from "./settings/templates/job-templates";
 import ProposalTemplates from "./settings/templates/proposal-templates";
+import CreateSMSTemplate from "./settings/templates/sms-template/create-sms-template";
 import TermsandConditions from "./settings/termsandconditions/TermsandConditions";
 import TermsConditionsInvoice from "./settings/termsandconditions/TermsConditionsInvoice";
 import { fetchProfile } from "../../APIs/ProfileApi";
@@ -97,6 +94,7 @@ import News from "../Work/Pages/News";
 import PeoplePage from "../Work/Pages/people";
 import TaskPage from "../Work/Pages/tasks";
 import { Work } from "../Work/Pages/Work";
+import SMSTemplates from "./settings/templates/sms-template/sms-templates";
 
 const Header = () => {
   const location = useLocation();
@@ -543,10 +541,14 @@ export const protectedRoutes = (
     <Route path="/settings/generalinformation/subscription" element={<Subscription />} />
     <Route path="/settings/generalinformation/bills" element={<Bills />} />
     <Route path="/settings/generalinformation/billing-info" element={<BillingInfo />} />
+    
     <Route path="/settings/users/desktop" element={<Users />} />
     <Route path="/settings/users/mobile-app" element={<MobileApp />} />
+    
     <Route path="/settings/calculators/departments" element={<Departments />} />
+    
     <Route path="/settings/location" element={<Location />} />
+
     <Route path="/settings/templates/job-templates" element={<JobTemplates />} />
     <Route path="/settings/templates/job-templates/new" element={<CreateJobTemplate />} />
     <Route path="/settings/templates/job-templates/:id" element={<CreateJobTemplate />} />
@@ -557,6 +559,10 @@ export const protectedRoutes = (
     <Route path="/settings/templates/proposal-templates" element={<ProposalTemplates />} />
     <Route path="/settings/templates/proposal-templates/new" element={<CreateProposalTemplate />} />
     <Route path="/settings/templates/proposal-templates/:id" element={<CreateProposalTemplate />} />
+    <Route path="/settings/templates/sms-templates" element={<SMSTemplates />} />
+    <Route path="/settings/templates/sms-templates/new" element={<CreateSMSTemplate />} />
+    <Route path="/settings/templates/sms-templates/:id" element={<CreateSMSTemplate />} />
+
     <Route path="/settings/companyethos/company-ethos" element={<CompanyEthos />} />
     <Route path="/settings/integrations" element={<Integrations />} />
     <Route path="/settings/quotesjobs/recurring-quotes" element={<RecurringQuotes />} />
@@ -569,13 +575,10 @@ export const protectedRoutes = (
     <Route path="/settings/customerssettings/customers-discount-category" element={<CustomersDiscountCategory />} />
     <Route path="/settings/accounting/expenses" element={<ExpensesAccount />} />
     <Route path="/settings/accounting/department-turnover-plan" element={<DepartmentTurnoverPlan />} />
+    
     <Route path="/settings/notifications/dashboard-notifications" element={<DashboardNotifications />} />
     <Route path="/settings/notifications/app-notifications" element={<AppNotifications />} />
     <Route path="/settings/notifications/email-notifications" element={<EmailNotifications />} />
-    <Route path="/settings/templates/edit-template/" element={<EditTemplates />} />
-    <Route path="/settings/templates/edit-email/" element={<EditEmail />} />
-    <Route path="/settings/templates/edit-signatures/" element={<EditSignatures />} />
-    <Route path="/settings/templates/edit-proposal/" element={<EditProposal />} />
   </Route>
 );
 

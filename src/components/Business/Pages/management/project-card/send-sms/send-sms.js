@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X } from "react-bootstrap-icons";
 import { PhoneInput } from 'react-international-phone';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { PhoneNumberUtil } from 'google-libphonenumber';
+import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -11,11 +13,9 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import style from './send-sms.module.scss';
+import { getSMS, getSMSTemplates } from '../../../../../../APIs/email-template';
 import { sendSms } from '../../../../../../APIs/management-api';
 import AddNoteModeIcon from "../../../../../../assets/images/icon/addNoteModeIcon.svg";
-
-
-
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 const isPhoneValid = (phone) => {
@@ -28,15 +28,17 @@ const isPhoneValid = (phone) => {
 
 const SendSMS = ({ projectId, projectCardData }) => {
   const navigate = useNavigate();
+  const [smsTemplateId, setSMSTemplatedId] = useState(null);
   const [viewShow, setViewShow] = useState(false);
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [phoneNumber, setPhoneNumber] = useState('');
-  const isValid = isPhoneValid(phoneNumber);
   const handleClose = () => {
     setViewShow(false);
     setMessage("");
     setPhoneNumber("");
+    setErrors({});
+    setSMSTemplatedId(null);
   };
 
   const handleShow = () => {
@@ -47,6 +49,19 @@ const SendSMS = ({ projectId, projectCardData }) => {
       navigate('/settings/integrations?openTwilio=true');
     }
   };
+
+  const smsTemplateQuery = useQuery({
+    queryKey: ["getSMSTemplates"],
+    queryFn: getSMSTemplates
+  });
+
+  const smsQuery = useQuery({
+    queryKey: ["smsQuery", smsTemplateId],
+    queryFn: () => getSMS(smsTemplateId),
+    enabled: !!smsTemplateId,
+    retry: 1,
+  });
+
 
   const mutation = useMutation({
     mutationFn: (data) => sendSms(projectId, data),
@@ -62,14 +77,23 @@ const SendSMS = ({ projectId, projectCardData }) => {
   });
 
   const handleSubmit = () => {
-    if (!message) return setErrors({ message: true });
-    if (message && isValid) {
-      mutation.mutate({
-        phone_number: phoneNumber,
-        message: message
-      });
-    }
+    let error = {};
+    if (!message) error.message = true;
+    if (!phoneNumber || !isPhoneValid(phoneNumber)) error.phone = true;
+    if (Object.keys(error).length) return setErrors(error);
+
+    mutation.mutate({
+      phone_number: phoneNumber,
+      message: message
+    });
   };
+
+  useEffect(() => {
+    if (smsQuery?.data?.text) {
+      setMessage(smsQuery.data.text);
+      setErrors((others) => ({ ...others, message: false }));
+    }
+  }, [smsQuery.data]);
 
   return (
     <>
@@ -101,6 +125,32 @@ const SendSMS = ({ projectId, projectCardData }) => {
         <Modal.Body>
           <div className="ContactModel">
             <Row>
+              <Col sm={12} className='mb-3'>
+                <div style={{ position: 'relative' }}>
+                  <label className={clsx(style.customLabel)}>Templates</label>
+                  <Dropdown
+                    options={
+                      (smsTemplateQuery &&
+                        smsTemplateQuery.data?.map((smsTemplate) => ({
+                          value: smsTemplate.id,
+                          label: `${smsTemplate.title}`,
+                        }))) ||
+                      []
+                    }
+                    className={clsx(
+                      style.dropdownSelect,
+                      "dropdown-height-fixed w-100"
+                    )}
+                    style={{ height: "46px", paddingLeft: '88px' }}
+                    placeholder="Select template"
+                    onChange={(e) => {
+                      setSMSTemplatedId(e.value);
+                    }}
+                    value={smsTemplateId}
+                    loading={smsTemplateQuery?.isFetching}
+                  />
+                </div>
+              </Col>
               <Col>
                 <div className="formgroup sendSMSPhone mb-2 mt-0">
                   <label>To</label>
@@ -113,10 +163,11 @@ const SendSMS = ({ projectId, projectCardData }) => {
                       containerClass={style.countrySelector}
                       onChange={(e) => {
                         setPhoneNumber(e);
+                        if (isPhoneValid(e)) setErrors((others) => ({ ...others, phone: false }));
                       }}
                     />
                   </div>
-                  {!isValid && <p className="error-message">Phone is not valid</p>}
+                  {errors.phone && <p className="error-message">Phone is not valid</p>}
                 </div>
               </Col>
             </Row>
@@ -125,7 +176,10 @@ const SendSMS = ({ projectId, projectCardData }) => {
               <Col>
                 <div className="formgroup mb-2 mt-2">
                   <label>Message </label>
-                  <div className={`inputInfo ${errors.description ? 'error-border' : ''}`}>
+                  <div className={`inputInfo ${errors.description ? 'error-border' : ''}`} style={{ position: 'relative' }}>
+                    <div style={{ position: 'absolute', right: '10px', top: '15px' }}>
+                      {smsQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                    </div>
                     <textarea
                       type="text"
                       name="Enter a message here..."
@@ -133,7 +187,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
                       placeholder='Enter a message here...'
                       onChange={(e) => {
                         setMessage(e.target.value);
-                        setErrors({});
+                        setErrors((others) => ({ ...others, message: false }));
                       }}
                     />
                   </div>
@@ -149,7 +203,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
                 Cancel
               </Button>
               <Button disabled={mutation?.isPending} variant="primary save d-flex align-items-center gap-2" onClick={handleSubmit}>
-                Save 
+                Save
                 {
                   mutation?.isPending && <ProgressSpinner style={{ width: '15px', height: '15px' }} />
                 }

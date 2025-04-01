@@ -127,7 +127,10 @@ const Desktop = ({ visible, setVisible }) => {
                             <div className="topHeadStyle pb-4">
                                 <div className={style.userHead}>
                                     <h2>Desktop Users</h2>
-                                    <p>{activeUserCount?.length || 0} / {desktopUsersQuery?.data?.limits?.total || 0} <span className='cursor-pointer'>Buy More</span></p>
+                                    <p className='d-flex align-items-center gap-2'>
+                                        {activeUserCount?.length || 0} / {desktopUsersQuery?.data?.limits?.total || 0} 
+                                        <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
+                                    </p>
                                 </div>
                                 <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={clsx(style.showDeleteBut, 'outline-none')}>{!isShowDeleted ? "Show" : "Hide"} Deleted</Button>
                             </div>

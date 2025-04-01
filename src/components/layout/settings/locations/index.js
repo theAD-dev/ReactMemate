@@ -110,7 +110,7 @@ const Location = () => {
                 <div className="settings-content setModalelBoots">
                     <div className='headSticky'>
                         <h1 className='mb-0'>Locations</h1>
-                        <p className='d-flex align-items-center'>{locationsQuery?.data?.locations?.length || 0} / {locationsQuery?.data?.limits?.total} <Button className='text-button'>Buy More</Button></p>
+                        <p className='d-flex align-items-center'>{locationsQuery?.data?.locations?.length || 0} / {locationsQuery?.data?.limits?.total} <Link to={"/settings/generalinformation/subscription"}><Button className='text-button'>Buy More</Button></Link></p>
                         <div className={`contentMenuTab ${style.contentMenuTab}`} style={{ position: 'relative' }}>
                             <ul className='w-100'>
                                 {
