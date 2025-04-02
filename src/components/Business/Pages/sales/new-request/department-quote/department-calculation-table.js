@@ -30,7 +30,7 @@ const calculateTotal = (item) => {
     let discount = parseFloat(item.discount) || 0;
     let total = subtotal - (subtotal * discount) / 100;
 
-    return total.toFixed(2);
+    return parseFloat(total).toFixed(2);
 };
 
 const calculateUnitPrice = (item) => {
@@ -46,7 +46,7 @@ const calculateUnitPrice = (item) => {
         unit_price = cost + margin;
     }
 
-    return unit_price.toFixed(2);
+    return parseFloat(unit_price).toFixed(2);
 };
 
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
