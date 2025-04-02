@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Check, ChevronDown, GripVertical, Trash } from 'react-bootstrap-icons';
+import { Check, GripVertical, Trash } from 'react-bootstrap-icons';
 import { useParams } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
+import { nanoid } from "nanoid";
 import { toast } from 'sonner';
-import { DepartmentQuoteTableRowLoading } from './department-quote-table-row-loading';
+import { DepartmentQuoteTableRowLoading, DepartmentRowChangeLoading } from './department-quote-table-row-loading';
 import SelectComponent from './select-component';
 import { getCalculationByReferenceId, getDepartments } from '../../../../../../APIs/CalApi';
 import { formatAUD } from '../../../../../../shared/lib/format-aud';
 import CreateMergeCalculation from '../../../../features/sales-features/merges-calculation/create-merge-calculation';
 import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
 import { romanize } from '../../../../shared/utils/helper';
-
 
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
     return (
@@ -107,8 +107,10 @@ const DepartmentCalculationTableHead = () => {
     );
 };
 
-const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [] }) => {
-    const handleChange = (event, value) => {
+const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [], departments, handleDepartmentChange, selectKey }) => {
+    const handleChange = (event, value, key) => {
+        const mergeKey = `${key}-${value.id}`;
+
         setSelectItem((oldItems) => {
             if (event.target.checked) {
                 const items = {
@@ -117,16 +119,17 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                     calculator: value?.calculator,
                     id: value?.id,
                     index: value?.index,
-                    total: value?.total
+                    total: value?.total,
+                    key: key
                 };
 
                 return {
                     ...oldItems,
-                    [value?.id]: [items]
+                    [mergeKey]: [items]
                 };
             } else {
                 const updatedItems = { ...oldItems };
-                if (updatedItems[value?.id]) delete updatedItems[value?.id];
+                if (updatedItems[mergeKey]) delete updatedItems[mergeKey];
                 return updatedItems;
             }
         });
@@ -141,7 +144,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                             <Draggable draggableId={`row-${key}-${value.id}`} key={`${key}-${value.id}`} index={id}>
                                 {(provided) => (
                                     <tr
-                                        key={value.id}
+                                        key={`tr-${key}-${value.id}`}
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         style={{
@@ -150,101 +153,119 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                         }}
                                         className={`calculation-tr ${checkedItems.includes(key) ? 'selected' : ''}`}
                                     >
-                                        <td {...provided.dragHandleProps} style={{ width: '24px' }}>
-                                            {
-                                                index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
-                                            }
-                                        </td>
-                                        <td calculator={value.calculator} style={{ width: '64px', textAlign: 'left' }}>
 
-                                            <div className='d-flex align-items-center justify-content-end gap-2'>
-                                                {index === 0 && (<span>{id + 1}</span>)}
-                                                {
-                                                    mapMergeItemWithNo[value.calculator] ? (
-                                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '0px' }}>
-                                                            {mapMergeItemWithNo[value.calculator]}
-                                                        </div>
-                                                    ) : (
-                                                        <label className="customCheckBox checkbox" style={{ marginRight: '0px' }}>
-                                                            <input type="checkbox" checked={selectItem[value.id] ? true : false} onChange={(e) => handleChange(e, value)} />
-                                                            <span className="checkmark" style={{ top: '0px' }}>
-                                                                <Check color="#1AB2FF" size={20} />
-                                                            </span>
-                                                        </label>
-                                                    )
-                                                }
-                                            </div>
-                                        </td>
-                                        <td style={{ width: '192px' }}>
-                                            {
-                                                index === 0 && (
-                                                    <div className='disabledSelectBox'><div title={value.label} className='disabledSelectBoxLabel' style={{ color: '#101828', fontSize: '14px' }}>{value.label}</div> <ChevronDown color="#98A2B3" size={15} /></div>
+                                        {
+                                            selectKey === key ? (
+                                                <>
+                                                    <td {...provided.dragHandleProps} style={{ width: '24px' }}>
+                                                        {
+                                                            index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
+                                                        }
+                                                    </td>
+                                                    <DepartmentRowChangeLoading />
+                                                </>
+                                            )
+                                                : (
+                                                    <>
+                                                        <td {...provided.dragHandleProps} style={{ width: '24px' }}>
+                                                            {
+                                                                index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
+                                                            }
+                                                        </td>
+                                                        <td calculator={value.calculator} style={{ width: '64px', textAlign: 'left' }}>
+
+                                                            <div className='d-flex align-items-center justify-content-end gap-2'>
+                                                                {index === 0 && (<span>{id + 1}</span>)}
+                                                                {
+                                                                    mapMergeItemWithNo[`${key}-${value.calculator}`] ? (
+                                                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '0px' }}>
+                                                                            {mapMergeItemWithNo[`${key}-${value.calculator}`]}
+                                                                        </div>
+                                                                    ) : (
+                                                                        <label className="customCheckBox checkbox" style={{ marginRight: '0px' }}>
+                                                                            <input type="checkbox" checked={selectItem[`${key}-${value.id}`] ? true : false} onChange={(e) => handleChange(e, value, key)} />
+                                                                            <span className="checkmark" style={{ top: '0px' }}>
+                                                                                <Check color="#1AB2FF" size={20} />
+                                                                            </span>
+                                                                        </label>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                        <td style={{ width: '192px' }}>
+                                                            {
+                                                                index === 0 && (
+                                                                    <SelectComponent departments={departments} handleChange={handleDepartmentChange} title={value.label} keyValue={key} />
+                                                                )
+                                                            }
+                                                        </td>
+                                                        <td style={{ width: '100%' }}>
+                                                            <textarea rows={1} style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box', fontSize: '14px' }} value={value.description}
+                                                                onChange={(e) => updateData(key, value.id, 'description', e.target.value)}
+                                                            ></textarea>
+                                                        </td>
+                                                        <td style={{ width: '128px' }}>
+                                                            <div className='d-flex align-items-center'>
+                                                                <span style={{ fontSize: '14px' }}>$</span>
+                                                                <input
+                                                                    type="text"
+                                                                    style={{ padding: '4px', width: '100px', background: 'transparent', fontSize: '14px' }}
+                                                                    value={`${value.cost}`}
+                                                                    onChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
+                                                                />
+                                                            </div>
+                                                        </td>
+                                                        <td style={{ width: '185px' }}>
+                                                            <div className='d-flex align-items-center'>
+                                                                <input
+                                                                    type="text"
+                                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
+                                                                    value={`${value.profit_type_value}`}
+                                                                    onChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
+                                                                />
+                                                                <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
+                                                                    <option value={"MRG"}>MRG %</option>
+                                                                    <option value={"AMN"}>AMT $</option>
+                                                                    <option value={"MRK"}>MRK %</option>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>${formatAUD(value.unit_price || "0.00")}</td>
+                                                        <td style={{ width: '166px' }}>
+                                                            <div className='d-flex align-items-center'>
+                                                                <input
+                                                                    type="text"
+                                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
+                                                                    value={`${value.quantity}`}
+                                                                    onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
+                                                                />
+                                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
+                                                                    <option value="Cost">1/Q</option>
+                                                                    <option value="Hourly">1/H</option>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+
+                                                        <td style={{ width: '83px' }}>
+                                                            <div className='d-flex align-items-center'>
+                                                                <input
+                                                                    type="text"
+                                                                    style={{ width: '60px', padding: '4px', background: 'transparent', fontSize: '14px' }}
+                                                                    value={`${value.discount}`}
+                                                                    onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
+                                                                />
+                                                                <span style={{ fontSize: '14px' }}>%</span>
+                                                            </div>
+                                                        </td>
+
+                                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {formatAUD(value.total || 0.00)}</td>
+                                                        <td style={{ width: '32px' }}>
+                                                            <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id, value.calculator)} />
+                                                        </td>
+                                                    </>
                                                 )
-                                            }
-                                        </td>
-                                        <td style={{ width: '100%' }}>
-                                            <textarea rows={1} style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box', fontSize: '14px' }} value={value.description}
-                                                onChange={(e) => updateData(key, value.id, 'description', e.target.value)}
-                                            ></textarea>
-                                        </td>
-                                        <td style={{ width: '128px' }}>
-                                            <div className='d-flex align-items-center'>
-                                                <span style={{ fontSize: '14px' }}>$</span>
-                                                <input
-                                                    type="text"
-                                                    style={{ padding: '4px', width: '100px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.cost}`}
-                                                    onChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
-                                                />
-                                            </div>
-                                        </td>
-                                        <td style={{ width: '185px' }}>
-                                            <div className='d-flex align-items-center'>
-                                                <input
-                                                    type="text"
-                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.profit_type_value}`}
-                                                    onChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
-                                                />
-                                                <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
-                                                    <option value={"MRG"}>MRG %</option>
-                                                    <option value={"AMN"}>AMT $</option>
-                                                    <option value={"MRK"}>MRK %</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>${formatAUD(value.unit_price || "0.00")}</td>
-                                        <td style={{ width: '166px' }}>
-                                            <div className='d-flex align-items-center'>
-                                                <input
-                                                    type="text"
-                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.quantity}`}
-                                                    onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
-                                                />
-                                                <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
-                                                    <option value="Cost">1/Q</option>
-                                                    <option value="Hourly">1/H</option>
-                                                </select>
-                                            </div>
-                                        </td>
+                                        }
 
-                                        <td style={{ width: '83px' }}>
-                                            <div className='d-flex align-items-center'>
-                                                <input
-                                                    type="text"
-                                                    style={{ width: '60px', padding: '4px', background: 'transparent', fontSize: '14px' }}
-                                                    value={`${value.discount}`}
-                                                    onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
-                                                />
-                                                <span style={{ fontSize: '14px' }}>%</span>
-                                            </div>
-                                        </td>
-
-                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {formatAUD(value.total || 0.00)}</td>
-                                        <td style={{ width: '32px' }}>
-                                            <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id, value.calculator)} />
-                                        </td>
                                     </tr>
                                 )}
                             </Draggable>
@@ -261,6 +282,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     const [rows, setRows] = useState({});
     const [subItem, setSubItem] = useState(null);
     const [subItemLabel, setSubItemLabel] = useState(null);
+    const [selectKey, setSelectKey] = useState(null);
     const [preExistMerges, setPreExistMerges] = useState([]);
 
     const [merges, setMerges] = useState([]);
@@ -319,7 +341,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         let cost = parseFloat(item.cost) || 0;
         let quantity = parseFloat(item.quantity) || 0;
         let subtotal = cost * quantity;
-
+    
         let margin = parseFloat(item.profit_type_value) || 0;
         if (item.profit_type === "MRK") {
             subtotal += (subtotal * margin) / 100;
@@ -328,17 +350,17 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         } else if (item.profit_type === "AMN") {
             subtotal += margin;
         }
-
+    
         let discount = parseFloat(item.discount) || 0;
         let total = subtotal - (subtotal * discount) / 100;
-
-        return total.toFixed(2);
+    
+        return parseFloat(total).toFixed(2);
     };
-
+    
     const calculateUnitPrice = (item) => {
         let cost = parseFloat(item.cost) || 0;
         let unit_price = 0.00;
-
+    
         let margin = parseFloat(item.profit_type_value) || 0;
         if (item.profit_type === "MRK") {
             unit_price = cost + (cost * (margin / 100));
@@ -347,8 +369,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         } else if (item.profit_type === "AMN") {
             unit_price = cost + margin;
         }
-
-        return unit_price.toFixed(2);
+    
+        return parseFloat(unit_price).toFixed(2);
     };
 
     const updateData = (key, id, type, value) => {
@@ -372,11 +394,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         });
     };
 
-    const deleteMergeCalculator = (calcReferenceId) => {
+    const deleteMergeCalculator = (calcReferenceId, key) => {
         let idsToDelete = [];
         const updatedMerges = merges.reduce((result, item) => {
             const updatedCalculators = item.calculators.filter(
-                calc => calc.calculator !== calcReferenceId
+                calc => !(calc.calculator === calcReferenceId && calc.key === key)
             );
 
             if (updatedCalculators.length < 2) {
@@ -402,7 +424,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
             return updatedRows;
         });
-        deleteMergeCalculator(calcReferenceId);
+        deleteMergeCalculator(calcReferenceId, key);
     };
 
     useEffect(() => {
@@ -431,12 +453,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 index === self.findIndex((t) => t.id === item.id)
             );
 
-            if (subItem && !rows[subItem]) {
-                setRows((prevRows) => ({
-                    ...prevRows,
-                    [`_${subItem}_`]: filteredData,
-                }));
-            }
+            let key = `${nanoid(6)}`;
+            setRows((prevRows) => ({
+                ...prevRows,
+                [`${key}`]: filteredData,
+            }));
 
             setSubItem("");
         }
@@ -445,7 +466,44 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             console.log('data.length: ', data.length);
             toast.error(`No calculation found inside ${subItemLabel}`);
         }
-    }, [data, rows, subItem]);
+    }, [data, rows, subItem, defaultDiscount, subItemLabel]);
+
+    const handleDepartmentChange = async (value, label, keyValue) => {
+        if (!value || !keyValue) return;
+
+        try {
+            setSelectKey(keyValue);
+            const calculators = await getCalculationByReferenceId(value);
+            console.log('calculators: ', calculators);
+            if (calculators?.length) {
+                calculators.forEach((item) => {
+                    item.label = label;
+                    item.calculator = item.id;
+                    item.index = value;
+                    item.discount = defaultDiscount;
+                    item.quantity = parseFloat(parseFloat(item.quantity) || 1).toFixed(2);
+                    item.unit_price = calculateUnitPrice(item);
+                    item.total = calculateTotal(item);
+                });
+
+                let filteredData = calculators.filter((item, index, self) =>
+                    index === self.findIndex((t) => t.id === item.id)
+                );
+
+                setRows((prevRows) => ({
+                    ...prevRows,
+                    [`${keyValue}`]: filteredData,
+                }));
+
+            } else {
+                toast.error(`No calculation found inside ${label}`);
+            }
+        } catch (error) {
+            console.error('Error in handleDepartmentChange:', error);
+        } finally {
+            setSelectKey(null);
+        }
+    };
 
     const calculateSummary = (taxType) => {
         let budget = 0;
@@ -479,11 +537,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         const operationalProfit = subtotal - budget;
 
         return {
-            budget: budget.toFixed(2),
-            operationalProfit: operationalProfit.toFixed(2),
-            subtotal: subtotal.toFixed(2),
-            tax: tax.toFixed(2),
-            total: total.toFixed(2),
+            budget: parseFloat(budget || 0.00).toFixed(2),
+            operationalProfit: parseFloat(operationalProfit).toFixed(2),
+            subtotal: parseFloat(subtotal).toFixed(2),
+            tax: parseFloat(tax).toFixed(2),
+            total: parseFloat(total).toFixed(2),
         };
     };
 
@@ -491,17 +549,19 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         const summary = calculateSummary(xero_tax);
         setTotals(summary);
 
-        const calculations = Object.values(rows)?.flat().map((item, index) => {
-            const { id, ...rest } = item; // Remove 'id' using destructuring
-            return {
-                ...rest,
-                cost: parseFloat(rest.cost || 0.00).toFixed(2),
-                profit_type_value: parseFloat(rest.profit_type_value || 0.00).toFixed(2),
-                unit_price: parseFloat(rest.unit_price || 0.00).toFixed(),
-                quantity: parseFloat(rest.quantity || 0.00).toFixed(2),
-                discount: parseFloat(rest.discount || 0.00).toFixed(2),
-                order: index // Add 'order' key with index value
-            };
+        const calculations = Object.entries(rows).flatMap(([key, items], parentIndex) => {
+            return items.map((item) => {
+                const { id, ...rest } = item;
+                return {
+                    ...rest,
+                    cost: parseFloat(rest.cost || 0.00).toFixed(2),
+                    profit_type_value: parseFloat(rest.profit_type_value || 0.00).toFixed(2),
+                    unit_price: parseFloat(rest.unit_price || 0.00).toFixed(2),
+                    quantity: parseFloat(rest.quantity || 0.00).toFixed(2),
+                    discount: parseFloat(rest.discount || 0.00).toFixed(2),
+                    order: parentIndex + 1, // Use the parent's index as the order
+                };
+            });
         });
         setPayload((others) => ({ ...others, expense: summary.total || "", calculations }));
     }, [rows, xero_tax]);
@@ -521,17 +581,30 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             return map;
         }, {});
 
-        // Reformat preExistCalculation data
-        const reformattedData = preExistCalculation.reduce((acc, { order, index, ...item }) => {
-            const key = `_${index}_`;
-            acc[key] = acc[key] || [];
+        // Group by order first, then assign nanoid keys
+        const orderGroups = preExistCalculation.reduce((acc, { order, index, ...item }) => {
+            acc[order] = acc[order] || [];
             let unit_price = item.unit_price;
-            if (item.unit_price === "0.00") {
+            if (unit_price === "0.00" || !unit_price) {
                 unit_price = calculateUnitPrice(item);
             }
-            acc[key].push({ ...item, unit_price, label: subindexMap[index], index });
+            acc[order].push({ ...item, unit_price, label: subindexMap[index] || "Unknown", index });
             return acc;
         }, {});
+
+        const reformattedData = Object.keys(orderGroups).reduce((acc, order) => {
+            const key = nanoid(6);
+            acc[key] = orderGroups[order];
+            return acc;
+        }, {});
+
+        // Build a mapping of calculator IDs to reformattedData keys
+        const calculatorKeyMap = {};
+        Object.entries(reformattedData).forEach(([key, items]) => {
+            items.forEach(item => {
+                calculatorKeyMap[item.calculator] = key;
+            });
+        });
 
         // Create key-index map and reformat preExistMerges data
         const reformattedMerges = preExistMerges.map((merge, index) => {
@@ -539,7 +612,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
             const calculators = merge?.calculators?.map(cal => {
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
-                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, id: findData?.id, calculator: findData?.calculator };
+                const key = calculatorKeyMap[findData?.calculator];
+                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, id: findData?.id, calculator: findData?.calculator, key };
             });
 
             return { ...merge, alias, calculators };
@@ -556,7 +630,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             merges?.forEach((merge, index) => {
                 const alias = romanize(index + 1);
                 merge?.calculators?.forEach(cal => {
-                    keyIndexMap[cal.calculator] = alias;
+                    keyIndexMap[`${cal.key}-${cal.calculator}`] = alias;
                 });
             });
 
@@ -583,6 +657,10 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                                     setSelectItem={setSelectItem}
                                     mapMergeItemWithNo={mapMergeItemWithNo}
                                     checkedItems={Object.keys(selectItem)}
+
+                                    selectKey={selectKey}
+                                    departments={departments}
+                                    handleDepartmentChange={handleDepartmentChange}
                                 />
                                 {
                                     isLoadingSubItem && <DepartmentQuoteTableRowLoading />

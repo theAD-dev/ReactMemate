@@ -68,15 +68,13 @@ const RecurringQuotes = LazyLoader(lazy(() => import('../components/layout/setti
 const BillingInfo = LazyLoader(lazy(() => import('../components/layout/settings/subscription/BillingInfo')));
 const Bills = LazyLoader(lazy(() => import('../components/layout/settings/subscription/Bills')));
 const Subscription = LazyLoader(lazy(() => import('../components/layout/settings/subscription/Subscription')));
-const CreateEmailTemplate = LazyLoader(lazy(() => import('../components/layout/settings/templates/create-email-template')));
+const CreateEmailTemplate = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-template/create-email-template')));
+const CreateSMSTemplate = LazyLoader(lazy(() => import('../components/layout/settings/templates/sms-template/create-sms-template')));
 const CreateJobTemplate = LazyLoader(lazy(() => import('../components/layout/settings/templates/create-job-template')));
 const CreateProposalTemplate = LazyLoader(lazy(() => import('../components/layout/settings/templates/create-proposal-template')));
-const EditEmail = LazyLoader(lazy(() => import('../components/layout/settings/templates/edit-email')));
-const EditProposal = LazyLoader(lazy(() => import('../components/layout/settings/templates/edit-proposal')));
-const EditSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/edit-signatures')));
-const EditTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/edit-template')));
-const EmailTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-templates')));
-const EmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/EmailSignatures')));
+const EmailTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-template/email-templates')));
+const SMSTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/sms-template/sms-templates')));
+const EmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signatures')));
 const JobTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/job-templates')));
 const ProposalTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/proposal-templates')));
 const TermsandConditions = LazyLoader(lazy(() => import('../components/layout/settings/termsandconditions/TermsandConditions')));
@@ -478,20 +476,16 @@ const routes = [
                         element: <ProtectedRoute permission={""}><CreateProposalTemplate /></ProtectedRoute>,
                     },
                     {
-                        path: "edit-template",
-                        element: <ProtectedRoute permission={""}><EditTemplates /></ProtectedRoute>,
+                        path: "sms-templates",
+                        element: <ProtectedRoute permission={""}><SMSTemplates /></ProtectedRoute>,
                     },
                     {
-                        path: "edit-email",
-                        element: <ProtectedRoute permission={""}><EditEmail /></ProtectedRoute>,
+                        path: "sms-templates/new",
+                        element: <ProtectedRoute permission={""}><CreateSMSTemplate /></ProtectedRoute>,
                     },
                     {
-                        path: "edit-signatures",
-                        element: <ProtectedRoute permission={""}><EditSignatures /></ProtectedRoute>,
-                    },
-                    {
-                        path: "edit-proposal",
-                        element: <ProtectedRoute permission={""}><EditProposal /></ProtectedRoute>,
+                        path: "sms-templates/:id",
+                        element: <ProtectedRoute permission={""}><CreateSMSTemplate /></ProtectedRoute>,
                     },
                 ],
             },

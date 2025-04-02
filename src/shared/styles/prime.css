@@ -562,3 +562,10 @@ tr.p-datatable-emptymessage td {
   bottom: 100% !important;
   top: unset !important;
 }
+
+.p-inputtextarea,
+.p-inputtextarea:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid #d1d5db;
+}

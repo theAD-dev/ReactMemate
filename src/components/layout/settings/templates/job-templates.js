@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Spinner } from 'react-bootstrap';
+import { Button, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
 import { PlusLg } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -9,14 +9,11 @@ import { getJobTemplates } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Sidebar from '../Sidebar';
 
-
-
-
-
 const JobTemplates = () => {
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
+    const has_twilio = !!profileData?.has_twilio;
     const [activeTab, setActiveTab] = useState('job-templates');
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplates"],
@@ -36,19 +33,36 @@ const JobTemplates = () => {
                                 <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
                                 <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
                                 <li className='menuActive'><Link to="/settings/templates/job-templates">Job Templates</Link></li>
-                                <li><Link to="#">SMS Templates</Link></li>
+                                {!has_twilio ? (
+                                    <OverlayTrigger
+                                        key="top"
+                                        placement="top"
+                                        overlay={
+                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                                Your Twilio account has not been set up yet.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">SMS Templates</Link></li>
+                                    </OverlayTrigger>
+                                ) : (
+                                    <li><Link to="/settings/templates/sms-templates">SMS Templates</Link></li>
+                                )}
                             </ul>
                         </div>
-                        {
-                            has_work_subscription &&
-                            <Link to={'/settings/templates/job-templates/new'}>
-                                <Button className='outline-button' style={{ position: 'absolute', right: 0, bottom: '16px' }}>Create New Template <PlusLg color='#344054' size={20} /></Button>
-                            </Link>
-                        }
                     </div>
-                    <div className={`content_wrap_main mt-0`} style={{ paddingBottom: `${trialHeight}px` }}>
+                    <div className={`content_wrap_main mt-0`} style={{ height: `calc(100vh - 230px - ${trialHeight}px)` }}>
                         <div className='content_wrapper'>
-                            <div className='listwrapper' style={{ height: 'calc(100vh - 229px)' }}>
+                            <div className='listwrapper'>
+                                <div className="topHeadStyle mb-4 align-items-center">
+                                    <h2 className='mb-0'>Job Templates</h2>
+                                    {
+                                        has_work_subscription &&
+                                        <Link className='mb-0' to={'/settings/templates/job-templates/new'}>
+                                            Create New Template <PlusLg color='#344054' size={20} />
+                                        </Link>
+                                    }
+                                </div>
                                 {
                                     proposalTemplateQuery?.data?.map((proposal) =>
                                         <div key={proposal.id} className={clsx(style.listbox, 'mb-2')}>

@@ -154,7 +154,10 @@ const MobileApp = React.memo(() => {
                                             <div className="topHeadStyle pb-4">
                                                 <div className={style.userHead}>
                                                     <h2>Mobile App Users</h2>
-                                                    <p>{mobileUsersQuery?.data?.limits?.number || 0} / {mobileUsersQuery?.data?.limits?.total || 0} <span>Buy More</span></p>
+                                                    <p className='d-flex align-items-center gap-2'>
+                                                        {mobileUsersQuery?.data?.limits?.number || 0} / {mobileUsersQuery?.data?.limits?.total || 0}
+                                                        <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
+                                                    </p>
                                                 </div>
                                                 <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={style.showDeleteBut}>{!isShowDeleted ? "Show" : "Hide"} Disconnected</Button>
                                             </div>

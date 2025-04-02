@@ -39,6 +39,7 @@ const CreateProposalTemplate = () => {
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
+    const has_twilio = !!profileData?.has_twilio;
     const [activeTab, setActiveTab] = useState('job-templates');
     const navigate = useNavigate();
     const { id } = useParams();
@@ -181,7 +182,21 @@ const CreateProposalTemplate = () => {
                                 ) : (
                                     <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                                 )}
-                                <li><Link to="#">SMS Templates</Link></li>
+                                {!has_twilio ? (
+                                    <OverlayTrigger
+                                        key="top"
+                                        placement="top"
+                                        overlay={
+                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                                Your Twilio account has not been set up yet.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">SMS Templates</Link></li>
+                                    </OverlayTrigger>
+                                ) : (
+                                    <li><Link to="/settings/templates/sms-templates">SMS Templates</Link></li>
+                                )}
                             </ul>
                         </div>
                     </div>

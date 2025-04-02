@@ -10,10 +10,10 @@ import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
-import style from './job-template.module.scss';
-import { createEmailTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../APIs/email-template';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import Sidebar from '../Sidebar';
+import { createEmailTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../../APIs/email-template';
+import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
+import Sidebar from '../../Sidebar';
+import style from '../job-template.module.scss';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -59,6 +59,7 @@ const CreateEmailTemplate = () => {
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
+    const has_twilio = !!profileData?.has_twilio;
     const navigate = useNavigate();
     const { id } = useParams();
     const [searchParams] = useSearchParams();
@@ -191,7 +192,21 @@ const CreateEmailTemplate = () => {
                                 ) : (
                                     <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                                 )}
-                                <li><Link to="#">SMS Templates</Link></li>
+                                {!has_twilio ? (
+                                    <OverlayTrigger
+                                        key="top"
+                                        placement="top"
+                                        overlay={
+                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                                Your Twilio account has not been set up yet.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">SMS Templates</Link></li>
+                                    </OverlayTrigger>
+                                ) : (
+                                    <li><Link to="/settings/templates/sms-templates">SMS Templates</Link></li>
+                                )}
                             </ul>
                         </div>
                     </div>

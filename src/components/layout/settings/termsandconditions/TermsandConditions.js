@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Placeholder } from "react-bootstrap";
-import { BoxArrowUpRight, PencilSquare } from "react-bootstrap-icons";
+import { PencilSquare } from "react-bootstrap-icons";
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 import clsx from 'clsx';
@@ -12,16 +12,11 @@ import { getInvoiceTermsapp, updateTermsapp } from "../../../../APIs/terms-and-c
 import { renderHeader } from '../../../../shared/ui/editor/editor-header-template';
 import Sidebar from '../Sidebar';
 
-
-
-
-
 const TermsandConditions = () => {
     const [activeTab, setActiveTab] = useState('terms-and-conditions');
     const [edit, setEdit] = useState(false);
     const [terms, setTerms] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
 
     // Fetching terms data
     const fetchData = async () => {
@@ -72,11 +67,11 @@ const TermsandConditions = () => {
                         <h1>Terms and Conditions</h1>
                         <div className='contentMenuTab'>
                             <ul>
-                                <li className='menuActive'>
-                                    <Link to="/settings/termsandconditions/terms-and-conditions">Terms and Conditions Application</Link>
-                                </li>
                                 <li>
                                     <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Terms and Conditions Invoice</Link>
+                                </li>
+                                <li className='menuActive'>
+                                    <Link to="/settings/termsandconditions/terms-and-conditions">Terms and Conditions Application</Link>
                                 </li>
                             </ul>
                         </div>
@@ -92,9 +87,9 @@ const TermsandConditions = () => {
                                                 <button onClick={handleEditClick} className='text-nowrap'>
                                                     Edit &nbsp; <PencilSquare color="#344054" size={20} />
                                                 </button>
-                                                <Link to={`${process.env.REACT_APP_URL}/media/organization_${profileData?.organization?.id}/terms_and_conditions.pdf`} style={{ padding: '10px 18px'}} target='_blank'>
+                                                {/* <Link to={`${process.env.REACT_APP_URL}/media/organization_${profileData?.organization?.id}/terms_and_conditions.pdf`} style={{ padding: '10px 18px' }} target='_blank'>
                                                     Preview &nbsp; <BoxArrowUpRight color="#344054" size={20} />
-                                                </Link>
+                                                </Link> */}
                                             </>
                                         )}
                                     </div>
@@ -106,9 +101,15 @@ const TermsandConditions = () => {
 
                                 <div>
                                     {isLoading ? (
-                                        <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                            <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
-                                        </Placeholder>
+                                        <>
+                                            <Placeholder as="h2" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                                <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
+                                            </Placeholder>
+
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                                <Placeholder bg="secondary" size='md' style={{ width: '100%', height: '300px' }} />
+                                            </Placeholder>
+                                        </>
 
                                     ) : edit ? (
                                         <>

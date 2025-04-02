@@ -1,0 +1,26 @@
+.heading {
+  font-size: 60px !important;
+  font-weight: 700 !important;
+  line-height: 1.5;
+  padding-bottom: 0.5em;
+  padding-top: .4em;
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    rgb(26, 178, 255) 33.15%,
+    rgb(255, 178, 88) 62%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.paragraph {
+    color: #475467;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.img {
+    width: 400px;
+}

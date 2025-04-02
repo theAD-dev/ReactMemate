@@ -21,9 +21,9 @@ export const stripeIntegrationsSet = async (data) => {
 };
 
 export const stripeIntegrationsDelete = async (data) => {
-    const endpoint = '/settings/integrations/stripe/';
+    const endpoint = '/settings/integrations/stripe/disconnect/';
     const options = {
-        method: 'PUT',
+        method: 'DELETE',
         body: data
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);

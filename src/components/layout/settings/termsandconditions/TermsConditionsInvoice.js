@@ -12,10 +12,6 @@ import { getInvoiceTerms, updateTerms } from "../../../../APIs/terms-and-conditi
 import { renderHeader } from '../../../../shared/ui/editor/editor-header-template';
 import Sidebar from '../Sidebar';
 
-
-
-
-
 const TermsConditionsInvoice = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [activeTab, setActiveTab] = useState('terms-and-conditions');
@@ -73,11 +69,11 @@ const TermsConditionsInvoice = () => {
                         <h1>Terms and Conditions</h1>
                         <div className='contentMenuTab'>
                             <ul>
-                                <li>
-                                    <Link to="/settings/termsandconditions/terms-and-conditions">Terms and Conditions Application</Link>
-                                </li>
                                 <li className='menuActive'>
                                     <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Terms and Conditions Invoice</Link>
+                                </li>
+                                <li>
+                                    <Link to="/settings/termsandconditions/terms-and-conditions">Terms and Conditions Application</Link>
                                 </li>
                             </ul>
                         </div>
@@ -106,10 +102,15 @@ const TermsConditionsInvoice = () => {
 
                                 <div>
                                     {isLoading ? (
-                                        <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
-                                            <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
-                                        </Placeholder>
+                                        <>
+                                            <Placeholder as="h5" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                                <Placeholder bg="secondary" size='md' style={{ width: '100%' }} />
+                                            </Placeholder>
 
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>
+                                                <Placeholder bg="secondary" size='md' style={{ width: '100%', height: '300px' }} />
+                                            </Placeholder>
+                                        </>
                                     ) : edit ? (
                                         <>
                                             <Row className={style.qlEditorText}>
