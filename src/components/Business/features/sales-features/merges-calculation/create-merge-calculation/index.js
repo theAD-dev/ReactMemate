@@ -58,7 +58,7 @@ const CreateMergeCalculation = ({ selectItem, setSelectItem, merges, setMerges }
 
   return (
     <React.Fragment>
-      <Button type='button' disabled={Object.keys(selectItem)?.length < 2} onClick={handleOpen} className={clsx(style.mergeButton, 'text-button', { [style.disabled]: Object.keys(selectItem)?.length < 2 })}>Merge Items</Button>
+      {/* <Button type='button' disabled={Object.keys(selectItem)?.length < 2} onClick={handleOpen} className={clsx(style.mergeButton, 'text-button', { [style.disabled]: Object.keys(selectItem)?.length < 2 })}>Merge Items</Button> */}
       <Modal
         size="lg"
         show={show}
