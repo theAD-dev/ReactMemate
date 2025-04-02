@@ -534,11 +534,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         const operationalProfit = subtotal - budget;
 
         return {
-            budget: budget.toFixed(2),
-            operationalProfit: operationalProfit.toFixed(2),
-            subtotal: subtotal.toFixed(2),
-            tax: tax.toFixed(2),
-            total: total.toFixed(2),
+            budget: parseFloat(budget || 0.00).toFixed(2),
+            operationalProfit: parseFloat(operationalProfit).toFixed(2),
+            subtotal: parseFloat(subtotal).toFixed(2),
+            tax: parseFloat(tax).toFixed(2),
+            total: parseFloat(total).toFixed(2),
         };
     };
 
