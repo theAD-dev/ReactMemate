@@ -21,7 +21,7 @@ const schema = yup
 const CreateMergeCalculation = ({ selectItem, setSelectItem, merges, setMerges }) => {
   const [show, setShow] = useState(false);
   const romanNo = romanize((merges?.length || 0) + 1);
-  const [defaultValues, ] = useState({
+  const [defaultValues,] = useState({
     title: '',
     description: ''
   });
@@ -35,8 +35,12 @@ const CreateMergeCalculation = ({ selectItem, setSelectItem, merges, setMerges }
     const payload = {
       ...data,
       alias: romanNo,
-      calculators: Object.values(selectItem)?.flat().map((value) => ({ 
-        calculator: value.calculator, id: value.id, label: value.label, total: value.total,
+      calculators: Object.values(selectItem)?.flat().map((value) => ({
+        id: value.id,
+        key: value.key,
+        calculator: value.calculator,
+        label: value.label,
+        total: value.total,
         description: value.description
       }))
     };

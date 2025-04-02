@@ -13,42 +13,6 @@ import CreateMergeCalculation from '../../../../features/sales-features/merges-c
 import ListMergeCalculations from '../../../../features/sales-features/merges-calculation/list-merge-calculations';
 import { romanize } from '../../../../shared/utils/helper';
 
-const calculateTotal = (item) => {
-    let cost = parseFloat(item.cost) || 0;
-    let quantity = parseFloat(item.quantity) || 0;
-    let subtotal = cost * quantity;
-
-    let margin = parseFloat(item.profit_type_value) || 0;
-    if (item.profit_type === "MRK") {
-        subtotal += (subtotal * margin) / 100;
-    } else if (item.profit_type === "MRG") {
-        subtotal = subtotal / (1 - margin / 100);
-    } else if (item.profit_type === "AMN") {
-        subtotal += margin;
-    }
-
-    let discount = parseFloat(item.discount) || 0;
-    let total = subtotal - (subtotal * discount) / 100;
-
-    return parseFloat(total).toFixed(2);
-};
-
-const calculateUnitPrice = (item) => {
-    let cost = parseFloat(item.cost) || 0;
-    let unit_price = 0.00;
-
-    let margin = parseFloat(item.profit_type_value) || 0;
-    if (item.profit_type === "MRK") {
-        unit_price = cost + (cost * (margin / 100));
-    } else if (item.profit_type === "MRG") {
-        unit_price = cost / (1 - (margin / 100));
-    } else if (item.profit_type === "AMN") {
-        unit_price = cost + margin;
-    }
-
-    return parseFloat(unit_price).toFixed(2);
-};
-
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
     return (
         <tr>
@@ -144,7 +108,9 @@ const DepartmentCalculationTableHead = () => {
 };
 
 const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectItem, setSelectItem, mapMergeItemWithNo, checkedItems = [], departments, handleDepartmentChange, selectKey }) => {
-    const handleChange = (event, value) => {
+    const handleChange = (event, value, key) => {
+        const mergeKey = `${key}-${value.id}`;
+
         setSelectItem((oldItems) => {
             if (event.target.checked) {
                 const items = {
@@ -153,16 +119,17 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                     calculator: value?.calculator,
                     id: value?.id,
                     index: value?.index,
-                    total: value?.total
+                    total: value?.total,
+                    key: key
                 };
 
                 return {
                     ...oldItems,
-                    [value?.id]: [items]
+                    [mergeKey]: [items]
                 };
             } else {
                 const updatedItems = { ...oldItems };
-                if (updatedItems[value?.id]) delete updatedItems[value?.id];
+                if (updatedItems[mergeKey]) delete updatedItems[mergeKey];
                 return updatedItems;
             }
         });
@@ -177,7 +144,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                             <Draggable draggableId={`row-${key}-${value.id}`} key={`${key}-${value.id}`} index={id}>
                                 {(provided) => (
                                     <tr
-                                        key={value.id}
+                                        key={`tr-${key}-${value.id}`}
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         style={{
@@ -210,13 +177,13 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                             <div className='d-flex align-items-center justify-content-end gap-2'>
                                                                 {index === 0 && (<span>{id + 1}</span>)}
                                                                 {
-                                                                    mapMergeItemWithNo[value.calculator] ? (
+                                                                    mapMergeItemWithNo[`${key}-${value.calculator}`] ? (
                                                                         <div className='d-flex justify-content-center align-items-center' style={{ width: '20px', height: '20px', borderRadius: '24px', background: '#F2F4F7', border: '1px solid #EAECF0', color: '#344054', fontSize: '10px', marginRight: '0px' }}>
-                                                                            {mapMergeItemWithNo[value.calculator]}
+                                                                            {mapMergeItemWithNo[`${key}-${value.calculator}`]}
                                                                         </div>
                                                                     ) : (
                                                                         <label className="customCheckBox checkbox" style={{ marginRight: '0px' }}>
-                                                                            <input type="checkbox" checked={selectItem[value.id] ? true : false} onChange={(e) => handleChange(e, value)} />
+                                                                            <input type="checkbox" checked={selectItem[`${key}-${value.id}`] ? true : false} onChange={(e) => handleChange(e, value, key)} />
                                                                             <span className="checkmark" style={{ top: '0px' }}>
                                                                                 <Check color="#1AB2FF" size={20} />
                                                                             </span>
@@ -370,6 +337,42 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         if (label) setSubItemLabel(label);
     };
 
+    const calculateTotal = (item) => {
+        let cost = parseFloat(item.cost) || 0;
+        let quantity = parseFloat(item.quantity) || 0;
+        let subtotal = cost * quantity;
+    
+        let margin = parseFloat(item.profit_type_value) || 0;
+        if (item.profit_type === "MRK") {
+            subtotal += (subtotal * margin) / 100;
+        } else if (item.profit_type === "MRG") {
+            subtotal = subtotal / (1 - margin / 100);
+        } else if (item.profit_type === "AMN") {
+            subtotal += margin;
+        }
+    
+        let discount = parseFloat(item.discount) || 0;
+        let total = subtotal - (subtotal * discount) / 100;
+    
+        return parseFloat(total).toFixed(2);
+    };
+    
+    const calculateUnitPrice = (item) => {
+        let cost = parseFloat(item.cost) || 0;
+        let unit_price = 0.00;
+    
+        let margin = parseFloat(item.profit_type_value) || 0;
+        if (item.profit_type === "MRK") {
+            unit_price = cost + (cost * (margin / 100));
+        } else if (item.profit_type === "MRG") {
+            unit_price = cost / (1 - (margin / 100));
+        } else if (item.profit_type === "AMN") {
+            unit_price = cost + margin;
+        }
+    
+        return parseFloat(unit_price).toFixed(2);
+    };
+
     const updateData = (key, id, type, value) => {
         setRows(prevRows => {
             const updatedRows = {
@@ -391,11 +394,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         });
     };
 
-    const deleteMergeCalculator = (calcReferenceId) => {
+    const deleteMergeCalculator = (calcReferenceId, key) => {
         let idsToDelete = [];
         const updatedMerges = merges.reduce((result, item) => {
             const updatedCalculators = item.calculators.filter(
-                calc => calc.calculator !== calcReferenceId
+                calc => !(calc.calculator === calcReferenceId && calc.key === key)
             );
 
             if (updatedCalculators.length < 2) {
@@ -421,7 +424,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
             return updatedRows;
         });
-        deleteMergeCalculator(calcReferenceId);
+        deleteMergeCalculator(calcReferenceId, key);
     };
 
     useEffect(() => {
@@ -595,13 +598,22 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             return acc;
         }, {});
 
+        // Build a mapping of calculator IDs to reformattedData keys
+        const calculatorKeyMap = {};
+        Object.entries(reformattedData).forEach(([key, items]) => {
+            items.forEach(item => {
+                calculatorKeyMap[item.calculator] = key;
+            });
+        });
+
         // Create key-index map and reformat preExistMerges data
         const reformattedMerges = preExistMerges.map((merge, index) => {
             const alias = romanize(index + 1);
 
             const calculators = merge?.calculators?.map(cal => {
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
-                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, id: findData?.id, calculator: findData?.calculator };
+                const key = calculatorKeyMap[findData?.calculator];
+                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, id: findData?.id, calculator: findData?.calculator, key };
             });
 
             return { ...merge, alias, calculators };
@@ -618,7 +630,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             merges?.forEach((merge, index) => {
                 const alias = romanize(index + 1);
                 merge?.calculators?.forEach(cal => {
-                    keyIndexMap[cal.calculator] = alias;
+                    keyIndexMap[`${cal.key}-${cal.calculator}`] = alias;
                 });
             });
 

@@ -20,7 +20,7 @@ const schema = yup
 const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCalculator }) => {
   const [show, setShow] = useState(false);
   const romanNo = alias;
-  const [defaultValues, ] = useState({
+  const [defaultValues,] = useState({
     title: merge?.title || "",
     description: merge?.description || ""
   });
@@ -35,12 +35,16 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
       ...data,
       alias: romanNo,
       calculators: merge?.calculators?.map((value) => ({
-        calculator: value.calculator, id: value.id, label: value.label, total: value.total,
+        id: value.id,
+        key: value.key,
+        calculator: value.calculator,
+        label: value.label,
+        total: value.total,
         description: value.description
       }))
     };
-    setMerges((merges) => 
-      merges.map((item) => 
+    setMerges((merges) =>
+      merges.map((item) =>
         item.alias === romanNo ? { ...item, ...payload } : item
       )
     );
@@ -104,7 +108,7 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
                       <Row className='w-100'>
                         <Col sm={4} className='text-start'>
                           <span style={{ color: '#101828', fontSize: '16px' }}>
-                             {value?.label || ""}
+                            {value?.label || ""}
                           </span>
                         </Col>
                         <Col sm={6}>
@@ -116,7 +120,7 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
                           <span style={{ color: '#101828', fontSize: '16px', textAlign: 'end' }}>
                             $ {parseFloat(value?.total).toFixed(2)}
                           </span>
-                          <Trash onClick={() => deleteMergeCalculator(value.calculator)} color='#98A2B3' size={16} className='ms-2' style={{ position: 'relative', left: '20px', cursor: 'pointer' }} />
+                          <Trash onClick={() => deleteMergeCalculator(value.calculator, value.key)} color='#98A2B3' size={16} className='ms-2' style={{ position: 'relative', left: '20px', cursor: 'pointer' }} />
                         </Col>
                       </Row>
                     </ListGroup.Item>
