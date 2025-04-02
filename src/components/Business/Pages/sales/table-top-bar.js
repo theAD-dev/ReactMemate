@@ -151,10 +151,16 @@ const TableTopBar = ({
       );
     }
 
-
-    filteredRows = filteredRows.filter((item) =>
-      item?.Client?.toLowerCase().includes(debouncedValue?.toLowerCase())
-    );
+    filteredRows = filteredRows.filter((item) => {
+      if (
+        (item?.Client?.toLowerCase().includes(debouncedValue?.toLowerCase()))
+        ||
+        (item?.Quote?.toLowerCase().includes(debouncedValue?.toLowerCase()))
+        ||
+        (item?.Reference?.toLowerCase().includes(debouncedValue?.toLowerCase()))
+      ) return true;
+      else return false;
+    });
 
     onRowsFilterChange(filteredRows);
   };

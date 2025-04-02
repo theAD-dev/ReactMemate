@@ -11599,7 +11599,8 @@ ul.client {
   letter-spacing: -0.18px;
 }
 
-.text-button.padding-left-0 {
+.text-button.padding-left-0,
+.text-button.padding-left-0:hover {
   padding-left: 0px !important;
 }
 
@@ -11624,4 +11625,20 @@ ul.client {
 .scheduler_default_message.success_message {
   color: white;
   background: #4CAF4F;
+}
+
+.scheduler_default_event_inner,
+ul.eventStyleCal li:first-child,
+.scheduler_default_event_float {
+  overflow: visible !important;
+}
+
+.auto-expand {
+  min-height: 54px;
+  height: auto;
+  resize: none;
+  overflow: hidden !important;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
 }

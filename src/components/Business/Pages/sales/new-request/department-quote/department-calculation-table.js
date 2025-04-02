@@ -200,8 +200,23 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                             }
                                                         </td>
                                                         <td style={{ width: '100%' }}>
-                                                            <textarea rows={1} style={{ background: 'transparent', border: '0px solid #fff', resize: 'none', boxSizing: 'border-box', fontSize: '14px' }} value={value.description}
+                                                            <textarea rows={1} className="auto-expand" style={{ background: 'transparent', border: '0px solid #fff', fontSize: '14px' }} value={value.description}
                                                                 onChange={(e) => updateData(key, value.id, 'description', e.target.value)}
+                                                                onInput={(e) => {
+                                                                    e.target.style.height = 'auto';
+                                                                    e.target.style.height = `${e.target.scrollHeight}px`;
+                                                                }}
+                                                                onFocus={(e) => {
+                                                                    e.target.style.height = 'auto';
+                                                                    e.target.style.height = `${e.target.scrollHeight}px`;
+                                                                }}
+                                                                onBlur={(e) => {
+                                                                    e.target.style.height = '50px';
+                                                                }}
+                                                                onClick={(e) => {
+                                                                    e.target.style.height = 'auto';
+                                                                    e.target.style.height = `${e.target.scrollHeight}px`;
+                                                                }}
                                                             ></textarea>
                                                         </td>
                                                         <td style={{ width: '128px' }}>
