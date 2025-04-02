@@ -189,26 +189,32 @@ const CalculateQuote = () => {
 
         if (action === "quote-pdf-open") {
             if (result?.quote_url) {
-                window.location.href = result.quote_url;
+                window.open(result.quote_url, '_blank');
             } else {
                 toast.error('Quote PDF not found.');
             }
+        } else {
+            navigate(`/sales`);
         }
 
-        navigate(`/sales`);
         setIsLoading(false);
         setShowQuoteModal(false);
     };
 
     return (
         <div className='newQuotePage'>
-            <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative' }}>
+            <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative', boxShadow: "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px" }}>
                 <NavLink to={""}>
                     <button className='back-button' style={{ padding: "10px 16px" }} onClick={() => { navigate(-1); }}>
                         <ChevronLeft color="#000000" size={17} /> &nbsp;Go Back
                     </button>
                 </NavLink>
-                <h2 className='m-0' style={{ fontSize: '22px', fontWeight: '600', position: 'absolute', left: '42.5%' }}><PlusSlashMinus color="#1D2939" size={16} />&nbsp; Calculate a Quote</h2>
+                <h2 className='m-0' style={{ fontSize: '22px', fontWeight: '600', position: 'absolute', left: '42.5%' }}>
+                    <div className='d-flex flex-column align-items-center gap-1'>
+                        <div className='d-flex align-items-center'><PlusSlashMinus color="#1D2939" size={16} />&nbsp; Calculate a Quote</div>
+                        {newRequestQuery?.data?.number &&  <small className='font-14 border px-3 py-1 rounded' style={{ width: 'fit-content' }}>{newRequestQuery?.data?.number}</small>}
+                    </div>
+                </h2>
                 <div className='d-flex align-items-center justify-content-end'>
                     <CustomRadioButton
                         label="Standard"
@@ -249,7 +255,7 @@ const CalculateQuote = () => {
                 <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems} setContactPersons={setContactPersons} />
             </div>
 
-            <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #EAECF0', boxShadow: '0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06)' }}>
+            <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #f2f2f2', boxShadow: 'rgba(0, 0, 0, 0.06) 0px 0px 4px 0px inset' }}>
                 <div className='d-flex justify-content-between align-items-center mb-3'>
                     <div className='d-flex align-items-center' style={{ gap: '16px' }}>
                         <div className='item'>
