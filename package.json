@@ -2,6 +2,12 @@
   "name": "memateapp",
   "version": "1.0.0",
   "private": true,
+  "main": "public/electron.js",
+  "homepage": "./",
+  "author": {
+    "name": "MeMate Team",
+    "email": "info@thead.com.au"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -95,7 +101,16 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron:serve": "concurrently -k \"cross-env BROWSER=none npm start\" \"npm run electron:start\"",
-    "electron:build": "npm run build && electron-builder -c.extraMetadata.main=build/main.js",
+    "electron:build": "npm run build && electron-builder",
+    "electron:build-all": "npm run build && electron-builder -mwl",
+    "electron:build-mac": "npm run build && electron-builder --mac",
+    "electron:build-win": "npm run build && electron-builder --win",
+    "electron:build-linux": "npm run build && electron-builder --linux",
+    "electron:build:prod": "cross-env NODE_ENV=production npm run build && electron-builder",
+    "electron:build:prod:win": "cross-env NODE_ENV=production npm run build && electron-builder --win",
+    "electron:build:prod:mac": "cross-env NODE_ENV=production npm run build && electron-builder --mac",
+    "electron:build:prod:linux": "cross-env NODE_ENV=production npm run build && electron-builder --linux",
+    "setup:code-signing": "node scripts/code-signing-setup.js",
     "electron:start": "wait-on tcp:3000 && electron .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
@@ -129,5 +144,56 @@
     "loader-utils": "3.2.1",
     "react-router-dom": "^6.22.1",
     "typescript": "4.4.4"
+  },
+  "build": {
+    "appId": "com.memate.app",
+    "productName": "MeMate",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "public/electron.js",
+      "public/preload.js"
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.business",
+      "target": ["dmg", "zip"],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "notarize": false
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "certificateFile": "${process.env.WINDOWS_CERTIFICATE_FILE}",
+      "certificatePassword": "${process.env.WINDOWS_CERTIFICATE_PASSWORD}",
+      "publisherName": "MeMate",
+      "verifyUpdateCodeSignature": false,
+      "signDlls": true
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Office",
+      "maintainer": "MeMate Team <sourav.1121@zenmonk.tech>",
+      "vendor": "MeMate"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MeMate",
+      "artifactName": "MeMate-Setup-${version}.${ext}",
+      "uninstallDisplayName": "MeMate",
+      "deleteAppDataOnUninstall": true
+    },
+    "publish": {
+      "provider": "generic",
+      "url": "https://dev.memate.com.au/downloads"
+    }
   }
 }
