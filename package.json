@@ -178,7 +178,7 @@
     "linux": {
       "target": ["AppImage", "deb"],
       "category": "Office",
-      "maintainer": "MeMate Team <sourav.1121@zenmonk.tech>",
+      "maintainer": "MeMate Team <info@thead.com.au>",
       "vendor": "MeMate"
     },
     "nsis": {
