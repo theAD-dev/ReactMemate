@@ -72,7 +72,7 @@ const renderHeader = () => (
 
 const header = renderHeader();
 
-const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
+const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => {
     const { unique_id } = useParams();
     const [isLoading, setIsLoading] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
@@ -93,13 +93,12 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons }) => {
     const readProposalQuery = useQuery({
         queryKey: ["readProposal", unique_id],
         queryFn: () => getProposalBySalesId(unique_id),
-        enabled: !!unique_id,
+        enabled: !!unique_id && isExist,
         retry: 0,
     });
     
     useEffect(() => {
         if (readProposalQuery?.data) {
-            console.log('read proposal: ', readProposalQuery?.data);
             setTemplatedId(readProposalQuery?.data?.template);
         }
         if (!image && readProposalQuery?.data?.image) {

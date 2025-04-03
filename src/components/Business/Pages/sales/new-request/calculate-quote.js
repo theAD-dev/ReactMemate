@@ -31,7 +31,8 @@ const CalculateQuote = () => {
         queryFn: () => getQuoteByUniqueId(unique_id),
         enabled: !!unique_id,
         retry: 1,
-        cacheTime: 0
+        cacheTime: 0,
+        refetchOnWindowFocus: false,
     });
 
     useEffect(() => {
@@ -129,7 +130,7 @@ const CalculateQuote = () => {
 
             if (merges && merges?.length) {
                 let calculatorMap = result.calculations?.reduce((map, item) => {
-                    map[item.calculator] = item.id;
+                    map[item.merge_id] = item.id;
                     return map;
                 }, {});
 
@@ -137,7 +138,7 @@ const CalculateQuote = () => {
                     ...item,
                     unique_id: uniqueid,
                     calculations: item.calculators.map(calc => ({
-                        calculator: calculatorMap[calc.calculator]
+                        calculator: calculatorMap[calc.merge_id]
                     }))
                 }));
 
@@ -161,7 +162,7 @@ const CalculateQuote = () => {
 
             if (merges && merges?.length) {
                 let calculatorMap = result.calculations?.reduce((map, item) => {
-                    map[item.calculator] = item.id;
+                    map[item.merge_id] = item.id;
                     return map;
                 }, {});
 
@@ -169,7 +170,7 @@ const CalculateQuote = () => {
                     ...item,
                     unique_id: uniqueid,
                     calculations: item.calculators.map(calc => ({
-                        calculator: calculatorMap[calc.calculator]
+                        calculator: calculatorMap[calc.merge_id]
                     }))
                 }));
 
@@ -333,7 +334,7 @@ const CalculateQuote = () => {
             </div>
 
             <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest} />
-            <CreateProposal show={showProposalModal} setShow={setShowProposalModal} refetch={newRequestQuery?.refetch} contactPersons={contactPersons} />
+            <CreateProposal show={showProposalModal} setShow={setShowProposalModal} refetch={newRequestQuery?.refetch} contactPersons={contactPersons} isExist={!!newRequestQuery?.data?.proposal_pdf} />
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

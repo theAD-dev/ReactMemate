@@ -36,8 +36,8 @@ const CreateMergeCalculation = ({ selectItem, setSelectItem, merges, setMerges }
       ...data,
       alias: romanNo,
       calculators: Object.values(selectItem)?.flat().map((value) => ({
-        id: value.id,
         key: value.key,
+        merge_id: value.merge_id,
         calculator: value.calculator,
         label: value.label,
         total: value.total,
@@ -58,7 +58,7 @@ const CreateMergeCalculation = ({ selectItem, setSelectItem, merges, setMerges }
 
   return (
     <React.Fragment>
-      {/* <Button type='button' disabled={Object.keys(selectItem)?.length < 2} onClick={handleOpen} className={clsx(style.mergeButton, 'text-button', { [style.disabled]: Object.keys(selectItem)?.length < 2 })}>Merge Items</Button> */}
+      <Button type='button' disabled={Object.keys(selectItem)?.length < 2} onClick={handleOpen} className={clsx(style.mergeButton, 'text-button', { [style.disabled]: Object.keys(selectItem)?.length < 2 })}>Merge Items</Button>
       <Modal
         size="lg"
         show={show}
