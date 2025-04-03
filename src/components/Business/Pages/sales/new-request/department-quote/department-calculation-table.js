@@ -413,8 +413,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     };
 
     const deleteMergeCalculator = (calcReferenceId, key) => {
-        let idsToDelete = [];
-        const updatedMerges = merges.reduce((result, item) => {
+        let idsToDelete = [], mergeCount = 0;
+
+        const updatedMerges = merges.reduce((result, item, index) => {
             const updatedCalculators = item.calculators.filter(
                 calc => !(calc.calculator === calcReferenceId && calc.key === key)
             );
@@ -424,7 +425,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 return result;
             }
 
-            result.push({ ...item, calculators: updatedCalculators });
+            mergeCount++;
+            const alias = romanize(mergeCount);
+            result.push({ ...item, calculators: updatedCalculators, alias });
             return result;
         }, []);
         setMerges(updatedMerges);
@@ -478,7 +481,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 ...prevRows,
                 [`${key}`]: filteredData,
             }));
-            
+
             setSubItem("");
         }
 
