@@ -36,6 +36,7 @@ function MyProfile() {
   const { trialHeight } = useTrialHeight();
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditingGroup, setIsEditingGroup] = useState(false);
+  const editingHeight = isEditingGroup ? 100 : 0;
   const [photo, setPhoto] = useState({});
   const {
     register,
@@ -72,7 +73,6 @@ function MyProfile() {
   });
 
   const onSubmit = (data) => {
-    console.log("data: ", data);
     mutation.mutate({ ...data });
   };
 
@@ -95,7 +95,7 @@ function MyProfile() {
             <div className="headSticky">
               <h1>My Profile </h1>
             </div>
-            <div className={`content_wrap_main ${isEditingGroup ? "isEditingwrap" : ""}`} style={{ paddingBottom: `${trialHeight}px` }}>
+            <div className={`content_wrap_main ${isEditingGroup ? "isEditingwrap" : ""}`} style={{ height: `calc(100vh - 200px - ${trialHeight}px - ${editingHeight}px)` }}>
               <div className="content_wrapper">
                 <div className="listwrapper">
                   <div className="topHeadStyle">
@@ -139,6 +139,7 @@ function MyProfile() {
                                 {...register("first_name")}
                                 placeholder="Enter First Name"
                                 defaultValue={data.first_name}
+                                className="w-100"
                               />
                               {errors.first_name && (
                                 <img
@@ -149,7 +150,7 @@ function MyProfile() {
                               )}
                             </div>
                             {errors.first_name && (
-                              <p className="error-message">
+                              <p className="error-message ms-2">
                                 {errors.first_name.message}
                               </p>
                             )}
@@ -178,6 +179,7 @@ function MyProfile() {
                                 {...register("last_name")}
                                 placeholder="Enter Last name name"
                                 defaultValue={data.last_name}
+                                className="w-100"
                               />
                               {errors.last_name && (
                                 <img
@@ -188,7 +190,7 @@ function MyProfile() {
                               )}
                             </div>
                             {errors.last_name && (
-                              <p className="error-message">
+                              <p className="error-message ms-2">
                                 {errors.last_name.message}
                               </p>
                             )}
@@ -245,6 +247,7 @@ function MyProfile() {
                                 {...register("email")}
                                 placeholder="Enter Email"
                                 defaultValue={data.email}
+                                className="w-100"
                               />
                               {errors.email && (
                                 <img
@@ -255,7 +258,7 @@ function MyProfile() {
                               )}
                             </div>
                             {errors.email && (
-                              <p className="error-message">
+                              <p className="error-message ms-2">
                                 {errors.email.message}
                               </p>
                             )}
@@ -309,7 +312,7 @@ function MyProfile() {
                               )}
                             </div>
                             {errors.phone && (
-                              <p className="error-message">
+                              <p className="error-message ms-2">
                                 {errors.phone.message}
                               </p>
                             )}
@@ -344,6 +347,7 @@ function MyProfile() {
                                 {...register("type")}
                                 placeholder="Enter Position"
                                 defaultValue={data.type}
+                                className="w-100"
                               />
                               {errors.type && (
                                 <img
@@ -354,7 +358,7 @@ function MyProfile() {
                               )}
                             </div>
                             {errors.type && (
-                              <p className="error-message">
+                              <p className="error-message ms-2">
                                 {errors.type.message}
                               </p>
                             )}

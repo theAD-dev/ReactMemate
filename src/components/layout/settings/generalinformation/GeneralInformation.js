@@ -38,6 +38,7 @@ function GeneralInformation() {
   const { trialHeight } = useTrialHeight();
   const [activeTab, setActiveTab] = useState('generalinformation');
   const [isEditingGroup, setIsEditingGroup] = useState(false);
+  const editingHeight = isEditingGroup ? 100 : 0;
   const [photo, setPhoto] = useState({});
   const { register, handleSubmit, control, formState: { errors }, reset, setValue } = useForm({
     resolver: yupResolver(schema),
@@ -98,7 +99,7 @@ function GeneralInformation() {
                 </ul>
               </div>
             </div>
-            <div className={`content_wrap_main ${isEditingGroup ? 'isEditingwrap' : ''}`} style={{ paddingBottom: `${trialHeight}px` }}>
+            <div className={`content_wrap_main ${isEditingGroup ? 'isEditingwrap' : ''}`} style={{ height: `calc(100vh - 230px - ${trialHeight}px - ${editingHeight}px)` }}>
               <div className='content_wrapper'>
                 <div className="listwrapper">
                   <div className="topHeadStyle">

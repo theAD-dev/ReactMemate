@@ -6740,7 +6740,6 @@ span.checkmarkdata.agree_marketing-border {
 
 .content_wrap_main.isEditingwrap {
   overflow: auto;
-  height: calc(100vh - 345px);
 }
 
 .content_wrap_main {

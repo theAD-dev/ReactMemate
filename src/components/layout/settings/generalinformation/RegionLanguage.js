@@ -97,7 +97,7 @@ const RegionLanguage = () => {
             </div>
           </div>
           <div
-            className={`content_wrap_main ${isEditing ? "isEditingwrap" : ""}`} style={{ paddingBottom: `${trialHeight}px` }}
+            className={`content_wrap_main ${isEditing ? "isEditingwrap" : ""}`} style={{ height: `calc(100vh - 330px - ${trialHeight}px)` }}
           >
             <div className="content_wrapper">
               <div className={`listwrapper ${styles.listwrapp}`}>

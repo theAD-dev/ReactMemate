@@ -117,15 +117,18 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                     label: value.label,
                     description: value?.description,
                     calculator: value?.calculator,
-                    id: value?.id,
                     index: value?.index,
                     total: value?.total,
-                    key: key
+                    key: key,
+                    merge_id: value?.merge_id
                 };
+
+                let newItems = oldItems[mergeKey] || [];
+                newItems.push(items);
 
                 return {
                     ...oldItems,
-                    [mergeKey]: [items]
+                    [mergeKey]: newItems
                 };
             } else {
                 const updatedItems = { ...oldItems };
@@ -356,7 +359,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         let cost = parseFloat(item.cost) || 0;
         let quantity = parseFloat(item.quantity) || 0;
         let subtotal = cost * quantity;
-    
+
         let margin = parseFloat(item.profit_type_value) || 0;
         if (item.profit_type === "MRK") {
             subtotal += (subtotal * margin) / 100;
@@ -365,17 +368,17 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         } else if (item.profit_type === "AMN") {
             subtotal += margin;
         }
-    
+
         let discount = parseFloat(item.discount) || 0;
         let total = subtotal - (subtotal * discount) / 100;
-    
+
         return parseFloat(total).toFixed(2);
     };
-    
+
     const calculateUnitPrice = (item) => {
         let cost = parseFloat(item.cost) || 0;
         let unit_price = 0.00;
-    
+
         let margin = parseFloat(item.profit_type_value) || 0;
         if (item.profit_type === "MRK") {
             unit_price = cost + (cost * (margin / 100));
@@ -384,7 +387,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         } else if (item.profit_type === "AMN") {
             unit_price = cost + margin;
         }
-    
+
         return parseFloat(unit_price).toFixed(2);
     };
 
@@ -410,7 +413,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     };
 
     const deleteMergeCalculator = (calcReferenceId, key) => {
-        let idsToDelete = [];
+        let idsToDelete = [], mergeCount = 0;
+
         const updatedMerges = merges.reduce((result, item) => {
             const updatedCalculators = item.calculators.filter(
                 calc => !(calc.calculator === calcReferenceId && calc.key === key)
@@ -421,7 +425,9 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                 return result;
             }
 
-            result.push({ ...item, calculators: updatedCalculators });
+            mergeCount++;
+            const alias = romanize(mergeCount);
+            result.push({ ...item, calculators: updatedCalculators, alias });
             return result;
         }, []);
         setMerges(updatedMerges);
@@ -449,6 +455,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     item.label = subItemLabel;
                     item.calculator = item.id;
                     item.index = subItem;
+                    item.merge_id = nanoid(6);
                     item.discount = defaultDiscount;
                     item.quantity = parseFloat(parseFloat(item.quantity) || 1).toFixed(2);
                     item.unit_price = calculateUnitPrice(item);
@@ -459,6 +466,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     label: subItemLabel,
                     calculator: data.id,
                     index: subItem,
+                    merge_id: nanoid(6),
                     discount: defaultDiscount,
                     quantity: parseFloat(parseFloat(data.quantity) || 1).toFixed(2),
                 });
@@ -478,10 +486,10 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         }
 
         if (subItem && data?.length === 0) {
-            console.log('data.length: ', data.length);
             toast.error(`No calculation found inside ${subItemLabel}`);
         }
-    }, [data, rows, subItem, defaultDiscount, subItemLabel]);
+
+    }, [data, subItem, defaultDiscount, subItemLabel]);
 
     const handleDepartmentChange = async (value, label, keyValue) => {
         if (!value || !keyValue) return;
@@ -489,12 +497,12 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         try {
             setSelectKey(keyValue);
             const calculators = await getCalculationByReferenceId(value);
-            console.log('calculators: ', calculators);
             if (calculators?.length) {
                 calculators.forEach((item) => {
                     item.label = label;
                     item.calculator = item.id;
                     item.index = value;
+                    item.merge_id = nanoid(6);
                     item.discount = defaultDiscount;
                     item.quantity = parseFloat(parseFloat(item.quantity) || 1).toFixed(2);
                     item.unit_price = calculateUnitPrice(item);
@@ -596,6 +604,11 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             return map;
         }, {});
 
+        // Add merge id to preExistCalculation
+        preExistCalculation.forEach(item => {
+            if (!item.merge_id) item.merge_id = nanoid(6);
+        });
+
         // Group by order first, then assign nanoid keys
         const orderGroups = preExistCalculation.reduce((acc, { order, index, ...item }) => {
             acc[order] = acc[order] || [];
@@ -617,7 +630,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
         const calculatorKeyMap = {};
         Object.entries(reformattedData).forEach(([key, items]) => {
             items.forEach(item => {
-                calculatorKeyMap[item.calculator] = key;
+                calculatorKeyMap[item.id] = key;
             });
         });
 
@@ -627,8 +640,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
             const calculators = merge?.calculators?.map(cal => {
                 const findData = preExistCalculation.find(data => data.id === cal.calculator);
-                const key = calculatorKeyMap[findData?.calculator];
-                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, id: findData?.id, calculator: findData?.calculator, key };
+                const key = calculatorKeyMap[findData?.id];
+                return { label: subindexMap[findData?.index], description: findData?.description, total: findData?.total, calculator: findData?.calculator, key, merge_id: findData?.merge_id };
             });
 
             return { ...merge, alias, calculators };

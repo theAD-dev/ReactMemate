@@ -35,8 +35,8 @@ const EditMergeCalculation = ({ merge, alias, setMerges, refetch, deleteMergeCal
       ...data,
       alias: romanNo,
       calculators: merge?.calculators?.map((value) => ({
-        id: value.id,
         key: value.key,
+        merge_id: value.merge_id,
         calculator: value.calculator,
         label: value.label,
         total: value.total,
