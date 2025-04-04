@@ -95,7 +95,7 @@ const BankDetails = () => {
               </ul>
             </div>
           </div>
-          <div className={`content_wrap_main pb-0 ${isEditing ? "isEditingwrap" : ""}`} style={{ paddingBottom: `${trialHeight}px` }}>
+          <div className={`content_wrap_main pb-0 ${isEditing ? "isEditingwrap" : ""}`} style={{ height: `calc(100vh - 230px - ${trialHeight}px)` }}>
             <div className="content_wrapper pb-0 h-100">
               <div className={`listwrapper ${styles.listwrapp} pb-0`}>
                 <div className="topHeadStyle">

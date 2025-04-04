@@ -415,7 +415,7 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     const deleteMergeCalculator = (calcReferenceId, key) => {
         let idsToDelete = [], mergeCount = 0;
 
-        const updatedMerges = merges.reduce((result, item, index) => {
+        const updatedMerges = merges.reduce((result, item) => {
             const updatedCalculators = item.calculators.filter(
                 calc => !(calc.calculator === calcReferenceId && calc.key === key)
             );
