@@ -263,27 +263,33 @@ const Executive = () => {
     return (
         <>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
+                {/* Current page - Executive */}
+                <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: "#9E77ED" }}>Executive</span>
                 </Link>
-                <Link to={"/statistics/sales-conversion"} className='d-flex align-items-center px-2 py-1'>
+                {/* Conversion - disabled */}
+                <Link to={"/statistics/sales-conversion"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                <Link to={"/statistics/overview"} className='d-flex align-items-center px-2 py-1'>
+                {/* Overview - disabled */}
+                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
+                {/* Key Results - enabled */}
                 <Link to={"/statistics/key-results"} className='d-flex align-items-center px-2 py-1'>
                     <WindowDesktop color='#667085' size={16} className='me-2' />
                     <span className={style.topbartext}>Key Results</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2 py-1'>
+                {/* Reports - disabled */}
+                <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2 py-1'>
+                {/* GA Widgets - disabled */}
+                <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
@@ -340,7 +346,7 @@ const Executive = () => {
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <span className={style.money}>$10,206.20</span>
-                                <Button className='text-button p-0'>View  Invioces</Button>
+                                <Button className={clsx('text-button p-0', style.disabledLink)}>View Invoices</Button>
                             </div>
                         </div>
                         <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#F6FEF9' }}>
@@ -363,7 +369,7 @@ const Executive = () => {
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <span className={style.money}>$ 5,594.31</span>
-                                <Button className='text-button p-0'>View Sales</Button>
+                                <Button className={clsx('text-button p-0', style.disabledLink)}>View Sales</Button>
                             </div>
                         </div>
                         <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#FFFCF5' }}>
@@ -375,7 +381,7 @@ const Executive = () => {
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <span className={style.money}>$ 1,754.46</span>
-                                <Button className='text-button p-0'>View People</Button>
+                                <Button className={clsx('text-button p-0', style.disabledLink)}>View People</Button>
                             </div>
                         </div>
                         <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#F2FAFF' }}>
@@ -387,7 +393,7 @@ const Executive = () => {
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <span className={style.money}>$ 2,685.62</span>
-                                <Button className='text-button p-0'>View Expenses</Button>
+                                <Button className={clsx('text-button p-0', style.disabledLink)}>View Expenses</Button>
                             </div>
                         </div>
 
