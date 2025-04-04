@@ -45,7 +45,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         value={`${'0.00'}`}
                         onChange={() => { }}
                     />
-                    <select value={"MRG"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
+                    <select value={"MRG"} disabled style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
                         <option value={"MRG"}>MRG %</option>
                         <option value={"AMN"}>AMT $</option>
                         <option value={"MRK"}>MRK %</option>
@@ -62,7 +62,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         value={`${'0.00'}`}
                         onChange={() => { }}
                     />
-                    <select value={"Cost"} style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
+                    <select value={"Cost"} disabled style={{ border: '0px solid #fff', background: 'transparent' }} onChange={() => { }}>
                         <option value="Cost">1/Q</option>
                         <option value="Hourly">1/H</option>
                     </select>
@@ -614,6 +614,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             acc[order] = acc[order] || [];
             let unit_price = item.unit_price;
             if (unit_price === "0.00" || !unit_price) {
+                unit_price = calculateUnitPrice(item);
+            } else if (unit_price) {
                 unit_price = calculateUnitPrice(item);
             }
             acc[order].push({ ...item, unit_price, label: subindexMap[index] || "Unknown", index });

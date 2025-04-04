@@ -14,6 +14,7 @@ import Sidebar from '../Sidebar';
 
 const TermsConditionsInvoice = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const has_work_subscription = !!profileData?.has_work_subscription;
     const [activeTab, setActiveTab] = useState('terms-and-conditions');
     const [edit, setEdit] = useState(false);
     const [terms, setTerms] = useState('');
@@ -70,11 +71,13 @@ const TermsConditionsInvoice = () => {
                         <div className='contentMenuTab'>
                             <ul>
                                 <li className='menuActive'>
-                                    <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Terms and Conditions Invoice</Link>
+                                    <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Invoice Terms and Conditions</Link>
                                 </li>
-                                <li>
-                                    <Link to="/settings/termsandconditions/terms-and-conditions">Terms and Conditions Application</Link>
-                                </li>
+                                {has_work_subscription && (
+                                    <li className='menuActive'>
+                                        <Link to="/settings/termsandconditions/terms-and-conditions">Application Terms and Conditions</Link>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>

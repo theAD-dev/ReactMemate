@@ -87,6 +87,12 @@
   background: var(--Gray-100, #f2f4f7);
 }
 
+.disabledLink {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .keyResults {
   .keyResultsTitle {
     color: var(--Gray-800, #1d2939);

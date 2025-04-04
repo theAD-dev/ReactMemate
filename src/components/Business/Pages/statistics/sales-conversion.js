@@ -255,27 +255,33 @@ const SalesConversion = () => {
     return (
         <>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1')}>
+                {/* Executive - disabled */}
+                <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
                 </Link>
-                <Link to={"/statistics/sales-conversion"} style={{ background: "#ECFDF3" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
+                {/* Sales Conversion - disabled (current page) */}
+                <Link to={"/statistics/sales-conversion"} style={{ background: "#ECFDF3" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: '#17B26A' }}>Conversion</span>
                 </Link>
-                <Link to={"/statistics/overview"} className='d-flex align-items-center px-2 py-1'>
+                {/* Overview - disabled */}
+                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
+                {/* Key Results - enabled */}
                 <Link to={"/statistics/key-results"} className='d-flex align-items-center px-2 py-1'>
                     <WindowDesktop color='#667085' size={16} className='me-2' />
                     <span className={style.topbartext}>Key Results</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2 py-1'>
+                {/* Reports - disabled */}
+                <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
                 </Link>
-                <Link className='d-flex align-items-center px-2 py-1'>
+                {/* GA Widgets - disabled */}
+                <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
