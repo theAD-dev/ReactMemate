@@ -615,6 +615,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
             let unit_price = item.unit_price;
             if (unit_price === "0.00" || !unit_price) {
                 unit_price = calculateUnitPrice(item);
+            } else if (unit_price) {
+                unit_price = calculateUnitPrice(item);
             }
             acc[order].push({ ...item, unit_price, label: subindexMap[index] || "Unknown", index });
             return acc;
