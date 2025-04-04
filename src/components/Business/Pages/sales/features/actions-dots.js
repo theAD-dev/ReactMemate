@@ -73,7 +73,7 @@ const ActionsDots = ({ saleUniqueId, clientId, refreshData, status, salesHistory
       )
     },
     ...(status === "Draft"
-      ? [{ label: "Delete", icon: loading === 5 ? <ProgressSpinner /> : <Trash size={20} /> }]
+      ? [{ label: "Delete", icon: (loading === 5) ? <ProgressSpinner style={{ width: "20px", height: "20px", position: 'absolute', right: '15px', top: '10px' }} /> : <Trash size={20} /> }]
       : [])
   ];
 
