@@ -257,7 +257,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #f2f2f2', boxShadow: 'rgba(0, 0, 0, 0.06) 0px 0px 4px 0px inset' }}>
-                <div className='d-flex justify-content-between align-items-center mb-3'>
+                <div className='d-flex justify-content-between align-items-center pb-3' style={{ gap: '20px', width: '100%', overflowX: 'auto' }}>
                     <div className='d-flex align-items-center' style={{ gap: '16px' }}>
                         <div className='item'>
                             <label>Budget</label>

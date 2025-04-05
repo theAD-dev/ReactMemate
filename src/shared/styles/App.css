@@ -5493,7 +5493,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
   clip-path: inset(0px -6px 0px 0px);
 }
 
-.salesTableWrap table {
+.salesTableWrap table,
+.department-calculation {
   border-spacing: 0 !important;
   border-collapse: separate !important;
 }
@@ -5914,7 +5915,7 @@ li.szh-menu__item:hover {
 
 ul.szh-menu {
   width: 230px;
-  max-height: 300px;
+  max-height: 300px !important;
   overflow-y: auto !important;
 }
 
@@ -11149,16 +11150,14 @@ table.indexCalname tbody tr td:nth-child(9) {
 }
 
 .DepartmentQuote input[type="text"] {
-  color: var(--Gray-900, #101828);
-
-  /* Text md/Regular */
-  font-family: Inter;
-  font-size: 16px;
-  font-style: normal;
+  margin: 0 2px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 24px;
-  /* 150% */
-  margin: 0 2px;
+  font-family: Inter;
+  font-style: normal;
+  color: var(--Gray-900, #101828);
+  border: 1px solid transparent;
 }
 
 .DepartmentQuote input[type="text"]:focus {
@@ -11186,14 +11185,11 @@ table.indexCalname tbody tr td:nth-child(9) {
   width: 100%;
   overflow: hidden;
   color: var(--Gray-900, #101828);
-
-  /* Text md/Regular */
   font-family: Inter;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
-  /* 150% */
 }
 
 .DepartmentQuote textarea:focus::-webkit-scrollbar {
