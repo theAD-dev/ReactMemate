@@ -431,7 +431,7 @@ function FileUpload({ photo, setPhoto, data }) {
             </div>
           ) : (
             <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '2px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
-              {data?.company_logo ? (
+              {data?.company_logo && data.has_photo ? (
                 <div
                   style={{
                     width: '64px',
