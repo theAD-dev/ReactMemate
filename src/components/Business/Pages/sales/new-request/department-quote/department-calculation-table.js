@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
 import { nanoid } from "nanoid";
+import { InputNumber } from 'primereact/inputnumber';
 import { toast } from 'sonner';
 import { DepartmentQuoteTableRowLoading, DepartmentRowChangeLoading } from './department-quote-table-row-loading';
 import SelectComponent from './select-component';
@@ -16,7 +17,7 @@ import { romanize } from '../../../../shared/utils/helper';
 const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange }) => {
     return (
         <tr>
-            <td style={{ width: '24px' }}></td>
+            <td style={{ width: '24px' }} className='shadowRight-'></td>
             <td style={{ width: '64px', textAlign: 'left' }}>{srNo + 1}</td>
             <td style={{ width: '192px' }}>
                 <SelectComponent departments={departments} handleChange={handleChange} isShowlabel={false} />
@@ -72,6 +73,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                 <div className='d-flex align-items-center'>
                     <input
                         type="text"
+                        disabled
                         style={{ width: '60px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
                         value={`${"0.00"}`}
                         onChange={() => { }}
@@ -80,7 +82,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                 </div>
             </td>
             <td style={{ width: '118px', textAlign: 'left' }}>$ {"0.00"}</td>
-            <td style={{ width: '32px' }}>
+            <td style={{ width: '32px', position: 'sticky', right: '0px' }} className='shadowLeft-'>
                 <Trash color="#98A2B3" style={{ cursor: 'not-allowed', opacity: '.5' }} onClick={() => { }} />
             </td>
         </tr>
@@ -170,12 +172,12 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                             )
                                                 : (
                                                     <>
-                                                        <td {...provided.dragHandleProps} style={{ width: '24px' }}>
+                                                        <td {...provided.dragHandleProps} style={{ width: '24px' }} className='shadowRight-'>
                                                             {
                                                                 index === 0 && <GripVertical color="#98A2B3" style={{ cursor: 'move' }} />
                                                             }
                                                         </td>
-                                                        <td calculator={value.calculator} style={{ width: '64px', textAlign: 'left' }}>
+                                                        <td style={{ width: '64px', textAlign: 'left' }}>
 
                                                             <div className='d-flex align-items-center justify-content-end gap-2'>
                                                                 {index === 0 && (<span>{id + 1}</span>)}
@@ -202,7 +204,7 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                                 )
                                                             }
                                                         </td>
-                                                        <td style={{ width: '100%' }}>
+                                                        <td style={{ width: '300px', textAlign: 'left' }}>
                                                             <textarea rows={1} className="auto-expand" style={{ background: 'transparent', border: '0px solid #fff', fontSize: '14px' }} value={value.description}
                                                                 onChange={(e) => updateData(key, value.id, 'description', e.target.value)}
                                                                 onInput={(e) => {
@@ -224,22 +226,30 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                         </td>
                                                         <td style={{ width: '128px' }}>
                                                             <div className='d-flex align-items-center'>
-                                                                <span style={{ fontSize: '14px' }}>$</span>
-                                                                <input
-                                                                    type="text"
-                                                                    style={{ padding: '4px', width: '100px', background: 'transparent', fontSize: '14px' }}
-                                                                    value={`${value.cost}`}
-                                                                    onChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
+                                                                <InputNumber
+                                                                    prefix="$"
+                                                                    value={value.cost}
+                                                                    onValueChange={(e) => updateData(key, value.id, 'cost', e.target.value)}
+                                                                    maxFractionDigits={2}
+                                                                    minFractionDigits={2}
+                                                                    placeholder='$0.00'
+                                                                    inputId="minmaxfraction"
+                                                                    className='w-100'
+                                                                    inputStyle={{ width: '120px', padding: '4px', background: 'transparent' }}
                                                                 />
                                                             </div>
                                                         </td>
                                                         <td style={{ width: '185px' }}>
                                                             <div className='d-flex align-items-center'>
-                                                                <input
-                                                                    type="text"
-                                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
-                                                                    value={`${value.profit_type_value}`}
-                                                                    onChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
+                                                                <InputNumber
+                                                                    value={value.profit_type_value}
+                                                                    onValueChange={(e) => updateData(key, value.id, 'profit_type_value', e.target.value)}
+                                                                    maxFractionDigits={2}
+                                                                    minFractionDigits={2}
+                                                                    placeholder='0.00'
+                                                                    inputId="minmaxfraction"
+                                                                    className='w-100'
+                                                                    inputStyle={{ width: '60px', padding: '4px', background: 'transparent' }}
                                                                 />
                                                                 <select value={value.profit_type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'profit_type', e.target.value)}>
                                                                     <option value={"MRG"}>MRG %</option>
@@ -248,14 +258,18 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                                 </select>
                                                             </div>
                                                         </td>
-                                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>${formatAUD(value.unit_price || "0.00")}</td>
+                                                        <td style={{ width: '100%', textAlign: 'left', fontSize: '14px' }}>${formatAUD(value.unit_price || "0.00")}</td>
                                                         <td style={{ width: '166px' }}>
                                                             <div className='d-flex align-items-center'>
-                                                                <input
-                                                                    type="text"
-                                                                    style={{ padding: '4px', width: '60px', background: 'transparent', fontSize: '14px' }}
-                                                                    value={`${value.quantity}`}
-                                                                    onChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
+                                                                <InputNumber
+                                                                    value={value.quantity}
+                                                                    onValueChange={(e) => updateData(key, value.id, 'quantity', e.target.value)}
+                                                                    maxFractionDigits={2}
+                                                                    minFractionDigits={2}
+                                                                    placeholder='0.00'
+                                                                    inputId="minmaxfraction"
+                                                                    className='w-100'
+                                                                    inputStyle={{ width: '60px', padding: '4px', background: 'transparent' }}
                                                                 />
                                                                 <select value={value.type} style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }} onChange={(e) => updateData(key, value.id, 'type', e.target.value)}>
                                                                     <option value="Cost">1/Q</option>
@@ -264,20 +278,24 @@ const DepartmentCalculationTableBody = ({ rows, updateData, deleteRow, selectIte
                                                             </div>
                                                         </td>
 
-                                                        <td style={{ width: '83px' }}>
+                                                        <td style={{ width: '60px' }}>
                                                             <div className='d-flex align-items-center'>
-                                                                <input
-                                                                    type="text"
-                                                                    style={{ width: '60px', padding: '4px', background: 'transparent', fontSize: '14px' }}
-                                                                    value={`${value.discount}`}
-                                                                    onChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
+                                                                <InputNumber
+                                                                    suffix="%"
+                                                                    value={value.discount}
+                                                                    onValueChange={(e) => updateData(key, value.id, 'discount', e.target.value)}
+                                                                    maxFractionDigits={2}
+                                                                    minFractionDigits={2}
+                                                                    placeholder='0.00%'
+                                                                    inputId="minmaxfraction"
+                                                                    className='w-100'
+                                                                    inputStyle={{ width: '60px', padding: '4px', background: 'transparent' }}
                                                                 />
-                                                                <span style={{ fontSize: '14px' }}>%</span>
                                                             </div>
                                                         </td>
 
-                                                        <td style={{ width: '118px', textAlign: 'left', fontSize: '14px' }}>$ {formatAUD(value.total || 0.00)}</td>
-                                                        <td style={{ width: '32px' }}>
+                                                        <td style={{ textAlign: 'left', fontSize: '14px' }}>$ {formatAUD(value.total || 0.00)}</td>
+                                                        <td style={{ width: '32px', position: 'sticky', right: '0px' }} className='shadowLeft-'>
                                                             <Trash color="#98A2B3" style={{ cursor: 'pointer' }} onClick={() => deleteRow(key, value.id, value.calculator)} />
                                                         </td>
                                                     </>
@@ -671,39 +689,40 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
 
 
     return (
-        <div>
-            <DragDropContext onDragEnd={onDragEnd}>
-                <table className='w-100 department-calculation'>
-                    <DepartmentCalculationTableHead />
-                    <Droppable droppableId="departmentQuoteTable">
-                        {(provided) => (
-                            <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                                <DepartmentCalculationTableBody
-                                    rows={rows}
-                                    updateData={updateData}
-                                    deleteRow={deleteRow}
-                                    defaultDiscount={defaultDiscount}
-                                    selectItem={selectItem}
-                                    setSelectItem={setSelectItem}
-                                    mapMergeItemWithNo={mapMergeItemWithNo}
-                                    checkedItems={Object.keys(selectItem)}
+        <>
+            <div className="pb-3" style={{ overflowX: 'auto', width: '100%' }}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <table className='w-100 department-calculation'>
+                        <DepartmentCalculationTableHead />
+                        <Droppable droppableId="departmentQuoteTable">
+                            {(provided) => (
+                                <tbody {...provided.droppableProps} ref={provided.innerRef}>
+                                    <DepartmentCalculationTableBody
+                                        rows={rows}
+                                        updateData={updateData}
+                                        deleteRow={deleteRow}
+                                        defaultDiscount={defaultDiscount}
+                                        selectItem={selectItem}
+                                        setSelectItem={setSelectItem}
+                                        mapMergeItemWithNo={mapMergeItemWithNo}
+                                        checkedItems={Object.keys(selectItem)}
 
-                                    selectKey={selectKey}
-                                    departments={departments}
-                                    handleDepartmentChange={handleDepartmentChange}
-                                />
-                                {
-                                    isLoadingSubItem && <DepartmentQuoteTableRowLoading />
-                                }
+                                        selectKey={selectKey}
+                                        departments={departments}
+                                        handleDepartmentChange={handleDepartmentChange}
+                                    />
+                                    {
+                                        isLoadingSubItem && <DepartmentQuoteTableRowLoading />
+                                    }
 
-                                <DepartmentCalculationTableEmptyRow srNo={Object.keys(rows || {}).length} departments={departments} handleChange={handleChange} />
-                                {provided.placeholder}
-                            </tbody>
-                        )}
-                    </Droppable>
-                </table>
-            </DragDropContext>
-
+                                    <DepartmentCalculationTableEmptyRow srNo={Object.keys(rows || {}).length} departments={departments} handleChange={handleChange} />
+                                    {provided.placeholder}
+                                </tbody>
+                            )}
+                        </Droppable>
+                    </table>
+                </DragDropContext>
+            </div>
             <div className='merge-section' style={{ marginTop: '20px', textAlign: 'left' }}>
                 <CreateMergeCalculation unique_id={unique_id} selectItem={selectItem}
                     setSelectItem={setSelectItem} merges={merges} setMerges={setMerges}
@@ -715,7 +734,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
                     deleteMergeCalculator={deleteMergeCalculator}
                 />
             </div>
-        </div>
+
+        </>
     );
 };
 

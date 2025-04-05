@@ -23,7 +23,6 @@ const Departments = () => {
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [activeTab, setActiveTab] = useState('departments');
-    const [editSubIndex, setEdiSubIndex] = useState(null);
     const [createCalculatorId, setCreateCalculatorId] = useState(null);
     const [editDepartment, setEditDepartment] = useState({ id: null, name: null });
     const [subDepartment, setSubDepartment] = useState(null);
@@ -169,19 +168,13 @@ const Departments = () => {
                                                                         >
                                                                             {
                                                                                 activeCalculations[subindex.id] ? (
-                                                                                    <>
-                                                                                        {
-                                                                                            editSubIndex === subindex.id
-                                                                                                ? <EditCalculators editSubIndex={editSubIndex} calculators={activeCalculations[subindex.id]} />
-                                                                                                : <ViewCalculators index={subindex.id}
-                                                                                                    isNewCreate={createCalculatorId === subindex.id}
-                                                                                                    cancelCreateCalculator={setCreateCalculatorId}
-                                                                                                    refetch={getCalculator}
-                                                                                                    calculators={activeCalculations[subindex.id]}
-                                                                                                    name={subindex.name}
-                                                                                                />
-                                                                                        }
-                                                                                    </>
+                                                                                    <ViewCalculators index={subindex.id}
+                                                                                        isNewCreate={createCalculatorId === subindex.id}
+                                                                                        cancelCreateCalculator={setCreateCalculatorId}
+                                                                                        refetch={getCalculator}
+                                                                                        calculators={activeCalculations[subindex.id]}
+                                                                                        name={subindex.name}
+                                                                                    />
                                                                                 ) : <LoadingCalculator />
                                                                             }
 
@@ -236,11 +229,11 @@ const calculateSummary = (calculators, taxType) => {
     const operationalProfit = subtotal - budget;
 
     return {
-        budget: budget.toFixed(2),
-        operationalProfit: operationalProfit.toFixed(2),
-        subtotal: subtotal.toFixed(2),
-        tax: tax.toFixed(2),
-        total: total.toFixed(2),
+        budget: parseFloat(budget).toFixed(2),
+        operationalProfit: parseFloat(operationalProfit).toFixed(2),
+        subtotal: parseFloat(subtotal).toFixed(2),
+        tax: parseFloat(tax).toFixed(2),
+        total: parseFloat(total).toFixed(2),
     };
 };
 
@@ -257,7 +250,7 @@ const calculateUnitPrice = (item) => {
         unit_price = cost + margin;
     }
 
-    return unit_price.toFixed(2);
+    return formatAUD(parseFloat(unit_price).toFixed(2));
 };
 
 const ViewSectionComponent = ({ calculator, index, refetch }) => {
@@ -274,7 +267,26 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
     }, [tempCalculator]);
 
     const saveCalculator = async () => {
-        console.log('tempCalculator: ', tempCalculator);
+        if (!tempCalculator?.description) {
+            toast.error("Description is required.");
+            return;
+        }
+        
+        if (!tempCalculator?.cost) {
+            toast.error("Cost is required.");
+            return;
+        }
+
+        if (!tempCalculator?.profit_type_value) {
+            toast.error("Markup/Margin is required.");
+            return;
+        }
+
+        if (!tempCalculator?.quantity) {
+            toast.error("Quantity/Hours is required.");
+            return;
+        }
+
         let payload = {
             title: tempCalculator?.title,
             description: tempCalculator?.description,
@@ -334,7 +346,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             {
                 isEdit ? (
                     <>
-                        <h6>Full Description</h6>
+                        <h6>Full Description <span style={{ color: "#f04438" }}>*</span></h6>
                         <InputTextarea autoResize value={tempCalculator?.description}
                             onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
                             className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
@@ -343,7 +355,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             <Col>
                                 <div className={`d-flex gap-2 justify-content-between align-items-center `}>
                                     <div className='left'>
-                                        <label>Cost</label>
+                                        <label>Cost <span style={{ color: "#f04438" }}>*</span></label>
                                         <InputNumber className={clsx(style.inputNumber)} prefix="$" value={parseFloat(tempCalculator?.cost || 0)}
                                             onValueChange={(e) => setTempCalculator((others) => ({ ...others, cost: e.value }))}
                                             maxFractionDigits={2}
@@ -360,7 +372,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             <Col>
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='d-flex flex-column'>
-                                        <label>Markup/Margin</label>
+                                        <label>Markup/Margin <span style={{ color: "#f04438" }}>*</span></label>
                                         <div className='d-flex gap-1 align-items-center'>
                                             <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
                                                 onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
@@ -402,7 +414,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             <Col>
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='d-flex flex-column'>
-                                        <label>Quantity/Hours</label>
+                                        <label>Quantity/Hours <span style={{ color: "#f04438" }}>*</span></label>
                                         <div className='d-flex gap-2 align-items-center'>
                                             <InputNumber className={clsx(style.inputNumber2)}
                                                 inputId="withoutgrouping"
@@ -426,7 +438,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
 
                             <Col>
                                 <label className='mb-2'>Sub Total:</label>
-                                <strong>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
+                                <strong>$ {formatAUD(parseFloat(tempCalculator?.total || 0))}</strong>
                             </Col>
                         </Row>
 
@@ -473,7 +485,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             </Col>
                             <Col>
                                 <label>Quantity/Hours</label>
-                                <strong>{parseFloat(calculator?.quantity || 0)}</strong>
+                                <strong>{formatAUD(parseFloat(calculator?.quantity || 0))}</strong>
                             </Col>
                             <Col>
                                 <label>Sub Total:</label>
@@ -531,7 +543,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
         }
 
         let discount = parseFloat(tempCalculator.discount) || 0;
-        return (subtotal - (subtotal * discount) / 100).toFixed(2);
+        return parseFloat(subtotal - (subtotal * discount) / 100).toFixed(2);
     }, [tempCalculator.cost, tempCalculator.quantity, tempCalculator.profit_type, tempCalculator.profit_type_value, tempCalculator.discount]);
 
     // Update total only when needed
@@ -543,6 +555,26 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
 
     // Save Calculator Function
     const saveCalculator = async () => {
+        if (!tempCalculator.description) {
+            toast.error("Description is required.");
+            return;
+        }
+
+        if (!tempCalculator.cost) {
+            toast.error("Cost is required.");
+            return;
+        }
+
+        if (!tempCalculator.profit_type_value) {
+            toast.error("Markup/Margin is required.");
+            return;
+        }
+
+        if (!tempCalculator.quantity) {
+            toast.error("Quantity/Hours is required.");
+            return;
+        }
+
         const payload = {
             title: name || "",
             description: tempCalculator.description,
@@ -570,16 +602,16 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
 
     return (
         <div className={`${style.contentStyle}`}>
-            <h6>Full Description</h6>
+            <h6>Full Description<span style={{ color: "#f04438" }}>*</span></h6>
             <InputTextarea autoResize value={tempCalculator?.description}
                 onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
                 className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none', outline: 'none', boxShadow: 'none' }} />
 
-            <Row>
+            <Row className={style.edidcodtUpdate}>
                 <Col>
                     <div className='d-flex gap-2 justify-content-between align-items-center'>
                         <div className='left'>
-                            <label>Cost</label>
+                            <label>Cost <span style={{ color: "#f04438" }}>*</span></label>
                             <InputNumber className={clsx(style.inputNumber)} prefix="$" value={tempCalculator?.cost && parseFloat(tempCalculator?.cost || 0)}
                                 onValueChange={(e) => setTempCalculator((others) => ({ ...others, cost: e.value }))}
                                 maxFractionDigits={2}
@@ -597,14 +629,14 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 <Col>
                     <div className='d-flex justify-content-between align-items-center'>
                         <div className='d-flex flex-column'>
-                            <label className='d-block text-center'>Markup/Margin</label>
+                            <label className='d-block text-center'>Markup/Margin <span style={{ color: "#f04438" }}>*</span></label>
                             <div className='d-flex gap-1 align-items-center'>
                                 <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
                                     onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: parseFloat(e.value) }))}
                                     max={tempCalculator?.profit_type === "MRG" ? 99.99 : undefined}
                                     maxFractionDigits={2}
                                     minFractionDigits={2}
-                                    useGrouping={false}
+                                    // useGrouping={false}
                                     placeholder='0.00'
                                 />
                                 <select value={tempCalculator?.profit_type}
@@ -641,7 +673,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
                 <Col>
                     <div className='d-flex justify-content-between align-items-center'>
                         <div className='d-flex flex-column'>
-                            <label>Quantity/Hours</label>
+                            <label>Quantity/Hours <span style={{ color: "#f04438" }}>*</span></label>
                             <div className='d-flex gap-2 align-items-center'>
                                 <InputNumber className={clsx(style.inputNumber2)}
                                     inputId="withoutgrouping"
@@ -666,7 +698,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
 
                 <Col>
                     <label className='mb-2'>Sub Total:</label>
-                    <strong>$ {parseFloat(tempCalculator?.total || 0).toFixed(2)}</strong>
+                    <strong>$ {formatAUD(parseFloat(tempCalculator?.total || 0).toFixed(2))}</strong>
                 </Col>
             </Row>
 
@@ -721,98 +753,6 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
                         <div className={`${style.boxcal}`}>
                             <h6>Total</h6>
                             <strong>{formatAUD(+summary.total)}</strong>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    );
-};
-
-const EditCalculators = ({ editSubIndex, calculators }) => {
-    const [updatedCalculator, setUpdatedCalculator] = useState(calculators || []);
-    const summary = calculateSummary(calculators, 'no');
-
-    const setValue = (value, id, field) => {
-
-    };
-    return (
-        <div>
-            {
-                updatedCalculator.map(calculator => (
-                    <div key={calculator.id} className={`${style.contentStyle}`}>
-                        <h6>Full Description</h6>
-                        <InputTextarea autoResize value={calculator.description} onChange={(e) => setValue(e.target.value, calculator.id, 'description')} className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
-
-                        <Row>
-                            <Col sm={2}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <div className='left'>
-                                        <label>Cost</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.cost || 0))} onValueChange={() => { }} maxFractionDigits={2} />
-                                    </div>
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
-                                        <X color='#1AB2FF' size={12} />
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col sm={2}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <div className='left'>
-                                        <label>Margin</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={() => { }} maxFractionDigits={2} />
-                                    </div>
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
-                                        <X color='#1AB2FF' size={12} />
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col sm={2}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <div className='left'>
-                                        <label>Margin</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.profit_type_value || 0))} onValueChange={() => { }} maxFractionDigits={2} />
-                                    </div>
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', background: '#EBF8FF' }}>
-                                        <X color='#1AB2FF' size={12} />
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col sm={3}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <div className='left'>
-                                        <label>Budget</label>
-                                        <InputNumber prefix="$" value={parseFloat((calculator?.quantity || 0))} onValueChange={() => { }} maxFractionDigits={2} />
-                                    </div>
-                                    <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px' }}>
-                                        =
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col sm={3}>
-                                <label>Sub Total:</label>
-                                <strong>$ {parseFloat(calculator.total || 0).toFixed(2)}</strong>
-                            </Col>
-                        </Row>
-                    </div>
-                ))
-            }
-            <div className={style.calculateBox}>
-                <ul>
-                    <li>
-                        <div className={`${style.boxcal}`}>
-                            <h6>Budget</h6>
-                            <strong>{formatMoney(+summary.budget)}</strong>
-                        </div>
-                        <div className={`${style.profit} ${style.boxcal}`}>
-                            <h6>Operational Profit</h6>
-                            <strong>{formatMoney(+summary.operationalProfit)}</strong>
-                        </div>
-                    </li>
-                    <li>
-                        <div className={`${style.boxcal}`}>
-                            <h6>Total</h6>
-                            <strong>{formatMoney(+summary.total)}</strong>
                         </div>
                     </li>
                 </ul>
@@ -934,7 +874,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
         <>
             <Dialog visible={visible} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
                 <div className="d-flex flex-column">
-                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Department name</p>
+                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Department name <span style={{ color: "#f04438" }}>*</span></p>
                     <InputText value={department} onChange={(e) => setDepartment(e.target.value)} className={style.inputBox} />
                 </div>
             </Dialog>
@@ -1011,7 +951,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
         <>
             <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
                 <div className="d-flex flex-column">
-                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Sub Department name</p>
+                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Sub Department name <span style={{ color: "#f04438" }}>*</span></p>
                     <InputText value={subDepartment} onChange={(e) => setSubDepartment(e.target.value)} className={style.inputBox} />
                 </div>
             </Dialog>
