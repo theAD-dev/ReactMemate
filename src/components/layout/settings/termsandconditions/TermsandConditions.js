@@ -70,7 +70,7 @@ const TermsandConditions = () => {
                         <div className='contentMenuTab'>
                             <ul>
                                 <li>
-                                    <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Invoice Terms and Conditions</Link>
+                                    <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Quote & Invoice Terms and Conditions</Link>
                                 </li>
                                 {has_work_subscription && (
                                     <li className='menuActive'>
