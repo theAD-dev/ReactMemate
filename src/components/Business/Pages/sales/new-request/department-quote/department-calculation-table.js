@@ -27,7 +27,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
             </td>
             <td style={{ width: '128px' }}>
                 <div className='d-flex align-items-center'>
-                    <span style={{ color: '#475467' }}>$</span>
+                    <span style={{ color: 'rgb(152, 162, 179)' }}>$</span>
                     <input
                         type="text"
                         disabled
@@ -53,7 +53,7 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                     </select>
                 </div>
             </td>
-            <td style={{ width: '118px', textAlign: 'left' }}>$ {"0.00"}</td>
+            <td style={{ width: '118px', textAlign: 'left', color: 'rgb(152, 162, 179)' }}>$ {"0.00"}</td>
             <td style={{ width: '166px' }}>
                 <div className='d-flex align-items-center'>
                     <input
@@ -75,13 +75,12 @@ const DepartmentCalculationTableEmptyRow = ({ srNo, departments, handleChange })
                         type="text"
                         disabled
                         style={{ width: '60px', padding: '4px', background: 'transparent', color: '#98A2B3' }}
-                        value={`${"0.00"}`}
+                        value={`${"0.00%"}`}
                         onChange={() => { }}
                     />
-                    <span>%</span>
                 </div>
             </td>
-            <td style={{ width: '118px', textAlign: 'left' }}>$ {"0.00"}</td>
+            <td style={{ width: '118px', textAlign: 'left', color: 'rgb(152, 162, 179)' }}>$ {"0.00"}</td>
             <td style={{ width: '32px', position: 'sticky', right: '0px' }} className='shadowLeft-'>
                 <Trash color="#98A2B3" style={{ cursor: 'not-allowed', opacity: '.5' }} onClick={() => { }} />
             </td>
