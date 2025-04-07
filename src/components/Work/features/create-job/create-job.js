@@ -20,10 +20,11 @@ import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template
 import { createNewJob } from '../../../../APIs/jobs-api';
 import { getManagement } from '../../../../APIs/management-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
+import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
-function getFileIcon(fileType) {
+export function getFileIcon(fileType) {
     const fileTypes = {
         'application/pdf': { name: 'PDF', color: '#D92D20' },
         'application/vnd.ms-excel': { name: 'Excel', color: '#22A746' },
@@ -68,38 +69,6 @@ function getFileIcon(fileType) {
     );
 }
 
-const CircularProgressBar = ({ percentage, size = 100, strokeWidth = 4, color = "#4CAF50", background = "#ddd" }) => {
-    const radius = (size - strokeWidth) / 2;
-    const circumference = 2 * Math.PI * radius;
-    const progressOffset = circumference - (percentage / 100) * circumference;
-
-    return (
-        <svg width={size} height={size}>
-            {/* Background Circle */}
-            <circle
-                cx={size / 2}
-                cy={size / 2}
-                r={radius}
-                fill="none"
-                stroke={background}
-                strokeWidth={strokeWidth}
-            />
-            {/* Progress Circle */}
-            <circle
-                cx={size / 2}
-                cy={size / 2}
-                r={radius}
-                fill="none"
-                stroke={color}
-                strokeWidth={strokeWidth}
-                strokeDasharray={circumference}
-                strokeDashoffset={progressOffset}
-                strokeLinecap="round"
-                style={{ transition: 'stroke-dashoffset 0.3s ease' }}
-            />
-        </svg>
-    );
-};
 
 const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     const accessToken = localStorage.getItem("access_token");
@@ -265,6 +234,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 });
             },
         }).catch((err) => {
+            console.log('err: ', err);
             setFiles((prevFiles) => {
                 return prevFiles.map((f) =>
                     f.name === file.name
@@ -305,7 +275,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
     const fileUploadBySignedURL = async (id) => {
         if (!files.length) return;
-        if (!id) return toast.success(`Job id not found`);
+        if (!id) return toast.error(`Job id not found`);
 
         for (const file of files) {
             try {
