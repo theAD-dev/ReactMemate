@@ -71,7 +71,7 @@ const TermsConditionsInvoice = () => {
                         <div className='contentMenuTab'>
                             <ul>
                                 <li className='menuActive'>
-                                    <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Invoice Terms and Conditions</Link>
+                                    <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Quote & Invoice Terms and Conditions</Link>
                                 </li>
                                 {has_work_subscription && (
                                     <li className='menuActive'>
@@ -98,8 +98,8 @@ const TermsConditionsInvoice = () => {
                                         )}
                                     </div>
                                     <div className='w-100 text-start'>
-                                        <h2>Terms and Conditions Invoice</h2>
-                                        <p>Please,fill up your Company Terms and Conditions for Subcontractors which they going to follow by using the MeMate Application.</p>
+                                        <h2>Terms and Conditions for Quotes and Invoices</h2>
+                                        <p>Use this section to display your Terms and Conditions on your Quote and Invoice PDFs.</p>
                                     </div>
                                 </div>
 
