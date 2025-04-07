@@ -98,8 +98,8 @@ const TermsConditionsInvoice = () => {
                                         )}
                                     </div>
                                     <div className='w-100 text-start'>
-                                        <h2>Terms and Conditions Invoice</h2>
-                                        <p>Please,fill up your Company Terms and Conditions for Subcontractors which they going to follow by using the MeMate Application.</p>
+                                        <h2>Terms and Conditions for Invoice</h2>
+                                        <p>Please, fill up your Company Terms and Conditions for Subcontractors which they going to follow by using the MeMate Application.</p>
                                     </div>
                                 </div>
 
