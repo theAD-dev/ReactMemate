@@ -249,3 +249,26 @@
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
 }
+
+.shakeText {
+  display: inline-block;
+  animation: tilt-n-move-shaking 0.85s infinite;
+}
+
+@keyframes tilt-n-move-shaking {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(3px);
+  }
+  50% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

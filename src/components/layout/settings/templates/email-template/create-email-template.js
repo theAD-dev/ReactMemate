@@ -243,7 +243,7 @@ const CreateEmailTemplate = () => {
                             <div className={style.divider}></div>
 
                             <div className="flex flex-column gap-2" style={{ marginBottom: '16px' }}>
-                                <label className={style.label}>Subject</label>
+                                <label className={style.label}>Subject<span className="required">*</span></label>
                                 <IconField>
                                     <InputIcon>
                                         {emailQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
@@ -265,7 +265,7 @@ const CreateEmailTemplate = () => {
                             </div>
 
                             <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
-                                <label className={clsx(style.lable)}>Message</label>
+                                <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
                                 <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                     {emailQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                 </InputIcon>
