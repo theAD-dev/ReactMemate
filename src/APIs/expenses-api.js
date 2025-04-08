@@ -1,7 +1,7 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-export const getListOfExpense = async (page, limit, search="", order="", isShowDeleted) => {
+export const getListOfExpense = async (page, limit, search="", order="", isShowUnpaid) => {
   const offset = (page - 1) * limit;
   const endpoint = `/expenses/`;
   const options = {
@@ -12,7 +12,7 @@ export const getListOfExpense = async (page, limit, search="", order="", isShowD
   url.searchParams.append("offset", offset);
   if (search) url.searchParams.append("search", search);
   if (order) url.searchParams.append("ordering", order);
-  if (isShowDeleted) url.searchParams.append('status', 'not_paid');
+  if (isShowUnpaid) url.searchParams.append('status', 'not_paid');
 
   return fetchAPI(url.toString(), options);
 };
