@@ -234,7 +234,7 @@ const CreateProposalTemplate = () => {
                                     </div>
 
                                     <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
-                                        <label className={style.label}>Title</label>
+                                        <label className={style.label}>Title<span className="required">*</span></label>
                                         <IconField>
                                             <InputIcon>
                                                 {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
@@ -257,7 +257,7 @@ const CreateProposalTemplate = () => {
                                         )}
                                     </div>
                                     <div className="d-flex flex-column gap-1 w-100" style={{ position: 'relative' }}>
-                                        <label className={clsx(style.lable)}>Message</label>
+                                        <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
                                         <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                             {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                         </InputIcon>

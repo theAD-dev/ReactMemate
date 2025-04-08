@@ -141,7 +141,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
             {
                 rowData?.xero_status === "in_progress"
                     ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
-                    : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span>xero</span>
+                    : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span></span>
             }
         </div>;
     };

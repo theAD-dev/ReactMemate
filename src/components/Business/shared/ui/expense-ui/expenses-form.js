@@ -362,7 +362,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </div>
                 </Col>
 
-                <Col sm={12}>
+                <Col sm={12} style={{ display: 'none' }}>
                     <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '16px' }}>
                         <input {...getInputProps()} />
                         <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
