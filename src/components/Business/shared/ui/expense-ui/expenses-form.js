@@ -1,10 +1,12 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Plus, Calendar3, QuestionCircle } from 'react-bootstrap-icons';
+import { Plus, Calendar3, QuestionCircle, CloudUpload, ExclamationCircleFill } from 'react-bootstrap-icons';
+import { useDropzone } from 'react-dropzone';
 import { useForm, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import clsx from 'clsx';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
@@ -16,6 +18,7 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from 'primereact/inputtextarea';
 import { SelectButton } from 'primereact/selectbutton';
 import { Tooltip } from 'primereact/tooltip';
+import { toast } from 'sonner';
 import * as yup from 'yup';
 import styles from './expenses-form.module.scss';
 import { getDepartments } from '../../../../../APIs/CalApi';
@@ -23,7 +26,9 @@ import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-
 import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
+import { CircularProgressBar } from '../../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
+import { getFileIcon } from '../../../../Work/features/create-job/create-job';
 
 
 function debounce(fn, delay) {
@@ -51,9 +56,11 @@ const schema = yup
 const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier, setVisible, projectId }, ref) => {
     const autoCompleteRef = useRef(null);
     const observerRef = useRef(null);
+    const accessToken = localStorage.getItem("access_token");
 
     const [supplierValue, setSupplierValue] = useState(defaultSupplier || "");
     const [suppliers, setSuppliers] = useState([]);
+    const [files, setFiles] = useState([]);
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState(defaultSupplier?.name || "");
     const [hasMoreData, setHasMoreData] = useState(true);
@@ -63,6 +70,87 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         resolver: yupResolver(schema),
         defaultValues
     });
+
+    const {
+        getRootProps,
+        getInputProps
+    } = useDropzone({
+        maxFiles: 1,
+        multiple: false,
+        onDrop: acceptedFiles => {
+            console.log('acceptedFiles: ', acceptedFiles);
+            const newFiles = acceptedFiles.map(file => Object.assign(file, {
+                preview: URL.createObjectURL(file),
+                progress: 0,
+            }));
+            setFiles(() => [
+                // ...prevFiles,
+                ...newFiles,
+            ]);
+            fileUploadBySignedURL(newFiles);
+        }
+    });
+
+    const uploadToS3 = async (file, url) => {
+        return axios.put(url, file, {
+            headers: {
+                "Content-Type": "",
+            },
+            onUploadProgress: (progressEvent) => {
+                const progress = Math.round(
+                    (progressEvent.loaded / progressEvent.total) * 100
+                );
+                setFiles((prevFiles) => {
+                    return prevFiles.map((f) =>
+                        f.name === file.name
+                            ? Object.assign(f, { progress, url })
+                            : f
+                    );
+                });
+            },
+        }).catch((err) => {
+            console.log('err: ', err);
+            setFiles((prevFiles) => {
+                return prevFiles.map((f) =>
+                    f.name === file.name
+                        ? Object.assign(f, { progress: 0, url, error: true })
+                        : f
+                );
+            });
+        });
+    };
+
+    const fileUploadBySignedURL = async (files) => {
+        if (!files.length) return;
+
+        for (const file of files) {
+            try {
+                // Step 1: Get the signed URL from the backend
+                const response = await axios.post(
+                    `${process.env.REACT_APP_BACKEND_API_URL}/expenses/file/`,
+                    { file_name: file.name },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+
+                const { url } = response.data;
+                if (!url) {
+                    setFiles([]);
+                    toast.error(`Failed to upload ${file.name}. Please try again.`);
+                    return;
+                }
+
+                // Step 2: Upload the file to S3 using the signed URL
+                await uploadToS3(file, url);
+            } catch (error) {
+                console.error("Error uploading file:", file.name, error);
+                toast.error(`Failed to upload ${file.name}. Please try again.`);
+            }
+        }
+    };
 
     useEffect(() => {
         setValue('supplier', +supplierValue?.id);
@@ -226,7 +314,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         <form ref={ref} onSubmit={handleSubmit(handleFormSubmit)} >
             <Row className={clsx(styles.bgGreay, 'pt-3')}>
                 <Col sm={8}>
-                    <div className="d-flex flex-column gap-1 mb-4">
+                    <div className="d-flex flex-column gap-1 mb-3">
                         <label className={clsx(styles.lable)}>Supplier<span className='required'>*</span></label>
                         <input type="hidden" {...register("supplier")} />
                         <AutoComplete
@@ -267,12 +355,47 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 </Col>
 
                 <Col sm={4}>
-                    <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-4">
+                    <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-3">
                         <Link to={"/suppliers"}>
                             <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
                         </Link>
                     </div>
                 </Col>
+
+                <Col sm={12}>
+                    <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '16px' }}>
+                        <input {...getInputProps()} />
+                        <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
+                            <CloudUpload />
+                        </button>
+                        <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
+                        <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
+                    </div>
+
+                    <div className='d-flex flex-column gap-3 mb-4'>
+                        {
+                            files?.map((file, index) => (
+                                <div key={index} className={styles.fileBox}>
+                                    {getFileIcon(file.type)}
+                                    <div className={styles.fileNameBox}>
+                                        <p className='mb-0'>{file?.name || ""}</p>
+                                        <p className='mb-0'>{parseFloat(file?.size / 1024).toFixed(2)} KB - {parseInt(file?.progress) || 0}% uploaded</p>
+                                    </div>
+                                    <div className='ms-auto'>
+                                        {
+                                            file.error ? <div className={styles.deleteBox}>
+                                                <ExclamationCircleFill color='#F04438' size={16} />
+                                            </div>
+                                                : <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
+                                        }
+
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </Col>
+
                 <Col sm={12}>
                     <div className="d-flex flex-column gap-1">
                         <label className={clsx(styles.lable)}>Invoice/#Ref<span className='required'>*</span></label>

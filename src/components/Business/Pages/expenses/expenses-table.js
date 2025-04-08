@@ -93,7 +93,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
     const ExpensesIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-            <span>{rowData.number}</span>
+            <span>{rowData.number?.split('-')[1]}</span>
             <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }); }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>;
     };
