@@ -92,17 +92,7 @@ export const getSignatureTemplates = async () => {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  // return fetchAPI(url.toString(), options);
-  return [
-    {
-      id: 'new',
-      title: "Signature 1",
-    },
-    {
-      id: 'new',
-      title: "Signature 2",
-    },
-  ];
+  return fetchAPI(url.toString(), options);
 };
 
 export const getEmailSignature = async (id) => {

@@ -11637,3 +11637,7 @@ ul.eventStyleCal li:first-child,
   padding: 8px;
   box-sizing: border-box;
 }
+
+.modal-header .btn-close {
+  font-size: 12px;
+}
