@@ -25,6 +25,7 @@ import { getDepartments } from '../../../../../APIs/CalApi';
 import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-api';
 import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import { extractAIResponseData, formatExpenseDataFromAI } from '../../../../../shared/lib/extract-ai-response';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import { CircularProgressBar } from '../../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
@@ -44,7 +45,25 @@ const schema = yup
         supplier: yup.number().typeError("Supplier must be a valid id").required("Supplier is required"),
         invoice_reference: yup.string().required("Invoice reference is required"),
         date: yup.string().required("Date is required"),
-        due_date: yup.string().required("Due date is required"),
+        due_date: yup.string()
+            .required("Due date is required")
+            .test(
+                'is-after-date',
+                'Due date must be after the invoice date',
+                function(value) {
+                    const { date } = this.parent;
+                    if (!date || !value) return true; // Skip validation if either date is missing
+
+                    const invoiceDate = new Date(date);
+                    const dueDate = new Date(value);
+
+                    // Set hours, minutes, seconds, and milliseconds to 0 for both dates to compare only the dates
+                    invoiceDate.setHours(0, 0, 0, 0);
+                    dueDate.setHours(0, 0, 0, 0);
+
+                    return dueDate >= invoiceDate;
+                }
+            ),
         amount: yup.string().required("Amount is required"),
         nogst: yup.boolean().required("NOGST must be a boolean"),
         gst: yup.boolean().required("GST must be a boolean"),
@@ -64,6 +83,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState(defaultSupplier?.name || "");
     const [hasMoreData, setHasMoreData] = useState(true);
+    const [isRecognizing, setIsRecognizing] = useState(false);
     const limit = 25;
 
     const { control, reset, register, handleSubmit, setValue, getValues, watch, setError, trigger, formState: { errors } } = useForm({
@@ -145,6 +165,102 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                 // Step 2: Upload the file to S3 using the signed URL
                 await uploadToS3(file, url);
+
+                // step 3: Get the AI recognize response
+                const fileUrl = url.split("?")[0] || "";
+
+                // Set recognizing state to true to show loader
+                setIsRecognizing(true);
+
+                // Update file progress to show AI processing
+                setFiles((prevFiles) => {
+                    return prevFiles.map((f) =>
+                        f.name === file.name
+                            ? Object.assign(f, { progress: 100, aiProcessing: true })
+                            : f
+                    );
+                });
+
+                // Show toast notification for AI processing
+                toast.info('AI is analyzing your document...', {
+                    duration: 3000,
+                });
+
+                try {
+                    const aiResponse = await axios.post(
+                        `${process.env.REACT_APP_BACKEND_API_URL}/expenses/recognize/`,
+                        { file_url: fileUrl },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                        }
+                    );
+
+                    console.log('aiResponse: ', aiResponse?.data);
+
+                    // Extract and process the AI response data
+                    const extractedData = extractAIResponseData(aiResponse?.data);
+                    if (extractedData) {
+                        // Format the data for the form
+                        const formattedData = formatExpenseDataFromAI(extractedData);
+                        if (formattedData) {
+                            // Prefill the form with the extracted data
+                            Object.entries(formattedData).forEach(([key, value]) => {
+                                setValue(key, value);
+                            });
+
+                            // Trigger validation for required fields
+                            trigger(['invoice_reference', 'amount', 'gst', 'nogst']);
+
+                            // Show success message
+                            toast.success('Form prefilled with invoice data');
+
+                            // Update file to show success
+                            setFiles((prevFiles) => {
+                                return prevFiles.map((f) =>
+                                    f.name === file.name
+                                        ? Object.assign(f, { aiProcessing: false, aiSuccess: true })
+                                        : f
+                                );
+                            });
+                        } else {
+                            // Update file to show no data extracted
+                            setFiles((prevFiles) => {
+                                return prevFiles.map((f) =>
+                                    f.name === file.name
+                                        ? Object.assign(f, { aiProcessing: false, aiNoData: true })
+                                        : f
+                                );
+                            });
+                            toast.warning('No invoice data could be extracted from the document');
+                        }
+                    } else {
+                        // Update file to show no data extracted
+                        setFiles((prevFiles) => {
+                            return prevFiles.map((f) =>
+                                f.name === file.name
+                                    ? Object.assign(f, { aiProcessing: false, aiNoData: true })
+                                    : f
+                            );
+                        });
+                        toast.warning('No invoice data could be extracted from the document');
+                    }
+                } catch (aiError) {
+                    console.error("Error during AI recognition:", aiError);
+                    // Update file to show AI error
+                    setFiles((prevFiles) => {
+                        return prevFiles.map((f) =>
+                            f.name === file.name
+                                ? Object.assign(f, { aiProcessing: false, aiError: true })
+                                : f
+                        );
+                    });
+                    toast.error('Failed to analyze the document. Please try again.');
+                } finally {
+                    // Set recognizing state back to false
+                    setIsRecognizing(false);
+                }
             } catch (error) {
                 console.error("Error uploading file:", file.name, error);
                 toast.error(`Failed to upload ${file.name}. Please try again.`);
@@ -383,10 +499,37 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     </div>
                                     <div className='ms-auto'>
                                         {
-                                            file.error ? <div className={styles.deleteBox}>
-                                                <ExclamationCircleFill color='#F04438' size={16} />
-                                            </div>
-                                                : <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
+                                            file.error ? (
+                                                <div className={styles.deleteBox}>
+                                                    <ExclamationCircleFill color='#F04438' size={16} />
+                                                </div>
+                                            ) : file.aiProcessing ? (
+                                                <div className={styles.aiProcessingBox}>
+                                                    <div className={styles.aiProcessingSpinner}></div>
+                                                    <span className={styles.aiProcessingText}>AI analyzing...</span>
+                                                </div>
+                                            ) : file.aiSuccess ? (
+                                                <div className={styles.aiSuccessBox}>
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM7 11.4L3.6 8L5 6.6L7 8.6L11 4.6L12.4 6L7 11.4Z" fill="#12B76A"/>
+                                                    </svg>
+                                                    <span className={styles.aiSuccessText}>Data extracted</span>
+                                                </div>
+                                            ) : file.aiNoData ? (
+                                                <div className={styles.aiNoDataBox}>
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM8 12C7.4 12 7 11.6 7 11C7 10.4 7.4 10 8 10C8.6 10 9 10.4 9 11C9 11.6 8.6 12 8 12ZM9 9H7V4H9V9Z" fill="#F79009"/>
+                                                    </svg>
+                                                    <span className={styles.aiNoDataText}>No data found</span>
+                                                </div>
+                                            ) : file.aiError ? (
+                                                <div className={styles.aiErrorBox}>
+                                                    <ExclamationCircleFill color='#F04438' size={16} />
+                                                    <span className={styles.aiErrorText}>AI error</span>
+                                                </div>
+                                            ) : (
+                                                <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
+                                            )
                                         }
 
                                     </div>
@@ -415,7 +558,11 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             control={control}
                             render={({ field }) => (
                                 <Calendar {...field}
-                                    onChange={(e) => field.onChange(e.value)}
+                                    onChange={(e) => {
+                                        field.onChange(e.value);
+                                        // Trigger validation for due_date when invoice date changes
+                                        setTimeout(() => trigger('due_date'), 0);
+                                    }}
                                     showButtonBar
                                     placeholder='DD/MM/YY'
                                     dateFormat="dd/mm/yy"
@@ -436,18 +583,29 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                         <Controller
                             name="due_date"
                             control={control}
-                            render={({ field }) => (
-                                <Calendar {...field}
-                                    onChange={(e) => field.onChange(e.value)}
-                                    showButtonBar
-                                    placeholder='DD/MM/YY'
-                                    dateFormat="dd/mm/yy"
-                                    showIcon
-                                    style={{ height: '46px' }}
-                                    icon={<Calendar3 color='#667085' size={20} />}
-                                    className={clsx(styles.inputText, { [styles.error]: errors.due_date }, 'p-0 outline-none')}
-                                />
-                            )}
+                            render={({ field }) => {
+                                // Get the current invoice date value to set as minimum date
+                                const invoiceDate = watch('date');
+                                const minDate = invoiceDate ? new Date(invoiceDate) : null;
+
+                                return (
+                                    <Calendar {...field}
+                                        onChange={(e) => {
+                                            field.onChange(e.value);
+                                            // Trigger validation after date change
+                                            trigger('due_date');
+                                        }}
+                                        showButtonBar
+                                        placeholder='DD/MM/YY'
+                                        dateFormat="dd/mm/yy"
+                                        showIcon
+                                        minDate={minDate}
+                                        style={{ height: '46px' }}
+                                        icon={<Calendar3 color='#667085' size={20} />}
+                                        className={clsx(styles.inputText, { [styles.error]: errors.due_date }, 'p-0 outline-none')}
+                                    />
+                                );
+                            }}
                         />
                         {errors?.due_date && <p className="error-message">{errors.due_date?.message}</p>}
                     </div>
