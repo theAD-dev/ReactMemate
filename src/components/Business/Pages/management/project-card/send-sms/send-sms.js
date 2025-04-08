@@ -153,7 +153,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
               </Col>
               <Col>
                 <div className="formgroup sendSMSPhone mb-2 mt-0">
-                  <label>To</label>
+                  <label>To<span className="required">*</span></label>
                   <div className={`inputInfo p-0 ${errors.taskRead ? 'error-border' : 'border-0'}`}>
                     <PhoneInput
                       defaultCountry='au'
@@ -175,7 +175,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
 
               <Col>
                 <div className="formgroup mb-2 mt-2">
-                  <label>Message </label>
+                  <label>Message<span className="required">*</span></label>
                   <div className={`inputInfo ${errors.description ? 'error-border' : ''}`} style={{ position: 'relative' }}>
                     <div style={{ position: 'absolute', right: '10px', top: '15px' }}>
                       {smsQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
@@ -186,12 +186,18 @@ const SendSMS = ({ projectId, projectCardData }) => {
                       value={message}
                       placeholder='Enter a message here...'
                       onChange={(e) => {
-                        setMessage(e.target.value);
+                        const newText = e.target.value.slice(0, 150);
+                        setMessage(newText);
                         setErrors((others) => ({ ...others, message: false }));
                       }}
                     />
                   </div>
-                  {errors.message && <p className="error-message">Description is required</p>}
+                  <div className="d-flex justify-content-between align-items-center mt-1">
+                    <p className="error-message">{errors.message && "Description is required"}</p>
+                    <div style={{ float: 'right', fontSize: '14px', color: '#6c757d' }}>
+                      {message?.length || 0}/150
+                    </div>
+                  </div>
                 </div>
               </Col>
             </Row>
