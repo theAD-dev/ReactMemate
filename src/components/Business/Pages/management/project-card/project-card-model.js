@@ -24,10 +24,10 @@ import ProjectCardFilter from './project-card-filter';
 import ScheduleUpdate from './schedule-update';
 import SelectStatus from './select-status';
 import SendSMS from './send-sms/send-sms';
+import SendToCalendar from './send-to-calendar';
 import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
-import CalendarIcon from "../../../../../assets/images/icon/calendar.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avatar';
@@ -753,7 +753,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 {/* <FilesModel /> */}
-                <Button className='calenBut calenActive'>Send to Calendar  <img src={CalendarIcon} alt="Calendar3" /></Button>
+                <SendToCalendar projectId={projectId} project={cardData} projectCardData={projectCardData} />
               </Col>
             </Row>
             <Row className='projectCardCalculation'>

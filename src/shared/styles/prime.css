@@ -569,3 +569,7 @@ tr.p-datatable-emptymessage td {
   box-shadow: none !important;
   border: 1px solid #d1d5db;
 }
+
+.p-datepicker {
+  z-index: 10001 !important;
+}
