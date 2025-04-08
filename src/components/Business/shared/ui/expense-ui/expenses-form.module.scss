@@ -299,3 +299,55 @@
 .autoComplete.error {
   border-radius: 6px;
 }
+
+.fileBox {
+  width: 100%;
+  padding: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.imgBox {
+  position: relative;
+}
+
+.fileType {
+  bottom: 4px;
+  left: 7px;
+  color: var(--Base-White, #fff);
+  text-align: center;
+  font-family: Inter;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  position: absolute;
+}
+
+.fileNameBox p {
+  overflow: hidden;
+  color: var(--Gray-700, #344054);
+  text-overflow: ellipsis;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.deleteBox {
+  display: inline-flex;
+  padding: 4px;
+  align-items: center;
+  gap: 8px;
+  border-radius: 22px;
+  background: var(--Error-100, #fee4e2);
+}
+
+.openTransition {
+  transition: all 0.5s;
+}
