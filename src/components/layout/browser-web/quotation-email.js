@@ -202,7 +202,7 @@ const QuotationEmail = () => {
                                         }
                                     </div>
                                     <div className='title-sections'>
-                                        <h1>Tax Invoice</h1>
+                                        <h1>Quotation</h1>
                                         <p className={clsx(style.invoiceNumber, 'mb-2 mt-2')}> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
                                     </div>
                                 </div>
