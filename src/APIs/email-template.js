@@ -86,6 +86,53 @@ export const getEmail = async (id) => {
   return fetchAPI(url.toString(), options);
 };
 
+export const getSignatureTemplates = async () => {
+  const endpoint = `/email-signatures/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const getEmailSignature = async (id) => {
+  const endpoint = `/email-signatures/${id}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const createEmailSignature = async (data) => {
+  const endpoint = `/email-signatures/`;
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const updateEmailSignature = async (id, data) => {
+  const endpoint = `/email-signatures/${id}/`;
+  const options = {
+    method: 'PUT',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const deleteEmailSignature = async (id) => {
+  const endpoint = `/email-signatures/${id}/`;
+  const options = {
+    method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
 export const getSMSTemplates = async () => {
   const endpoint = `/sms-templates/`;
   const options = {

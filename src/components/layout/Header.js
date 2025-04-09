@@ -28,7 +28,8 @@ import RecurringQuotes from "./settings/quotesjobs/RecurringQuotes";
 import Subscription from "./settings/subscription/Subscription";
 import CreateJobTemplate from "./settings/templates/create-job-template";
 import CreateProposalTemplate from "./settings/templates/create-proposal-template";
-import EmailSignatures from "./settings/templates/email-signatures";
+import CreateEmailSignatures from "./settings/templates/email-signature-template/create-email-signature-template";
+import EmailSignatures from "./settings/templates/email-signature-template/email-signature-templates";
 import CreateEmailTemplate from "./settings/templates/email-template/create-email-template";
 import EmailTemplates from "./settings/templates/email-template/email-templates";
 import JobTemplates from "./settings/templates/job-templates";
@@ -556,6 +557,8 @@ export const protectedRoutes = (
     <Route path="/settings/templates/email-templates/new" element={<CreateEmailTemplate />} />
     <Route path="/settings/templates/email-templates/:id" element={<CreateEmailTemplate />} />
     <Route path="/settings/templates/email-signatures" element={<EmailSignatures />} />
+    <Route path="/settings/templates/email-signatures/new" element={<CreateEmailSignatures />} />
+    <Route path="/settings/templates/email-signatures/:id" element={<CreateEmailSignatures />} />
     <Route path="/settings/templates/proposal-templates" element={<ProposalTemplates />} />
     <Route path="/settings/templates/proposal-templates/new" element={<CreateProposalTemplate />} />
     <Route path="/settings/templates/proposal-templates/:id" element={<CreateProposalTemplate />} />

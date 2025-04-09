@@ -351,3 +351,78 @@
 .openTransition {
   transition: all 0.5s;
 }
+
+/* AI Processing Styles */
+.aiProcessingBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 22px;
+  background: #EFF8FF;
+  color: #0086C9;
+}
+
+.aiProcessingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #0086C9;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.aiProcessingText {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.aiSuccessBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 22px;
+  background: #ECFDF3;
+  color: #12B76A;
+}
+
+.aiSuccessText {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.aiNoDataBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 22px;
+  background: #FFF8ED;
+  color: #F79009;
+}
+
+.aiNoDataText {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.aiErrorBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 22px;
+  background: #FEE4E2;
+  color: #F04438;
+}
+
+.aiErrorText {
+  font-size: 12px;
+  font-weight: 500;
+}

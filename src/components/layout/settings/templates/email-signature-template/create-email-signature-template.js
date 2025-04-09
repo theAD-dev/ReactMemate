@@ -1,16 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { ChevronLeft, PencilSquare } from "react-bootstrap-icons";
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Button, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { ChevronLeft, Eye, PencilSquare } from "react-bootstrap-icons";
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Editor } from 'primereact/editor';
-import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
-import { createEmailTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../../APIs/email-template';
+import { createEmailSignature, deleteEmailSignature, getEmailSignature, updateEmailSignature } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import Sidebar from '../../Sidebar';
 import style from '../job-template.module.scss';
@@ -55,35 +54,31 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const CreateEmailTemplate = () => {
+const CreateEmailSignatureTemplate = () => {
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
     const has_twilio = !!profileData?.has_twilio;
     const navigate = useNavigate();
     const { id } = useParams();
-    const [searchParams] = useSearchParams();
     const editorRef = useRef(null);
-    const subjectRef = useRef(null);
-    const [name, setName] = useState("");
-    const [subject, setSubject] = useState(null);
+    const [title, setTitle] = useState("");
     const [text, setText] = useState(null);
-
-    const isCustom = searchParams.get('isCustom');
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
     const [activeTab, setActiveTab] = useState('job-templates');
-    const emailQuery = useQuery({
-        queryKey: ["getEmail", id],
-        queryFn: () => getEmail(id),
+    const [showPreview, setShowPreview] = useState(false);
+    const signatureQuery = useQuery({
+        queryKey: ["getEmailSignature", id],
+        queryFn: () => getEmailSignature(id),
         enabled: !!id,
         retry: 1,
     });
     const mutation = useMutation({
-        mutationFn: (templateData) => (id ? updateEmailTemplate(id, templateData) : createEmailTemplate(templateData)),
+        mutationFn: (templateData) => (id ? updateEmailSignature(id, templateData) : createEmailSignature(templateData)),
         onSuccess: () => {
             toast.success("Template saved successfully!");
-            navigate('/settings/templates/email-templates/');
+            navigate('/settings/templates/email-signatures/');
         },
         onError: (error) => {
             console.error("Error saving template:", error);
@@ -91,10 +86,10 @@ const CreateEmailTemplate = () => {
         },
     });
     const deleteMutation = useMutation({
-        mutationFn: () => (id && deleteEmailTemplates(id)),
+        mutationFn: () => (id && deleteEmailSignature(id)),
         onSuccess: () => {
             toast.success("Template deleted successfully!");
-            navigate('/settings/templates/email-templates/');
+            navigate('/settings/templates/email-signatures/');
         },
         onError: (error) => {
             console.error("Error deleting template:", error);
@@ -102,40 +97,12 @@ const CreateEmailTemplate = () => {
         },
     });
 
-    const insertTextAtCursor = (insertedText) => {
-        const activeElement = document.activeElement;
-
-        // Check if the active element is an InputText field
-        if (subjectRef.current && subjectRef.current.element === activeElement) {
-            const input = activeElement;
-            const start = input.selectionStart;
-            const end = input.selectionEnd;
-            const value = input.value;
-            const newText = value.slice(0, start) + insertedText + value.slice(end);
-
-            // Update subject state
-            setSubject(newText);
-            // Update input box value
-            input.value = newText;
-            // Set cursor position after inserted text
-            input.setSelectionRange(start + insertedText.length, start + insertedText.length);
-        } else if (editorRef.current) {
-            // If the active element is the rich text editor, insert HTML content at cursor
-            const editorInstance = editorRef.current.getQuill(); // Assuming PrimeReact Editor uses Quill
-            const range = editorInstance.getSelection();
-
-            if (range) {
-                editorInstance.clipboard.dangerouslyPasteHTML(range.index, insertedText); // Insert text at the cursor
-            }
-        }
-    };
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrors({});
 
         const newErrors = {};
-        if (!name) newErrors.name = true;
-        if (!subject) newErrors.subject = true;
+        if (!title) newErrors.title = true;
         if (!text) newErrors.text = true;
 
         if (Object.keys(newErrors).length > 0) {
@@ -144,11 +111,12 @@ const CreateEmailTemplate = () => {
         }
 
         const templateData = {
-            name,
-            subject,
-            body: text,
+            title,
+            text,
         };
-        mutation.mutate(templateData);
+        console.log(templateData);
+        toast.error("The Email Signature API is currently being developed and is not available yet.");
+        // mutation.mutate(templateData);
     };
 
     const handleDelete = () => {
@@ -158,12 +126,11 @@ const CreateEmailTemplate = () => {
     };
 
     useEffect(() => {
-        if (emailQuery?.data) {
-            setName(emailQuery?.data?.name);
-            setSubject(emailQuery?.data?.subject);
-            setText(emailQuery?.data?.body);
+        if (signatureQuery?.data) {
+            setTitle(signatureQuery?.data?.title);
+            setText(signatureQuery?.data?.text);
         }
-    }, [emailQuery?.data]);
+    }, [signatureQuery?.data]);
 
     return (
         <div className='settings-wrap'>
@@ -174,8 +141,8 @@ const CreateEmailTemplate = () => {
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>
                             <ul>
-                                <li className='menuActive'><Link to="/settings/templates/email-templates">Email Templates</Link></li>
-                                <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
+                                <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
+                                <li className='menuActive'><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
                                 <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
                                 {!has_work_subscription ? (
                                     <OverlayTrigger
@@ -210,9 +177,48 @@ const CreateEmailTemplate = () => {
                             </ul>
                         </div>
                     </div>
+
+                    {/* Email Signature Preview Modal */}
+                    <Modal show={showPreview} onHide={() => setShowPreview(false)} size="lg" centered>
+                        <Modal.Header closeButton>
+                            <Modal.Title className="font-16 mb-0 p-2">{title || "Email Signature Preview"}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className={style.emailPreviewContainer}>
+                                <div className={style.emailPreviewHeader}>
+                                    <div className={style.emailPreviewHeaderItem}>
+                                        <strong>From:</strong> Your Name &lt;your.email@example.com&gt;
+                                    </div>
+                                    <div className={style.emailPreviewHeaderItem}>
+                                        <strong>To:</strong> Recipient &lt;recipient@example.com&gt;
+                                    </div>
+                                    <div className={style.emailPreviewHeaderItem}>
+                                        <strong>Subject:</strong> Email with Signature
+                                    </div>
+                                </div>
+                                <div className={style.emailPreviewBody}>
+                                    <p>Hello,</p>
+                                    <p>This is a sample email message. Your actual email content would appear here.</p>
+                                    <p>Best regards,</p>
+                                    <div className={style.emailSignature}>
+                                        {text ? (
+                                            <div className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: text }} />
+                                        ) : (
+                                            <p>No signature content yet. Please add your signature in the editor.</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button className="outline-button" variant="secondary" onClick={() => setShowPreview(false)}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                     <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
                         <div className='content_wrapper d-block px-3' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
-                            <Link to='/settings/templates/email-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
+                            <Link to='/settings/templates/email-signatures/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
                                 <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
                             </Link>
 
@@ -220,54 +226,32 @@ const CreateEmailTemplate = () => {
                                 {
                                     isEdit ? (
                                         <>
-                                            <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={name} onChange={(e) => {
-                                                setName(e.target.value);
-                                                setErrors((others) => ({ ...others, name: false }));
+                                            <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={title} onChange={(e) => {
+                                                setTitle(e.target.value);
+                                                setErrors((others) => ({ ...others, title: false }));
                                             }} autoFocus
                                                 placeholder='[ Template ]'
                                             />
                                         </>
-                                    ) : <span className={clsx(style.templateName, 'me-2')}>{name || "[ Template Name ]"}</span>
+                                    ) : <span className={clsx(style.templateName, 'me-2')}>{title || "[ Template Name ]"}</span>
                                 }
                                 <div style={{ width: '30px' }}>
-                                    {emailQuery?.isFetching ?
+                                    {signatureQuery?.isFetching ?
                                         <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px' }} />
                                         : <PencilSquare color='#106B99' onClick={() => setIsEdit(true)} size={16} style={{ cursor: 'pointer' }} />
                                     }
                                 </div>
                             </div>
-                            {errors?.name && (
-                                <p className="error-message mb-0">{"Name is required"}</p>
+                            {errors?.title && (
+                                <p className="error-message mb-0">{"Title is required"}</p>
                             )}
 
                             <div className={style.divider}></div>
 
-                            <div className="flex flex-column gap-2" style={{ marginBottom: '16px' }}>
-                                <label className={style.label}>Subject<span className="required">*</span></label>
-                                <IconField>
-                                    <InputIcon>
-                                        {emailQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                    </InputIcon>
-                                    <InputText
-                                        ref={subjectRef}
-                                        value={subject}
-                                        className={clsx(style.inputBox, 'w-100')}
-                                        onChange={(e) => {
-                                            setSubject(e.target.value);
-                                            setErrors((others) => ({ ...others, subject: false }));
-                                        }}
-                                        placeholder="Enter subject"
-                                    />
-                                </IconField>
-                                {errors?.subject && (
-                                    <p className="error-message mb-0">{"Subject is required"}</p>
-                                )}
-                            </div>
-
                             <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
-                                <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
+                                <label className={clsx(style.lable)}>Signature<span className="required">*</span></label>
                                 <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
-                                    {emailQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                                    {signatureQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                 </InputIcon>
                                 <Editor
                                     ref={editorRef}
@@ -282,31 +266,23 @@ const CreateEmailTemplate = () => {
                                 />
                             </div>
                             {errors?.text && (
-                                <p className="error-message mb-0">{"Message is required"}</p>
+                                <p className="error-message mb-0">{"Signature is required"}</p>
                             )}
-
-                            <div className='d-flex gap-3 align-items-center' style={{ marginTop: '26px' }}>
-                                <Button onClick={() => insertTextAtCursor("%NAME%")} className="outline-button">Name</Button>
-                                <Button onClick={() => insertTextAtCursor("%EMAIL%")} className="outline-button">Email</Button>
-                                <Button onClick={() => insertTextAtCursor("%PHONE%")} className="outline-button">Phone</Button>
-                                <Button onClick={() => insertTextAtCursor("%NUMBER%")} className="outline-button">Number</Button>
-                                <Button onClick={() => insertTextAtCursor("%PROJECT NUMBER%")} className="outline-button">Project Number</Button>
-                                <Button onClick={() => insertTextAtCursor("%YOUR ORGANISATION%")} className="outline-button">Your Organisation</Button>
-                                <Button onClick={() => insertTextAtCursor("%CLIENT ORGANISATION%")} className="outline-button">Client Organisation</Button>
-                            </div>
-
                         </div>
                     </div>
                     <div className={style.bottom}>
                         {
-                            isCustom == "true" && id ?
-                                <Button onClick={handleDelete} className='danger-outline-button'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
+                            id ?
+                                <Button onClick={handleDelete} className='danger-outline-button ms-2'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
                                 : <span></span>
                         }
                         <div className='d-flex gap-2'>
-                            <Link to={'/settings/templates/email-templates/'}>
+                            <Link to={'/settings/templates/email-signatures/'}>
                                 <Button className='outline-button'>Cancel</Button>
                             </Link>
+                            <Button onClick={() => setShowPreview(true)} className='outline-button'>
+                                <Eye size={16} className="me-1" /> Preview
+                            </Button>
                             <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
                         </div>
                     </div>
@@ -316,4 +292,4 @@ const CreateEmailTemplate = () => {
     );
 };
 
-export default CreateEmailTemplate;
+export default CreateEmailSignatureTemplate;
