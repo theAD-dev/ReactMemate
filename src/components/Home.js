@@ -21,6 +21,7 @@ const Home = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const hasBankDetails = !!profileData?.bank_detail?.account_number;
     const [homeData, setHomeData] = useState({
         expense: {},
         invoices_due: {},
@@ -108,7 +109,7 @@ const Home = () => {
                         }
 
                         {
-                            !profileData?.bank_detail?.account_number &&
+                            !hasBankDetails &&
                             <Col style={{ minWidth: '306px' }}>
                                 <div className={classNames('grid-item', { 'active': selectedOption === 'option2' })}>
                                     <label>
