@@ -10,12 +10,13 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { SelectButton } from 'primereact/selectbutton';
 import { toast } from 'sonner';
 import style from './invoice-partial-payment.module.scss';
 import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 
 
@@ -117,10 +118,19 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                 <Card.Body>
                     <div className='d-flex justify-content-between gap-3 align-items-center'>
                         <div className='d-flex flex-column'>
-                            <label>Enter Amount</label>
+                            <label className="mb-2">Enter Amount</label>
                             <IconField iconPosition="left">
                                 <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
-                                <InputText value={deposit} onChange={(e) => setDeposit(e.target.value)} onBlur={(e) => setDeposit(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ width: '380px', paddingLeft: '30px' }} className={clsx(style.inputText, { [style.error]: errors?.deposit })} />
+                                <InputNumber
+                                    value={deposit}
+                                    onValueChange={(e) => setDeposit(e.target.value || 0)}
+                                    style={{ width: '380px', paddingLeft: '30px', padding: '0px 16px' }}
+                                    className={clsx(style.inputText, { [style.error]: errors?.deposit })}
+                                    maxFractionDigits={2}
+                                    minFractionDigits={2}
+                                    placeholder='0.00'
+                                    inputId="minmaxfraction"
+                                />
                             </IconField>
                             {errors?.deposit && (
                                 <p className="error-message mb-0">{"Payment type is required"}</p>
@@ -128,11 +138,11 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                         </div>
                         <div className={clsx(style.box, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.amount || 0).toFixed(2))}>
                             <label>Total invoice</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.amount || 0).toFixed(2)}</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.amount || 0)}</h1>
                         </div>
                         <div className={clsx(style.box, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.to_be_paid || 0).toFixed(2))}>
                             <label>To Be Paid</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.to_be_paid || 0).toFixed(2)}</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.to_be_paid || 0)}</h1>
                         </div>
                     </div>
                 </Card.Body>
@@ -143,23 +153,23 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                     <div className='d-flex justify-content-between gap-2 align-items-center'>
                         <div className={clsx(style.box3, 'd-flex flex-column text-end')}>
                             <label>Budget</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.budget || 0).toFixed(2)}</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.budget || 0)}</h1>
                         </div>
                         <div className={clsx(style.box4, 'd-flex flex-column text-end')}>
                             <label>Real Cost</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.real_cost || 0).toFixed(2)}</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.real_cost || 0)}</h1>
                         </div>
                         <div className={clsx(style.box5, 'd-flex flex-column text-end')}>
                             <label>Cost Of Sale</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.cost_of_sale || 0).toFixed(2)}</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.cost_of_sale || 0)}</h1>
                         </div>
                         <div className={clsx(style.box6, 'd-flex flex-column text-end')}>
                             <label>Labour</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.labor_expenses || 0).toFixed(2)}</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.labor_expenses || 0)}</h1>
                         </div>
                         <div className={clsx(style.box7, 'd-flex flex-column text-end')}>
                             <label>Operational Profit</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${parseFloat(invoice?.profit || 0).toFixed(2)}</h1>
+                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.profit || 0)}</h1>
                         </div>
                     </div>
                 </Card.Body>
@@ -246,7 +256,7 @@ const InvoiceHistory = ({ history }) => {
                 <DataTable value={history} className={style.borderTable} showGridlines>
                     <Column field="" style={{ width: 'auto' }} body={(rowData, { rowIndex }) => <>#{rowIndex + 1}</>} header="ID"></Column>
                     <Column field="type" style={{ width: '150px' }} header="Reference" body={referenceBody}></Column>
-                    <Column field="deposit" style={{ width: '210px', textAlign: 'right' }} body={(rowData) => <>${rowData?.deposit}</>} header="Amount"></Column>
+                    <Column field="deposit" style={{ width: '210px', textAlign: 'right' }} body={(rowData) => <>${formatAUD(rowData?.deposit)}</>} header="Amount"></Column>
                     <Column field="manager.name" style={{ width: '210px' }} header="Manager" body={nameBody}></Column>
                     <Column field="created" style={{ width: '147px' }} header="Created at" body={depositDate}></Column>
                 </DataTable>
