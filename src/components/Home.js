@@ -12,6 +12,7 @@ import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { getOutgoingEmail } from '../APIs/email-template';
 import { fetchHomePage } from "../APIs/HomeApi";
+import { fetchProfile } from '../APIs/ProfileApi';
 import AccountingContact from './layout/modals/accounting-contact';
 import BookkeepingContact from './layout/modals/book-keeping-contact';
 import InsuranceContact from './layout/modals/insurance-contact';
@@ -20,8 +21,8 @@ import ModalSalesContactFinance from './layout/modals/modal-sales-contact-financ
 const Home = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
+    const [hasBankDetails, setHasBankDetails] = useState(true);
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
-    const hasBankDetails = !!profileData?.bank_detail?.account_number;
     const [homeData, setHomeData] = useState({
         expense: {},
         invoices_due: {},
@@ -36,6 +37,19 @@ const Home = () => {
         queryFn: getOutgoingEmail
     });
     const isConnectedEmail = outgoingEmailTemplateQuery?.data?.outgoing_email !== 'no-reply@memate.com.au';
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchProfile();
+                setHasBankDetails(!!data?.bank_detail?.account_number);
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            }
+        };
+
+        if (!profileData?.bank_details?.account_number) fetchData();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
