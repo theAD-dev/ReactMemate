@@ -4,6 +4,7 @@ import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import gradient from 'random-gradient';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { getKeyResultStatics } from './api/statistics-api';
 import style from './statistics.module.scss';
@@ -288,13 +289,8 @@ const KeyResultsPage = () => {
                         const progressWidthText = progressWidth;
                         progressWidth = progressWidth > 100 ? 100 : progressWidth;
 
-                        const progressClass = [
-                            style.ProgressBarInner,
-                            style.ProgressBarInner2,
-                            style.ProgressBarInner3,
-                            style.ProgressBarInner4
-                        ][index];
-                        const colors = ['#67a9fd', '#73CEE1', '#34A339', '#D6CC27'];
+                        const color = gradient(stat.name, 'vertical');
+                        const bgGradient = { background: color };
 
                         return (
                             <div className={style.chartTextBox} key={stat.name}>
@@ -303,14 +299,14 @@ const KeyResultsPage = () => {
                                 </div>
                                 <div className={clsx(style.ProgressBar)}>
                                     <div
-                                        style={{ width: `${progressWidth}%` }}
-                                        className={clsx(progressClass || style.progressDefaultClass, style.ProgressInnerBar)}
+                                        style={{ width: `${progressWidth}%`, ...bgGradient }}
+                                        className={clsx(style.ProgressInnerBar)}
                                     >
                                         <div className={style.ProgressInnerBarPercentage} style={{ right: parseInt(progressWidth) > 10 ? '0px' : '-50px' }}>{parseFloat(progressWidthText).toFixed(2)}%</div>
                                     </div>
                                 </div>
                                 <div className={style.chartProgressText} style={{ width: '170px', textAlign: 'left' }}>
-                                    <span style={{ color: colors[index] }} className={clsx(style.text1)}>
+                                    <span style={{ backgroundImage: color }} className={clsx(style.text1)}>
                                         ${formatAUD(stat.sum, true)}
                                     </span> / ${formatAUD(stat.target_value, true)}
                                 </div>
