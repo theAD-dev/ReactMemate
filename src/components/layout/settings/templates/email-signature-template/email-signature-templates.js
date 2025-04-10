@@ -72,10 +72,15 @@ const EmailSignatureTemplates = () => {
                         <div className='content_wrapper'>
                             <div className='listwrapper'>
                                 <div className="topHeadStyle mb-4 align-items-center">
-                                    <h2 className='mb-0'>Email Signatures</h2>
-                                    <Link className='mb-0' to={'/settings/templates/email-signatures/new'}>
-                                        Create New Template <PlusLg color='#344054' size={20} />
-                                    </Link>
+                                    <div>
+                                        <h2 className='mb-0'>Email Signatures</h2>
+                                        <p className='text-muted mb-0'>Create professional email signatures for your communications</p>
+                                    </div>
+                                    <div className='d-flex gap-3'>
+                                        <Link className='mb-0 d-flex align-items-center' to={'/settings/templates/email-signatures/new?premium=true'}>
+                                            Premium Signature <PlusLg color='#344054' size={20} />
+                                        </Link>
+                                    </div>
                                 </div>
                                 {signatureTemplateQuery?.data?.map((signature, index) => (
                                     <div key={signature.id+index} className={clsx(style.listbox, 'mb-2')}>
