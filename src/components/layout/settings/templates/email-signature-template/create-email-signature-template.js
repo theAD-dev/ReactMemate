@@ -24,7 +24,7 @@ import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
-import { socialIconsBase64 } from './social-icons-base64';
+import { socialIcons } from './social-icons-base64';
 import { createEmailSignature, deleteEmailSignature, getEmailSignature, updateEmailSignature } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import Sidebar from '../../Sidebar';
@@ -484,9 +484,17 @@ const CreateEmailSignatureTemplate = () => {
             }
         };
 
-        // Get profile image border radius
-        const getProfileImageRadius = () => {
-            return getIconRadius(profileImageStyle);
+        // Get profile image styling
+        const getProfileImageStyle = () => {
+            const radius = getIconRadius(profileImageStyle);
+            const isCircle = profileImageStyle === 'circle';
+
+            if (isCircle) {
+                // For circle style, ensure perfect circular cropping
+                return `border-radius: ${radius}; object-fit: cover; aspect-ratio: 1/1; overflow: hidden;`;
+            } else {
+                return `border-radius: ${radius};`;
+            }
         };
 
         // Get border style for dividers
@@ -559,9 +567,9 @@ const CreateEmailSignatureTemplate = () => {
             // Use Base64 encoded icons to ensure they display in email clients
             return `
                 <a href="${link}" class="social-icon" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-right: 8px;">
-                    <img src="${socialIconsBase64[platformId] || socialIconsBase64['website']}"
+                    <img src="${socialIcons[platformId] || socialIcons['website']}"
                          alt="${platform.name}" width="24" height="24"
-                         style="border: 0; display: inline-block; border-radius: ${getIconRadius(iconStyle)}; background-color: ${primaryColor === '#ffffff' ? '#f5f5f5' : primaryColor}; padding: 2px;" />
+                         style="border: none; display: inline-block; padding: 2px;" />
                 </a>
             `;
         }).join('');
@@ -576,7 +584,9 @@ const CreateEmailSignatureTemplate = () => {
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                             <tr>
                                 <td class="mobile-text-center">
-                                    ${profileImage ? `<img src="${profileImage}" alt="${fullName}" width="80" height="80" style="border-radius: ${getProfileImageRadius()}; display: block; margin-bottom: 10px;" class="mobile-img-center" />` : ''}
+                                    ${profileImage ? `<div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    </div>` : ''}
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
                                     <p style="margin: 0 0 10px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${jobTitle}${company ? ` at ${company}` : ''}</p>
@@ -600,7 +610,9 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ?`
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: center;">
-                                    ${profileImage ? `<img src="${profileImage}" alt="${fullName}" width="80" height="80" style="border-radius: ${getProfileImageRadius()}; display: block;" class="mobile-img-center" />` : ''}
+                                    ${profileImage ? `<div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 0;">
+                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    </div>` : ''}
                                 </td>` : ''}
                                 <td class="mobile-text-center">
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
@@ -635,7 +647,9 @@ const CreateEmailSignatureTemplate = () => {
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                             <tr>
                                 <td class="mobile-text-center" style="text-align: center;">
-                                    ${profileImage ? `<img src="${profileImage}" alt="${fullName}" width="80" height="80" style="border-radius: ${getProfileImageRadius()}; display: block; margin: 0 auto 10px;" />` : ''}
+                                    ${profileImage ? `<div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin: 0 auto 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" />
+                                    </div>` : ''}
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
                                     <p style="margin: 0 0 10px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${jobTitle}${company ? ` at ${company}` : ''}</p>
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
@@ -660,7 +674,9 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
-                                    <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="border-radius: ${getProfileImageRadius()}; display: block; margin-top: 10px;" class="mobile-img-center" />
+                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    </div>
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${primaryColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
@@ -692,7 +708,9 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
-                                    <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="border-radius: ${getProfileImageRadius()}; display: block; margin-top: 10px;" class="mobile-img-center" />
+                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    </div>
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
@@ -725,7 +743,9 @@ const CreateEmailSignatureTemplate = () => {
                                 </td>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-left: 15px; width: 80px; vertical-align: top;">
-                                    <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="border-radius: ${getProfileImageRadius()}; display: block; margin-top: 10px;" class="mobile-img-center" />
+                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    </div>
                                 </td>` : ''}
                             </tr>
                         </table>
@@ -746,7 +766,9 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
-                                    <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="border-radius: ${getProfileImageRadius()}; display: block; margin-top: 10px;" class="mobile-img-center" />
+                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    </div>
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
@@ -1266,9 +1288,9 @@ const CreateEmailSignatureTemplate = () => {
                                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                                     <Form.Label className="mb-0">Customize your signature appearance</Form.Label>
                                                     <Button
-                                                        variant="link"
                                                         onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-                                                        className="p-0"
+                                                        className="py-1 outline-button"
+                                                        style={{ width: '80px' }}
                                                     >
                                                         {showAdvancedOptions ? 'Hide' : 'Show'}
                                                     </Button>
@@ -1409,7 +1431,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                     />
                                                                 </Form.Group>
                                                             </Col>
-                                                            <Col md={4}>
+                                                            {/* <Col md={4}>
                                                                 <Form.Group className="mb-3">
                                                                     <Form.Label>Icon Style</Form.Label>
                                                                     <Form.Select
@@ -1421,7 +1443,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                         <option value="rounded">Rounded</option>
                                                                     </Form.Select>
                                                                 </Form.Group>
-                                                            </Col>
+                                                            </Col> */}
                                                         </Row>
 
                                                         <Row>
