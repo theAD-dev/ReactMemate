@@ -77,7 +77,7 @@ const EmailSignatureTemplates = () => {
                                         <p className='text-muted mb-0'>Create professional email signatures for your communications</p>
                                     </div>
                                     <div className='d-flex gap-3'>
-                                        <Link className='mb-0 d-flex align-items-center' to={'/settings/templates/email-signatures/new?premium=true'}>
+                                        <Link className='mb-0 d-flex align-items-center' to={'/settings/templates/email-signatures/new'}>
                                             Premium Signature <PlusLg color='#344054' size={20} />
                                         </Link>
                                     </div>

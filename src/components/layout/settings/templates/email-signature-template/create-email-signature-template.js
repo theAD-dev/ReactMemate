@@ -1,26 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Button, Col, Form, Modal, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
 import {
-  ChevronLeft,
-  Eye,
-  PencilSquare,
-  Upload,
-  XCircle,
-  Linkedin,
-  Twitter,
-  Instagram,
-  Facebook,
-  Github,
-  Youtube,
-  Globe,
-  CheckCircle
+    ChevronLeft,
+    Eye,
+    PencilSquare,
+    Upload,
+    XCircle,
+    Linkedin,
+    Twitter,
+    Instagram,
+    Facebook,
+    Github,
+    Youtube,
+    Globe,
+    CheckCircle
 } from "react-bootstrap-icons";
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Editor } from 'primereact/editor';
-import { InputIcon } from 'primereact/inputicon';
+import { Checkbox } from 'primereact/checkbox';
+import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
@@ -31,53 +31,14 @@ import Sidebar from '../../Sidebar';
 import style from '../job-template.module.scss';
 import premiumStyle from './premium-email-signatures.module.scss';
 
-const renderHeader = () => (
-    <span className="ql-formats">
-        <button className="ql-bold" aria-label="Bold"></button>
-        <button className="ql-italic" aria-label="Italic"></button>
-        <button className="ql-underline" aria-label="Underline"></button>
-        <button className="ql-strike" aria-label="Strikethrough"></button>
-        <button className="ql-blockquote" aria-label="Blockquote"></button>
-        <button
-            className="ql-list"
-            value="ordered"
-            aria-label="Ordered List"
-        ></button>
-        <button
-            className="ql-list"
-            value="bullet"
-            aria-label="Bullet List"
-        ></button>
-        <button className="ql-align" value="" aria-label="Align Left"></button>
-        <button
-            className="ql-align"
-            value="center"
-            aria-label="Align Center"
-        ></button>
-        <button
-            className="ql-align"
-            value="right"
-            aria-label="Align Right"
-        ></button>
-        <button
-            className="ql-align"
-            value="justify"
-            aria-label="Justify"
-        ></button>
-        <button className="ql-link" aria-label="Insert Link"></button>
-        <button className="ql-image" aria-label="Insert Image"></button>
-        <button className="ql-code-block" aria-label="Code Block"></button>
-    </span>
-);
-const header = renderHeader();
 
 // Premium template data with HTML thumbnails
 const premiumTemplates = [
-  {
-    id: 'single-column',
-    title: 'Single Column',
-    type: 'Premium',
-    htmlThumbnail: `
+    {
+        id: 'single-column',
+        title: 'Single Column',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="width:24px;height:24px;background:#e4e7ec;border-radius:50%;margin-bottom:8px;"></div>
         <div style="height:1px;width:100%;background:#e4e7ec;margin:8px 0;"></div>
@@ -94,13 +55,13 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A clean, single-column signature with dividers'
-  },
-  {
-    id: 'two-column',
-    title: 'Two Column',
-    type: 'Premium',
-    htmlThumbnail: `
+        description: 'A clean, single-column signature with dividers'
+    },
+    {
+        id: 'two-column',
+        title: 'Two Column',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="display:flex;margin-bottom:8px;">
           <div style="width:24px;height:24px;background:#e4e7ec;border-radius:50%;"></div>
@@ -128,13 +89,13 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A two-column signature with photo and logo'
-  },
-  {
-    id: 'vertical',
-    title: 'Vertical',
-    type: 'Premium',
-    htmlThumbnail: `
+        description: 'A two-column signature with photo and logo'
+    },
+    {
+        id: 'vertical',
+        title: 'Vertical',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="width:24px;height:24px;background:#e4e7ec;border-radius:50%;margin:0 auto 8px;"></div>
         <div style="height:6px;width:60%;background:#e4e7ec;margin:0 auto 6px;border-radius:4px;"></div>
@@ -154,13 +115,13 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A vertical signature with centered content'
-  },
-  {
-    id: 'modern-divider',
-    title: 'Modern Divider',
-    type: 'Premium',
-    htmlThumbnail: `
+        description: 'A vertical signature with centered content'
+    },
+    {
+        id: 'modern-divider',
+        title: 'Modern Divider',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="display:flex;margin-bottom:8px;">
           <div style="width:24px;height:24px;background:#e4e7ec;border-radius:50%;"></div>
@@ -181,13 +142,13 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A modern signature with colored dividers'
-  },
-  {
-    id: 'photo-left',
-    title: 'Photo Left',
-    type: 'Premium',
-    htmlThumbnail: `
+        description: 'A modern signature with colored dividers'
+    },
+    {
+        id: 'photo-left',
+        title: 'Photo Left',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="display:flex;margin-bottom:8px;">
           <div style="width:30px;height:30px;background:#e4e7ec;border-radius:50%;margin-right:8px;"></div>
@@ -207,13 +168,13 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A signature with photo on the left side'
-  },
-  {
-    id: 'photo-right',
-    title: 'Photo Right',
-    type: 'Premium',
-    htmlThumbnail: `
+        description: 'A signature with photo on the left side'
+    },
+    {
+        id: 'photo-right',
+        title: 'Photo Right',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="display:flex;margin-bottom:8px;">
           <div style="width:calc(100% - 38px);">
@@ -233,13 +194,13 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A signature with photo on the right side'
-  },
-  {
-    id: 'logo-banner',
-    title: 'Logo Banner',
-    type: 'Premium',
-    htmlThumbnail: `
+        description: 'A signature with photo on the right side'
+    },
+    {
+        id: 'logo-banner',
+        title: 'Logo Banner',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="height:20px;background:#e4e7ec;margin-bottom:8px;border-radius:4px;display:flex;align-items:center;justify-content:center;">
           <div style="width:40px;height:12px;background:#ffffff;border-radius:2px;"></div>
@@ -257,13 +218,13 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A signature with a logo banner at the top'
-  },
-  {
-    id: 'minimal',
-    title: 'Minimal',
-    type: 'Premium',
-    htmlThumbnail: `
+        description: 'A signature with a logo banner at the top'
+    },
+    {
+        id: 'minimal',
+        title: 'Minimal',
+        type: 'Premium',
+        htmlThumbnail: `
       <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
         <div style="height:6px;width:60%;background:#e4e7ec;margin-bottom:6px;border-radius:4px;"></div>
         <div style="height:6px;width:40%;background:#e4e7ec;margin-bottom:12px;border-radius:4px;"></div>
@@ -276,19 +237,19 @@ const premiumTemplates = [
         </div>
       </div>
     `,
-    description: 'A clean, minimal signature without dividers'
-  }
+        description: 'A clean, minimal signature without dividers'
+    }
 ];
 
 // Social media platforms
 const socialPlatforms = [
-  { id: 'linkedin', name: 'LinkedIn', icon: Linkedin, color: '#0A66C2' },
-  { id: 'twitter', name: 'Twitter', icon: Twitter, color: '#1DA1F2' },
-  { id: 'instagram', name: 'Instagram', icon: Instagram, color: '#E4405F' },
-  { id: 'facebook', name: 'Facebook', icon: Facebook, color: '#1877F2' },
-  { id: 'github', name: 'GitHub', icon: Github, color: '#181717' },
-  { id: 'youtube', name: 'YouTube', icon: Youtube, color: '#FF0000' },
-  { id: 'website', name: 'Website', icon: Globe, color: '#0E85C7' }
+    { id: 'linkedin', name: 'LinkedIn', icon: Linkedin, color: '#0A66C2' },
+    { id: 'twitter', name: 'Twitter', icon: Twitter, color: '#1DA1F2' },
+    { id: 'instagram', name: 'Instagram', icon: Instagram, color: '#E4405F' },
+    { id: 'facebook', name: 'Facebook', icon: Facebook, color: '#1877F2' },
+    { id: 'github', name: 'GitHub', icon: Github, color: '#181717' },
+    { id: 'youtube', name: 'YouTube', icon: Youtube, color: '#FF0000' },
+    { id: 'website', name: 'Website', icon: Globe, color: '#0E85C7' }
 ];
 
 const CreateEmailSignatureTemplate = () => {
@@ -299,10 +260,8 @@ const CreateEmailSignatureTemplate = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [searchParams] = useSearchParams();
-    const isPremium = searchParams.get('premium') === 'true';
     const templateId = searchParams.get('templateId');
 
-    const editorRef = useRef(null);
     const [title, setTitle] = useState("");
     const [text, setText] = useState(null);
     const [errors, setErrors] = useState({});
@@ -336,104 +295,106 @@ const CreateEmailSignatureTemplate = () => {
     const [dividerStyle, setDividerStyle] = useState('solid'); // 'solid', 'dashed', 'dotted'
     const [dividerWidth, setDividerWidth] = useState('1px'); // '1px', '2px', '3px'
     const [dividerColor, setDividerColor] = useState('#0E85C7'); // Default to primary color
-    const [iconStyle, setIconStyle] = useState('circle'); // 'circle', 'square', 'rounded'
     const [profileImageStyle, setProfileImageStyle] = useState('circle'); // 'circle', 'square', 'rounded'
+    const [profileImageSize, setProfileImageSize] = useState('medium'); // 'small', 'medium', 'large'
+    const [companyLogoSize, setCompanyLogoSize] = useState('medium'); // 'small', 'medium', 'large'
+    const [previewKey, setPreviewKey] = useState(0); // Used to force preview re-render
     const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
     const [isDefault, setIsDefault] = useState(false);
 
     // Handle social media toggle
     const toggleSocialPlatform = (platformId) => {
-      if (activeSocials.includes(platformId)) {
-        setActiveSocials(activeSocials.filter(id => id !== platformId));
-      } else {
-        setActiveSocials([...activeSocials, platformId]);
-      }
+        if (activeSocials.includes(platformId)) {
+            setActiveSocials(activeSocials.filter(id => id !== platformId));
+        } else {
+            setActiveSocials([...activeSocials, platformId]);
+        }
     };
 
     // Handle social media link change
     const handleSocialLinkChange = (platformId, value) => {
-      setSocialLinks({
-        ...socialLinks,
-        [platformId]: value
-      });
+        setSocialLinks({
+            ...socialLinks,
+            [platformId]: value
+        });
     };
 
     // Handle image upload with validation and optimization
     const handleImageUpload = (e, type) => {
-      const file = e.target.files[0];
-      if (!file) return;
+        const file = e.target.files[0];
+        if (!file) return;
 
-      // Validate file type
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-      if (!validTypes.includes(file.type)) {
-        toast.error('Please upload a valid image file (JPEG, PNG, GIF, or WebP)');
-        return;
-      }
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            toast.error('Please upload a valid image file (JPEG, PNG, GIF, or WebP)');
+            return;
+        }
 
-      // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error('Image size should be less than 2MB');
-        return;
-      }
+        // Validate file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error('Image size should be less than 2MB');
+            return;
+        }
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        // Create an image element to get dimensions
-        const img = new Image();
-        img.onload = () => {
-          // Create a canvas to resize the image if needed
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            // Create an image element to get dimensions
+            const img = new Image();
+            img.onload = () => {
+                // Create a canvas to resize the image if needed
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
 
-          // Resize if image is too large (max dimension 800px)
-          const maxDimension = 800;
-          if (width > maxDimension || height > maxDimension) {
-            if (width > height) {
-              height = Math.round(height * (maxDimension / width));
-              width = maxDimension;
-            } else {
-              width = Math.round(width * (maxDimension / height));
-              height = maxDimension;
-            }
+                // Resize if image is too large (max dimension 800px)
+                const maxDimension = 800;
+                if (width > maxDimension || height > maxDimension) {
+                    if (width > height) {
+                        height = Math.round(height * (maxDimension / width));
+                        width = maxDimension;
+                    } else {
+                        width = Math.round(width * (maxDimension / height));
+                        height = maxDimension;
+                    }
 
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
 
-            // Convert to optimized data URL
-            const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                    // Convert to optimized data URL
+                    const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
-            if (type === 'profile') {
-              setProfileImage(optimizedDataUrl);
-            } else if (type === 'logo') {
-              setCompanyLogo(optimizedDataUrl);
-            }
-          } else {
-            // Use original image if it's already small enough
-            if (type === 'profile') {
-              setProfileImage(event.target.result);
-            } else if (type === 'logo') {
-              setCompanyLogo(event.target.result);
-            }
-          }
+                    if (type === 'profile') {
+                        setProfileImage(optimizedDataUrl);
+                    } else if (type === 'logo') {
+                        setCompanyLogo(optimizedDataUrl);
+                    }
+                } else {
+                    // Use original image if it's already small enough
+                    if (type === 'profile') {
+                        setProfileImage(event.target.result);
+                    } else if (type === 'logo') {
+                        setCompanyLogo(event.target.result);
+                    }
+                }
+            };
+            img.src = event.target.result;
         };
-        img.src = event.target.result;
-      };
-      reader.onerror = () => {
-        toast.error('Error reading file');
-      };
-      reader.readAsDataURL(file);
+        reader.onerror = () => {
+            toast.error('Error reading file');
+        };
+        reader.readAsDataURL(file);
     };
 
     // Remove uploaded image
     const removeImage = (type) => {
-      if (type === 'profile') {
-        setProfileImage(null);
-      } else if (type === 'logo') {
-        setCompanyLogo(null);
-      }
+        if (type === 'profile') {
+            setProfileImage(null);
+        } else if (type === 'logo') {
+            setCompanyLogo(null);
+        }
     };
     const signatureQuery = useQuery({
         queryKey: ["getEmailSignature", id],
@@ -464,11 +425,37 @@ const CreateEmailSignatureTemplate = () => {
         },
     });
 
+    // Function to get company logo size based on selection
+    const getCompanyLogoSize = (size) => {
+        switch (size) {
+            case 'small':
+                return { height: '30px', width: '30px' };
+            case 'large':
+                return { height: '50px', width: '50px' };
+            case 'medium':
+            default:
+                return { height: '40px', width: '40px' };
+        }
+    };
+
+    // Function to get profile image size based on selection
+    const getProfileImageSize = (size) => {
+        switch (size) {
+            case 'small':
+                return { width: '60px', height: '60px' };
+            case 'large':
+                return { width: '100px', height: '100px' };
+            case 'medium':
+            default:
+                return { width: '80px', height: '80px' };
+        }
+    };
+
     // Generate HTML for the signature based on selected template and user inputs
     const generateSignatureHTML = () => {
         // Get font size in pixels based on selection
         const getFontSize = (size) => {
-            switch(size) {
+            switch (size) {
                 case 'small': return { base: '13px', heading: '15px' };
                 case 'large': return { base: '15px', heading: '18px' };
                 default: return { base: '14px', heading: '16px' }; // normal
@@ -477,7 +464,7 @@ const CreateEmailSignatureTemplate = () => {
 
         // Get border radius based on style
         const getIconRadius = (style) => {
-            switch(style) {
+            switch (style) {
                 case 'square': return '0';
                 case 'rounded': return '4px';
                 default: return '50%'; // circle
@@ -501,10 +488,6 @@ const CreateEmailSignatureTemplate = () => {
         const getBorderStyle = (style, width) => {
             return `${width} ${style} ${dividerColor}`;
         };
-
-        const fontSizes = getFontSize(fontSize);
-        const iconRadius = getIconRadius(iconStyle);
-        const borderStyle = getBorderStyle(dividerStyle, dividerWidth);
 
         // Base styling for cross-platform compatibility
         const baseStyles = `
@@ -577,15 +560,15 @@ const CreateEmailSignatureTemplate = () => {
         // Different templates
         let signatureHTML = '';
 
-        switch(selectedTemplate) {
+        switch (selectedTemplate) {
             case 'single-column':
                 signatureHTML = `
                     <div class="email-signature" style="background-color: ${backgroundColor};">
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                             <tr>
                                 <td class="mobile-text-center">
-                                    ${profileImage ? `<div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 10px;">
-                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    ${profileImage ? `<div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
                                     </div>` : ''}
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
@@ -608,7 +591,7 @@ const CreateEmailSignatureTemplate = () => {
                     <div class="email-signature" style="background-color: ${backgroundColor};">
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                             <tr>
-                                ${profileImage ?`
+                                ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: center;">
                                     ${profileImage ? `<div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 0;">
                                         <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
@@ -625,7 +608,7 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${companyLogo ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
-                                    ${companyLogo ? `<img src="${companyLogo}" alt="${company}" height="40" style="display: block; margin-top: 10px;" class="mobile-img-center" />` : ''}
+                                    ${companyLogo ? `<img src="${companyLogo}" alt="${company}" height="${getCompanyLogoSize(companyLogoSize).height.replace('px', '')}" style="display: block; margin-top: 10px; width: ${getCompanyLogoSize(companyLogoSize).width};" class="mobile-img-center" />` : ''}
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
                                     ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="color: ${linkColor};">${email}</a></p>` : ''}
@@ -647,13 +630,13 @@ const CreateEmailSignatureTemplate = () => {
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                             <tr>
                                 <td class="mobile-text-center" style="text-align: center;">
-                                    ${profileImage ? `<div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin: 0 auto 10px;">
-                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" />
+                                    ${profileImage ? `<div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin: 0 auto 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" />
                                     </div>` : ''}
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
                                     <p style="margin: 0 0 10px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${jobTitle}${company ? ` at ${company}` : ''}</p>
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
-                                    ${companyLogo ? `<img src="${companyLogo}" alt="${company}" height="40" style="display: block; margin: 10px auto;" />` : ''}
+                                    ${companyLogo ? `<img src="${companyLogo}" alt="${company}" height="${getCompanyLogoSize(companyLogoSize).height}" style="display: block; margin: 10px auto; width: ${getCompanyLogoSize(companyLogoSize).width};" />` : ''}
                                     ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="color: ${linkColor};">${email}</a></p>` : ''}
                                     ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="color: ${textColor};">${phone}</a></p>` : ''}
                                     ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="color: ${linkColor};">${website}</a></p>` : ''}
@@ -760,7 +743,7 @@ const CreateEmailSignatureTemplate = () => {
                     <div class="email-signature" style="background-color: ${backgroundColor};">
                         ${companyLogo ? `
                         <div style="background-color: ${primaryColor}; padding: 10px; text-align: center; margin-bottom: 15px;">
-                            <img src="${companyLogo}" alt="${company}" height="40" style="display: inline-block;" />
+                            <img src="${companyLogo}" alt="${company}" height="${getCompanyLogoSize(companyLogoSize).height}" style="display: inline-block; width: ${getCompanyLogoSize(companyLogoSize).width};" />
                         </div>` : ''}
                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                             <tr>
@@ -866,29 +849,21 @@ const CreateEmailSignatureTemplate = () => {
 
         const newErrors = {};
         if (!title) newErrors.title = true;
-
-        // For premium templates, validate required fields
-        if (isPremium) {
-            if (!fullName) newErrors.fullName = true;
-            if (!email) newErrors.email = true;
-        } else {
-            // For regular templates
-            if (!text) newErrors.text = true;
-        }
+        if (!fullName) newErrors.fullName = true;
+        if (!email) newErrors.email = true;
+        if (!text) newErrors.text = true;
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
-        // Generate signature HTML for premium templates
-        const signatureHTML = isPremium ? generateSignatureHTML() : text;
+        const signatureHTML = generateSignatureHTML();
 
         const templateData = {
             title,
             text: signatureHTML,
-            type: isPremium ? 'Premium' : 'Custom',
-            template_id: isPremium ? selectedTemplate : null,
+            template_id: selectedTemplate || null,
             is_default: isDefault
         };
 
@@ -1008,13 +983,7 @@ const CreateEmailSignatureTemplate = () => {
                                     <p>This is a sample email message. Your actual email content would appear here.</p>
                                     <p>Best regards,</p>
                                     <div className={style.emailSignature}>
-                                        {isPremium ? (
-                                            <div className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
-                                        ) : text ? (
-                                            <div className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: text }} />
-                                        ) : (
-                                            <p>No signature content yet. Please add your signature in the editor.</p>
-                                        )}
+                                        <div key={previewKey} className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
                                     </div>
                                 </div>
                             </div>
@@ -1056,522 +1025,562 @@ const CreateEmailSignatureTemplate = () => {
                             )}
 
                             <div className={style.divider}></div>
-
-                            {isPremium ? (
-                                <Row className="mt-4">
-                                    {/* Left Column - Form */}
-                                    <Col md={7}>
-                                        <div className={premiumStyle.formSection}>
-                                            <h3>Select your template</h3>
-                                            <div className={premiumStyle.templateSelector}>
-                                                <div className={premiumStyle.templateOptions}>
-                                                    {premiumTemplates.map(template => (
+                            <Row className="mt-4">
+                                {/* Left Column - Form */}
+                                <Col md={7}>
+                                    <div className={premiumStyle.formSection}>
+                                        <h3>Select your template</h3>
+                                        <div className={premiumStyle.templateSelector}>
+                                            <div className={premiumStyle.templateOptions}>
+                                                {premiumTemplates.map(template => (
+                                                    <div
+                                                        key={template.id}
+                                                        className={clsx(
+                                                            premiumStyle.templateOption,
+                                                            { [premiumStyle.selected]: selectedTemplate === template.id }
+                                                        )}
+                                                        onClick={() => setSelectedTemplate(template.id)}
+                                                    >
                                                         <div
-                                                            key={template.id}
-                                                            className={clsx(
-                                                                premiumStyle.templateOption,
-                                                                { [premiumStyle.selected]: selectedTemplate === template.id }
-                                                            )}
-                                                            onClick={() => setSelectedTemplate(template.id)}
-                                                        >
-                                                            <div
-                                                                className={premiumStyle.thumbnailContainer}
-                                                                dangerouslySetInnerHTML={{ __html: template.htmlThumbnail }}
-                                                            ></div>
-                                                            <div className={premiumStyle.templateName}>{template.title}</div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            <h3>Personal Information</h3>
-                                            <Form>
-                                                <Row>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Full Name <span className="text-danger">*</span></Form.Label>
-                                                            <Form.Control
-                                                                type="text"
-                                                                value={fullName}
-                                                                onChange={(e) => {
-                                                                    setFullName(e.target.value);
-                                                                    setErrors(prev => ({ ...prev, fullName: false }));
-                                                                }}
-                                                                isInvalid={errors.fullName}
-                                                                placeholder="John Doe"
-                                                            />
-                                                            {errors.fullName && <Form.Text className="text-danger">Full name is required</Form.Text>}
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Job Title</Form.Label>
-                                                            <Form.Control
-                                                                type="text"
-                                                                value={jobTitle}
-                                                                onChange={(e) => setJobTitle(e.target.value)}
-                                                                placeholder="Marketing Manager"
-                                                            />
-                                                        </Form.Group>
-                                                    </Col>
-                                                </Row>
-
-                                                <Row>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Email <span className="text-danger">*</span></Form.Label>
-                                                            <Form.Control
-                                                                type="email"
-                                                                value={email}
-                                                                onChange={(e) => {
-                                                                    setEmail(e.target.value);
-                                                                    setErrors(prev => ({ ...prev, email: false }));
-                                                                }}
-                                                                isInvalid={errors.email}
-                                                                placeholder="john.doe@example.com"
-                                                            />
-                                                            {errors.email && <Form.Text className="text-danger">Email is required</Form.Text>}
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Phone</Form.Label>
-                                                            <Form.Control
-                                                                type="text"
-                                                                value={phone}
-                                                                onChange={(e) => setPhone(e.target.value)}
-                                                                placeholder="+1 (555) 123-4567"
-                                                            />
-                                                        </Form.Group>
-                                                    </Col>
-                                                </Row>
-
-                                                <Row>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Company</Form.Label>
-                                                            <Form.Control
-                                                                type="text"
-                                                                value={company}
-                                                                onChange={(e) => setCompany(e.target.value)}
-                                                                placeholder="Acme Inc."
-                                                            />
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Col md={6}>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Website</Form.Label>
-                                                            <Form.Control
-                                                                type="text"
-                                                                value={website}
-                                                                onChange={(e) => setWebsite(e.target.value)}
-                                                                placeholder="https://example.com"
-                                                            />
-                                                        </Form.Group>
-                                                    </Col>
-                                                </Row>
-
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label>Address</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        value={address}
-                                                        onChange={(e) => setAddress(e.target.value)}
-                                                        placeholder="123 Main St, City, State, 12345"
-                                                    />
-                                                </Form.Group>
-                                            </Form>
-
-                                            <h3>Images</h3>
-                                            <div className={premiumStyle.imageUploadSection}>
-                                                <div className={premiumStyle.imageUploadContainer}>
-                                                    <div>
-                                                        <Form.Label>Profile Picture</Form.Label>
-                                                        {profileImage ? (
-                                                            <div className={clsx(premiumStyle.imageUploadBox, premiumStyle.hasImage)}>
-                                                                <img src={profileImage} alt="Profile" />
-                                                                <button
-                                                                    className={premiumStyle.removeImageButton}
-                                                                    onClick={() => removeImage('profile')}
-                                                                    type="button"
-                                                                >
-                                                                    <XCircle size={14} />
-                                                                </button>
-                                                            </div>
-                                                        ) : (
-                                                            <label className={premiumStyle.imageUploadBox}>
-                                                                <Upload className={premiumStyle.uploadIcon} size={24} />
-                                                                <p>Upload Image</p>
-                                                                <input
-                                                                    type="file"
-                                                                    accept="image/*"
-                                                                    style={{ display: 'none' }}
-                                                                    onChange={(e) => handleImageUpload(e, 'profile')}
-                                                                />
-                                                            </label>
-                                                        )}
+                                                            className={premiumStyle.thumbnailContainer}
+                                                            dangerouslySetInnerHTML={{ __html: template.htmlThumbnail }}
+                                                        ></div>
+                                                        <div className={premiumStyle.templateName}>{template.title}</div>
                                                     </div>
-
-                                                    <div>
-                                                        <Form.Label>Company Logo</Form.Label>
-                                                        {companyLogo ? (
-                                                            <div className={clsx(premiumStyle.imageUploadBox, premiumStyle.hasImage)}>
-                                                                <img src={companyLogo} alt="Company Logo" />
-                                                                <button
-                                                                    className={premiumStyle.removeImageButton}
-                                                                    onClick={() => removeImage('logo')}
-                                                                    type="button"
-                                                                >
-                                                                    <XCircle size={14} />
-                                                                </button>
-                                                            </div>
-                                                        ) : (
-                                                            <label className={premiumStyle.imageUploadBox}>
-                                                                <Upload className={premiumStyle.uploadIcon} size={24} />
-                                                                <p>Upload Logo</p>
-                                                                <input
-                                                                    type="file"
-                                                                    accept="image/*"
-                                                                    style={{ display: 'none' }}
-                                                                    onChange={(e) => handleImageUpload(e, 'logo')}
-                                                                />
-                                                            </label>
-                                                        )}
-                                                    </div>
-                                                </div>
+                                                ))}
                                             </div>
+                                        </div>
 
-                                            <h3>Social Media</h3>
-                                            <div className={premiumStyle.socialMediaSection}>
-                                                <Form.Label>Select platforms to include:</Form.Label>
-                                                <div className={premiumStyle.socialMediaList}>
-                                                    {socialPlatforms.map(platform => {
-                                                        const isActive = activeSocials.includes(platform.id);
-                                                        return (
-                                                            <div
-                                                                key={platform.id}
-                                                                className={clsx(
-                                                                    premiumStyle.socialMediaItem,
-                                                                    { [premiumStyle.active]: isActive }
-                                                                )}
-                                                                onClick={() => toggleSocialPlatform(platform.id)}
+                                        <h3>Personal Information</h3>
+                                        <Form>
+                                            <Row>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className={premiumStyle.label}>Full Name <span className="text-danger">*</span></Form.Label>
+                                                        <Form.Control
+                                                            type="text"
+                                                            value={fullName}
+                                                            onChange={(e) => {
+                                                                setFullName(e.target.value);
+                                                                setErrors(prev => ({ ...prev, fullName: false }));
+                                                            }}
+                                                            isInvalid={errors.fullName}
+                                                            placeholder="John Doe"
+                                                            className={premiumStyle.inputBox}
+                                                        />
+                                                        {errors.fullName && <Form.Text className="text-danger">Full name is required</Form.Text>}
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className={premiumStyle.label}>Job Title</Form.Label>
+                                                        <Form.Control
+                                                            type="text"
+                                                            value={jobTitle}
+                                                            onChange={(e) => setJobTitle(e.target.value)}
+                                                            placeholder="Marketing Manager"
+                                                            className={premiumStyle.inputBox}
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className={premiumStyle.label}>Email <span className="text-danger">*</span></Form.Label>
+                                                        <Form.Control
+                                                            type="email"
+                                                            value={email}
+                                                            onChange={(e) => {
+                                                                setEmail(e.target.value);
+                                                                setErrors(prev => ({ ...prev, email: false }));
+                                                            }}
+                                                            isInvalid={errors.email}
+                                                            placeholder="john.doe@example.com"
+                                                            className={premiumStyle.inputBox}
+                                                        />
+                                                        {errors.email && <Form.Text className="text-danger">Email is required</Form.Text>}
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className={premiumStyle.label}>Phone</Form.Label>
+                                                        <Form.Control
+                                                            type="text"
+                                                            value={phone}
+                                                            onChange={(e) => setPhone(e.target.value)}
+                                                            placeholder="+1 (555) 123-4567"
+                                                            className={premiumStyle.inputBox}
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+
+                                            <Row>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className={premiumStyle.label}>Company</Form.Label>
+                                                        <Form.Control
+                                                            type="text"
+                                                            value={company}
+                                                            onChange={(e) => setCompany(e.target.value)}
+                                                            placeholder="Acme Inc."
+                                                            className={premiumStyle.inputBox}
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col md={6}>
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className={premiumStyle.label}>Website</Form.Label>
+                                                        <Form.Control
+                                                            type="text"
+                                                            value={website}
+                                                            onChange={(e) => setWebsite(e.target.value)}
+                                                            placeholder="https://example.com"
+                                                            className={premiumStyle.inputBox}
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
+
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className={premiumStyle.label}>Address</Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    value={address}
+                                                    className={premiumStyle.inputBox}
+                                                    onChange={(e) => setAddress(e.target.value)}
+                                                    placeholder="123 Main St, City, State, 12345"
+                                                />
+                                            </Form.Group>
+                                        </Form>
+
+                                        <h3>Images</h3>
+                                        <div className={premiumStyle.imageUploadSection}>
+                                            <div className={premiumStyle.imageUploadContainer}>
+                                                <div>
+                                                    <Form.Label>Profile Picture</Form.Label>
+                                                    {profileImage ? (
+                                                        <div className={clsx(premiumStyle.imageUploadBox, premiumStyle.hasImage)}>
+                                                            <img src={profileImage} alt="Profile" />
+                                                            <button
+                                                                className={premiumStyle.removeImageButton}
+                                                                onClick={() => removeImage('profile')}
+                                                                type="button"
                                                             >
-                                                                <platform.icon className={premiumStyle.socialIcon} size={16} />
-                                                                {platform.name}
-                                                            </div>
+                                                                <XCircle size={14} />
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <label className={premiumStyle.imageUploadBox}>
+                                                            <Upload className={premiumStyle.uploadIcon} size={24} />
+                                                            <p>Upload Image</p>
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                style={{ display: 'none' }}
+                                                                onChange={(e) => handleImageUpload(e, 'profile')}
+                                                            />
+                                                        </label>
+                                                    )}
+                                                </div>
+
+                                                <div>
+                                                    <Form.Label>Company Logo</Form.Label>
+                                                    {companyLogo ? (
+                                                        <div className={clsx(premiumStyle.imageUploadBox, premiumStyle.hasImage)}>
+                                                            <img
+                                                                src={companyLogo}
+                                                                alt="Company Logo"
+                                                                style={{
+                                                                    height: getCompanyLogoSize(companyLogoSize).height,
+                                                                    width: getCompanyLogoSize(companyLogoSize).width
+                                                                }}
+                                                            />
+                                                            <button
+                                                                className={premiumStyle.removeImageButton}
+                                                                onClick={() => removeImage('logo')}
+                                                                type="button"
+                                                            >
+                                                                <XCircle size={14} />
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <label className={premiumStyle.imageUploadBox}>
+                                                            <Upload className={premiumStyle.uploadIcon} size={24} />
+                                                            <p>Upload Logo</p>
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                style={{ display: 'none' }}
+                                                                onChange={(e) => handleImageUpload(e, 'logo')}
+                                                            />
+                                                        </label>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h3>Social Media</h3>
+                                        <div className={premiumStyle.socialMediaSection}>
+                                            <Form.Label>Select platforms to include:</Form.Label>
+                                            <div className={premiumStyle.socialMediaList}>
+                                                {socialPlatforms.map(platform => {
+                                                    const isActive = activeSocials.includes(platform.id);
+                                                    return (
+                                                        <div
+                                                            key={platform.id}
+                                                            className={clsx(
+                                                                premiumStyle.socialMediaItem,
+                                                                { [premiumStyle.active]: isActive }
+                                                            )}
+                                                            onClick={() => toggleSocialPlatform(platform.id)}
+                                                        >
+                                                            <platform.icon className={premiumStyle.socialIcon} size={16} />
+                                                            {platform.name}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            {activeSocials.length > 0 && (
+                                                <div className="mt-3">
+                                                    {activeSocials.map(platformId => {
+                                                        const platform = socialPlatforms.find(p => p.id === platformId);
+                                                        return (
+                                                            <Form.Group key={platformId} className="mb-2">
+                                                                <Form.Label className={premiumStyle.label}>{platform.name} URL</Form.Label>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={socialLinks[platformId] || ''}
+                                                                    onChange={(e) => handleSocialLinkChange(platformId, e.target.value)}
+                                                                    placeholder={`https://${platformId}.com/username`}
+                                                                    className={premiumStyle.inputBox}
+                                                                />
+                                                            </Form.Group>
                                                         );
                                                     })}
                                                 </div>
+                                            )}
+                                        </div>
 
-                                                {activeSocials.length > 0 && (
-                                                    <div className="mt-3">
-                                                        {activeSocials.map(platformId => {
-                                                            const platform = socialPlatforms.find(p => p.id === platformId);
-                                                            return (
-                                                                <Form.Group key={platformId} className="mb-2">
-                                                                    <Form.Label>{platform.name} URL</Form.Label>
-                                                                    <Form.Control
-                                                                        type="text"
-                                                                        value={socialLinks[platformId] || ''}
-                                                                        onChange={(e) => handleSocialLinkChange(platformId, e.target.value)}
-                                                                        placeholder={`https://${platformId}.com/username`}
-                                                                    />
-                                                                </Form.Group>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                )}
+                                        <h3>Advanced Options</h3>
+                                        <div className={premiumStyle.advancedOptionsSection}>
+                                            <div className="d-flex justify-content-between align-items-center mb-2">
+                                                <Form.Label className="mb-0">Customize your signature appearance</Form.Label>
+                                                <Button
+                                                    onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+                                                    className="py-1 outline-button"
+                                                    style={{ width: '80px' }}
+                                                >
+                                                    {showAdvancedOptions ? 'Hide' : 'Show'}
+                                                </Button>
                                             </div>
 
-                                            <h3>Advanced Options</h3>
-                                            <div className={premiumStyle.advancedOptionsSection}>
-                                                <div className="d-flex justify-content-between align-items-center mb-2">
-                                                    <Form.Label className="mb-0">Customize your signature appearance</Form.Label>
-                                                    <Button
-                                                        onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
-                                                        className="py-1 outline-button"
-                                                        style={{ width: '80px' }}
-                                                    >
-                                                        {showAdvancedOptions ? 'Hide' : 'Show'}
-                                                    </Button>
-                                                </div>
+                                            {showAdvancedOptions && (
+                                                <div className="p-3 border rounded">
+                                                    <Form.Group className="mb-3">
+                                                        <Form.Label className={premiumStyle.label}>Font Family</Form.Label>
+                                                        <Dropdown
+                                                            value={fontFamily}
+                                                            onChange={(e) => setFontFamily(e.value)}
+                                                            options={[
+                                                                { label: 'Arial', value: 'Arial, sans-serif' },
+                                                                { label: 'Helvetica', value: '\'Helvetica Neue\', Helvetica, sans-serif' },
+                                                                { label: 'Times New Roman', value: '\'Times New Roman\', Times, serif' },
+                                                                { label: 'Georgia', value: 'Georgia, serif' },
+                                                                { label: 'Verdana', value: 'Verdana, sans-serif' },
+                                                                { label: 'Tahoma', value: 'Tahoma, sans-serif' },
+                                                                { label: 'Trebuchet MS', value: '\'Trebuchet MS\', sans-serif' },
+                                                                { label: 'Courier New', value: '\'Courier New\', Courier, monospace' }
+                                                            ]}
+                                                            style={{ width: '520px', outline: 'none', boxShadow: 'none' }}
+                                                            placeholder="Select a font family"
+                                                        />
+                                                    </Form.Group>
 
-                                                {showAdvancedOptions && (
-                                                    <div className="p-3 border rounded">
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Font Family</Form.Label>
-                                                            <Form.Select
-                                                                value={fontFamily}
-                                                                onChange={(e) => setFontFamily(e.target.value)}
-                                                            >
-                                                                <option value="Arial, sans-serif">Arial</option>
-                                                                <option value="'Helvetica Neue', Helvetica, sans-serif">Helvetica</option>
-                                                                <option value="'Times New Roman', Times, serif">Times New Roman</option>
-                                                                <option value="Georgia, serif">Georgia</option>
-                                                                <option value="Verdana, sans-serif">Verdana</option>
-                                                                <option value="Tahoma, sans-serif">Tahoma</option>
-                                                                <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                                                                <option value="'Courier New', Courier, monospace">Courier New</option>
-                                                            </Form.Select>
-                                                        </Form.Group>
+                                                    <Row>
+                                                        <Col md={6}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Primary Color</Form.Label>
+                                                                <Form.Control
+                                                                    type="color"
+                                                                    value={primaryColor}
+                                                                    onChange={(e) => setPrimaryColor(e.target.value)}
+                                                                    className={premiumStyle.inputBox}
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col md={6}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Text Color</Form.Label>
+                                                                <Form.Control
+                                                                    type="color"
+                                                                    value={textColor}
+                                                                    onChange={(e) => setTextColor(e.target.value)}
+                                                                    className={premiumStyle.inputBox}
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                    </Row>
 
-                                                        <Row>
-                                                            <Col md={6}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Primary Color</Form.Label>
-                                                                    <Form.Control
-                                                                        type="color"
-                                                                        value={primaryColor}
-                                                                        onChange={(e) => setPrimaryColor(e.target.value)}
-                                                                    />
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col md={6}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Text Color</Form.Label>
-                                                                    <Form.Control
-                                                                        type="color"
-                                                                        value={textColor}
-                                                                        onChange={(e) => setTextColor(e.target.value)}
-                                                                    />
-                                                                </Form.Group>
-                                                            </Col>
-                                                        </Row>
+                                                    <Row>
+                                                        <Col md={6}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Secondary Text Color</Form.Label>
+                                                                <Form.Control
+                                                                    type="color"
+                                                                    value={secondaryTextColor}
+                                                                    className={premiumStyle.inputBox}
+                                                                    onChange={(e) => setSecondaryTextColor(e.target.value)}
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col md={6}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Link Color</Form.Label>
+                                                                <Form.Control
+                                                                    type="color"
+                                                                    value={linkColor}
+                                                                    className={premiumStyle.inputBox}
+                                                                    onChange={(e) => setLinkColor(e.target.value)}
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                    </Row>
 
-                                                        <Row>
-                                                            <Col md={6}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Secondary Text Color</Form.Label>
-                                                                    <Form.Control
-                                                                        type="color"
-                                                                        value={secondaryTextColor}
-                                                                        onChange={(e) => setSecondaryTextColor(e.target.value)}
-                                                                    />
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col md={6}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Link Color</Form.Label>
-                                                                    <Form.Control
-                                                                        type="color"
-                                                                        value={linkColor}
-                                                                        onChange={(e) => setLinkColor(e.target.value)}
-                                                                    />
-                                                                </Form.Group>
-                                                            </Col>
-                                                        </Row>
-
-                                                        <Row>
-                                                            <Col md={6}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Background Color</Form.Label>
-                                                                    <Form.Control
-                                                                        type="color"
-                                                                        value={backgroundColor === 'transparent' ? '#ffffff' : backgroundColor}
-                                                                        onChange={(e) => setBackgroundColor(e.target.value)}
-                                                                    />
-                                                                    <Form.Check
-                                                                        type="checkbox"
-                                                                        label="Transparent background"
+                                                    <Row>
+                                                        <Col md={6}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Background Color</Form.Label>
+                                                                <Form.Control
+                                                                    type="color"
+                                                                    className={premiumStyle.inputBox}
+                                                                    value={backgroundColor === 'transparent' ? '#ffffff' : backgroundColor}
+                                                                    onChange={(e) => setBackgroundColor(e.target.value)}
+                                                                />
+                                                                <div className="d-flex gap-2 mt-3">
+                                                                    <Checkbox
                                                                         checked={backgroundColor === 'transparent'}
-                                                                        onChange={(e) => setBackgroundColor(e.target.checked ? 'transparent' : '#ffffff')}
-                                                                        className="mt-2"
+                                                                        onChange={(e) => setBackgroundColor(e.checked ? 'transparent' : '#ffffff')}
                                                                     />
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col md={6}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Font Size</Form.Label>
-                                                                    <Form.Select
-                                                                        value={fontSize}
-                                                                        onChange={(e) => setFontSize(e.target.value)}
-                                                                    >
-                                                                        <option value="small">Small</option>
-                                                                        <option value="normal">Normal</option>
-                                                                        <option value="large">Large</option>
-                                                                    </Form.Select>
-                                                                </Form.Group>
-                                                            </Col>
-                                                        </Row>
+                                                                    <label className="form-label">Transparent</label>
+                                                                </div>
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col md={6}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Font Size</Form.Label>
+                                                                <Dropdown
+                                                                    value={fontSize}
+                                                                    options={[
+                                                                        { label: 'Small', value: 'small' },
+                                                                        { label: 'Normal', value: 'normal' },
+                                                                        { label: 'Large', value: 'large' }
+                                                                    ]}
+                                                                    onChange={(e) => setFontSize(e.value)}
+                                                                    style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
+                                                                    placeholder="Select font size"
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                    </Row>
 
-                                                        <Row>
-                                                            <Col md={4}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Divider Style</Form.Label>
-                                                                    <Form.Select
-                                                                        value={dividerStyle}
-                                                                        onChange={(e) => setDividerStyle(e.target.value)}
-                                                                    >
-                                                                        <option value="solid">Solid</option>
-                                                                        <option value="dashed">Dashed</option>
-                                                                        <option value="dotted">Dotted</option>
-                                                                    </Form.Select>
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col md={4}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Divider Width</Form.Label>
-                                                                    <Form.Select
-                                                                        value={dividerWidth}
-                                                                        onChange={(e) => setDividerWidth(e.target.value)}
-                                                                    >
-                                                                        <option value="1px">Thin</option>
-                                                                        <option value="2px">Medium</option>
-                                                                        <option value="3px">Thick</option>
-                                                                    </Form.Select>
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col md={4}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Divider Color</Form.Label>
-                                                                    <Form.Control
-                                                                        type="color"
-                                                                        value={dividerColor}
-                                                                        onChange={(e) => setDividerColor(e.target.value)}
-                                                                    />
-                                                                </Form.Group>
-                                                            </Col>
-                                                            {/* <Col md={4}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Icon Style</Form.Label>
-                                                                    <Form.Select
-                                                                        value={iconStyle}
-                                                                        onChange={(e) => setIconStyle(e.target.value)}
-                                                                    >
-                                                                        <option value="circle">Circle</option>
-                                                                        <option value="square">Square</option>
-                                                                        <option value="rounded">Rounded</option>
-                                                                    </Form.Select>
-                                                                </Form.Group>
-                                                            </Col> */}
-                                                        </Row>
+                                                    <Row>
+                                                        <Col md={4}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Divider Style</Form.Label>
+                                                                <Dropdown
+                                                                    value={dividerStyle}
+                                                                    options={[
+                                                                        { label: 'Solid', value: 'solid' },
+                                                                        { label: 'Dashed', value: 'dashed' },
+                                                                        { label: 'Dotted', value: 'dotted' }
+                                                                    ]}
+                                                                    onChange={(e) => setDividerStyle(e.value)}
+                                                                    style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
+                                                                    placeholder="Select divider style"
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col md={4}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Divider Width</Form.Label>
+                                                                <Dropdown
+                                                                    value={dividerWidth}
+                                                                    options={[
+                                                                        { label: 'Thin', value: '1px' },
+                                                                        { label: 'Medium', value: '2px' },
+                                                                        { label: 'Thick', value: '3px' }
+                                                                    ]}
+                                                                    onChange={(e) => setDividerWidth(e.value)}
+                                                                    style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
+                                                                    placeholder="Select divider width"
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col md={4}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Divider Color</Form.Label>
+                                                                <Form.Control
+                                                                    type="color"
+                                                                    value={dividerColor}
+                                                                    className={premiumStyle.inputBox}
+                                                                    onChange={(e) => setDividerColor(e.target.value)}
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                    </Row>
 
-                                                        <Row>
-                                                            <Col md={4}>
-                                                                <Form.Group className="mb-3">
-                                                                    <Form.Label>Profile Image Style</Form.Label>
-                                                                    <Form.Select
-                                                                        value={profileImageStyle}
-                                                                        onChange={(e) => setProfileImageStyle(e.target.value)}
-                                                                    >
-                                                                        <option value="circle">Circle</option>
-                                                                        <option value="square">Square</option>
-                                                                        <option value="rounded">Rounded</option>
-                                                                    </Form.Select>
-                                                                </Form.Group>
-                                                            </Col>
-                                                        </Row>
+                                                    <Row>
+                                                        <Col md={4}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Profile Image Style</Form.Label>
+                                                                <Dropdown
+                                                                    value={profileImageStyle}
+                                                                    options={[
+                                                                        { label: 'Circle', value: 'circle' },
+                                                                        { label: 'Square', value: 'square' },
+                                                                        { label: 'Rounded', value: 'rounded' }
+                                                                    ]}
+                                                                    style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
+                                                                    onChange={(e) => {
+                                                                        setProfileImageStyle(e.value);
+                                                                        setPreviewKey(prev => prev + 1); // Force preview re-render
+                                                                    }}
+                                                                    placeholder="Select image style"
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col md={4}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Profile Image Size</Form.Label>
+                                                                <Dropdown
+                                                                    value={profileImageSize}
+                                                                    options={[
+                                                                        { label: 'Small', value: 'small' },
+                                                                        { label: 'Medium', value: 'medium' },
+                                                                        { label: 'Large', value: 'large' }
+                                                                    ]}
+                                                                    onChange={(e) => {
+                                                                        setProfileImageSize(e.value);
+                                                                        setPreviewKey(prev => prev + 1); // Force preview re-render
+                                                                    }}
+                                                                    style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
+                                                                    placeholder="Select image size"
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col md={4}>
+                                                            <Form.Group className="mb-3">
+                                                                <Form.Label className={premiumStyle.label}>Company Logo Size</Form.Label>
+                                                                <Dropdown
+                                                                    value={companyLogoSize}
+                                                                    options={[
+                                                                        { label: 'Small', value: 'small' },
+                                                                        { label: 'Medium', value: 'medium' },
+                                                                        { label: 'Large', value: 'large' }
+                                                                    ]}
+                                                                    onChange={(e) => {
+                                                                        setCompanyLogoSize(e.value);
+                                                                        setPreviewKey(prev => prev + 1); // Force preview re-render
+                                                                    }}
+                                                                    style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
+                                                                    placeholder="Select logo size"
+                                                                />
+                                                            </Form.Group>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </Col>
+
+                                {/* Right Column - Preview */}
+                                <Col md={5}>
+                                    <div className={premiumStyle.previewSection}>
+                                        <div className={premiumStyle.previewCard}>
+                                            <div className={premiumStyle.previewHeader}>
+                                                <h3>Live Preview</h3>
+                                            </div>
+                                            <div className={premiumStyle.previewBody}>
+                                                <div className={premiumStyle.emailPreview}>
+                                                    <div className={premiumStyle.emailHeader}>
+                                                        <div className={premiumStyle.emailHeaderItem}>
+                                                            <strong>From:</strong> {fullName || 'Your Name'} &lt;{email || 'your.email@example.com'}&gt;
+                                                        </div>
+                                                        <div className={premiumStyle.emailHeaderItem}>
+                                                            <strong>To:</strong> Recipient &lt;recipient@example.com&gt;
+                                                        </div>
+                                                        <div className={premiumStyle.emailHeaderItem}>
+                                                            <strong>Subject:</strong> Email with Signature
+                                                        </div>
                                                     </div>
-                                                )}
+                                                    <div className={premiumStyle.emailBody}>
+                                                        <p>Hello,</p>
+                                                        <p>This is a sample email message. Your actual email content would appear here.</p>
+                                                        <p>Best regards,</p>
+                                                        <div className={premiumStyle.emailSignature}>
+                                                            <div key={previewKey} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className={premiumStyle.compatibilityInfo}>
+                                                <h4>Compatible with:</h4>
+                                                <div className={premiumStyle.compatibilityList}>
+                                                    <div className={premiumStyle.compatibilityItem}>
+                                                        <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Gmail
+                                                    </div>
+                                                    <div className={premiumStyle.compatibilityItem}>
+                                                        <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Outlook
+                                                    </div>
+                                                    <div className={premiumStyle.compatibilityItem}>
+                                                        <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Apple Mail
+                                                    </div>
+                                                    <div className={premiumStyle.compatibilityItem}>
+                                                        <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Yahoo Mail
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </Col>
 
-                                    {/* Right Column - Preview */}
-                                    <Col md={5}>
-                                        <div className={premiumStyle.previewSection}>
-                                            <div className={premiumStyle.previewCard}>
-                                                <div className={premiumStyle.previewHeader}>
-                                                    <h3>Live Preview</h3>
-                                                </div>
-                                                <div className={premiumStyle.previewBody}>
-                                                    <div className={premiumStyle.emailPreview}>
-                                                        <div className={premiumStyle.emailHeader}>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>From:</strong> {fullName || 'Your Name'} &lt;{email || 'your.email@example.com'}&gt;
-                                                            </div>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>To:</strong> Recipient &lt;recipient@example.com&gt;
-                                                            </div>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>Subject:</strong> Email with Signature
-                                                            </div>
-                                                        </div>
-                                                        <div className={premiumStyle.emailBody}>
-                                                            <p>Hello,</p>
-                                                            <p>This is a sample email message. Your actual email content would appear here.</p>
-                                                            <p>Best regards,</p>
-                                                            <div className={premiumStyle.emailSignature}>
-                                                                <div dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className={premiumStyle.compatibilityInfo}>
-                                                    <h4>Compatible with:</h4>
-                                                    <div className={premiumStyle.compatibilityList}>
-                                                        <div className={premiumStyle.compatibilityItem}>
-                                                            <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Gmail
-                                                        </div>
-                                                        <div className={premiumStyle.compatibilityItem}>
-                                                            <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Outlook
-                                                        </div>
-                                                        <div className={premiumStyle.compatibilityItem}>
-                                                            <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Apple Mail
-                                                        </div>
-                                                        <div className={premiumStyle.compatibilityItem}>
-                                                            <CheckCircle className={premiumStyle.compatibilityIcon} size={12} /> Yahoo Mail
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="mt-3 d-flex gap-2">
-                                                <Button
-                                                    className="outline-button w-100"
-                                                    onClick={handleCopySignature}
-                                                >
-                                                    Copy HTML
-                                                </Button>
-                                                <Button
-                                                    className="outline-button w-100"
-                                                    onClick={handleExportSignature}
-                                                >
-                                                    Export as HTML
-                                                </Button>
-                                            </div>
+                                        <div className="mt-3 d-flex gap-2">
+                                            <Button
+                                                className="outline-button w-100"
+                                                onClick={handleCopySignature}
+                                            >
+                                                Copy HTML
+                                            </Button>
+                                            <Button
+                                                className="outline-button w-100"
+                                                onClick={handleExportSignature}
+                                            >
+                                                Export as HTML
+                                            </Button>
                                         </div>
-                                    </Col>
-                                </Row>
-                            ) : (
-                                <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
-                                    <label className={clsx(style.lable)}>Signature<span className="required">*</span></label>
-                                    <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
-                                        {signatureQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                    </InputIcon>
-                                    <Editor
-                                        ref={editorRef}
-                                        style={{ minHeight: "299px" }}
-                                        headerTemplate={header}
-                                        value={text}
-                                        placeholder='Enter a description...'
-                                        onTextChange={(e) => {
-                                            setText(e.htmlValue);
-                                            setErrors((others) => ({ ...others, text: false }));
-                                        }}
-                                    />
-                                    {errors?.text && (
-                                        <p className="error-message mb-0">{"Signature is required"}</p>
-                                    )}
-                                </div>
-                            )}
+                                    </div>
+                                </Col>
+                            </Row>
                         </div>
                     </div>
                     <div className={style.bottom}>
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center gap-4">
                             {
                                 id ?
                                     <Button onClick={handleDelete} className='danger-outline-button ms-2'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
                                     : <span></span>
                             }
-                            <Form.Check
-                                type="checkbox"
-                                id="set-as-default"
-                                label="Set as default signature"
-                                checked={isDefault}
-                                onChange={(e) => setIsDefault(e.target.checked)}
-                                className="ms-3"
-                            />
+                            <div className="d-flex align-items-center gap-2">
+                                <Checkbox
+                                    inputId='defaultSignature'
+                                    checked={isDefault}
+                                    onChange={(e) => setIsDefault(e.checked)}
+                                />
+                                <label htmlFor="defaultSignature" className={clsx(premiumStyle.label, 'mb-0 cursor-pointer')}>Set as default signature</label>
+                            </div>
                         </div>
                         <div className='d-flex gap-2'>
                             <Link to={'/settings/templates/email-signatures/'}>
@@ -1580,16 +1589,6 @@ const CreateEmailSignatureTemplate = () => {
                             <Button onClick={() => setShowPreview(true)} className='outline-button'>
                                 <Eye size={16} className="me-1" /> Preview
                             </Button>
-                            {isPremium && (
-                                <>
-                                    <Button onClick={handleCopySignature} className='outline-button'>
-                                        Copy HTML
-                                    </Button>
-                                    <Button onClick={handleExportSignature} className='outline-button'>
-                                        Export HTML
-                                    </Button>
-                                </>
-                            )}
                             <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
                         </div>
                     </div>
