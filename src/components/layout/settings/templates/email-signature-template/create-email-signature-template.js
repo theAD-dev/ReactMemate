@@ -35,6 +35,25 @@ import premiumStyle from './premium-email-signatures.module.scss';
 // Premium template data with HTML thumbnails
 const premiumTemplates = [
     {
+        id: 'minimal',
+        title: 'Minimal',
+        type: 'Premium',
+        htmlThumbnail: `
+      <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
+        <div style="height:6px;width:60%;background:#e4e7ec;margin-bottom:6px;border-radius:4px;"></div>
+        <div style="height:6px;width:40%;background:#e4e7ec;margin-bottom:12px;border-radius:4px;"></div>
+        <div style="height:6px;width:90%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
+        <div style="height:6px;width:80%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
+        <div style="display:flex;gap:4px;margin-top:12px;">
+          <div style="height:8px;width:8px;background:#4285F4;border-radius:50%;"></div>
+          <div style="height:8px;width:8px;background:#3b5998;border-radius:50%;"></div>
+          <div style="height:8px;width:8px;background:#000000;border-radius:50%;"></div>
+        </div>
+      </div>
+    `,
+        description: 'A clean, minimal signature without dividers'
+    },
+    {
         id: 'single-column',
         title: 'Single Column',
         type: 'Premium',
@@ -219,25 +238,6 @@ const premiumTemplates = [
       </div>
     `,
         description: 'A signature with a logo banner at the top'
-    },
-    {
-        id: 'minimal',
-        title: 'Minimal',
-        type: 'Premium',
-        htmlThumbnail: `
-      <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
-        <div style="height:6px;width:60%;background:#e4e7ec;margin-bottom:6px;border-radius:4px;"></div>
-        <div style="height:6px;width:40%;background:#e4e7ec;margin-bottom:12px;border-radius:4px;"></div>
-        <div style="height:6px;width:90%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
-        <div style="height:6px;width:80%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
-        <div style="display:flex;gap:4px;margin-top:12px;">
-          <div style="height:8px;width:8px;background:#4285F4;border-radius:50%;"></div>
-          <div style="height:8px;width:8px;background:#3b5998;border-radius:50%;"></div>
-          <div style="height:8px;width:8px;background:#000000;border-radius:50%;"></div>
-        </div>
-      </div>
-    `,
-        description: 'A clean, minimal signature without dividers'
     }
 ];
 
@@ -1238,7 +1238,7 @@ const CreateEmailSignatureTemplate = () => {
                                                             onClick={() => toggleSocialPlatform(platform.id)}
                                                         >
                                                             <platform.icon className={premiumStyle.socialIcon} size={16} />
-                                                            {platform.name}
+                                                            <span className="font-14">{platform.name}</span>
                                                         </div>
                                                     );
                                                 })}
