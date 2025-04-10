@@ -148,8 +148,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
     const StatusBody = (rowData) => {
         if (rowData.paid)
-            return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='success-outline-button font-14' style={{ width: '86px', height: '36px' }}>Paid</Button>;
-        return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='danger-outline-button font-14' style={{ width: '86px', height: '36px' }}>Not Paid</Button>;
+            return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='success-outline-button font-14 mx-auto' style={{ width: '86px', height: '36px' }}>Paid</Button>;
+        return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='danger-outline-button font-14 mx-auto' style={{ width: '86px', height: '36px' }}>Not Paid</Button>;
     };
 
     const intervalProjectBody = (rowData) => {
@@ -223,8 +223,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field='account_code.code' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
                 <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
-                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft' headerClassName="shadowLeft" frozen alignFrozen='right'></Column>
-                <Column header="Actions" body={ActionBody} style={{ minWidth: '75px' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
+                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft text-center' headerClassName="shadowLeft text-center" frozen alignFrozen='right'></Column>
+                <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
             </DataTable>
             <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
             <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />
