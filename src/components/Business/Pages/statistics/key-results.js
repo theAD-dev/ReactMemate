@@ -4,13 +4,50 @@ import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import gradient from 'random-gradient';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { getKeyResultStatics } from './api/statistics-api';
 import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
+
+// Custom gradient function to generate random gradients between bright orange and light teal
+const createGradient = (seed) => {
+    // Define our color range
+    const brightOrange = '#FF8C00'; // Bright Orange
+    const orangeYellow = '#FFA500'; // Orange Yellow
+    const lightYellow = '#FFDB99'; // Light Yellow (mid-tone)
+    const lightTeal = '#20B2AA';    // Light Teal
+
+    // Generate a random number between 0 and 1 based on the seed
+    const generateRandom = (s) => {
+        if (!s) return Math.random();
+
+        // Create a deterministic hash from the seed string
+        const hash = s.toString().split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+        }, 0);
+
+        // Normalize to 0-1 range
+        return Math.abs((hash % 1000) / 1000);
+    };
+
+    // Generate random variations of our gradient
+    const random = generateRandom(seed);
+
+    // Create different gradient variations based on the random value
+    if (random < 0.33) {
+        // Variation 1: Orange to teal with more orange
+        return `linear-gradient(to right, ${brightOrange}, ${lightYellow} 60%, ${lightTeal})`;
+    } else if (random < 0.66) {
+        // Variation 2: Balanced gradient
+        return `linear-gradient(to right, ${brightOrange}, ${orangeYellow}, ${lightYellow}, ${lightTeal})`;
+    } else {
+        // Variation 3: Orange to teal with more teal
+        return `linear-gradient(to right, ${brightOrange}, ${lightYellow} 40%, ${lightTeal})`;
+    }
+};
 
 const KeyResultsPage = () => {
     const { trialHeight } = useTrialHeight();
@@ -282,15 +319,16 @@ const KeyResultsPage = () => {
                 <div className={style.divider}></div>
 
                 <div className='d-flex flex-column align-items-center'>
-                    {topStatistics?.map((stat, index) => {
+                    {topStatistics?.map((stat) => {
                         let progressWidth = parseFloat(stat.target_value) > 0
                             ? (parseFloat(stat.sum) / parseFloat(stat.target_value) * 100)
                             : 0;
                         const progressWidthText = progressWidth;
                         progressWidth = progressWidth > 100 ? 100 : progressWidth;
 
-                        const color = gradient(stat.name, 'vertical');
-                        const bgGradient = { background: color };
+                        // Use our custom gradient with the stat name as seed for consistency
+                        const color = createGradient(stat.name);
+                        const bgGradient = { background: createGradient(stat.name) };
 
                         return (
                             <div className={style.chartTextBox} key={stat.name}>
@@ -302,11 +340,11 @@ const KeyResultsPage = () => {
                                         style={{ width: `${progressWidth}%`, ...bgGradient }}
                                         className={clsx(style.ProgressInnerBar)}
                                     >
-                                        <div className={style.ProgressInnerBarPercentage} style={{ right: parseInt(progressWidth) > 10 ? '0px' : '-50px' }}>{parseFloat(progressWidthText).toFixed(2)}%</div>
+                                        <div className={style.ProgressInnerBarPercentage} style={{ right: parseInt(progressWidth) > 10 ? '0px' : '-50px', color: '#000000', fontWeight: 'bold', textShadow: '0px 0px 2px #ffffff' }}>{parseFloat(progressWidthText).toFixed(2)}%</div>
                                     </div>
                                 </div>
                                 <div className={style.chartProgressText} style={{ width: '170px', textAlign: 'left' }}>
-                                    <span style={{ backgroundImage: color }} className={clsx(style.text1)}>
+                                    <span style={{ backgroundImage: `${color}`, fontWeight: 'bold' }} className={clsx(style.text1)}>
                                         ${formatAUD(stat.sum, true)}
                                     </span> / ${formatAUD(stat.target_value, true)}
                                 </div>
