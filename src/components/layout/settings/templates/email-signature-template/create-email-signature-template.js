@@ -35,6 +35,25 @@ import premiumStyle from './premium-email-signatures.module.scss';
 // Premium template data with HTML thumbnails
 const premiumTemplates = [
     {
+        id: 'minimal',
+        title: 'Minimal',
+        type: 'Premium',
+        htmlThumbnail: `
+      <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
+        <div style="height:6px;width:60%;background:#e4e7ec;margin-bottom:6px;border-radius:4px;"></div>
+        <div style="height:6px;width:40%;background:#e4e7ec;margin-bottom:12px;border-radius:4px;"></div>
+        <div style="height:6px;width:90%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
+        <div style="height:6px;width:80%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
+        <div style="display:flex;gap:4px;margin-top:12px;">
+          <div style="height:8px;width:8px;background:#4285F4;border-radius:50%;"></div>
+          <div style="height:8px;width:8px;background:#3b5998;border-radius:50%;"></div>
+          <div style="height:8px;width:8px;background:#000000;border-radius:50%;"></div>
+        </div>
+      </div>
+    `,
+        description: 'A clean, minimal signature without dividers'
+    },
+    {
         id: 'single-column',
         title: 'Single Column',
         type: 'Premium',
@@ -219,25 +238,6 @@ const premiumTemplates = [
       </div>
     `,
         description: 'A signature with a logo banner at the top'
-    },
-    {
-        id: 'minimal',
-        title: 'Minimal',
-        type: 'Premium',
-        htmlThumbnail: `
-      <div style="width:100%;height:100%;padding:8px;background:#f9fafb;border-radius:4px;">
-        <div style="height:6px;width:60%;background:#e4e7ec;margin-bottom:6px;border-radius:4px;"></div>
-        <div style="height:6px;width:40%;background:#e4e7ec;margin-bottom:12px;border-radius:4px;"></div>
-        <div style="height:6px;width:90%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
-        <div style="height:6px;width:80%;background:#e4e7ec;margin-bottom:4px;border-radius:4px;"></div>
-        <div style="display:flex;gap:4px;margin-top:12px;">
-          <div style="height:8px;width:8px;background:#4285F4;border-radius:50%;"></div>
-          <div style="height:8px;width:8px;background:#3b5998;border-radius:50%;"></div>
-          <div style="height:8px;width:8px;background:#000000;border-radius:50%;"></div>
-        </div>
-      </div>
-    `,
-        description: 'A clean, minimal signature without dividers'
     }
 ];
 
@@ -429,12 +429,12 @@ const CreateEmailSignatureTemplate = () => {
     const getCompanyLogoSize = (size) => {
         switch (size) {
             case 'small':
-                return { height: '30px', width: '30px' };
+                return { height: '40px', width: '40px' };
             case 'large':
-                return { height: '50px', width: '50px' };
+                return { height: '80px', width: '80px' };
             case 'medium':
             default:
-                return { height: '40px', width: '40px' };
+                return { height: '60px', width: '60px' };
         }
     };
 
@@ -442,12 +442,12 @@ const CreateEmailSignatureTemplate = () => {
     const getProfileImageSize = (size) => {
         switch (size) {
             case 'small':
-                return { width: '60px', height: '60px' };
+                return { width: '40px', height: '40px' };
             case 'large':
-                return { width: '100px', height: '100px' };
+                return { width: '80px', height: '80px' };
             case 'medium':
             default:
-                return { width: '80px', height: '80px' };
+                return { width: '60px', height: '60px' };
         }
     };
 
@@ -593,8 +593,8 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: center;">
-                                    ${profileImage ? `<div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 0;">
-                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    ${profileImage ? `<div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 0;">
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
                                     </div>` : ''}
                                 </td>` : ''}
                                 <td class="mobile-text-center">
@@ -657,8 +657,8 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
-                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
-                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    <div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
                                     </div>
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
@@ -691,8 +691,8 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
-                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
-                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    <div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
                                     </div>
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
@@ -726,8 +726,8 @@ const CreateEmailSignatureTemplate = () => {
                                 </td>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-left: 15px; width: 80px; vertical-align: top;">
-                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
-                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    <div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
                                     </div>
                                 </td>` : ''}
                             </tr>
@@ -749,8 +749,8 @@ const CreateEmailSignatureTemplate = () => {
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
-                                    <div style="width: 80px; height: 80px; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
-                                        <img src="${profileImage}" alt="${fullName}" width="80" height="80" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                    <div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-top: 10px;">
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
                                     </div>
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
@@ -1238,7 +1238,7 @@ const CreateEmailSignatureTemplate = () => {
                                                             onClick={() => toggleSocialPlatform(platform.id)}
                                                         >
                                                             <platform.icon className={premiumStyle.socialIcon} size={16} />
-                                                            {platform.name}
+                                                            <span className="font-14">{platform.name}</span>
                                                         </div>
                                                     );
                                                 })}
