@@ -11,43 +11,10 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 
-// Custom gradient function to generate random gradients between bright orange and light teal
-const createGradient = (seed) => {
-    // Define our color range
-    const brightOrange = '#FF8C00'; // Bright Orange
-    const orangeYellow = '#FFA500'; // Orange Yellow
-    const lightYellow = '#FFDB99'; // Light Yellow (mid-tone)
-    const lightTeal = '#20B2AA';    // Light Teal
-
-    // Generate a random number between 0 and 1 based on the seed
-    const generateRandom = (s) => {
-        if (!s) return Math.random();
-
-        // Create a deterministic hash from the seed string
-        const hash = s.toString().split('').reduce((a, b) => {
-            a = ((a << 5) - a) + b.charCodeAt(0);
-            return a & a;
-        }, 0);
-
-        // Normalize to 0-1 range
-        return Math.abs((hash % 1000) / 1000);
-    };
-
-    // Generate random variations of our gradient
-    const random = generateRandom(seed);
-
-    // Create different gradient variations based on the random value
-    if (random < 0.33) {
-        // Variation 1: Orange to teal with more orange
-        return `linear-gradient(to right, ${brightOrange}, ${lightYellow} 60%, ${lightTeal})`;
-    } else if (random < 0.66) {
-        // Variation 2: Balanced gradient
-        return `linear-gradient(to right, ${brightOrange}, ${orangeYellow}, ${lightYellow}, ${lightTeal})`;
-    } else {
-        // Variation 3: Orange to teal with more teal
-        return `linear-gradient(to right, ${brightOrange}, ${lightYellow} 40%, ${lightTeal})`;
-    }
-};
+// Red to green gradient constants
+const RED_COLOR = '#FF4D4D';    // Bright Red
+const YELLOW_COLOR = '#FFCC00'; // Yellow
+const GREEN_COLOR = '#4CAF50';  // Green
 
 const KeyResultsPage = () => {
     const { trialHeight } = useTrialHeight();
@@ -271,16 +238,19 @@ const KeyResultsPage = () => {
                                         <stop offset="1" stopColor="#D4DBE2" />
                                     </linearGradient>
                                     <linearGradient id="paint1_linear_9278_365203" x1="12.831" y1="202.665" x2="203.164" y2="12.3317" gradientUnits="userSpaceOnUse">
-                                        <stop stopColor="#FFB258" />
-                                        <stop offset="1" stopColor="#1AB2FF" />
+                                        <stop stopColor="#FF4D4D" /> {/* Bright Red */}
+                                        <stop offset="0.5" stopColor="#FFCC00" /> {/* Yellow */}
+                                        <stop offset="1" stopColor="#4CAF50" /> {/* Green */}
                                     </linearGradient>
                                     <linearGradient id="paint0_linear_9278_365206" x1="98.8011" y1="32.6437" x2="12.1132" y2="165.393" gradientUnits="userSpaceOnUse">
-                                        <stop stopColor="#F3B541" />
-                                        <stop offset="1" stopColor="#E4572A" />
+                                        <stop stopColor="#FF4D4D" /> {/* Bright Red */}
+                                        <stop offset="0.5" stopColor="#FFCC00" /> {/* Yellow */}
+                                        <stop offset="1" stopColor="#4CAF50" /> {/* Green */}
                                     </linearGradient>
                                     <linearGradient id="paint1_linear_9278_365206" x1="124.471" y1="-4.15025" x2="7.36385" y2="107.5" gradientUnits="userSpaceOnUse">
-                                        <stop stopColor="#A3F3AE" />
-                                        <stop offset="1" stopColor="#64CAEC" />
+                                        <stop stopColor="#FF4D4D" /> {/* Bright Red */}
+                                        <stop offset="0.5" stopColor="#FFCC00" /> {/* Yellow */}
+                                        <stop offset="1" stopColor="#4CAF50" /> {/* Green */}
                                     </linearGradient>
                                 </defs>
                             </svg>
@@ -326,9 +296,24 @@ const KeyResultsPage = () => {
                         const progressWidthText = progressWidth;
                         progressWidth = progressWidth > 100 ? 100 : progressWidth;
 
-                        // Use our custom gradient with the stat name as seed for consistency
-                        const color = createGradient(stat.name);
-                        const bgGradient = { background: createGradient(stat.name) };
+                        // Create a red to green gradient based on progress value
+                        const createProgressGradient = (progress) => {
+                            // Create different gradient variations based on the progress value
+                            if (progress < 33) {
+                                // Low progress - more red
+                                return `linear-gradient(to right, ${RED_COLOR}, ${YELLOW_COLOR})`;
+                            } else if (progress < 66) {
+                                // Medium progress - yellow in the middle
+                                return `linear-gradient(to right, ${RED_COLOR}, ${YELLOW_COLOR}, ${GREEN_COLOR})`;
+                            } else {
+                                // High progress - more green
+                                return `linear-gradient(to right, ${YELLOW_COLOR}, ${GREEN_COLOR})`;
+                            }
+                        };
+
+                        // Use red to green gradient based on the progress value
+                        const bgGradient = { background: createProgressGradient(progressWidth) };
+                        const textColor = progressWidth < 33 ? '#FF4D4D' : progressWidth < 66 ? '#FFCC00' : '#4CAF50';
 
                         return (
                             <div className={style.chartTextBox} key={stat.name}>
@@ -344,7 +329,7 @@ const KeyResultsPage = () => {
                                     </div>
                                 </div>
                                 <div className={style.chartProgressText} style={{ width: '170px', textAlign: 'left' }}>
-                                    <span style={{ backgroundImage: `${color}`, fontWeight: 'bold' }} className={clsx(style.text1)}>
+                                    <span style={{ color: `${textColor}`, fontWeight: 'bold' }} className={clsx(style.text1)}>
                                         ${formatAUD(stat.sum, true)}
                                     </span> / ${formatAUD(stat.target_value, true)}
                                 </div>
