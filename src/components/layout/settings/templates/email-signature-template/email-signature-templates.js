@@ -86,7 +86,7 @@ const EmailSignatureTemplates = () => {
                                     <div key={signature.id+index} className={clsx(style.listbox, 'mb-2')}>
                                         <PrimeTooltip position='top' className={style.customTooltip} target={`.info-${index}`} />
                                         <h2 className={clsx(style.heading)}>
-                                            {signature?.title}
+                                            {signature?.name}
                                         </h2>
                                         <Link to={`/settings/templates/email-signatures/${signature.id}?isCustom=${signature.type === 'Custom'}`}>
                                             <Button className={clsx(style.editPencil, 'text-button p-0')} style={{ color: '#1AB2FF', visibility: 'hidden' }}>

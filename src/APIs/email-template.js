@@ -133,6 +133,15 @@ export const deleteEmailSignature = async (id) => {
   return fetchAPI(url.toString(), options);
 };
 
+export const setDefaultEmailSignature = async (id) => {
+  const endpoint = `/settings/email-signatures/default/${id}/`;
+  const options = {
+    method: 'PUT',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
 export const getSMSTemplates = async () => {
   const endpoint = `/sms-templates/`;
   const options = {
