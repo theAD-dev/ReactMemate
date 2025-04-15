@@ -349,18 +349,19 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
           <Row>
             <Col sm={3}>
               <div className="formgroupboxs mb-3 text-start">
-                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Frequency</label>
+                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Frequency <span className='required'>*</span></label>
                 <Dropdown
-                  value={payload?.recurring?.frequency || "weekly"}
+                  style={{ height: '46px' }}
+                  value={payload?.recurring?.frequency || null}
                   onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, frequency: e.value } }))}
                   options={[
-                    { label: "Daily - 15 Upfront", value: "daily" },
-                    { label: "Weekly - Day of the Week - 5 Upfront", value: "weekly" },
-                    { label: "Biweekly - Day of the week - 4 Upfront", value: "biweekly" },
-                    { label: "Monthly - Date - 3 Upfront", value: "monthly" },
-                    { label: "Last Day of the Month - Date - 3 Upfront", value: "lastday" },
-                    { label: "Quarterly - Date - 4 Upfront", value: "quarterly" },
-                    { label: "Yearly - 2 Upfront", value: "yearly" },
+                    { label: "Daily - 15 Upfront", value: "D" },
+                    { label: "Weekly - Day of the Week - 5 Upfront", value: "W" },
+                    { label: "Biweekly - Day of the week - 4 Upfront", value: "B" },
+                    { label: "Monthly - Date - 3 Upfront", value: "M" },
+                    { label: "Last Day of the Month - Date - 3 Upfront", value: "L" },
+                    { label: "Quarterly - Date - 4 Upfront", value: "Q" },
+                    { label: "Yearly - 2 Upfront", value: "Y" },
                   ]}
                   className="w-100 outline-none"
                   placeholder="Select frequency"
@@ -369,7 +370,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             </Col>
             <Col sm={3}>
               <div className="formgroupboxs mb-3 text-start">
-                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Start</label>
+                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Start <span className='required'>*</span></label>
                 <Calendar
                   value={payload?.recurring?.start_date || null}
                   onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, start_date: e.value } }))}
@@ -383,15 +384,16 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             </Col>
             <Col sm={3}>
               <div className="formgroupboxs mb-3 text-start">
-                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>End</label>
+                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>End <span className='required'>*</span></label>
                 <Dropdown
-                  value={payload?.recurring?.end_type || "never"}
-                  onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, end_type: e.value } }))}
+                  value={payload?.recurring?.end_by}
+                  onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, end_by: e.value } }))}
                   options={[
-                    { label: "No end", value: "never" },
-                    { label: "Number of projects", value: "on" },
-                    { label: "By date", value: "after" },
+                    { label: "No end", value: 0 },
+                    { label: "Number of projects", value: 2 },
+                    { label: "By date", value: 1 },
                   ]}
+                  style={{ height: '46px' }}
                   className="w-100 outline-none"
                   placeholder="Select an end"
                 />
@@ -399,19 +401,19 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             </Col>
             <Col sm={3}>
               {
-                payload?.recurring?.end_type === "on" ?
+                payload?.recurring?.end_by === 2 ?
                   <div className="formgroupboxs mb-3 text-start">
-                    <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Number of projects</label>
+                    <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Number of projects <span className='required'>*</span></label>
                     <InputNumber
-                      value={payload?.recurring?.projects || 0}
-                      onValueChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, projects: e.target.value } }))}
+                      value={payload?.recurring?.occurrences || 0}
+                      onValueChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, occurrences: e.target.value } }))}
                       style={{ height: '46px' }}
                       className='w-100 outline-none border rounded'
                     />
                   </div>
-                  : payload?.recurring?.end_type === "after" ?
+                  : payload?.recurring?.end_by === 1 ?
                     <div className="formgroupboxs mb-3 text-start">
-                      <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>By Date</label>
+                      <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>By Date <span className='required'>*</span></label>
                       <Calendar
                         value={payload?.recurring?.end_date || null}
                         onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, end_date: e.value } }))}

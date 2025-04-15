@@ -9,6 +9,8 @@ import {
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -45,6 +47,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [expenseJobsMapping, setExpenseJobsMapping] = useState([]);
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
+  const [showCostBreakdown, setShowCostBreakdown] = useState(false);
 
   //Real Cost Calculation
   const cs = parseFloat(cardData?.cost_of_sale) || 0;
@@ -840,9 +843,24 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
             </Row>
-            <Row className='projectBreakdown'>
-              <Col>
-                <Button>Cost breakdown</Button>
+            <Row className='projectBreakdown px-0'>
+              <Col className='px-0'>
+                <Button onClick={() => setShowCostBreakdown(!showCostBreakdown)}>{!showCostBreakdown ? 'Show' : 'Hide'} Cost breakdown</Button>
+                {
+                  showCostBreakdown &&
+                  <DataTable value={cardData?.calculations || []} showGridlines className="border-top">
+                    <Column field="index" header="#" style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
+                    <Column field="index" header="Order" style={{ width: '100%' }}></Column>
+                    <Column field="subindex" header="Department" style={{ width: '100%' }}></Column>
+                    <Column field="description" header="Description" body={(rowData) => <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '350px' }}>{rowData.description}</div>} style={{ width: '100%' }}></Column>
+                    <Column field="cost" header="Cost" style={{ width: '100%' }}></Column>
+                    <Column field="profit_type_value" header="Markup/Margin" body={(rowData) => `${rowData.profit_type_value} ${rowData.profit_type === "AMN" ? "AMT $" : rowData.profit_type === "MRG" ? "MRG %" : "MRK %"}`} style={{ width: '100%' }}></Column>
+                    <Column field="unit_price" header="Unit Price" style={{ width: '100%' }}></Column>
+                    <Column field="quantity" header="Qty/Unit" style={{ width: '100%' }}></Column>
+                    <Column field="discount" header="Discount" style={{ width: '100%' }}></Column>
+                    <Column field="total" header="Amount" style={{ width: '100%' }}></Column>
+                  </DataTable>
+                }
               </Col>
             </Row>
           </div>

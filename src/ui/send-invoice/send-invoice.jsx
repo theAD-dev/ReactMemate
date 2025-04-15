@@ -231,7 +231,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
     useEffect(() => {
         if (emailTemplateQuery?.data) {
             const activeTemplateId = isCreated ?
-                emailTemplateQuery?.data?.find((template) => template.type === 'Resend Invoice')
+                emailTemplateQuery?.data?.find((template) => template.type === 'Invoice')
                 : emailTemplateQuery?.data?.find((template) => template.type === 'Invoice');
             setEmailTemplatedId(activeTemplateId?.id);
         }

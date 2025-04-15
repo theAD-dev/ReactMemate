@@ -404,7 +404,7 @@ const CreateEmailSignatureTemplate = () => {
         retry: 1,
     });
     const mutation = useMutation({
-        mutationFn: (templateData) => (id ? updateEmailSignature(id, templateData) : createEmailSignature(templateData)),
+        mutationFn: (templateData) => ((id && id !== '0') ? updateEmailSignature(id, templateData) : createEmailSignature(templateData)),
         onSuccess: () => {
             toast.success("Template saved successfully!");
             navigate('/settings/templates/email-signatures/');
@@ -858,11 +858,11 @@ const CreateEmailSignatureTemplate = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrors({});
-
+        
         const newErrors = {};
         if (!title) newErrors.title = true;
-        if (!fullName) newErrors.fullName = true;
-        if (!email) newErrors.email = true;
+        if (!text && !fullName) newErrors.fullName = true;
+        if (!text && !email) newErrors.email = true;
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -873,9 +873,7 @@ const CreateEmailSignatureTemplate = () => {
 
         const templateData = {
             name: title,
-            text: id ? text : signatureHTML,
-            template_id: selectedTemplate || null,
-            default: isDefault
+            text: text ? text : signatureHTML,
         };
 
         console.log(templateData);
@@ -891,11 +889,11 @@ const CreateEmailSignatureTemplate = () => {
 
     useEffect(() => {
         if (signatureQuery?.data) {
-            setTitle(signatureQuery?.data?.title);
+            setTitle(signatureQuery?.data?.name);
             setText(signatureQuery?.data?.text);
-            setIsDefault(signatureQuery?.data?.is_default || false);
+            setIsDefault((profileData.email_signature === signatureQuery?.data?.id) || false);
         }
-    }, [signatureQuery?.data]);
+    }, [signatureQuery?.data, profileData.email_signature]);
 
     return (
         <div className='settings-wrap'>
@@ -994,7 +992,10 @@ const CreateEmailSignatureTemplate = () => {
                                     <p>This is a sample email message. Your actual email content would appear here.</p>
                                     <p>Best regards,</p>
                                     <div className={style.emailSignature}>
-                                        <div key={previewKey} className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
+                                        {
+                                            text ? <div key={previewKey} className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: text }} /> :
+                                                <div key={previewKey} className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -1520,24 +1521,8 @@ const CreateEmailSignatureTemplate = () => {
                                                 </div>
                                                 <div className={premiumStyle.previewBody}>
                                                     <div className={premiumStyle.emailPreview}>
-                                                        <div className={premiumStyle.emailHeader}>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>From:</strong> {fullName || 'Your Name'} &lt;{email || 'your.email@example.com'}&gt;
-                                                            </div>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>To:</strong> Recipient &lt;recipient@example.com&gt;
-                                                            </div>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>Subject:</strong> Email with Signature
-                                                            </div>
-                                                        </div>
                                                         <div className={premiumStyle.emailBody}>
-                                                            <p>Hello,</p>
-                                                            <p>This is a sample email message. Your actual email content would appear here.</p>
-                                                            <p>Best regards,</p>
-                                                            <div className={premiumStyle.emailSignature}>
-                                                                <div key={previewKey} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
-                                                            </div>
+                                                            <div key={previewKey} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1560,7 +1545,7 @@ const CreateEmailSignatureTemplate = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="mt-3 d-flex gap-2">
+                                            {/* <div className="mt-3 d-flex gap-2">
                                                 <Button
                                                     className="outline-button w-100"
                                                     onClick={handleCopySignature}
@@ -1573,7 +1558,7 @@ const CreateEmailSignatureTemplate = () => {
                                                 >
                                                     Export as HTML
                                                 </Button>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </Col>
                                 </Row>
@@ -1599,24 +1584,8 @@ const CreateEmailSignatureTemplate = () => {
                                                 </div>
                                                 <div className={premiumStyle.previewBody}>
                                                     <div className={premiumStyle.emailPreview}>
-                                                        <div className={premiumStyle.emailHeader}>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>From:</strong> {fullName || 'Your Name'} &lt;{email || 'your.email@example.com'}&gt;
-                                                            </div>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>To:</strong> Recipient &lt;recipient@example.com&gt;
-                                                            </div>
-                                                            <div className={premiumStyle.emailHeaderItem}>
-                                                                <strong>Subject:</strong> Email with Signature
-                                                            </div>
-                                                        </div>
                                                         <div className={premiumStyle.emailBody}>
-                                                            <p>Hello,</p>
-                                                            <p>This is a sample email message. Your actual email content would appear here.</p>
-                                                            <p>Best regards,</p>
-                                                            <div className={premiumStyle.emailSignature}>
-                                                                <div key={previewKey} dangerouslySetInnerHTML={{ __html: text }} />
-                                                            </div>
+                                                            <div key={previewKey} dangerouslySetInnerHTML={{ __html: text }} />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1638,12 +1607,13 @@ const CreateEmailSignatureTemplate = () => {
                                             <Checkbox
                                                 inputId='defaultSignature'
                                                 checked={isDefault}
+                                                disabled={setDefaultTemplateMutation.isPending || isDefault}
                                                 onChange={(e) => {
                                                     setIsDefault(e.checked);
                                                     setDefaultTemplateMutation.mutate();
                                                 }}
                                             />
-                                            <label htmlFor="defaultSignature" className={clsx(premiumStyle.label, 'mb-0 cursor-pointer')}>Set as default signature</label>
+                                            <label htmlFor="defaultSignature" className={clsx(premiumStyle.label, 'mb-0 cursor-pointer')} style={{ opacity: isDefault ? 0.5 : 1 }}>Set as default signature</label>
                                         </div>
                                     </>
                                     : <span></span>

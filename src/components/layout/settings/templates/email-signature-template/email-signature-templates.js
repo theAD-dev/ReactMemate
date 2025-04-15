@@ -20,6 +20,8 @@ const EmailSignatureTemplates = () => {
     const signatureTemplateQuery = useQuery({
         queryKey: ["email-signatures"],
         queryFn: getSignatureTemplates,
+        retry: 1,
+        cacheTime: 0
     });
 
     return (
@@ -77,13 +79,17 @@ const EmailSignatureTemplates = () => {
                                         <p className='text-muted mb-0'>Create professional email signatures for your communications</p>
                                     </div>
                                     <div className='d-flex gap-3'>
+                                        <Link className='mb-0 d-flex align-items-center' to={'/settings/templates/email-signatures/0'}>
+                                            New Signature <PlusLg color='#344054' size={20} />
+                                        </Link>
+
                                         <Link className='mb-0 d-flex align-items-center' to={'/settings/templates/email-signatures/new'}>
-                                            Premium Signature <PlusLg color='#344054' size={20} />
+                                            Generate Signature <PlusLg color='#344054' size={20} />
                                         </Link>
                                     </div>
                                 </div>
                                 {signatureTemplateQuery?.data?.map((signature, index) => (
-                                    <div key={signature.id+index} className={clsx(style.listbox, 'mb-2')}>
+                                    <div key={signature.id} className={clsx(style.listbox, { [style.notCustomBox]: signature.id === profileData.email_signature }, 'mb-2')}>
                                         <PrimeTooltip position='top' className={style.customTooltip} target={`.info-${index}`} />
                                         <h2 className={clsx(style.heading)}>
                                             {signature?.name}

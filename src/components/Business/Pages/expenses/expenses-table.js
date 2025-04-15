@@ -216,7 +216,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
                 <Column field="number" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
                 <Column field="supplier.name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-                <Column field="invoice_reference" header="Reference" style={{ minWidth: '94px' }}></Column>
+                <Column field="invoice_reference" header="Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.invoice_reference} style={{ maxWidth: '250px' }}>{rowData.invoice_reference}</div>} style={{ minWidth: '94px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'right' }}></Column>
