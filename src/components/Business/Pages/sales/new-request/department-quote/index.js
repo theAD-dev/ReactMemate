@@ -5,6 +5,9 @@ import { components } from 'react-select';
 import Select1 from 'react-select';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { Calendar } from 'primereact/calendar';
+import { Dropdown } from 'primereact/dropdown';
+import { InputNumber } from 'primereact/inputnumber';
 import Form from 'react-bootstrap/Form';
 import DepartmentCalculationTable from './department-calculation-table';
 import QuoteToBusiness from './quote-to-business';
@@ -24,7 +27,7 @@ const CustomOption = (props) => {
   );
 };
 
-const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges, setMergeDeletedItems, setContactPersons }) => {
+const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, preExistCalculation, preExistMerges, setMergeDeletedItems, setContactPersons, quoteType }) => {
   const [paymentCollection, setPaymentCollection] = useState('request');
   const [selectedManagers, setSelectedManagers] = useState([]);
   const [editedReference, setEditedReference] = useState('');
@@ -165,7 +168,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
           </Col>
         </Row>
       </div>
-      <div className='DepartmentQuote' style={{ background: '#fff', borderRadius: '4px', padding: '16px', width: '100%' }}>
+      <div className='DepartmentQuote mb-3' style={{ background: '#fff', borderRadius: '4px', padding: '16px', width: '100%' }}>
 
         <DepartmentCalculationTable setTotals={setTotals} setPayload={setPayload} xero_tax={payload.xero_tax} defaultDiscount={clientQuery?.data?.category?.value || 0} preExistCalculation={preExistCalculation} preMerges={preExistMerges} refetch={refetch} setMergeDeletedItems={setMergeDeletedItems} />
 
@@ -335,6 +338,99 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
           </Col>
         </Row>
       </div>
+
+      {quoteType === 'Recurring' &&
+        <div style={{ background: '#fff', borderRadius: '4px', padding: '16px', width: '100%' }} >
+          <h3 style={{ color: 'rgb(52, 64, 84)', fontSize: '16px', fontWeight: '600', textAlign: 'left' }}>
+            Recurring Details {" "}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="#667085" className="bi bi-info-circle"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path></svg>
+          </h3>
+
+          <Row>
+            <Col sm={3}>
+              <div className="formgroupboxs mb-3 text-start">
+                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Frequency <span className='required'>*</span></label>
+                <Dropdown
+                  style={{ height: '46px' }}
+                  value={payload?.recurring?.frequency || null}
+                  onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, frequency: e.value } }))}
+                  options={[
+                    { label: "Daily - 15 Upfront", value: "D" },
+                    { label: "Weekly - Day of the Week - 5 Upfront", value: "W" },
+                    { label: "Biweekly - Day of the week - 4 Upfront", value: "B" },
+                    { label: "Monthly - Date - 3 Upfront", value: "M" },
+                    { label: "Last Day of the Month - Date - 3 Upfront", value: "L" },
+                    { label: "Quarterly - Date - 4 Upfront", value: "Q" },
+                    { label: "Yearly - 2 Upfront", value: "Y" },
+                  ]}
+                  className="w-100 outline-none"
+                  placeholder="Select frequency"
+                />
+              </div>
+            </Col>
+            <Col sm={3}>
+              <div className="formgroupboxs mb-3 text-start">
+                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Start <span className='required'>*</span></label>
+                <Calendar
+                  value={payload?.recurring?.start_date || null}
+                  onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, start_date: e.value } }))}
+                  showButtonBar
+                  placeholder='DD/MM/YY'
+                  dateFormat="dd/mm/yy"
+                  style={{ height: '46px' }}
+                  className='w-100 outline-none border rounded'
+                />
+              </div>
+            </Col>
+            <Col sm={3}>
+              <div className="formgroupboxs mb-3 text-start">
+                <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>End <span className='required'>*</span></label>
+                <Dropdown
+                  value={payload?.recurring?.end_by}
+                  onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, end_by: e.value } }))}
+                  options={[
+                    { label: "No end", value: 0 },
+                    { label: "Number of projects", value: 2 },
+                    { label: "By date", value: 1 },
+                  ]}
+                  style={{ height: '46px' }}
+                  className="w-100 outline-none"
+                  placeholder="Select an end"
+                />
+              </div>
+            </Col>
+            <Col sm={3}>
+              {
+                payload?.recurring?.end_by === 2 ?
+                  <div className="formgroupboxs mb-3 text-start">
+                    <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Number of projects <span className='required'>*</span></label>
+                    <InputNumber
+                      value={payload?.recurring?.occurrences || 0}
+                      onValueChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, occurrences: e.target.value } }))}
+                      style={{ height: '46px' }}
+                      className='w-100 outline-none border rounded'
+                    />
+                  </div>
+                  : payload?.recurring?.end_by === 1 ?
+                    <div className="formgroupboxs mb-3 text-start">
+                      <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>By Date <span className='required'>*</span></label>
+                      <Calendar
+                        value={payload?.recurring?.end_date || null}
+                        onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, end_date: e.value } }))}
+                        showButtonBar
+                        placeholder='DD/MM/YY'
+                        dateFormat="dd/mm/yy"
+                        style={{ height: '46px' }}
+                        className='w-100 outline-none border rounded'
+                      />
+                    </div>
+                    : null
+              }
+            </Col>
+          </Row>
+        </div>
+      }
+
     </React.Fragment>
   );
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell } from 'react-bootstrap-icons';
+import { Send } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { toast } from 'sonner';
@@ -7,7 +7,7 @@ import { getClientById } from '../../../../../APIs/ClientsApi';
 import { resendInvoiceEmail } from '../../../../../APIs/invoice-api';
 import SendDynamicEmailForm from '../../../../../ui/send-email-2/send-email';
 
-const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
+const SendInvoiceEmail = ({ projectId, clientId, isAction }) => {
     const [show, setShow] = useState(false);
     const [payload, setPayload] = useState({});
     const clientQuery = useQuery({
@@ -21,11 +21,11 @@ const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
         mutationFn: (data) => resendInvoiceEmail(projectId, data),
         onSuccess: () => {
             setShow(false);
-            toast.success(`Reminder email sent successfully.`);
+            toast.success(`Email sent successfully.`);
         },
         onError: (error) => {
             console.error('Error sending email:', error);
-            toast.error(`Failed to send reminder email. Please try again.`);
+            toast.error(`Failed to resent email. Please try again.`);
         }
     });
 
@@ -33,15 +33,15 @@ const ResendInvoiceEmail = ({ projectId, clientId, isAction }) => {
         <>
             {
                 isAction ? <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={() => setShow(true)}>
-                    <Bell color='#667085' size={20} />
-                    <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Send Reminder</span>
+                    <Send color='#667085' size={20} />
+                    <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Send Invoice</span>
                 </div>
                     : <Button label="Resend" style={{ position: 'static' }} onClick={() => setShow(true)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
             }
-            <SendDynamicEmailForm show={show} setShow={setShow} setPayload={setPayload} mutation={mutation} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={() => { }} defaultTemplateId={'Resend Invoice'} />
+            <SendDynamicEmailForm show={show} setShow={setShow} setPayload={setPayload} mutation={mutation} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={() => { }} defaultTemplateId={'Invoice'} />
         </>
 
     );
 };
 
-export default ResendInvoiceEmail;
+export default SendInvoiceEmail;

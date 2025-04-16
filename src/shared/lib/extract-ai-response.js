@@ -81,16 +81,6 @@ export const formatExpenseDataFromAI = (data) => {
     tax = subtotal * 0.10;
   }
   
-  // Format the due date if available
-  let dueDate = null;
-  if (data.due_date) {
-    try {
-      dueDate = new Date(data.due_date);
-    } catch (e) {
-      console.error('Error parsing due date:', e);
-    }
-  }
-  
   return {
     invoice_reference: data.invoice_number || '',
     amount: amountValue.toFixed(2),
@@ -100,8 +90,6 @@ export const formatExpenseDataFromAI = (data) => {
     subtotal: subtotal.toFixed(2),
     tax: tax.toFixed(2),
     totalAmount: (subtotal + tax).toFixed(2),
-    note: data.description || '',
-    due_date: dueDate,
-    date: new Date(), // Default to current date
+    note: data.description || ''
   };
 };

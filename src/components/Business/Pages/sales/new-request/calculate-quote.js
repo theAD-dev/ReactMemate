@@ -48,8 +48,17 @@ const CalculateQuote = () => {
                 reference: storedSessionData?.reference || "",
                 description: storedSessionData?.requirements || ""
             }));
-        } else {
-            setPayload((others) => ({ ...others, ...newRequestQuery?.data }));
+        } else if (newRequestQuery?.data) {
+            let quoteType = newRequestQuery?.data?.recurring?.frequency ? 'Recurring' : 'Standard';
+            setQuoteType(quoteType);
+            const newData = { ...newRequestQuery?.data };
+            if (quoteType === 'Recurring') {
+                newData.recurring.start_date = new Date(+newData.recurring.start_date * 1000);
+                newData.recurring.end_by = +newData.recurring.end_by;
+                if (newData.recurring.end_by === 1)
+                    newData.recurring.end_date = new Date(+newData.recurring.end_date * 1000);
+            }
+            setPayload((others) => ({ ...others, ...newData }));
         }
     }, [unique_id, newRequestQuery?.data]);
 
@@ -101,8 +110,6 @@ const CalculateQuote = () => {
             payload.action = "save";
         }
 
-        payload.recurring = { frequency: "1", occurrences: 10, start_date: new Date() }; // dummy
-
         const merges = payload.merges;
         if (payload.merges) delete payload.merges;
 
@@ -112,6 +119,22 @@ const CalculateQuote = () => {
         if (!payload?.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
         if (!payload?.xero_tax) return toast.error('Tax details is required');
         if (!payload?.expense) return toast.error('Expense is required');
+
+        if (quoteType === 'Recurring' && !payload?.recurring) return toast.error('Recurring details is required');
+        if (quoteType === 'Recurring' && !payload?.recurring?.frequency) return toast.error('Recurring frequency is required');
+        if (quoteType === 'Recurring' && !payload?.recurring?.start_date) return toast.error('Recurring start date is required');
+        if (quoteType === 'Recurring' && !([0, 1, 2].includes(payload?.recurring?.end_by))) return toast.error('Recurring end by is required');
+        if (quoteType === 'Recurring' && payload?.recurring?.end_by === 1 && !payload?.recurring?.end_date) return toast.error('Recurring end date is required');
+        if (quoteType === 'Recurring' && payload?.recurring?.end_by === 2 && !payload?.recurring?.occurrences) return toast.error('Recurring projects is required');
+        if (quoteType === 'Recurring') {
+            if (payload.recurring.start_date)
+                payload.recurring.start_date = payload.recurring.start_date.toISOString().split('T')[0];
+            if (payload.recurring.end_date && payload.recurring.end_by === 1)
+                payload.recurring.end_date = payload.recurring.end_date.toISOString().split('T')[0];
+            else {
+                delete payload.recurring.end_date;
+            }
+        }
 
         let result;
         setIsLoading(true);
@@ -213,7 +236,7 @@ const CalculateQuote = () => {
                 <h2 className='m-0' style={{ fontSize: '22px', fontWeight: '600', position: 'absolute', left: '42.5%' }}>
                     <div className='d-flex flex-column align-items-center gap-1'>
                         <div className='d-flex align-items-center'><PlusSlashMinus color="#1D2939" size={16} />&nbsp; Calculate a Quote</div>
-                        {newRequestQuery?.data?.number &&  <small className='font-14 border px-3 py-1 rounded' style={{ width: 'fit-content' }}>{newRequestQuery?.data?.number}</small>}
+                        {newRequestQuery?.data?.number && <small className='font-14 border px-3 py-1 rounded' style={{ width: 'fit-content' }}>{newRequestQuery?.data?.number}</small>}
                     </div>
                 </h2>
                 <div className='d-flex align-items-center justify-content-end'>
@@ -231,7 +254,6 @@ const CalculateQuote = () => {
                         value="Recurring"
                         checked={quoteType === 'Recurring'}
                         onChange={(e) => setQuoteType(e.target.value)}
-                        disabled={true}
                     />
                     <CustomRadioButton
                         label="Subscription"
@@ -253,7 +275,7 @@ const CalculateQuote = () => {
             </div>
 
             <div className='w-100' style={{ overflow: 'auto', height: `calc(100% - 208px - ${trialHeight}px)`, padding: '16px 32px' }}>
-                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems} setContactPersons={setContactPersons} />
+                <DepartmentQuote payload={payload} setPayload={setPayload} totals={totals} setTotals={setTotals} refetch={newRequestQuery?.refetch} preExistMerges={newRequestQuery?.data?.merges || []} preExistCalculation={newRequestQuery?.data?.calculations || []} setMergeDeletedItems={setMergeDeletedItems} setContactPersons={setContactPersons} quoteType={quoteType} />
             </div>
 
             <div className='calculation-quote-bottom w-100' style={{ padding: '8px 24px', height: '136px', background: '#fff', borderTop: '1px solid #f2f2f2', boxShadow: 'rgba(0, 0, 0, 0.06) 0px 0px 4px 0px inset' }}>

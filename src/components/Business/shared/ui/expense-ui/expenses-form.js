@@ -14,6 +14,7 @@ import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
+import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from 'primereact/inputtextarea';
 import { SelectButton } from 'primereact/selectbutton';
@@ -50,7 +51,7 @@ const schema = yup
             .test(
                 'is-after-date',
                 'Due date must be after the invoice date',
-                function(value) {
+                function (value) {
                     const { date } = this.parent;
                     if (!date || !value) return true; // Skip validation if either date is missing
 
@@ -205,6 +206,9 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                         // Format the data for the form
                         const formattedData = formatExpenseDataFromAI(extractedData);
                         if (formattedData) {
+                            // set the file url
+                            setValue('file', fileUrl);
+
                             // Prefill the form with the extracted data
                             Object.entries(formattedData).forEach(([key, value]) => {
                                 setValue(key, value);
@@ -511,14 +515,14 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                             ) : file.aiSuccess ? (
                                                 <div className={styles.aiSuccessBox}>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM7 11.4L3.6 8L5 6.6L7 8.6L11 4.6L12.4 6L7 11.4Z" fill="#12B76A"/>
+                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM7 11.4L3.6 8L5 6.6L7 8.6L11 4.6L12.4 6L7 11.4Z" fill="#12B76A" />
                                                     </svg>
                                                     <span className={styles.aiSuccessText}>Data extracted</span>
                                                 </div>
                                             ) : file.aiNoData ? (
                                                 <div className={styles.aiNoDataBox}>
                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM8 12C7.4 12 7 11.6 7 11C7 10.4 7.4 10 8 10C8.6 10 9 10.4 9 11C9 11.6 8.6 12 8 12ZM9 9H7V4H9V9Z" fill="#F79009"/>
+                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM8 12C7.4 12 7 11.6 7 11C7 10.4 7.4 10 8 10C8.6 10 9 10.4 9 11C9 11.6 8.6 12 8 12ZM9 9H7V4H9V9Z" fill="#F79009" />
                                                     </svg>
                                                     <span className={styles.aiNoDataText}>No data found</span>
                                                 </div>
@@ -616,7 +620,21 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     <div className="d-flex flex-column gap-1 mt-4">
                         <label className={clsx(styles.lable)}>Total Amount<span className='required'>*</span></label>
                         <IconField>
-                            <InputText keyfilter="money" {...register("amount")} onBlur={(e) => setValue('amount', parseFloat(e?.target?.value || 0).toFixed(2))} onKeyUp={(e) => handleGstChange(getValues('gst-calculation'))} className={clsx(styles.inputText, { [styles.error]: errors.amount })} placeholder='$ Enter total amount' />
+                            <InputNumber
+                                prefix="$"
+                                value={watch('amount')}
+                                onValueChange={(e) => {
+                                    setValue('amount', e.value);
+                                    handleGstChange(getValues('gst-calculation'));
+                                }}
+                                onBlur={() => handleGstChange(getValues('gst-calculation'))}
+                                style={{ height: '46px', padding: '0px' }}
+                                className={clsx(styles.inputText, { [styles.error]: errors.amount })}
+                                placeholder='$ Enter total amount'
+                                maxFractionDigits={2}
+                                minFractionDigits={2}
+                                inputId="minmaxfraction"
+                            />
                             <InputIcon>{errors.amount && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                         </IconField>
                         {errors?.amount && <p className="error-message">{errors.amount?.message}</p>}

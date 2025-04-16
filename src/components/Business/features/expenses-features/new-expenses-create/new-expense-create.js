@@ -53,7 +53,6 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
         if (!data.type) data.type = 1;
         if (data.date) data.date = new Date(data.date).toISOString().split('T')[0];
         if (data.due_date) data.due_date = new Date(data.due_date).toISOString().split('T')[0];
-        console.log('data: ', data);
         mutation.mutate(data);
     };
 

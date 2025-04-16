@@ -23,6 +23,7 @@ import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
 import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
+import SendInvoiceEmail from '../../features/invoice-features/send-email/send-email';
 
 
 const formatDate = (timestamp) => {
@@ -305,6 +306,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
             >
                 <div className='d-flex flex-column gap-2'>
+                    <SendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
                     <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
                     <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
                         <Files color='#667085' size={20} />
