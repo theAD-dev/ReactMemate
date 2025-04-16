@@ -48,10 +48,17 @@ const CalculateQuote = () => {
                 reference: storedSessionData?.reference || "",
                 description: storedSessionData?.requirements || ""
             }));
-        } else {
+        } else if (newRequestQuery?.data) {
             let quoteType = newRequestQuery?.data?.recurring?.frequency ? 'Recurring' : 'Standard';
             setQuoteType(quoteType);
-            setPayload((others) => ({ ...others, ...newRequestQuery?.data }));
+            const newData = { ...newRequestQuery?.data };
+            if (quoteType === 'Recurring') {
+                newData.recurring.start_date = new Date(+newData.recurring.start_date * 1000);
+                newData.recurring.end_by = +newData.recurring.end_by;
+                if (newData.recurring.end_by === 1)
+                    newData.recurring.end_date = new Date(+newData.recurring.end_date * 1000);
+            }
+            setPayload((others) => ({ ...others, ...newData }));
         }
     }, [unique_id, newRequestQuery?.data]);
 
@@ -116,14 +123,17 @@ const CalculateQuote = () => {
         if (quoteType === 'Recurring' && !payload?.recurring) return toast.error('Recurring details is required');
         if (quoteType === 'Recurring' && !payload?.recurring?.frequency) return toast.error('Recurring frequency is required');
         if (quoteType === 'Recurring' && !payload?.recurring?.start_date) return toast.error('Recurring start date is required');
-        if (quoteType === 'Recurring' && !([0,1,2].includes(payload?.recurring?.end_by))) return toast.error('Recurring end by is required');
+        if (quoteType === 'Recurring' && !([0, 1, 2].includes(payload?.recurring?.end_by))) return toast.error('Recurring end by is required');
         if (quoteType === 'Recurring' && payload?.recurring?.end_by === 1 && !payload?.recurring?.end_date) return toast.error('Recurring end date is required');
         if (quoteType === 'Recurring' && payload?.recurring?.end_by === 2 && !payload?.recurring?.occurrences) return toast.error('Recurring projects is required');
         if (quoteType === 'Recurring') {
             if (payload.recurring.start_date)
                 payload.recurring.start_date = payload.recurring.start_date.toISOString().split('T')[0];
-            if (payload.recurring.end_date)
+            if (payload.recurring.end_date && payload.recurring.end_by === 1)
                 payload.recurring.end_date = payload.recurring.end_date.toISOString().split('T')[0];
+            else {
+                delete payload.recurring.end_date;
+            }
         }
 
         let result;
