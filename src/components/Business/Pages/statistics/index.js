@@ -1,6 +1,6 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import style from './statistics.module.scss';

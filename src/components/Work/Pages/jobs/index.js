@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { useDebounce } from 'primereact/hooks';
 import JobsTable from './jobs-table';
 import style from './jobs.module.scss';

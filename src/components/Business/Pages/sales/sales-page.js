@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import { Spinner } from "react-bootstrap";
+import { Helmet } from "react-helmet-async";
 import SalesTables from "./sales-tables";
 import { fetchSales } from "../../../../APIs/SalesApi";
 

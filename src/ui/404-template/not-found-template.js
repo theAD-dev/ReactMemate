@@ -1,7 +1,7 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Button } from 'react-bootstrap';
 import { ChevronLeft } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import style from './not-found-template.module.scss';

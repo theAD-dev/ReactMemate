@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { ArrowLeftShort, CheckCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
+import { Helmet } from "react-helmet-async";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";

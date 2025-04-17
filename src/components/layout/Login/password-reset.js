@@ -1,6 +1,6 @@
 import React from "react";
-import { Helmet } from "react-helmet-async";
 import { ArrowLeftShort, CheckCircle } from "react-bootstrap-icons";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import arrowRight from "../../../assets/images/icon/arrow.svg";

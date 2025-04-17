@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Spinner } from "react-bootstrap";
 import {
   PencilSquare,
@@ -7,6 +6,7 @@ import {
   Link45deg,
   Upload,
 } from "react-bootstrap-icons";
+import { Helmet } from "react-helmet-async";
 import { Controller, useForm } from "react-hook-form";
 import { PhoneInput } from "react-international-phone";
 import { Link } from "react-router-dom";

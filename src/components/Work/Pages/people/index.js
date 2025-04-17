@@ -1,6 +1,6 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Filter } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import DesktopPeoplesTable from './desktop-user-table';
 import style from './people.module.scss';
 import PeoplesTable from './peoples-table';

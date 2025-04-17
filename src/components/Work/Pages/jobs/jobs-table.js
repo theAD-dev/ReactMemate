@@ -10,10 +10,10 @@ import style from './jobs.module.scss';
 import { getListOfJobs } from '../../../../APIs/jobs-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import JobDetails from '../../features/job-table-actions/job-details-dialog';
 import ViewJob from '../../features/view-job/view-job';
-import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 export const formatDate = (timestamp) => {

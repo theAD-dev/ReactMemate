@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle } from "react-bootstrap-icons";
 import CountUp from 'react-countup';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import classNames from 'classnames';

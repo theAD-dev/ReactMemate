@@ -1,6 +1,6 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import { Filter } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
 
