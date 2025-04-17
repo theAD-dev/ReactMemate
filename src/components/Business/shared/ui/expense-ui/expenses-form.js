@@ -476,7 +476,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                 <Col sm={4}>
                     <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-3">
-                        <Link to={"/suppliers"}>
+                        <Link to={"/suppliers?addNewSupplier=true"} target='_blank'>
                             <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
                         </Link>
                     </div>
