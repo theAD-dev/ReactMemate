@@ -468,7 +468,7 @@ const Header = () => {
                           (isActive ? "menuActive" : "link") + " news"
                         }
                       >
-                        <img src={chat} alt="chat" style={{ width: '24px', height: '24px' }} />
+                        <img src={chat} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
                         Chat
                       </NavLink>
                     </li>
