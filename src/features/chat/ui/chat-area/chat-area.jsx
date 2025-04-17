@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { InputText } from 'primereact/inputtext';
 import { Menu } from 'primereact/menu';
-import { Button } from 'primereact/button';
+import styles from './chat-area.module.scss';
 import ChatHeader from '../chat-header/chat-header';
 import MessageList from '../message-list/message-list';
-import styles from './chat-area.module.scss';
 
 const ChatArea = ({ currentChat }) => {
   const [message, setMessage] = useState('');
@@ -108,8 +108,6 @@ const ChatArea = ({ currentChat }) => {
               className={styles.sendButton}
               onClick={handleSendMessage}
               disabled={!message.trim()}
-              icon="pi pi-send"
-              iconPos="right"
             >
               Send
             </Button>

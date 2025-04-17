@@ -39,7 +39,7 @@ import TermsandConditions from "./settings/termsandconditions/TermsandConditions
 import TermsConditionsInvoice from "./settings/termsandconditions/TermsConditionsInvoice";
 import { fetchProfile } from "../../APIs/ProfileApi";
 import { useTrialHeight } from "../../app/providers/trial-height-provider";
-import bookSquare from "../../assets/images/icon/book-square.svg";
+import chat from "../../assets/chat.png";
 import Briefcase from "../../assets/images/icon/briefcase.svg";
 import calendarTick from "../../assets/images/icon/calendar-tick.svg";
 import clipboardTick from "../../assets/images/icon/clipboard-tick.svg";
@@ -468,7 +468,7 @@ const Header = () => {
                           (isActive ? "menuActive" : "link") + " news"
                         }
                       >
-                        <img src={bookSquare} alt="bookSquare" />
+                        <img src={chat} alt="chat" style={{ width: '24px', height: '24px' }} />
                         Chat
                       </NavLink>
                     </li>

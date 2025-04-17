@@ -18,7 +18,7 @@ const ChatHeader = ({ chat, onMenuToggle, menuRef }) => {
               className={styles.userAvatar}
               style={chat.avatar ? { backgroundImage: `url(${chat.avatar})` } : {}}
             >
-              {!chat.avatar && chat.name.split(' ').map(n => n[0]).join('')}
+              {chat.name.split(' ').map(n => n[0]).join('')}
             </div>
             <div className={styles.userInfo}>
               <h2 className={styles.userName}>{chat.name}</h2>
