@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeftShort, CheckCircle } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -13,6 +14,9 @@ const PasswordReset = () => {
   };
   return (
     <>
+      <Helmet>
+        <title>MeMate - Password Reset</title>
+      </Helmet>
       <div className="loginPage passwordReset">
         <div className="boxinfo">
           <div className="logohead">

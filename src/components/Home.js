@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle } from "react-bootstrap-icons";
 import CountUp from 'react-countup';
 import { Link } from 'react-router-dom';
@@ -88,6 +89,9 @@ const Home = () => {
 
     return (
         <div style={{ position: 'relative' }}>
+            <Helmet>
+                <title>MeMate - Dashboard</title>
+            </Helmet>
             <div className='HomePageWrap'>
                 <div className="goodHeading" >
                     <h1 style={{ fontSize: '26px' }}>{getGreeting()}, {profileData?.first_name ? profileData.first_name : 'Guest'} 👋</h1>

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Download, Filter } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
@@ -9,7 +10,7 @@ import style from './project.module.scss';
 const ProjectPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
- 
+
     const [isShowDeleted,] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
@@ -24,6 +25,9 @@ const ProjectPage = () => {
 
     return (
         <div className='peoples-page'>
+            <Helmet>
+                <title>MeMate - Projects</title>
+            </Helmet>
             <div className={`topbar ${selectedOrder?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -58,7 +62,7 @@ const ProjectPage = () => {
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Projects</h1>
                 </div>
-               
+
             </div>
             <ProjectsTable ref={dt} searchValue={debouncedValue}  selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
         </div>

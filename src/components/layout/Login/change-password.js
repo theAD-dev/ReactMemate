@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeftShort, CheckCircleFill, Eye, EyeSlash } from "react-bootstrap-icons";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { Link } from "react-router-dom";
@@ -69,6 +70,9 @@ const ChangePassword = () => {
 
   return (
     <>
+      <Helmet>
+        <title>MeMate - Change Password</title>
+      </Helmet>
       <div className="loginPage forgotPage">
         <div className="boxinfo">
           <div className="logohead">

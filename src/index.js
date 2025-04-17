@@ -1,4 +1,5 @@
 import React from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { PrimeReactProvider } from "primereact/api";
@@ -21,14 +22,16 @@ const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <PrimeReactProvider>
-        <TrialHeightProvider>
-          <QueryClientProvider client={queryClient}>
-            <Toaster expand={true} richColors closeButton position="top-right" />
-            <App />
-          </QueryClientProvider>
-        </TrialHeightProvider>
-      </PrimeReactProvider>
+      <HelmetProvider>
+        <PrimeReactProvider>
+          <TrialHeightProvider>
+            <QueryClientProvider client={queryClient}>
+              <Toaster expand={true} richColors closeButton position="top-right" />
+              <App />
+            </QueryClientProvider>
+          </TrialHeightProvider>
+        </PrimeReactProvider>
+      </HelmetProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

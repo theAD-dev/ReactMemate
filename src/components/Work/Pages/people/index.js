@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Filter } from 'react-bootstrap-icons';
 import DesktopPeoplesTable from './desktop-user-table';
 import style from './people.module.scss';
@@ -11,6 +12,9 @@ const PeoplePage = () => {
     const handleSearch = () => { };
     return (
         <div className='peoples-page'>
+            <Helmet>
+                <title>MeMate - Team</title>
+            </Helmet>
             <div className="topbar border-bottom" style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     <div className='filtered-box'>

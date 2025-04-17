@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Button, Spinner } from 'react-bootstrap';
 import { Plus } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
@@ -105,6 +106,9 @@ const Location = () => {
 
     return (
         <div className={`settings-wrap ${style.userSettingPage}`}>
+            <Helmet>
+                <title>MeMate - Locations</title>
+            </Helmet>
             <div className="settings-wrapper">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                 <div className="settings-content setModalelBoots">

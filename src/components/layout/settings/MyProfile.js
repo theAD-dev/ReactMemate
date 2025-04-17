@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Spinner } from "react-bootstrap";
 import {
   PencilSquare,
@@ -89,6 +90,9 @@ function MyProfile() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="settings-wrap">
+        <Helmet>
+          <title>MeMate - My Profile</title>
+        </Helmet>
         <div className="settings-wrapper">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="settings-content">

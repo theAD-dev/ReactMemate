@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { Divider } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -67,6 +68,9 @@ const Subscription = () => {
   return (
     <>
       <div className="settings-wrap subscription-page">
+        <Helmet>
+          <title>MeMate - Subscription</title>
+        </Helmet>
         <div className="settings-wrapper">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="settings-content">

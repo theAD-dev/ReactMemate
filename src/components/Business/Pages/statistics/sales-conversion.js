@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Button, Card, CardBody, Col, Dropdown, Row } from 'react-bootstrap';
 import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
@@ -254,6 +255,9 @@ const SalesConversion = () => {
 
     return (
         <>
+            <Helmet>
+                <title>MeMate - Sales Conversion</title>
+            </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 {/* Executive - disabled */}
                 <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>

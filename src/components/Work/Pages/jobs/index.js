@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
 import { useDebounce } from 'primereact/hooks';
@@ -24,6 +25,9 @@ const JobsPage = () => {
     };
     return (
         <div className='jobs-page'>
+            <Helmet>
+                <title>MeMate - Jobs</title>
+            </Helmet>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {

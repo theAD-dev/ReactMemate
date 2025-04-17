@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeftShort } from "react-bootstrap-icons";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -40,6 +41,9 @@ const CheckMail = () => {
 
   return (
     <>
+      <Helmet>
+        <title>MeMate - Check Email</title>
+      </Helmet>
       <div className="loginPage checkMail">
         <div className="boxinfo">
           <div className="logohead">

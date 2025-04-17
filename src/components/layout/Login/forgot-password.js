@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeftShort } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -44,6 +45,9 @@ const ForgotPassword = () => {
 
   return (
     <>
+      <Helmet>
+        <title>MeMate - Forgot Password</title>
+      </Helmet>
       <div className="loginPage forgotPage">
         <div className="boxinfo">
           <div className="logohead">
