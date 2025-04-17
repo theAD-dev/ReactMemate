@@ -7,6 +7,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from "primereact/inputtext";
 import style from './chat.module.scss';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
+import { Helmet } from 'react-helmet-async';
 
 const Chat = () => {
     const { trialHeight } = useTrialHeight();
@@ -37,6 +38,9 @@ const Chat = () => {
 
     return (
         <div className={style.chatContainer} style={{ height: `calc(100vh - 130px - ${trialHeight}px)` }}>
+            <Helmet>
+                <title>MeMate - Chat</title>
+            </Helmet>
             <div className={style.chatSidebar}>
                 <div className={style.chartSidebarHeader}>
                     <div className={style.chartSidebarHeaderFirstRow}>

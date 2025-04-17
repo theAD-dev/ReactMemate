@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ComingSoon from '../../../../shared/ui/coming-soon';
 import Sidebar from '../Sidebar';
@@ -9,6 +10,9 @@ const CompanyEthos = () => {
 
     return (
         <>
+            <Helmet>
+                <title>MeMate - Company Ethos</title>
+            </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />

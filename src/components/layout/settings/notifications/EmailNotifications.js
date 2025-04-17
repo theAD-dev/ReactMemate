@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ComingSoon from '../../../../shared/ui/coming-soon';
@@ -11,6 +12,9 @@ const EmailNotifications = () => {
 
     return (
         <>
+            <Helmet>
+                <title>MeMate - Email Notifications</title>
+            </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />

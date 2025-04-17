@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import '@szhsin/react-menu/dist/index.css';
 import { Button, Table } from 'react-bootstrap';
 import { PlusLg } from "react-bootstrap-icons";
@@ -46,6 +47,9 @@ const OutgoingEmails = () => {
 
   return (
     <div className='settings-wrap'>
+      <Helmet>
+        <title>MeMate - Outgoing Emails</title>
+      </Helmet>
       <div className="settings-wrapper">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="settings-content setModalelBoots">

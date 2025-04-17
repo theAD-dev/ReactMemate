@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
 import { PlusLg, InfoCircle } from "react-bootstrap-icons";
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -24,6 +25,9 @@ const SMSTemplates = () => {
 
     return (
         <div className='settings-wrap'>
+            <Helmet>
+                <title>MeMate - SMS Templates</title>
+            </Helmet>
             <div className="settings-wrapper">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                 <div className="settings-content setModalelBoots">

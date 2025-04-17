@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { Dropdown } from 'primereact/dropdown';
@@ -56,6 +57,9 @@ const Regionalsettings = () => {
 
   return (
     <>
+      <Helmet>
+        <title>MeMate - Onboarding - Regional Settings</title>
+      </Helmet>
       <div className='requestDemoWrap'>
         <div className="logohead">
           <img src={LoinLogo} alt="Loin Logo" />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Placeholder } from "react-bootstrap";
 import { BoxArrowUpRight, PencilSquare } from "react-bootstrap-icons";
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 import clsx from 'clsx';
@@ -63,6 +64,9 @@ const TermsConditionsInvoice = () => {
 
     return (
         <div className='settings-wrap'>
+            <Helmet>
+                <title>MeMate - Quote & Invoice Terms and Conditions</title>
+            </Helmet>
             <div className="settings-wrapper">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                 <div className="settings-content setModalelBoots">
@@ -74,7 +78,7 @@ const TermsConditionsInvoice = () => {
                                     <Link to="/settings/termsandconditions/terms-and-conditions-invoice">Quote & Invoice Terms and Conditions</Link>
                                 </li>
                                 {has_work_subscription && (
-                                    <li className='menuActive'>
+                                    <li>
                                         <Link to="/settings/termsandconditions/terms-and-conditions">Application Terms and Conditions</Link>
                                     </li>
                                 )}
