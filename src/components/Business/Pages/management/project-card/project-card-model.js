@@ -849,16 +849,19 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 {
                   showCostBreakdown &&
                   <DataTable value={cardData?.calculations || []} showGridlines className="border-top">
-                    <Column field="index" header="#" style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
-                    <Column field="index" header="Order" style={{ width: '100%' }}></Column>
-                    <Column field="subindex" header="Department" style={{ width: '100%' }}></Column>
-                    <Column field="description" header="Description" body={(rowData) => <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '350px' }}>{rowData.description}</div>} style={{ width: '100%' }}></Column>
-                    <Column field="cost" header="Cost" style={{ width: '100%' }}></Column>
+                    <Column field="id" header="Order" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
+                    <Column field="subindex" header="Department" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.subindex} style={{ maxWidth: '192px' }}>{rowData.subindex}</div>}></Column>
+                    <Column field="description" header="Description"
+                      body={(rowData) =>
+                        <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '350px' }}>{rowData.description}</div>}
+                      style={{ width: '100%' }}
+                    ></Column>
+                    <Column field="cost" header="Cost" style={{ width: '100%' }} body={(rowData) => `$ ${rowData.cost}`}></Column>
                     <Column field="profit_type_value" header="Markup/Margin" body={(rowData) => `${rowData.profit_type_value} ${rowData.profit_type === "AMN" ? "AMT $" : rowData.profit_type === "MRG" ? "MRG %" : "MRK %"}`} style={{ width: '100%' }}></Column>
-                    <Column field="unit_price" header="Unit Price" style={{ width: '100%' }}></Column>
+                    <Column field="unit_price" header="Unit Price" style={{ width: '100%' }} body={(rowData) => `$ ${rowData.unit_price}`}></Column>
                     <Column field="quantity" header="Qty/Unit" style={{ width: '100%' }}></Column>
-                    <Column field="discount" header="Discount" style={{ width: '100%' }}></Column>
-                    <Column field="total" header="Amount" style={{ width: '100%' }}></Column>
+                    <Column field="discount" header="Discount" style={{ width: '100%' }} body={(rowData) => `${rowData.discount}%`}></Column>
+                    <Column field="total" header="Amount" style={{ width: '100%' }} body={(rowData) => `$ ${rowData.total}`}></Column>
                   </DataTable>
                 }
               </Col>
