@@ -36,17 +36,17 @@ const MessageList = ({ messages, isTyping = false }) => {
               key={index}
               className={`${styles.message} ${message.sender === 'You' ? styles.sent : styles.received}`}
             >
+              <span className={styles.messageTime}>
+                {message.time.includes('Today') ? message.time.replace('Today', '') : message.time.split(' ')[1]}
+              </span>
               <div className={styles.messageContent}>
                 <p className={styles.messageText}>{message.text}</p>
-                {message.attachment && (
-                  <div className={styles.messageAttachment}>
-                    <FileAttachment file={message.attachment} />
-                  </div>
-                )}
-                <span className={styles.messageTime}>
-                  {message.time.includes('Today') ? message.time.replace('Today', '') : message.time.split(' ')[1]}
-                </span>
               </div>
+              {message.attachment && (
+                <div className={styles.messageAttachment}>
+                  <FileAttachment file={message.attachment} />
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -1,9 +1,10 @@
 .fileAttachment {
   padding: 8px;
-  background-color: var(--gray-50, #f9fafb);
-  border-radius: 8px;
+  background-color: #fff;
+  border-radius: 6px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 }
 
 .fileInfo {
@@ -31,6 +32,7 @@
 
 .fileDetails {
   display: flex;
+  align-items: flex-start;
   flex-direction: column;
 }
 

@@ -31,6 +31,7 @@
 
 .message {
   display: flex;
+  flex-direction: column;
   max-width: 70%;
   margin-bottom: 8px;
 
@@ -38,8 +39,9 @@
     align-self: flex-end;
 
     .messageContent {
+      border-radius: 6px 6px 0 6px;
+      border: 1px solid var(--primary-100, #BAE8FF);
       background-color: var(--primary-50, #E6F5FD);
-      border-radius: 16px 16px 0 16px;
     }
 
     .messageTime {
@@ -51,8 +53,13 @@
     align-self: flex-start;
 
     .messageContent {
+      border-radius: 6px 6px 0 6px;
+      border: 1px solid var(--gray-200, #eaecf0);
       background-color: var(--gray-100, #f2f4f7);
-      border-radius: 16px 16px 16px 0;
+    }
+
+    .messageTime {
+      text-align: right;
     }
   }
 }
@@ -66,8 +73,9 @@
 
 .messageAttachment {
   margin-top: 4px;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
+  background-color: #fff;
   border: 1px solid var(--gray-200, #eaecf0);
 }
 
