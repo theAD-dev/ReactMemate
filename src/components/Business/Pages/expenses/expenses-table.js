@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
-import { Trash } from 'react-bootstrap-icons';
+import { FileEarmarkPdf, Trash } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -223,6 +224,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field='account_code.code' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
                 <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
+                <Column field="file" header="File" body={(rowData) => rowData.file ? <Link to={rowData.file} target='_blank'><FileEarmarkPdf color='#667085' size={16} /></Link> : ""} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column>
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft text-center' headerClassName="shadowLeft text-center" frozen alignFrozen='right'></Column>
                 <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
             </DataTable>
