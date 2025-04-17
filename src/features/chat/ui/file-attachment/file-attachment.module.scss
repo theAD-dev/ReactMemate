@@ -1,0 +1,48 @@
+.fileAttachment {
+  padding: 8px;
+  background-color: var(--gray-50, #f9fafb);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.imagePreview {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  background-color: #E6F5FD;
+  margin-right: 8px;
+
+  span {
+    color: #0086C9;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}
+
+.fileDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.fileName {
+  color: var(--gray-900, #101828);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.fileSize {
+  color: var(--gray-500, #667085);
+  font-size: 12px;
+  line-height: 18px;
+}
