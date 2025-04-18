@@ -468,7 +468,9 @@ const Header = () => {
                           (isActive ? "menuActive" : "link") + " news"
                         }
                       >
-                        <img src={chat} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
+                        <div style={{ width: '25px', height: '25px', overflow: 'hidden', marginRight: '6px' }}>
+                          <img src={chat} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
+                        </div>
                         Chat
                       </NavLink>
                     </li>
@@ -542,12 +544,12 @@ export const protectedRoutes = (
     <Route path="/settings/generalinformation/subscription" element={<Subscription />} />
     <Route path="/settings/generalinformation/bills" element={<Bills />} />
     <Route path="/settings/generalinformation/billing-info" element={<BillingInfo />} />
-    
+
     <Route path="/settings/users/desktop" element={<Users />} />
     <Route path="/settings/users/mobile-app" element={<MobileApp />} />
-    
+
     <Route path="/settings/calculators/departments" element={<Departments />} />
-    
+
     <Route path="/settings/location" element={<Location />} />
 
     <Route path="/settings/templates/job-templates" element={<JobTemplates />} />
@@ -578,7 +580,7 @@ export const protectedRoutes = (
     <Route path="/settings/customerssettings/customers-discount-category" element={<CustomersDiscountCategory />} />
     <Route path="/settings/accounting/expenses" element={<ExpensesAccount />} />
     <Route path="/settings/accounting/department-turnover-plan" element={<DepartmentTurnoverPlan />} />
-    
+
     <Route path="/settings/notifications/dashboard-notifications" element={<DashboardNotifications />} />
     <Route path="/settings/notifications/app-notifications" element={<AppNotifications />} />
     <Route path="/settings/notifications/email-notifications" element={<EmailNotifications />} />

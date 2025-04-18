@@ -74,7 +74,7 @@ const CreateJobTemplate = LazyLoader(lazy(() => import('../components/layout/set
 const CreateProposalTemplate = LazyLoader(lazy(() => import('../components/layout/settings/templates/create-proposal-template')));
 const EmailTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-template/email-templates')));
 const SMSTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/sms-template/sms-templates')));
-const EmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signatures')));
+const EmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signature-template/email-signature-templates')));
 const JobTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/job-templates')));
 const ProposalTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/proposal-templates')));
 const TermsandConditions = LazyLoader(lazy(() => import('../components/layout/settings/termsandconditions/TermsandConditions')));

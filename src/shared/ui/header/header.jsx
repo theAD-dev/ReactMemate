@@ -7,7 +7,7 @@ import ProfileInfo from "./components/profile-info";
 import style from './header.module.scss';
 import { useAuth } from "../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
-import bookSquare from "../../../assets/images/icon/book-square.svg";
+import chat from "../../../assets/chat.png";
 import Briefcase from "../../../assets/images/icon/briefcase.svg";
 import calendarTick from "../../../assets/images/icon/calendar-tick.svg";
 import clipboardTick from "../../../assets/images/icon/clipboard-tick.svg";
@@ -383,7 +383,9 @@ const Header = () => {
                                                     (isActive ? "menuActive" : "link") + " news"
                                                 }
                                             >
-                                                <img src={bookSquare} alt="bookSquare" />
+                                                <div style={{ width: '25px', height: '25px', overflow: 'hidden', marginRight: '6px' }}>
+                                                    <img src={chat} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
+                                                </div>
                                                 Chat
                                             </NavLink>
                                         </li>
