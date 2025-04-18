@@ -17,7 +17,7 @@ const JobTemplates = () => {
     const has_twilio = !!profileData?.has_twilio;
     const [activeTab, setActiveTab] = useState('job-templates');
     const proposalTemplateQuery = useQuery({
-        queryKey: ["proposalTemplates"],
+        queryKey: ["jobTemplates"],
         queryFn: getJobTemplates,
     });
 
