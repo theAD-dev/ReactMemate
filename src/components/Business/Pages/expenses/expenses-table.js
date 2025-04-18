@@ -1,5 +1,4 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { FileEarmarkPdf, Trash } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -13,6 +12,7 @@ import style from './expenses.module.scss';
 import { deleteExpense, getListOfExpense } from "../../../../APIs/expenses-api";
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
@@ -158,14 +158,6 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         return rowData?.order.number || "-";
     };
 
-    const loadingIconTemplate = () => {
-        return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        </div>;
-    };
-
     const deleteMutation = useMutation({
         mutationFn: (data) => deleteExpense(data),
         onSuccess: () => {
@@ -207,7 +199,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
-                loadingIcon={loadingIconTemplate}
+                loadingIcon={Loader}
                 emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}

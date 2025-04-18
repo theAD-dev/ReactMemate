@@ -1,5 +1,4 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { InfoCircle } from 'react-bootstrap-icons';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -13,6 +12,7 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
 import { formatDate } from '../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
@@ -265,14 +265,6 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     </div>;
   };
 
-  const loadingIconTemplate = () => {
-    return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    </div>;
-  };
-
   const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
   const onSort = (event) => {
@@ -301,7 +293,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
         scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selectedOrder}
         onSelectionChange={(e) => setSelectedOrder(e.value)}
         loading={loading}
-        loadingIcon={loadingIconTemplate}
+        loadingIcon={Loader}
         emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
         sortField={sort?.sortField}
         sortOrder={sort?.sortOrder}

@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { CloseButton, Spinner } from 'react-bootstrap';
+import { CloseButton } from 'react-bootstrap';
 import { ArrowLeftCircle, CardChecklist, Check2Circle, FileEarmark, FilePdf, Files, FileText, InfoCircle, Link45deg, ListCheck, ListUl, PhoneVibrate, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import style from './client-order-history.module.scss';
 import { bringBack, clientOrderHistory } from '../../../../../APIs/ClientsApi';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import Loader from '../../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
 
@@ -297,14 +298,6 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
     </>;
   };
 
-  const loadingIconTemplate = () => {
-    return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    </div>;
-  };
-
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
 
@@ -319,7 +312,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
       scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
       loading={loading}
-      loadingIcon={loadingIconTemplate}
+      loadingIcon={Loader}
       emptyMessage={<NoDataFoundTemplate isDataExist={!!clientOrders?.length} />}
       sortField={sort?.sortField}
       sortOrder={sort?.sortOrder}

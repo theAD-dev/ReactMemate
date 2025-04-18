@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { Chat, Envelope, Plus, Telephone } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
@@ -11,6 +10,7 @@ import { Rating } from 'primereact/rating';
 import style from './people.module.scss';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
+import Loader from '../../../../shared/ui/loader/loader';
 
 
 const PeoplesTable = () => {
@@ -112,14 +112,6 @@ const PeoplesTable = () => {
         return <Button className='text-button bg-tranparent p-0'>New Job <Plus color='#158ECC' size={20} /></Button>;
     };
 
-    const loadingIconTemplate = () => {
-        return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        </div>;
-    };
-
     return (
         <>
            <h1 className={clsx(style.tableCaption, 'mt-2')}>Mobile App Users</h1>
@@ -129,7 +121,7 @@ const PeoplesTable = () => {
                 size={'large'} className="border" selection={selectedPeoples}
                 onSelectionChange={(e) => setSelectedPeoples(e.value)}
                 loading={loading}
-                loadingIcon={loadingIconTemplate}
+                loadingIcon={Loader}
             >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
                 <Column field="name" header="Name" body={nameBody} style={{ minWidth: '400px' }} headerClassName='shadowRight' bodyClassName='shadowRight' frozen sortable></Column>

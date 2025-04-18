@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ChatSidebar from '../chat-sidebar/chat-sidebar';
@@ -86,22 +85,20 @@ const ChatLayout = () => {
   const currentChat = chatId ? mockChatData[chatId] : null;
 
   return (
-    <div className={styles.chatContainer} style={{ height: `calc(100vh - 130px - ${trialHeight}px)` }}>
-      <Helmet>
-        <title>MeMate - Chat</title>
-      </Helmet>
+    <div className="container-fluid px-0">
+      <div className={styles.chatContainer} style={{ height: `calc(100vh - 150px - ${trialHeight}px)` }}>
+        <ChatSidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          archivedVisible={archivedVisible}
+          setArchivedVisible={setArchivedVisible}
+          chatData={mockChatData}
+        />
 
-      <ChatSidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        archivedVisible={archivedVisible}
-        setArchivedVisible={setArchivedVisible}
-        chatData={mockChatData}
-      />
-
-      <ChatArea
-        currentChat={currentChat}
-      />
+        <ChatArea
+          currentChat={currentChat}
+        />
+      </div>
     </div>
   );
 };

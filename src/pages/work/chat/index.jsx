@@ -3,7 +3,14 @@ import { Helmet } from 'react-helmet-async';
 import { ChatLayout } from '../../../features/chat';
 
 const Chat = () => {
-    return <ChatLayout />;
+    return (
+        <>
+            <Helmet>
+                <title>MeMate - Chat</title>
+            </Helmet>
+            <ChatLayout />
+        </>
+    );
 };
 
 export default Chat;

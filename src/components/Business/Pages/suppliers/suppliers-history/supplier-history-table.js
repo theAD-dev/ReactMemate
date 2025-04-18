@@ -1,10 +1,10 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import style from './supplier-history.module.scss';
 import { getSupplierHistory } from '../../../../../APIs/SuppliersApi';
+import Loader from '../../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
 
@@ -70,15 +70,6 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
     return <>{rowData?.account_code?.code}: {rowData?.account_code?.name}</>;
   };
 
-  const loadingIconTemplate = () => {
-    return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    </div>;
-  };
-
-
   const onSort = (event) => {
     const { sortField, sortOrder } = event;
 
@@ -142,7 +133,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
       scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
       loading={loading}
-      loadingIcon={loadingIconTemplate}
+      loadingIcon={Loader}
       emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue}/>}
       sortField={sort?.sortField}
       sortOrder={sort?.sortOrder}

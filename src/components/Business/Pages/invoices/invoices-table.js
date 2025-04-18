@@ -1,7 +1,7 @@
 
 
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { CloseButton, Spinner } from 'react-bootstrap';
+import { CloseButton } from 'react-bootstrap';
 import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash, CreditCard } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
@@ -19,6 +19,7 @@ import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
 import { fetchduplicateData } from '../../../../APIs/SalesApi';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
@@ -327,14 +328,6 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         </React.Fragment>;
     };
 
-    const loadingIconTemplate = () => {
-        return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        </div>;
-    };
-
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : data?.payment_status === 'partial_payment' ? style.partialPaidRow : style.unpaidRow);
 
     const onSort = (event) => {
@@ -351,7 +344,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
-                loadingIcon={loadingIconTemplate}
+                loadingIcon={Loader}
                 emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
