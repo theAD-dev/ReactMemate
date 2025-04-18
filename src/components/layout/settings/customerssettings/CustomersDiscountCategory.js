@@ -22,7 +22,7 @@ const CustomersDiscountCategory = () => {
     const [selectedIndustryId, setSelectedIndustryId] = useState(null);
 
     const { data: industriesList, refetch } = useQuery({
-        queryKey: ['industriesList'],
+        queryKey: ['getCategoriesList'],
         queryFn: getCategoriesList,
         enabled: true,
     });

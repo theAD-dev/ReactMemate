@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./providers/protected-route-provider";
 import HeaderLayout from "../shared/ui/layout/header-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
+import CreateEmailSignatureTemplate from "../components/layout/settings/templates/email-signature-template/create-email-signature-template";
 // pages
 const ClientPage = LazyLoader(lazy(() => import('../components/Business/Pages/clients')));
 const ClientOrderHistory = LazyLoader(lazy(() => import('../components/Business/Pages/clients/client-order-history')));
@@ -462,6 +463,14 @@ const routes = [
                     {
                         path: "email-signatures",
                         element: <ProtectedRoute permission={""}><EmailSignatures /></ProtectedRoute>,
+                    },
+                    {
+                        path: "email-signatures/new",
+                        element: <ProtectedRoute permission={""}><CreateEmailSignatureTemplate /></ProtectedRoute>,
+                    },
+                    {
+                        path: "email-signatures/:id",
+                        element: <ProtectedRoute permission={""}><CreateEmailSignatureTemplate /></ProtectedRoute>,
                     },
                     {
                         path: "proposal-templates",
