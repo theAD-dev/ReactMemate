@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
-import { IconField } from 'primereact/iconfield';
-import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { Menu } from 'primereact/menu';
 import styles from './chat-area.module.scss';

@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./providers/protected-route-provider";
 import HeaderLayout from "../shared/ui/layout/header-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
-import CreateEmailSignatureTemplate from "../components/layout/settings/templates/email-signature-template/create-email-signature-template";
 // pages
 const ClientPage = LazyLoader(lazy(() => import('../components/Business/Pages/clients')));
 const ClientOrderHistory = LazyLoader(lazy(() => import('../components/Business/Pages/clients/client-order-history')));
@@ -76,6 +75,7 @@ const CreateProposalTemplate = LazyLoader(lazy(() => import('../components/layou
 const EmailTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-template/email-templates')));
 const SMSTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/sms-template/sms-templates')));
 const EmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signature-template/email-signature-templates')));
+const CreateEmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signature-template/create-email-signature-template')));
 const JobTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/job-templates')));
 const ProposalTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/proposal-templates')));
 const TermsandConditions = LazyLoader(lazy(() => import('../components/layout/settings/termsandconditions/TermsandConditions')));
@@ -466,11 +466,11 @@ const routes = [
                     },
                     {
                         path: "email-signatures/new",
-                        element: <ProtectedRoute permission={""}><CreateEmailSignatureTemplate /></ProtectedRoute>,
+                        element: <ProtectedRoute permission={""}><CreateEmailSignatures /></ProtectedRoute>,
                     },
                     {
                         path: "email-signatures/:id",
-                        element: <ProtectedRoute permission={""}><CreateEmailSignatureTemplate /></ProtectedRoute>,
+                        element: <ProtectedRoute permission={""}><CreateEmailSignatures /></ProtectedRoute>,
                     },
                     {
                         path: "proposal-templates",
