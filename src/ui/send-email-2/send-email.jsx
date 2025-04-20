@@ -149,6 +149,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
             email_body: text,
             from_email: from,
             to: to?.toString(),
+            signature: '',
             ...(cc.length > 0 && { cc: cc.toString() }),
             ...(bcc.length > 0 && { bcc: bcc.toString() })
         });
