@@ -442,7 +442,7 @@ const PublicInvoice = () => {
                         </BootstrapRow>
                     </div>
                     <div className={style.logoWrapperFooter}>
-                        <p><span>Powered by</span><img src="https://dev.memate.com.au/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt='Logo' /></p>
+                        <p><span>Powered by</span><img src="/logo.svg" alt='Logo' /></p>
                     </div>
                 </div>
 
