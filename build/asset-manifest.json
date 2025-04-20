@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.2d8b8294.css",
-    "main.js": "/static/js/main.82654c18.js",
+    "main.css": "/static/css/main.55e9ecea.css",
+    "main.js": "/static/js/main.6466aa36.js",
     "reactPlayerYouTube.js": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js",
     "reactPlayerSoundCloud.js": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js",
     "reactPlayerVimeo.js": "/static/js/reactPlayerVimeo.480e5167.chunk.js",
@@ -37,6 +37,7 @@
     "static/media/request02.jpg": "/static/media/request02.7667207084134f67142a.jpg",
     "static/media/bootstrap-icons.woff2?": "/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
     "static/media/request05.jpg": "/static/media/request05.e16c65b5dcdba84f673a.jpg",
+    "static/media/chat.png": "/static/media/chat.509711db75e969fd474c.png",
     "static/media/checkemail.jpg": "/static/media/checkemail.24f8d48039328e58d51d.jpg",
     "static/media/request03.jpg": "/static/media/request03.7aad20d55140cdfa3c23.jpg",
     "static/media/forgetyourpass.jpg": "/static/media/forgetyourpass.38863195291bb4a70113.jpg",
@@ -90,7 +91,6 @@
     "static/media/inter-vietnamese-400-normal.woff2": "/static/media/inter-vietnamese-400-normal.44c9df135eec470b0ab6.woff2",
     "static/media/ExpenseIcon.svg": "/static/media/ExpenseIcon.9e00a45f8f9b901a060bcf220da738b3.svg",
     "static/media/status-up.svg": "/static/media/status-up.1052e4e9cb5a9eb0f5c51154cce61ffb.svg",
-    "static/media/book-square.svg": "/static/media/book-square.a99d4d84971a5a7dd66d79e14f70b203.svg",
     "static/media/profile-3user.svg": "/static/media/profile-3user.3c2e24f094b65c60774f9880bec4ce08.svg",
     "static/media/ManagementIcon.svg": "/static/media/ManagementIcon.dc06a826c65afe21ea0ef8daf817ff17.svg",
     "static/media/StatisticsIcon.svg": "/static/media/StatisticsIcon.73e4a1bf29f9a9321ca40c890c90106f.svg",
@@ -101,6 +101,7 @@
     "static/media/suppliersIcon.svg": "/static/media/suppliersIcon.24ecdd425df9711554321a51ce5464e5.svg",
     "static/media/briefcase.svg": "/static/media/briefcase.71e57ac9a15a715842801447e4dfb47b.svg",
     "static/media/addNoteModeIcon.svg": "/static/media/addNoteModeIcon.43bdc8582f3ef769329a44f15a05fe67.svg",
+    "index.html": "/index.html",
     "static/media/calendar.svg": "/static/media/calendar.9ebe7da58af479b138e37b33d2affea2.svg",
     "static/media/archive.svg": "/static/media/archive.a93d5d4bb5e805d41614288a785b8375.svg",
     "static/media/mailgradi.svg": "/static/media/mailgradi.2164d17057c769448ddf96d8f89a722a.svg",
@@ -118,10 +119,9 @@
     "static/media/envelope.svg": "/static/media/envelope.c9c11cfa6a43774942324c9ac7f33f2d.svg",
     "static/media/new-task.svg": "/static/media/new-task.1f7c3f35d1b3af6863cc0437d88ae2f1.svg",
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
-    "index.html": "/index.html",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.2d8b8294.css.map": "/static/css/main.2d8b8294.css.map",
-    "main.82654c18.js.map": "/static/js/main.82654c18.js.map",
+    "main.55e9ecea.css.map": "/static/css/main.55e9ecea.css.map",
+    "main.6466aa36.js.map": "/static/js/main.6466aa36.js.map",
     "reactPlayerYouTube.89d03dc5.chunk.js.map": "/static/js/reactPlayerYouTube.89d03dc5.chunk.js.map",
     "reactPlayerSoundCloud.0b756129.chunk.js.map": "/static/js/reactPlayerSoundCloud.0b756129.chunk.js.map",
     "reactPlayerVimeo.480e5167.chunk.js.map": "/static/js/reactPlayerVimeo.480e5167.chunk.js.map",
@@ -140,7 +140,7 @@
     "351.12735450.chunk.js.map": "/static/js/351.12735450.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2d8b8294.css",
-    "static/js/main.82654c18.js"
+    "static/css/main.55e9ecea.css",
+    "static/js/main.6466aa36.js"
   ]
 }
