@@ -12,8 +12,8 @@ import { createNewTask, getUserList, updateTask } from '../../../../../APIs/task
 import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
 import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import newTaskImg from '../../../../../assets/images/new-task.svg';
-import SelectDate from '../../../../Business/Pages/management/task/select-date';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
+import SelectDate from '../../../../Business/Pages/management/task/select-date';
 
 
 

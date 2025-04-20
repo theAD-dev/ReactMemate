@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Button, Spinner, Table } from 'react-bootstrap';
 import { PlusLg, ChevronDown } from "react-bootstrap-icons";
+import { Helmet } from "react-helmet-async";
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, MenuButton, MenuGroup } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
@@ -163,6 +164,9 @@ const ProjectStatus = () => {
 
     return (
         <div className='settings-wrap'>
+            <Helmet>
+                <title>MeMate - Project Status</title>
+            </Helmet>
             <div className="settings-wrapper">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                 <div className="settings-content setModalelBoots">

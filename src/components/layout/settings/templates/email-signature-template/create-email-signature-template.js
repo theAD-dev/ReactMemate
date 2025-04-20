@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Button, Col, Form, Modal, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
 import {
@@ -858,7 +859,7 @@ const CreateEmailSignatureTemplate = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrors({});
-        
+
         const newErrors = {};
         if (!title) newErrors.title = true;
         if (!text && !fullName) newErrors.fullName = true;
@@ -897,6 +898,9 @@ const CreateEmailSignatureTemplate = () => {
 
     return (
         <div className='settings-wrap'>
+            <Helmet>
+                <title>MeMate - Email Signature Template</title>
+            </Helmet>
             <div className="settings-wrapper">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                 <div className="settings-content setModalelBoots">

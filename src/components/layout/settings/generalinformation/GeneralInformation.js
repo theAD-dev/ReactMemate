@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { PencilSquare, Telephone, Link45deg, Upload } from "react-bootstrap-icons";
+import { Helmet } from 'react-helmet-async';
 import { Controller, useForm } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import { Link } from 'react-router-dom';
@@ -86,6 +87,9 @@ function GeneralInformation() {
     <form onSubmit={handleSubmit(onSubmit)}>
 
       <div className='settings-wrap'>
+        <Helmet>
+          <title>MeMate - General Information</title>
+        </Helmet>
         <div className="settings-wrapper">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="settings-content">

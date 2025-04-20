@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
+import { useLocation } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
@@ -10,6 +11,7 @@ import SupplierForm from '../../../shared/ui/supliers-ui/supplier-form';
 
 const SupplierCreate = ({ visible, setVisible, refetch }) => {
   const formRef = useRef(null);
+  const addNewSupplier = new URLSearchParams(useLocation().search).get("addNewSupplier");
   const [isPending, setIsPending] = useState(false);
   const [photo, setPhoto] = useState(null);
   const [defaultValues, ] = useState({
@@ -96,6 +98,13 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
   useEffect(() => {
     if (!visible) setPhoto(null);
   }, [visible]);
+
+  useEffect(() => {
+    if (addNewSupplier) {
+      setVisible(true);
+    }
+  }, [addNewSupplier, setVisible]);
+
   return (
     <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
       content={({ closeIconRef, hide }) => (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { ChevronLeft } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import style from './not-found-template.module.scss';
@@ -15,6 +16,9 @@ const NotFoundTemplate = () => {
     };
     return (
         <div className={clsx(style.noDataBox)}>
+            <Helmet>
+                <title>MeMate - Page Not Found</title>
+            </Helmet>
             <div className='position-relative d-flex flex-column'>
                 <svg width="228" height="228" viewBox="0 0 228 228" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="114" cy="114.227" r="113.455" fill="#EAECF0" />

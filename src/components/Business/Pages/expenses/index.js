@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { CheckCircle, Download, Filter, Send, XCircle } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
@@ -88,6 +89,9 @@ const ExpensesPage = () => {
 
     return (
         <div className='peoples-page'>
+            <Helmet>
+                <title>MeMate - Expenses</title>
+            </Helmet>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { useDebounce } from 'primereact/hooks';
 import { SupplierTable } from './supplier-table';
 import style from './suppliers.module.scss';
@@ -24,6 +25,9 @@ const SupplierPage = () => {
 
     return (
         <div className='peoples-page'>
+            <Helmet>
+                <title>MeMate - Suppliers</title>
+            </Helmet>
             <div className={`topbar ${selectedSuppliers?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -38,7 +42,7 @@ const SupplierPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
+                                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>

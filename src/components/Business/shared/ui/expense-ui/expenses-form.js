@@ -476,7 +476,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                 <Col sm={4}>
                     <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-3">
-                        <Link to={"/suppliers"}>
+                        <Link to={"/suppliers?addNewSupplier=true"} target='_blank'>
                             <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
                         </Link>
                     </div>
@@ -489,7 +489,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             <CloudUpload />
                         </button>
                         <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-                        <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
+                        <span style={{ color: '#475467', fontSize: '12px' }}>PDF files only • Max size: 5MB</span>
                     </div>
 
                     <div className='d-flex flex-column gap-3 mb-4'>

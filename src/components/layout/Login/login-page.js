@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { authenticateUser } from "../../../APIs/LoginApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
@@ -66,6 +67,9 @@ const Login = () => {
 
   return (
     <>
+      <Helmet>
+        <title>MeMate - Login</title>
+      </Helmet>
       <form onSubmit={handleLogin}>
         <div className="loginPage">
           <div className="boxinfo">

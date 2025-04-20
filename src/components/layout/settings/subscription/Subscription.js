@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { Divider } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from "sonner";
@@ -67,6 +67,9 @@ const Subscription = () => {
   return (
     <>
       <div className="settings-wrap subscription-page">
+        <Helmet>
+          <title>MeMate - Subscription</title>
+        </Helmet>
         <div className="settings-wrapper">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="settings-content">
@@ -274,36 +277,44 @@ const Subscription = () => {
                       <p className="repaymentStatusBox-text-2">${formatAUD(subscriptionQuery?.data?.total_amount || "0.00")}</p>
                       <p className="repaymentStatusBox-text-3">/month</p>
                     </div>
-                    <p>
+                    <p className="mb-0">
                       <strong>Business Subscription</strong> allows you to use
                       the following features: Sales, Project Management,
                       Invoices, Expense Statistics, Order Management, as well as
                       managing Clients and Suppliers
                     </p>
-                    <Divider className="mb-2" />
-                    <p className="mb-5">
+
+                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
+                    <p className="mb-0">
                       <strong>Company Users</strong> can operate the desktop
                       account for the company and can be assigned different
                       roles, such as Admin, General Manager, Manager, Sales
                       Manager, or Accounts.
                     </p>
 
-                    <p className="pt-5">
+                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
+                    <p  className="mb-0">
                       <strong>Work Subscription</strong> enables you to utilise
                       the application to assign jobs to contractors, employees,
                       or shift workers. You can manage jobs assigned to your app
                       users, track time through the application, and allow users
                       to participate in projects remotely.
                     </p>
-                    <br></br><br />{" "}
-                    <p>
+
+                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
+                    <p className="mb-0">
                       <strong>Mobile users:</strong> Mobile application users
                       can communicate with independent contractors and shift
                       workers for time tracking on location. This app is ideal
                       for individuals who do not require access to the Company
                       Management Desktop system.
                     </p>
-                    <br></br><br />{" "}
+
+                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
                     <p>
                       <strong>Locations:</strong> Additional features for
                       Companies with multiple branches/Locations. It allows you

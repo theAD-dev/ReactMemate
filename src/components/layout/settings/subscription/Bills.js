@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { FilePdf, CreditCard2Front } from "react-bootstrap-icons";
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Sidebar from './../Sidebar';
@@ -38,6 +39,9 @@ const Bills = () => {
 
   return (
     <div className="settings-wrap billsPage">
+      <Helmet>
+        <title>MeMate - Bills</title>
+      </Helmet>
       <div className="settings-wrapper">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="settings-content ps-0">

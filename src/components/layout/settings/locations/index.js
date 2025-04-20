@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Spinner } from 'react-bootstrap';
 import { Plus } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -105,6 +106,9 @@ const Location = () => {
 
     return (
         <div className={`settings-wrap ${style.userSettingPage}`}>
+            <Helmet>
+                <title>MeMate - Locations</title>
+            </Helmet>
             <div className="settings-wrapper">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                 <div className="settings-content setModalelBoots">

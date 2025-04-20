@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Download, Filter, Printer, Send } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
@@ -68,6 +69,9 @@ const InvoicePage = () => {
 
     return (
         <div className='peoples-page'>
+            <Helmet>
+                <title>MeMate - Invoices</title>
+            </Helmet>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {

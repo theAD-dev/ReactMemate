@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PencilSquare } from "react-bootstrap-icons";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -76,6 +77,9 @@ const BankDetails = () => {
 
   return (
     <div className="settings-wrap">
+      <Helmet>
+        <title>MeMate - Bank Details</title>
+      </Helmet>
       <div className="settings-wrapper">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="settings-content">

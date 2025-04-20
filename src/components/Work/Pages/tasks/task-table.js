@@ -1,5 +1,4 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { FileText } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
@@ -9,6 +8,7 @@ import style from './task.module.scss';
 import { getListOfTasks } from '../../../../APIs/task-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
+import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ViewTaskModal from '../../features/task/view-task/view-task';
 
@@ -133,14 +133,6 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         return formatDate(rowData.to_date);
     };
 
-    const loadingIconTemplate = () => {
-        return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        </div>;
-    };
-
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
     const onSort = (event) => {
@@ -157,7 +149,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
-                loadingIcon={loadingIconTemplate}
+                loadingIcon={Loader}
                 emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}

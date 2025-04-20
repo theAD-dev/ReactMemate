@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Envelope } from "react-bootstrap-icons";
+import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
@@ -80,6 +81,9 @@ const Integrations = () => {
   }, [location]);
   return (
     <>
+      <Helmet>
+        <title>MeMate - Integrations</title>
+      </Helmet>
       <div className="settings-wrap">
         <div className="settings-wrapper">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />

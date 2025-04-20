@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { Plus, ThreeDotsVertical } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -128,6 +129,9 @@ const MobileApp = React.memo(() => {
 
     return (
         <>
+            <Helmet>
+                <title>MeMate - Mobile App Users</title>
+            </Helmet>
             <div className={`settings-wrap ${style.userSettingPage}`} id={`${style.appSettingPage}`}>
                 <div className="settings-wrapper">
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />

@@ -1,0 +1,159 @@
+.projectList {
+  width: 100%;
+  overflow-y: auto;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.projectItem {
+  width: 100%;
+  display: flex;
+  padding: 12px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  border-bottom: 1px solid var(--gray-200, #eaecf0);
+  background: #fff;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--gray-50, #f9fafb);
+  }
+
+  &:active {
+    background: var(--primary-25, #f2faff);
+  }
+}
+
+.projectHeader {
+  gap: 12px;
+  width: 100%;
+  display: flex;
+  padding-left: 10px;
+  align-items: flex-start;
+}
+
+.projectInfo {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.projectTitleRow {
+  gap: 8px;
+  display: flex;
+  text-align: left;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.projectName {
+  color: var(--gray-900, #101828);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.projectRef {
+  color: var(--gray-500, #667085);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.userInitials {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: var(--gray-100, #f2f4f7);
+  color: var(--gray-700, #344054);
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.messagePreviewContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 8px;
+  padding-left: 10px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.messagePreview {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.userName {
+  color: var(--gray-700, #344054);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.userFullName {
+  color: var(--gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.lastMessage {
+  color: var(--gray-600, #475467);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lastMessageTime {
+  color: var(--gray-600, #475467);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  flex-shrink: 0;
+}
+
+.archivedBadge {
+  display: inline-flex;
+  padding: 2px 8px;
+  align-items: center;
+  border-radius: 16px;
+  background: var(--gray-100, #f2f4f7);
+  color: var(--gray-700, #344054);
+  font-size: 12px;
+  font-weight: 500;
+}

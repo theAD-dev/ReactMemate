@@ -1,7 +1,6 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
-import ProtectedRoute from "./providers/protected-route-provider";
-import HeaderLayout from "../shared/ui/layout/header-layout";
+import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
 // pages
 const ClientPage = LazyLoader(lazy(() => import('../components/Business/Pages/clients')));
@@ -74,7 +73,8 @@ const CreateJobTemplate = LazyLoader(lazy(() => import('../components/layout/set
 const CreateProposalTemplate = LazyLoader(lazy(() => import('../components/layout/settings/templates/create-proposal-template')));
 const EmailTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-template/email-templates')));
 const SMSTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/sms-template/sms-templates')));
-const EmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signatures')));
+const EmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signature-template/email-signature-templates')));
+const CreateEmailSignatures = LazyLoader(lazy(() => import('../components/layout/settings/templates/email-signature-template/create-email-signature-template')));
 const JobTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/job-templates')));
 const ProposalTemplates = LazyLoader(lazy(() => import('../components/layout/settings/templates/proposal-templates')));
 const TermsandConditions = LazyLoader(lazy(() => import('../components/layout/settings/termsandconditions/TermsandConditions')));
@@ -208,62 +208,62 @@ const routes = [
     },
     {
         path: "/",
-        element: <HeaderLayout />,
+        element: <ProtectedLayout />,
         children: [
             {
                 path: "",
-                element: <ProtectedRoute permission={""}><Dashboard /></ProtectedRoute>,
+                element: <Dashboard />,
             },
             {
                 path: "clients",
-                element: <ProtectedRoute permission={""}><ClientPage /></ProtectedRoute>,
+                element: <ClientPage />,
             },
             {
                 path: "clients/:id/order-history",
-                element: <ProtectedRoute permission={""}><ClientOrderHistory /></ProtectedRoute>,
+                element: <ClientOrderHistory />,
             },
             {
                 path: "suppliers",
-                element: <ProtectedRoute permission={""}><SupplierPage /></ProtectedRoute>,
+                element: <SupplierPage />,
             },
             {
                 path: "suppliers/:id/history",
-                element: <ProtectedRoute permission={""}><SupplierHistoryPage /></ProtectedRoute>,
+                element: <SupplierHistoryPage />,
             },
             {
                 path: "expenses",
-                element: <ProtectedRoute permission={""}><ExpensesPage /></ProtectedRoute>,
+                element: <ExpensesPage />,
             },
             {
                 path: "invoices",
-                element: <ProtectedRoute permission={""}><InvoicePage /></ProtectedRoute>,
+                element: <InvoicePage />,
             },
             {
                 path: "projects",
-                element: <ProtectedRoute permission={""}><ProjectPage /></ProtectedRoute>,
+                element: <ProjectPage />,
             },
             {
                 path: "statistics",
                 children: [
                     {
                         path: "",
-                        element: <ProtectedRoute permission={""}><StatisticsPage /></ProtectedRoute>,
+                        element: <StatisticsPage />,
                     },
                     {
                         path: "key-results",
-                        element: <ProtectedRoute permission={""}><KeyResultsPage /></ProtectedRoute>,
+                        element: <KeyResultsPage />,
                     },
                     {
                         path: "executive",
-                        element: <ProtectedRoute permission={""}><Executive /></ProtectedRoute>,
+                        element: <Executive />,
                     },
                     {
                         path: "sales-conversion",
-                        element: <ProtectedRoute permission={""}><SalesConversion /></ProtectedRoute>,
+                        element: <SalesConversion />,
                     },
                     {
                         path: "overview",
-                        element: <ProtectedRoute permission={""}><Overview /></ProtectedRoute>,
+                        element: <Overview />,
                     },
                 ],
             },
@@ -272,7 +272,7 @@ const routes = [
                 children: [
                     {
                         path: "",
-                        element: <ProtectedRoute permission={""}><Sales /></ProtectedRoute>,
+                        element: <Sales />,
                     },
                     {
                         path: "newquote/selectyourclient",
@@ -280,134 +280,134 @@ const routes = [
 
                             {
                                 path: "",
-                                element: <ProtectedRoute permission={""}><SelectClientType /></ProtectedRoute>
+                                element: <SelectClientType />
                             },
                             {
                                 path: "existing-clients",
-                                element: <ProtectedRoute permission={""}><ExistingClients /></ProtectedRoute>,
+                                element: <ExistingClients />,
                             },
                             {
                                 path: "new-clients",
-                                element: <ProtectedRoute permission={""}><NewClient /></ProtectedRoute>,
+                                element: <NewClient />,
                             },
                             {
                                 path: "business-client",
-                                element: <ProtectedRoute permission={""}><BusinessClientInformation /></ProtectedRoute>,
+                                element: <BusinessClientInformation />,
                             },
                             {
                                 path: "business-client/:id",
-                                element: <ProtectedRoute permission={""}><BusinessClientInformation /></ProtectedRoute>,
+                                element: <BusinessClientInformation />,
                             },
                             {
                                 path: "individual-client",
-                                element: <ProtectedRoute permission={""}><IndividualClientInformation /></ProtectedRoute>,
+                                element: <IndividualClientInformation />,
                             },
                             {
                                 path: "individual-client/:id",
-                                element: <ProtectedRoute permission={""}><IndividualClientInformation /></ProtectedRoute>,
+                                element: <IndividualClientInformation />,
                             },
                             {
                                 path: "client-information/scope-of-work",
-                                element: <ProtectedRoute permission={""}><ScopeOfWorkComponent /></ProtectedRoute>,
+                                element: <ScopeOfWorkComponent />,
                             },
                             {
                                 path: "client-information/scope-of-work/:id",
-                                element: <ProtectedRoute permission={""}><ScopeOfWorkComponent /></ProtectedRoute>,
+                                element: <ScopeOfWorkComponent />,
                             },
                         ],
                     },
                     {
                         path: "quote-calculation",
-                        element: <ProtectedRoute permission={""}><CalculateQuote /></ProtectedRoute>,
+                        element: <CalculateQuote />,
                     },
                     {
                         path: "quote-calculation/:unique_id",
-                        element: <ProtectedRoute permission={""}><CalculateQuote /></ProtectedRoute>,
+                        element: <CalculateQuote />,
                     },
                 ],
             },
             {
                 path: "management",
-                element: <ProtectedRoute permission={""}><Management /></ProtectedRoute>,
+                element: <Management />,
             },
             {
                 path: "profile",
-                element: <ProtectedRoute permission={""}><Profile /></ProtectedRoute>,
+                element: <Profile />,
             },
         ],
     },
     {
         path: "/work",
-        element: <HeaderLayout />,
+        element: <ProtectedLayout />,
         children: [
             {
                 path: "",
-                element: <ProtectedRoute permission={""}><WorkDashboard /></ProtectedRoute>,
+                element: <WorkDashboard />,
             },
             {
                 path: "dashboard",
-                element: <ProtectedRoute permission={""}><WorkDashboard /></ProtectedRoute>,
+                element: <WorkDashboard />,
             },
             {
                 path: "tasks",
-                element: <ProtectedRoute permission={""}><TaskPage /></ProtectedRoute>,
+                element: <TaskPage />,
             },
             {
                 path: "news",
-                element: <ProtectedRoute permission={""}><News /></ProtectedRoute>,
+                element: <News />,
             },
             {
                 path: "approval",
-                element: <ProtectedRoute permission={""}><ApprovalPage /></ProtectedRoute>,
+                element: <ApprovalPage />,
             },
             {
                 path: "jobs",
-                element: <ProtectedRoute permission={""}><JobsPage /></ProtectedRoute>,
+                element: <JobsPage />,
             },
             {
                 path: "people",
-                element: <ProtectedRoute permission={""}><PeoplePage /></ProtectedRoute>,
+                element: <PeoplePage />,
             },
             {
                 path: "chat",
-                element: <ProtectedRoute permission={""}><Chat /></ProtectedRoute>,
+                element: <Chat />,
             },
         ],
     },
     {
         path: "/settings",
-        element: <HeaderLayout />,
+        element: <ProtectedLayout />,
         children: [
             {
                 path: "generalinformation",
                 children: [
                     {
                         path: "",
-                        element: <ProtectedRoute permission={""}><GeneralInformation /></ProtectedRoute>
+                        element: <GeneralInformation />
                     },
                     {
                         path: "bank-details",
-                        element: <ProtectedRoute permission={""}><BankDetails /></ProtectedRoute>,
+                        element: <BankDetails />,
                     },
                     {
                         path: "region-and-language",
-                        element: <ProtectedRoute permission={""}><RegionLanguage /></ProtectedRoute>,
+                        element: <RegionLanguage />,
                     },
                     {
                         path: "profile",
-                        element: <ProtectedRoute permission={""}><MyProfile /></ProtectedRoute>,
+                        element: <MyProfile />,
                     },
                     {
                         path: "subscription",
-                        element: <ProtectedRoute permission={""}><Subscription /></ProtectedRoute>,
+                        element: <Subscription />,
                     },
                     {
                         path: "bills",
-                        element: <ProtectedRoute permission={""}><Bills /></ProtectedRoute>,
+                        element: <Bills />,
                     },
                     {
                         path: "billing-info",
-                        element: <ProtectedRoute permission={""}><BillingInfo /></ProtectedRoute>,
+                        element: <BillingInfo />,
                     },
                 ],
             },
@@ -416,97 +416,105 @@ const routes = [
                 children: [
                     {
                         path: "desktop",
-                        element: <ProtectedRoute permission={""}><Users /></ProtectedRoute>,
+                        element: <Users />,
                     },
                     {
                         path: "mobile-app",
-                        element: <ProtectedRoute permission={""}><MobileApp /></ProtectedRoute>,
+                        element: <MobileApp />,
                     },
                 ],
             },
             {
                 path: "calculators/departments",
-                element: <ProtectedRoute permission={""}><Departments /></ProtectedRoute>,
+                element: <Departments />,
             },
             {
                 path: "location",
-                element: <ProtectedRoute permission={""}><Location /></ProtectedRoute>,
+                element: <Location />,
             },
             {
                 path: "templates",
                 children: [
                     {
                         path: "job-templates",
-                        element: <ProtectedRoute permission={""}><JobTemplates /></ProtectedRoute>,
+                        element: <JobTemplates />,
                     },
                     {
                         path: "job-templates/new",
-                        element: <ProtectedRoute permission={""}><CreateJobTemplate /></ProtectedRoute>,
+                        element: <CreateJobTemplate />,
                     },
                     {
                         path: "job-templates/:id",
-                        element: <ProtectedRoute permission={""}><CreateJobTemplate /></ProtectedRoute>,
+                        element: <CreateJobTemplate />,
                     },
                     {
                         path: "email-templates",
-                        element: <ProtectedRoute permission={""}><EmailTemplates /></ProtectedRoute>,
+                        element: <EmailTemplates />,
                     },
                     {
                         path: "email-templates/new",
-                        element: <ProtectedRoute permission={""}><CreateEmailTemplate /></ProtectedRoute>,
+                        element: <CreateEmailTemplate />,
                     },
                     {
                         path: "email-templates/:id",
-                        element: <ProtectedRoute permission={""}><CreateEmailTemplate /></ProtectedRoute>,
+                        element: <CreateEmailTemplate />,
                     },
                     {
                         path: "email-signatures",
-                        element: <ProtectedRoute permission={""}><EmailSignatures /></ProtectedRoute>,
+                        element: <EmailSignatures />,
+                    },
+                    {
+                        path: "email-signatures/new",
+                        element: <CreateEmailSignatures />,
+                    },
+                    {
+                        path: "email-signatures/:id",
+                        element: <CreateEmailSignatures />,
                     },
                     {
                         path: "proposal-templates",
-                        element: <ProtectedRoute permission={""}><ProposalTemplates /></ProtectedRoute>,
+                        element: <ProposalTemplates />,
                     },
                     {
                         path: "proposal-templates/new",
-                        element: <ProtectedRoute permission={""}><CreateProposalTemplate /></ProtectedRoute>,
+                        element: <CreateProposalTemplate />,
                     },
                     {
                         path: "proposal-templates/:id",
-                        element: <ProtectedRoute permission={""}><CreateProposalTemplate /></ProtectedRoute>,
+                        element: <CreateProposalTemplate />,
                     },
                     {
                         path: "sms-templates",
-                        element: <ProtectedRoute permission={""}><SMSTemplates /></ProtectedRoute>,
+                        element: <SMSTemplates />,
                     },
                     {
                         path: "sms-templates/new",
-                        element: <ProtectedRoute permission={""}><CreateSMSTemplate /></ProtectedRoute>,
+                        element: <CreateSMSTemplate />,
                     },
                     {
                         path: "sms-templates/:id",
-                        element: <ProtectedRoute permission={""}><CreateSMSTemplate /></ProtectedRoute>,
+                        element: <CreateSMSTemplate />,
                     },
                 ],
             },
             {
                 path: "companyethos/company-ethos",
-                element: <ProtectedRoute permission={""}><CompanyEthos /></ProtectedRoute>,
+                element: <CompanyEthos />,
             },
             {
                 path: "integrations",
-                element: <ProtectedRoute permission={""}><Integrations /></ProtectedRoute>,
+                element: <Integrations />,
             },
             {
                 path: "quotesjobs",
                 children: [
                     {
                         path: "recurring-quotes",
-                        element: <ProtectedRoute permission={""}><RecurringQuotes /></ProtectedRoute>,
+                        element: <RecurringQuotes />,
                     },
                     {
                         path: "recurring-jobs",
-                        element: <ProtectedRoute permission={""}><RecurringJobs /></ProtectedRoute>,
+                        element: <RecurringJobs />,
                     },
                 ],
             },
@@ -515,11 +523,11 @@ const routes = [
                 children: [
                     {
                         path: "project-status",
-                        element: <ProtectedRoute permission={""}><ProjectStatus /></ProtectedRoute>,
+                        element: <ProjectStatus />,
                     },
                     {
                         path: "outgoing-emails",
-                        element: <ProtectedRoute permission={""}><OutgoingEmails /></ProtectedRoute>,
+                        element: <OutgoingEmails />,
                     },
                 ],
             },
@@ -528,11 +536,11 @@ const routes = [
                 children: [
                     {
                         path: "terms-and-conditions",
-                        element: <ProtectedRoute permission={""}><TermsandConditions /></ProtectedRoute>,
+                        element: <TermsandConditions />,
                     },
                     {
                         path: "terms-and-conditions-invoice",
-                        element: <ProtectedRoute permission={""}><TermsConditionsInvoice /></ProtectedRoute>,
+                        element: <TermsConditionsInvoice />,
                     },
                 ],
             },
@@ -541,11 +549,11 @@ const routes = [
                 children: [
                     {
                         path: "industries",
-                        element: <ProtectedRoute permission={""}><CustomersIndustries /></ProtectedRoute>,
+                        element: <CustomersIndustries />,
                     },
                     {
                         path: "customers-discount-category",
-                        element: <ProtectedRoute permission={""}><CustomersDiscountCategory /></ProtectedRoute>,
+                        element: <CustomersDiscountCategory />,
                     },
                 ],
             },
@@ -554,11 +562,11 @@ const routes = [
                 children: [
                     {
                         path: "expenses",
-                        element: <ProtectedRoute permission={""}><ExpensesAccount /></ProtectedRoute>,
+                        element: <ExpensesAccount />,
                     },
                     {
                         path: "department-turnover-plan",
-                        element: <ProtectedRoute permission={""}><DepartmentTurnoverPlan /></ProtectedRoute>,
+                        element: <DepartmentTurnoverPlan />,
                     },
                 ],
             },
@@ -567,15 +575,15 @@ const routes = [
                 children: [
                     {
                         path: "dashboard-notifications",
-                        element: <ProtectedRoute permission={""}><DashboardNotifications /></ProtectedRoute>,
+                        element: <DashboardNotifications />,
                     },
                     {
                         path: "app-notifications",
-                        element: <ProtectedRoute permission={""}><AppNotifications /></ProtectedRoute>,
+                        element: <AppNotifications />,
                     },
                     {
                         path: "email-notifications",
-                        element: <ProtectedRoute permission={""}><EmailNotifications /></ProtectedRoute>,
+                        element: <EmailNotifications />,
                     },
                 ],
             },

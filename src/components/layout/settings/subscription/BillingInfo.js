@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { ExclamationCircle } from "react-bootstrap-icons";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { InputText } from "primereact/inputtext";
@@ -91,6 +92,9 @@ const BillingInfo = () => {
   return (
     <>
       <div className="settings-wrap settings-BillingInfo">
+        <Helmet>
+          <title>MeMate - Billing Info</title>
+        </Helmet>
         <div className="settings-wrapper">
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="settings-content ps-0">

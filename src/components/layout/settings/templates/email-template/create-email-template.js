@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { ChevronLeft, PencilSquare } from "react-bootstrap-icons";
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -167,6 +168,9 @@ const CreateEmailTemplate = () => {
 
     return (
         <div className='settings-wrap'>
+            <Helmet>
+                <title>MeMate - {id ? 'Edit' : 'Create'} Email Template</title>
+            </Helmet>
             <div className="settings-wrapper">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
                 <div className="settings-content setModalelBoots">

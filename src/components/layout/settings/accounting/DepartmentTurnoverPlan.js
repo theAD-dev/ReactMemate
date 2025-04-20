@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PencilSquare } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -78,6 +79,9 @@ const DepartmentTurnoverPlan = () => {
 
     return (
         <>
+            <Helmet>
+                <title>MeMate - Department Turnover Plan</title>
+            </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />

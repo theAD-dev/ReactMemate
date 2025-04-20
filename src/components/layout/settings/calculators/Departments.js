@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { PlusLg, PencilSquare, ChevronDown, ChevronUp, X, PlusCircle, Save, Backspace } from "react-bootstrap-icons";
+import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Accordion, AccordionTab } from 'primereact/accordion';
@@ -80,6 +81,9 @@ const Departments = () => {
 
     return (
         <>
+            <Helmet>
+                <title>MeMate - Departments</title>
+            </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
                     <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -271,7 +275,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             toast.error("Description is required.");
             return;
         }
-        
+
         if (!tempCalculator?.cost) {
             toast.error("Cost is required.");
             return;

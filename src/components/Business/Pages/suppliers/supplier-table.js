@@ -1,5 +1,4 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
 import { Envelope, GeoAlt, Globe } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
@@ -11,6 +10,7 @@ import style from './suppliers.module.scss';
 import { getListOfSuppliers } from '../../../../APIs/SuppliersApi';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
@@ -188,14 +188,6 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
         return <Tag value={`$${formatAUD(rowData.total_spent)}`} style={{ height: '22px', minWidth: '26px', borderRadius: '20px', border: '1px solid #D0D5DD', background: '#fff', color: '#344054', fontSize: '12px', fontWeight: 500 }}></Tag>;
     };
 
-    const loadingIconTemplate = () => {
-        return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        </div>;
-    };
-
     const onResizeColumn = (event) => {
         console.log('event: ', event);
     };
@@ -214,7 +206,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selectedSuppliers}
             onSelectionChange={(e) => setSelectedSuppliers(e.value)}
             loading={loading}
-            loadingIcon={loadingIconTemplate}
+            loadingIcon={Loader}
             emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
             sortField={sort?.sortField}
             sortOrder={sort?.sortOrder}
