@@ -42,7 +42,7 @@ const ResendEmail = LazyLoader(lazy(() => import('../components/layout/onboardin
 const Verifymail = LazyLoader(lazy(() => import('../components/layout/onboarding/Verifymail')));
 const AllSet = LazyLoader(lazy(() => import('../components/layout/requestdemo/AllSet')));
 const SelectCountry = LazyLoader(lazy(() => import('../components/layout/requestdemo/SelectCountry')));
-const SelectDate = LazyLoader(lazy(() => import('../components/layout/requestdemo/SelectDate')));
+const SelectDate = LazyLoader(lazy(() => import('../components/layout/requestdemo/select-date')));
 const SignUp = LazyLoader(lazy(() => import('../components/layout/requestdemo/SignUp')));
 const DepartmentTurnoverPlan = LazyLoader(lazy(() => import('../components/layout/settings/accounting/DepartmentTurnoverPlan')));
 const ExpensesAccount = LazyLoader(lazy(() => import('../components/layout/settings/accounting/ExpensesAccount')));

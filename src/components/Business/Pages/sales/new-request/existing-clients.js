@@ -239,9 +239,9 @@ export const ExistingClientsSearch = () => {
 
   return (
     <div className="existingClients py-0">
-      <div style={{ height: `calc(100vh - 430px - ${trialHeight}px)` }}>
+      <div style={{ height: `calc(100vh - 385px - ${trialHeight}px)` }}>
         <div className="newQuoteContent" style={{ height: '100%' }}>
-          <div className="h-100 mt-4">
+          <div className="h-100 mt-0">
             <div className="search-header">
               <div className='searchGroupFilter d-flex align-items-center' style={{ gap: '10px' }}>
                 <Search color="#98A2B3" size={20} />
@@ -255,7 +255,7 @@ export const ExistingClientsSearch = () => {
               </div>
             </div>
 
-            <div className='mt-4 h-100'>
+            <div className='mt-2 h-100'>
               <ul className='client customscrollBar'>
                 {itemList && itemList.map((item) => (
                   <li key={item.id}>

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import React, { useEffect, useRef, useState } from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Button, Col, Form, Modal, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
 import {
@@ -17,11 +16,14 @@ import {
     Globe,
     CheckCircle
 } from "react-bootstrap-icons";
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
+import { Editor } from 'primereact/editor';
+import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -33,6 +35,46 @@ import Sidebar from '../../Sidebar';
 import style from '../job-template.module.scss';
 import premiumStyle from './premium-email-signatures.module.scss';
 
+
+const renderHeader = () => (
+    <span className="ql-formats">
+        <button className="ql-bold" aria-label="Bold"></button>
+        <button className="ql-italic" aria-label="Italic"></button>
+        <button className="ql-underline" aria-label="Underline"></button>
+        <button className="ql-strike" aria-label="Strikethrough"></button>
+        <button className="ql-blockquote" aria-label="Blockquote"></button>
+        <button
+            className="ql-list"
+            value="ordered"
+            aria-label="Ordered List"
+        ></button>
+        <button
+            className="ql-list"
+            value="bullet"
+            aria-label="Bullet List"
+        ></button>
+        <button className="ql-align" value="" aria-label="Align Left"></button>
+        <button
+            className="ql-align"
+            value="center"
+            aria-label="Align Center"
+        ></button>
+        <button
+            className="ql-align"
+            value="right"
+            aria-label="Align Right"
+        ></button>
+        <button
+            className="ql-align"
+            value="justify"
+            aria-label="Justify"
+        ></button>
+        <button className="ql-link" aria-label="Insert Link"></button>
+        <button className="ql-image" aria-label="Insert Image"></button>
+        <button className="ql-code-block" aria-label="Code Block"></button>
+    </span>
+);
+const header = renderHeader();
 
 // Premium template data with HTML thumbnails
 const premiumTemplates = [
@@ -255,6 +297,7 @@ const socialPlatforms = [
 ];
 
 const CreateEmailSignatureTemplate = () => {
+    const editorRef = useRef(null);
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
@@ -502,43 +545,8 @@ const CreateEmailSignatureTemplate = () => {
             return `${width} ${style} ${dividerColor}`;
         };
 
-        // Base styling for cross-platform compatibility
-        const baseStyles = `
-            .email-signature {
-                font-family: ${fontFamily};
-                max-width: 500px;
-                color: ${textColor};
-                line-height: 1.4;
-                width: 100%;
-                background-color: ${backgroundColor};
-            }
-            .email-signature table {
-                border-collapse: collapse;
-                mso-table-lspace: 0pt;
-                mso-table-rspace: 0pt;
-                width: 100%;
-            }
-            .email-signature td {
-                padding: 0;
-                vertical-align: top;
-            }
-            .email-signature img {
-                border: 0;
-                height: auto;
-                line-height: 100%;
-                outline: none;
-                text-decoration: none;
-                -ms-interpolation-mode: bicubic;
-            }
-            .email-signature a {
-                text-decoration: none;
-            }
-            .email-signature .social-icon {
-                display: inline-block;
-                margin-right: 8px;
-                margin-bottom: 8px;
-            }
-
+        // Only responsive styles for media queries
+        const responsiveStyles = `
             /* Responsive styles */
             @media screen and (max-width: 480px) {
                 .email-signature .mobile-stack {
@@ -562,7 +570,7 @@ const CreateEmailSignatureTemplate = () => {
             const link = socialLinks[platformId] || '#';
             // Use Base64 encoded icons to ensure they display in email clients
             return `
-                <a href="${link}" class="social-icon" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-right: 8px;">
+                <a href="${link}" class="social-icon" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-right: 8px; margin-bottom: 8px; text-decoration: none;">
                     <img src="${socialIcons[platformId] || socialIcons['website']}"
                          alt="${platform.name}" width="24" height="24"
                          style="border: none; display: inline-block; padding: 2px;" />
@@ -576,19 +584,19 @@ const CreateEmailSignatureTemplate = () => {
         switch (selectedTemplate) {
             case 'single-column':
                 signatureHTML = `
-                    <div class="email-signature" style="background-color: ${backgroundColor};">
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                    <div class="email-signature" style="font-family: ${fontFamily}; max-width: 500px; color: ${textColor}; line-height: 1.4; width: 100%; background-color: ${backgroundColor};">
+                        <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
                             <tr>
-                                <td class="mobile-text-center">
+                                <td class="mobile-text-center" style="padding: 0; vertical-align: top; text-align: left;">
                                     ${profileImage ? `<div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin-bottom: 10px;">
-                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
+                                        <img src="${profileImage}" alt="${fullName}" width="${getProfileImageSize(profileImageSize).width.replace('px', '')}" height="${getProfileImageSize(profileImageSize).height.replace('px', '')}" style="border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; ${getProfileImageStyle()}; display: block;" class="mobile-img-center" />
                                     </div>` : ''}
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
                                     <h3 style="margin: 0 0 5px 0; font-size: ${getFontSize(fontSize).heading}; color: ${textColor}; font-weight: 600; font-family: ${fontFamily};">${fullName}</h3>
                                     <p style="margin: 0 0 10px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${jobTitle}${company ? ` at ${company}` : ''}</p>
-                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="color: ${linkColor};">${email}</a></p>` : ''}
-                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="color: ${textColor};">${phone}</a></p>` : ''}
-                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="color: ${linkColor};">${website}</a></p>` : ''}
+                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="text-decoration: none; color: ${linkColor};">${email}</a></p>` : ''}
+                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="text-decoration: none; color: ${textColor};">${phone}</a></p>` : ''}
+                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="text-decoration: none; color: ${linkColor};">${website}</a></p>` : ''}
                                     ${address ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${address}</p>` : ''}
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
                                     ${socialIconsHTML ? `<div style="margin-top: 10px;">${socialIconsHTML}</div>` : ''}
@@ -601,8 +609,8 @@ const CreateEmailSignatureTemplate = () => {
 
             case 'two-column':
                 signatureHTML = `
-                    <div class="email-signature" style="background-color: ${backgroundColor};">
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                    <div class="email-signature" style="font-family: ${fontFamily}; max-width: 500px; color: ${textColor}; line-height: 1.4; width: 100%; background-color: ${backgroundColor};">
+                        <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: center;">
@@ -617,16 +625,16 @@ const CreateEmailSignatureTemplate = () => {
                             </tr>
                         </table>
                         <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                        <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
                             <tr>
                                 ${companyLogo ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
                                     ${companyLogo ? `<img src="${companyLogo}" alt="${company}" height="${getCompanyLogoSize(companyLogoSize).height.replace('px', '')}" style="display: block; margin-top: 10px; width: ${getCompanyLogoSize(companyLogoSize).width};" class="mobile-img-center" />` : ''}
                                 </td>` : ''}
                                 <td class="mobile-stack mobile-text-center" style="vertical-align: top;">
-                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="color: ${linkColor};">${email}</a></p>` : ''}
-                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="color: ${textColor};">${phone}</a></p>` : ''}
-                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="color: ${linkColor};">${website}</a></p>` : ''}
+                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="text-decoration: none; color: ${linkColor};">${email}</a></p>` : ''}
+                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="text-decoration: none; color: ${textColor};">${phone}</a></p>` : ''}
+                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="text-decoration: none; color: ${linkColor};">${website}</a></p>` : ''}
                                     ${address ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${address}</p>` : ''}
                                 </td>
                             </tr>
@@ -639,8 +647,8 @@ const CreateEmailSignatureTemplate = () => {
 
             case 'vertical':
                 signatureHTML = `
-                    <div class="email-signature" style="background-color: ${backgroundColor};">
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                    <div class="email-signature" style="font-family: ${fontFamily}; max-width: 500px; color: ${textColor}; line-height: 1.4; width: 100%; background-color: ${backgroundColor};">
+                        <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
                             <tr>
                                 <td class="mobile-text-center" style="text-align: center;">
                                     ${profileImage ? `<div style="width: ${getProfileImageSize(profileImageSize).width}; height: ${getProfileImageSize(profileImageSize).height}; ${profileImageStyle === 'circle' ? 'overflow: hidden; border-radius: 50%;' : ''} margin: 0 auto 10px;">
@@ -650,9 +658,9 @@ const CreateEmailSignatureTemplate = () => {
                                     <p style="margin: 0 0 10px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${jobTitle}${company ? ` at ${company}` : ''}</p>
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
                                     ${companyLogo ? `<img src="${companyLogo}" alt="${company}" height="${getCompanyLogoSize(companyLogoSize).height}" style="display: block; margin: 10px auto; width: ${getCompanyLogoSize(companyLogoSize).width};" />` : ''}
-                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="color: ${linkColor};">${email}</a></p>` : ''}
-                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="color: ${textColor};">${phone}</a></p>` : ''}
-                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="color: ${linkColor};">${website}</a></p>` : ''}
+                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="text-decoration: none; color: ${linkColor};">${email}</a></p>` : ''}
+                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="text-decoration: none; color: ${textColor};">${phone}</a></p>` : ''}
+                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="text-decoration: none; color: ${linkColor};">${website}</a></p>` : ''}
                                     ${address ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${address}</p>` : ''}
                                     <div style="border-bottom: ${getBorderStyle(dividerStyle, dividerWidth)}; margin: 10px 0;"></div>
                                     ${socialIconsHTML ? `<div style="margin-top: 10px; text-align: center;">${socialIconsHTML}</div>` : ''}
@@ -665,8 +673,8 @@ const CreateEmailSignatureTemplate = () => {
 
             case 'modern-divider':
                 signatureHTML = `
-                    <div class="email-signature" style="background-color: ${backgroundColor};">
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                    <div class="email-signature" style="font-family: ${fontFamily}; max-width: 500px; color: ${textColor}; line-height: 1.4; width: 100%; background-color: ${backgroundColor};">
+                        <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
                             <tr>
                                 ${profileImage ? `
                                 <td class="mobile-stack" style="padding-right: 15px; width: 80px; vertical-align: top;">
@@ -681,12 +689,12 @@ const CreateEmailSignatureTemplate = () => {
                             </tr>
                         </table>
                         <div style="border-bottom: ${dividerWidth} ${dividerStyle} ${dividerColor}; margin: 10px 0;"></div>
-                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                        <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
                             <tr>
                                 <td>
-                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="color: ${linkColor};">${email}</a></p>` : ''}
-                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="color: ${textColor};">${phone}</a></p>` : ''}
-                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="color: ${linkColor};">${website}</a></p>` : ''}
+                                    ${email ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="mailto:${email}" style="text-decoration: none; color: ${linkColor};">${email}</a></p>` : ''}
+                                    ${phone ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="tel:${phone}" style="text-decoration: none; color: ${textColor};">${phone}</a></p>` : ''}
+                                    ${website ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; font-family: ${fontFamily};"><a href="${website}" style="text-decoration: none; color: ${linkColor};">${website}</a></p>` : ''}
                                     ${address ? `<p style="margin: 0 0 3px 0; font-size: ${getFontSize(fontSize).base}; color: ${secondaryTextColor}; font-family: ${fontFamily};">${address}</p>` : ''}
                                 </td>
                             </tr>
@@ -823,37 +831,8 @@ const CreateEmailSignatureTemplate = () => {
                 `;
         }
 
-        // Add style tag for cross-platform compatibility
-        return `<style type="text/css">${baseStyles}</style>${signatureHTML}`;
-    };
-
-    // Handle export signature
-    const handleExportSignature = () => {
-        const signatureHTML = generateSignatureHTML();
-        const blob = new Blob([signatureHTML], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${title || 'email-signature'}.html`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        toast.success('Email signature exported successfully!');
-    };
-
-    // Handle copy to clipboard
-    const handleCopySignature = () => {
-        const signatureHTML = generateSignatureHTML();
-        navigator.clipboard.writeText(signatureHTML)
-            .then(() => {
-                toast.success('Email signature copied to clipboard!');
-            })
-            .catch(err => {
-                console.error('Failed to copy signature: ', err);
-                toast.error('Failed to copy signature to clipboard');
-            });
+        // Add style tag for responsive styles only
+        return `<style type="text/css">${responsiveStyles}</style>${signatureHTML}`;
     };
 
     const handleSubmit = (e) => {
@@ -874,10 +853,10 @@ const CreateEmailSignatureTemplate = () => {
 
         const templateData = {
             name: title,
-            text: text ? text : signatureHTML,
+            text: text || signatureHTML,
         };
 
-        console.log(templateData);
+        // Removed console.log to prevent unnecessary re-renders
         toast.success("Saving your email signature...");
         mutation.mutate(templateData);
     };
@@ -1548,52 +1527,46 @@ const CreateEmailSignatureTemplate = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {/* <div className="mt-3 d-flex gap-2">
-                                                <Button
-                                                    className="outline-button w-100"
-                                                    onClick={handleCopySignature}
-                                                >
-                                                    Copy HTML
-                                                </Button>
-                                                <Button
-                                                    className="outline-button w-100"
-                                                    onClick={handleExportSignature}
-                                                >
-                                                    Export as HTML
-                                                </Button>
-                                            </div> */}
                                         </div>
                                     </Col>
                                 </Row>
                             ) :
                                 <Row>
                                     <Col sm={7}>
-                                        <div className={premiumStyle.formSection}>
-                                            <label className={premiumStyle.label}>Signature HTML</label>
-                                            <InputTextarea
-                                                value={text || ""}
-                                                onChange={(e) => setText(e.target.value)}
-                                                className={premiumStyle.textarea}
-                                                placeholder="Enter your signature HTML here..."
-                                                autoResize
+                                        <div className={premiumStyle.formSection} style={{ position: 'relative' }}>
+                                            <label className={clsx(premiumStyle.label, 'mb-1')}>Signature</label>
+                                            <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                                                {signatureQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                                            </InputIcon>
+                                            <Editor
+                                                ref={editorRef}
+                                                style={{ minHeight: "399px" }}
+                                                headerTemplate={header}
+                                                value={text}
+                                                placeholder='Enter your signature'
+                                                onTextChange={(e) => {
+                                                    // Only update if the content has actually changed
+                                                    if (e.htmlValue !== text) {
+                                                        setText(e.htmlValue);
+                                                    }
+                                                }}
                                             />
                                         </div>
                                     </Col>
                                     <Col sm={5}>
-                                        <div className={premiumStyle.previewSection}>
-                                            <div className={premiumStyle.previewCard}>
-                                                <div className={premiumStyle.previewHeader}>
-                                                    <h3>Live Preview</h3>
-                                                </div>
-                                                <div className={premiumStyle.previewBody}>
-                                                    <div className={premiumStyle.emailPreview}>
-                                                        <div className={premiumStyle.emailBody}>
-                                                            <div key={previewKey} dangerouslySetInnerHTML={{ __html: text }} />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div className={premiumStyle.formSection}>
+                                            <label className={clsx(premiumStyle.label, 'mb-1')}>Signature HTML</label>
+                                            <InputTextarea
+                                                value={text || ""}
+                                                onChange={(e) => {
+                                                    if (e.target.value !== text) {
+                                                        setText(e.target.value);
+                                                    }
+                                                }}
+                                                className={premiumStyle.textarea}
+                                                placeholder="Enter your signature HTML here..."
+                                                autoResize
+                                            />
                                         </div>
                                     </Col>
                                 </Row>

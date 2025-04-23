@@ -1,7 +1,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import Components from '../src/ui/memate-select';
 import PublicInvoice from './components/Business/Pages/invoices/public-invoice/public-invoice';
 import QuotationEmail from './components/layout/browser-web/quotation-email';
+import { protectedRoutes } from './components/layout/Header';
 import ChangePassword from './components/layout/Login/change-password';
 import CheckMail from './components/layout/Login/check-mail';
 import ForgotPassword from './components/layout/Login/forgot-password';
@@ -16,17 +18,15 @@ import ResendEmail from './components/layout/onboarding/ResendEmail';
 import Verifymail from './components/layout/onboarding/Verifymail';
 import AllSet from './components/layout/requestdemo/AllSet';
 import CompanyName from './components/layout/requestdemo/CompanyName';
+import SelectDate from './components/layout/requestdemo/select-date';
 import SelectCountry from './components/layout/requestdemo/SelectCountry';
-import SelectDate from './components/layout/requestdemo/SelectDate';
 import SignUp from './components/layout/requestdemo/SignUp';
 import Demo from './components/layout/settings/Demo';
 import Suspended from './components/layout/suspended';
 import AccountOverdue from './pages/account-overdue/account-overdue';
 import Logout from './pages/setting/logout/logout';
-import StripeContainer from './ui/strip-payment/strip-payment';
-import Components from '../src/ui/memate-select';
-import { protectedRoutes } from './components/layout/Header';
 import NotFoundTemplate from './ui/404-template/not-found-template';
+import StripeContainer from './ui/strip-payment/strip-payment';
 
 function App() {
   return (

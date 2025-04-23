@@ -210,49 +210,53 @@ const Home = () => {
 
                     <Row className='d-flex flex-nowrap'>
                         <Col className='mt-4'>
-                            <div className="bigBoxHome tobePaidWrap" >
-                                <div className='TooltipWrapper'>
-                                    {['top'].map((placement) => (
-                                        <OverlayTrigger
-                                            key={placement}
-                                            placement={placement}
-                                            overlay={
-                                                <Tooltip className='TooltipOverlay' id={`tooltip-${placement}`}>
-                                                    Number and Total value of all expenses to be paid
-                                                </Tooltip>
-                                            }
-                                        >
-                                            <Button><InfoCircle size={16} color="#cdcfd2" /> </Button>
-                                        </OverlayTrigger>
-                                    ))}
+                            <Link to="/expenses?isShowUnpaid=true">
+                                <div className="bigBoxHome tobePaidWrap" >
+                                    <div className='TooltipWrapper'>
+                                        {['top'].map((placement) => (
+                                            <OverlayTrigger
+                                                key={placement}
+                                                placement={placement}
+                                                overlay={
+                                                    <Tooltip className='TooltipOverlay' id={`tooltip-${placement}`}>
+                                                        Number and Total value of all expenses to be paid
+                                                    </Tooltip>
+                                                }
+                                            >
+                                                <Button><InfoCircle size={16} color="#cdcfd2" /> </Button>
+                                            </OverlayTrigger>
+                                        ))}
+                                    </div>
+                                    <h3>Expense to be paid</h3>
+                                    <div className='countNoBox tobePaidH'> <span><CountUp start={0} end={homeData?.expense?.cnt != null ? homeData?.expense?.cnt : 0} duration={10} /></span>
+                                    </div>
+                                    <h4>{formatCurrency(homeData?.expense?.sum || 0)}</h4>
                                 </div>
-                                <h3>Expense to be paid</h3>
-                                <div className='countNoBox tobePaidH'> <span><CountUp start={0} end={homeData?.expense?.cnt != null ? homeData?.expense?.cnt : 0} duration={10} /></span>
-                                </div>
-                                <h4>{formatCurrency(homeData?.expense?.sum || 0)}</h4>
-                            </div>
+                            </Link>
                         </Col>
                         <Col className='mt-4'>
-                            <div className="bigBoxHome invoiceDuewrap" >
-                                <div className='TooltipWrapper'>
-                                    {['top'].map((placement) => (
-                                        <OverlayTrigger
-                                            key={placement}
-                                            placement={placement}
-                                            overlay={
-                                                <Tooltip className='TooltipOverlay' id={`tooltip-${placement}`}>
-                                                    Number and value of all Invoices which are due to be paid.
-                                                </Tooltip>
-                                            }
-                                        >
-                                            <Button><InfoCircle size={16} color="#cdcfd2" /> </Button>
-                                        </OverlayTrigger>
-                                    ))}
+                            <Link to="/invoices?isShowUnpaid=true">
+                                <div className="bigBoxHome invoiceDuewrap" >
+                                    <div className='TooltipWrapper'>
+                                        {['top'].map((placement) => (
+                                            <OverlayTrigger
+                                                key={placement}
+                                                placement={placement}
+                                                overlay={
+                                                    <Tooltip className='TooltipOverlay' id={`tooltip-${placement}`}>
+                                                        Number and value of all Invoices which are due to be paid.
+                                                    </Tooltip>
+                                                }
+                                            >
+                                                <Button><InfoCircle size={16} color="#cdcfd2" /> </Button>
+                                            </OverlayTrigger>
+                                        ))}
+                                    </div>
+                                    <h3>Invoices Due</h3>
+                                    <div className='countNoBox invoiceDueH'> <span> <CountUp start={0} end={homeData?.invoices_due?.cnt} duration={9} /></span></div>
+                                    <h4>{formatCurrency(homeData?.invoices_due?.sum)}</h4>
                                 </div>
-                                <h3>Invoices Due</h3>
-                                <div className='countNoBox invoiceDueH'> <span> <CountUp start={0} end={homeData?.invoices_due?.cnt} duration={9} /></span></div>
-                                <h4>{formatCurrency(homeData?.invoices_due?.sum)}</h4>
-                            </div>
+                            </Link>
                         </Col>
                     </Row>
                     <Row className='mb-5'>
