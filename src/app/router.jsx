@@ -2,6 +2,8 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
+import Login from '../components/layout/Login/login-page';
+
 // pages
 const ClientPage = LazyLoader(lazy(() => import('../components/Business/Pages/clients')));
 const ClientOrderHistory = LazyLoader(lazy(() => import('../components/Business/Pages/clients/client-order-history')));
@@ -29,7 +31,6 @@ const QuotationEmail = LazyLoader(lazy(() => import('../components/layout/browse
 const ChangePassword = LazyLoader(lazy(() => import('../components/layout/Login/change-password')));
 const CheckMail = LazyLoader(lazy(() => import('../components/layout/Login/check-mail')));
 const ForgotPassword = LazyLoader(lazy(() => import('../components/layout/Login/forgot-password')));
-const Login = LazyLoader(lazy(() => import('../components/layout/Login/login-page')));
 const PasswordReset = LazyLoader(lazy(() => import('../components/layout/Login/password-reset')));
 const Profile = LazyLoader(lazy(() => import('../components/layout/Login/profile')));
 const Companyname = LazyLoader(lazy(() => import('../components/layout/onboarding/Companyname')));

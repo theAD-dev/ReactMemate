@@ -8,29 +8,23 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import styles from './send-to-calendar.module.scss';
 import { getClientById } from '../../../../../../APIs/ClientsApi';
-import { sendComposeEmail } from '../../../../../../APIs/management-api';
 import CalendarIcon from "../../../../../../assets/images/icon/calendar.svg";
 import SendDynamicEmailForm from '../../../../../../ui/send-email-2/send-email';
+import axios from 'axios';
 
-/**
- * Component for sending project events to calendar
- * @param {Object} props - Component props
- * @param {string} props.projectId - The ID of the project
- * @param {Object} props.project - The project data
- * @param {Function} props.projectCardData - Function to refresh project card data
- */
 const SendToCalendar = ({ projectId, project, projectCardData }) => {
+  const accessToken = localStorage.getItem("access_token");
   const [show, setShow] = useState(false);
   const [emailShow, setEmailShow] = useState(false);
   const [payload, setPayload] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [eventTitle, setEventTitle] = useState('');
   const [eventDescription, setEventDescription] = useState('');
+  const [eventLocation, setEventLocation] = useState('');
+  const [meetLink, setMeetLink] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  // No need for icsFileUrl state as we're creating the file directly in the mutation
 
-  // Query to get client data for email contacts
   const clientQuery = useQuery({
     queryKey: ['getClientById', project?.client],
     queryFn: () => getClientById(project?.client),
@@ -38,30 +32,60 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
     retry: 1,
   });
 
-  // Mutation for sending email with calendar attachment
   const emailMutation = useMutation({
     mutationFn: async (data) => {
       try {
-        // Create the .ics file content
-        const icalContent = generateICalContent();
+        const attendees = [];
 
-        // Create a File object instead of just using a URL
-        const fileName = `${eventTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-        const icsFile = new File([icalContent], fileName, { type: 'text/calendar' });
+        if (data.to) {
+          const toEmails = data.to.split(',').map(email => email.trim());
+          toEmails.forEach(email => {
+            if (email) attendees.push(email);
+          });
+        }
 
-        // Create FormData to properly upload the file
+        if (data.cc) {
+          const ccEmails = data.cc.split(',').map(email => email.trim());
+          ccEmails.forEach(email => {
+            if (email) attendees.push(email);
+          });
+        }
+
+        if (data.bcc) {
+          const bccEmails = data.bcc.split(',').map(email => email.trim());
+          bccEmails.forEach(email => {
+            if (email) attendees.push(email);
+          });
+        }
+
+        const calendarContent = generateICalContent(attendees, data.from_email);
+        const fileName = `invite.ics`;
+        const icsFile = new File([calendarContent], fileName, { type: 'text/calendar' });
         const formData = new FormData();
 
-        // Add all the email data to the FormData
         Object.keys(data).forEach(key => {
           formData.append(key, data[key]);
         });
 
-        // Add the file to the FormData
         formData.append('attachments', icsFile);
+        formData.append('calendar_event', 'true');
+        formData.append('event_title', eventTitle);
+        formData.append('event_start', startDate.toISOString());
+        formData.append('event_end', endDate.toISOString());
 
-        // Send the email with the attachment
-        return sendComposeEmail(projectId, "", formData);
+        if (meetLink) {
+          formData.append('meet_link', meetLink);
+        }
+        await axios.post(
+          `${process.env.REACT_APP_BACKEND_API_URL}/custom/email/${projectId}/`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
       } catch (error) {
         console.error('Error preparing email attachment:', error);
         throw error;
@@ -69,7 +93,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
     },
     onSuccess: () => {
       setEmailShow(false);
-      projectCardData();
+      projectCardData(projectId);
       toast.success(`Calendar invitation sent successfully.`);
     },
     onError: (error) => {
@@ -80,7 +104,6 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    // Set default event title based on project data
     if (project?.reference) {
       setEventTitle(`${project.reference}`);
     } else if (project?.number) {
@@ -89,10 +112,8 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
       setEventTitle('Project Event');
     }
 
-    // Set default description from project data without extra text
     setEventDescription(project?.description || '');
 
-    // Set dates from project booking data
     if (project?.booking_start) {
       setStartDate(new Date(project.booking_start * 1000));
     }
@@ -104,7 +125,6 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
     setShow(true);
   };
 
-  // Update dates if project data changes
   useEffect(() => {
     if (project?.booking_start && !startDate) {
       setStartDate(new Date(project.booking_start * 1000));
@@ -115,69 +135,91 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
     }
   }, [project, startDate, endDate]);
 
-  /**
-   * Generate iCalendar file content
-   * @returns {string} iCalendar file content
-   */
-  const generateICalContent = () => {
-    const formatDate = (date) => {
-      return format(date, "yyyyMMdd'T'HHmmss'Z'");
+
+  const generateICalContent = (attendees = [], organizerEmail = 'no-reply@memate.com.au') => {
+    const formatDate = (date) => format(date, "yyyyMMdd'T'HHmmss'Z'");
+    const now = new Date();
+    const uid = `${Date.now()}@memate.com.au`;
+    const dtStamp = formatDate(now);
+
+    const generateValidMeetLink = () => {
+      const chars = 'abcdefghijklmnopqrstuvwxyz';
+      const getRandomChars = (length) => {
+        let result = '';
+        for (let i = 0; i < length; i++) {
+          result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+      };
+
+      const part1 = getRandomChars(3);
+      const part2 = getRandomChars(4);
+      const part3 = getRandomChars(3);
+
+      return `https://meet.google.com/${part1}-${part2}-${part3}`;
     };
 
-    return `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//MeMate//Calendar//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-SUMMARY:${eventTitle}
-DTSTART:${formatDate(startDate)}
-DTEND:${formatDate(endDate)}
-DESCRIPTION:${eventDescription}
-STATUS:CONFIRMED
-SEQUENCE:0
-END:VEVENT
-END:VCALENDAR`;
+    const googleMeetLink = meetLink || generateValidMeetLink();
+    const formattedDescription = `${eventDescription || "Meeting Invitation"}\n\nJoin with Google Meet: ${googleMeetLink}`;
+
+    const htmlDescription = `<html><body>
+      <p>${eventDescription || "Meeting Invitation"}</p>
+      <p>Join with Google Meet: <a href="${googleMeetLink}">${googleMeetLink}</a></p>
+    </body></html>`.replace(/\n/g, '').replace(/\s+/g, ' ');
+    const calendarContent = [
+      "BEGIN:VCALENDAR",
+      "PRODID:-//MeMate//Calendar//EN",
+      "VERSION:2.0",
+      "CALSCALE:GREGORIAN",
+      "METHOD:REQUEST",
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${dtStamp}`,
+      `SUMMARY:${eventTitle}`,
+      `DESCRIPTION:${formattedDescription.replace(/\n/g, '\\n')}`,
+      `LOCATION:${eventLocation || googleMeetLink}`,
+      `URL:${googleMeetLink}`,
+      `DTSTART:${formatDate(startDate)}`,
+      `DTEND:${formatDate(endDate)}`,
+      `ORGANIZER;CN=MeMate:mailto:${organizerEmail}`
+    ];
+
+    if (attendees && attendees.length > 0) {
+      attendees.forEach(email => {
+        let name = email.split('@')[0].replace(/[.]/g, ' ');
+        name = name.split(' ').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+
+        calendarContent.push(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=${name}:mailto:${email}`);
+      });
+    }
+
+    calendarContent.push(
+      "STATUS:CONFIRMED",
+      "SEQUENCE:0",
+      "TRANSP:OPAQUE",
+      "BEGIN:VALARM",
+      "TRIGGER:-PT15M",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Reminder",
+      "END:VALARM",
+      "X-MICROSOFT-CDO-BUSYSTATUS:BUSY",
+      "X-MICROSOFT-CDO-IMPORTANCE:1",
+      "X-MICROSOFT-DISALLOW-COUNTER:FALSE",
+      "X-MICROSOFT-DONOTFORWARDMEETING:FALSE",
+      "X-MICROSOFT-CDO-ALLDAYEVENT:FALSE",
+      `X-GOOGLE-CONFERENCE:${googleMeetLink}`,
+      `X-ALT-DESC;FMTTYPE=text/html:${htmlDescription}`,
+      "END:VEVENT",
+      "END:VCALENDAR"
+    );
+
+    return calendarContent.join("\r\n");
   };
 
-  /**
-   * Create iCalendar file and return URL
-   * @returns {Object} Object containing fileUrl and fileName
-   */
-  const createICalFile = () => {
-    const icalContent = generateICalContent();
-    const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
-    const fileUrl = URL.createObjectURL(blob);
-    const fileName = `${eventTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-
-    return { fileUrl, fileName };
-  };
-
-  /**
-   * Download iCalendar file directly
-   */
-  const downloadICalFile = () => {
-    const { fileUrl, fileName } = createICalFile();
-    const link = document.createElement('a');
-    link.href = fileUrl;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  /**
-   * Open email form with calendar attachment
-   */
   const openEmailForm = () => {
-    // Simply show the email form, the file will be created in the mutation
     setEmailShow(true);
   };
 
-  /**
-   * Validate form fields
-   * @returns {boolean} True if form is valid, false otherwise
-   */
   const validateForm = () => {
     if (!eventTitle.trim()) {
       toast.error('Event title is required');
@@ -197,25 +239,17 @@ END:VCALENDAR`;
     return true;
   };
 
-  /**
-   * Handle form submission
-   * @param {Event} e - Form submit event
-   */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Validate form
       if (!validateForm()) {
         setIsLoading(false);
         return;
       }
 
-      // Open email form with calendar attachment
       openEmailForm();
-
-      // Close the calendar modal
       handleClose();
     } catch (error) {
       console.error('Error creating calendar event:', error);
@@ -313,6 +347,31 @@ END:VCALENDAR`;
             </Row>
 
             <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Location</Form.Label>
+              <Form.Control
+                type="text"
+                className='border outline-none'
+                placeholder="Enter location (optional)"
+                value={eventLocation}
+                onChange={(e) => setEventLocation(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Google Meet Link</Form.Label>
+              <Form.Control
+                type="text"
+                className='border outline-none'
+                placeholder="Enter Google Meet link (optional, will be generated if empty)"
+                value={meetLink}
+                onChange={(e) => setMeetLink(e.target.value)}
+              />
+              <Form.Text className="text-muted">
+                Leave empty to automatically generate a Google Meet link
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
               <Form.Label className={styles.formLabel}>Description</Form.Label>
               <Form.Control
                 as="textarea"
@@ -327,19 +386,6 @@ END:VCALENDAR`;
             <div className="d-flex justify-content-end gap-2 mt-4 border-top pt-4">
               <Button className="outline-button" variant="secondary" onClick={handleClose}>
                 Cancel
-              </Button>
-              <Button
-                className="outline-button"
-                variant="secondary"
-                onClick={() => {
-                  if (validateForm()) {
-                    downloadICalFile();
-                    toast.success('Calendar event file downloaded');
-                  }
-                }}
-                disabled={isLoading}
-              >
-                Download .ics File
               </Button>
               <Button className="solid-button" variant="primary" type="submit" disabled={isLoading}>
                 {isLoading ? (
@@ -356,7 +402,6 @@ END:VCALENDAR`;
         </Modal.Body>
       </Modal>
 
-      {/* Email form with calendar attachment */}
       <SendDynamicEmailForm
         show={emailShow}
         setShow={setEmailShow}

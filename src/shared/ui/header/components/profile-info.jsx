@@ -4,8 +4,13 @@ import { QuestionCircle, Search, PlusLg, Bell } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
 import style from '../header.module.scss';
+import Support from "../../support/support";
 
 const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
+    const [visible, setVisible] = React.useState(false);
+    const openSupportModal = () => {
+        setVisible(true);
+    };
     return (
         <>
             <div className="avatar-wrap flexEndbox colMinWidth">
@@ -19,7 +24,7 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                     <li className={style.navbarActionIcon}>
                         <Search color="#667085" size={20} />
                     </li>
-                    <li className={style.navbarActionIcon}>
+                    <li className={style.navbarActionIcon} onClick={openSupportModal}>
                         <QuestionCircle color="#667085" size={20} />
                     </li>
                 </ul>
@@ -48,6 +53,7 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                     </Link>
                 </div>
             </div>
+            <Support visible={visible} setVisible={setVisible} />
         </>
     );
 };
