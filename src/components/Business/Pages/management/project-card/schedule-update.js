@@ -13,18 +13,20 @@ const formatDateRange = (startDate, endDate) => {
 };
 
 const DateRangeComponent = ({ startDate, endDate }) => (
-         <Button className='dateSelectdTaskBar schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
+    <Button className='dateSelectdTaskBar schedule schActive' style={{ minWidth: '160px', minHeight: '46px' }}>
         {formatDateRange(startDate, endDate)} <img src={OrdersIcon} alt="OrdersIcon" /></Button>
 );
 
-const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
+const ScheduleUpdate = ({ projectId, projectCardData, isFetching, startDate, endDate }) => {
     const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const selectDateRef = useRef(null);
     const togglePicker = () => setIsPickerVisible(prev => !prev);
     const updateMutation = useMutation({
         mutationFn: (data) => updateProjectScheduleById(projectId, data),
-        onSuccess: async () => { },
+        onSuccess: async () => {
+            projectCardData(projectId);
+        },
         onError: (error) => {
             setDateRange({ startDate: null, endDate: null });
             console.error('Error creating task:', error);
@@ -60,11 +62,12 @@ const ScheduleUpdate = ({ projectId, startDate, endDate }) => {
     return (
         <div className='select-date' style={{ position: 'relative' }} ref={selectDateRef}>
             <div onClick={togglePicker} style={{ cursor: 'pointer' }}>
-                {dateRange?.startDate && dateRange?.endDate ? (
+                {(dateRange?.startDate && dateRange?.endDate && !updateMutation.isPending) ? (
                     <DateRangeComponent isPending={updateMutation.isPending} startDate={dateRange.startDate} endDate={dateRange.endDate} />
                 ) : (
-                    <Button className={`schedule schActive  ${isPickerVisible ? 'active' : ''}`}>
-                        Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" />
+                    <Button className={`schedule schActive`} style={{ minWidth: '201px', minHeight: '46px' }}>
+                        {updateMutation.isPending || isFetching ? <div className="dot-flashing" ></div>
+                            : <span>Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" /></span>}
                     </Button>
                 )}
             </div>

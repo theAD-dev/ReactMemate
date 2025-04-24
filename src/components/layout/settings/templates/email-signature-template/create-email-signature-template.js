@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Button, Col, Form, Modal, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
 import {
@@ -22,59 +22,21 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
-import { Editor } from 'primereact/editor';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import { preserveEmailSignatureHtml } from '../../../../../utils/html-preservers';
+import style from '../job-template.module.scss';
+import premiumStyle from './premium-email-signatures.module.scss';
+import SignatureHtmlEditor from './signature-html-editor';
 import { socialIcons } from './social-icons-base64';
 import { createEmailSignature, deleteEmailSignature, getEmailSignature, setDefaultEmailSignature, updateEmailSignature } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import Sidebar from '../../Sidebar';
-import style from '../job-template.module.scss';
-import premiumStyle from './premium-email-signatures.module.scss';
 
 
-const renderHeader = () => (
-    <span className="ql-formats">
-        <button className="ql-bold" aria-label="Bold"></button>
-        <button className="ql-italic" aria-label="Italic"></button>
-        <button className="ql-underline" aria-label="Underline"></button>
-        <button className="ql-strike" aria-label="Strikethrough"></button>
-        <button className="ql-blockquote" aria-label="Blockquote"></button>
-        <button
-            className="ql-list"
-            value="ordered"
-            aria-label="Ordered List"
-        ></button>
-        <button
-            className="ql-list"
-            value="bullet"
-            aria-label="Bullet List"
-        ></button>
-        <button className="ql-align" value="" aria-label="Align Left"></button>
-        <button
-            className="ql-align"
-            value="center"
-            aria-label="Align Center"
-        ></button>
-        <button
-            className="ql-align"
-            value="right"
-            aria-label="Align Right"
-        ></button>
-        <button
-            className="ql-align"
-            value="justify"
-            aria-label="Justify"
-        ></button>
-        <button className="ql-link" aria-label="Insert Link"></button>
-        <button className="ql-image" aria-label="Insert Image"></button>
-        <button className="ql-code-block" aria-label="Code Block"></button>
-    </span>
-);
-const header = renderHeader();
+
 
 // Premium template data with HTML thumbnails
 const premiumTemplates = [
@@ -297,7 +259,6 @@ const socialPlatforms = [
 ];
 
 const CreateEmailSignatureTemplate = () => {
-    const editorRef = useRef(null);
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
@@ -444,7 +405,7 @@ const CreateEmailSignatureTemplate = () => {
     const signatureQuery = useQuery({
         queryKey: ["getEmailSignature", id],
         queryFn: () => getEmailSignature(id),
-        enabled: !!id,
+        enabled: !!id && id !== '0',
         retry: 1,
     });
     const mutation = useMutation({
@@ -851,9 +812,12 @@ const CreateEmailSignatureTemplate = () => {
 
         const signatureHTML = generateSignatureHTML();
 
+        // Make sure to preserve the HTML structure when saving
+        const finalHtml = text ? preserveEmailSignatureHtml(text) : signatureHTML;
+
         const templateData = {
             name: title,
-            text: text || signatureHTML,
+            text: finalHtml,
         };
 
         // Removed console.log to prevent unnecessary re-renders
@@ -976,7 +940,7 @@ const CreateEmailSignatureTemplate = () => {
                                     <p>Best regards,</p>
                                     <div className={style.emailSignature}>
                                         {
-                                            text ? <div key={previewKey} className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: text }} /> :
+                                            text ? <div key={previewKey} className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: preserveEmailSignatureHtml(text) }} /> :
                                                 <div key={previewKey} className={style.emailSignatureContent} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
                                         }
                                     </div>
@@ -1505,7 +1469,7 @@ const CreateEmailSignatureTemplate = () => {
                                                 <div className={premiumStyle.previewBody}>
                                                     <div className={premiumStyle.emailPreview}>
                                                         <div className={premiumStyle.emailBody}>
-                                                            <div key={previewKey} dangerouslySetInnerHTML={{ __html: generateSignatureHTML() }} />
+                                                            <div key={previewKey} dangerouslySetInnerHTML={{ __html: text ? preserveEmailSignatureHtml(text) : generateSignatureHTML() }} />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1532,40 +1496,17 @@ const CreateEmailSignatureTemplate = () => {
                                 </Row>
                             ) :
                                 <Row>
-                                    <Col sm={7}>
+                                    <Col sm={12}>
                                         <div className={premiumStyle.formSection} style={{ position: 'relative' }}>
-                                            <label className={clsx(premiumStyle.label, 'mb-1')}>Signature</label>
                                             <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                                 {signatureQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                             </InputIcon>
-                                            <Editor
-                                                ref={editorRef}
-                                                style={{ minHeight: "399px" }}
-                                                headerTemplate={header}
+                                            <SignatureHtmlEditor
                                                 value={text}
                                                 placeholder='Enter your signature'
-                                                onTextChange={(e) => {
-                                                    // Only update if the content has actually changed
-                                                    if (e.htmlValue !== text) {
-                                                        setText(e.htmlValue);
-                                                    }
+                                                onChange={(newValue) => {
+                                                    setText(newValue);
                                                 }}
-                                            />
-                                        </div>
-                                    </Col>
-                                    <Col sm={5}>
-                                        <div className={premiumStyle.formSection}>
-                                            <label className={clsx(premiumStyle.label, 'mb-1')}>Signature HTML</label>
-                                            <InputTextarea
-                                                value={text || ""}
-                                                onChange={(e) => {
-                                                    if (e.target.value !== text) {
-                                                        setText(e.target.value);
-                                                    }
-                                                }}
-                                                className={premiumStyle.textarea}
-                                                placeholder="Enter your signature HTML here..."
-                                                autoResize
                                             />
                                         </div>
                                     </Col>

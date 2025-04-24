@@ -790,7 +790,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     options={[
                                         ...(xeroCodesList && xeroCodesList?.data?.map((code) => ({
                                             value: code.id,
-                                            label: `${code.name}`
+                                            label: `${code.code}: ${code.name}`
                                         }))) || []
                                     ] || []}
                                     onChange={(e) => {
@@ -798,6 +798,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     }}
                                     className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.account_code })}
                                     style={{ height: '46px' }}
+                                    scrollHeight="400px"
                                     value={field.value}
                                     loading={xeroCodesList?.isFetching}
                                     placeholder="Select account code"
@@ -828,6 +829,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     }}
                                     className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.department })}
                                     style={{ height: '46px' }}
+                                    scrollHeight="400px"
                                     value={field.value}
                                     loading={departmentsList?.isFetching}
                                     placeholder="Select department"

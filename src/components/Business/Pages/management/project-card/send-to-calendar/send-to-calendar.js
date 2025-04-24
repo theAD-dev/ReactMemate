@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { Calendar3 } from 'react-bootstrap-icons';
-import { addDays, format } from 'date-fns';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
 import { Calendar } from 'primereact/calendar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import styles from './send-to-calendar.module.scss';
+import { getClientById } from '../../../../../../APIs/ClientsApi';
+import { sendComposeEmail } from '../../../../../../APIs/management-api';
 import CalendarIcon from "../../../../../../assets/images/icon/calendar.svg";
+import SendDynamicEmailForm from '../../../../../../ui/send-email-2/send-email';
 
 /**
  * Component for sending project events to calendar
@@ -17,65 +21,99 @@ import CalendarIcon from "../../../../../../assets/images/icon/calendar.svg";
  */
 const SendToCalendar = ({ projectId, project, projectCardData }) => {
   const [show, setShow] = useState(false);
+  const [emailShow, setEmailShow] = useState(false);
+  const [payload, setPayload] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [eventTitle, setEventTitle] = useState('');
   const [eventDescription, setEventDescription] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(addDays(new Date(), 1));
-  const [calendarType, setCalendarType] = useState('google');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  // No need for icsFileUrl state as we're creating the file directly in the mutation
+
+  // Query to get client data for email contacts
+  const clientQuery = useQuery({
+    queryKey: ['getClientById', project?.client],
+    queryFn: () => getClientById(project?.client),
+    enabled: !!project?.client && !!emailShow,
+    retry: 1,
+  });
+
+  // Mutation for sending email with calendar attachment
+  const emailMutation = useMutation({
+    mutationFn: async (data) => {
+      try {
+        // Create the .ics file content
+        const icalContent = generateICalContent();
+
+        // Create a File object instead of just using a URL
+        const fileName = `${eventTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+        const icsFile = new File([icalContent], fileName, { type: 'text/calendar' });
+
+        // Create FormData to properly upload the file
+        const formData = new FormData();
+
+        // Add all the email data to the FormData
+        Object.keys(data).forEach(key => {
+          formData.append(key, data[key]);
+        });
+
+        // Add the file to the FormData
+        formData.append('attachments', icsFile);
+
+        // Send the email with the attachment
+        return sendComposeEmail(projectId, "", formData);
+      } catch (error) {
+        console.error('Error preparing email attachment:', error);
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      setEmailShow(false);
+      projectCardData();
+      toast.success(`Calendar invitation sent successfully.`);
+    },
+    onError: (error) => {
+      console.error('Error sending calendar invitation:', error);
+      toast.error(`Failed to send calendar invitation. Please try again.`);
+    }
+  });
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
     // Set default event title based on project data
     if (project?.reference) {
-      setEventTitle(`Project: ${project.reference}`);
+      setEventTitle(`${project.reference}`);
     } else if (project?.number) {
       setEventTitle(`Project #${project.number}`);
     } else {
-      setEventTitle('New Project Event');
+      setEventTitle('Project Event');
     }
 
-    // Set default description
-    setEventDescription(`Project details for ${project?.reference || `#${project?.number}` || 'this project'}`);
+    // Set default description from project data without extra text
+    setEventDescription(project?.description || '');
+
+    // Set dates from project booking data
+    if (project?.booking_start) {
+      setStartDate(new Date(project.booking_start * 1000));
+    }
+
+    if (project?.booking_end) {
+      setEndDate(new Date(project.booking_end * 1000));
+    }
 
     setShow(true);
   };
 
-  /**
-   * Generate Google Calendar URL
-   * @returns {string} Google Calendar URL with event parameters
-   */
-  const generateGoogleCalendarUrl = () => {
-    const formatDate = (date) => {
-      return format(date, "yyyyMMdd'T'HHmmss'Z'");
-    };
+  // Update dates if project data changes
+  useEffect(() => {
+    if (project?.booking_start && !startDate) {
+      setStartDate(new Date(project.booking_start * 1000));
+    }
 
-    const baseUrl = 'https://calendar.google.com/calendar/render';
-    const action = 'action=TEMPLATE';
-    const text = `text=${encodeURIComponent(eventTitle)}`;
-    const dates = `dates=${formatDate(startDate)}/${formatDate(endDate)}`;
-    const details = `details=${encodeURIComponent(eventDescription)}`;
-
-    return `${baseUrl}?${action}&${text}&${dates}&${details}`;
-  };
-
-  /**
-   * Generate Outlook Calendar URL
-   * @returns {string} Outlook Calendar URL with event parameters
-   */
-  const generateOutlookCalendarUrl = () => {
-    const formatDate = (date) => {
-      return format(date, "yyyy-MM-dd'T'HH:mm:ss");
-    };
-
-    const baseUrl = 'https://outlook.office.com/calendar/0/deeplink/compose';
-    const subject = `subject=${encodeURIComponent(eventTitle)}`;
-    const startDateTime = `startdt=${formatDate(startDate)}`;
-    const endDateTime = `enddt=${formatDate(endDate)}`;
-    const body = `body=${encodeURIComponent(eventDescription)}`;
-
-    return `${baseUrl}?${subject}&${startDateTime}&${endDateTime}&${body}`;
-  };
+    if (project?.booking_end && !endDate) {
+      setEndDate(new Date(project.booking_end * 1000));
+    }
+  }, [project, startDate, endDate]);
 
   /**
    * Generate iCalendar file content
@@ -103,17 +141,60 @@ END:VCALENDAR`;
   };
 
   /**
-   * Download iCalendar file
+   * Create iCalendar file and return URL
+   * @returns {Object} Object containing fileUrl and fileName
    */
-  const downloadICalFile = () => {
+  const createICalFile = () => {
     const icalContent = generateICalContent();
     const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
+    const fileUrl = URL.createObjectURL(blob);
+    const fileName = `${eventTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+
+    return { fileUrl, fileName };
+  };
+
+  /**
+   * Download iCalendar file directly
+   */
+  const downloadICalFile = () => {
+    const { fileUrl, fileName } = createICalFile();
     const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${eventTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+    link.href = fileUrl;
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  /**
+   * Open email form with calendar attachment
+   */
+  const openEmailForm = () => {
+    // Simply show the email form, the file will be created in the mutation
+    setEmailShow(true);
+  };
+
+  /**
+   * Validate form fields
+   * @returns {boolean} True if form is valid, false otherwise
+   */
+  const validateForm = () => {
+    if (!eventTitle.trim()) {
+      toast.error('Event title is required');
+      return false;
+    }
+
+    if (!startDate || !endDate) {
+      toast.error('Start and end dates are required');
+      return false;
+    }
+
+    if (startDate > endDate) {
+      toast.error('End date must be after start date');
+      return false;
+    }
+
+    return true;
   };
 
   /**
@@ -126,38 +207,19 @@ END:VCALENDAR`;
 
     try {
       // Validate form
-      if (!eventTitle.trim()) {
-        toast.error('Event title is required');
+      if (!validateForm()) {
         setIsLoading(false);
         return;
       }
 
-      if (startDate > endDate) {
-        toast.error('End date must be after start date');
-        setIsLoading(false);
-        return;
-      }
+      // Open email form with calendar attachment
+      openEmailForm();
 
-      // Handle different calendar types
-      if (calendarType === 'google') {
-        // Open Google Calendar in a new tab
-        window.open(generateGoogleCalendarUrl(), '_blank');
-        toast.success('Event sent to Google Calendar');
-      } else if (calendarType === 'outlook') {
-        // Open Outlook Calendar in a new tab
-        window.open(generateOutlookCalendarUrl(), '_blank');
-        toast.success('Event sent to Outlook Calendar');
-      } else if (calendarType === 'ical') {
-        // Download iCal file
-        downloadICalFile();
-        toast.success('iCalendar file downloaded');
-      }
-
-      // Close modal and reset form
+      // Close the calendar modal
       handleClose();
     } catch (error) {
-      console.error('Error sending to calendar:', error);
-      toast.error('Failed to send event to calendar. Please try again.');
+      console.error('Error creating calendar event:', error);
+      toast.error('Failed to create calendar event. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -165,7 +227,7 @@ END:VCALENDAR`;
 
   return (
     <>
-      <Button className={`calenBut calenActive ${styles.calendarButton}`} onClick={handleShow}>
+      <Button disabled={!project?.booking_start} className={`calenBut calenActive ${styles.calendarButton}`} onClick={handleShow}>
         Send to Calendar <img src={CalendarIcon} alt="Calendar" />
       </Button>
 
@@ -175,45 +237,6 @@ END:VCALENDAR`;
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>Calendar Type</Form.Label>
-              <div className={styles.calendarTypeRadio}>
-                <label className={calendarType === 'google' ? styles.selected : ''}>
-                  <Form.Check
-                    type="radio"
-                    name="calendarType"
-                    id="google-calendar"
-                    checked={calendarType === 'google'}
-                    onChange={() => setCalendarType('google')}
-                    className="me-2"
-                  />
-                  Google Calendar
-                </label>
-                <label className={calendarType === 'outlook' ? styles.selected : ''}>
-                  <Form.Check
-                    type="radio"
-                    name="calendarType"
-                    id="outlook-calendar"
-                    checked={calendarType === 'outlook'}
-                    onChange={() => setCalendarType('outlook')}
-                    className="me-2"
-                  />
-                  Outlook
-                </label>
-                <label className={calendarType === 'ical' ? styles.selected : ''}>
-                  <Form.Check
-                    type="radio"
-                    name="calendarType"
-                    id="ical-calendar"
-                    checked={calendarType === 'ical'}
-                    onChange={() => setCalendarType('ical')}
-                    className="me-2"
-                  />
-                  iCalendar (.ics)
-                </label>
-              </div>
-            </Form.Group>
-
             <Form.Group className="mb-3">
               <Form.Label className={styles.formLabel}>Event Title</Form.Label>
               <Form.Control
@@ -234,19 +257,15 @@ END:VCALENDAR`;
                     value={startDate}
                     onChange={(e) => {
                       setStartDate(e.value);
-                      // Auto-close is handled by the onSelect and onClear props
                     }}
                     onSelect={() => {
-                      // Auto-close after selecting a date
-                      document.body.click(); // This will close the calendar
+                      document.body.click();
                     }}
                     onClear={() => {
-                      // Auto-close after clearing the date
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure the clear happens first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     onTodayButtonClick={() => {
-                      // Auto-close after clicking Today button
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure today is set first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     showTime
                     showIcon
@@ -255,7 +274,7 @@ END:VCALENDAR`;
                     clearButtonClassName="p-button-sm p-button-outlined p-button-danger"
                     icon={<Calendar3 color='#667085' size={20} />}
                     className="w-100 border rounded"
-                    appendTo={document.body} /* This ensures the calendar panel is appended to the document body */
+                    appendTo={document.body}
                     style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                     panelClassName="calendar-panel-higher-z"
                   />
@@ -268,19 +287,15 @@ END:VCALENDAR`;
                     value={endDate}
                     onChange={(e) => {
                       setEndDate(e.value);
-                      // Auto-close is handled by the onSelect and onClear props
                     }}
                     onSelect={() => {
-                      // Auto-close after selecting a date
-                      document.body.click(); // This will close the calendar
+                      document.body.click();
                     }}
                     onClear={() => {
-                      // Auto-close after clearing the date
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure the clear happens first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     onTodayButtonClick={() => {
-                      // Auto-close after clicking Today button
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure today is set first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     showTime
                     showIcon
@@ -289,7 +304,7 @@ END:VCALENDAR`;
                     clearButtonClassName="p-button-sm p-button-outlined p-button-danger"
                     icon={<Calendar3 color='#667085' size={20} />}
                     className="w-100 border rounded"
-                    appendTo={document.body} /* This ensures the calendar panel is appended to the document body */
+                    appendTo={document.body}
                     style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                     panelClassName="calendar-panel-higher-z"
                   />
@@ -313,20 +328,43 @@ END:VCALENDAR`;
               <Button className="outline-button" variant="secondary" onClick={handleClose}>
                 Cancel
               </Button>
+              <Button
+                className="outline-button"
+                variant="secondary"
+                onClick={() => {
+                  if (validateForm()) {
+                    downloadICalFile();
+                    toast.success('Calendar event file downloaded');
+                  }
+                }}
+                disabled={isLoading}
+              >
+                Download .ics File
+              </Button>
               <Button className="solid-button" variant="primary" type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <ProgressSpinner style={{ width: '20px', height: '20px', marginRight: '8px' }} />
-                    Sending...
+                    Creating...
                   </>
                 ) : (
-                  'Send to Calendar'
+                  'Send via Email'
                 )}
               </Button>
             </div>
           </Form>
         </Modal.Body>
       </Modal>
+
+      {/* Email form with calendar attachment */}
+      <SendDynamicEmailForm
+        show={emailShow}
+        setShow={setEmailShow}
+        mutation={emailMutation}
+        setPayload={setPayload}
+        contactPersons={clientQuery?.data?.contact_persons || []}
+        projectCardData={projectCardData}
+      />
     </>
   );
 };

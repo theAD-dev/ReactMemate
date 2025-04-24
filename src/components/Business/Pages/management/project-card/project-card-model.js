@@ -741,18 +741,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </Row>
             <Row className='projectCardButWrap'>
               <Col>
-                {
-                  isFetching ? (
-                    <Placeholder as="div" animation="wave" className="">
-                      <Placeholder xs={12} bg="secondary" className="rounded" size='md' style={{ width: '190px', height: '45px' }} />
-                    </Placeholder>
-                  ) : <ScheduleUpdate key={projectId} projectId={projectId} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
-                }
+                <ScheduleUpdate key={projectId} projectId={projectId} projectCardData={projectCardData} isFetching={isFetching} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
                 <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
                   profileData?.has_work_subscription &&
-                  <Button className='createJob jobActive'>Create a Job   <img src={Briefcase} alt="briefcase" /></Button>
+                  <Button className='createJob jobActive'>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
                 }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 {/* <FilesModel /> */}
