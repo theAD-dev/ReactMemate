@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmemateapp=self.webpackChunkmemateapp||[]).push([[4751],{14751:(e,a,l)=>{l.r(a),l.d(a,{default:()=>c});var s=l(65043),t=l(73216);const c=()=>{const e=(0,t.Zp)();return(0,s.useEffect)((()=>{window.localStorage.clear(),window.sessionStorage.clear(),e("/login",{replace:!0})}),[e]),null}}}]);
+//# sourceMappingURL=4751.66bd10db.chunk.js.map
