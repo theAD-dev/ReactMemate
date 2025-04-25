@@ -746,17 +746,17 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
                     <li>
                         <div className={`${style.boxcal}`}>
                             <h6>Budget</h6>
-                            <strong>{formatAUD(+summary.budget)}</strong>
+                            <strong>${formatAUD(+summary.budget)}</strong>
                         </div>
                         <div className={`${style.profit} ${style.boxcal}`}>
                             <h6>Operational Profit</h6>
-                            <strong>{formatAUD(+summary.operationalProfit)}</strong>
+                            <strong>${formatAUD(+summary.operationalProfit)}</strong>
                         </div>
                     </li>
                     <li>
                         <div className={`${style.boxcal}`}>
                             <h6>Total</h6>
-                            <strong>{formatAUD(+summary.total)}</strong>
+                            <strong>${formatAUD(+summary.total)}</strong>
                         </div>
                     </li>
                 </ul>

@@ -5,6 +5,11 @@ export const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
     const { data, error, isLoading, isError, refetch } = useSessionQuery();
+    if (isError) {
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+    }
+
     const value = { session: data || null, isLoading, isError, error: error || null, refetchSession: refetch };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

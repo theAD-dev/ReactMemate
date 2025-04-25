@@ -29,6 +29,12 @@ export const fetchAPI = async (endpoint, options = {}, isRequiredLoggedin = true
         const url = new URL(`${endpoint}`);
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
+            if (response.status === 401) {
+                window.localStorage.clear();
+                window.sessionStorage.clear();
+                window.location.replace("/login");
+            }
+            
             if (response.status === 404) throw new Error('Not found');
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
