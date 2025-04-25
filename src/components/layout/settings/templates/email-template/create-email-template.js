@@ -13,7 +13,6 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import { createEmailTemplate, deleteEmailTemplates, getEmail, updateEmailTemplate } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
-import Sidebar from '../../Sidebar';
 import style from '../job-template.module.scss';
 
 const renderHeader = () => (
@@ -172,8 +171,7 @@ const CreateEmailTemplate = () => {
                 <title>MeMate - {id ? 'Edit' : 'Create'} Email Template</title>
             </Helmet>
             <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
+                <div className="settings-content setModalelBoots w-100">
                     <div className='headSticky' style={{ position: 'relative' }}>
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>

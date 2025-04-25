@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import styles from "./general.module.scss";
 import currency from './lib/currency.json';
 import timezones from './lib/timezones.json';
-import Sidebar from ".././Sidebar";
 import { getCountries } from "../../../../APIs/ClientsApi";
 import { getReginalAndLanguage, updateReginalAndLanguage } from "../../../../APIs/SettingsGeneral";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
@@ -76,8 +75,7 @@ const RegionLanguage = () => {
         <title>MeMate - Region & Language</title>
       </Helmet>
       <div className="settings-wrapper">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div className="settings-content">
+        <div className="settings-content w-100">
           <div className="headSticky">
             <h1>Company Information</h1>
             <div className="contentMenuTab">

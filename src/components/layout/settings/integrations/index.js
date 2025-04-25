@@ -21,7 +21,6 @@ import googleLogo from "../../../../assets/images/icon/googleLogo.png";
 import stripelogo from "../../../../assets/images/icon/stripeLogo.png";
 import xeroLogo from "../../../../assets/images/icon/xeroLogo.png";
 import twilioLogo from '../../../../assets/images/twilio-logo.png';
-import Sidebar from "../Sidebar";
 
 const schema = yup.object().shape({
   emails: yup.array().of(
@@ -86,8 +85,7 @@ const Integrations = () => {
       </Helmet>
       <div className="settings-wrap">
         <div className="settings-wrapper">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          <div className="settings-content setModalelBoots">
+          <div className="settings-content setModalelBoots w-100">
             <div className="headSticky">
               <h1>Integrations</h1>
             </div>

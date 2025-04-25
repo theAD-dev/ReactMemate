@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
+import SettingsLayout from "../shared/ui/layout/settings-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
 import Login from '../components/layout/Login/login-page';
 
@@ -380,211 +381,217 @@ const routes = [
         element: <ProtectedLayout />,
         children: [
             {
-                path: "generalinformation",
+                path: "",
+                element: <SettingsLayout />,
                 children: [
                     {
-                        path: "",
-                        element: <GeneralInformation />
+                        path: "generalinformation",
+                        children: [
+                            {
+                                path: "",
+                                element: <GeneralInformation />
+                            },
+                            {
+                                path: "bank-details",
+                                element: <BankDetails />,
+                            },
+                            {
+                                path: "region-and-language",
+                                element: <RegionLanguage />,
+                            },
+                            {
+                                path: "profile",
+                                element: <MyProfile />,
+                            },
+                            {
+                                path: "subscription",
+                                element: <Subscription />,
+                            },
+                            {
+                                path: "bills",
+                                element: <Bills />,
+                            },
+                            {
+                                path: "billing-info",
+                                element: <BillingInfo />,
+                            },
+                        ],
                     },
                     {
-                        path: "bank-details",
-                        element: <BankDetails />,
+                        path: "users",
+                        children: [
+                            {
+                                path: "desktop",
+                                element: <Users />,
+                            },
+                            {
+                                path: "mobile-app",
+                                element: <MobileApp />,
+                            },
+                        ],
                     },
                     {
-                        path: "region-and-language",
-                        element: <RegionLanguage />,
+                        path: "calculators/departments",
+                        element: <Departments />,
                     },
                     {
-                        path: "profile",
-                        element: <MyProfile />,
+                        path: "location",
+                        element: <Location />,
                     },
                     {
-                        path: "subscription",
-                        element: <Subscription />,
+                        path: "templates",
+                        children: [
+                            {
+                                path: "job-templates",
+                                element: <JobTemplates />,
+                            },
+                            {
+                                path: "job-templates/new",
+                                element: <CreateJobTemplate />,
+                            },
+                            {
+                                path: "job-templates/:id",
+                                element: <CreateJobTemplate />,
+                            },
+                            {
+                                path: "email-templates",
+                                element: <EmailTemplates />,
+                            },
+                            {
+                                path: "email-templates/new",
+                                element: <CreateEmailTemplate />,
+                            },
+                            {
+                                path: "email-templates/:id",
+                                element: <CreateEmailTemplate />,
+                            },
+                            {
+                                path: "email-signatures",
+                                element: <EmailSignatures />,
+                            },
+                            {
+                                path: "email-signatures/new",
+                                element: <CreateEmailSignatures />,
+                            },
+                            {
+                                path: "email-signatures/:id",
+                                element: <CreateEmailSignatures />,
+                            },
+                            {
+                                path: "proposal-templates",
+                                element: <ProposalTemplates />,
+                            },
+                            {
+                                path: "proposal-templates/new",
+                                element: <CreateProposalTemplate />,
+                            },
+                            {
+                                path: "proposal-templates/:id",
+                                element: <CreateProposalTemplate />,
+                            },
+                            {
+                                path: "sms-templates",
+                                element: <SMSTemplates />,
+                            },
+                            {
+                                path: "sms-templates/new",
+                                element: <CreateSMSTemplate />,
+                            },
+                            {
+                                path: "sms-templates/:id",
+                                element: <CreateSMSTemplate />,
+                            },
+                        ],
                     },
                     {
-                        path: "bills",
-                        element: <Bills />,
+                        path: "companyethos/company-ethos",
+                        element: <CompanyEthos />,
                     },
                     {
-                        path: "billing-info",
-                        element: <BillingInfo />,
-                    },
-                ],
-            },
-            {
-                path: "users",
-                children: [
-                    {
-                        path: "desktop",
-                        element: <Users />,
+                        path: "integrations",
+                        element: <Integrations />,
                     },
                     {
-                        path: "mobile-app",
-                        element: <MobileApp />,
-                    },
-                ],
-            },
-            {
-                path: "calculators/departments",
-                element: <Departments />,
-            },
-            {
-                path: "location",
-                element: <Location />,
-            },
-            {
-                path: "templates",
-                children: [
-                    {
-                        path: "job-templates",
-                        element: <JobTemplates />,
+                        path: "quotesjobs",
+                        children: [
+                            {
+                                path: "recurring-quotes",
+                                element: <RecurringQuotes />,
+                            },
+                            {
+                                path: "recurring-jobs",
+                                element: <RecurringJobs />,
+                            },
+                        ],
                     },
                     {
-                        path: "job-templates/new",
-                        element: <CreateJobTemplate />,
+                        path: "projectstatus",
+                        children: [
+                            {
+                                path: "project-status",
+                                element: <ProjectStatus />,
+                            },
+                            {
+                                path: "outgoing-emails",
+                                element: <OutgoingEmails />,
+                            },
+                        ],
                     },
                     {
-                        path: "job-templates/:id",
-                        element: <CreateJobTemplate />,
+                        path: "termsandconditions",
+                        children: [
+                            {
+                                path: "terms-and-conditions",
+                                element: <TermsandConditions />,
+                            },
+                            {
+                                path: "terms-and-conditions-invoice",
+                                element: <TermsConditionsInvoice />,
+                            },
+                        ],
                     },
                     {
-                        path: "email-templates",
-                        element: <EmailTemplates />,
+                        path: "customerssettings",
+                        children: [
+                            {
+                                path: "industries",
+                                element: <CustomersIndustries />,
+                            },
+                            {
+                                path: "customers-discount-category",
+                                element: <CustomersDiscountCategory />,
+                            },
+                        ],
                     },
                     {
-                        path: "email-templates/new",
-                        element: <CreateEmailTemplate />,
+                        path: "accounting",
+                        children: [
+                            {
+                                path: "expenses",
+                                element: <ExpensesAccount />,
+                            },
+                            {
+                                path: "department-turnover-plan",
+                                element: <DepartmentTurnoverPlan />,
+                            },
+                        ],
                     },
                     {
-                        path: "email-templates/:id",
-                        element: <CreateEmailTemplate />,
-                    },
-                    {
-                        path: "email-signatures",
-                        element: <EmailSignatures />,
-                    },
-                    {
-                        path: "email-signatures/new",
-                        element: <CreateEmailSignatures />,
-                    },
-                    {
-                        path: "email-signatures/:id",
-                        element: <CreateEmailSignatures />,
-                    },
-                    {
-                        path: "proposal-templates",
-                        element: <ProposalTemplates />,
-                    },
-                    {
-                        path: "proposal-templates/new",
-                        element: <CreateProposalTemplate />,
-                    },
-                    {
-                        path: "proposal-templates/:id",
-                        element: <CreateProposalTemplate />,
-                    },
-                    {
-                        path: "sms-templates",
-                        element: <SMSTemplates />,
-                    },
-                    {
-                        path: "sms-templates/new",
-                        element: <CreateSMSTemplate />,
-                    },
-                    {
-                        path: "sms-templates/:id",
-                        element: <CreateSMSTemplate />,
-                    },
-                ],
-            },
-            {
-                path: "companyethos/company-ethos",
-                element: <CompanyEthos />,
-            },
-            {
-                path: "integrations",
-                element: <Integrations />,
-            },
-            {
-                path: "quotesjobs",
-                children: [
-                    {
-                        path: "recurring-quotes",
-                        element: <RecurringQuotes />,
-                    },
-                    {
-                        path: "recurring-jobs",
-                        element: <RecurringJobs />,
-                    },
-                ],
-            },
-            {
-                path: "projectstatus",
-                children: [
-                    {
-                        path: "project-status",
-                        element: <ProjectStatus />,
-                    },
-                    {
-                        path: "outgoing-emails",
-                        element: <OutgoingEmails />,
-                    },
-                ],
-            },
-            {
-                path: "termsandconditions",
-                children: [
-                    {
-                        path: "terms-and-conditions",
-                        element: <TermsandConditions />,
-                    },
-                    {
-                        path: "terms-and-conditions-invoice",
-                        element: <TermsConditionsInvoice />,
-                    },
-                ],
-            },
-            {
-                path: "customerssettings",
-                children: [
-                    {
-                        path: "industries",
-                        element: <CustomersIndustries />,
-                    },
-                    {
-                        path: "customers-discount-category",
-                        element: <CustomersDiscountCategory />,
-                    },
-                ],
-            },
-            {
-                path: "accounting",
-                children: [
-                    {
-                        path: "expenses",
-                        element: <ExpensesAccount />,
-                    },
-                    {
-                        path: "department-turnover-plan",
-                        element: <DepartmentTurnoverPlan />,
-                    },
-                ],
-            },
-            {
-                path: "notifications",
-                children: [
-                    {
-                        path: "dashboard-notifications",
-                        element: <DashboardNotifications />,
-                    },
-                    {
-                        path: "app-notifications",
-                        element: <AppNotifications />,
-                    },
-                    {
-                        path: "email-notifications",
-                        element: <EmailNotifications />,
+                        path: "notifications",
+                        children: [
+                            {
+                                path: "dashboard-notifications",
+                                element: <DashboardNotifications />,
+                            },
+                            {
+                                path: "app-notifications",
+                                element: <AppNotifications />,
+                            },
+                            {
+                                path: "email-notifications",
+                                element: <EmailNotifications />,
+                            },
+                        ],
                     },
                 ],
             },

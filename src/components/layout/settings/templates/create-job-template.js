@@ -14,7 +14,6 @@ import { toast } from 'sonner';
 import style from './job-template.module.scss';
 import { createJobTemplate, deleteJobTemplate, getJobTemplate, updateJobTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import Sidebar from '../Sidebar';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -154,8 +153,7 @@ const CreateJobTemplate = () => {
                 <title>MeMate - {id ? 'Edit' : 'Create'} Job Template</title>
             </Helmet>
             <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
+                <div className="settings-content setModalelBoots w-100">
                     <div className='headSticky' style={{ position: 'relative' }}>
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>

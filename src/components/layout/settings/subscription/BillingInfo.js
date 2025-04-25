@@ -8,7 +8,6 @@ import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Skeleton } from "primereact/skeleton";
 import { toast } from "sonner";
-import Sidebar from "./../Sidebar";
 import ChangePaymentMethod from "./features/change-payment-method";
 import { getBillingPersonalInfo, getPaymentMethodInfo, updateBillingPersonalInfo } from "../../../../APIs/SettingsGeneral";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
@@ -96,7 +95,6 @@ const BillingInfo = () => {
           <title>MeMate - Billing Info</title>
         </Helmet>
         <div className="settings-wrapper">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
           <div className="settings-content ps-0">
             <div className="headSticky ps-4">
               <h1>Subscription </h1>

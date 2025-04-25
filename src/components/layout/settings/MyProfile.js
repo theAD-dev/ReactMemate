@@ -14,7 +14,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import * as yup from "yup";
 import styles from "./setting.profile.module.scss";
-import Sidebar from "./Sidebar";
 import { fetchProfile, updateProfile } from "../../../APIs/ProfileApi";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
@@ -94,8 +93,7 @@ function MyProfile() {
           <title>MeMate - My Profile</title>
         </Helmet>
         <div className="settings-wrapper">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          <div className="settings-content">
+          <div className="settings-content w-100">
             <div className="headSticky">
               <h1>My Profile </h1>
             </div>

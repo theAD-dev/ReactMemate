@@ -11,7 +11,6 @@ import { toast } from 'sonner';
 import style from './terms-.module.scss';
 import { getInvoiceTermsapp, updateTermsapp } from "../../../../APIs/terms-and-condition";
 import { renderHeader } from '../../../../shared/ui/editor/editor-header-template';
-import Sidebar from '../Sidebar';
 
 const TermsandConditions = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
@@ -67,8 +66,7 @@ const TermsandConditions = () => {
                 <title>MeMate - Terms and Conditions</title>
             </Helmet>
             <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
+                <div className="settings-content setModalelBoots w-100">
                     <div className='headSticky'>
                         <h1>Terms and Conditions</h1>
                         <div className='contentMenuTab'>

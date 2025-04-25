@@ -110,7 +110,7 @@ const Desktop = ({ visible, setVisible }) => {
 
     return (
         <>
-            <div className="settings-content setModalelBoots">
+            <div className="settings-content setModalelBoots w-100">
                 <div className='headSticky'>
                     <h1>Users</h1>
                     <div className={`contentMenuTab ${style.contentMenuTab}`}>

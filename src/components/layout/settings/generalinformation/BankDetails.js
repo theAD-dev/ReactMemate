@@ -7,7 +7,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Skeleton } from "primereact/skeleton";
 import * as yup from "yup";
 import styles from "./general.module.scss";
-import Sidebar from ".././Sidebar";
 import {
   SettingsBankInformation,
   updateBankInformation,
@@ -81,8 +80,7 @@ const BankDetails = () => {
         <title>MeMate - Bank Details</title>
       </Helmet>
       <div className="settings-wrapper">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div className="settings-content">
+        <div className="settings-content w-100">
           <div className="headSticky">
             <h1>Company Information</h1>
             <div className="contentMenuTab">

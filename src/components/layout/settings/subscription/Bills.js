@@ -4,7 +4,6 @@ import { FilePdf, CreditCard2Front } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import Sidebar from './../Sidebar';
 import { getSubscriptionsBills } from '../../../../APIs/settings-subscription-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
@@ -43,7 +42,6 @@ const Bills = () => {
         <title>MeMate - Bills</title>
       </Helmet>
       <div className="settings-wrapper">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="settings-content ps-0">
           <div className="headSticky ps-4">
             <h1>Subscription</h1>

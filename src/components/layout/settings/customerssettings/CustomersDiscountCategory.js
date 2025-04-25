@@ -14,7 +14,6 @@ import * as yup from 'yup';
 import style from './customer.module.scss';
 import { getCategoriesList, newCategories, readCategories, updateCategories, deleteCategories } from '../../../../APIs/industrieslist-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import Sidebar from '../Sidebar';
 
 const CustomersDiscountCategory = () => {
     const { trialHeight } = useTrialHeight();
@@ -174,8 +173,7 @@ const CustomersDiscountCategory = () => {
             </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
+                    <div className="settings-content setModalelBoots w-100">
                         <div className='headSticky'>
                             <h1>Customers Settings</h1>
                             <div className='contentMenuTab'>

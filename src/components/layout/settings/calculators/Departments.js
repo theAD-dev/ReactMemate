@@ -18,7 +18,6 @@ import DeleteConfirmationModal from './delete-confirmation-modal';
 import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { formatMoney } from '../../../Business/shared/utils/helper';
-import Sidebar from '../Sidebar';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -86,8 +85,7 @@ const Departments = () => {
             </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
+                    <div className="settings-content setModalelBoots w-100">
                         <div className='headSticky'>
                             <h1>Calculators</h1>
                         </div>

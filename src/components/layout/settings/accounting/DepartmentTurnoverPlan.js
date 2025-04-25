@@ -15,7 +15,6 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 import { useAccountingGetQuery } from '../../../../entities/setting/accounting/department-turnover-plan/models/get-accounting-list.query';
 import { useAccountingTargetUpdateMutations } from '../../../../entities/setting/accounting/department-turnover-plan/models/update-accounting-target.mutation';
 import { formatAUD } from '../../../../shared/lib/format-aud';
-import Sidebar from '../Sidebar';
 
 const schema = yup.object().shape({
     target: yup.number().typeError('Target must be a number').required('Target is required').positive('Target must be positive'),
@@ -84,8 +83,7 @@ const DepartmentTurnoverPlan = () => {
             </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
+                    <div className="settings-content setModalelBoots w-100">
                         <div className='headSticky'>
                             <h1>Accounting</h1>
                             <div className='contentMenuTab'>

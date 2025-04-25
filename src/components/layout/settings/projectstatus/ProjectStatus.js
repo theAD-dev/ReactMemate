@@ -8,7 +8,6 @@ import '@szhsin/react-menu/dist/index.css';
 import { useMutation } from "@tanstack/react-query";
 import { toast } from 'sonner';
 import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
-import Sidebar from '../Sidebar';
 
 const colorOptions = [
     { value: "#1AB2FF", bg: "#BAE8FF", border: "#1AB2FF", color: "#0A4766", text: "Blue" },
@@ -168,8 +167,7 @@ const ProjectStatus = () => {
                 <title>MeMate - Project Status</title>
             </Helmet>
             <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
+                <div className="settings-content setModalelBoots w-100">
                     <div className='headSticky'>
                         <h1>Organisation Setting</h1>
                         <div className='contentMenuTab'>

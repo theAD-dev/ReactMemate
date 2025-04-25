@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ComingSoon from '../../../../shared/ui/coming-soon';
-import Sidebar from '../Sidebar';
 
 
 const RecurringJobs = () => {
@@ -17,8 +16,7 @@ const RecurringJobs = () => {
             </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
+                    <div className="settings-content setModalelBoots w-100">
                         <div className='headSticky'>
                             <h1>Quotes & Jobs</h1>
                             <div className='contentMenuTab'>

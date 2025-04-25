@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { Tooltip as PrimeTooltip } from 'primereact/tooltip';
 import { getSignatureTemplates } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
-import Sidebar from '../../Sidebar';
 import style from '../job-template.module.scss';
 
 const EmailSignatureTemplates = () => {
@@ -31,8 +30,7 @@ const EmailSignatureTemplates = () => {
                 <title>MeMate - Email Signatures</title>
             </Helmet>
             <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
+                <div className="settings-content setModalelBoots w-100">
                     <div className='headSticky' style={{ position: 'relative' }}>
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>

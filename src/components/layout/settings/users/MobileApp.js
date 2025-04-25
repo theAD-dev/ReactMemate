@@ -17,7 +17,6 @@ import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../..
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
 import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
-import Sidebar from '../Sidebar';
 
 
 const MobileApp = React.memo(() => {
@@ -134,8 +133,7 @@ const MobileApp = React.memo(() => {
             </Helmet>
             <div className={`settings-wrap ${style.userSettingPage}`} id={`${style.appSettingPage}`}>
                 <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
+                    <div className="settings-content setModalelBoots w-100">
                         <div className='headSticky'>
                             <h1>Users</h1>
                             <div className={`contentMenuTab ${style.contentMenuTab}`}>

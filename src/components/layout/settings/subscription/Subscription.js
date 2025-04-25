@@ -12,7 +12,6 @@ import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 import ThemeImages from '../../../../assets/imgconstant';
 import { formatAUD } from "../../../../shared/lib/format-aud";
-import Sidebar from "../Sidebar";
 
 const Subscription = () => {
   const { trialHeight } = useTrialHeight();
@@ -71,8 +70,7 @@ const Subscription = () => {
           <title>MeMate - Subscription</title>
         </Helmet>
         <div className="settings-wrapper">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          <div className="settings-content">
+          <div className="settings-content w-100">
             <div className="headSticky">
               <h1>Subscription</h1>
               <div className="contentMenuTab">

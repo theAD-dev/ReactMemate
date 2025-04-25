@@ -6738,6 +6738,7 @@ span.checkmarkdata.agree_marketing-border {
 .settings-content {
   width: calc(100% - 280px);
   padding: 0 0px 0 24px;
+  text-align: left;
 }
 
 .settings-menu {
@@ -6746,9 +6747,8 @@ span.checkmarkdata.agree_marketing-border {
   background: var(--Base-White, #fff);
 }
 
-.settings-content {
+.settings-wrapper > .settings-content {
   width: calc(100% - 280px);
-  text-align: left;
 }
 
 .content_wrap_main.isEditingwrap {
@@ -11003,7 +11003,7 @@ table.indexCalname thead tr th{
     border-right: 0;
     border-left: 0;
     border-bottom:1px solid #ccc ;
-    
+
 } */
 /* table.indexCalname {
     width: 100%;

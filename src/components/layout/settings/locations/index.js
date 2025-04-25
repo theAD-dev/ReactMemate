@@ -16,7 +16,6 @@ import { getDesktopUserList, getLocation, getLocationList, userAssigned, userUna
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import GoogleMap from "../../../../assets/images/icon/google_maps_ico.png";
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
-import Sidebar from '../Sidebar';
 
 const Location = () => {
     const { trialHeight } = useTrialHeight();
@@ -110,8 +109,7 @@ const Location = () => {
                 <title>MeMate - Locations</title>
             </Helmet>
             <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
+                <div className="settings-content setModalelBoots w-100">
                     <div className='headSticky'>
                         <h1 className='mb-0'>Locations</h1>
                         <p className='d-flex align-items-center'>{locationsQuery?.data?.locations?.length || 0} / {locationsQuery?.data?.limits?.total} <Link to={"/settings/generalinformation/subscription"}><Button className='text-button'>Buy More</Button></Link></p>

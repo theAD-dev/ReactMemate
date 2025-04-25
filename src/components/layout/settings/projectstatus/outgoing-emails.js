@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import style from './project.module.scss';
-import Sidebar from '../Sidebar';
 
 // Define schema for multiple entries
 const schema = yup.object().shape({
@@ -51,8 +50,7 @@ const OutgoingEmails = () => {
         <title>MeMate - Outgoing Emails</title>
       </Helmet>
       <div className="settings-wrapper">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div className="settings-content setModalelBoots">
+        <div className="settings-content setModalelBoots w-100">
           <div className='headSticky'>
             <h1>Organisation Setting</h1>
             <div className='contentMenuTab'>

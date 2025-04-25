@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ComingSoon from '../../../../shared/ui/coming-soon';
-import Sidebar from '../Sidebar';
 
 const CompanyEthos = () => {
     const { trialHeight } = useTrialHeight();
@@ -15,8 +14,7 @@ const CompanyEthos = () => {
             </Helmet>
             <div className='settings-wrap'>
                 <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
+                    <div className="settings-content setModalelBoots w-100">
                         <div className='headSticky'>
                             <h1>Company Ethos</h1>
                         </div>

@@ -33,7 +33,6 @@ import SignatureHtmlEditor from './signature-html-editor';
 import { socialIcons } from './social-icons-base64';
 import { createEmailSignature, deleteEmailSignature, getEmailSignature, setDefaultEmailSignature, updateEmailSignature } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
-import Sidebar from '../../Sidebar';
 
 
 
@@ -845,8 +844,7 @@ const CreateEmailSignatureTemplate = () => {
                 <title>MeMate - Email Signature Template</title>
             </Helmet>
             <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
+                <div className="settings-content setModalelBoots w-100">
                     <div className='headSticky' style={{ position: 'relative' }}>
                         <h1>Templates</h1>
                         <div className='contentMenuTab'>

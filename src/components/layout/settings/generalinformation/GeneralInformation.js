@@ -10,7 +10,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 import styles from "./general.module.scss";
-import Sidebar from '.././Sidebar';
+
 import { SettingsGeneralInformation, updateGeneralInformation } from '../../../../APIs/SettingsGeneral';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
@@ -85,24 +85,19 @@ function GeneralInformation() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-
-      <div className='settings-wrap'>
-        <Helmet>
-          <title>MeMate - General Information</title>
-        </Helmet>
-        <div className="settings-wrapper">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          <div className="settings-content">
-            <div className='headSticky'>
-              <h1>Company Information </h1>
-              <div className='contentMenuTab'>
-                <ul>
-                  <li className='menuActive'><Link to="/settings/generalinformation">General Information</Link></li>
-                  <li><Link to="/settings/generalinformation/bank-details">Bank Details </Link></li>
-                  <li><Link to="/settings/generalinformation/region-and-language">Region & Language</Link></li>
-                </ul>
-              </div>
-            </div>
+      <Helmet>
+        <title>MeMate - General Information</title>
+      </Helmet>
+      <div className='headSticky'>
+        <h1>Company Information </h1>
+        <div className='contentMenuTab'>
+          <ul>
+            <li className='menuActive'><Link to="/settings/generalinformation">General Information</Link></li>
+            <li><Link to="/settings/generalinformation/bank-details">Bank Details </Link></li>
+            <li><Link to="/settings/generalinformation/region-and-language">Region & Language</Link></li>
+          </ul>
+        </div>
+      </div>
             <div className={`content_wrap_main ${isEditingGroup ? 'isEditingwrap' : ''}`} style={{ height: `calc(100vh - 230px - ${trialHeight}px - ${editingHeight}px)` }}>
               <div className='content_wrapper'>
                 <div className="listwrapper">
@@ -405,12 +400,8 @@ function GeneralInformation() {
                 <button type="submit" className="save mr-3" disabled={mutation.isPending}>
                   {mutation.isPending ? 'Updating...' : 'Update'}
                 </button>
-
               </div>
             )}
-          </div>
-        </div>
-      </div>
     </form>
   );
 }
