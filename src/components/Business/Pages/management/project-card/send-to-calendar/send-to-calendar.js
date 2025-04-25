@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { Calendar3 } from 'react-bootstrap-icons';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -88,19 +88,35 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
   }, [project, startDate, endDate]);
 
 
-  const generateICalContent = (attendees = [], organizerEmail = 'no-reply@memate.com.au') => {
+  const generateICalContent = (attendees = [], organizerEmail = profileData?.email || 'no-reply@memate.com.au') => {
     const formatDate = (date) => format(date, "yyyyMMdd'T'HHmmss'Z'");
     const now = new Date();
     const uid = `${Date.now()}@memate.com.au`;
     const dtStamp = formatDate(now);
 
-    const googleMeetLink = meetLink || "";
-    const formattedDescription = `${eventDescription || "Meeting Invitation"}\n\nJoin with Meet Link: ${googleMeetLink}`;
+    // Determine meeting platform type based on URL pattern
+    const getMeetingPlatform = (url) => {
+      if (!url) return null;
+      if (url.includes('zoom.us')) return 'Zoom';
+      if (url.includes('teams.microsoft.com')) return 'Microsoft Teams';
+      if (url.includes('meet.google.com')) return 'Google Meet';
+      if (url.includes('webex.com')) return 'Cisco Webex';
+      return 'Online Meeting'; // Generic fallback
+    };
 
-    const htmlDescription = `<html><body>
-      <p>${eventDescription || "Meeting Invitation"}</p>
-      <p>Join with Meet Link: <a href="${googleMeetLink}">${googleMeetLink}</a></p>
-    </body></html>`.replace(/\n/g, '').replace(/\s+/g, ' ');
+    // Create description with meeting link if provided
+    let formattedDescription = eventDescription || "Meeting Invitation";
+    let htmlDescription = `<html><body><p>${eventDescription || "Meeting Invitation"}</p>`;
+
+    if (meetLink) {
+      const platform = getMeetingPlatform(meetLink);
+      formattedDescription += `\n\n${platform} Link: ${meetLink}`;
+      htmlDescription += `<p><strong>${platform} Link:</strong> <a href="${meetLink}">${meetLink}</a></p>`;
+    }
+
+    htmlDescription += `</body></html>`;
+    htmlDescription = htmlDescription.replace(/\n/g, '').replace(/\s+/g, ' ');
+
     const calendarContent = [
       "BEGIN:VCALENDAR",
       "PRODID:-//MeMate//Calendar//EN",
@@ -112,12 +128,14 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
       `DTSTAMP:${dtStamp}`,
       `SUMMARY:${eventTitle}`,
       `DESCRIPTION:${formattedDescription.replace(/\n/g, '\\n')}`,
-      `LOCATION:${eventLocation || googleMeetLink}`,
-      `URL:${googleMeetLink}`,
+      `LOCATION:${eventLocation || meetLink || ''}`,
+      meetLink ? `URL:${meetLink}` : '',
       `DTSTART:${formatDate(startDate)}`,
       `DTEND:${formatDate(endDate)}`,
-      `ORGANIZER;CN=MeMate:mailto:${organizerEmail}`
-    ];
+      `ORGANIZER;CN=${profileData?.first_name && profileData?.last_name ?
+        `${profileData.first_name} ${profileData.last_name}` :
+        organizerEmail.split('@')[0] || 'MeMate'}:mailto:${organizerEmail}`
+    ].filter(line => line !== ''); // Remove empty lines
 
     if (attendees && attendees.length > 0) {
       attendees.forEach(email => {
@@ -141,9 +159,22 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
       "X-MICROSOFT-CDO-IMPORTANCE:1",
       "X-MICROSOFT-DISALLOW-COUNTER:FALSE",
       "X-MICROSOFT-DONOTFORWARDMEETING:FALSE",
-      "X-MICROSOFT-CDO-ALLDAYEVENT:FALSE",
-      `X-GOOGLE-CONFERENCE:${googleMeetLink}`,
-      `X-ALT-DESC;FMTTYPE=text/html:${htmlDescription}`,
+      "X-MICROSOFT-CDO-ALLDAYEVENT:FALSE"
+    );
+
+    // Add platform-specific properties
+    if (meetLink) {
+      if (meetLink.includes('meet.google.com')) {
+        calendarContent.push(`X-GOOGLE-CONFERENCE:${meetLink}`);
+      } else if (meetLink.includes('teams.microsoft.com')) {
+        calendarContent.push(`X-MICROSOFT-SKYPETEAMSMEETINGURL:${meetLink}`);
+      }
+    }
+
+    // Add HTML description for better email client compatibility
+    calendarContent.push(`X-ALT-DESC;FMTTYPE=text/html:${htmlDescription}`);
+
+    calendarContent.push(
       "END:VEVENT",
       "END:VCALENDAR"
     );
@@ -260,10 +291,10 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
   }, [outgoingEmailTemplateQuery]);
 
   useEffect(() => {
-    if (profileData?.email) {
+    if (profileData?.email && show) {
       setGuests([profileData?.email]);
     }
-  }, [profileData?.email]);
+  }, [profileData?.email, show]);
 
   return (
     <>
@@ -379,24 +410,24 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>Meet Link</Form.Label>
-              <Form.Control
-                type="text"
-                className='border outline-none'
-                placeholder="Enter Meet link (optional)"
-                value={meetLink}
-                onChange={(e) => setMeetLink(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
               <Form.Label className={styles.formLabel}>Location</Form.Label>
               <Form.Control
                 type="text"
                 className='border outline-none'
-                placeholder="Enter location (optional)"
+                placeholder="Enter physical location (optional)"
                 value={eventLocation}
                 onChange={(e) => setEventLocation(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Meeting Link</Form.Label>
+              <Form.Control
+                type="text"
+                className='border outline-none'
+                placeholder="Enter meeting link (Zoom, Teams, etc.)"
+                value={meetLink}
+                onChange={(e) => setMeetLink(e.target.value)}
               />
             </Form.Group>
 
