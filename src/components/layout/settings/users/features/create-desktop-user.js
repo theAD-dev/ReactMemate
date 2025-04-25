@@ -200,7 +200,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
         </div>
     );
 
-    const roleOptions = privilegeOptions?.map((data) => ({ label: data?.name || '', value: data?.id }));
+    const roleOptions = privilegeOptions?.filter((role) => role?.name !== 'Admin' )?.map((data) => ({ label: data?.name || '', value: data?.id }));
 
     return (
         <Dialog visible={visible} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>

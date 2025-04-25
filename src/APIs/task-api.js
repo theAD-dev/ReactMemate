@@ -47,7 +47,7 @@ export const updateTask = async (id, data) => {
 };
 
 export const getUserList = async () => {
-    const endpoint = `/references/all-users/`;
+    const endpoint = `/desktop-users/`;
     const options = {
         method: 'GET',
     };

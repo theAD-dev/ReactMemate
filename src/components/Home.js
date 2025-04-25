@@ -120,7 +120,7 @@ const Home = () => {
 
                                     </label>
                                     <div className='boxItemBut'>
-                                        <Link to={"/settings/integrations?openEmail=true"}><Button variant="link">Connected</Button></Link>
+                                        <Link to={"/settings/integrations?openEmail=true"}><Button variant="link">Connect</Button></Link>
                                     </div>
                                 </div>
                             </Col>

@@ -140,9 +140,9 @@ const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) =
                     }
                     <Dropdown
                         ref={dropdownRef}
-                        options={usersList?.data?.map((user) => ({
+                        options={usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
                             value: user?.id,
-                            label: user?.name || "-",
+                            label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
                             photo: user?.photo || "",
                             has_photo: user?.has_photo
                         })) || []}

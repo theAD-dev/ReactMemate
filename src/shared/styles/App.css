@@ -663,6 +663,14 @@ table.department-calculation tbody tr.selected td {
   text-overflow: ellipsis;
 }
 
+#calender .scheduler_default_rowheader_inner_text span {
+  max-width: 268px;
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .scheduler_default_rowheader_inner {
   position: relative;
   inset: 0px;
@@ -9349,9 +9357,12 @@ ul.activeListPassword li.active svg {
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  /* 150% */
   letter-spacing: 0.08px;
   margin-bottom: 4px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .task-description {
@@ -9361,7 +9372,6 @@ ul.activeListPassword li.active svg {
   font-style: normal;
   font-weight: 400;
   line-height: 22px;
-  /* 157.143% */
   letter-spacing: 0.14px;
   overflow: hidden;
   text-overflow: ellipsis;

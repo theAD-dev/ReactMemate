@@ -99,6 +99,8 @@ const CalculateQuote = () => {
             delete payload.to;
             delete payload.cc;
             delete payload.bcc;
+            delete payload.from_email;
+            delete payload.signature;
         }
 
         if (action === "saveAndsend") {
@@ -114,11 +116,11 @@ const CalculateQuote = () => {
         if (payload.merges) delete payload.merges;
 
         if (!payload?.client) return toast.error('Client is required');
-        if (!payload?.contact_person) return toast.error('Contact person is required');
-        if (!payload?.managers || !payload.managers?.length) return toast.error('Project manager is required');
-        if (!payload?.calculations || !payload.calculations.length) return toast.error('At least one calculation is required');
-        if (!payload?.xero_tax) return toast.error('Tax details is required');
-        if (!payload?.expense) return toast.error('Expense is required');
+        if (!payload?.contact_person && action !== "draft") return toast.error('Contact person is required');
+        if ((!payload?.managers || !payload.managers?.length) && action !== "draft") return toast.error('Project manager is required');
+        if ((!payload?.calculations || !payload.calculations.length) && action !== "draft") return toast.error('At least one calculation is required');
+        if (!payload?.xero_tax && action !== "draft") return toast.error('Tax details is required');
+        if (!payload?.expense && action !== "draft") return toast.error('Expense is required');
 
         if (quoteType === 'Recurring' && !payload?.recurring) return toast.error('Recurring details is required');
         if (quoteType === 'Recurring' && !payload?.recurring?.frequency) return toast.error('Recurring frequency is required');

@@ -97,7 +97,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         const name = `${rowData?.user.full_name}`;
         const initials = `${rowData?.user?.alias}`;
         return <div className='d-flex align-items-center'>
-            <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>
+            <div className={`d-flex justify-content-center align-items-center ${style.clientName}`} style={{ width: '30px', height: '30px', borderRadius: '50%', overflow: 'hidden' }}>
                 {rowData?.user?.has_photo
                     ? <FallbackImage has_photo={rowData?.user?.has_photo} photo={rowData?.user?.photo} is_business={false}/>
                     : initials
@@ -158,7 +158,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
                 <Column field="number" header="Task ID" body={idBody} style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="title" header="Task Title" style={{ minWidth: '150px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
+                <Column field="title" header="Task Title" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px' }}>{rowData.title}</div>} style={{ minWidth: '150px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
                 <Column field="user.full_name" header="Assigne" body={nameBody} style={{ minWidth: '208px' }}></Column>
                 <Column field="finished" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
                 <Column field="project.reference" header="Project" body={projectBody} style={{ minWidth: '460px' }}></Column>

@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { Calendar3 } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import clsx from 'clsx';
 import { format } from 'date-fns';
+import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import styles from './send-to-calendar.module.scss';
 import { getClientById } from '../../../../../../APIs/ClientsApi';
+import { getOutgoingEmail } from '../../../../../../APIs/email-template';
 import CalendarIcon from "../../../../../../assets/images/icon/calendar.svg";
-import SendDynamicEmailForm from '../../../../../../ui/send-email-2/send-email';
-import axios from 'axios';
 
 const SendToCalendar = ({ projectId, project, projectCardData }) => {
+  const autoCompleteRef = useRef(null);
+  const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const accessToken = localStorage.getItem("access_token");
   const [show, setShow] = useState(false);
-  const [emailShow, setEmailShow] = useState(false);
-  const [payload, setPayload] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [eventTitle, setEventTitle] = useState('');
   const [eventDescription, setEventDescription] = useState('');
@@ -24,85 +26,35 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
   const [meetLink, setMeetLink] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [guests, setGuests] = useState([]);
+  const [from, setFrom] = useState('');
+  const [filteredEmails, setFilteredEmails] = useState([]);
 
   const clientQuery = useQuery({
     queryKey: ['getClientById', project?.client],
     queryFn: () => getClientById(project?.client),
-    enabled: !!project?.client && !!emailShow,
+    enabled: !!project?.client && !!show,
     retry: 1,
   });
 
-  const emailMutation = useMutation({
-    mutationFn: async (data) => {
-      try {
-        const attendees = [];
-
-        if (data.to) {
-          const toEmails = data.to.split(',').map(email => email.trim());
-          toEmails.forEach(email => {
-            if (email) attendees.push(email);
-          });
-        }
-
-        if (data.cc) {
-          const ccEmails = data.cc.split(',').map(email => email.trim());
-          ccEmails.forEach(email => {
-            if (email) attendees.push(email);
-          });
-        }
-
-        if (data.bcc) {
-          const bccEmails = data.bcc.split(',').map(email => email.trim());
-          bccEmails.forEach(email => {
-            if (email) attendees.push(email);
-          });
-        }
-
-        const calendarContent = generateICalContent(attendees, data.from_email);
-        const fileName = `invite.ics`;
-        const icsFile = new File([calendarContent], fileName, { type: 'text/calendar' });
-        const formData = new FormData();
-
-        Object.keys(data).forEach(key => {
-          formData.append(key, data[key]);
-        });
-
-        formData.append('attachments', icsFile);
-        formData.append('calendar_event', 'true');
-        formData.append('event_title', eventTitle);
-        formData.append('event_start', startDate.toISOString());
-        formData.append('event_end', endDate.toISOString());
-
-        if (meetLink) {
-          formData.append('meet_link', meetLink);
-        }
-        await axios.post(
-          `${process.env.REACT_APP_BACKEND_API_URL}/custom/email/${projectId}/`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-      } catch (error) {
-        console.error('Error preparing email attachment:', error);
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      setEmailShow(false);
-      projectCardData(projectId);
-      toast.success(`Calendar invitation sent successfully.`);
-    },
-    onError: (error) => {
-      console.error('Error sending calendar invitation:', error);
-      toast.error(`Failed to send calendar invitation. Please try again.`);
-    }
+  const outgoingEmailTemplateQuery = useQuery({
+    queryKey: ["getOutgoingEmail"],
+    queryFn: getOutgoingEmail,
+    enabled: !!show,
   });
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setGuests([]);
+    setEventTitle('');
+    setEventDescription('');
+    setEventLocation('');
+    setStartDate(null);
+    setEndDate(null);
+    setMeetLink('');
+    setFrom('');
+  };
+
   const handleShow = () => {
     if (project?.reference) {
       setEventTitle(`${project.reference}`);
@@ -142,29 +94,12 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
     const uid = `${Date.now()}@memate.com.au`;
     const dtStamp = formatDate(now);
 
-    const generateValidMeetLink = () => {
-      const chars = 'abcdefghijklmnopqrstuvwxyz';
-      const getRandomChars = (length) => {
-        let result = '';
-        for (let i = 0; i < length; i++) {
-          result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return result;
-      };
-
-      const part1 = getRandomChars(3);
-      const part2 = getRandomChars(4);
-      const part3 = getRandomChars(3);
-
-      return `https://meet.google.com/${part1}-${part2}-${part3}`;
-    };
-
-    const googleMeetLink = meetLink || generateValidMeetLink();
-    const formattedDescription = `${eventDescription || "Meeting Invitation"}\n\nJoin with Google Meet: ${googleMeetLink}`;
+    const googleMeetLink = meetLink || "";
+    const formattedDescription = `${eventDescription || "Meeting Invitation"}\n\nJoin with Meet Link: ${googleMeetLink}`;
 
     const htmlDescription = `<html><body>
       <p>${eventDescription || "Meeting Invitation"}</p>
-      <p>Join with Google Meet: <a href="${googleMeetLink}">${googleMeetLink}</a></p>
+      <p>Join with Meet Link: <a href="${googleMeetLink}">${googleMeetLink}</a></p>
     </body></html>`.replace(/\n/g, '').replace(/\s+/g, ' ');
     const calendarContent = [
       "BEGIN:VCALENDAR",
@@ -216,10 +151,6 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
     return calendarContent.join("\r\n");
   };
 
-  const openEmailForm = () => {
-    setEmailShow(true);
-  };
-
   const validateForm = () => {
     if (!eventTitle.trim()) {
       toast.error('Event title is required');
@@ -236,6 +167,16 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
       return false;
     }
 
+    if (guests.length === 0) {
+      toast.error('At least one guest is required');
+      return false;
+    }
+
+    if (!from) {
+      toast.error('From email is required');
+      return false;
+    }
+
     return true;
   };
 
@@ -249,8 +190,30 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
         return;
       }
 
-      openEmailForm();
+      const calendarContent = generateICalContent(guests, from);
+      const fileName = `invite.ics`;
+      const icsFile = new File([calendarContent], fileName, { type: 'text/calendar' });
+      const formData = new FormData();
+
+      formData.append('subject', `Invitation: ${eventTitle}`);
+      formData.append('email_body', eventDescription);
+      formData.append('from_email', from);
+      formData.append('to', guests.toString());
+      formData.append('attachments', icsFile);
+
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_API_URL}/custom/email/${projectId}/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success('Calendar event created successfully!');
       handleClose();
+      projectCardData(projectId);
     } catch (error) {
       console.error('Error creating calendar event:', error);
       toast.error('Failed to create calendar event. Please try again.');
@@ -258,6 +221,49 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
       setIsLoading(false);
     }
   };
+
+  const search = (event) => {
+    const query = event?.query?.toLowerCase() || '';
+
+    const contactPersons = clientQuery.data?.contact_persons || [];
+    let emails = contactPersons.map((data) => (data.email));
+    emails = emails.filter((email) => !guests.includes(email));
+
+    emails = emails.filter((email) =>
+      email.toLowerCase().includes(query)
+    );
+
+    setFilteredEmails(emails);
+  };
+
+  const onFocus = () => {
+    search();
+    if (autoCompleteRef.current) autoCompleteRef.current.show();
+  };
+
+  const onInputChange = (e) => {
+    const currentValue = e.target.value;
+    if (currentValue.includes(',') || e.key === 'Enter') {
+      const emails = currentValue.split(/[\s,]+/).filter((email) => email);
+      setGuests((prev) => [...new Set([...prev, ...emails])]);
+      e.target.value = '';
+    }
+  };
+
+  useEffect(() => {
+    if (outgoingEmailTemplateQuery?.data) {
+      if (outgoingEmailTemplateQuery?.data?.outgoing_email && outgoingEmailTemplateQuery?.data?.outgoing_email_verified)
+        setFrom(outgoingEmailTemplateQuery?.data?.outgoing_email);
+      else
+        setFrom('no-reply@memate.com.au');
+    }
+  }, [outgoingEmailTemplateQuery]);
+
+  useEffect(() => {
+    if (profileData?.email) {
+      setGuests([profileData?.email]);
+    }
+  }, [profileData?.email]);
 
   return (
     <>
@@ -347,6 +353,43 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
             </Row>
 
             <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Add Guests</Form.Label>
+              <AutoComplete
+                ref={autoCompleteRef}
+                value={guests}
+                completeMethod={search}
+                onChange={(e) => {
+                  setGuests(e.value);
+                }}
+                multiple
+                suggestions={filteredEmails}
+                onClick={onFocus}
+                onFocus={onFocus}
+                onKeyUp={onInputChange}
+                onBlur={(e) => {
+                  const currentValue = e.target.value.trim();
+                  if (currentValue) {
+                    setGuests((prev) => [...new Set([...prev, currentValue])]);
+                    e.target.value = '';
+                  }
+                }}
+                className={clsx(styles.AutoComplete, "w-100")}
+                placeholder="Add guests"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Meet Link</Form.Label>
+              <Form.Control
+                type="text"
+                className='border outline-none'
+                placeholder="Enter Meet link (optional)"
+                value={meetLink}
+                onChange={(e) => setMeetLink(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
               <Form.Label className={styles.formLabel}>Location</Form.Label>
               <Form.Control
                 type="text"
@@ -355,20 +398,6 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                 value={eventLocation}
                 onChange={(e) => setEventLocation(e.target.value)}
               />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>Google Meet Link</Form.Label>
-              <Form.Control
-                type="text"
-                className='border outline-none'
-                placeholder="Enter Google Meet link (optional, will be generated if empty)"
-                value={meetLink}
-                onChange={(e) => setMeetLink(e.target.value)}
-              />
-              <Form.Text className="text-muted">
-                Leave empty to automatically generate a Google Meet link
-              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -391,7 +420,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                 {isLoading ? (
                   <>
                     <ProgressSpinner style={{ width: '20px', height: '20px', marginRight: '8px' }} />
-                    Creating...
+                    Sending...
                   </>
                 ) : (
                   'Send via Email'
@@ -401,15 +430,6 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
           </Form>
         </Modal.Body>
       </Modal>
-
-      <SendDynamicEmailForm
-        show={emailShow}
-        setShow={setEmailShow}
-        mutation={emailMutation}
-        setPayload={setPayload}
-        contactPersons={clientQuery?.data?.contact_persons || []}
-        projectCardData={projectCardData}
-      />
     </>
   );
 };

@@ -149,10 +149,6 @@ const Desktop = ({ visible, setVisible }) => {
                 </div>
             </div>
 
-
-
-
-
             {
                 desktopUsersQuery.isLoading &&
                 <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

@@ -127,3 +127,22 @@
   letter-spacing: 0.14px;
   line-height: 22px;
 }
+
+.AutoComplete ul {
+  width: 100%;
+  padding: 4px 10px 4px 10px;
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid var(--Border, #d0d5dd);
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: auto;
+}
+
+.AutoComplete.bcc ul {
+  padding: 4px 10px 4px 10px;
+}
+
+.AutoComplete input {
+  min-width: 100px;
+}

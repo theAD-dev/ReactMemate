@@ -1,19 +1,26 @@
 import React from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
+import { BoxArrowRight } from 'react-bootstrap-icons';
 import { Link, Navigate } from 'react-router-dom';
+import clsx from 'clsx';
 import styles from './suspended.module.scss';
 import suspendedImage from '../../../assets/suspended-mask.svg';
 
 const Suspended = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const isSuspended = profileData?.is_suspended ? true : false;
-    const isAdmin = (profileData?.type === "Admin") ? true : false;
+    const isAdmin = !(profileData?.type === "Admin") ? true : false;
 
     if (!isSuspended) return <Navigate to={"/"} replace />; //TODO: not
     return (
         <Row className='w-100 m-0 p-0'>
-            <Col sm={6} className={styles.leftSection}>
-                <div className="logohead"><img src="/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt="Loin Logo" /></div>
+            <Col sm={6} className={clsx(styles.leftSection)} style={{ position: 'relative' }}>
+                <div className="logohead">
+                    <img src="/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt="Loin Logo" />
+                </div>
+
+                <Link to={"/logout"}><Button className='outline-button' style={{ position: 'absolute', top: '15px', right: '15px', fontSize: '14px' }}>Logout <BoxArrowRight size={18} color='#344054' /></Button></Link>
+
                 <div style={{ width: '568px', maxWidth: "calc(100% - 0px)" }} className='d-flex flex-column align-items-center text-center m-auto'>
                     <div className={styles.topHeading}>
                         <h1 className={styles.heading}>
