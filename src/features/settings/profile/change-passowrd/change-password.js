@@ -133,7 +133,7 @@ const ChangePassword = () => {
 
     return (
         <>
-            <button className="cancel" onClick={() => setVisible(true)}>Change Password <PencilSquare color="#344054" size={20} /></button>
+            <button className="cancel d-flex gap-2 align-items-center" onClick={() => setVisible(true)}>Change Password <PencilSquare color="#344054" size={18} /></button>
             <Dialog visible={visible} modal header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={() => setVisible(false)}>
                 <form onSubmit={handleSubmit}>
                     <div className="formgroup">

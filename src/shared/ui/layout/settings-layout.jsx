@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../../../components/layout/settings/Sidebar';
 
 const SettingsLayout = () => {
@@ -18,19 +18,19 @@ const SettingsLayout = () => {
       } else if (path.includes('/subscription')) {
         setActiveTab('subscription');
       } else if (path.includes('/bank-details')) {
-        setActiveTab('bank-details');
+        setActiveTab('generalinformation');
       } else if (path.includes('/region-and-language')) {
-        setActiveTab('region-and-language');
+        setActiveTab('generalinformation');
       } else if (path.includes('/billing-info')) {
-        setActiveTab('billing-info');
+        setActiveTab('subscription');
       } else if (path.includes('/bills')) {
-        setActiveTab('bills');
+        setActiveTab('subscription');
       } else {
         setActiveTab('generalinformation');
       }
     } else if (path.includes('/settings/users')) {
       if (path.includes('/mobile-app')) {
-        setActiveTab('mobile-app');
+        setActiveTab('desktop');
       } else {
         setActiveTab('desktop');
       }
@@ -66,7 +66,7 @@ const SettingsLayout = () => {
       if (path.includes('/industries')) {
         setActiveTab('industries');
       } else {
-        setActiveTab('customers-settings');
+        setActiveTab('industries');
       }
     } else if (path.includes('/settings/accounting')) {
       setActiveTab('expenses');

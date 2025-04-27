@@ -22,7 +22,6 @@ const schema = yup.object().shape({
 
 const DepartmentTurnoverPlan = () => {
     const { trialHeight } = useTrialHeight();
-    const [activeTab, setActiveTab] = useState('expenses');
     const [selectedData, setSelectedData] = useState(null);
     const [visible, setVisible] = useState(false);
     const accountingListQuery = useAccountingGetQuery();
@@ -81,50 +80,44 @@ const DepartmentTurnoverPlan = () => {
             <Helmet>
                 <title>MeMate - Department Turnover Plan</title>
             </Helmet>
-            <div className='settings-wrap'>
-                <div className="settings-wrapper">
-                    <div className="settings-content setModalelBoots w-100">
-                        <div className='headSticky'>
-                            <h1>Accounting</h1>
-                            <div className='contentMenuTab'>
-                                <ul>
-                                    <li className='menuActive'><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
-                                    <li><Link to="/settings/accounting/expenses">Expenses</Link></li>
-                                </ul>
-                            </div>
+            <div className='headSticky'>
+                <h1>Accounting</h1>
+                <div className='contentMenuTab'>
+                    <ul>
+                        <li className='menuActive'><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
+                        <li><Link to="/settings/accounting/expenses">Expenses</Link></li>
+                    </ul>
+                </div>
+            </div>
+            <div className={`content_wrap_main w-100 ${style.tablePrimeBar}`} style={{ paddingBottom: `${trialHeight}px` }}>
+                <div className='content_wrapper w-100'>
+                    <div className="listwrapper">
+                        <div className="topHeadStyle pb-4">
+                            <h2>Department Turnover Plan</h2>
                         </div>
-                        <div className={`content_wrap_main w-100 ${style.tablePrimeBar}`} style={{ paddingBottom: `${trialHeight}px` }}>
-                            <div className='content_wrapper w-100'>
-                                <div className="listwrapper">
-                                    <div className="topHeadStyle pb-4">
-                                        <h2>Department Turnover Plan</h2>
-                                    </div>
 
-                                    <DataTable className='w-100' value={accountingListQuery.data || []} tableStyle={{ minWidth: '100%', border: '1px solid #f2f2f2' }}>
-                                        <Column field="name" header="Category Name" body={categoryBodyTemplate} style={{ width: '100%' }}></Column>
-                                        <Column field="target" header="Target" body={(rowData) => `$${formatAUD(rowData.target)}`} style={{ width: '56px' }} className='text-end'></Column>
-                                    </DataTable>
-                                    <Dialog visible={visible} modal={true} header={headerElement} className={`${style.modal} custom-modal`} onHide={() => setVisible(false)}>
-                                        <form onSubmit={handleSubmit(onSubmit)}>
-                                            <div className="d-flex flex-column mb-4">
-                                                <h6 className='mb-3' style={{ fontSize: '16px', color: '#1D2939', fontWeight: 600 }}>{selectedData?.name}</h6>
-                                                <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Target</p>
-                                                <InputText {...register('target')} className={style.inputBox} />
-                                                {errors.target && <small className="p-error">{errors.target.message}</small>}
-                                            </div>
-                                            <hr />
-                                            <div className='d-flex justify-content-end gap-2 mt-3'>
-                                                <Button className='outline-button' onClick={onCancel}>Cancel</Button>
-                                                <Button className='solid-button' style={{ minWidth: '132px' }} type="submit" loading={isPending}>Save Details</Button>
-                                            </div>
-                                        </form>
-                                    </Dialog>
+                        <DataTable className='w-100' value={accountingListQuery.data || []} tableStyle={{ minWidth: '100%', border: '1px solid #f2f2f2' }}>
+                            <Column field="name" header="Category Name" body={categoryBodyTemplate} style={{ width: '100%' }}></Column>
+                            <Column field="target" header="Target" body={(rowData) => `$${formatAUD(rowData.target)}`} style={{ width: '56px' }} className='text-end'></Column>
+                        </DataTable>
+                        <Dialog visible={visible} modal={true} header={headerElement} className={`${style.modal} custom-modal`} onHide={() => setVisible(false)}>
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <div className="d-flex flex-column mb-4">
+                                    <h6 className='mb-3' style={{ fontSize: '16px', color: '#1D2939', fontWeight: 600 }}>{selectedData?.name}</h6>
+                                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Target</p>
+                                    <InputText {...register('target')} className={style.inputBox} />
+                                    {errors.target && <small className="p-error">{errors.target.message}</small>}
                                 </div>
-                            </div>
-                        </div>
+                                <hr />
+                                <div className='d-flex justify-content-end gap-2 mt-3'>
+                                    <Button className='outline-button' onClick={onCancel}>Cancel</Button>
+                                    <Button className='solid-button' style={{ minWidth: '132px' }} type="submit" loading={isPending}>Save Details</Button>
+                                </div>
+                            </form>
+                        </Dialog>
                     </div>
                 </div>
-            </div >
+            </div>
         </>
     );
 };

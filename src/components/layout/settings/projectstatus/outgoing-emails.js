@@ -20,7 +20,6 @@ const schema = yup.object().shape({
 });
 
 const OutgoingEmails = () => {
-  const [activeTab, setActiveTab] = useState('project-status');
   const [rows, setRows] = useState([{ id: 1 }]); // State to store rows
 
   const { control, handleSubmit, formState: { errors } } = useForm({
@@ -45,24 +44,22 @@ const OutgoingEmails = () => {
   };
 
   return (
-    <div className='settings-wrap'>
+    <>
       <Helmet>
         <title>MeMate - Outgoing Emails</title>
       </Helmet>
-      <div className="settings-wrapper">
-        <div className="settings-content setModalelBoots w-100">
-          <div className='headSticky'>
-            <h1>Organisation Setting</h1>
-            <div className='contentMenuTab'>
-              <ul>
-                <li><Link to="/settings/projectstatus/project-status">Project Status</Link></li>
-                {/* <li className='menuActive'><Link to="/settings/projectstatus/outgoing-emails">Outgoing Emails</Link></li> */}
-              </ul>
-            </div>
-          </div>
-          <div className="content_wrap_main">
-            <div className='content_wrapper'>
-              <div className="listwrapper orgColorStatus">
+      <div className='headSticky'>
+        <h1>Organisation Setting</h1>
+        <div className='contentMenuTab'>
+          <ul>
+            <li><Link to="/settings/projectstatus/project-status">Project Status</Link></li>
+            {/* <li className='menuActive'><Link to="/settings/projectstatus/outgoing-emails">Outgoing Emails</Link></li> */}
+          </ul>
+        </div>
+      </div>
+      <div className="content_wrap_main">
+        <div className='content_wrapper'>
+          <div className="listwrapper orgColorStatus">
                 <h4>Outgoing Emails</h4>
                 <p>The status name can be up to 20 characters long.</p>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -131,9 +128,7 @@ const OutgoingEmails = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

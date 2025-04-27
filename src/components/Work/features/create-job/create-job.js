@@ -17,7 +17,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import style from './create-job.module.scss';
 import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
-import { createNewJob } from '../../../../APIs/jobs-api';
+import { createNewJob, updateJob } from '../../../../APIs/jobs-api';
 import { getManagement } from '../../../../APIs/management-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
@@ -70,7 +70,7 @@ export function getFileIcon(fileType) {
 }
 
 
-const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
+const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = false, jobData = null, jobId = null }) => {
     const accessToken = localStorage.getItem("access_token");
 
     const [templateId, setTemplatedId] = useState("");
@@ -87,8 +87,6 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     const [paymentCycle, setPaymentCycle] = useState("");
 
     const [projectId, setProjectId] = useState("");
-    // const [projectReference, setProjectReference] = useState(null);
-    // const [projectDescription, setProjectDescription] = useState(null);
     const [repeat, setRepeat] = useState('Weekly');
     const [weeks, setWeeks] = useState([]);
     const [months, setMonths] = useState([]);
@@ -209,7 +207,9 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
     useEffect(() => {
         if (getTemplateByIDQuery?.data) {
-            setJobReference(getTemplateByIDQuery?.data?.title || "");
+            // Limit job reference to 50 characters when loading from template
+            const templateTitle = getTemplateByIDQuery?.data?.title || "";
+            setJobReference(templateTitle.substring(0, 50));
             setDescription(getTemplateByIDQuery?.data?.description || "");
             setErrors((others) => ({ ...others, jobReference: false }));
             setErrors((others) => ({ ...others, description: false }));
@@ -302,18 +302,34 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     };
 
     const mutation = useMutation({
-        mutationFn: (data) => createNewJob(data),
+        mutationFn: (data) => {
+            if (isEditMode && jobId) {
+                return updateJob(jobId, data);
+            } else {
+                return createNewJob(data);
+            }
+        },
         onSuccess: async (response) => {
-            await fileUploadBySignedURL(response.id);
-            await attachmentsUpdateInJob(response.id);
-            toast.success(`Job created successfully`);
+            const id = isEditMode ? jobId : response.id;
+
+            // Only upload new files (not existing ones)
+            const newFiles = files.filter(file => !file.isExisting);
+            if (newFiles.length > 0) {
+                setFiles(prevFiles => prevFiles.map(file =>
+                    file.isExisting ? file : { ...file, progress: 0 }
+                ));
+                await fileUploadBySignedURL(id);
+                await attachmentsUpdateInJob(id);
+            }
+
+            toast.success(`Job ${isEditMode ? 'updated' : 'created'} successfully`);
             setVisible(false);
             setRefetch((refetch) => !refetch);
             reset();
         },
         onError: (error) => {
-            console.error('Error creating expense:', error);
-            toast.error('Failed to create job. Please try again.');
+            console.error(`Error ${isEditMode ? 'updating' : 'creating'} job:`, error);
+            toast.error(`Failed to ${isEditMode ? 'update' : 'create'} job. Please try again.`);
         }
     });
 
@@ -401,37 +417,92 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         }
     }, [workerId]);
 
+    // Populate form with job data when in edit mode
+    useEffect(() => {
+        if (isEditMode && jobData) {
+            // Set job reference and description
+            setJobReference(jobData.short_description || "");
+            setDescription(jobData.long_description || "");
+
+            // Set worker details
+            if (jobData.worker) {
+                setUserId(jobData.worker.id);
+                workerDetailsSet(jobData.worker.id);
+            }
+
+            // Set project
+            if (jobData.project) {
+                setProjectId(jobData.project.id);
+            }
+
+            // Set payment type and cost
+            setType(jobData.type || "2");
+            setCost(jobData.cost || 0.00);
+
+            // Set time type and duration
+            set_time_type(jobData.time_type || "");
+            setDuration(jobData.duration || "");
+
+            // Set dates
+            if (jobData.start_date) {
+                setStart(new Date(jobData.start_date));
+            }
+            if (jobData.end_date) {
+                setEnd(new Date(jobData.end_date));
+            }
+
+            // Set project photos
+            setProjectPhotoDeliver(jobData.project_photos || "");
+
+            // Set attachments if available
+            if (jobData.attachments && jobData.attachments.length > 0) {
+                setFiles(jobData.attachments.map(attachment => ({
+                    name: attachment.name,
+                    size: attachment.size,
+                    url: attachment.link,
+                    progress: 100,
+                    isExisting: true
+                })));
+            }
+        }
+    }, [isEditMode, jobData]);
+
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
                         <div className="d-flex align-items-center gap-3">
-                            <div style={{ position: 'relative', textAlign: 'start' }}>
-                                <Dropdown
-                                    options={
-                                        (templateQuery &&
-                                            templateQuery.data?.map((template) => ({
-                                                value: template.id,
-                                                label: `${template.name}`,
-                                            }))) ||
-                                        []
-                                    }
-                                    className={clsx(
-                                        style.dropdownSelect,
-                                        "dropdown-height-fixed",
-                                        "outline-none"
-                                    )}
-                                    style={{ height: "44px", width: '606px' }}
-                                    placeholder="Select template"
-                                    onChange={(e) => {
-                                        setTemplatedId(e.value);
-                                    }}
-                                    value={templateId}
-                                    loading={templateQuery?.isFetching}
-                                    filter
-                                />
-                            </div>
+                            {!isEditMode && (
+                                <div style={{ position: 'relative', textAlign: 'start' }}>
+                                    <Dropdown
+                                        options={
+                                            (templateQuery &&
+                                                templateQuery.data?.map((template) => ({
+                                                    value: template.id,
+                                                    label: `${template.name}`,
+                                                }))) ||
+                                            []
+                                        }
+                                        className={clsx(
+                                            style.dropdownSelect,
+                                            "dropdown-height-fixed",
+                                            "outline-none"
+                                        )}
+                                        style={{ height: "44px", width: '606px' }}
+                                        placeholder="Select template"
+                                        onChange={(e) => {
+                                            setTemplatedId(e.value);
+                                        }}
+                                        value={templateId}
+                                        loading={templateQuery?.isFetching}
+                                        filter
+                                    />
+                                </div>
+                            )}
+                            {isEditMode && (
+                                <h2 className="mb-0" style={{ fontSize: '18px', fontWeight: '500' }}>Edit Job #{jobId}</h2>
+                            )}
                         </div>
                         <span>
                             <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -444,7 +515,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx('d-flex justify-content-between align-items-center', style.borderBottom)}>
                                 <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Details</h1>
-                                <div className={clsx(style.newJobTag, 'mb-0')}>New Job</div>
+                                <div className={clsx(style.newJobTag, 'mb-0')}>{isEditMode ? 'Edit Job' : 'New Job'}</div>
                             </Card.Body>
                             <Card.Header className={clsx(style.background, 'border-0')}>
                                 <div className='form-group mb-3'>
@@ -458,17 +529,24 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                 value={jobReference}
                                                 className={clsx(style.inputBox, 'w-100')}
                                                 onChange={(e) => {
-                                                    setJobReference(e.target.value);
-                                                    if (e.target.value)
-                                                        setErrors((others) => ({ ...others, jobReference: false }));
+                                                    const value = e.target.value;
+                                                    if (value.length <= 50) {
+                                                        setJobReference(value);
+                                                        if (value)
+                                                            setErrors((others) => ({ ...others, jobReference: false }));
+                                                    }
                                                 }}
+                                                maxLength={50}
                                                 placeholder="Enter job reference"
                                             />
                                         </IconField>
                                     </div>
-                                    {errors?.jobReference && (
-                                        <p className="error-message mb-0">{"Job reference is required"}</p>
-                                    )}
+                                    <div className="d-flex justify-content-between">
+                                        {errors?.jobReference && (
+                                            <p className="error-message mb-0">{"Job reference is required"}</p>
+                                        )}
+                                        <small className="text-muted ms-auto">{jobReference.length}/50</small>
+                                    </div>
                                 </div>
 
                                 <div className='form-group mb-3'>
@@ -1129,10 +1207,11 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        {/*  onSubmit ()=>fileUploadBySignedURL(128) */}
-                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>Create {mutation?.isPending && <ProgressSpinner
+                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending || isEditMode}>
+                            {isEditMode ? 'Update' : 'Create'} {mutation?.isPending && <ProgressSpinner
                             style={{ width: "20px", height: "20px", color: "#fff" }}
-                        />}</Button>
+                            />}
+                        </Button>
                     </div>
                 </div>
             )}

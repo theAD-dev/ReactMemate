@@ -17,9 +17,7 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 
 const CustomersIndustries = () => {
     const { trialHeight } = useTrialHeight();
-    const [activeTab, setActiveTab] = useState('industries');
     const [selectedIndustryId, setSelectedIndustryId] = useState(null);
-
 
     const { data: industriesList, refetch } = useQuery({
         queryKey: ['industriesList'],
@@ -47,7 +45,6 @@ const CustomersIndustries = () => {
         }
     }, [selectedIndustryId]);
 
-
     const readIndustryQuery = useQuery({
         queryKey: ['industry', selectedIndustryId],
         queryFn: () => readIndustryQuery(selectedIndustryId),
@@ -57,14 +54,10 @@ const CustomersIndustries = () => {
         }
     });
 
-
-
-
     const handleEditClick = (industryId) => {
         setSelectedIndustryId(industryId);
         setVisible2(true);
     };
-
 
     const mutation = useMutation({
         mutationFn: (data) => newIndustries(data),
@@ -73,7 +66,6 @@ const CustomersIndustries = () => {
             handleClose();
         },
     });
-
 
     const updateIndustryMutation = useMutation({
         mutationFn: async ({ id, data }) => {
@@ -101,8 +93,6 @@ const CustomersIndustries = () => {
         },
     });
 
-
-
     const onSubmit = (data) => {
         if (selectedIndustryId) {
             updateIndustryMutation.mutate({ id: selectedIndustryId, data });
@@ -111,9 +101,6 @@ const CustomersIndustries = () => {
         }
         handleClose();
     };
-
-
-
 
     const [visible2, setVisible2] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -179,48 +166,44 @@ const CustomersIndustries = () => {
             <Helmet>
                 <title>MeMate - Industries</title>
             </Helmet>
-            <div className='settings-wrap'>
-                <div className="settings-wrapper">
-                    <div className="settings-content setModalelBoots w-100">
-                        <div className='headSticky'>
-                            <h1>Customers Settings</h1>
-                            <div className='contentMenuTab'>
-                                <ul>
-                                    <li className='menuActive'><Link to="/settings/customerssettings/industries">Industries</Link></li>
-                                    <li><Link to="/settings/customerssettings/customers-discount-category">Customers Discount Category</Link></li>
-                                </ul>
+            <div className="settings-content setModalelBoots w-100">
+                <div className='headSticky'>
+                    <h1>Customers Settings</h1>
+                    <div className='contentMenuTab'>
+                        <ul>
+                            <li className='menuActive'><Link to="/settings/customerssettings/industries">Industries</Link></li>
+                            <li><Link to="/settings/customerssettings/customers-discount-category">Customers Discount Category</Link></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className={`content_wrap_main ${style.tablePrimeBar}`} style={{ paddingBottom: `${trialHeight}px` }}>
+                    <div className='content_wrapper'>
+                        <div className="listwrapper">
+                            <div className="topHeadStyle pb-4">
+                                <h2>Industries</h2>
+                                <Button label="Add New" onClick={() => setVisible(true)}> <PlusLg color="#000000" size={20} /></Button>
                             </div>
-                        </div>
+                            <DataTable value={industriesList} tableStyle={{ minWidth: '50rem' }}>
+                                <Column field="name" header="Industry Name" style={{ width: '100%' }}></Column>
+                                <Column field="edit" header="Edit" body={editBody} style={{ width: '56px' }} className='text-end'></Column>
+                            </DataTable>
 
-                        <div className={`content_wrap_main ${style.tablePrimeBar}`} style={{ paddingBottom: `${trialHeight}px` }}>
-                            <div className='content_wrapper'>
-                                <div className="listwrapper">
-                                    <div className="topHeadStyle pb-4">
-                                        <h2>Industries</h2>
-                                        <Button label="Add New" onClick={() => setVisible(true)}> <PlusLg color="#000000" size={20} /></Button>
-                                    </div>
-                                    <DataTable value={industriesList} tableStyle={{ minWidth: '50rem' }}>
-                                        <Column field="name" header="Industry Name" style={{ width: '100%' }}></Column>
-                                        <Column field="edit" header="Edit" body={editBody} style={{ width: '56px' }} className='text-end'></Column>
-                                    </DataTable>
-
-                                    <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
-                                        <div className="d-flex flex-column">
-                                            <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Industry name</p>
-                                            <InputText {...register('name')} className={style.inputBox} />
-                                            {errors.name && <small className="p-error">{errors.name.message}</small>}
-                                        </div>
-                                    </Dialog>
-
-                                    <Dialog visible={visible} modal={true} header={headerElement1} footer={footerContent1} className={`${style.modal} custom-modal`} onHide={handleClose}>
-                                        <div className="d-flex flex-column">
-                                            <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Industry name</p>
-                                            <InputText {...register('name')} placeholder='Industry name' className={style.inputBox} />
-                                            {errors.name && <small className="p-error">{errors.name.message}</small>}
-                                        </div>
-                                    </Dialog>
+                            <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
+                                <div className="d-flex flex-column">
+                                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Industry name</p>
+                                    <InputText {...register('name')} className={style.inputBox} />
+                                    {errors.name && <small className="p-error">{errors.name.message}</small>}
                                 </div>
-                            </div>
+                            </Dialog>
+
+                            <Dialog visible={visible} modal={true} header={headerElement1} footer={footerContent1} className={`${style.modal} custom-modal`} onHide={handleClose}>
+                                <div className="d-flex flex-column">
+                                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Industry name</p>
+                                    <InputText {...register('name')} placeholder='Industry name' className={style.inputBox} />
+                                    {errors.name && <small className="p-error">{errors.name.message}</small>}
+                                </div>
+                            </Dialog>
                         </div>
                     </div>
                 </div>

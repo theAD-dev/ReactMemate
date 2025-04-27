@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, OverlayTrigger, Spinner, Tooltip } from 'react-bootstrap';
 import { PlusLg, InfoCircle } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { Tooltip as PrimeTooltip } from 'primereact/tooltip'; // Renamed to avoid conflict
 import { getEmailTemplates } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
-
 import style from '../job-template.module.scss';
 
 const EmailTemplates = () => {
@@ -16,7 +15,6 @@ const EmailTemplates = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
     const has_twilio = !!profileData?.has_twilio;
-    const [activeTab, setActiveTab] = useState('job-templates');
 
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
