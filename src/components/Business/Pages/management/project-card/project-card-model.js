@@ -5,7 +5,8 @@ import {
   Envelope,
   Tag,
   Postcard,
-  PlusCircle
+  PlusCircle,
+  PauseCircle
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -837,26 +838,50 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 </Button>
               </Col>
             </Row>
-            <Row className='projectBreakdown px-0'>
-              <Col className='px-0'>
-                <Button onClick={() => setShowCostBreakdown(!showCostBreakdown)}>{!showCostBreakdown ? 'Show' : 'Hide'} Cost breakdown</Button>
+            <Row className='projectBreakdown px-0 pb-0'>
+              <Col sm={12} className='px-0'>
+                <Button className='mb-2' onClick={() => setShowCostBreakdown(!showCostBreakdown)}>{!showCostBreakdown ? 'Show' : 'Hide'} Cost breakdown</Button>
                 {
                   showCostBreakdown &&
-                  <DataTable value={cardData?.calculations || []} showGridlines className="border-top">
-                    <Column field="id" header="Order" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
-                    <Column field="subindex" header="Department" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.subindex} style={{ maxWidth: '192px' }}>{rowData.subindex}</div>}></Column>
-                    <Column field="description" header="Description"
-                      body={(rowData) =>
-                        <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '350px' }}>{rowData.description}</div>}
-                      style={{ width: '100%' }}
-                    ></Column>
-                    <Column field="cost" header="Cost" style={{ width: '100%' }} body={(rowData) => `$ ${rowData.cost}`}></Column>
-                    <Column field="profit_type_value" header="Markup/Margin" body={(rowData) => `${rowData.profit_type_value} ${rowData.profit_type === "AMN" ? "AMT $" : rowData.profit_type === "MRG" ? "MRG %" : "MRK %"}`} style={{ width: '100%' }}></Column>
-                    <Column field="unit_price" header="Unit Price" style={{ width: '100%' }} body={(rowData) => `$ ${rowData.unit_price}`}></Column>
-                    <Column field="quantity" header="Qty/Unit" style={{ width: '100%' }}></Column>
-                    <Column field="discount" header="Discount" style={{ width: '100%' }} body={(rowData) => `${rowData.discount}%`}></Column>
-                    <Column field="total" header="Amount" style={{ width: '100%' }} body={(rowData) => `$ ${rowData.total}`}></Column>
-                  </DataTable>
+                  <>
+                    <DataTable value={cardData?.calculations || []} showGridlines className="border-top">
+                      <Column field="id" header="Order" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
+                      <Column field="subindex" header="Department" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.subindex} style={{ maxWidth: '192px' }}>{rowData.subindex}</div>}></Column>
+                      <Column field="description" header="Description"
+                        body={(rowData) =>
+                          <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '350px' }}>{rowData.description}</div>}
+                        style={{ width: '100%' }}
+                      ></Column>
+                      <Column field="cost" header="Cost" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.cost)}`}></Column>
+                      <Column field="profit_type_value" header="Markup/Margin" body={(rowData) => `${rowData.profit_type_value} ${rowData.profit_type === "AMN" ? "AMT $" : rowData.profit_type === "MRG" ? "MRG %" : "MRK %"}`} style={{ width: '100%' }}></Column>
+                      <Column field="unit_price" header="Unit Price" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.unit_price)}`}></Column>
+                      <Column field="quantity" header="Qty/Unit" style={{ width: '100%' }}></Column>
+                      <Column field="discount" header="Discount" style={{ width: '100%' }} body={(rowData) => `${rowData.discount}%`}></Column>
+                      <Column field="total" header="Amount" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.total)}`}></Column>
+                    </DataTable>
+                    <div className='w-100 d-flex align-items-center justify-content-end gap-4' style={{ background: '#EBF8FF', padding: '8px 24px 8px 40px' }}>
+                      <div className='d-flex flex-column align-items-end'>
+                        <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Sub Total</p>
+                        <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(cardData?.sub_total)}</p>
+                      </div>
+                      <div>
+                        <PlusCircle size={20} color='#106B99' />
+                      </div>
+                      <div className='d-flex flex-column align-items-end'>
+                        <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Tax</p>
+                        <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(cardData?.gst)}</p>
+                      </div>
+                      <div>
+                        <div>
+                          <PauseCircle size={20} color='#106B99' style={{ transform: 'rotate(90deg)' }}/>
+                        </div>
+                      </div>
+                      <div className='d-flex flex-column align-items-end'>
+                        <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Total Invoice Amount</p>
+                        <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(cardData?.total)}</p>
+                      </div>
+                    </div>
+                  </>
                 }
               </Col>
             </Row>
