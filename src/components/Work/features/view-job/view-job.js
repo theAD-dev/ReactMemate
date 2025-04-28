@@ -332,6 +332,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                     isEditMode={true}
                     jobData={job}
                     jobId={jobId}
+                    refetch={() => jobQuery.refetch()}
                 />
             )}
         </>

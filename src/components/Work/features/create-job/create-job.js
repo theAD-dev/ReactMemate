@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Calendar3, ClockHistory, CloudUpload, X } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
@@ -70,7 +70,7 @@ export function getFileIcon(fileType) {
 }
 
 
-const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = false, jobData = null, jobId = null }) => {
+const CreateJob = ({ visible, setVisible, setRefetch = () => {}, workerId, isEditMode = false, jobData = null, jobId = null, refetch = () => {} }) => {
     const accessToken = localStorage.getItem("access_token");
 
     const [templateId, setTemplatedId] = useState("");
@@ -95,7 +95,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
     const [repeatEnd, setRepeatEnd] = useState("");
     const [occurrences, setOccurrences] = useState("");
 
-    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("");
+    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("3");
 
 
     const [files, setFiles] = useState([]);
@@ -194,7 +194,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
         setEnding([]);
         setRepeatEnd("");
         setOccurrences("");
-        setProjectPhotoDeliver("");
+        setProjectPhotoDeliver("3");
         setFiles([]);
         setType('2');
         setCost(0.00);
@@ -322,9 +322,12 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
                 await attachmentsUpdateInJob(id);
             }
 
+            // Call setRefetch to trigger a refresh in the parent component
+            if (jobData) refetch();
+            setRefetch((prev) => !prev);
+
             toast.success(`Job ${isEditMode ? 'updated' : 'created'} successfully`);
             setVisible(false);
-            setRefetch((refetch) => !refetch);
             reset();
         },
         onError: (error) => {
@@ -390,7 +393,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
         }
     };
 
-    const workerDetailsSet = (id) => {
+    const workerDetailsSet = useCallback((id) => {
         let user = mobileuserQuery?.data?.users?.find(user => user.id === id);
         let paymentCycleObj = {
             "7": "WEEK",
@@ -407,15 +410,14 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
                 name: `${user.first_name} ${user.last_name}`,
             });
         }
-
-    };
+    }, [mobileuserQuery?.data?.users]);
 
     useEffect(() => {
         if (workerId) {
             setUserId(+workerId);
             workerDetailsSet(+workerId);
         }
-    }, [workerId]);
+    }, [workerId, workerDetailsSet]);
 
     // Populate form with job data when in edit mode
     useEffect(() => {
@@ -445,14 +447,16 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
 
             // Set dates
             if (jobData.start_date) {
-                setStart(new Date(jobData.start_date));
+                const startDate = new Date(+jobData.start_date * 1000);
+                setStart(startDate);
             }
             if (jobData.end_date) {
-                setEnd(new Date(jobData.end_date));
+                const endDate = new Date(+jobData.end_date * 1000);
+                setEnd(endDate);
             }
 
             // Set project photos
-            setProjectPhotoDeliver(jobData.project_photos || "");
+            setProjectPhotoDeliver(jobData.project_photos || "3");
 
             // Set attachments if available
             if (jobData.attachments && jobData.attachments.length > 0) {
@@ -465,7 +469,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
                 })));
             }
         }
-    }, [isEditMode, jobData]);
+    }, [isEditMode, jobData, workerDetailsSet]);
 
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -1207,7 +1211,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId, isEditMode = fal
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending || isEditMode}>
+                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
                             {isEditMode ? 'Update' : 'Create'} {mutation?.isPending && <ProgressSpinner
                             style={{ width: "20px", height: "20px", color: "#fff" }}
                             />}
