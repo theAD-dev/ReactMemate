@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CardChecklist, Check2Circle, CheckCircleFill, ThreeDotsVertical } from 'react-bootstrap-icons';
+import { CardChecklist, CheckCircleFill } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -7,7 +7,9 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
+import { toast } from 'sonner';
 import style from './quote.module.scss';
+import RecurringJobActions from './RecurringJobActions';
 import { getRecurring } from '../../../../APIs/settings-recurring-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Loader from '../../../../shared/ui/loader/loader';
@@ -16,6 +18,16 @@ function formatDate(timestampMs) {
     const date = new Date(+timestampMs * 1000);
     return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
+
+const frequencyMap = {
+    D: 'Daily',
+    W: 'Weekly',
+    B: 'Biweekly',
+    M: 'Monthly',
+    L: 'Last Day of the Month',
+    Q: 'Quarterly',
+    Y: 'Yearly',
+};
 
 const RecurringQuotes = () => {
     const { trialHeight } = useTrialHeight();
@@ -34,12 +46,26 @@ const RecurringQuotes = () => {
 
     useEffect(() => {
         refetch();
-    }, [currentPage]);
+    }, [currentPage, refetch]);
 
     const { results = [], count } = data || {};
     const totalPages = Math.ceil(count / itemsPerPage) || 1;
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const handleActionComplete = (action) => {
+        // Show a success message based on the action
+        const actionMessages = {
+            'delete': 'Recurring job deleted successfully',
+            'pause': 'Recurring job paused successfully',
+            'activate': 'Recurring job activated successfully'
+        };
+
+        toast.success(actionMessages[action] || 'Action completed successfully');
+
+        // Refetch the data to update the UI
+        refetch();
+    };
 
     const headerElement = (
         <div className={`${style.modalHeader}`}>
@@ -98,13 +124,19 @@ const RecurringQuotes = () => {
                                 <Button label="Open" onClick={() => handleOpen(rowData.pk)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
                             </div>
                         )} style={{ width: 'auto' }}></Column>
-                        <Column header="Order Reference" field="project.reference" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px' }}>{rowData?.project?.reference || ''}</div>} style={{ width: 'auto' }}></Column>
-                        <Column header="Frequency" field="frequency" style={{ width: 'auto' }}></Column>
+                        <Column header="Order Reference" field="project.reference" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px', fontWeight: 600 }}>{rowData?.project?.reference || ''}</div>} style={{ width: 'auto' }}></Column>
+                        <Column header="Frequency" field="frequency" body={(rowData) => frequencyMap[rowData.frequency]} style={{ width: 'auto' }}></Column>
                         <Column header="Date started" field="start_date" body={(rowData) => formatDate(rowData.start_date)} style={{ width: 'auto' }}></Column>
                         <Column header="Occurrences" field="occurrences" style={{ width: 'auto' }}></Column>
                         <Column header="Processed" field="processed" style={{ width: 'auto' }}></Column>
-                        <Column header="Status" field="status" style={{ width: 'auto' }}></Column>
-                        <Column header="Actions" field="" body={() => <ThreeDotsVertical size={24} color="#667085" />} style={{ width: 'auto' }}></Column>
+                        <Column header="Status" field="active" body={(rowData) => rowData.active ? <CheckCircleFill size={24} color="#17B26A" /> : ''} style={{ width: 'auto' }}></Column>
+                        <Column header="Actions" field="" className='text-center' body={(rowData) => (
+                            <RecurringJobActions
+                                jobId={rowData.pk}
+                                status={rowData.active ? 'active' : 'inactive'}
+                                onActionComplete={handleActionComplete}
+                            />
+                        )} style={{ width: 'auto' }}></Column>
                     </DataTable>
 
                     <div className="bottomPagenation">
