@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'sonner';
 import { getProjectsList } from '../../../../../APIs/expenses-api';
-import { createNewTask, getUserList, updateTask } from '../../../../../APIs/task-api';
+import { createNewTask, getMobileUserList, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
 import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import newTaskImg from '../../../../../assets/images/new-task.svg';
@@ -69,6 +69,11 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
     };
     const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
+    const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
+
+    useEffect(() => {
+        if (!show) reset();
+    }, [show]);
 
     const mutation = useMutation({
         mutationFn: (data) => taskId ? updateTask(taskId, data) : createNewTask(data),
@@ -84,6 +89,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
             toast.error(`Failed to ${taskId ? "update" : "create"} client. Please try again.`);
         }
     });
+
     useEffect(() => {
         if (submitted) {
             const newErrors = {
@@ -204,18 +210,32 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                     }
                     <Dropdown
                         ref={dropdownRef}
-                        options={usersList?.data?.users?.filter((user) => user?.is_active).map((user) => ({
-                            value: user?.id,
-                            label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                            photo: user?.photo || "",
-                            has_photo: user?.has_photo
-                        })) || []}
+                        options={[
+                            {
+                                label: 'Desktop User',
+                                items: usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
+                                    value: user?.id,
+                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                    photo: user?.photo || "",
+                                    has_photo: user?.has_photo
+                                })) || []
+                            },
+                            {
+                                label: 'Mobile User',
+                                items: mobileUsersList?.data?.users?.filter((user) => user?.status !== 'disconnected')?.map((user) => ({
+                                    value: user?.id,
+                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                    photo: user?.photo || "",
+                                    has_photo: user?.has_photo
+                                })) || []
+                            }
+                        ]}
                         onChange={(e) => {
                             setUser(e.value);
                         }}
                         valueTemplate={(option) => {
                             return <div className='d-flex gap-2 align-items-center'>
-                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '0px solid #dedede' }}>
                                     <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
                                 </div>
                                 {option?.label}
@@ -242,8 +262,11 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                         }}
                         value={user}
                         dropdownIcon={<></>}
+                        collapseIcon={<></>}
                         placeholder="Select project"
                         filter
+                        optionGroupLabel="label"
+                        optionGroupChildren="items"
                     />
                 </div>
                 <SelectDate dateRange={date} setDateRange={setDate} />

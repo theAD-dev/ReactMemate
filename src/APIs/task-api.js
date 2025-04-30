@@ -54,3 +54,12 @@ export const getUserList = async () => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const getMobileUserList = async () => {
+    const endpoint = `/team/mobile-users/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

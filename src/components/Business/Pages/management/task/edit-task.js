@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import SelectDate from './select-date';
-import { getUserList } from '../../../../../APIs/task-api';
+import { getMobileUserList, getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksDelete, fetchTasksUpdate } from '../../../../../APIs/TasksApi';
 import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
@@ -83,6 +83,8 @@ const EditTask = ({ show, setShow, data, reInitialize }) => {
     };
     const handleClose = () => setShow(false);
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
+    const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
+
     return (
         <>
             <Form onSubmit={handleSubmit}>
@@ -150,18 +152,32 @@ const EditTask = ({ show, setShow, data, reInitialize }) => {
                         }
                         <Dropdown
                             ref={dropdownRef}
-                            options={usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
-                                value: user?.id,
-                                label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                photo: user?.photo || "",
-                                has_photo: user?.has_photo
-                            })) || []}
+                            options={[
+                                {
+                                    label: 'Desktop User',
+                                    items: usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
+                                        value: user?.id,
+                                        label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                        photo: user?.photo || "",
+                                        has_photo: user?.has_photo
+                                    })) || []
+                                },
+                                {
+                                    label: 'Mobile User',
+                                    items: mobileUsersList?.data?.users?.filter((user) => user?.status !== 'disconnected')?.map((user) => ({
+                                        value: user?.id,
+                                        label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                        photo: user?.photo || "",
+                                        has_photo: user?.has_photo
+                                    })) || []
+                                }
+                            ]}
                             onChange={(e) => {
                                 setUser(e.value);
                             }}
                             valueTemplate={(option) => {
                                 return <div className='d-flex gap-2 align-items-center'>
-                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                    <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '0px solid #dedede' }}>
                                         <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
                                     </div>
                                     {option?.label}
@@ -188,8 +204,11 @@ const EditTask = ({ show, setShow, data, reInitialize }) => {
                             }}
                             value={user}
                             dropdownIcon={<></>}
+                            collapseIcon={<></>}
                             placeholder="Select project"
                             filter
+                            optionGroupLabel="label"
+                            optionGroupChildren="items"
                         />
                         <SelectDate dateRange={date} setDateRange={setDate} />
                     </div>
