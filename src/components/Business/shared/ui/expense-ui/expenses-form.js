@@ -99,7 +99,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         maxFiles: 1,
         multiple: false,
         onDrop: acceptedFiles => {
-            console.log('acceptedFiles: ', acceptedFiles);
             const newFiles = acceptedFiles.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file),
                 progress: 0,

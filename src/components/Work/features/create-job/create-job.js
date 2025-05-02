@@ -104,15 +104,14 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         getInputProps
     } = useDropzone({
         onDrop: acceptedFiles => {
-            console.log('acceptedFiles: ', acceptedFiles);
+            const newFiles = acceptedFiles.map(file => Object.assign(file, {
+                preview: URL.createObjectURL(file),
+                progress: 0,
+            }));
+
             setFiles((prevFiles) => [
                 ...prevFiles,
-                ...acceptedFiles.map((file) =>
-                    Object.assign(file, {
-                        preview: URL.createObjectURL(file),
-                        progress: 0,
-                    })
-                ),
+                ...newFiles,
             ]);
         }
     });
@@ -217,37 +216,77 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     }, [getTemplateByIDQuery?.data]);
 
     const uploadToS3 = async (file, url) => {
-        return axios.put(url, file, {
-            headers: {
-                "Content-Type": "",
-            },
-            onUploadProgress: (progressEvent) => {
-                const progress = Math.round(
-                    (progressEvent.loaded / progressEvent.total) * 100
-                );
-                setFiles((prevFiles) => {
-                    return prevFiles.map((f) =>
-                        f.name === file.name
-                            ? Object.assign(f, { progress, url })
-                            : f
+        try {
+            const response = await axios.put(url, file, {
+                headers: {
+                    "Content-Type": "",
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = Math.round(
+                        (progressEvent.loaded / progressEvent.total) * 100
                     );
-                });
-            },
-        }).catch((err) => {
-            console.log('err: ', err);
+                    setFiles((prevFiles) => {
+                        return prevFiles.map((f) =>
+                            f.name === file.name
+                                ? Object.assign(f, { progress, url })
+                                : f
+                        );
+                    });
+                },
+            });
+
+            // Mark as successfully uploaded
             setFiles((prevFiles) => {
                 return prevFiles.map((f) =>
                     f.name === file.name
-                        ? Object.assign(f, { progress: 0, url, error: true })
+                        ? Object.assign(f, { progress: 100, uploaded: true })
                         : f
                 );
             });
-        });
+
+            return response;
+        } catch (err) {
+            // Handle specific error types
+            let errorMessage = "Upload failed";
+
+            if (err.response) {
+                if (err.response.status === 403) {
+                    errorMessage = "Permission denied (403 Forbidden)";
+                } else {
+                    errorMessage = `Server error: ${err.response.status}`;
+                }
+            } else if (err.request) {
+                errorMessage = "No response from server";
+            } else {
+                errorMessage = err.message;
+            }
+
+            console.error(`Error uploading ${file.name}:`, errorMessage);
+
+            // Update file with error status but don't stop other uploads
+            setFiles((prevFiles) => {
+                return prevFiles.map((f) =>
+                    f.name === file.name
+                        ? Object.assign(f, {
+                            progress: 0,
+                            error: true,
+                            errorMessage,
+                            uploadFailed: true
+                          })
+                        : f
+                );
+            });
+
+            // Return error object instead of throwing
+            return { error: true, message: errorMessage };
+        }
     };
 
     const attachmentsUpdateInJob = async (id) => {
         let attachments = [];
         for (const file of files) {
+            if (file.error || !file.url) continue;
+
             let obj = {
                 "name": file?.name,
                 "link": file?.url?.split("?")[0] || "",
@@ -277,6 +316,10 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (!files.length) return;
         if (!id) return toast.error(`Job id not found`);
 
+        let successCount = 0;
+        let errorCount = 0;
+
+        // Process each file independently
         for (const file of files) {
             try {
                 // Step 1: Get the signed URL from the backend
@@ -291,13 +334,49 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 );
 
                 const { url } = response.data;
+                if (!url) {
+                    console.error(`No URL returned for file: ${file.name}`);
+                    errorCount++;
+                    continue;
+                }
 
                 // Step 2: Upload the file to S3 using the signed URL
-                await uploadToS3(file, url);
+                const result = await uploadToS3(file, url);
+
+                // Check if upload was successful
+                if (result && !result.error) {
+                    successCount++;
+                } else {
+                    errorCount++;
+                }
             } catch (error) {
                 console.error("Error uploading file:", file.name, error);
-                toast.error(`Failed to upload ${file.name}. Please try again.`);
+
+                // Update file with error status
+                setFiles((prevFiles) => {
+                    return prevFiles.map((f) =>
+                        f.name === file.name
+                            ? Object.assign(f, {
+                                progress: 0,
+                                error: true,
+                                errorMessage: error.message || "Failed to get upload URL",
+                                uploadFailed: true
+                              })
+                            : f
+                    );
+                });
+
+                errorCount++;
+                // Continue with next file instead of stopping
             }
+        }
+
+        // Show summary toasts
+        if (successCount > 0) {
+            toast.success(`Successfully uploaded ${successCount} file(s)`);
+        }
+        if (errorCount > 0) {
+            toast.error(`Failed to upload ${errorCount} file(s)`);
         }
     };
 
@@ -312,12 +391,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         onSuccess: async (response) => {
             const id = isEditMode ? jobId : response.id;
 
-            // Only upload new files (not existing ones)
-            const newFiles = files.filter(file => !file.isExisting);
-            if (newFiles.length > 0) {
-                setFiles(prevFiles => prevFiles.map(file =>
-                    file.isExisting ? file : { ...file, progress: 0 }
-                ));
+            if (files.length > 0) {
                 await fileUploadBySignedURL(id);
                 await attachmentsUpdateInJob(id);
             }
@@ -1194,13 +1268,22 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                         {getFileIcon(file.type)}
                                                         <div className={style.fileNameBox}>
                                                             <p className='mb-0'>{file?.name || ""}</p>
-                                                            <p className='mb-0'>{parseFloat(file?.size / 1024).toFixed(2)} KB - {parseInt(file?.progress) || 0}% uploaded</p>
+                                                            <p className='mb-0'>
+                                                                {parseFloat(file?.size / 1024).toFixed(2)} KB
+                                                                {file.error ?
+                                                                    <span style={{color: "#F04438"}}> - Upload failed</span> :
+                                                                    ` - ${parseInt(file?.progress) || 0}% uploaded`
+                                                                }
+                                                            </p>
+                                                            {file.errorMessage &&
+                                                                <p className='mb-0' style={{color: "#F04438", fontSize: "12px"}}>{file.errorMessage}</p>
+                                                            }
                                                         </div>
                                                         <div className='ms-auto'>
-                                                            <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
-                                                            {/* <div className={style.deleteBox}>
-                                                                <Trash color='#F04438' size={16} />
-                                                            </div> */}
+                                                            {file.error ?
+                                                                <div style={{color: "#F04438", width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center"}}>!</div> :
+                                                                <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
+                                                            }
                                                         </div>
                                                     </div>
                                                 ))
