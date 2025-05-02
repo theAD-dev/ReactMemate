@@ -83,7 +83,6 @@ const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
                         </div>
                         <div className={styles.footerwrap}>
                           <Button onClick={handlePopoverClose} className={styles.cancelbut}>Cancel</Button>
-                          <Button className={styles.editbut}>Edit</Button>
                         </div>
                       </div>
                     </Popover>

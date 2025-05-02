@@ -506,7 +506,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
         profit_type: "MRG", // Default profit type
         profit_type_value: 0,
         cost: undefined,
-        quantity: undefined,
+        quantity: 1,
         discount: 0,
         total: 0,
         description: "",

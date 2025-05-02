@@ -16,7 +16,7 @@ const StatisticsPage = () => {
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 {/* Executive - disabled */}
-                <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
                 </Link>
@@ -48,7 +48,7 @@ const StatisticsPage = () => {
             </div>
             <div style={{ padding: "72px 128px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)` }}>
                 <div className='d-flex justify-content-center' style={{ gap: '24px' }}>
-                    <Link to={"/statistics/executive"} className={clsx(style.box, style.disabledLink)}>
+                    <Link to={"/statistics/executive"} className={clsx(style.box)}>
                         <div className={style.executiveBox}>
                             <PieChart color='#9E77ED' size={40} />
                         </div>

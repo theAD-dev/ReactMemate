@@ -109,7 +109,7 @@ const KeyResultsPage = () => {
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 {/* Executive - disabled */}
-                <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
                 </Link>

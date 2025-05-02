@@ -268,7 +268,7 @@ const Executive = () => {
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 {/* Current page - Executive */}
-                <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: "#9E77ED" }}>Executive</span>
                 </Link>

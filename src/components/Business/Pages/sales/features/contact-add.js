@@ -1,10 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { PlusLg, Envelope, Telephone, Calendar, ChevronDown } from "react-bootstrap-icons";
+import { PlusLg, Envelope, Telephone, Calendar as CalendarIcon, ChevronDown, Calendar3 } from "react-bootstrap-icons";
 import Typography from '@mui/material/Typography';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
+import { Calendar } from 'primereact/calendar';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
@@ -85,7 +83,7 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
   const radios = [
     { name: 'Email', value: 'E', icon: <Envelope size={20} /> },
     { name: 'Phone', value: 'P', icon: <Telephone size={20} /> },
-    { name: 'Meeting', value: 'M', icon: <Calendar size={20} /> },
+    { name: 'Meeting', value: 'M', icon: <CalendarIcon size={20} /> },
   ];
 
   const isShowPulseEffect = step === 0
@@ -148,23 +146,16 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
                 ))}
               </ButtonGroup>
 
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Form.Label className="flexRemove mt-3">Date<sup className="required">*</sup></Form.Label>
-                <DatePicker
-                  className='datepickerField w-100'
-                  value={value}
-                  onChange={(newValue) => setValue(newValue)}
-                  slots={{ openPickerIcon: ChevronDown }}
-                  disabled={isLoading}
-                  minDate={dayjs()} // Prevent past dates
-                  slotProps={{
-                    textField: {
-                      error: !!errors.date,
-                      helperText: errors.date,
-                    }
-                  }}
-                />
-              </LocalizationProvider>
+              <Form.Label className="flexRemove mt-3 mb-0">Date<sup className="required">*</sup></Form.Label>
+              <Calendar value={value} onChange={(e) => setValue(e.value)} dateFormat="dd/mm/yy" disabled={isLoading} 
+                className='w-100 outline-none border rounded'
+                style={{ height: '46px', width: '230px', overflow: 'hidden' }}
+                showIcon
+                showButtonBar
+                icon={<Calendar3 color='#667085' size={20} style={{ position: 'absolute', top: '6px' }} />}
+                inputStyle={{ width: '88%' }}
+                placeholder='DD/MM/YY'
+              />
 
               <Form.Label className="mt-3">Note<sup className="required">*</sup></Form.Label>
               <Typography sx={{ p: 0 }}>

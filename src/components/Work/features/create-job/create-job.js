@@ -70,7 +70,7 @@ export function getFileIcon(fileType) {
 }
 
 
-const CreateJob = ({ visible, setVisible, setRefetch = () => {}, workerId, isEditMode = false, jobData = null, jobId = null, refetch = () => {} }) => {
+const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
 
     const [templateId, setTemplatedId] = useState("");
@@ -95,7 +95,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => {}, workerId, isEdi
     const [repeatEnd, setRepeatEnd] = useState("");
     const [occurrences, setOccurrences] = useState("");
 
-    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("3");
+    const [projectPhotoDeliver, setProjectPhotoDeliver] = useState("");
 
 
     const [files, setFiles] = useState([]);
@@ -194,7 +194,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => {}, workerId, isEdi
         setEnding([]);
         setRepeatEnd("");
         setOccurrences("");
-        setProjectPhotoDeliver("3");
+        setProjectPhotoDeliver("");
         setFiles([]);
         setType('2');
         setCost(0.00);
@@ -382,7 +382,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => {}, workerId, isEdi
         // if (!projectId) tempErrors.projectId = true;
         if (projectId) payload.project = projectId;
 
-        payload.project_photos = projectPhotoDeliver;
+        if (projectPhotoDeliver)
+            payload.project_photos = projectPhotoDeliver;
 
         // Batch update errors at the end
         setErrors(tempErrors);
@@ -1138,6 +1139,10 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => {}, workerId, isEdi
                                 isOpenProjectPhotoSection && <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
                                     <div className='d-flex align-items-center gap-4 py-1'>
                                         <div className="flex align-items-center">
+                                            <RadioButton inputId="None" name="projectPhotoDeliver" value="" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver == ''} />
+                                            <label htmlFor="None" className="ms-2 cursor-pointer">None</label>
+                                        </div>
+                                        <div className="flex align-items-center">
                                             <RadioButton inputId="Before and After" name="projectPhotoDeliver" value="1" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver == '1'} />
                                             <label htmlFor="Before and After" className="ms-2 cursor-pointer">Before and After</label>
                                         </div>
@@ -1213,7 +1218,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => {}, workerId, isEdi
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
                         <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
                             {isEditMode ? 'Update' : 'Create'} {mutation?.isPending && <ProgressSpinner
-                            style={{ width: "20px", height: "20px", color: "#fff" }}
+                                style={{ width: "20px", height: "20px", color: "#fff" }}
                             />}
                         </Button>
                     </div>
