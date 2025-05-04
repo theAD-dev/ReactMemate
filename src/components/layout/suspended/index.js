@@ -4,14 +4,16 @@ import { BoxArrowRight } from 'react-bootstrap-icons';
 import { Link, Navigate } from 'react-router-dom';
 import clsx from 'clsx';
 import styles from './suspended.module.scss';
+import { useAuth } from '../../../app/providers/auth-provider';
 import suspendedImage from '../../../assets/suspended-mask.svg';
 
 const Suspended = () => {
-    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
-    const isSuspended = profileData?.is_suspended ? true : false;
-    const isAdmin = !(profileData?.type === "Admin") ? true : false;
+    const { session } = useAuth();
+    const isSuspended = session?.is_suspended ? true : false;
+    const isAdmin = !(session?.type === "Admin") ? true : false;
 
-    if (!isSuspended) return <Navigate to={"/"} replace />; //TODO: not
+    if (!isSuspended) return <Navigate to={"/"} replace />;
+    
     return (
         <Row className='w-100 m-0 p-0'>
             <Col sm={6} className={clsx(styles.leftSection)} style={{ position: 'relative' }}>

@@ -10,6 +10,7 @@ const ProtectedLayout = () => {
 
     if (isLoading) return <Loader />;
     if (!session) return <Navigate to="/login" replace />;
+    if (session?.is_suspended) return <Navigate to="/suspended" replace />;
 
     return (
         <React.Fragment>
