@@ -1,0 +1,89 @@
+.actionButton {
+  background: transparent !important;
+  border: none;
+  cursor: pointer;
+  padding: 0rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+}
+
+.actionMenu {
+  min-width: 200px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+
+  :global(.p-menuitem) {
+    margin: 0;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+  }
+
+  :global(.p-menuitem-link) {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #333;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  :global(.p-menuitem-icon) {
+    margin-right: 0.5rem;
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .menuItemText {
+    flex: 1;
+  }
+
+  .menuItemIcon {
+    margin-left: 0.5rem;
+  }
+}
+
+.suspendItem {
+  color: #6c757d;
+  white-space: nowrap;
+}
+
+.activateItem {
+  color: #28a745;
+  white-space: nowrap;
+}
+
+.deleteItem {
+  color: #dc3545;
+  white-space: nowrap;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}

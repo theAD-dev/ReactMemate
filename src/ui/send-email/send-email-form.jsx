@@ -11,7 +11,7 @@ import { InputIcon } from 'primereact/inputicon';
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import style from "./send-email.module.scss";
-import { getEmail, getEmailTemplates, getOutgoingEmail } from '../../APIs/email-template';
+import { getEmail, getEmailTemplates, getOutgoingEmail, getSignatureTemplates } from '../../APIs/email-template';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -64,13 +64,14 @@ const renderHeader = () => (
 const header = renderHeader();
 
 const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
+    const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
     const [cc, setCC] = useState([]);
     const [bcc, setBCC] = useState([]);
     const [subject, setSubject] = useState(null);
     const [text, setText] = useState(null);
-
+    const [signature, setSignature] = useState(null);
     const [errors, setErrors] = useState({});
     const [filteredEmails, setFilteredEmails] = useState([]);
     const autoCompleteRef = useRef(null);
@@ -84,6 +85,10 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
     const emailTemplateQuery = useQuery({
         queryKey: ["emailTemplate"],
         queryFn: getEmailTemplates,
+    });
+    const signatureQuery = useQuery({
+        queryKey: ["getSignatureTemplates"],
+        queryFn: getSignatureTemplates,
     });
     const outgoingEmailTemplateQuery = useQuery({
         queryKey: ["getOutgoingEmail"],
@@ -109,7 +114,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
             if (activeTemplateId?.id) setEmailTemplatedId(activeTemplateId?.id);
         }
 
-    }, [emailQuery, outgoingEmailTemplateQuery]);
+    }, [emailTemplateQuery, outgoingEmailTemplateQuery]);
 
     const onSubmit = async () => {
         let errorCount = 0;
@@ -229,16 +234,23 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
             from_email: from,
             to: to?.toString(),
             ...(cc.length > 0 && { cc: cc.toString() }),
-            ...(bcc.length > 0 && { bcc: bcc.toString() })
+            ...(bcc.length > 0 && { bcc: bcc.toString() }),
+            ...(signature && { signature: signature })
         }));
-    }, [subject, text, from, to, cc, bcc]);
+    }, [subject, text, from, to, cc, bcc, signature, setPayload]);
+
+    useEffect(() => {
+        if (signatureQuery?.data) {
+            setSignature(signatureQuery?.data?.find((template) => template.id === profileData.email_signature)?.id);
+        }
+    }, [signatureQuery?.data, profileData.email_signature]);
 
     useEffect(() => {
         setText(emailQuery?.data?.body || "");
         setSubject(emailQuery?.data?.subject);
         setErrors((others) => ({ ...others, subject: false }));
         setErrors((others) => ({ ...others, text: false }));
-    }, [emailQuery?.data?.body]);
+    }, [emailQuery?.data]);
     return (
         <Dialog
             visible={show}
@@ -434,7 +446,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                         <p className="error-message mb-0">{"Subject is required"}</p>
                     )}
                 </Col>
-                <Col sm={12}>
+                <Col sm={12} className='mb-3'>
                     <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
                         <label className={clsx(style.lable)}>Message</label>
                         <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
@@ -454,6 +466,33 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                     {errors?.text && (
                         <p className="error-message mb-0">{"Message is required"}</p>
                     )}
+                </Col>
+                <Col sm={12}>
+                    <div style={{ position: 'relative' }}>
+                        <label className={clsx(style.customLabel)}>Signature</label>
+                        <Dropdown
+                            options={
+                                (signatureQuery &&
+                                    signatureQuery.data?.map((template) => ({
+                                        value: template.id,
+                                        label: `${template.name}`,
+                                    }))) ||
+                                []
+                            }
+                            panelClassName='px880-dropdown-item'
+                            className={clsx(
+                                style.dropdownSelect,
+                                "dropdown-height-fixed w-100"
+                            )}
+                            style={{ height: "46px", paddingLeft: '88px' }}
+                            placeholder="Select signature"
+                            onChange={(e) => {
+                                setSignature(e.value);
+                            }}
+                            value={signature}
+                            loading={signatureQuery?.isFetching}
+                        />
+                    </div>
                 </Col>
             </Row>
         </Dialog>

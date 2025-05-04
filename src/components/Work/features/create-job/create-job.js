@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Calendar3, ClockHistory, CloudUpload, X } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
@@ -17,7 +17,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import style from './create-job.module.scss';
 import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
-import { createNewJob } from '../../../../APIs/jobs-api';
+import { createNewJob, updateJob } from '../../../../APIs/jobs-api';
 import { getManagement } from '../../../../APIs/management-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
@@ -70,7 +70,7 @@ export function getFileIcon(fileType) {
 }
 
 
-const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
+const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
 
     const [templateId, setTemplatedId] = useState("");
@@ -87,8 +87,6 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     const [paymentCycle, setPaymentCycle] = useState("");
 
     const [projectId, setProjectId] = useState("");
-    // const [projectReference, setProjectReference] = useState(null);
-    // const [projectDescription, setProjectDescription] = useState(null);
     const [repeat, setRepeat] = useState('Weekly');
     const [weeks, setWeeks] = useState([]);
     const [months, setMonths] = useState([]);
@@ -106,15 +104,14 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         getInputProps
     } = useDropzone({
         onDrop: acceptedFiles => {
-            console.log('acceptedFiles: ', acceptedFiles);
+            const newFiles = acceptedFiles.map(file => Object.assign(file, {
+                preview: URL.createObjectURL(file),
+                progress: 0,
+            }));
+
             setFiles((prevFiles) => [
                 ...prevFiles,
-                ...acceptedFiles.map((file) =>
-                    Object.assign(file, {
-                        preview: URL.createObjectURL(file),
-                        progress: 0,
-                    })
-                ),
+                ...newFiles,
             ]);
         }
     });
@@ -209,7 +206,9 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
     useEffect(() => {
         if (getTemplateByIDQuery?.data) {
-            setJobReference(getTemplateByIDQuery?.data?.title || "");
+            // Limit job reference to 50 characters when loading from template
+            const templateTitle = getTemplateByIDQuery?.data?.title || "";
+            setJobReference(templateTitle.substring(0, 50));
             setDescription(getTemplateByIDQuery?.data?.description || "");
             setErrors((others) => ({ ...others, jobReference: false }));
             setErrors((others) => ({ ...others, description: false }));
@@ -217,37 +216,77 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
     }, [getTemplateByIDQuery?.data]);
 
     const uploadToS3 = async (file, url) => {
-        return axios.put(url, file, {
-            headers: {
-                "Content-Type": "",
-            },
-            onUploadProgress: (progressEvent) => {
-                const progress = Math.round(
-                    (progressEvent.loaded / progressEvent.total) * 100
-                );
-                setFiles((prevFiles) => {
-                    return prevFiles.map((f) =>
-                        f.name === file.name
-                            ? Object.assign(f, { progress, url })
-                            : f
+        try {
+            const response = await axios.put(url, file, {
+                headers: {
+                    "Content-Type": "",
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = Math.round(
+                        (progressEvent.loaded / progressEvent.total) * 100
                     );
-                });
-            },
-        }).catch((err) => {
-            console.log('err: ', err);
+                    setFiles((prevFiles) => {
+                        return prevFiles.map((f) =>
+                            f.name === file.name
+                                ? Object.assign(f, { progress, url })
+                                : f
+                        );
+                    });
+                },
+            });
+
+            // Mark as successfully uploaded
             setFiles((prevFiles) => {
                 return prevFiles.map((f) =>
                     f.name === file.name
-                        ? Object.assign(f, { progress: 0, url, error: true })
+                        ? Object.assign(f, { progress: 100, uploaded: true })
                         : f
                 );
             });
-        });
+
+            return response;
+        } catch (err) {
+            // Handle specific error types
+            let errorMessage = "Upload failed";
+
+            if (err.response) {
+                if (err.response.status === 403) {
+                    errorMessage = "Permission denied (403 Forbidden)";
+                } else {
+                    errorMessage = `Server error: ${err.response.status}`;
+                }
+            } else if (err.request) {
+                errorMessage = "No response from server";
+            } else {
+                errorMessage = err.message;
+            }
+
+            console.error(`Error uploading ${file.name}:`, errorMessage);
+
+            // Update file with error status but don't stop other uploads
+            setFiles((prevFiles) => {
+                return prevFiles.map((f) =>
+                    f.name === file.name
+                        ? Object.assign(f, {
+                            progress: 0,
+                            error: true,
+                            errorMessage,
+                            uploadFailed: true
+                          })
+                        : f
+                );
+            });
+
+            // Return error object instead of throwing
+            return { error: true, message: errorMessage };
+        }
     };
 
     const attachmentsUpdateInJob = async (id) => {
         let attachments = [];
         for (const file of files) {
+            if (file.error || !file.url) continue;
+
             let obj = {
                 "name": file?.name,
                 "link": file?.url?.split("?")[0] || "",
@@ -277,6 +316,10 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         if (!files.length) return;
         if (!id) return toast.error(`Job id not found`);
 
+        let successCount = 0;
+        let errorCount = 0;
+
+        // Process each file independently
         for (const file of files) {
             try {
                 // Step 1: Get the signed URL from the backend
@@ -291,29 +334,79 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 );
 
                 const { url } = response.data;
+                if (!url) {
+                    console.error(`No URL returned for file: ${file.name}`);
+                    errorCount++;
+                    continue;
+                }
 
                 // Step 2: Upload the file to S3 using the signed URL
-                await uploadToS3(file, url);
+                const result = await uploadToS3(file, url);
+
+                // Check if upload was successful
+                if (result && !result.error) {
+                    successCount++;
+                } else {
+                    errorCount++;
+                }
             } catch (error) {
                 console.error("Error uploading file:", file.name, error);
-                toast.error(`Failed to upload ${file.name}. Please try again.`);
+
+                // Update file with error status
+                setFiles((prevFiles) => {
+                    return prevFiles.map((f) =>
+                        f.name === file.name
+                            ? Object.assign(f, {
+                                progress: 0,
+                                error: true,
+                                errorMessage: error.message || "Failed to get upload URL",
+                                uploadFailed: true
+                              })
+                            : f
+                    );
+                });
+
+                errorCount++;
+                // Continue with next file instead of stopping
             }
+        }
+
+        // Show summary toasts
+        if (successCount > 0) {
+            toast.success(`Successfully uploaded ${successCount} file(s)`);
+        }
+        if (errorCount > 0) {
+            toast.error(`Failed to upload ${errorCount} file(s)`);
         }
     };
 
     const mutation = useMutation({
-        mutationFn: (data) => createNewJob(data),
+        mutationFn: (data) => {
+            if (isEditMode && jobId) {
+                return updateJob(jobId, data);
+            } else {
+                return createNewJob(data);
+            }
+        },
         onSuccess: async (response) => {
-            await fileUploadBySignedURL(response.id);
-            await attachmentsUpdateInJob(response.id);
-            toast.success(`Job created successfully`);
+            const id = isEditMode ? jobId : response.id;
+
+            if (files.length > 0) {
+                await fileUploadBySignedURL(id);
+                await attachmentsUpdateInJob(id);
+            }
+
+            // Call setRefetch to trigger a refresh in the parent component
+            if (jobData) refetch();
+            setRefetch((prev) => !prev);
+
+            toast.success(`Job ${isEditMode ? 'updated' : 'created'} successfully`);
             setVisible(false);
-            setRefetch((refetch) => !refetch);
             reset();
         },
         onError: (error) => {
-            console.error('Error creating expense:', error);
-            toast.error('Failed to create job. Please try again.');
+            console.error(`Error ${isEditMode ? 'updating' : 'creating'} job:`, error);
+            toast.error(`Failed to ${isEditMode ? 'update' : 'create'} job. Please try again.`);
         }
     });
 
@@ -363,7 +456,8 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         // if (!projectId) tempErrors.projectId = true;
         if (projectId) payload.project = projectId;
 
-        payload.project_photos = projectPhotoDeliver;
+        if (projectPhotoDeliver)
+            payload.project_photos = projectPhotoDeliver;
 
         // Batch update errors at the end
         setErrors(tempErrors);
@@ -374,7 +468,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
         }
     };
 
-    const workerDetailsSet = (id) => {
+    const workerDetailsSet = useCallback((id) => {
         let user = mobileuserQuery?.data?.users?.find(user => user.id === id);
         let paymentCycleObj = {
             "7": "WEEK",
@@ -391,15 +485,66 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 name: `${user.first_name} ${user.last_name}`,
             });
         }
-
-    };
+    }, [mobileuserQuery?.data?.users]);
 
     useEffect(() => {
         if (workerId) {
             setUserId(+workerId);
             workerDetailsSet(+workerId);
         }
-    }, [workerId]);
+    }, [workerId, workerDetailsSet]);
+
+    // Populate form with job data when in edit mode
+    useEffect(() => {
+        if (isEditMode && jobData) {
+            // Set job reference and description
+            setJobReference(jobData.short_description || "");
+            setDescription(jobData.long_description || "");
+
+            // Set worker details
+            if (jobData.worker) {
+                setUserId(jobData.worker.id);
+                workerDetailsSet(jobData.worker.id);
+            }
+
+            // Set project
+            if (jobData.project) {
+                setProjectId(jobData.project.id);
+            }
+
+            // Set payment type and cost
+            setType(jobData.type || "2");
+            setCost(jobData.cost || 0.00);
+
+            // Set time type and duration
+            set_time_type(jobData.time_type || "");
+            setDuration(jobData.duration || "");
+
+            // Set dates
+            if (jobData.start_date) {
+                const startDate = new Date(+jobData.start_date * 1000);
+                setStart(startDate);
+            }
+            if (jobData.end_date) {
+                const endDate = new Date(+jobData.end_date * 1000);
+                setEnd(endDate);
+            }
+
+            // Set project photos
+            setProjectPhotoDeliver(jobData.project_photos || "3");
+
+            // Set attachments if available
+            if (jobData.attachments && jobData.attachments.length > 0) {
+                setFiles(jobData.attachments.map(attachment => ({
+                    name: attachment.name,
+                    size: attachment.size,
+                    url: attachment.link,
+                    progress: 100,
+                    isExisting: true
+                })));
+            }
+        }
+    }, [isEditMode, jobData, workerDetailsSet]);
 
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -407,31 +552,36 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
                         <div className="d-flex align-items-center gap-3">
-                            <div style={{ position: 'relative', textAlign: 'start' }}>
-                                <Dropdown
-                                    options={
-                                        (templateQuery &&
-                                            templateQuery.data?.map((template) => ({
-                                                value: template.id,
-                                                label: `${template.name}`,
-                                            }))) ||
-                                        []
-                                    }
-                                    className={clsx(
-                                        style.dropdownSelect,
-                                        "dropdown-height-fixed",
-                                        "outline-none"
-                                    )}
-                                    style={{ height: "44px", width: '606px' }}
-                                    placeholder="Select template"
-                                    onChange={(e) => {
-                                        setTemplatedId(e.value);
-                                    }}
-                                    value={templateId}
-                                    loading={templateQuery?.isFetching}
-                                    filter
-                                />
-                            </div>
+                            {!isEditMode && (
+                                <div style={{ position: 'relative', textAlign: 'start' }}>
+                                    <Dropdown
+                                        options={
+                                            (templateQuery &&
+                                                templateQuery.data?.map((template) => ({
+                                                    value: template.id,
+                                                    label: `${template.name}`,
+                                                }))) ||
+                                            []
+                                        }
+                                        className={clsx(
+                                            style.dropdownSelect,
+                                            "dropdown-height-fixed",
+                                            "outline-none"
+                                        )}
+                                        style={{ height: "44px", width: '606px' }}
+                                        placeholder="Select template"
+                                        onChange={(e) => {
+                                            setTemplatedId(e.value);
+                                        }}
+                                        value={templateId}
+                                        loading={templateQuery?.isFetching}
+                                        filter
+                                    />
+                                </div>
+                            )}
+                            {isEditMode && (
+                                <h2 className="mb-0" style={{ fontSize: '18px', fontWeight: '500' }}>Edit Job #{jobId}</h2>
+                            )}
                         </div>
                         <span>
                             <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -444,7 +594,7 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx('d-flex justify-content-between align-items-center', style.borderBottom)}>
                                 <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Details</h1>
-                                <div className={clsx(style.newJobTag, 'mb-0')}>New Job</div>
+                                <div className={clsx(style.newJobTag, 'mb-0')}>{isEditMode ? 'Edit Job' : 'New Job'}</div>
                             </Card.Body>
                             <Card.Header className={clsx(style.background, 'border-0')}>
                                 <div className='form-group mb-3'>
@@ -458,17 +608,24 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                 value={jobReference}
                                                 className={clsx(style.inputBox, 'w-100')}
                                                 onChange={(e) => {
-                                                    setJobReference(e.target.value);
-                                                    if (e.target.value)
-                                                        setErrors((others) => ({ ...others, jobReference: false }));
+                                                    const value = e.target.value;
+                                                    if (value.length <= 50) {
+                                                        setJobReference(value);
+                                                        if (value)
+                                                            setErrors((others) => ({ ...others, jobReference: false }));
+                                                    }
                                                 }}
+                                                maxLength={50}
                                                 placeholder="Enter job reference"
                                             />
                                         </IconField>
                                     </div>
-                                    {errors?.jobReference && (
-                                        <p className="error-message mb-0">{"Job reference is required"}</p>
-                                    )}
+                                    <div className="d-flex justify-content-between">
+                                        {errors?.jobReference && (
+                                            <p className="error-message mb-0">{"Job reference is required"}</p>
+                                        )}
+                                        <small className="text-muted ms-auto">{jobReference.length}/50</small>
+                                    </div>
                                 </div>
 
                                 <div className='form-group mb-3'>
@@ -1056,6 +1213,10 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                 isOpenProjectPhotoSection && <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>
                                     <div className='d-flex align-items-center gap-4 py-1'>
                                         <div className="flex align-items-center">
+                                            <RadioButton inputId="None" name="projectPhotoDeliver" value="" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver == ''} />
+                                            <label htmlFor="None" className="ms-2 cursor-pointer">None</label>
+                                        </div>
+                                        <div className="flex align-items-center">
                                             <RadioButton inputId="Before and After" name="projectPhotoDeliver" value="1" onChange={(e) => setProjectPhotoDeliver(e.value)} checked={projectPhotoDeliver == '1'} />
                                             <label htmlFor="Before and After" className="ms-2 cursor-pointer">Before and After</label>
                                         </div>
@@ -1107,13 +1268,22 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
                                                         {getFileIcon(file.type)}
                                                         <div className={style.fileNameBox}>
                                                             <p className='mb-0'>{file?.name || ""}</p>
-                                                            <p className='mb-0'>{parseFloat(file?.size / 1024).toFixed(2)} KB - {parseInt(file?.progress) || 0}% uploaded</p>
+                                                            <p className='mb-0'>
+                                                                {parseFloat(file?.size / 1024).toFixed(2)} KB
+                                                                {file.error ?
+                                                                    <span style={{color: "#F04438"}}> - Upload failed</span> :
+                                                                    ` - ${parseInt(file?.progress) || 0}% uploaded`
+                                                                }
+                                                            </p>
+                                                            {file.errorMessage &&
+                                                                <p className='mb-0' style={{color: "#F04438", fontSize: "12px"}}>{file.errorMessage}</p>
+                                                            }
                                                         </div>
                                                         <div className='ms-auto'>
-                                                            <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
-                                                            {/* <div className={style.deleteBox}>
-                                                                <Trash color='#F04438' size={16} />
-                                                            </div> */}
+                                                            {file.error ?
+                                                                <div style={{color: "#F04438", width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center"}}>!</div> :
+                                                                <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
+                                                            }
                                                         </div>
                                                     </div>
                                                 ))
@@ -1129,10 +1299,11 @@ const CreateJob = ({ visible, setVisible, setRefetch, workerId }) => {
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        {/*  onSubmit ()=>fileUploadBySignedURL(128) */}
-                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>Create {mutation?.isPending && <ProgressSpinner
-                            style={{ width: "20px", height: "20px", color: "#fff" }}
-                        />}</Button>
+                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
+                            {isEditMode ? 'Update' : 'Create'} {mutation?.isPending && <ProgressSpinner
+                                style={{ width: "20px", height: "20px", color: "#fff" }}
+                            />}
+                        </Button>
                     </div>
                 </div>
             )}

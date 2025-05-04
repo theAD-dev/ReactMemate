@@ -3,12 +3,15 @@ import { Button, Card, CardBody, Col, Dropdown, Row } from 'react-bootstrap';
 import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Chart as ChartJS, registerables } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import clsx from 'clsx';
 import { Chart } from 'primereact/chart';
+import { getExecutiveStatistics } from './api/statistics-api';
 import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 
 const verticalLinePlugin = {
@@ -47,50 +50,67 @@ ChartJS.register(...registerables, annotationPlugin, verticalLinePlugin);
 const Executive = () => {
     const { trialHeight } = useTrialHeight();
     const [selectedYear, setSelectedYear] = useState(2025);
-    const [selectedMonth, setSelectedMonth] = useState('Mar');
 
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
+    const [total, setTotal] = useState({});
 
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
-
-    // List of months
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    // Determine if a month should be disabled (future months in the current year)
-    const currentDate = new Date('2025-03-03'); // Current date as per system info
-    const currentMonthIndex = currentDate.getMonth(); // 2 (March)
-    const isMonthDisabled = (month, year) => {
-        const monthIndex = months.indexOf(month);
-        return year === currentDate.getFullYear() && monthIndex > currentMonthIndex;
-    };
+    const months = React.useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], []);
 
     const handleYearSelect = (year) => {
         setSelectedYear(year);
-        // Optionally update progress based on year selection
-        // e.g., fetch data and setOuterProgress/setInnerProgress here
     };
 
-    const handleMonthSelect = (month) => {
-        if (!isMonthDisabled(month, selectedYear)) {
-            setSelectedMonth(month);
-        }
-    };
-
+    const executiveQuery = useQuery({
+        queryKey: ["getExecutiveStatistics", selectedYear],
+        queryFn: () => getExecutiveStatistics(selectedYear),
+        enabled: !!selectedYear,
+        retry: 1
+    });
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+        const datasetObj = executiveQuery?.data?.statistics;
+
+        const total_income = [];
+        const operating_profit = [];
+        const cost_of_sale = [];
+        const labor = [];
+        const operating_expense = [];
+
+        for (const key in datasetObj) {
+            total_income.push(parseFloat(datasetObj[key].total_income));
+            operating_profit.push(parseFloat(datasetObj[key].operating_profit));
+            cost_of_sale.push(parseFloat(datasetObj[key].cost_of_sale));
+            labor.push(parseFloat(datasetObj[key].labor));
+            operating_expense.push(parseFloat(datasetObj[key].operating_expense));
+        }
+
+        const total_income_sum = total_income.reduce((sum, val) => sum + val, 0);
+        const operating_profit_sum = operating_profit.reduce((sum, val) => sum + val, 0);
+        const cost_of_sale_sum = cost_of_sale.reduce((sum, val) => sum + val, 0);
+        const labor_sum = labor.reduce((sum, val) => sum + val, 0);
+        const operating_expense_sum = operating_expense.reduce((sum, val) => sum + val, 0);
+
+        setTotal({
+            total_income: total_income_sum,
+            operating_profit: operating_profit_sum,
+            cost_of_sale: cost_of_sale_sum,
+            labor: labor_sum,
+            operating_expense: operating_expense_sum
+        });
 
         const data = {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [
                 {
                     label: 'Operational Profit',
-                    data: [120, 140, 130, 150, 170, 160, 180, 200, 190, 210, 230, 220],
+                    data: operating_profit,
                     fill: true,
                     tension: 0.4,
                     borderColor: '#17B26A',
@@ -98,23 +118,23 @@ const Executive = () => {
                 },
                 {
                     label: 'Cost of Sale',
-                    data: [80, 90, 85, 88, 95, 92, 100, 110, 105, 115, 120, 118],
+                    data: cost_of_sale,
                     fill: true,
                     tension: 0.4,
-                    borderColor: '#5A3FFF4D',
-                    backgroundColor: getGradientCostofSale(),
+                    borderColor: '#F04438',
+                    backgroundColor: getGradientCostOfSale(),
                 },
                 {
                     label: 'Labor',
-                    data: [50, 55, 52, 58, 60, 62, 65, 68, 70, 75, 78, 80],
-                    fill: false,
+                    data: labor,
+                    fill: true,
                     tension: 0.4,
-                    borderColor: '#FF8508',
+                    borderColor: '#F79009',
                     backgroundColor: getGradientLabor(),
                 },
                 {
                     label: 'Operating Expense',
-                    data: [40, 45, 42, 48, 50, 52, 55, 58, 60, 62, 65, 68],
+                    data: operating_expense,
                     fill: true,
                     borderColor: '#1AB2FF',
                     tension: 0.4,
@@ -125,7 +145,7 @@ const Executive = () => {
 
         function getGradientForOperationalProfit() {
             const ctx = document.createElement('canvas').getContext('2d');
-            if (!ctx) return 'rgba(76,175,80,0.2)';
+            if (!ctx) return 'rgba(23, 178, 106, 0.2)';
 
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
             gradient.addColorStop(0.0596, 'rgba(23, 178, 106, 0.20)');
@@ -134,24 +154,24 @@ const Executive = () => {
             return gradient;
         }
 
-        function getGradientCostofSale() {
+        function getGradientCostOfSale() {
             const ctx = document.createElement('canvas').getContext('2d');
-            if (!ctx) return 'rgba(90, 63, 255, 0.3)';
+            if (!ctx) return 'rgba(240, 68, 56, 0.3)';
 
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0.1, 'rgba(90, 63, 255, 0.30)');
-            gradient.addColorStop(1, 'rgba(90, 63, 255, 0.06)');
+            gradient.addColorStop(0.1, 'rgba(240, 68, 56, 0.30)');
+            gradient.addColorStop(1, 'rgba(240, 68, 56, 0.06)');
 
             return gradient;
         }
 
         function getGradientLabor() {
             const ctx = document.createElement('canvas').getContext('2d');
-            if (!ctx) return 'rgba(255,133,8,0.2)';
+            if (!ctx) return 'rgba(247, 144, 9, 0.2)';
 
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(255, 133, 8, 0.20)');
-            gradient.addColorStop(1, 'rgba(255, 133, 8, 0.00)');
+            gradient.addColorStop(0, 'rgba(247, 144, 9, 0.20)');
+            gradient.addColorStop(1, 'rgba(247, 144, 9, 0.00)');
 
             return gradient;
         }
@@ -214,12 +234,11 @@ const Executive = () => {
                     borderWidth: 1,
                     callbacks: {
                         label: function (tooltipItem) {
-                            const datasetIndex = tooltipItem.datasetIndex;
                             const datasetLabel = tooltipItem.dataset.label;
                             const value = tooltipItem.raw;
-                            return `${datasetLabel}: ${value}`;  // Display dataset label and value
+                            return `${datasetLabel}: $${formatAUD(value)}`;  // Display dataset label and value with currency formatting
                         },
-                        footer: function (tooltipItems) {
+                        footer: function () {
                             return `Hover over the chart to see values`; // Optional footer
                         },
                     },
@@ -247,8 +266,16 @@ const Executive = () => {
                     }
                 },
                 y: {
+                    beginAtZero: false, // Allow negative values
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
+                        // Format the tick values to be more readable
+                        callback: function(value) {
+                            if (Math.abs(value) >= 1000) {
+                                return '$' + (value / 1000).toFixed(1) + 'k';
+                            }
+                            return '$' + value;
+                        }
                     },
                     grid: {
                         color: surfaceBorder
@@ -259,6 +286,11 @@ const Executive = () => {
 
         setChartData(data);
         setChartOptions(options);
+    }, [executiveQuery?.data]);
+
+    useEffect(() => {
+        const currentDate = new Date();
+        setSelectedYear(currentDate.getUTCFullYear());
     }, []);
 
     return (
@@ -268,7 +300,7 @@ const Executive = () => {
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 {/* Current page - Executive */}
-                <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: "#9E77ED" }}>Executive</span>
                 </Link>
@@ -320,16 +352,6 @@ const Executive = () => {
                 </Dropdown>
 
                 <div className='d-flex justify-content-center gap-0' style={{ marginTop: '16px', borderBottom: "1px solid var(--Gray-200, #EAECF0)", background: '#F8F9FC' }}>
-                    {months.map((month) => (
-                        <Button
-                            key={month}
-                            className={clsx(style.monthName, { [style.activeButton]: month === selectedMonth })}
-                            disabled={isMonthDisabled(month, selectedYear)}
-                            onClick={() => handleMonthSelect(month)}
-                        >
-                            {month}
-                        </Button>
-                    ))}
                 </div>
 
                 <Row>
@@ -349,7 +371,7 @@ const Executive = () => {
                                 <span className={style.title}>Total Income</span>
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$10,206.20</span>
+                                <span className={style.money}>${formatAUD(total.total_income || 0)}</span>
                                 <Button className={clsx('text-button p-0', style.disabledLink)}>View Invoices</Button>
                             </div>
                         </div>
@@ -361,7 +383,7 @@ const Executive = () => {
                                 <span className={style.title}>Operational Profit</span>
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$3,256.21</span>
+                                <span className={style.money}>${formatAUD(total.operating_profit || 0)}</span>
                             </div>
                         </div>
                         <div className={clsx(style.rightBoxDiv, 'w-100 mb-3')} style={{ background: '#FFFBFA' }}>
@@ -372,7 +394,7 @@ const Executive = () => {
                                 <span className={style.title}>Cost of Sale</span>
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$ 5,594.31</span>
+                                <span className={style.money}>${formatAUD(total.cost_of_sale || 0)}</span>
                                 <Button className={clsx('text-button p-0', style.disabledLink)}>View Sales</Button>
                             </div>
                         </div>
@@ -384,7 +406,7 @@ const Executive = () => {
                                 <span className={style.title}>Labor</span>
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$ 1,754.46</span>
+                                <span className={style.money}>${formatAUD(total.labor || 0)}</span>
                                 <Button className={clsx('text-button p-0', style.disabledLink)}>View People</Button>
                             </div>
                         </div>
@@ -396,7 +418,7 @@ const Executive = () => {
                                 <span className={style.title}>Operating Expense</span>
                             </div>
                             <div className='d-flex justify-content-between align-items-center'>
-                                <span className={style.money}>$ 2,685.62</span>
+                                <span className={style.money}>${formatAUD(total.operating_expense || 0)}</span>
                                 <Button className={clsx('text-button p-0', style.disabledLink)}>View Expenses</Button>
                             </div>
                         </div>

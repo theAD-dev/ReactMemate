@@ -218,6 +218,14 @@ tr.p-datatable-emptymessage td {
   display: block;
 }
 
+.px880-dropdown-item.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  white-space: nowrap;
+  max-width: 890px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
 .p-tieredmenu .p-menuitem-content {
   background: transparent;
 }

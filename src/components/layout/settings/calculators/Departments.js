@@ -17,13 +17,10 @@ import style from './calculators.module.scss';
 import DeleteConfirmationModal from './delete-confirmation-modal';
 import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { formatAUD } from '../../../../shared/lib/format-aud';
-import { formatMoney } from '../../../Business/shared/utils/helper';
-import Sidebar from '../Sidebar';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
-    const [activeTab, setActiveTab] = useState('departments');
     const [createCalculatorId, setCreateCalculatorId] = useState(null);
     const [editDepartment, setEditDepartment] = useState({ id: null, name: null });
     const [subDepartment, setSubDepartment] = useState(null);
@@ -84,116 +81,109 @@ const Departments = () => {
             <Helmet>
                 <title>MeMate - Departments</title>
             </Helmet>
-            <div className='settings-wrap'>
-                <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
-                        <div className='headSticky'>
-                            <h1>Calculators</h1>
+            <div className='headSticky'>
+                <h1>Calculators</h1>
+            </div>
+            <div className={clsx(style.wraper, `content_wrap_main`)}>
+                <div className='content_wrapper'>
+                    <div className="listwrapper">
+                        <div className={`topHeadStyle pb-4 ${style.topHeadBorder}`}>
+                            <h2>Departments</h2>
+                            <button onClick={() => setVisible(true)} className={"outline-button"}>Create Department <PlusLg color="#000000" size={20} className='mb-1 ms-1' /></button>
                         </div>
-                        <div className={clsx(style.wraper, `content_wrap_main`)}>
-                            <div className='content_wrapper'>
-                                <div className="listwrapper">
-                                    <div className={`topHeadStyle pb-4 ${style.topHeadBorder}`}>
-                                        <h2>Departments</h2>
-                                        <button onClick={() => setVisible(true)}>Create Department <PlusLg color="#000000" size={20} className='mb-1 ms-1' /></button>
-                                    </div>
-                                    <div>
-                                        <Accordion
-                                            activeIndex={AccordionActiveTab}
-                                            onTabChange={(e) => setAccordionActiveTab(e.index)}
-                                            expandIcon={<div className='expandIcon'>
-                                                <ChevronUp size={16} color='#344054' />
-                                            </div>}
-                                            collapseIcon={<div className='collapseIcon'>
-                                                <ChevronDown size={16} color='#106B99' />
-                                            </div>}
-                                        >
-                                            {
-                                                departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => {
-                                                    const subDepartment = department?.subindexes?.filter((data) => !data?.deleted);
-                                                    return (
-                                                        <AccordionTab
-                                                            className={clsx(style.accorHeadbox, 'main-accordion-header')}
-                                                            key={department.id}
-                                                            header={
-                                                                <span className="d-flex align-items-center justify-content-between">
-                                                                    <div className='d-flex align-items-center'>
-                                                                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
-                                                                        <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
-                                                                            <PencilSquare color="#106B99" size={16} />
+                        <div>
+                            <Accordion
+                                activeIndex={AccordionActiveTab}
+                                onTabChange={(e) => setAccordionActiveTab(e.index)}
+                                expandIcon={<div className='expandIcon'>
+                                    <ChevronUp size={16} color='#344054' />
+                                </div>}
+                                collapseIcon={<div className='collapseIcon'>
+                                    <ChevronDown size={16} color='#106B99' />
+                                </div>}
+                            >
+                                {
+                                    departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => {
+                                        const subDepartment = department?.subindexes?.filter((data) => !data?.deleted);
+                                        return (
+                                            <AccordionTab
+                                                className={clsx(style.accorHeadbox, 'main-accordion-header')}
+                                                key={department.id}
+                                                header={
+                                                    <span className="d-flex align-items-center justify-content-between">
+                                                        <div className='d-flex align-items-center'>
+                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
+                                                            <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
+                                                                <PencilSquare color="#106B99" size={16} />
+                                                            </div>
+                                                        </div>
+                                                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
+                                                            <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
+                                                            <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
+                                                        </div>
+                                                    </span>
+                                                }
+                                            >
+                                                <Accordion
+                                                    activeIndex={AccordionActiveTab2}
+                                                    onTabChange={(e) => setAccordionActiveTab2(e.index)}
+                                                    className='innnerAccordian'
+                                                    expandIcon={<div className={clsx(style.innerExpandIcon)}>
+                                                        <ChevronUp size={16} color='#344054' />
+                                                    </div>}
+                                                    collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
+                                                        <ChevronDown size={16} color='#106B99' />
+                                                    </div>}
+                                                    onTabOpen={(e) => {
+                                                        const subindexId = subDepartment[e.index].id;
+                                                        getCalculator(subindexId);
+                                                    }}
+                                                    onTabClose={() => {
+                                                        return false;
+                                                    }}
+                                                >
+                                                    {
+                                                        subDepartment?.map((subindex, i) => (
+                                                            <AccordionTab
+                                                                className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
+                                                                key={subindex.id}
+                                                                header={(
+                                                                    <span className="d-flex align-items-center justify-content-between">
+                                                                        <div className='d-flex align-items-center'>
+                                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
+                                                                            <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
+                                                                                <PencilSquare color="#106B99" size={16} />
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
-                                                                        <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
-                                                                        <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
-                                                                    </div>
-                                                                </span>
-                                                            }
-                                                        >
-                                                            <Accordion
-                                                                activeIndex={AccordionActiveTab2}
-                                                                onTabChange={(e) => setAccordionActiveTab2(e.index)}
-                                                                className='innnerAccordian'
-                                                                expandIcon={<div className={clsx(style.innerExpandIcon)}>
-                                                                    <ChevronUp size={16} color='#344054' />
-                                                                </div>}
-                                                                collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
-                                                                    <ChevronDown size={16} color='#106B99' />
-                                                                </div>}
-                                                                onTabOpen={(e) => {
-                                                                    const subindexId = subDepartment[e.index].id;
-                                                                    getCalculator(subindexId);
-                                                                }}
-                                                                onTabClose={() => {
-                                                                    return false;
-                                                                }}
+
+                                                                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
+                                                                            <DeleteConfirmationModal title={"Sub Department"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
+                                                                            <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
+                                                                        </div>
+                                                                    </span>
+                                                                )}
                                                             >
                                                                 {
-                                                                    subDepartment?.map((subindex, i) => (
-                                                                        <AccordionTab
-                                                                            className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
-                                                                            key={subindex.id}
-                                                                            header={(
-                                                                                <span className="d-flex align-items-center justify-content-between">
-                                                                                    <div className='d-flex align-items-center'>
-                                                                                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
-                                                                                        <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
-                                                                                            <PencilSquare color="#106B99" size={16} />
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
-                                                                                        <DeleteConfirmationModal title={"Sub Department"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
-                                                                                        <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
-                                                                                    </div>
-                                                                                </span>
-                                                                            )}
-                                                                        >
-                                                                            {
-                                                                                activeCalculations[subindex.id] ? (
-                                                                                    <ViewCalculators index={subindex.id}
-                                                                                        isNewCreate={createCalculatorId === subindex.id}
-                                                                                        cancelCreateCalculator={setCreateCalculatorId}
-                                                                                        refetch={getCalculator}
-                                                                                        calculators={activeCalculations[subindex.id]}
-                                                                                        name={subindex.name}
-                                                                                    />
-                                                                                ) : <LoadingCalculator />
-                                                                            }
-
-                                                                        </AccordionTab>
-                                                                    ))
+                                                                    activeCalculations[subindex.id] ? (
+                                                                        <ViewCalculators index={subindex.id}
+                                                                            isNewCreate={createCalculatorId === subindex.id}
+                                                                            cancelCreateCalculator={setCreateCalculatorId}
+                                                                            refetch={getCalculator}
+                                                                            calculators={activeCalculations[subindex.id]}
+                                                                            name={subindex.name}
+                                                                        />
+                                                                    ) : <LoadingCalculator />
                                                                 }
-                                                            </Accordion>
-                                                        </AccordionTab>
-                                                    );
-                                                })
-                                            }
-                                        </Accordion>
-                                    </div>
-                                </div>
-                            </div>
+
+                                                            </AccordionTab>
+                                                        ))
+                                                    }
+                                                </Accordion>
+                                            </AccordionTab>
+                                        );
+                                    })
+                                }
+                            </Accordion>
                         </div>
                     </div>
                 </div>
@@ -516,7 +506,7 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
         profit_type: "MRG", // Default profit type
         profit_type_value: 0,
         cost: undefined,
-        quantity: undefined,
+        quantity: 1,
         discount: 0,
         total: 0,
         description: "",
@@ -746,17 +736,17 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
                     <li>
                         <div className={`${style.boxcal}`}>
                             <h6>Budget</h6>
-                            <strong>{formatAUD(+summary.budget)}</strong>
+                            <strong>${formatAUD(+summary.budget)}</strong>
                         </div>
                         <div className={`${style.profit} ${style.boxcal}`}>
                             <h6>Operational Profit</h6>
-                            <strong>{formatAUD(+summary.operationalProfit)}</strong>
+                            <strong>${formatAUD(+summary.operationalProfit)}</strong>
                         </div>
                     </li>
                     <li>
                         <div className={`${style.boxcal}`}>
                             <h6>Total</h6>
-                            <strong>{formatAUD(+summary.total)}</strong>
+                            <strong>${formatAUD(+summary.total)}</strong>
                         </div>
                     </li>
                 </ul>

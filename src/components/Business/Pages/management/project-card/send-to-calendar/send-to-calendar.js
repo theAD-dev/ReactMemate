@@ -1,171 +1,304 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { Calendar3 } from 'react-bootstrap-icons';
-import { addDays, format } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import clsx from 'clsx';
+import { format } from 'date-fns';
+import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import styles from './send-to-calendar.module.scss';
+import { getClientById } from '../../../../../../APIs/ClientsApi';
+import { getOutgoingEmail } from '../../../../../../APIs/email-template';
 import CalendarIcon from "../../../../../../assets/images/icon/calendar.svg";
 
-/**
- * Component for sending project events to calendar
- * @param {Object} props - Component props
- * @param {string} props.projectId - The ID of the project
- * @param {Object} props.project - The project data
- * @param {Function} props.projectCardData - Function to refresh project card data
- */
 const SendToCalendar = ({ projectId, project, projectCardData }) => {
+  const autoCompleteRef = useRef(null);
+  const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+  const accessToken = localStorage.getItem("access_token");
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [eventTitle, setEventTitle] = useState('');
   const [eventDescription, setEventDescription] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(addDays(new Date(), 1));
-  const [calendarType, setCalendarType] = useState('google');
+  const [eventLocation, setEventLocation] = useState('');
+  const [meetLink, setMeetLink] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [guests, setGuests] = useState([]);
+  const [from, setFrom] = useState('');
+  const [filteredEmails, setFilteredEmails] = useState([]);
 
-  const handleClose = () => setShow(false);
+  const clientQuery = useQuery({
+    queryKey: ['getClientById', project?.client],
+    queryFn: () => getClientById(project?.client),
+    enabled: !!project?.client && !!show,
+    retry: 1,
+  });
+
+  const outgoingEmailTemplateQuery = useQuery({
+    queryKey: ["getOutgoingEmail"],
+    queryFn: getOutgoingEmail,
+    enabled: !!show,
+  });
+
+  const handleClose = () => {
+    setShow(false);
+    setGuests([]);
+    setEventTitle('');
+    setEventDescription('');
+    setEventLocation('');
+    setStartDate(null);
+    setEndDate(null);
+    setMeetLink('');
+    setFrom('');
+  };
+
   const handleShow = () => {
-    // Set default event title based on project data
     if (project?.reference) {
-      setEventTitle(`Project: ${project.reference}`);
+      setEventTitle(`${project.reference}`);
     } else if (project?.number) {
       setEventTitle(`Project #${project.number}`);
     } else {
-      setEventTitle('New Project Event');
+      setEventTitle('Project Event');
     }
 
-    // Set default description
-    setEventDescription(`Project details for ${project?.reference || `#${project?.number}` || 'this project'}`);
+    setEventDescription(project?.description || '');
+
+    if (project?.booking_start) {
+      setStartDate(new Date(project.booking_start * 1000));
+    }
+
+    if (project?.booking_end) {
+      setEndDate(new Date(project.booking_end * 1000));
+    }
 
     setShow(true);
   };
 
-  /**
-   * Generate Google Calendar URL
-   * @returns {string} Google Calendar URL with event parameters
-   */
-  const generateGoogleCalendarUrl = () => {
-    const formatDate = (date) => {
-      return format(date, "yyyyMMdd'T'HHmmss'Z'");
+  useEffect(() => {
+    if (project?.booking_start && !startDate) {
+      setStartDate(new Date(project.booking_start * 1000));
+    }
+
+    if (project?.booking_end && !endDate) {
+      setEndDate(new Date(project.booking_end * 1000));
+    }
+  }, [project, startDate, endDate]);
+
+
+  const generateICalContent = (attendees = [], organizerEmail = profileData?.email || 'no-reply@memate.com.au') => {
+    const formatDate = (date) => format(date, "yyyyMMdd'T'HHmmss'Z'");
+    const now = new Date();
+    const uid = `${Date.now()}@memate.com.au`;
+    const dtStamp = formatDate(now);
+
+    // Determine meeting platform type based on URL pattern
+    const getMeetingPlatform = (url) => {
+      if (!url) return null;
+      if (url.includes('zoom.us')) return 'Zoom';
+      if (url.includes('teams.microsoft.com')) return 'Microsoft Teams';
+      if (url.includes('meet.google.com')) return 'Google Meet';
+      if (url.includes('webex.com')) return 'Cisco Webex';
+      return 'Online Meeting'; // Generic fallback
     };
 
-    const baseUrl = 'https://calendar.google.com/calendar/render';
-    const action = 'action=TEMPLATE';
-    const text = `text=${encodeURIComponent(eventTitle)}`;
-    const dates = `dates=${formatDate(startDate)}/${formatDate(endDate)}`;
-    const details = `details=${encodeURIComponent(eventDescription)}`;
+    // Create description with meeting link if provided
+    let formattedDescription = eventDescription || "Meeting Invitation";
+    let htmlDescription = `<html><body><p>${eventDescription || "Meeting Invitation"}</p>`;
 
-    return `${baseUrl}?${action}&${text}&${dates}&${details}`;
+    if (meetLink) {
+      const platform = getMeetingPlatform(meetLink);
+      formattedDescription += `\n\n${platform} Link: ${meetLink}`;
+      htmlDescription += `<p><strong>${platform} Link:</strong> <a href="${meetLink}">${meetLink}</a></p>`;
+    }
+
+    htmlDescription += `</body></html>`;
+    htmlDescription = htmlDescription.replace(/\n/g, '').replace(/\s+/g, ' ');
+
+    const calendarContent = [
+      "BEGIN:VCALENDAR",
+      "PRODID:-//MeMate//Calendar//EN",
+      "VERSION:2.0",
+      "CALSCALE:GREGORIAN",
+      "METHOD:REQUEST",
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${dtStamp}`,
+      `SUMMARY:${eventTitle}`,
+      `DESCRIPTION:${formattedDescription.replace(/\n/g, '\\n')}`,
+      `LOCATION:${eventLocation || meetLink || ''}`,
+      meetLink ? `URL:${meetLink}` : '',
+      `DTSTART:${formatDate(startDate)}`,
+      `DTEND:${formatDate(endDate)}`,
+      `ORGANIZER;CN=${profileData?.first_name && profileData?.last_name ?
+        `${profileData.first_name} ${profileData.last_name}` :
+        organizerEmail.split('@')[0] || 'MeMate'}:mailto:${organizerEmail}`
+    ].filter(line => line !== ''); // Remove empty lines
+
+    if (attendees && attendees.length > 0) {
+      attendees.forEach(email => {
+        let name = email.split('@')[0].replace(/[.]/g, ' ');
+        name = name.split(' ').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+
+        calendarContent.push(`ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=${name}:mailto:${email}`);
+      });
+    }
+
+    calendarContent.push(
+      "STATUS:CONFIRMED",
+      "SEQUENCE:0",
+      "TRANSP:OPAQUE",
+      "BEGIN:VALARM",
+      "TRIGGER:-PT15M",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Reminder",
+      "END:VALARM",
+      "X-MICROSOFT-CDO-BUSYSTATUS:BUSY",
+      "X-MICROSOFT-CDO-IMPORTANCE:1",
+      "X-MICROSOFT-DISALLOW-COUNTER:FALSE",
+      "X-MICROSOFT-DONOTFORWARDMEETING:FALSE",
+      "X-MICROSOFT-CDO-ALLDAYEVENT:FALSE"
+    );
+
+    // Add platform-specific properties
+    if (meetLink) {
+      if (meetLink.includes('meet.google.com')) {
+        calendarContent.push(`X-GOOGLE-CONFERENCE:${meetLink}`);
+      } else if (meetLink.includes('teams.microsoft.com')) {
+        calendarContent.push(`X-MICROSOFT-SKYPETEAMSMEETINGURL:${meetLink}`);
+      }
+    }
+
+    // Add HTML description for better email client compatibility
+    calendarContent.push(`X-ALT-DESC;FMTTYPE=text/html:${htmlDescription}`);
+
+    calendarContent.push(
+      "END:VEVENT",
+      "END:VCALENDAR"
+    );
+
+    return calendarContent.join("\r\n");
   };
 
-  /**
-   * Generate Outlook Calendar URL
-   * @returns {string} Outlook Calendar URL with event parameters
-   */
-  const generateOutlookCalendarUrl = () => {
-    const formatDate = (date) => {
-      return format(date, "yyyy-MM-dd'T'HH:mm:ss");
-    };
+  const validateForm = () => {
+    if (!eventTitle.trim()) {
+      toast.error('Event title is required');
+      return false;
+    }
 
-    const baseUrl = 'https://outlook.office.com/calendar/0/deeplink/compose';
-    const subject = `subject=${encodeURIComponent(eventTitle)}`;
-    const startDateTime = `startdt=${formatDate(startDate)}`;
-    const endDateTime = `enddt=${formatDate(endDate)}`;
-    const body = `body=${encodeURIComponent(eventDescription)}`;
+    if (!startDate || !endDate) {
+      toast.error('Start and end dates are required');
+      return false;
+    }
 
-    return `${baseUrl}?${subject}&${startDateTime}&${endDateTime}&${body}`;
+    if (startDate > endDate) {
+      toast.error('End date must be after start date');
+      return false;
+    }
+
+    if (guests.length === 0) {
+      toast.error('At least one guest is required');
+      return false;
+    }
+
+    if (!from) {
+      toast.error('From email is required');
+      return false;
+    }
+
+    return true;
   };
 
-  /**
-   * Generate iCalendar file content
-   * @returns {string} iCalendar file content
-   */
-  const generateICalContent = () => {
-    const formatDate = (date) => {
-      return format(date, "yyyyMMdd'T'HHmmss'Z'");
-    };
-
-    return `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//MeMate//Calendar//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-SUMMARY:${eventTitle}
-DTSTART:${formatDate(startDate)}
-DTEND:${formatDate(endDate)}
-DESCRIPTION:${eventDescription}
-STATUS:CONFIRMED
-SEQUENCE:0
-END:VEVENT
-END:VCALENDAR`;
-  };
-
-  /**
-   * Download iCalendar file
-   */
-  const downloadICalFile = () => {
-    const icalContent = generateICalContent();
-    const blob = new Blob([icalContent], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${eventTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  /**
-   * Handle form submission
-   * @param {Event} e - Form submit event
-   */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Validate form
-      if (!eventTitle.trim()) {
-        toast.error('Event title is required');
+      if (!validateForm()) {
         setIsLoading(false);
         return;
       }
 
-      if (startDate > endDate) {
-        toast.error('End date must be after start date');
-        setIsLoading(false);
-        return;
-      }
+      const calendarContent = generateICalContent(guests, from);
+      const fileName = `invite.ics`;
+      const icsFile = new File([calendarContent], fileName, { type: 'text/calendar' });
+      const formData = new FormData();
 
-      // Handle different calendar types
-      if (calendarType === 'google') {
-        // Open Google Calendar in a new tab
-        window.open(generateGoogleCalendarUrl(), '_blank');
-        toast.success('Event sent to Google Calendar');
-      } else if (calendarType === 'outlook') {
-        // Open Outlook Calendar in a new tab
-        window.open(generateOutlookCalendarUrl(), '_blank');
-        toast.success('Event sent to Outlook Calendar');
-      } else if (calendarType === 'ical') {
-        // Download iCal file
-        downloadICalFile();
-        toast.success('iCalendar file downloaded');
-      }
+      formData.append('subject', `Invitation: ${eventTitle}`);
+      formData.append('email_body', eventDescription);
+      formData.append('from_email', from);
+      formData.append('to', guests.toString());
+      formData.append('attachments', icsFile);
 
-      // Close modal and reset form
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_API_URL}/custom/email/${projectId}/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success('Calendar event created successfully!');
       handleClose();
+      projectCardData(projectId);
     } catch (error) {
-      console.error('Error sending to calendar:', error);
-      toast.error('Failed to send event to calendar. Please try again.');
+      console.error('Error creating calendar event:', error);
+      toast.error('Failed to create calendar event. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const search = (event) => {
+    const query = event?.query?.toLowerCase() || '';
+
+    const contactPersons = clientQuery.data?.contact_persons || [];
+    let emails = contactPersons.map((data) => (data.email));
+    emails = emails.filter((email) => !guests.includes(email));
+
+    emails = emails.filter((email) =>
+      email.toLowerCase().includes(query)
+    );
+
+    setFilteredEmails(emails);
+  };
+
+  const onFocus = () => {
+    search();
+    if (autoCompleteRef.current) autoCompleteRef.current.show();
+  };
+
+  const onInputChange = (e) => {
+    const currentValue = e.target.value;
+    if (currentValue.includes(',') || e.key === 'Enter') {
+      const emails = currentValue.split(/[\s,]+/).filter((email) => email);
+      setGuests((prev) => [...new Set([...prev, ...emails])]);
+      e.target.value = '';
+    }
+  };
+
+  useEffect(() => {
+    if (outgoingEmailTemplateQuery?.data) {
+      if (outgoingEmailTemplateQuery?.data?.outgoing_email && outgoingEmailTemplateQuery?.data?.outgoing_email_verified)
+        setFrom(outgoingEmailTemplateQuery?.data?.outgoing_email);
+      else
+        setFrom('no-reply@memate.com.au');
+    }
+  }, [outgoingEmailTemplateQuery]);
+
+  useEffect(() => {
+    if (profileData?.email && show) {
+      setGuests([profileData?.email]);
+    }
+  }, [profileData?.email, show]);
+
   return (
     <>
-      <Button className={`calenBut calenActive ${styles.calendarButton}`} onClick={handleShow}>
+      <Button disabled={!project?.booking_start} className={`calenBut calenActive ${styles.calendarButton}`} onClick={handleShow}>
         Send to Calendar <img src={CalendarIcon} alt="Calendar" />
       </Button>
 
@@ -175,45 +308,6 @@ END:VCALENDAR`;
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>Calendar Type</Form.Label>
-              <div className={styles.calendarTypeRadio}>
-                <label className={calendarType === 'google' ? styles.selected : ''}>
-                  <Form.Check
-                    type="radio"
-                    name="calendarType"
-                    id="google-calendar"
-                    checked={calendarType === 'google'}
-                    onChange={() => setCalendarType('google')}
-                    className="me-2"
-                  />
-                  Google Calendar
-                </label>
-                <label className={calendarType === 'outlook' ? styles.selected : ''}>
-                  <Form.Check
-                    type="radio"
-                    name="calendarType"
-                    id="outlook-calendar"
-                    checked={calendarType === 'outlook'}
-                    onChange={() => setCalendarType('outlook')}
-                    className="me-2"
-                  />
-                  Outlook
-                </label>
-                <label className={calendarType === 'ical' ? styles.selected : ''}>
-                  <Form.Check
-                    type="radio"
-                    name="calendarType"
-                    id="ical-calendar"
-                    checked={calendarType === 'ical'}
-                    onChange={() => setCalendarType('ical')}
-                    className="me-2"
-                  />
-                  iCalendar (.ics)
-                </label>
-              </div>
-            </Form.Group>
-
             <Form.Group className="mb-3">
               <Form.Label className={styles.formLabel}>Event Title</Form.Label>
               <Form.Control
@@ -234,19 +328,15 @@ END:VCALENDAR`;
                     value={startDate}
                     onChange={(e) => {
                       setStartDate(e.value);
-                      // Auto-close is handled by the onSelect and onClear props
                     }}
                     onSelect={() => {
-                      // Auto-close after selecting a date
-                      document.body.click(); // This will close the calendar
+                      document.body.click();
                     }}
                     onClear={() => {
-                      // Auto-close after clearing the date
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure the clear happens first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     onTodayButtonClick={() => {
-                      // Auto-close after clicking Today button
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure today is set first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     showTime
                     showIcon
@@ -255,7 +345,7 @@ END:VCALENDAR`;
                     clearButtonClassName="p-button-sm p-button-outlined p-button-danger"
                     icon={<Calendar3 color='#667085' size={20} />}
                     className="w-100 border rounded"
-                    appendTo={document.body} /* This ensures the calendar panel is appended to the document body */
+                    appendTo={document.body}
                     style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                     panelClassName="calendar-panel-higher-z"
                   />
@@ -268,19 +358,15 @@ END:VCALENDAR`;
                     value={endDate}
                     onChange={(e) => {
                       setEndDate(e.value);
-                      // Auto-close is handled by the onSelect and onClear props
                     }}
                     onSelect={() => {
-                      // Auto-close after selecting a date
-                      document.body.click(); // This will close the calendar
+                      document.body.click();
                     }}
                     onClear={() => {
-                      // Auto-close after clearing the date
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure the clear happens first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     onTodayButtonClick={() => {
-                      // Auto-close after clicking Today button
-                      setTimeout(() => document.body.click(), 100); // Slight delay to ensure today is set first
+                      setTimeout(() => document.body.click(), 100);
                     }}
                     showTime
                     showIcon
@@ -289,13 +375,61 @@ END:VCALENDAR`;
                     clearButtonClassName="p-button-sm p-button-outlined p-button-danger"
                     icon={<Calendar3 color='#667085' size={20} />}
                     className="w-100 border rounded"
-                    appendTo={document.body} /* This ensures the calendar panel is appended to the document body */
+                    appendTo={document.body}
                     style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                     panelClassName="calendar-panel-higher-z"
                   />
                 </Form.Group>
               </Col>
             </Row>
+
+            <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Add Guests</Form.Label>
+              <AutoComplete
+                ref={autoCompleteRef}
+                value={guests}
+                completeMethod={search}
+                onChange={(e) => {
+                  setGuests(e.value);
+                }}
+                multiple
+                suggestions={filteredEmails}
+                onClick={onFocus}
+                onFocus={onFocus}
+                onKeyUp={onInputChange}
+                onBlur={(e) => {
+                  const currentValue = e.target.value.trim();
+                  if (currentValue) {
+                    setGuests((prev) => [...new Set([...prev, currentValue])]);
+                    e.target.value = '';
+                  }
+                }}
+                className={clsx(styles.AutoComplete, "w-100")}
+                placeholder="Add guests"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Location</Form.Label>
+              <Form.Control
+                type="text"
+                className='border outline-none'
+                placeholder="Enter physical location (optional)"
+                value={eventLocation}
+                onChange={(e) => setEventLocation(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label className={styles.formLabel}>Meeting Link</Form.Label>
+              <Form.Control
+                type="text"
+                className='border outline-none'
+                placeholder="Enter meeting link (Zoom, Teams, etc.)"
+                value={meetLink}
+                onChange={(e) => setMeetLink(e.target.value)}
+              />
+            </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label className={styles.formLabel}>Description</Form.Label>
@@ -320,7 +454,7 @@ END:VCALENDAR`;
                     Sending...
                   </>
                 ) : (
-                  'Send to Calendar'
+                  'Send via Email'
                 )}
               </Button>
             </div>

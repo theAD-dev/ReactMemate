@@ -11,6 +11,7 @@ import ViewAttachements from './view-attachements';
 import style from './view-job.module.scss';
 import { getJob } from '../../../../APIs/jobs-api';
 import { formatDate } from '../../Pages/jobs/jobs-table';
+import CreateJob from '../create-job/create-job';
 
 
 
@@ -37,21 +38,29 @@ const statusBody = (status) => {
     }
 };
 
-const ViewJob = ({ visible, setVisible, jobId }) => {
+const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
     const [show, setShow] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+
     let paymentCycleObj = {
         "7": "WEEK",
         "14": "TWO_WEEKS",
         "28": "FOUR_WEEKS",
         "1": "MONTH"
     };
+
     const jobQuery = useQuery({
         queryKey: ["jobRead", jobId],
         queryFn: () => getJob(jobId),
         enabled: !!jobId,
         retry: 1,
     });
+
     const job = jobQuery?.data;
+
+    const handleEditClick = () => {
+        setEditMode(true);
+    };
 
     return (
         <>
@@ -305,7 +314,7 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
 
                         <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                             <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                            <Button type='button' onClick={() => { }} className='solid-button' style={{ minWidth: '75px' }}>Create {false && <ProgressSpinner
+                            <Button type='button' onClick={handleEditClick} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
                             />}</Button>
                         </div>
@@ -313,6 +322,19 @@ const ViewJob = ({ visible, setVisible, jobId }) => {
                 )}
             ></Sidebar>
             <ViewAttachements attachments={job?.attachments || []} show={show} setShow={setShow} />
+
+            {/* Edit Job Modal */}
+            {editMode && (
+                <CreateJob
+                    visible={editMode}
+                    setVisible={setEditMode}
+                    setRefetch={setRefetch}
+                    isEditMode={true}
+                    jobData={job}
+                    jobId={jobId}
+                    refetch={() => jobQuery.refetch()}
+                />
+            )}
         </>
     );
 };

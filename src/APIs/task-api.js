@@ -47,7 +47,16 @@ export const updateTask = async (id, data) => {
 };
 
 export const getUserList = async () => {
-    const endpoint = `/references/all-users/`;
+    const endpoint = `/desktop-users/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const getMobileUserList = async () => {
+    const endpoint = `/team/mobile-users/`;
     const options = {
         method: 'GET',
     };

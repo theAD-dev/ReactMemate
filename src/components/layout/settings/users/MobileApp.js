@@ -17,7 +17,6 @@ import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../..
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
 import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
-import Sidebar from '../Sidebar';
 
 
 const MobileApp = React.memo(() => {
@@ -25,7 +24,6 @@ const MobileApp = React.memo(() => {
     const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const hasWorkSubscription = profileDataLocal?.has_work_subscription || false;
 
-    const [activeTab, setActiveTab] = useState('desktop');
     const [visible, setVisible] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(false);
 
@@ -132,57 +130,54 @@ const MobileApp = React.memo(() => {
             <Helmet>
                 <title>MeMate - Mobile App Users</title>
             </Helmet>
-            <div className={`settings-wrap ${style.userSettingPage}`} id={`${style.appSettingPage}`}>
-                <div className="settings-wrapper">
-                    <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                    <div className="settings-content setModalelBoots">
-                        <div className='headSticky'>
-                            <h1>Users</h1>
-                            <div className={`contentMenuTab ${style.contentMenuTab}`}>
-                                <ul>
-                                    <li><Link to="/settings/users/desktop">Desktop</Link></li>
-                                    <li className='menuActive'><Link to="/settings/users/mobile-app">Mobile App</Link></li>
-                                </ul>
-                                {
-                                    hasWorkSubscription &&
-                                    <Button
-                                        disabled={parseInt(mobileUsersQuery?.data?.limits?.total) === parseInt(mobileUsersQuery?.data?.limits?.number)} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
-                                }
-                            </div>
+            <div className={`${style.userSettingPage}`} id={`${style.appSettingPage}`}>
+                <div className="settings-content setModalelBoots w-100">
+                    <div className='headSticky'>
+                        <h1 className='mb-0'>Users</h1>
+                        <div className={`contentMenuTab ${style.contentMenuTab}`}>
+                            <ul>
+                                <li><Link to="/settings/users/desktop">Desktop</Link></li>
+                                <li className='menuActive'><Link to="/settings/users/mobile-app">Mobile App</Link></li>
+                            </ul>
+                            {
+                                hasWorkSubscription &&
+                                <Button
+                                    disabled={parseInt(mobileUsersQuery?.data?.limits?.total) === parseInt(mobileUsersQuery?.data?.limits?.number)} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                            }
                         </div>
-                        <div className={`content_wrap_main ${style.contentwrapmain}`} style={{ paddingBottom: `${trialHeight}px` }}>
-                            <div className='content_wrapper'>
-                                <div className="listwrapper border-top">
-                                    {
-                                        hasWorkSubscription ? <>
-                                            <div className="topHeadStyle pb-4">
-                                                <div className={style.userHead}>
-                                                    <h2>Mobile App Users</h2>
-                                                    <p className='d-flex align-items-center gap-2'>
-                                                        {mobileUsersQuery?.data?.limits?.number || 0} / {mobileUsersQuery?.data?.limits?.total || 0}
-                                                        <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
-                                                    </p>
-                                                </div>
-                                                <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={style.showDeleteBut}>{!isShowDeleted ? "Show" : "Hide"} Disconnected</Button>
+                    </div>
+                    <div className={`content_wrap_main ${style.contentwrapmain}`} style={{ paddingBottom: `${trialHeight}px` }}>
+                        <div className='content_wrapper'>
+                            <div className="listwrapper border-top">
+                                {
+                                    hasWorkSubscription ? <>
+                                        <div className="topHeadStyle pb-4">
+                                            <div className={style.userHead}>
+                                                <h2>Mobile App Users</h2>
+                                                <p className='d-flex align-items-center gap-2'>
+                                                    {mobileUsersQuery?.data?.limits?.number || 0} / {mobileUsersQuery?.data?.limits?.total || 0}
+                                                    <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
+                                                </p>
                                             </div>
-                                            <DataTable value={mobileUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                                                <Column field="name" style={{ width: 'auto' }} body={nameBody} header="Name"></Column>
-                                                <Column field="email" style={{ width: '447px' }} header="Email"></Column>
-                                                <Column field="phone" style={{ width: '210px' }} header="Phone"></Column>
-                                                <Column field="status" body={StatusBody} style={{ width: '85px' }} header="Status"></Column>
-                                                <Column field="privilege" body={ActionBody} style={{ width: '64px' }} header="Action"></Column>
-                                            </DataTable>
-                                        </> : <div className='d-flex flex-column justify-content-center align-items-center'>
-                                            <img src={ExpertsCuate} alt='expired-subscription' style={{ width: '300px' }} />
-                                            <h4 style={{ fontWeight: 700 }}>Work Subscription Expired</h4>
-                                            <p className='font-18 text-center'> Your MeMate subscription has expired. To continue enjoying all features,<br /> please activate your subscription plan.</p>
-
-                                            <Link to={"/settings/generalinformation/subscription"}>
-                                                <Button className='solid-button'>Active Work Subscription</Button>
-                                            </Link>
+                                            <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={style.showDeleteBut}>{!isShowDeleted ? "Show" : "Hide"} Disconnected</Button>
                                         </div>
-                                    }
-                                </div>
+                                        <DataTable value={mobileUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
+                                            <Column field="name" style={{ width: 'auto' }} body={nameBody} header="Name"></Column>
+                                            <Column field="email" style={{ width: '447px' }} header="Email"></Column>
+                                            <Column field="phone" style={{ width: '210px' }} header="Phone"></Column>
+                                            <Column field="status" body={StatusBody} style={{ width: '85px' }} header="Status"></Column>
+                                            <Column field="privilege" body={ActionBody} style={{ width: '64px' }} header="Action"></Column>
+                                        </DataTable>
+                                    </> : <div className='d-flex flex-column justify-content-center align-items-center'>
+                                        <img src={ExpertsCuate} alt='expired-subscription' style={{ width: '300px' }} />
+                                        <h4 style={{ fontWeight: 700 }}>Work Subscription Expired</h4>
+                                        <p className='font-18 text-center'> Your MeMate subscription has expired. To continue enjoying all features,<br /> please activate your subscription plan.</p>
+
+                                        <Link to={"/settings/generalinformation/subscription"}>
+                                            <Button className='solid-button'>Active Work Subscription</Button>
+                                        </Link>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

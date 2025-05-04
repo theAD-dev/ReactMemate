@@ -61,8 +61,9 @@ const SelectClientType = () => {
             <ul className="mt-2">
               <li className="w-100">
                 <NavLink
-                  className="ActiveClient"
+                  className="ActiveClient border-bottom-0"
                   to="#"
+                  style={{ cursor: 'default', background: 'none' }}
                 >
                   <span>
                     <People color="#1AB2FF" size={24} />

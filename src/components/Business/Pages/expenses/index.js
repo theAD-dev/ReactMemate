@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { CheckCircle, Download, Filter, Send, XCircle } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
@@ -17,11 +18,13 @@ import NewExpensesCreate from '../../features/expenses-features/new-expenses-cre
 const ExpensesPage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
+    const [searchParams] = useSearchParams();
+    const isShowUnpaid = searchParams.get('isShowUnpaid');
     const [total, setTotal] = useState(0);
     const [totalMoney, setTotalMoney] = useState(0);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
-    const [isShowDeleted, setIsShowDeleted] = useState(false);
+    const [isShowDeleted, setIsShowDeleted] = useState(isShowUnpaid ? true : false);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
@@ -87,6 +90,13 @@ const ExpensesPage = () => {
         unpaidMutation.mutate({ ids: ids });
     };
 
+    const handleUnpaid = () => {
+        setIsShowDeleted(!isShowDeleted);
+        if (isShowUnpaid === 'true' && isShowDeleted) {
+            window.history.pushState({}, '', '/expenses');
+        }
+    };
+
     return (
         <div className='peoples-page'>
             <Helmet>
@@ -141,7 +151,7 @@ const ExpensesPage = () => {
                     )
                 }
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <Button className={isShowDeleted ? style.unpaidMoneyButton : style.allMoneyButton} onClick={() => setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
+                    <Button className={isShowDeleted ? style.unpaidMoneyButton : style.allMoneyButton} onClick={handleUnpaid}>Unpaid</Button>
                     {isShowDeleted &&
                         <>
                             <h1 className={`${style.total} mb-0`}>Total</h1>

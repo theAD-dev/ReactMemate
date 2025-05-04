@@ -152,7 +152,7 @@ const QuoteToClient = ({ isLoading, data, setPayload }) => {
                             placeholder="Select client"
                             filter
                             filterTemplate={filterTemplate}
-                            virtualScrollerOptions={{ itemSize: 38, lazy: true, onLazyLoad: setupObserver }}
+                            virtualScrollerOptions={{ itemSize: 46, lazy: true, onLazyLoad: setupObserver }}
                             className="w-100"
                         />
                     </Col>

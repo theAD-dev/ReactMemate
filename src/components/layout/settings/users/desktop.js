@@ -110,9 +110,9 @@ const Desktop = ({ visible, setVisible }) => {
 
     return (
         <>
-            <div className="settings-content setModalelBoots">
+            <div className="settings-content setModalelBoots w-100">
                 <div className='headSticky'>
-                    <h1>Users</h1>
+                    <h1 className='mb-0'>Users</h1>
                     <div className={`contentMenuTab ${style.contentMenuTab}`}>
                         <ul>
                             <li className='menuActive'><Link to="/settings/users/desktop">Desktop</Link></li>
@@ -128,7 +128,7 @@ const Desktop = ({ visible, setVisible }) => {
                                 <div className={style.userHead}>
                                     <h2>Desktop Users</h2>
                                     <p className='d-flex align-items-center gap-2'>
-                                        {activeUserCount?.length || 0} / {desktopUsersQuery?.data?.limits?.total || 0} 
+                                        {activeUserCount?.length || 0} / {desktopUsersQuery?.data?.limits?.total || 0}
                                         <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
                                     </p>
                                 </div>
@@ -148,10 +148,6 @@ const Desktop = ({ visible, setVisible }) => {
                     </div>
                 </div>
             </div>
-
-
-
-
 
             {
                 desktopUsersQuery.isLoading &&

@@ -12,11 +12,9 @@ import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 import ThemeImages from '../../../../assets/imgconstant';
 import { formatAUD } from "../../../../shared/lib/format-aud";
-import Sidebar from "../Sidebar";
 
 const Subscription = () => {
   const { trialHeight } = useTrialHeight();
-  const [activeTab, setActiveTab] = useState("subscription");
   const [visible, setVisible] = useState(false);
   const [mobileUserVisible, setMobileUserVisible] = useState(false);
 
@@ -66,261 +64,259 @@ const Subscription = () => {
 
   return (
     <>
-      <div className="settings-wrap subscription-page">
+      <div className="subscription-page">
         <Helmet>
           <title>MeMate - Subscription</title>
         </Helmet>
-        <div className="settings-wrapper">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          <div className="settings-content">
-            <div className="headSticky">
-              <h1>Subscription</h1>
-              <div className="contentMenuTab">
+
+        <div className="settings-content w-100">
+          <div className="headSticky">
+            <h1>Subscription</h1>
+            <div className="contentMenuTab">
+              <ul>
+                <li className="menuActive">
+                  <Link to="/settings/generalinformation/subscription">
+                    Subscription
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/settings/generalinformation/billing-info">
+                    Billing Info
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/settings/generalinformation/bills">Bills</Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className={`content_wrap_main pt-4`} style={{ paddingBottom: `${trialHeight}px` }}>
+            <div className="content_wrapper">
+              <div className={`listwrapper ${styles.listsubscription}`}>
+                <div className="topHeadStyle">
+                  <div className="border-bottom mb-4">
+                    <h2>Subscription</h2>
+                    <p className="font-14">
+                      Here, you can manage your subscription, adding or
+                      removing users and features as needed.
+                    </p>
+                  </div>
+                </div>
+
                 <ul>
-                  <li className="menuActive">
-                    <Link to="/settings/generalinformation/subscription">
-                      Subscription
-                    </Link>
-                  </li>
                   <li>
-                    <Link to="/settings/generalinformation/billing-info">
-                      Billing Info
-                    </Link>
+                    <div className="progressSubsstart actibeSubscription">
+                      <div className="progressSubsWrap">
+                        <div className="progressSubsIcon">
+                          <img src={ThemeImages.buildingCheck} alt="buildingCheck" />
+                        </div>
+                        <div className="progressSubsIn">
+                          <div className="d-flex justify-content-between mb-1">
+                            <h4>Business Subscription </h4>
+                            <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.business?.amount || "0.00")}</div>
+                          </div>
+                          <div className="progressWrapMain">
+                            <div className="progressWrapSubs">
+                              <div className="progress-bar bg-businessBar" style={{ width: `${subscriptionQuery?.data?.business ? 100 : 0}%` }}></div>
+                            </div>
+                            <span className={styles.textGradient}>{subscriptionQuery?.data?.business ? "ON" : "OFF"}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="progressSubsstart marginTopSpance ">
+                      <div className="progressSubsWrap">
+                        <div className="progressSubsIcon">
+                          <img src={ThemeImages.buildingssubs} alt="buildingssubs" />
+                        </div>
+                        <div className="progressSubsIn">
+                          <div className="d-flex justify-content-between mb-1">
+                            <h4>Company Users</h4>
+                            <div className="subscriptionPrice active">${formatAUD(parseFloat(parseFloat(subscriptionQuery?.data?.business_user_cost || 0) * parseInt((subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0))).toFixed(2))}</div>
+                          </div>
+                          <div className="progressWrapMain">
+                            <div className="progressWrapSubs">
+                              <div
+                                className="progress-bar bg-companyBar"
+                                style={{ width: `${((subscriptionQuery?.data?.business?.total_users || 0) / (subscriptionQuery?.data?.business?.max_users || 0)) * 100}%` }}
+                              ></div>
+                            </div>
+                            <span>{subscriptionQuery?.data?.business?.total_users || 0}/{subscriptionQuery?.data?.business?.max_users || 0}</span>
+                          </div>
+                          <div className="progressButton">
+                            <button className="paynow" onClick={() => setVisible(true)}>Add or Remove Users</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </li>
+
+                  <p className="border-bottom py-2 mb-4 font-16">Add-ons</p>
+
                   <li>
-                    <Link to="/settings/generalinformation/bills">Bills</Link>
+                    <div className="progressSubsstart ">
+                      <div className="progressSubsWrap">
+                        <div className="progressSubsIcon">
+                          <img src={ThemeImages.hddNetwork} alt="hddNetwork" />
+                        </div>
+                        <div className="progressSubsIn">
+                          <div className="d-flex justify-content-between mb-1">
+                            <h4>Work Subscription</h4>
+                            <div className="subscriptionPrice">${formatAUD(subscriptionQuery?.data?.work?.amount || "0.00")}</div>
+                          </div>
+
+                          <div className="progressWrapMain">
+                            <div className="progressWrapSubs">
+                              <div
+                                className="progress-bar bg-WorkBar"
+                                style={{ width: `${subscriptionQuery?.data?.work ? 100 : 0}%` }}
+                              ></div>
+                            </div>
+                            <span>{hasWorkSubscription ? "ON" : "OFF"}</span>
+                          </div>
+                          <div className="progressButton">
+                            {
+                              hasWorkSubscription ?
+                                <button className="close d-flex gap-1 align-items-center" disabled={cancelWorkMutation.isPending} onClick={() => cancelWorkMutation.mutate()}>
+                                  Cancel Subscription
+                                  {cancelWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
+                                </button>
+                                : <button className="paynow d-flex gap-1 align-items-center" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
+                                  Active Work Subscription
+                                  {
+                                    activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>
+                                  }
+                                </button>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </li>
+
+                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
+                  <li>
+                    <div className="progressSubsstart ">
+                      <div className="progressSubsWrap">
+                        <div className="progressSubsIcon">
+                          <img src={ThemeImages.appIndicator} alt="appIndicator" />
+                        </div>
+                        <div className="progressSubsIn">
+                          <div className="d-flex justify-content-between mb-1">
+                            <h4>Mobile App Users</h4>
+                            <div className="subscriptionPrice">${formatAUD(parseFloat(parseFloat(subscriptionQuery?.data?.work_user_cost || 0) * parseInt((subscriptionQuery?.data?.work?.max_workers || 0) - (hasWorkSubscription && subscriptionQuery?.data?.default_work_users || 0))).toFixed(2))}</div>
+                          </div>
+
+                          <div className="progressWrapMain">
+                            <div className="progressWrapSubs">
+                              <div
+                                className="progress-bar bg-appBar"
+                                style={{ width: `${((subscriptionQuery?.data?.work?.total_workers || 0) / (subscriptionQuery?.data?.work?.max_workers || 0)) * 100}%` }}
+                              ></div>
+                            </div>
+                            <span>{subscriptionQuery?.data?.work?.total_workers || 0}/{subscriptionQuery?.data?.work?.max_workers || 0}</span>
+                          </div>
+                          <div className="progressButton">
+                            <button disabled={!hasWorkSubscription} className="paynow" onClick={() => setMobileUserVisible(true)}>
+                              Add or Remove Users
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+
+                  <li>
+                    <div className="progressSubsstart mb-4">
+                      <div className="progressSubsWrap">
+                        <div className="progressSubsIcon">
+                          <img src={ThemeImages.geoAlt} alt="geoAlt" />
+                        </div>
+                        <div className="progressSubsIn">
+                          <div className="d-flex justify-content-between mb-1">
+                            <h4>Locations</h4>
+                            <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.location?.amount || "0.00")}</div>
+                          </div>
+
+                          <div className="progressWrapMain">
+                            <div className="progressWrapSubs">
+                              <div
+                                className="progress-bar bg-locationsBar"
+                                style={{ width: `${((subscriptionQuery?.data?.location?.total_locations || 0) / (subscriptionQuery?.data?.location?.max_locations || 0)) * 100}%` }}
+                              ></div>
+                            </div>
+                            <span>{subscriptionQuery?.data?.location?.total_locations || 0}/{subscriptionQuery?.data?.location?.max_locations || 0}</span>
+                          </div>
+
+                          <div className="progressButton">
+                            <button className="paynow" disabled>Purchase Locations</button>
+                            <button className="close" disabled>Remove Locations</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <button className="closeSubscription" disabled={cancelSubscriptionMutation.isPending} onClick={() => cancelSubscriptionMutation.mutate()}>
+                    Cancel Subscription
+                    {cancelSubscriptionMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
+                  </button>
                 </ul>
               </div>
-            </div>
-            <div className={`content_wrap_main pt-4`} style={{ paddingBottom: `${trialHeight}px` }}>
-              <div className="content_wrapper">
-                <div className={`listwrapper ${styles.listsubscription}`}>
-                  <div className="topHeadStyle">
-                    <div className="border-bottom mb-4">
-                      <h2>Subscription</h2>
-                      <p className="font-14">
-                        Here, you can manage your subscription, adding or
-                        removing users and features as needed.
-                      </p>
-                    </div>
+              <div className="rightText">
+                <div className="editwrapper">
+                  <div className="repaymentStatusBox w-100 mb-4">
+                    <p className="repaymentStatusBox-text-1">Current  repayments</p>
+                    <p className="repaymentStatusBox-text-2">${formatAUD(subscriptionQuery?.data?.total_amount || "0.00")}</p>
+                    <p className="repaymentStatusBox-text-3">/month</p>
                   </div>
+                  <p className="mb-0">
+                    <strong>Business Subscription</strong> allows you to use
+                    the following features: Sales, Project Management,
+                    Invoices, Expense Statistics, Order Management, as well as
+                    managing Clients and Suppliers
+                  </p>
 
-                  <ul>
-                    <li>
-                      <div className="progressSubsstart actibeSubscription">
-                        <div className="progressSubsWrap">
-                          <div className="progressSubsIcon">
-                            <img src={ThemeImages.buildingCheck} alt="buildingCheck" />
-                          </div>
-                          <div className="progressSubsIn">
-                            <div className="d-flex justify-content-between mb-1">
-                              <h4>Business Subscription </h4>
-                              <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.business?.amount || "0.00")}</div>
-                            </div>
-                            <div className="progressWrapMain">
-                              <div className="progressWrapSubs">
-                                <div className="progress-bar bg-businessBar" style={{ width: `${subscriptionQuery?.data?.business ? 100 : 0}%` }}></div>
-                              </div>
-                              <span className={styles.textGradient}>{subscriptionQuery?.data?.business ? "ON" : "OFF"}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
 
-                      <div className="progressSubsstart marginTopSpance ">
-                        <div className="progressSubsWrap">
-                          <div className="progressSubsIcon">
-                            <img src={ThemeImages.buildingssubs} alt="buildingssubs" />
-                          </div>
-                          <div className="progressSubsIn">
-                            <div className="d-flex justify-content-between mb-1">
-                              <h4>Company Users</h4>
-                              <div className="subscriptionPrice active">${formatAUD(parseFloat(parseFloat(subscriptionQuery?.data?.business_user_cost || 0) * parseInt((subscriptionQuery?.data?.business?.max_users || 0) - (subscriptionQuery?.data?.default_business_users || 0))).toFixed(2))}</div>
-                            </div>
-                            <div className="progressWrapMain">
-                              <div className="progressWrapSubs">
-                                <div
-                                  className="progress-bar bg-companyBar"
-                                  style={{ width: `${((subscriptionQuery?.data?.business?.total_users || 0) / (subscriptionQuery?.data?.business?.max_users || 0)) * 100}%` }}
-                                ></div>
-                              </div>
-                              <span>{subscriptionQuery?.data?.business?.total_users || 0}/{subscriptionQuery?.data?.business?.max_users || 0}</span>
-                            </div>
-                            <div className="progressButton">
-                              <button className="paynow" onClick={() => setVisible(true)}>Add or Remove Users</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
+                  <p className="mb-0">
+                    <strong>Company Users</strong> can operate the desktop
+                    account for the company and can be assigned different
+                    roles, such as Admin, General Manager, Manager, Sales
+                    Manager, or Accounts.
+                  </p>
 
-                    <p className="border-bottom py-2 mb-4 font-16">Add-ons</p>
+                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
 
-                    <li>
-                      <div className="progressSubsstart ">
-                        <div className="progressSubsWrap">
-                          <div className="progressSubsIcon">
-                            <img src={ThemeImages.hddNetwork} alt="hddNetwork" />
-                          </div>
-                          <div className="progressSubsIn">
-                            <div className="d-flex justify-content-between mb-1">
-                              <h4>Work Subscription</h4>
-                              <div className="subscriptionPrice">${formatAUD(subscriptionQuery?.data?.work?.amount || "0.00")}</div>
-                            </div>
+                  <p className="mb-0">
+                    <strong>Work Subscription</strong> enables you to utilise
+                    the application to assign jobs to contractors, employees,
+                    or shift workers. You can manage jobs assigned to your app
+                    users, track time through the application, and allow users
+                    to participate in projects remotely.
+                  </p>
 
-                            <div className="progressWrapMain">
-                              <div className="progressWrapSubs">
-                                <div
-                                  className="progress-bar bg-WorkBar"
-                                  style={{ width: `${subscriptionQuery?.data?.work ? 100 : 0}%` }}
-                                ></div>
-                              </div>
-                              <span>{hasWorkSubscription ? "ON" : "OFF"}</span>
-                            </div>
-                            <div className="progressButton">
-                              {
-                                hasWorkSubscription ?
-                                  <button className="close d-flex gap-1 align-items-center" disabled={cancelWorkMutation.isPending} onClick={() => cancelWorkMutation.mutate()}>
-                                    Cancel Subscription
-                                    {cancelWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
-                                  </button>
-                                  : <button className="paynow d-flex gap-1 align-items-center" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
-                                    Active Work Subscription
-                                    {
-                                      activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>
-                                    }
-                                  </button>
-                              }
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
+                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
 
-                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+                  <p className="mb-0">
+                    <strong>Mobile users:</strong> Mobile application users
+                    can communicate with independent contractors and shift
+                    workers for time tracking on location. This app is ideal
+                    for individuals who do not require access to the Company
+                    Management Desktop system.
+                  </p>
 
-                    <li>
-                      <div className="progressSubsstart ">
-                        <div className="progressSubsWrap">
-                          <div className="progressSubsIcon">
-                            <img src={ThemeImages.appIndicator} alt="appIndicator" />
-                          </div>
-                          <div className="progressSubsIn">
-                            <div className="d-flex justify-content-between mb-1">
-                              <h4>Mobile App Users</h4>
-                              <div className="subscriptionPrice">${formatAUD(parseFloat(parseFloat(subscriptionQuery?.data?.work_user_cost || 0) * parseInt((subscriptionQuery?.data?.work?.max_workers || 0) - (hasWorkSubscription && subscriptionQuery?.data?.default_work_users || 0))).toFixed(2))}</div>
-                            </div>
+                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
 
-                            <div className="progressWrapMain">
-                              <div className="progressWrapSubs">
-                                <div
-                                  className="progress-bar bg-appBar"
-                                  style={{ width: `${((subscriptionQuery?.data?.work?.total_workers || 0) / (subscriptionQuery?.data?.work?.max_workers || 0)) * 100}%` }}
-                                ></div>
-                              </div>
-                              <span>{subscriptionQuery?.data?.work?.total_workers || 0}/{subscriptionQuery?.data?.work?.max_workers || 0}</span>
-                            </div>
-                            <div className="progressButton">
-                              <button disabled={!hasWorkSubscription} className="paynow" onClick={() => setMobileUserVisible(true)}>
-                                Add or Remove Users
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-
-                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
-
-                    <li>
-                      <div className="progressSubsstart mb-4">
-                        <div className="progressSubsWrap">
-                          <div className="progressSubsIcon">
-                            <img src={ThemeImages.geoAlt} alt="geoAlt" />
-                          </div>
-                          <div className="progressSubsIn">
-                            <div className="d-flex justify-content-between mb-1">
-                              <h4>Locations</h4>
-                              <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.location?.amount || "0.00")}</div>
-                            </div>
-
-                            <div className="progressWrapMain">
-                              <div className="progressWrapSubs">
-                                <div
-                                  className="progress-bar bg-locationsBar"
-                                  style={{ width: `${((subscriptionQuery?.data?.location?.total_locations || 0) / (subscriptionQuery?.data?.location?.max_locations || 0)) * 100}%` }}
-                                ></div>
-                              </div>
-                              <span>{subscriptionQuery?.data?.location?.total_locations || 0}/{subscriptionQuery?.data?.location?.max_locations || 0}</span>
-                            </div>
-
-                            <div className="progressButton">
-                              <button className="paynow" disabled>Purchase Locations</button>
-                              <button className="close" disabled>Remove Locations</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-
-                    <button className="closeSubscription" disabled={cancelSubscriptionMutation.isPending} onClick={() => cancelSubscriptionMutation.mutate()}>
-                      Cancel Subscription
-                      {cancelSubscriptionMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
-                    </button>
-                  </ul>
-                </div>
-                <div className="rightText">
-                  <div className="editwrapper">
-                    <div className="repaymentStatusBox w-100 mb-4">
-                      <p className="repaymentStatusBox-text-1">Current  repayments</p>
-                      <p className="repaymentStatusBox-text-2">${formatAUD(subscriptionQuery?.data?.total_amount || "0.00")}</p>
-                      <p className="repaymentStatusBox-text-3">/month</p>
-                    </div>
-                    <p className="mb-0">
-                      <strong>Business Subscription</strong> allows you to use
-                      the following features: Sales, Project Management,
-                      Invoices, Expense Statistics, Order Management, as well as
-                      managing Clients and Suppliers
-                    </p>
-
-                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
-
-                    <p className="mb-0">
-                      <strong>Company Users</strong> can operate the desktop
-                      account for the company and can be assigned different
-                      roles, such as Admin, General Manager, Manager, Sales
-                      Manager, or Accounts.
-                    </p>
-
-                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
-
-                    <p  className="mb-0">
-                      <strong>Work Subscription</strong> enables you to utilise
-                      the application to assign jobs to contractors, employees,
-                      or shift workers. You can manage jobs assigned to your app
-                      users, track time through the application, and allow users
-                      to participate in projects remotely.
-                    </p>
-
-                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
-
-                    <p className="mb-0">
-                      <strong>Mobile users:</strong> Mobile application users
-                      can communicate with independent contractors and shift
-                      workers for time tracking on location. This app is ideal
-                      for individuals who do not require access to the Company
-                      Management Desktop system.
-                    </p>
-
-                    <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
-
-                    <p>
-                      <strong>Locations:</strong> Additional features for
-                      Companies with multiple branches/Locations. It allows you
-                      to operate multiple locations simultaneously{" "}
-                    </p>
-                  </div>
+                  <p>
+                    <strong>Locations:</strong> Additional features for
+                    Companies with multiple branches/Locations. It allows you
+                    to operate multiple locations simultaneously{" "}
+                  </p>
                 </div>
               </div>
             </div>

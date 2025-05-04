@@ -8,7 +8,6 @@ import '@szhsin/react-menu/dist/index.css';
 import { useMutation } from "@tanstack/react-query";
 import { toast } from 'sonner';
 import { createProjectStatus, deleteProjectStatusById, ProjectStatusesList, updateProjectStatusById } from "../../../../APIs/SettingsGeneral";
-import Sidebar from '../Sidebar';
 
 const colorOptions = [
     { value: "#1AB2FF", bg: "#BAE8FF", border: "#1AB2FF", color: "#0A4766", text: "Blue" },
@@ -27,7 +26,6 @@ const colorOptions = [
 
 const ProjectStatus = () => {
     const [isCreating, setIsCreating] = useState(false);
-    const [activeTab, setActiveTab] = useState('organisation-setting');
     const [options, setOptions] = useState([]);
     const [error, setError] = useState('');
 
@@ -163,145 +161,140 @@ const ProjectStatus = () => {
     }, [fetchData]);
 
     return (
-        <div className='settings-wrap'>
+        <>
             <Helmet>
                 <title>MeMate - Project Status</title>
             </Helmet>
-            <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
-                    <div className='headSticky'>
-                        <h1>Organisation Setting</h1>
-                        <div className='contentMenuTab'>
-                            <ul>
-                                <li className='menuActive'><Link to="/settings/projectstatus/project-status">Project Status</Link></li>
-                            </ul>
+            <div className='headSticky'>
+                <h1>Organisation Setting</h1>
+                <div className='contentMenuTab'>
+                    <ul>
+                        <li className='menuActive'><Link to="/settings/projectstatus/project-status">Project Status</Link></li>
+                    </ul>
+                </div>
+            </div>
+            <div className="content_wrap_main">
+                <div className='content_wrapper'>
+                    <div className="listwrapper orgColorStatus">
+                        <div className="top">
+                            <h4>Custom Order Status</h4>
+                            {error ? (
+                                <p style={{ color: 'red' }}>{error}</p>
+                            ) : (
+                                <p>The status name can be up to 20 characters long.</p>
+                            )}
                         </div>
-                    </div>
-                    <div className="content_wrap_main">
-                        <div className='content_wrapper'>
-                            <div className="listwrapper orgColorStatus">
-                                <div className="top">
-                                    <h4>Custom Order Status</h4>
-                                    {error ? (
-                                        <p style={{ color: 'red' }}>{error}</p>
-                                    ) : (
-                                        <p>The status name can be up to 20 characters long.</p>
-                                    )}
-                                </div>
-                                {isCreating && (
-                                    <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-                                        <Spinner animation="border" role="status">
-                                            <span className="visually-hidden">Loading...</span>
-                                        </Spinner>
-                                    </div>
-                                )}
-                                <Table>
-                                    <tbody>
-                                        {options.map((option) => (
-                                            <tr key={`option-${option.id}`}>
-                                                <td>
-                                                    <div className='statuswrapper'>
-                                                        <div className='statusTitle'>
-                                                            <input
-                                                                type="text"
-                                                                value={option.title}
-                                                                onChange={(e) => updateOptionTitle(option.id, e.target.value)}
-                                                                maxLength={20}
-                                                                placeholder="Enter status name"
-                                                            />
-                                                            {(option.isNew || option.isChanged) && (
-                                                                <p className="mb-2 mt-2">
-                                                                    {option.title.length >= 20 ? (
-                                                                        <span className="text-danger">{option.title.length}</span>
-                                                                    ) : (
-                                                                        option.title.length
-                                                                    )}
-                                                                    /20
-                                                                </p>
-                                                            )}
-                                                        </div>
-                                                        <Menu
-                                                            className='mainSelectMenu'
-                                                            menuButton={
-                                                                <MenuButton className="colorSelectBut">
-                                                                    <div
-                                                                        className="butcolorIn"
-                                                                        style={{
-                                                                            borderColor: option.color,
-                                                                            background: colorOptions.find(opt => opt.value === option.color)?.bg || 'transparent',
-                                                                            color: option.color,
-                                                                        }}
-                                                                    >
-                                                                        {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
-                                                                    </div>
-                                                                    <ChevronDown size={20} color='#98A2B3' />
-                                                                </MenuButton>
-                                                            }
-                                                            overflow={"auto"}
-                                                            position={"anchor"}
-                                                        >
-                                                            <MenuGroup takeOverflow style={{ maxHeight: '230px', overflow: 'auto', boxShadow: '0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
-                                                                {getAvailableColors(option.id).map(({ value, bg, border, color, text }, index) => (
-                                                                    <MenuItem
-                                                                        onClick={() => updateOptionColor(option.id, value)}
-                                                                        key={`${index}-${value}`}
-                                                                        value={value}
-                                                                        style={{ padding: '8px 10px 8px 8px' }}
-                                                                    >
-                                                                        <div className="d-flex" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
-                                                                            <div className="h-100" style={{ width: '4px', background: border }}></div>
-                                                                            <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: bg }}>
-                                                                                <span style={{ color: color, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{text}</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </MenuGroup>
-                                                        </Menu>
-                                                    </div>
-                                                </td>
-                                                <td className="butactionOrg">
-                                                    {(option.isNew || option.isChanged) && (
-                                                        <Button
-                                                            className="save"
-                                                            onClick={() => saveOption(option.id, option.isNew)}
-                                                            disabled={!option.title.trim() || createMutation.isPending || updateMutation.isPending}
-                                                        >
-                                                            {(updateMutation.isPending && updateMutation?.variables?.id === option.id) ||
-                                                                (createMutation.isPending && createMutation?.variables?.id === option.id)
-                                                                ? "Loading..."
-                                                                : "Save"}
-                                                        </Button>
-                                                    )}
-                                                    <Button
-                                                        className="remove"
-                                                        onClick={() => removeOption(option.id)}
-                                                        disabled={deleteMutation.isPending}
-                                                    >
-                                                        {deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                        <tr>
-                                            <td id='addmoreOption' colSpan={3}>
-                                                <Button
-                                                    onClick={addOption}
-                                                    disabled={getAvailableColors(null).length === 0}
-                                                >
-                                                    Add an Option   <PlusLg size={20} color='#000000' />
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
+                        {isCreating && (
+                            <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+                                <Spinner animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>
                             </div>
-                        </div>
+                        )}
+                        <Table>
+                            <tbody>
+                                {options.map((option) => (
+                                    <tr key={`option-${option.id}`}>
+                                        <td>
+                                            <div className='statuswrapper'>
+                                                <div className='statusTitle'>
+                                                    <input
+                                                        type="text"
+                                                        value={option.title}
+                                                        onChange={(e) => updateOptionTitle(option.id, e.target.value)}
+                                                        maxLength={20}
+                                                        placeholder="Enter status name"
+                                                    />
+                                                    {(option.isNew || option.isChanged) && (
+                                                        <p className="mb-2 mt-2">
+                                                            {option.title.length >= 20 ? (
+                                                                <span className="text-danger">{option.title.length}</span>
+                                                            ) : (
+                                                                option.title.length
+                                                            )}
+                                                            /20
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <Menu
+                                                    className='mainSelectMenu'
+                                                    menuButton={
+                                                        <MenuButton className="colorSelectBut">
+                                                            <div
+                                                                className="butcolorIn"
+                                                                style={{
+                                                                    borderColor: option.color,
+                                                                    background: colorOptions.find(opt => opt.value === option.color)?.bg || 'transparent',
+                                                                    color: option.color,
+                                                                }}
+                                                            >
+                                                                {colorOptions.find(opt => opt.value === option.color)?.text || 'Select Color'}
+                                                            </div>
+                                                            <ChevronDown size={20} color='#98A2B3' />
+                                                        </MenuButton>
+                                                    }
+                                                    overflow={"auto"}
+                                                    position={"anchor"}
+                                                >
+                                                    <MenuGroup takeOverflow style={{ maxHeight: '230px', overflow: 'auto', boxShadow: '0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)', borderRadius: '4px', border: '1px solid #D0D5DD' }}>
+                                                        {getAvailableColors(option.id).map(({ value, bg, border, color, text }, index) => (
+                                                            <MenuItem
+                                                                onClick={() => updateOptionColor(option.id, value)}
+                                                                key={`${index}-${value}`}
+                                                                value={value}
+                                                                style={{ padding: '8px 10px 8px 8px' }}
+                                                            >
+                                                                <div className="d-flex" style={{ width: '140px', height: '30px', borderRadius: '4px', overflow: 'hidden' }}>
+                                                                    <div className="h-100" style={{ width: '4px', background: border }}></div>
+                                                                    <div className="h-100 d-flex align-items-center" style={{ width: '100%', background: bg }}>
+                                                                        <span style={{ color: color, fontSize: '14px', paddingLeft: '12px', fontWeight: '400' }}>{text}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </MenuItem>
+                                                        ))}
+                                                    </MenuGroup>
+                                                </Menu>
+                                            </div>
+                                        </td>
+                                        <td className="butactionOrg">
+                                            {(option.isNew || option.isChanged) && (
+                                                <Button
+                                                    className="save"
+                                                    onClick={() => saveOption(option.id, option.isNew)}
+                                                    disabled={!option.title.trim() || createMutation.isPending || updateMutation.isPending}
+                                                >
+                                                    {(updateMutation.isPending && updateMutation?.variables?.id === option.id) ||
+                                                        (createMutation.isPending && createMutation?.variables?.id === option.id)
+                                                        ? "Loading..."
+                                                        : "Save"}
+                                                </Button>
+                                            )}
+                                            <Button
+                                                className="remove"
+                                                onClick={() => removeOption(option.id)}
+                                                disabled={deleteMutation.isPending}
+                                            >
+                                                {deleteMutation.isPending && deleteMutation?.variables === option.id ? "Loading..." : "Remove"}
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                <tr>
+                                    <td id='addmoreOption' colSpan={3}>
+                                        <Button
+                                            onClick={addOption}
+                                            disabled={getAvailableColors(null).length === 0}
+                                        >
+                                            Add an Option   <PlusLg size={20} color='#000000' />
+                                        </Button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </Table>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

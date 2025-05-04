@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { InputGroup } from 'react-bootstrap';
 import { ChevronDown, Person, QuestionCircle } from 'react-bootstrap-icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import SelectDate from './select-date';
-import { getUserList } from '../../../../../APIs/task-api';
+import { getMobileUserList, getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksNew } from '../../../../../APIs/TasksApi';
 import newTask from '../../../../../assets/images/new-task.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
@@ -75,6 +75,11 @@ const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) =
 
     const handleClose = () => setShow(false);
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
+    const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
+
+    useEffect(() => {
+        if (!show) reset();
+    }, [show]);
 
     return (
         <>
@@ -133,25 +138,41 @@ const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) =
                     gap: '20px', borderTop: '1px solid #eaecf0',
                     padding: "12px 30px 8px 20px"
                 }}>
-                    {!user && <Person
-                        color={dropdownRef.current?.panel?.element?.offsetParent ? "#1AB2FF" : "#475467"}
-                        size={22} style={{ position: 'relative', left: '10px', zIndex: 1 }}
-                        onClick={() => dropdownRef.current?.show()} className='me-3 cursor-pointer' />
+                    {!user &&
+                        <Person
+                            color={dropdownRef.current?.panel?.element?.offsetParent ? "#1AB2FF" : "#475467"}
+                            size={22} style={{ position: 'relative', left: '10px', zIndex: 1 }}
+                            onClick={() => dropdownRef.current?.show()} className='me-3 cursor-pointer'
+                        />
                     }
                     <Dropdown
                         ref={dropdownRef}
-                        options={usersList?.data?.map((user) => ({
-                            value: user?.id,
-                            label: user?.name || "-",
-                            photo: user?.photo || "",
-                            has_photo: user?.has_photo
-                        })) || []}
+                        options={[
+                            {
+                                label: 'Desktop User',
+                                items: usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
+                                    value: user?.id,
+                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                    photo: user?.photo || "",
+                                    has_photo: user?.has_photo
+                                })) || []
+                            },
+                            {
+                                label: 'Mobile User',
+                                items: mobileUsersList?.data?.users?.filter((user) => user?.status !== 'disconnected')?.map((user) => ({
+                                    value: user?.id,
+                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                    photo: user?.photo || "",
+                                    has_photo: user?.has_photo
+                                })) || []
+                            }
+                        ]}
                         onChange={(e) => {
                             setUser(e.value);
                         }}
                         valueTemplate={(option) => {
                             return <div className='d-flex gap-2 align-items-center'>
-                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '0px solid #dedede' }}>
                                     <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
                                 </div>
                                 {option?.label}
@@ -178,8 +199,11 @@ const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) =
                         }}
                         value={user}
                         dropdownIcon={<></>}
+                        collapseIcon={<></>}
                         placeholder="Select project"
                         filter
+                        optionGroupLabel="label"
+                        optionGroupChildren="items"
                     />
                     <SelectDate dateRange={date} setDateRange={setDate} />
                 </div>

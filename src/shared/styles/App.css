@@ -663,6 +663,14 @@ table.department-calculation tbody tr.selected td {
   text-overflow: ellipsis;
 }
 
+#calender .scheduler_default_rowheader_inner_text span {
+  max-width: 268px;
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .scheduler_default_rowheader_inner {
   position: relative;
   inset: 0px;
@@ -6724,12 +6732,7 @@ span.checkmarkdata.agree_marketing-border {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 0 22px;
-}
-
-.settings-content {
-  width: calc(100% - 280px);
-  padding: 0 0px 0 24px;
+  padding: 0 0 0 22px;
 }
 
 .settings-menu {
@@ -6738,9 +6741,9 @@ span.checkmarkdata.agree_marketing-border {
   background: var(--Base-White, #fff);
 }
 
-.settings-content {
-  width: calc(100% - 280px);
+.settings-wrapper > .settings-content {
   text-align: left;
+  width: calc(100% - 280px) !important;
 }
 
 .content_wrap_main.isEditingwrap {
@@ -6749,13 +6752,15 @@ span.checkmarkdata.agree_marketing-border {
 
 .content_wrap_main {
   overflow: auto;
+  background: #f9fafb;
   height: calc(100vh - 235px);
   margin-top: 0px;
 }
 
 .headSticky {
-  position: sticky;
   top: 0;
+  padding: 0px 24px 0px 24px;
+  position: sticky;
 }
 
 .bg-grey {
@@ -7009,22 +7014,13 @@ span.checkmarkdata.agree_marketing-border {
   margin-bottom: 17px;
 }
 
-/* .content_wrapper {
-    border-radius: var(--radius-xs, 4px);
-    background: var(--Gray-50, #F9FAFB);
-    padding: 32px;
-    margin-top: 24px;
-    margin-bottom: 24px;
-} */
-/* General Information */
 .listwrapper {
   border-radius: var(--radius-xs, 4px);
   background: var(--Gray-50, #f9fafb);
   padding: 32px;
-  /* margin-top: 24px; */
   margin-bottom: 0;
   width: 100%;
-  margin-right: 12px;
+  margin-right: 0px;
 }
 
 .content_wrap_main .rightText {
@@ -9349,9 +9345,12 @@ ul.activeListPassword li.active svg {
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  /* 150% */
   letter-spacing: 0.08px;
   margin-bottom: 4px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .task-description {
@@ -9361,7 +9360,6 @@ ul.activeListPassword li.active svg {
   font-style: normal;
   font-weight: 400;
   line-height: 22px;
-  /* 157.143% */
   letter-spacing: 0.14px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -10993,7 +10991,7 @@ table.indexCalname thead tr th{
     border-right: 0;
     border-left: 0;
     border-bottom:1px solid #ccc ;
-    
+
 } */
 /* table.indexCalname {
     width: 100%;

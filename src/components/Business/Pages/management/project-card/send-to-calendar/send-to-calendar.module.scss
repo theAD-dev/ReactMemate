@@ -1,7 +1,7 @@
 .calendarButton {
-  background-color: #e1f0ff;
-  color: #0086c9;
-  border: 1px solid #e1f0ff;
+  background-color: #ffffff !important;
+  color: #344054 !important;
+  border: 1px solid #d0d5dd !important;
   border-radius: 40px;
   padding: 8px 16px;
   font-size: 14px;
@@ -13,17 +13,14 @@
   margin-right: 10px;
 
   &:hover {
-    background-color: #cce5ff;
-    border-color: #cce5ff;
-    color: #0072b1;
+    background-color: #ffffff !important;
+    color: #344054 !important;
   }
 
   &:focus,
   &:active {
-    background-color: #b8daff;
-    border-color: #b8daff;
-    color: #005a8e;
-    box-shadow: 0 0 0 0.25rem rgba(0, 134, 201, 0.25);
+    background-color: #ffffff !important;
+    color: #344054 !important;
   }
 
   img {
@@ -129,4 +126,23 @@
   font-weight: 500;
   letter-spacing: 0.14px;
   line-height: 22px;
+}
+
+.AutoComplete ul {
+  width: 100%;
+  padding: 4px 10px 4px 10px;
+  outline: none !important;
+  box-shadow: none !important;
+  border: 1px solid var(--Border, #d0d5dd);
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: auto;
+}
+
+.AutoComplete.bcc ul {
+  padding: 4px 10px 4px 10px;
+}
+
+.AutoComplete input {
+  min-width: 100px;
 }

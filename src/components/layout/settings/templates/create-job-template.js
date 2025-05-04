@@ -14,7 +14,6 @@ import { toast } from 'sonner';
 import style from './job-template.module.scss';
 import { createJobTemplate, deleteJobTemplate, getJobTemplate, updateJobTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import Sidebar from '../Sidebar';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -74,7 +73,6 @@ const CreateJobTemplate = () => {
 
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
-    const [activeTab, setActiveTab] = useState('job-templates');
     const jobQuery = useQuery({
         queryKey: ["getJobTemplate", id],
         queryFn: () => getJobTemplate(id),
@@ -149,180 +147,178 @@ const CreateJobTemplate = () => {
     }, [jobQuery?.data]);
 
     return (
-        <div className='settings-wrap'>
+        <>
             <Helmet>
                 <title>MeMate - {id ? 'Edit' : 'Create'} Job Template</title>
             </Helmet>
-            <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
-                    <div className='headSticky' style={{ position: 'relative' }}>
-                        <h1>Templates</h1>
-                        <div className='contentMenuTab'>
-                            <ul>
-                                <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
-                                <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
-                                <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
-                                <li className='menuActive'><Link to="/settings/templates/job-templates">Job Templates</Link></li>
-                                {!has_twilio ? (
-                                    <OverlayTrigger
-                                        key="top"
-                                        placement="top"
-                                        overlay={
-                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
-                                                Your Twilio account has not been set up yet.
-                                            </Tooltip>
-                                        }
-                                    >
-                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">SMS Templates</Link></li>
-                                    </OverlayTrigger>
-                                ) : (
-                                    <li><Link to="/settings/templates/sms-templates">SMS Templates</Link></li>
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-                    <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
-                        <div className='content_wrapper d-block px-3' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
-                            <Link to='/settings/templates/job-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
-                                <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
-                            </Link>
-
-                            <div className='d-flex align-items-center w-100'>
-                                {
-                                    isEdit ? (
-                                        <>
-                                            <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={name} onChange={(e) => {
-                                                setName(e.target.value);
-                                                setErrors((others) => ({ ...others, name: false }));
-                                            }} autoFocus
-                                                placeholder='[ Template ]'
-                                            />
-                                        </>
-                                    ) : <span className={clsx(style.templateName, 'me-2')}>{name || "[ Template Name ]"}</span>
-                                }
-                                <div style={{ width: '30px' }}>
-                                    {jobQuery?.isFetching ?
-                                        <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px' }} />
-                                        : <PencilSquare color='#106B99' onClick={() => setIsEdit(true)} size={16} style={{ cursor: 'pointer' }} />
+            <div className="settings-content setModalelBoots w-100">
+                <div className='headSticky' style={{ position: 'relative' }}>
+                    <h1>Templates</h1>
+                    <div className='contentMenuTab'>
+                        <ul>
+                            <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
+                            <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
+                            <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
+                            <li className='menuActive'><Link to="/settings/templates/job-templates">Job Templates</Link></li>
+                            {!has_twilio ? (
+                                <OverlayTrigger
+                                    key="top"
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                            Your Twilio account has not been set up yet.
+                                        </Tooltip>
                                     }
-                                </div>
-                            </div>
-                            {errors?.name && (
-                                <p className="error-message mb-0">{"Name is required"}</p>
+                                >
+                                    <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">SMS Templates</Link></li>
+                                </OverlayTrigger>
+                            ) : (
+                                <li><Link to="/settings/templates/sms-templates">SMS Templates</Link></li>
                             )}
+                        </ul>
+                    </div>
+                </div>
+                <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
+                    <div className='listwrapper' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
+                        <Link to='/settings/templates/job-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
+                            <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
+                        </Link>
 
-                            <div className={style.divider}></div>
-
-                            <div className="flex flex-column gap-2" style={{ marginBottom: '16px' }}>
-                                <label className={style.label}>Subject<span className="required">*</span></label>
-                                <IconField>
-                                    <InputIcon>
-                                        {jobQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                    </InputIcon>
-                                    <InputText
-                                        ref={subjectRef}
-                                        value={subject}
-                                        className={clsx(style.inputBox, 'w-100')}
-                                        onChange={(e) => {
-                                            setSubject(e.target.value);
-                                            setErrors((others) => ({ ...others, subject: false }));
-                                        }}
-                                        placeholder="Enter subject"
-                                    />
-                                </IconField>
-                                {errors?.subject && (
-                                    <p className="error-message mb-0">{"Subject is required"}</p>
-                                )}
+                        <div className='d-flex align-items-center w-100'>
+                            {
+                                isEdit ? (
+                                    <>
+                                        <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={name} onChange={(e) => {
+                                            setName(e.target.value);
+                                            setErrors((others) => ({ ...others, name: false }));
+                                        }} autoFocus
+                                            placeholder='[ Template ]'
+                                        />
+                                    </>
+                                ) : <span className={clsx(style.templateName, 'me-2')}>{name || "[ Template Name ]"}</span>
+                            }
+                            <div style={{ width: '30px' }}>
+                                {jobQuery?.isFetching ?
+                                    <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px' }} />
+                                    : <PencilSquare color='#106B99' onClick={() => setIsEdit(true)} size={16} style={{ cursor: 'pointer' }} />
+                                }
                             </div>
+                        </div>
+                        {errors?.name && (
+                            <p className="error-message mb-0">{"Name is required"}</p>
+                        )}
 
-                            <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
-                                <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
-                                <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                        <div className={style.divider}></div>
+
+                        <div className="flex flex-column gap-2" style={{ marginBottom: '16px' }}>
+                            <label className={style.label}>Subject<span className="required">*</span></label>
+                            <IconField>
+                                <InputIcon>
                                     {jobQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                 </InputIcon>
-                                <Editor
-                                    ref={editorRef}
-                                    style={{ minHeight: "299px" }}
-                                    headerTemplate={header}
-                                    value={text}
-                                    placeholder='Enter a description...'
-                                    onTextChange={(e) => {
-                                        setText(e.htmlValue);
-                                        setErrors((others) => ({ ...others, text: false }));
+                                <InputText
+                                    ref={subjectRef}
+                                    value={subject}
+                                    className={clsx(style.inputBox, 'w-100')}
+                                    onChange={(e) => {
+                                        setSubject(e.target.value);
+                                        setErrors((others) => ({ ...others, subject: false }));
                                     }}
+                                    placeholder="Enter subject"
                                 />
-                            </div>
-                            {errors?.text && (
-                                <p className="error-message mb-0">{"Message is required"}</p>
+                            </IconField>
+                            {errors?.subject && (
+                                <p className="error-message mb-0">{"Subject is required"}</p>
                             )}
+                        </div>
 
-                            <div className={clsx(style.formTemplateGroup, "card flex justify-content-center mt-3 pb-4")}>
-                                <label className={clsx(style.lable1)}>Time / Money </label>
-                                <div className={style.paymentType}>
-                                    <label className={clsx(style.lable)}>Payment Type</label>
-                                    <div className={style.paymentmain}>
-                                        <div className={`flex align-items-center ${style.RadioButton}`}>
-                                            <input
-                                                type="radio"
-                                                id="fix"
-                                                name="paymentype"
-                                                value="2"
-                                                onChange={(e) => setType(e.target.value)}
-                                                checked={type === '2'}
-                                                className={style.customRadio}
-                                            />
-                                            <label htmlFor="fix" className={clsx(style.radioLabel, style.fix)}>Fix</label>
-                                        </div>
-                                        <span>OR</span>
-                                        <div className={`flex align-items-center ${style.RadioButton}`}>
-                                            <input
-                                                type="radio"
-                                                id="hours"
-                                                name="paymentype"
-                                                value="3"
-                                                onChange={(e) => setType(e.target.value)}
-                                                checked={type === '3'}
-                                                className={style.customRadio}
-                                            />
-                                            <label htmlFor="hours" className={clsx(style.radioLabel, style.hours)}>Hours</label>
-                                        </div>
-                                        <span>OR</span>
-                                        <div className={`flex align-items-center ${style.RadioButton}`}>
-                                            <input
-                                                type="radio"
-                                                id="timetracker"
-                                                name="paymentype"
-                                                value="4"
-                                                onChange={(e) => setType(e.target.value)}
-                                                checked={type === '4'}
-                                                className={style.customRadio}
-                                            />
-                                            <label htmlFor="timetracker" className={clsx(style.radioLabel, style.timetracker)}>Time Tracker</label>
-                                        </div>
+                        <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
+                            <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
+                            <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                                {jobQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                            </InputIcon>
+                            <Editor
+                                ref={editorRef}
+                                style={{ minHeight: "299px" }}
+                                headerTemplate={header}
+                                value={text}
+                                placeholder='Enter a description...'
+                                onTextChange={(e) => {
+                                    setText(e.htmlValue);
+                                    setErrors((others) => ({ ...others, text: false }));
+                                }}
+                            />
+                        </div>
+                        {errors?.text && (
+                            <p className="error-message mb-0">{"Message is required"}</p>
+                        )}
+
+                        <div className={clsx(style.formTemplateGroup, "card flex justify-content-center mt-3 pb-4")}>
+                            <label className={clsx(style.lable1)}>Time / Money </label>
+                            <div className={style.paymentType}>
+                                <label className={clsx(style.lable)}>Payment Type</label>
+                                <div className={style.paymentmain}>
+                                    <div className={`flex align-items-center ${style.RadioButton}`}>
+                                        <input
+                                            type="radio"
+                                            id="fix"
+                                            name="paymentype"
+                                            value="2"
+                                            onChange={(e) => setType(e.target.value)}
+                                            checked={type === '2'}
+                                            className={style.customRadio}
+                                        />
+                                        <label htmlFor="fix" className={clsx(style.radioLabel, style.fix)}>Fix</label>
                                     </div>
-                                    {errors?.type && (
-                                        <p className="error-message mb-0">{"Payment Type is required"}</p>
-                                    )}
-                                    {
-                                        type === "2" ? <>
-                                            <label className={clsx(style.lable, 'mt-4 mb-2')}>Payment</label>
-                                            <IconField iconPosition="left">
-                                                <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
-                                                <InputText value={cost} onChange={(e) => setCost(e.target.value)} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
-                                            </IconField>
-                                        </>
-                                            : <div style={{ width: 'fit-content' }}>
-                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Duration</label>
-                                                <IconField iconPosition="right">
-                                                    <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
-                                                    <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ width: '120px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
-                                                </IconField>
-                                            </div>
-                                    }
+                                    <span>OR</span>
+                                    <div className={`flex align-items-center ${style.RadioButton}`}>
+                                        <input
+                                            type="radio"
+                                            id="hours"
+                                            name="paymentype"
+                                            value="3"
+                                            onChange={(e) => setType(e.target.value)}
+                                            checked={type === '3'}
+                                            className={style.customRadio}
+                                        />
+                                        <label htmlFor="hours" className={clsx(style.radioLabel, style.hours)}>Hours</label>
+                                    </div>
+                                    <span>OR</span>
+                                    <div className={`flex align-items-center ${style.RadioButton}`}>
+                                        <input
+                                            type="radio"
+                                            id="timetracker"
+                                            name="paymentype"
+                                            value="4"
+                                            onChange={(e) => setType(e.target.value)}
+                                            checked={type === '4'}
+                                            className={style.customRadio}
+                                        />
+                                        <label htmlFor="timetracker" className={clsx(style.radioLabel, style.timetracker)}>Time Tracker</label>
+                                    </div>
                                 </div>
+                                {errors?.type && (
+                                    <p className="error-message mb-0">{"Payment Type is required"}</p>
+                                )}
+                                {
+                                    type === "2" ? <>
+                                        <label className={clsx(style.lable, 'mt-4 mb-2')}>Payment</label>
+                                        <IconField iconPosition="left">
+                                            <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
+                                            <InputText value={cost} onChange={(e) => setCost(e.target.value)} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
+                                        </IconField>
+                                    </>
+                                        : <div style={{ width: 'fit-content' }}>
+                                            <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Duration</label>
+                                            <IconField iconPosition="right">
+                                                <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
+                                                <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ width: '120px' }} className={clsx(style.inputText, "outline-none")} placeholder='20' />
+                                            </IconField>
+                                        </div>
+                                }
+                            </div>
 
-                                {/* <div className={`${style.typeBorder} ${style.paymentType}`}>
+                            {/* <div className={`${style.typeBorder} ${style.paymentType}`}>
                                     <label className={clsx(style.lable)}>Time</label>
                                     <div className={style.paymentmain}>
                                         <div className={`flex align-items-center ${style.RadioButton}`}>
@@ -355,26 +351,25 @@ const CreateJobTemplate = () => {
                                         <p className="error-message mb-0">{"Time is required"}</p>
                                     )}
                                 </div> */}
-                            </div>
+                        </div>
 
-                        </div>
                     </div>
-                    <div className={style.bottom}>
-                        {
-                            id ?
-                                <Button onClick={handleDelete} className='danger-outline-button'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
-                                : <span></span>
-                        }
-                        <div className='d-flex gap-2'>
-                            <Link to={'/settings/templates/job-templates/'}>
-                                <Button className='outline-button'>Cancel</Button>
-                            </Link>
-                            <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
-                        </div>
+                </div>
+                <div className={style.bottom}>
+                    {
+                        id ?
+                            <Button onClick={handleDelete} className='danger-outline-button'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
+                            : <span></span>
+                    }
+                    <div className='d-flex gap-2'>
+                        <Link to={'/settings/templates/job-templates/'}>
+                            <Button className='outline-button'>Cancel</Button>
+                        </Link>
+                        <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

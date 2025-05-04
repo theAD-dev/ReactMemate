@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Download, Filter, Printer, Send } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
@@ -15,16 +16,16 @@ import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
 
-
-
 const InvoicePage = () => {
     const dt = useRef(null);
     const menu = useRef(null);
+    const [searchParams] = useSearchParams();
+    const isShowUnpaid = searchParams.get('isShowUnpaid');
     const [total, setTotal] = useState(0);
     const [totalMoney, setTotalMoney] = useState(0);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
-    const [isShowDeleted, setIsShowDeleted] = useState(false);
+    const [isShowDeleted, setIsShowDeleted] = useState(isShowUnpaid ? true : false);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
@@ -66,6 +67,14 @@ const InvoicePage = () => {
         const ids = selected.map(item => item.unique_id);
         sendInvoiceToXeroMutation.mutate({ ids: ids });
     };
+
+    const handleUnpaid = () => {
+        setIsShowDeleted(!isShowDeleted);
+        if (isShowUnpaid === 'true' && isShowDeleted) {
+            window.history.pushState({}, '', '/invoices');
+        }
+    };
+
 
     return (
         <div className='peoples-page'>
@@ -116,7 +125,7 @@ const InvoicePage = () => {
                     <h1 className="title p-0">Invoices</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <Button className={isShowDeleted ? style.unpaidInvoice : style.allInvoice} onClick={() => setIsShowDeleted(!isShowDeleted)}>Unpaid</Button>
+                    <Button className={isShowDeleted ? style.unpaidInvoice : style.allInvoice} onClick={handleUnpaid}>Unpaid</Button>
                     {isShowDeleted && <>
                         <h1 className={`${style.total} mb-0`}>Total</h1>
                         <div className={`${style.totalCount}`}>{total} Invoice</div>

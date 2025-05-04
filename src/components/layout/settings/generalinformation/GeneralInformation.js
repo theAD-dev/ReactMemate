@@ -10,7 +10,6 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 import styles from "./general.module.scss";
-import Sidebar from '.././Sidebar';
 import { SettingsGeneralInformation, updateGeneralInformation } from '../../../../APIs/SettingsGeneral';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
@@ -37,7 +36,6 @@ const schema = yup.object().shape({
 
 function GeneralInformation() {
   const { trialHeight } = useTrialHeight();
-  const [activeTab, setActiveTab] = useState('generalinformation');
   const [isEditingGroup, setIsEditingGroup] = useState(false);
   const editingHeight = isEditingGroup ? 100 : 0;
   const [photo, setPhoto] = useState({});
@@ -85,332 +83,323 @@ function GeneralInformation() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-
-      <div className='settings-wrap'>
-        <Helmet>
-          <title>MeMate - General Information</title>
-        </Helmet>
-        <div className="settings-wrapper">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          <div className="settings-content">
-            <div className='headSticky'>
-              <h1>Company Information </h1>
-              <div className='contentMenuTab'>
-                <ul>
-                  <li className='menuActive'><Link to="/settings/generalinformation">General Information</Link></li>
-                  <li><Link to="/settings/generalinformation/bank-details">Bank Details </Link></li>
-                  <li><Link to="/settings/generalinformation/region-and-language">Region & Language</Link></li>
-                </ul>
-              </div>
-            </div>
-            <div className={`content_wrap_main ${isEditingGroup ? 'isEditingwrap' : ''}`} style={{ height: `calc(100vh - 230px - ${trialHeight}px - ${editingHeight}px)` }}>
-              <div className='content_wrapper'>
-                <div className="listwrapper">
-                  <div className="topHeadStyle">
-                    <div className=''>
-                      <h2>General Information</h2>
-                      {!isEditingGroup ? (
-                        <></>
-                      ) : (
-                        <p>Provide key details about your company</p>
-                      )}
-                    </div>
-
-                    {!isEditingGroup && (
-                      <Link to="#" onClick={handleEditGroup}>Edit<PencilSquare color="#344054" size={20} /></Link>
-                    )}
-                  </div>
-
-                  <ul>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>Company Legal Name</span>
-                        {!isEditingGroup ? (
-                          <strong>{data?.legal_name} </strong>
-                        ) : (
-                          <div>
-                            <div className={`inputInfo ${errors?.legal_name ? 'error-border' : ''}`}>
-                              <input
-                                {...register("legal_name")}
-                                placeholder='Enter company legal name'
-                                defaultValue={data?.legal_name}
-                              />
-                              {errors?.legal_name && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors?.legal_name && <p className="error-message">{errors?.legal_name?.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p>Please provide the complete legal name of your company, as it will be displayed on outgoing documentation.</p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>Company Trading name</span>
-                        {!isEditingGroup ? (
-                          <strong>{data.trading_name} </strong>
-                        ) : (
-                          <div>
-                            <div className={`inputInfo ${errors.trading_name ? 'error-border' : ''}`}>
-                              <input
-                                {...register("trading_name")}
-                                placeholder='Enter Trading Name'
-                                defaultValue={data.trading_name}
-                              />
-                              {errors.trading_name && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors.trading_name && <p className="error-message">{errors.trading_name.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p>Please enter a trading name. This will be displayed when you communicate with contractors, clients, and suppliers.</p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>ABN</span>
-                        {!isEditingGroup ? (
-                          <strong>{data.abn} </strong>
-                        ) : (
-                          <div>
-                            <div className={`inputInfo ${errors.abn ? 'error-border' : ''}`}>
-                              <input
-                                {...register("abn", {
-                                  onChange: (e) => {
-                                    const sanitizedValue = e.target.value.replace(/\D/g, "");
-                                    setValue("abn", sanitizedValue, { shouldValidate: true });
-                                  },
-                                  onPaste: (e) => {
-                                    e.preventDefault();
-                                    const pastedText = e.clipboardData.getData("text").replace(/\D/g, "");
-                                    setValue("abn", pastedText, { shouldValidate: true });
-                                  },
-                                })}
-                                placeholder='Enter ABN'
-                                defaultValue={data.abn}
-                              />
-                              {errors.abn && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors.abn && <p className="error-message">{errors.abn.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p>Please input Active Business Number</p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>Main Company Email</span>
-                        {!isEditingGroup ? (
-                          <strong>{data.main_email} <Link45deg color="#158ECC" size={20} /></strong>
-                        ) : (
-                          <div>
-                            <div className={`inputInfo ${errors.main_email ? 'error-border' : ''}`}>
-                              <input
-                                {...register("main_email")}
-                                placeholder='Enter Email'
-                                defaultValue={data.main_email}
-                              />
-                              {errors.main_email && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors.main_email && <p className="error-message">{errors.main_email.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p>Insert emails which will be used to send all your automatic outgoing emails and notifications.</p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>Main Company Phone Number</span>
-                        {!isEditingGroup ? (
-                          <strong>{data.main_phone} <Telephone color="#158ECC" size={20} /></strong>
-                        ) : (
-                          <div>
-                            <Controller
-                              name="main_phone"
-                              control={control}
-                              render={({ field }) => (
-                                <PhoneInput
-                                  className='phoneInput'
-                                  defaultCountry='au'
-                                  value={field.value || ''}
-                                  placeholder='Enter Phone Number'
-                                  style={{ width: '315px' }}
-                                  onChange={(phone) => field.onChange(phone)}
-                                />
-                              )}
-                            />
-                            {errors.main_phone && <p className="error-message">{errors.main_phone.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p>Insert emails which will be used to send all your automatic outgoing emails and notifications.</p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>Street Address</span>
-                        {!isEditingGroup ? (
-                          <strong>{data.address}</strong>
-                        ) : (
-                          <div>
-                            <div className={`inputInfo ${errors.address ? 'error-border' : ''}`}>
-                              <input
-                                {...register("address")}
-                                placeholder='Enter Address'
-                                defaultValue={data.address}
-                              />
-                              {errors.address && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors.address && <p className="error-message">{errors.address.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p></p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>State</span>
-                        {!isEditingGroup ? (
-                          <strong>{data.state}</strong>
-                        ) : (
-                          <div>
-                            <div className={`inputInfo ${errors.state ? 'error-border' : ''}`}>
-                              <input
-                                {...register("state")}
-                                placeholder='Enter state'
-                                defaultValue={data.state}
-                              />
-                              {errors.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors.state && <p className="error-message">{errors.state.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p></p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>Postcode</span>
-                        {!isEditingGroup ? (
-                          <strong>{data.postcode}</strong>
-                        ) : (
-                          <div>
-                            <div className={`inputInfo ${errors.postcode ? 'error-border' : ''}`}>
-                              <input
-                                {...register("postcode")}
-                                placeholder='Enter postcode'
-                                defaultValue={data.postcode}
-                              />
-                              {errors.postcode && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                            </div>
-                            {errors.postcode && <p className="error-message">{errors.postcode.message}</p>}
-                          </div>
-                        )}
-                      </div>
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-                        <div className={styles.editpara}>
-                          <p></p>
-                        </div>
-                      )}
-                    </li>
-                    <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                      <div className={styles.editinfo}>
-                        <span>Company Logo for Documentation</span>
-                        {!isEditingGroup ? (
-                          <div className='d-flex justify-content-center align-items-center' style={{ border: '1px solid #dedede', width: '50px', height: '50px', borderRadius: '6px', overflow: 'hidden' }}>
-                            <FallbackImage photo={data.company_logo} has_photo={data.has_photo} is_business={true} size={28} />
-                          </div>
-                        ) : (
-
-                          <div className="upload-btn-wrapper">
-                            <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
-                          </div>
-                        )}
-                      </div>
-
-                      {!isEditingGroup ? (
-                        <>
-                        </>
-                      ) : (
-
-                        <div className={styles.editpara}>
-                          <div className='logo'>
-                            <h5>Company logo</h5>
-                            <p>Upload the logo for your unique quotes and invoices.</p>
-                          </div>
-
-                        </div>
-
-                      )}
-
-                    </li>
-
-                  </ul>
-                </div>
-
-              </div>
-            </div>
-            {isEditingGroup && (
-              <div className='updateButtonGeneral'>
-                <button className="cancel" type='button' onClick={() => setIsEditingGroup(false)}>Cancel</button>
-                <button type="submit" className="save mr-3" disabled={mutation.isPending}>
-                  {mutation.isPending ? 'Updating...' : 'Update'}
-                </button>
-
-              </div>
-            )}
-          </div>
+      <Helmet>
+        <title>MeMate - General Information</title>
+      </Helmet>
+      <div className='headSticky'>
+        <h1>Company Information </h1>
+        <div className='contentMenuTab'>
+          <ul>
+            <li className='menuActive'><Link to="/settings/generalinformation">General Information</Link></li>
+            <li><Link to="/settings/generalinformation/bank-details">Bank Details </Link></li>
+            <li><Link to="/settings/generalinformation/region-and-language">Region & Language</Link></li>
+          </ul>
         </div>
       </div>
+      <div className={`content_wrap_main ${isEditingGroup ? 'isEditingwrap' : ''}`} style={{ height: `calc(100vh - 230px - ${trialHeight}px - ${editingHeight}px)` }}>
+        <div className='content_wrapper'>
+          <div className="listwrapper">
+            <div className="topHeadStyle">
+              <div className=''>
+                <h2>General Information</h2>
+                {!isEditingGroup ? (
+                  <></>
+                ) : (
+                  <p>Provide key details about your company</p>
+                )}
+              </div>
+
+              {!isEditingGroup && (
+                <Link to="#" onClick={handleEditGroup}>Edit<PencilSquare color="#344054" size={20} /></Link>
+              )}
+            </div>
+
+            <ul>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Company Legal Name</span>
+                  {!isEditingGroup ? (
+                    <strong>{data?.legal_name} </strong>
+                  ) : (
+                    <div>
+                      <div className={`inputInfo ${errors?.legal_name ? 'error-border' : ''}`}>
+                        <input
+                          {...register("legal_name")}
+                          placeholder='Enter company legal name'
+                          defaultValue={data?.legal_name}
+                        />
+                        {errors?.legal_name && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      </div>
+                      {errors?.legal_name && <p className="error-message">{errors?.legal_name?.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p>Please provide the complete legal name of your company, as it will be displayed on outgoing documentation.</p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Company Trading name</span>
+                  {!isEditingGroup ? (
+                    <strong>{data.trading_name} </strong>
+                  ) : (
+                    <div>
+                      <div className={`inputInfo ${errors.trading_name ? 'error-border' : ''}`}>
+                        <input
+                          {...register("trading_name")}
+                          placeholder='Enter Trading Name'
+                          defaultValue={data.trading_name}
+                        />
+                        {errors.trading_name && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      </div>
+                      {errors.trading_name && <p className="error-message">{errors.trading_name.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p>Please enter a trading name. This will be displayed when you communicate with contractors, clients, and suppliers.</p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>ABN</span>
+                  {!isEditingGroup ? (
+                    <strong>{data.abn} </strong>
+                  ) : (
+                    <div>
+                      <div className={`inputInfo ${errors.abn ? 'error-border' : ''}`}>
+                        <input
+                          {...register("abn", {
+                            onChange: (e) => {
+                              const sanitizedValue = e.target.value.replace(/\D/g, "");
+                              setValue("abn", sanitizedValue, { shouldValidate: true });
+                            },
+                            onPaste: (e) => {
+                              e.preventDefault();
+                              const pastedText = e.clipboardData.getData("text").replace(/\D/g, "");
+                              setValue("abn", pastedText, { shouldValidate: true });
+                            },
+                          })}
+                          placeholder='Enter ABN'
+                          defaultValue={data.abn}
+                        />
+                        {errors.abn && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      </div>
+                      {errors.abn && <p className="error-message">{errors.abn.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p>Please input Active Business Number</p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Main Company Email</span>
+                  {!isEditingGroup ? (
+                    <strong>{data.main_email} <Link45deg color="#158ECC" size={20} /></strong>
+                  ) : (
+                    <div>
+                      <div className={`inputInfo ${errors.main_email ? 'error-border' : ''}`}>
+                        <input
+                          {...register("main_email")}
+                          placeholder='Enter Email'
+                          defaultValue={data.main_email}
+                        />
+                        {errors.main_email && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      </div>
+                      {errors.main_email && <p className="error-message">{errors.main_email.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p>Insert emails which will be used to send all your automatic outgoing emails and notifications.</p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Main Company Phone Number</span>
+                  {!isEditingGroup ? (
+                    <strong>{data.main_phone} <Telephone color="#158ECC" size={20} /></strong>
+                  ) : (
+                    <div>
+                      <Controller
+                        name="main_phone"
+                        control={control}
+                        render={({ field }) => (
+                          <PhoneInput
+                            className='phoneInput'
+                            defaultCountry='au'
+                            value={field.value || ''}
+                            placeholder='Enter Phone Number'
+                            style={{ width: '315px' }}
+                            onChange={(phone) => field.onChange(phone)}
+                          />
+                        )}
+                      />
+                      {errors.main_phone && <p className="error-message">{errors.main_phone.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p>Insert emails which will be used to send all your automatic outgoing emails and notifications.</p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Street Address</span>
+                  {!isEditingGroup ? (
+                    <strong>{data.address}</strong>
+                  ) : (
+                    <div>
+                      <div className={`inputInfo ${errors.address ? 'error-border' : ''}`}>
+                        <input
+                          {...register("address")}
+                          placeholder='Enter Address'
+                          defaultValue={data.address}
+                        />
+                        {errors.address && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      </div>
+                      {errors.address && <p className="error-message">{errors.address.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p></p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>State</span>
+                  {!isEditingGroup ? (
+                    <strong>{data.state}</strong>
+                  ) : (
+                    <div>
+                      <div className={`inputInfo ${errors.state ? 'error-border' : ''}`}>
+                        <input
+                          {...register("state")}
+                          placeholder='Enter state'
+                          defaultValue={data.state}
+                        />
+                        {errors.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      </div>
+                      {errors.state && <p className="error-message">{errors.state.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p></p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Postcode</span>
+                  {!isEditingGroup ? (
+                    <strong>{data.postcode}</strong>
+                  ) : (
+                    <div>
+                      <div className={`inputInfo ${errors.postcode ? 'error-border' : ''}`}>
+                        <input
+                          {...register("postcode")}
+                          placeholder='Enter postcode'
+                          defaultValue={data.postcode}
+                        />
+                        {errors.postcode && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
+                      </div>
+                      {errors.postcode && <p className="error-message">{errors.postcode.message}</p>}
+                    </div>
+                  )}
+                </div>
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+                  <div className={styles.editpara}>
+                    <p></p>
+                  </div>
+                )}
+              </li>
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Company Logo for Documentation</span>
+                  {!isEditingGroup ? (
+                    <div className='d-flex justify-content-center align-items-center' style={{ border: '1px solid #dedede', width: '50px', height: '50px', borderRadius: '6px', overflow: 'hidden' }}>
+                      <FallbackImage photo={data.company_logo} has_photo={data.has_photo} is_business={true} size={28} />
+                    </div>
+                  ) : (
+
+                    <div className="upload-btn-wrapper">
+                      <FileUpload photo={photo} data={data} setPhoto={setPhoto} />
+                    </div>
+                  )}
+                </div>
+
+                {!isEditingGroup ? (
+                  <>
+                  </>
+                ) : (
+
+                  <div className={styles.editpara}>
+                    <div className='logo'>
+                      <h5>Company logo</h5>
+                      <p>Upload the logo for your unique quotes and invoices.</p>
+                    </div>
+
+                  </div>
+
+                )}
+
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+      </div>
+      {isEditingGroup && (
+        <div className='updateButtonGeneral'>
+          <button className="cancel" type='button' onClick={() => setIsEditingGroup(false)}>Cancel</button>
+          <button type="submit" className="save mr-3" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Updating...' : 'Update'}
+          </button>
+        </div>
+      )}
     </form>
   );
 }

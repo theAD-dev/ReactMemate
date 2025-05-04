@@ -22,11 +22,7 @@ axiosInstance.interceptors.response.use(
             console.error('Permission denied: You do not have access to this resource.');
             window.location.href = '/403';
         }
-        // if (response && response.status === 401) {
-        //     console.error('Session expired. Please log in again.');
-        //     localStorage.clear();
-        //     window.location.href = '/login';
-        // }
+
         if (error.code === 'ECONNABORTED') {
             console.error('Request timeout: The server took too long to respond.');
             toast.error('Request timeout. Please try again later.');

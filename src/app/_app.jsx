@@ -22,7 +22,10 @@ const App = () => {
             <AuthProvider>
               <TrialHeightProvider>
                 <Toaster expand={true} richColors closeButton position="top-right" />
-                <RouterProvider router={content} />
+                <RouterProvider router={content} future={{
+                  v7_relativeSplatPath: true,
+                  v7_startTransition: true,
+                }} />
               </TrialHeightProvider>
             </AuthProvider>
           </ReactQueryProvider>

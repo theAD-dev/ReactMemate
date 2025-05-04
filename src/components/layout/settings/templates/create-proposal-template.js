@@ -14,7 +14,6 @@ import { toast } from 'sonner';
 import style from './job-template.module.scss';
 import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import Sidebar from '../Sidebar';
 
 const renderHeader = () => (
     <span className="ql-formats">
@@ -41,7 +40,6 @@ const CreateProposalTemplate = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const has_work_subscription = !!profileData?.has_work_subscription;
     const has_twilio = !!profileData?.has_twilio;
-    const [activeTab, setActiveTab] = useState('job-templates');
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -157,160 +155,157 @@ const CreateProposalTemplate = () => {
     }, [id, proposalQuery?.data]);
 
     return (
-        <div className='settings-wrap'>
+        <>
             <Helmet>
                 <title>MeMate - {id ? 'Edit' : 'Create'} Proposal Template</title>
             </Helmet>
-            <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
-                    <div className='headSticky' style={{ position: 'relative' }}>
-                        <h1>Templates</h1>
-                        <div className='contentMenuTab'>
-                            <ul>
-                                <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
-                                <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
-                                <li className='menuActive'><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
-                                {!has_work_subscription ? (
-                                    <OverlayTrigger
-                                        key="top"
-                                        placement="top"
-                                        overlay={
-                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
-                                                Work environment is not available for this subscription type
-                                            </Tooltip>
-                                        }
-                                    >
-                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">Job Templates</Link></li>
-                                    </OverlayTrigger>
-                                ) : (
-                                    <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
-                                )}
-                                {!has_twilio ? (
-                                    <OverlayTrigger
-                                        key="top"
-                                        placement="top"
-                                        overlay={
-                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
-                                                Your Twilio account has not been set up yet.
-                                            </Tooltip>
-                                        }
-                                    >
-                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">SMS Templates</Link></li>
-                                    </OverlayTrigger>
-                                ) : (
-                                    <li><Link to="/settings/templates/sms-templates">SMS Templates</Link></li>
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-                    <div className={`content_wrap_main mt-0 ${style.createProposal}`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
-                        <div className='content_wrapper d-block px-3' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
-                            <Link to='/settings/templates/proposal-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
-                                <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
-                            </Link>
-
-                            <div className='d-flex align-items-center w-100'>
-                                {isEdit ? (
-                                    <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={name} onChange={(e) => setName(e.target.value)} autoFocus placeholder='[ Template ]' />
-                                ) : (
-                                    <span className={clsx(style.templateName, 'me-2')}>{name || "[ Template Name ]"}</span>
-                                )}
-                                <div style={{ width: '30px' }}>
-                                    {proposalQuery?.isFetching ? (
-                                        <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px' }} />
-                                    ) : (
-                                        <PencilSquare color='#106B99' onClick={() => setIsEdit(true)} size={16} style={{ cursor: 'pointer' }} />
-                                    )}
-                                </div>
-                            </div>
-                            {errors?.name && (
-                                <p className="error-message mb-0">{"Name is required"}</p>
+            <div className="settings-content setModalelBoots w-100">
+                <div className='headSticky' style={{ position: 'relative' }}>
+                    <h1>Templates</h1>
+                    <div className='contentMenuTab'>
+                        <ul>
+                            <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
+                            <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
+                            <li className='menuActive'><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
+                            {!has_work_subscription ? (
+                                <OverlayTrigger
+                                    key="top"
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                            Work environment is not available for this subscription type
+                                        </Tooltip>
+                                    }
+                                >
+                                    <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">Job Templates</Link></li>
+                                </OverlayTrigger>
+                            ) : (
+                                <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                             )}
+                            {!has_twilio ? (
+                                <OverlayTrigger
+                                    key="top"
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                            Your Twilio account has not been set up yet.
+                                        </Tooltip>
+                                    }
+                                >
+                                    <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">SMS Templates</Link></li>
+                                </OverlayTrigger>
+                            ) : (
+                                <li><Link to="/settings/templates/sms-templates">SMS Templates</Link></li>
+                            )}
+                        </ul>
+                    </div>
+                </div>
+                <div className={`content_wrap_main mt-0 ${style.createProposal}`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
+                    <div className='listwrapper' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
+                        <Link to='/settings/templates/proposal-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
+                            <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
+                        </Link>
 
-                            <div className={style.divider}></div>
+                        <div className='d-flex align-items-center w-100'>
+                            {isEdit ? (
+                                <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={name} onChange={(e) => setName(e.target.value)} autoFocus placeholder='[ Template ]' />
+                            ) : (
+                                <span className={clsx(style.templateName, 'me-2')}>{name || "[ Template Name ]"}</span>
+                            )}
+                            <div style={{ width: '30px' }}>
+                                {proposalQuery?.isFetching ? (
+                                    <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px' }} />
+                                ) : (
+                                    <PencilSquare color='#106B99' onClick={() => setIsEdit(true)} size={16} style={{ cursor: 'pointer' }} />
+                                )}
+                            </div>
+                        </div>
+                        {errors?.name && (
+                            <p className="error-message mb-0">{"Name is required"}</p>
+                        )}
 
-                            {sections?.filter(section => !section.delete)?.map((section, index) => (
-                                <div key={index} className={style.section}>
-                                    <h1 className={clsx(style.sectionName)}>Section {index + 1}</h1>
-                                    <div className={clsx(style.deleteButton)} onClick={() => handleDeleteSection(index)}>
-                                        <Trash color='#F04438' size={16} />
-                                    </div>
+                        <div className={style.divider}></div>
 
-                                    <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
-                                        <label className={style.label}>Title<span className="required">*</span></label>
-                                        <IconField>
-                                            <InputIcon>
-                                                {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                            </InputIcon>
-                                            <InputText
-                                                value={section?.title || ""}
-                                                className={clsx(style.inputBox, 'w-100')}
-                                                onChange={(e) => {
-                                                    setSections(prevSections => {
-                                                        const newSections = [...prevSections];
-                                                        newSections[index] = { ...newSections[index], title: e.target.value };
-                                                        return newSections;
-                                                    });
-                                                }}
-                                                placeholder="Section Title"
-                                            />
-                                        </IconField>
-                                        {errors?.sections?.[index]?.title && (
-                                            <p className="error-message mb-0">{"Title is required"}</p>
-                                        )}
-                                    </div>
-                                    <div className="d-flex flex-column gap-1 w-100" style={{ position: 'relative' }}>
-                                        <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
-                                        <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                        {sections?.filter(section => !section.delete)?.map((section, index) => (
+                            <div key={index} className={style.section}>
+                                <h1 className={clsx(style.sectionName)}>Section {index + 1}</h1>
+                                <div className={clsx(style.deleteButton)} onClick={() => handleDeleteSection(index)}>
+                                    <Trash color='#F04438' size={16} />
+                                </div>
+
+                                <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
+                                    <label className={style.label}>Title<span className="required">*</span></label>
+                                    <IconField>
+                                        <InputIcon>
                                             {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                         </InputIcon>
-                                        <Editor
-                                            style={{ minHeight: "299px" }}
-                                            headerTemplate={header}
-                                            value={section.description}
-                                            placeholder='Enter a description...'
-                                            onTextChange={(e) => {
+                                        <InputText
+                                            value={section?.title || ""}
+                                            className={clsx(style.inputBox, 'w-100')}
+                                            onChange={(e) => {
                                                 setSections(prevSections => {
                                                     const newSections = [...prevSections];
-                                                    newSections[index] = { ...newSections[index], description: e.htmlValue };
+                                                    newSections[index] = { ...newSections[index], title: e.target.value };
                                                     return newSections;
                                                 });
                                             }}
+                                            placeholder="Section Title"
                                         />
-                                    </div>
-                                    {errors?.sections?.[index]?.description && (
-                                        <p className="error-message mb-0">{"Message is required"}</p>
+                                    </IconField>
+                                    {errors?.sections?.[index]?.title && (
+                                        <p className="error-message mb-0">{"Title is required"}</p>
                                     )}
                                 </div>
-                            ))}
+                                <div className="d-flex flex-column gap-1 w-100" style={{ position: 'relative' }}>
+                                    <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
+                                    <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                                        {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                                    </InputIcon>
+                                    <Editor
+                                        style={{ minHeight: "299px" }}
+                                        headerTemplate={header}
+                                        value={section.description}
+                                        placeholder='Enter a description...'
+                                        onTextChange={(e) => {
+                                            setSections(prevSections => {
+                                                const newSections = [...prevSections];
+                                                newSections[index] = { ...newSections[index], description: e.htmlValue };
+                                                return newSections;
+                                            });
+                                        }}
+                                    />
+                                </div>
+                                {errors?.sections?.[index]?.description && (
+                                    <p className="error-message mb-0">{"Message is required"}</p>
+                                )}
+                            </div>
+                        ))}
 
-                            <Button onClick={handleAddSection} className={`outline-button mt-3 ${style.blueOutlineButton}`}>
-                                Add  New Section <PlusLg color='#106B99' />
-                            </Button>
-                        </div>
+                        <Button onClick={handleAddSection} className={`outline-button mt-3 ${style.blueOutlineButton}`}>
+                            Add  New Section <PlusLg color='#106B99' />
+                        </Button>
                     </div>
+                </div>
 
-                    <div className={style.bottom}>
-                        {id ? (
-                            <Button onClick={handleDelete} disabled={deleteMutation.isPending} className='danger-outline-button'>
-                                Delete Template {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
-                            </Button>
-                        ) : (
-                            <span></span>
-                        )}
-                        <div className='d-flex gap-2'>
-                            <Link to={'/settings/templates/proposal-templates/'}>
-                                <Button className='outline-button'>Cancel</Button>
-                            </Link>
-                            <Button onClick={handleSubmit} disabled={isLoading} className='solid-button'>
-                                Save Template {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
-                            </Button>
-                        </div>
+                <div className={style.bottom}>
+                    {id ? (
+                        <Button onClick={handleDelete} disabled={deleteMutation.isPending} className='danger-outline-button'>
+                            Delete Template {deleteMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+                        </Button>
+                    ) : (
+                        <span></span>
+                    )}
+                    <div className='d-flex gap-2'>
+                        <Link to={'/settings/templates/proposal-templates/'}>
+                            <Button className='outline-button'>Cancel</Button>
+                        </Link>
+                        <Button onClick={handleSubmit} disabled={isLoading} className='solid-button'>
+                            Save Template {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+                        </Button>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

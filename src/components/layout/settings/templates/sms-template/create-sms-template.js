@@ -13,7 +13,6 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import { createSMSTemplate, deleteSMSTemplate, getSMS, updateSMSTemplate } from '../../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
-import Sidebar from '../../Sidebar';
 import style from '../job-template.module.scss';
 
 const CreateSMSTemplate = () => {
@@ -30,7 +29,6 @@ const CreateSMSTemplate = () => {
     const isCustom = searchParams.get('isCustom');
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
-    const [activeTab, setActiveTab] = useState('job-templates');
     const smsQuery = useQuery({
         queryKey: ["getSMS", id],
         queryFn: () => getSMS(id),
@@ -94,112 +92,110 @@ const CreateSMSTemplate = () => {
     }, [smsQuery?.data]);
 
     return (
-        <div className='settings-wrap'>
+        <>
             <Helmet>
                 <title>MeMate - {id ? 'Edit' : 'Create'} SMS Template</title>
             </Helmet>
-            <div className="settings-wrapper">
-                <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-                <div className="settings-content setModalelBoots">
-                    <div className='headSticky' style={{ position: 'relative' }}>
-                        <h1>Templates</h1>
-                        <div className='contentMenuTab'>
-                            <ul>
-                                <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
-                                <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
-                                <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
-                                {!has_work_subscription ? (
-                                    <OverlayTrigger
-                                        key="top"
-                                        placement="top"
-                                        overlay={
-                                            <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
-                                                Work environment is not available for this subscription type
-                                            </Tooltip>
-                                        }
-                                    >
-                                        <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">Job Templates</Link></li>
-                                    </OverlayTrigger>
-                                ) : (
-                                    <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
-                                )}
-                                <li className='menuActive'><Link to="#">SMS Templates</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
-                        <div className='content_wrapper d-block px-3' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
-                            <Link to='/settings/templates/sms-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
-                                <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
-                            </Link>
 
-                            <div className='d-flex align-items-center w-100'>
-                                {
-                                    isEdit ? (
-                                        <>
-                                            <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={title} onChange={(e) => {
-                                                setTitle(e.target.value);
-                                                setErrors((others) => ({ ...others, title: false }));
-                                            }} autoFocus
-                                                placeholder='[ Template ]'
-                                            />
-                                        </>
-                                    ) : <span className={clsx(style.templateName, 'me-2')}>{title || "[ Template Name ]"}</span>
-                                }
-                                <div style={{ width: '30px' }}>
-                                    {smsQuery?.isFetching ?
-                                        <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px' }} />
-                                        : <PencilSquare color='#106B99' onClick={() => setIsEdit(true)} size={16} style={{ cursor: 'pointer' }} />
+            <div className="settings-content setModalelBoots w-100">
+                <div className='headSticky' style={{ position: 'relative' }}>
+                    <h1>Templates</h1>
+                    <div className='contentMenuTab'>
+                        <ul>
+                            <li><Link to="/settings/templates/email-templates">Email Templates</Link></li>
+                            <li><Link to="/settings/templates/email-signatures">Email Signatures</Link></li>
+                            <li><Link to="/settings/templates/proposal-templates">Proposal Templates</Link></li>
+                            {!has_work_subscription ? (
+                                <OverlayTrigger
+                                    key="top"
+                                    placement="top"
+                                    overlay={
+                                        <Tooltip className='TooltipOverlay width-300' id="tooltip-job-templates">
+                                            Work environment is not available for this subscription type
+                                        </Tooltip>
                                     }
-                                </div>
-                            </div>
-                            {errors?.title && (
-                                <p className="error-message mb-0">{"Title is required"}</p>
+                                >
+                                    <li style={{ opacity: '.5', cursor: 'not-allowed' }}><Link to="#">Job Templates</Link></li>
+                                </OverlayTrigger>
+                            ) : (
+                                <li><Link to="/settings/templates/job-templates">Job Templates</Link></li>
                             )}
-
-                            <div className={style.divider}></div>
-
-                            <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
-                                <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
-                                <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
-                                    {smsQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
-                                </InputIcon>
-                                <InputTextarea
-                                    ref={editorRef}
-                                    style={{ minHeight: "150px" }}
-                                    value={text}
-                                    placeholder='Enter a description...'
-                                    onChange={(e) => {
-                                        const newText = e.target.value.slice(0, 150); // Limit to 150 characters
-                                        setText(newText);
-                                        setErrors((others) => ({ ...others, text: false }));
-                                    }}
-                                />
-                                <div style={{ textAlign: 'right', marginTop: '5px', fontSize: '14px', color: '#6c757d' }}>
-                                    {text?.length || 0}/150
-                                </div>
-                            </div>
-                            {errors?.text && (
-                                <p className="error-message mb-0">{"Message is required"}</p>
-                            )}
-                        </div>
+                            <li className='menuActive'><Link to="#">SMS Templates</Link></li>
+                        </ul>
                     </div>
-                    <div className={style.bottom}>
-                        {
-                            id ?
-                                <Button onClick={handleDelete} className='danger-outline-button ms-2'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
-                                : <span></span>
-                        }
-                        <div className='d-flex gap-2'>
-                            <Link to={'/settings/templates/sms-templates/'}>
-                                <Button className='outline-button'>Cancel</Button>
-                            </Link>
-                            <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
+                </div>
+                <div className={`content_wrap_main mt-0`} style={{ background: '#F9FAFB', paddingBottom: `${trialHeight}px` }}>
+                    <div className='listwrapper' style={{ paddingTop: '24px', paddingBottom: '100px' }}>
+                        <Link to='/settings/templates/sms-templates/' className={clsx(style.transparent, 'text-button border px-0')} style={{ width: "fit-content", marginBottom: '16px' }}>
+                            <ChevronLeft color="#475467" size={20} /> <span style={{ color: '#475467' }}>Go Back</span>
+                        </Link>
+
+                        <div className='d-flex align-items-center w-100'>
+                            {
+                                isEdit ? (
+                                    <>
+                                        <InputText onBlur={() => setIsEdit(false)} className={clsx(style.inputBox, style.templateName, style.transparent, 'me-2 p-0')} value={title} onChange={(e) => {
+                                            setTitle(e.target.value);
+                                            setErrors((others) => ({ ...others, title: false }));
+                                        }} autoFocus
+                                            placeholder='[ Template ]'
+                                        />
+                                    </>
+                                ) : <span className={clsx(style.templateName, 'me-2')}>{title || "[ Template Name ]"}</span>
+                            }
+                            <div style={{ width: '30px' }}>
+                                {smsQuery?.isFetching ?
+                                    <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px' }} />
+                                    : <PencilSquare color='#106B99' onClick={() => setIsEdit(true)} size={16} style={{ cursor: 'pointer' }} />
+                                }
+                            </div>
                         </div>
+                        {errors?.title && (
+                            <p className="error-message mb-0">{"Title is required"}</p>
+                        )}
+
+                        <div className={style.divider}></div>
+
+                        <div className="d-flex flex-column gap-1" style={{ position: 'relative' }}>
+                            <label className={clsx(style.lable)}>Message<span className="required">*</span></label>
+                            <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
+                                {smsQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
+                            </InputIcon>
+                            <InputTextarea
+                                ref={editorRef}
+                                style={{ minHeight: "150px" }}
+                                value={text}
+                                placeholder='Enter a description...'
+                                onChange={(e) => {
+                                    const newText = e.target.value.slice(0, 150); // Limit to 150 characters
+                                    setText(newText);
+                                    setErrors((others) => ({ ...others, text: false }));
+                                }}
+                            />
+                            <div style={{ textAlign: 'right', marginTop: '5px', fontSize: '14px', color: '#6c757d' }}>
+                                {text?.length || 0}/150
+                            </div>
+                        </div>
+                        {errors?.text && (
+                            <p className="error-message mb-0">{"Message is required"}</p>
+                        )}
+                    </div>
+                </div>
+                <div className={style.bottom}>
+                    {
+                        id ?
+                            <Button onClick={handleDelete} className='danger-outline-button ms-2'>{deleteMutation.isPending ? "Loading..." : "Delete Template"}</Button>
+                            : <span></span>
+                    }
+                    <div className='d-flex gap-2'>
+                        <Link to={'/settings/templates/sms-templates/'}>
+                            <Button className='outline-button'>Cancel</Button>
+                        </Link>
+                        <Button onClick={handleSubmit} className='solid-button'>{mutation.isPending ? "Loading..." : "Save Template"}</Button>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

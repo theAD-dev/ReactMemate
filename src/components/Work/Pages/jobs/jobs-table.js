@@ -241,7 +241,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
-      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} />
+      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch}/>
     </>
   );
 });

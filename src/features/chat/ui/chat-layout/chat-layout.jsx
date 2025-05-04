@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import ChatSidebar from '../chat-sidebar/chat-sidebar';
-import ChatArea from '../chat-area/chat-area';
 import styles from './chat-layout.module.scss';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import ChatArea from '../chat-area/chat-area';
+import ChatSidebar from '../chat-sidebar/chat-sidebar';
 
 const ChatLayout = () => {
   const { trialHeight } = useTrialHeight();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const chatId = params.get("id");
-
   const [activeTab, setActiveTab] = useState('users');
   const [archivedVisible, setArchivedVisible] = useState(false);
 
