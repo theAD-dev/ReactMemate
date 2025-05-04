@@ -26,7 +26,7 @@ function loadData(data) {
   const resources = [
     {
       id: 0,
-      html: `<div class="d-flex align-items-center open-jobs-box">
+      html: `<div class="d-flex align-items-center open-jobs-box" style="width: 300px">
       <div class="d-flex justify-content-center align-items-center icon-box">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M7.14307 6.57171C6.82748 6.57171 6.57164 6.82754 6.57164 7.14314C6.57164 7.45873 6.82748 7.71457 7.14307 7.71457H12.8574C13.1729 7.71457 13.4288 7.45873 13.4288 7.14314C13.4288 6.82754 13.1729 6.57171 12.8574 6.57171H7.14307Z" fill="#475467"/>
@@ -80,23 +80,27 @@ function loadData(data) {
       backColor: "#fff"
     });
 
-    resources.push(
-      {
-        id: worker.id,
-        cssClass: 'job-resource-head',
-        html: `<div class="job-resource d-flex align-items-center justify-content-between" style="width: 320px">
-        <div class="left-box">
-          <div class="d-flex justify-content-center align-items-center avatar-text-box">AM</div>
-          <div class="avatar-name" title="${worker.first_name} ${worker.last_name}">${worker.first_name} ${worker.last_name}</div>
-        </div>
-        <button class="job-resource-button">Working</button>
-      </div>`,
-        backColor: '#FFFFFF',
-        minHeight: 56,
-        expanded: true,
-        children: childResource
-      }
-    );
+    if (worker?.first_name !== "Open" && worker?.last_name !== "Jobs") {
+      resources.push(
+        {
+          id: worker.id,
+          cssClass: 'job-resource-head',
+          html: `<div class="job-resource d-flex align-items-center justify-content-between" style="width: 320px">
+            <div class="left-box">
+              <div class="d-flex justify-content-center align-items-center avatar-text-box">AM</div>
+              <div class="avatar-name" title="${worker.first_name} ${worker.last_name}">${worker.first_name} ${worker.last_name}</div>
+            </div>
+            <button class="job-resource-button">Working</button>
+          </div>`,
+          backColor: '#FFFFFF',
+          minHeight: 56,
+          expanded: true,
+          children: childResource
+        }
+      );
+    } else {
+      resources.filter((resource) => resource.id === 0)[0].children = childResource;
+    }
 
     worker?.jobs?.forEach((job) => {
       if (job.start_date && job.end_date) {
