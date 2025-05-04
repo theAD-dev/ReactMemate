@@ -10,6 +10,10 @@ export const AuthProvider = ({ children }) => {
         window.sessionStorage.clear();
     }
 
+    if (data) {
+        localStorage.setItem('profileData', JSON.stringify(data));
+    }
+
     const value = { session: data || null, isLoading, isError, error: error || null, refetchSession: refetch };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -113,7 +113,7 @@ const Desktop = ({ visible, setVisible }) => {
             <div className="settings-content setModalelBoots w-100">
                 <div className='headSticky'>
                     <h1 className='mb-0'>Users</h1>
-                    <div className={`contentMenuTab ${style.contentMenuTab}`}>
+                    <div className={`contentMenuTab ${style.contentMenuTab}`} style={{ height: '50px' }}>
                         <ul>
                             <li className='menuActive'><Link to="/settings/users/desktop">Desktop</Link></li>
                             <li><Link to="/settings/users/mobile-app">Mobile App</Link></li>
