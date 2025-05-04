@@ -27,7 +27,7 @@ function EventScheduler() {
   const [filterBy, setFilterBy] = useState("");
   const [sortBy, setSortBy] = useState("");
 
-  // show project model from invoice 
+  // show project model from invoice
   const url = window.location.href;
   const urlObj = new URL(url);
   const params = new URLSearchParams(urlObj.search);
@@ -263,8 +263,35 @@ function EventScheduler() {
       </div>
       <div className="d-flex gap-2 justify-content-end align-items-center">
         <Dropdown>
-          <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px" }}>
+          <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px", position: "relative" }}>
             <span className="font-14">{sortBy || "Sort By"}</span>
+            {sortBy && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSortChange("");
+                }}
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: "50%",
+                  backgroundColor: "#F2F4F7",
+                  marginLeft: "8px"
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 3L3 9M3 3L9 9" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            )}
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item key={"Date Due"} eventKey={"Date Due"} active={sortBy === "Date Due"} onClick={() => handleSortChange("Date Due")}>
@@ -283,8 +310,35 @@ function EventScheduler() {
         </Dropdown>
 
         <Dropdown>
-          <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px" }}>
+          <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px", position: "relative" }}>
             <span className="font-14">{filterBy || "Filter By"}</span>
+            {filterBy && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleFilterChange("");
+                }}
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: "50%",
+                  backgroundColor: "#F2F4F7",
+                  marginLeft: "8px"
+                }}
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 3L3 9M3 3L9 9" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </span>
+            )}
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item key={"Not Invoiced"} eventKey={"Not Invoiced"} active={filterBy === "Not Invoiced"} onClick={() => handleFilterChange("Not Invoiced")}>
