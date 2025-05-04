@@ -211,7 +211,7 @@ function EventScheduler() {
     } else if (sortBy === "Job Number") {
       filteredData.sort((a, b) => a.number.localeCompare(b.number));
     } else if (sortBy === "Order Status") {
-      filteredData.sort((a, b) => (a.custom_status || "").localeCompare(b.custom_status || ""));
+      filteredData.sort((a, b) => (a?.custom_status?.title || "").localeCompare(b?.custom_status?.title || ""));
     }
 
     // Apply search
