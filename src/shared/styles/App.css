@@ -638,13 +638,17 @@ table.department-calculation tbody tr.selected td {
 }
 
 #calender .scheduler_default_rowheader_scroll,
-#calender .scheduler_default_scrollable {
+#calender .scheduler_default_scrollable,
+#job-scheduler .scheduler_default_rowheader_scroll,
+#job-scheduler .scheduler_default_scrollable {
   height: calc(100vh - 234px) !important;
   height: calc(100dvh -234px) !important;
 }
 
 .trial-height-added #calender .scheduler_default_rowheader_scroll,
-.trial-height-added #calender .scheduler_default_scrollable {
+.trial-height-added #calender .scheduler_default_scrollable,
+.trial-height-added #job-scheduler .scheduler_default_rowheader_scroll,
+.trial-height-added #job-scheduler .scheduler_default_scrollable {
   height: calc(100vh - 264px) !important;
   height: calc(100dvh -264px) !important;
 }

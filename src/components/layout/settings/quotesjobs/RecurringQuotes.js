@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CardChecklist, CheckCircleFill } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -31,6 +31,8 @@ const frequencyMap = {
 
 const RecurringQuotes = () => {
     const { trialHeight } = useTrialHeight();
+    const params = new URLSearchParams(location.search);
+    const recurringId = params.get('recurringId');
     const [currentPage, setCurrentPage] = useState(1);
     const [showHistory, setShowHistory] = useState(false);
     const [history, setHistory] = useState([]);
@@ -91,11 +93,21 @@ const RecurringQuotes = () => {
         </div>
     );
 
-    const handleOpen = (pk) => {
-        const currentHistory = results.find((item) => item.pk === pk);
-        setHistory(currentHistory.history || []);
+    const handleOpen = useCallback((unique_id) => {
+        const currentHistory = results.find((item) => item.unique_id === unique_id);
+        setHistory(currentHistory?.history || []);
         setShowHistory(true);
-    };
+    }, [results]);
+
+    useEffect(() => {
+        if (recurringId && data) {
+          handleOpen(recurringId);
+
+          const url = new URL(window.location.href);
+          url.searchParams.delete('recurringId');
+          window.history.replaceState({}, '', url);
+        }
+    }, [recurringId, data, handleOpen]);
 
     return (
         <>
@@ -121,18 +133,17 @@ const RecurringQuotes = () => {
                         <Column header="Client name" field="client.name" body={(rowData) => (
                             <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
                                 <div className='ellipsis-width'>{rowData.client.name}</div>
-                                <Button label="Open" onClick={() => handleOpen(rowData.pk)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+                                <Button label="Open" onClick={() => handleOpen(rowData.unique_id)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
                             </div>
                         )} style={{ width: 'auto' }}></Column>
                         <Column header="Order Reference" field="project.reference" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px', fontWeight: 600 }}>{rowData?.project?.reference || ''}</div>} style={{ width: 'auto' }}></Column>
                         <Column header="Frequency" field="frequency" body={(rowData) => frequencyMap[rowData.frequency]} style={{ width: 'auto' }}></Column>
                         <Column header="Date started" field="start_date" body={(rowData) => formatDate(rowData.start_date)} style={{ width: 'auto' }}></Column>
-                        <Column header="Occurrences" field="occurrences" style={{ width: 'auto' }}></Column>
-                        <Column header="Processed" field="processed" style={{ width: 'auto' }}></Column>
+                        <Column header="Processed/Occurrences" field="occurrences" body={(rowData) => `${rowData.processed || 0}/${rowData.occurrences || 0}`} style={{ width: 'auto', textAlign: 'center' }}></Column>
                         <Column header="Status" field="active" body={(rowData) => rowData.active ? <CheckCircleFill size={24} color="#17B26A" /> : ''} style={{ width: 'auto' }}></Column>
                         <Column header="Actions" field="" className='text-center' body={(rowData) => (
                             <RecurringJobActions
-                                jobId={rowData.pk}
+                                jobId={rowData.unique_id}
                                 status={rowData.active ? 'active' : 'inactive'}
                                 onActionComplete={handleActionComplete}
                             />
@@ -175,7 +186,7 @@ const RecurringQuotes = () => {
             }
             <Dialog visible={showHistory} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={() => setShowHistory(false)}>
                 <DataTable value={history || []} showGridlines tableStyle={{ minWidth: '50rem' }}>
-                    <Column header="#" field="pk" body={(rowData, { rowIndex }) => <>{rowIndex + 1}</>} style={{ width: 'auto' }}></Column>
+                    <Column header="#" field="unique_id" body={(rowData, { rowIndex }) => <>{rowIndex + 1}</>} style={{ width: 'auto' }}></Column>
                     <Column header="Date" field="date" body={(rowData) => formatDate(rowData.date)} style={{ width: 'auto' }}></Column>
                     <Column header="Project Number" field="project.number" style={{ width: 'auto' }}></Column>
                     <Column header="Project Reference" field="project.reference" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px' }}>{rowData?.project?.reference || ''}</div>} style={{ width: 'auto' }}></Column>

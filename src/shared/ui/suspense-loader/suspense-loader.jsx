@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
+import { Spinner } from 'react-bootstrap';
 import NProgress from 'nprogress';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import style from './suspense-loader.module.scss';
 
 function SuspenseLoader() {
@@ -15,7 +15,7 @@ function SuspenseLoader() {
   return (
     <div className={style.box}>
       <div className={style.innerBox}>
-        <ProgressSpinner className={style.spinnerSize} />
+        <Spinner animation="border" className={style.spinnerSize} role="status"/>
       </div>
     </div>
   );

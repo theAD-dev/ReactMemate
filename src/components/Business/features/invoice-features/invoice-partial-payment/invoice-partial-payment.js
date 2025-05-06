@@ -224,7 +224,7 @@ const InvoiceHistory = ({ history }) => {
         } else if (type === 3) {
             return <div className='d-flex align-items-center gap-2'>
                 <Stripe size={18} />
-                <span>Strip</span>
+                <span>Stripe</span>
             </div>;
         } else if (type === 4) {
             return <div className='d-flex align-items-center gap-2'>

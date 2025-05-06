@@ -25,7 +25,7 @@ const CompanyName = () => {
   const [company_name, setCompanyname] = useState("");
   const [company_description, setCompanydescription] = useState("");
   const [company_size, setCompanySize] = useState("");
-  const [is_agree_marketing, setAgree] = useState(false);
+  const [is_agree_marketing, setAgree] = useState(true);
 
   const [emailError, setEmailError] = useState("");
   const [checkError, setCheckError] = useState("");
