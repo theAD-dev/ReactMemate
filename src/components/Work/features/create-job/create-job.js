@@ -503,8 +503,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     useEffect(() => {
         if (workerId) {
-            setUserId(+workerId);
-            workerDetailsSet(+workerId);
+            setUserId(+workerId || "0");
+            workerDetailsSet(+workerId || "");
         }
     }, [workerId, workerDetailsSet]);
 
@@ -711,7 +711,6 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 valueTemplate={selectedItemTemplate}
                                                 loading={mobileUserQuery?.isFetching}
                                                 filter
-                                                disabled={!!workerId}
                                             />
                                             {errors?.userId && (
                                                 <p className="error-message mb-0">{"Worker is required"}</p>
