@@ -128,6 +128,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       <small>A→Z</small>
     </div>;
   };
+
   const clientBody = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
@@ -138,8 +139,21 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const nameBody = (rowData) => {
+    const status = rowData.status;
+    if (status === '1') {
+      return <div className='d-flex align-items-center'>
+        <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 20" fill="none">
+            <path d="M7.14307 6.57171C6.82748 6.57171 6.57164 6.82754 6.57164 7.14314C6.57164 7.45873 6.82748 7.71457 7.14307 7.71457H12.8574C13.1729 7.71457 13.4288 7.45873 13.4288 7.14314C13.4288 6.82754 13.1729 6.57171 12.8574 6.57171H7.14307Z" fill="#475467" />
+            <path d="M7.14307 8.85742C6.82748 8.85742 6.57164 9.11326 6.57164 9.42885C6.57164 9.74444 6.82748 10.0003 7.14307 10.0003H10.5716C10.8872 10.0003 11.1431 9.74444 11.1431 9.42885C11.1431 9.11326 10.8872 8.85742 10.5716 8.85742H7.14307Z" fill="#475467" />
+            <path fillRule="evenodd" clipRule="evenodd" d="M10.0002 3.14314C11.2626 3.14314 12.2859 2.11979 12.2859 0.857422H15.1431C16.0898 0.857422 16.8574 1.62493 16.8574 2.57171V17.4289C16.8574 18.3756 16.0898 19.1431 15.1431 19.1431H4.85735C3.91058 19.1431 3.14307 18.3756 3.14307 17.4289V2.57171C3.14307 1.62493 3.91058 0.857422 4.85735 0.857422H7.7145C7.7145 2.11979 8.73784 3.14314 10.0002 3.14314ZM10.0002 4.28599C11.493 4.28599 12.763 3.33193 13.2337 2.00028H15.1431C15.4587 2.00028 15.7145 2.25612 15.7145 2.57171V17.4289C15.7145 17.7444 15.4587 18.0003 15.1431 18.0003H4.85735C4.54176 18.0003 4.28592 17.7444 4.28592 17.4289V2.57171C4.28592 2.25612 4.54176 2.00028 4.85735 2.00028H6.76673C7.2374 3.33193 8.50739 4.28599 10.0002 4.28599Z" fill="#475467" />
+          </svg>
+        </div>
+        Open Jobs
+      </div>;
+    }
+
     const name = `${rowData?.worker?.first_name} ${rowData?.worker?.last_name}`;
-    const initials = name.split(' ').map(word => word[0]).join('');
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientName}`}>
         <FallbackImage photo={rowData?.worker?.photo} is_business={false} has_photo={!!(rowData?.worker?.photo) || false} />
@@ -241,7 +255,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
-      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch}/>
+      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} />
     </>
   );
 });

@@ -108,29 +108,42 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                             <h1 className={clsx(style.heading, 'mb-3')}>Assigned to</h1>
                             <Card className={clsx(style.border, 'mb-3')}>
                                 <Card.Header className={clsx(style.background, 'border-0 py-4')}>
-                                    <Row className={clsx(style.chooseUserBox, 'flex-nowrap', 'w-75')}>
-                                        <Col sm={2} className='p-0'>
-                                            <div className='d-flex justify-content-center align-items-center border' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
-                                                {job?.worker?.has_photo ? <img src={job?.worker?.photo} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />
-                                                    : <span className='font-16'>{job?.worker?.alias}</span>
-                                                }
-                                            </div>
-                                        </Col>
-                                        <Col sm={5} className='pe-0 ps-0'>
-                                            <label className={clsx(style.customLabel, 'text-nowrap')}>{job?.worker?.full_name || "-"}</label>
-                                            <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center' }}>Employee</div>
-                                        </Col>
-                                        <Col sm={5} className=''>
-                                            <div className='d-flex align-items-center gap-2 mb-3'>
-                                                <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
-                                                <span>{job?.worker?.hourly_rate || "-"} AUD</span>
-                                            </div>
+                                    {
+                                        job?.status === '1' ?
                                             <div className='d-flex align-items-center gap-2'>
-                                                <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
-                                                <span>{paymentCycleObj[job?.worker?.payment_cycle] || "-"}</span>
+                                                <div className={`d-flex justify-content-center align-items-center`} style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M7.14307 6.57171C6.82748 6.57171 6.57164 6.82754 6.57164 7.14314C6.57164 7.45873 6.82748 7.71457 7.14307 7.71457H12.8574C13.1729 7.71457 13.4288 7.45873 13.4288 7.14314C13.4288 6.82754 13.1729 6.57171 12.8574 6.57171H7.14307Z" fill="#475467" />
+                                                        <path d="M7.14307 8.85742C6.82748 8.85742 6.57164 9.11326 6.57164 9.42885C6.57164 9.74444 6.82748 10.0003 7.14307 10.0003H10.5716C10.8872 10.0003 11.1431 9.74444 11.1431 9.42885C11.1431 9.11326 10.8872 8.85742 10.5716 8.85742H7.14307Z" fill="#475467" />
+                                                        <path fillRule="evenodd" clipRule="evenodd" d="M10.0002 3.14314C11.2626 3.14314 12.2859 2.11979 12.2859 0.857422H15.1431C16.0898 0.857422 16.8574 1.62493 16.8574 2.57171V17.4289C16.8574 18.3756 16.0898 19.1431 15.1431 19.1431H4.85735C3.91058 19.1431 3.14307 18.3756 3.14307 17.4289V2.57171C3.14307 1.62493 3.91058 0.857422 4.85735 0.857422H7.7145C7.7145 2.11979 8.73784 3.14314 10.0002 3.14314ZM10.0002 4.28599C11.493 4.28599 12.763 3.33193 13.2337 2.00028H15.1431C15.4587 2.00028 15.7145 2.25612 15.7145 2.57171V17.4289C15.7145 17.7444 15.4587 18.0003 15.1431 18.0003H4.85735C4.54176 18.0003 4.28592 17.7444 4.28592 17.4289V2.57171C4.28592 2.25612 4.54176 2.00028 4.85735 2.00028H6.76673C7.2374 3.33193 8.50739 4.28599 10.0002 4.28599Z" fill="#475467" />
+                                                    </svg>
+                                                </div>
+                                                Open Jobs
                                             </div>
-                                        </Col>
-                                    </Row>
+                                            : <Row className={clsx(style.chooseUserBox, 'flex-nowrap', 'w-75')}>
+                                                <Col sm={2} className='p-0'>
+                                                    <div className='d-flex justify-content-center align-items-center border' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
+                                                        {job?.worker?.has_photo ? <img src={job?.worker?.photo} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />
+                                                            : <span className='font-16'>{job?.worker?.alias}</span>
+                                                        }
+                                                    </div>
+                                                </Col>
+                                                <Col sm={5} className='pe-0 ps-0'>
+                                                    <label className={clsx(style.customLabel, 'text-nowrap')}>{job?.worker?.full_name || "-"}</label>
+                                                    <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center' }}>Employee</div>
+                                                </Col>
+                                                <Col sm={5} className=''>
+                                                    <div className='d-flex align-items-center gap-2 mb-3'>
+                                                        <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
+                                                        <span>{job?.worker?.hourly_rate || "-"} AUD</span>
+                                                    </div>
+                                                    <div className='d-flex align-items-center gap-2'>
+                                                        <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
+                                                        <span>{paymentCycleObj[job?.worker?.payment_cycle] || "-"}</span>
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                    }
                                 </Card.Header>
                             </Card>
 

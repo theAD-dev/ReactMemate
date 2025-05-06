@@ -20,7 +20,8 @@
 
 .newButton,
 .newButton:hover,
-.newButton:focus {
+.newButton:focus,
+.newButton:active {
   gap: 8px;
   width: 59px;
   height: 28px;
