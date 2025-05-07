@@ -13,9 +13,6 @@ import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
-
-
-
 const ClientTable = forwardRef(({ searchValue, setTotalClients, selectedClients, setSelectedClients, isShowDeleted, refetch }, ref) => {
     const navigate = useNavigate();
     const { trialHeight } = useTrialHeight();
