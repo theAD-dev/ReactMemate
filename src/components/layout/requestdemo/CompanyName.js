@@ -37,14 +37,6 @@ const CompanyName = () => {
       return;
     }
 
-    // Checkbox validation
-    if (!is_agree_marketing) {
-      setCheckError(
-        "Please agree to receive marketing communications from MeMate."
-      );
-      return;
-    }
-
     navigate("/selectdate", {
       state: {
         first_name,
@@ -178,7 +170,7 @@ const CompanyName = () => {
                           name="is_agree_marketing"
                           checked={is_agree_marketing}
                           onChange={(e) => {
-                            setAgree(e.target.value);
+                            setAgree(e.target.checked);
                           }}
                         />
                         <span
