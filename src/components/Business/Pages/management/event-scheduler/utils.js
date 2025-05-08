@@ -17,7 +17,9 @@ function loadData(responses) {
     let font = data?.custom_status?.font;
 
     const status = data?.custom_status?.title
-      ? `<em style='color:${font}; background:${background}; border: 1px solid ${color};'>${data.custom_status.title}</em>`
+      ? `<em style='color:${font}; background:${background}; border: 1px solid ${color}; padding-top: 4px;'>
+         <div style='max-width: 50px; overflow: hidden; text-overflow: ellipsis; display: inline-block; position: relative; top: 4px'>${data.custom_status.title}</div>
+      </em>`
       : `<em style='color: #344054; background: #F2F4F7; border: 1px solid rgba(0, 0, 0, 0.498);' class="pb-1">No status</em>`;
 
     let jobsStatus = "not-started";
@@ -122,11 +124,14 @@ function loadData(responses) {
             <span class='${jobsStatus}'>${data.jobs_done}/${data.jobs_count
         }</span>
           </li>
+
+          <li class="float-end w-100 text-end pe-2">
+          ${status}
+          </li>
         </ul>
         <div class="project-content" unique-id="${data.unique_id}" project-id="${data.id}" number="${data?.number}" reference="${data?.reference}">
           <span class="small project-content-name" unique-id="${data.unique_id}">${data?.client?.name}</span>
           <h2 class="project-content-name" unique-id="${data.unique_id}">${data.reference}</h2>
-          ${status}
         </div>
       </div>`,
       children: [...data.tasks, { title: 'create-task', id: data.number }].map((task) => {
@@ -230,7 +235,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     scale: "Day",
     separators: [{ color: "#48C1FF", width: 4 }],
     treeImage: "img/nochildren.png",
-    rowMinHeight: 130,
+    rowMinHeight: 110,
     eventEndSpec: "Date",
     durationBarVisible: false,
     eventArrangement: "Cascade",

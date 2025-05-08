@@ -1,22 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
-import WeekNavigator from './week-navigator';
 
 const ApprovalPage = () => {
     const handleSearch = () => { };
-    const [selectedPeriod, setSelectedPeriod] = useState({
-        week: null,
-        year: null,
-        startDate: null,
-        endDate: null
-    });
-
-    const handleWeekChange = useCallback((periodData) => {
-        setSelectedPeriod(periodData);
-    }, []);
 
     return (
         <div className='approval-page'>
@@ -48,10 +37,7 @@ const ApprovalPage = () => {
                 </div>
             </div>
 
-            <div className="topbar d-flex justify-content-center text-center w-100" style={{ padding: '4px 0px', position: 'relative', height: '48px', borderTop: '1px solid #dedede', borderBottom: '0px solid #dedede', background: '#F9FAFB' }}>
-                <WeekNavigator onWeekChange={handleWeekChange} />
-            </div>
-            <ApprovalTable weekData={selectedPeriod} />
+            <ApprovalTable />
         </div>
     );
 };

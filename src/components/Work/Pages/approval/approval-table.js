@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link45deg, Person, Repeat } from 'react-bootstrap-icons';
 import { useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
@@ -10,14 +11,25 @@ import { Row } from 'primereact/row';
 import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './approval.module.scss';
+import WeekNavigator from './week-navigator';
 import { getJobsToApprove, getApproveNotInvoice } from '../../../../APIs/approval-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { FallbackImage } from '../../../../ui/image-with-fallback/image-avatar';
 
-const ApprovalTable = React.memo(({ weekData }) => {
+const ApprovalTable = React.memo(() => {
     const { trialHeight } = useTrialHeight();
     const [selectedApprovals, setSelectedApprovals] = useState(null);
     const [selectedInvoiceApprovals, setSelectedInvoiceApprovals] = useState(null);
+    const [weekData, setSelectedPeriod] = useState({
+        week: null,
+        year: null,
+        startDate: null,
+        endDate: null
+    });
+
+    const handleWeekChange = useCallback((periodData) => {
+        setSelectedPeriod(periodData);
+    }, []);
 
     const {
         data: approveData = [],
@@ -120,36 +132,26 @@ const ApprovalTable = React.memo(({ weekData }) => {
 
     const actionBody = (rowData) => {
         return (
-            <div className='d-flex gap-2'>
+            <div className='d-flex justify-content-center gap-2'>
                 <Chip
                     className={`status ${style.finishedAction} cursor-pointer`}
                     label="Approve"
                     onClick={() => handleApprove(rowData.id)}
-                />
-                <Chip
-                    className={`status ${style.assignAction} cursor-pointer`}
-                    label="Reject"
-                    onClick={() => handleReject(rowData.id)}
                 />
             </div>
         );
     };
 
     const statusBody = (rowData) => {
-        return (
-            <div className='d-flex gap-2'>
-                <Chip
-                    className={`status ${style.finished} cursor-pointer`}
-                    label="Approve"
-                    onClick={() => handleApprove(rowData.id)}
-                />
-                <Chip
-                    className={`status ${style.assign} cursor-pointer`}
-                    label="Reject"
-                    onClick={() => handleReject(rowData.id)}
-                />
-            </div>
-        );
+        if (rowData.status === 'approved') {
+            return <Chip className={`status ${style.finished}`} label="Approved" />;
+        } else if (rowData.status === 'rejected') {
+            return <Chip className={`status ${style.assign}`} label="Rejected" />;
+        } else if (rowData.status === 'pending') {
+            return <Chip className={`status ${style.defaultStatus}`} label="Pending" />;
+        } else {
+            return "N/A";
+        }
     };
 
     const handleApprove = React.useCallback((id) => {
@@ -195,19 +197,20 @@ const ApprovalTable = React.memo(({ weekData }) => {
     };
 
     const header = (
-        <div className="flex align-items-center justify-content-end" style={{}}>
+        <div className="d-flex align-items-center justify-content-end gap-2" style={{ position: 'relative' }}>
             <p style={{ color: '#344054', fontWeight: 400 }} className='m-0 font-14'>Review & Approve</p>
+            {isLoadingApprove && <ProgressSpinner style={{ width: '20px', height: '20px', marginLeft: '8px', position: 'absolute', right: '-40px' }} />}
         </div>
     );
 
     const header2 = (
-        <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center justify-content-between gap-2" style={{ position: 'relative' }}>
             <p style={{ color: '#344054', fontWeight: 500 }} className='m-0 font-14'>
                 {weekData?.week && weekData?.year
                     ? `Week ${weekData.week}, ${weekData.year} - Approved Jobs (Not Invoiced)`
                     : 'Approved Jobs - Not Invoiced'}
             </p>
-            {isLoadingInvoice && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+            {isLoadingInvoice && <ProgressSpinner style={{ width: '20px', height: '20px', marginRight: '8px', position: 'absolute', right: '-40px' }} />}
         </div>
     );
 
@@ -288,6 +291,7 @@ const ApprovalTable = React.memo(({ weekData }) => {
                 onSelectionChange={(e) => setSelectedApprovals(e.value)}
                 emptyMessage="No jobs to approve"
                 loading={isLoadingApprove}
+                loadingIcon={<></>}
             >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
                 <Column field="number" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
@@ -307,8 +311,12 @@ const ApprovalTable = React.memo(({ weekData }) => {
                 <Column field="spent_time" header="Spent Time" style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="real_total" header="Real Total" body={thisWeekTotalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="id" header="Actions" body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
+                <Column field="id" header="Actions" body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
+
+            <div className="topbar d-flex justify-content-center text-center w-100" style={{ padding: '4px 0px', position: 'relative', height: '48px', borderTop: '1px solid #dedede', borderBottom: '0px solid #dedede', background: '#F9FAFB' }}>
+                <WeekNavigator onWeekChange={handleWeekChange} />
+            </div>
 
             {/* Jobs to Invoice DataTable */}
             <DataTable
@@ -328,6 +336,7 @@ const ApprovalTable = React.memo(({ weekData }) => {
                 onSelectionChange={(e) => setSelectedInvoiceApprovals(e.value)}
                 emptyMessage="No approved jobs waiting to be invoiced"
                 loading={isLoadingInvoice}
+                loadingIcon={<></>}
             >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
                 <Column field="number" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
@@ -347,7 +356,7 @@ const ApprovalTable = React.memo(({ weekData }) => {
                 <Column field="spent_time" header="Spent Time" style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="real_total" header="Real Total" body={thisWeekTotalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="id" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={`${style.shadowLeft}`} frozen alignFrozen="right"></Column>
+                <Column field="id" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={clsx(`${style.shadowLeft}`, 'text-center')} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
         </>
     );
