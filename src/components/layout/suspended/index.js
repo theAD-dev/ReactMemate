@@ -10,7 +10,7 @@ import suspendedImage from '../../../assets/suspended-mask.svg';
 const Suspended = () => {
     const { session } = useAuth();
     const isSuspended = session?.is_suspended ? true : false;
-    const isAdmin = !(session?.type === "Admin") ? true : false;
+    const isAdmin = (session?.type === "Admin") ? true : false;
 
     if (!isSuspended) return <Navigate to={"/"} replace />;
     

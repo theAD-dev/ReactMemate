@@ -20,7 +20,8 @@
 
 .newButton,
 .newButton:hover,
-.newButton:focus {
+.newButton:focus,
+.newButton:active {
   gap: 8px;
   display: flex;
   font-size: 14px;

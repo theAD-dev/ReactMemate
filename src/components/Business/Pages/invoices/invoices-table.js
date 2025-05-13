@@ -136,9 +136,13 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                     <div className={`${style.status} ${style.active}`}>
                         <Badge severity="success"></Badge> Paid
                     </div>
-                    : <div className={`${style.status} ${style.inactive}`}>
-                        Overdue {rowData.overdue} days <Badge severity="danger"></Badge>
-                    </div>
+                    : rowData.overdue > 0 ?
+                        <div className={`${style.status} ${style.inactive}`}>
+                            Overdue {rowData.overdue} days <Badge severity="danger"></Badge>
+                        </div>
+                        : <div className={`${style.status} ${style.inactive}`}>
+                            <Badge severity="warning"></Badge> Not Paid
+                        </div>
             }
 
             {formatDate(rowData.due_date)}
@@ -241,7 +245,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                                                     <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '24px', height: '24px', background: 'linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%)', marginRight: '10px' }}>
                                                         <Stripe size={14} color="#98A2B3" />
                                                     </div>
-                                                    <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>Strip</div>
+                                                    <div className='font-14 ellipsis-width text-start' style={{ width: '120px', maxWidth: '120px' }}>Stripe</div>
                                                 </>
                                             ) : (
                                                 <>
@@ -261,7 +265,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                                                 : history.type === 4 ? <CreditCard size={14} color="#98A2B3" />
                                                     : <Stripe size={14} color="#98A2B3" />}
                                         <div className='border rounded font-12 px-1'>
-                                            {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : history.type === 4 ? "EFTPOS" : "Strip"}
+                                            {history?.type === 2 ? "Bank" : history.type === 1 ? "Cash" : history.type === 4 ? "EFTPOS" : "Stripe"}
                                         </div>
                                     </div>
                                     <div className='d-flex gap-2 align-items-center'>

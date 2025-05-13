@@ -15,7 +15,7 @@ const SalesNote = ({ saleUniqueId, noteData, onNoteUpdate, refreshData }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const MAX_LENGTH = 500;
+  const MAX_LENGTH = 1000;
   const MIN_LENGTH = 3;
 
   const validateNote = (text) => {
@@ -111,7 +111,7 @@ const SalesNote = ({ saleUniqueId, noteData, onNoteUpdate, refreshData }) => {
           horizontal: 'right',
         }}
         PaperProps={{
-          style: { width: '460px' },
+          style: { width: '640px' },
           id: 'popoverStyleChange'
         }}
       >

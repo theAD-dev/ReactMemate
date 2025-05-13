@@ -17,7 +17,9 @@ function loadData(responses) {
     let font = data?.custom_status?.font;
 
     const status = data?.custom_status?.title
-      ? `<em style='color:${font}; background:${background}; border: 1px solid ${color};'>${data.custom_status.title}</em>`
+      ? `<em style='color:${font}; background:${background}; border: 1px solid ${color}; padding-top: 4px;'>
+         <div style='max-width: 50px; overflow: hidden; text-overflow: ellipsis; display: inline-block; position: relative; top: 4px'>${data.custom_status.title}</div>
+      </em>`
       : `<em style='color: #344054; background: #F2F4F7; border: 1px solid rgba(0, 0, 0, 0.498);' class="pb-1">No status</em>`;
 
     let jobsStatus = "not-started";
@@ -82,7 +84,7 @@ function loadData(responses) {
       expanded: expandRow === data.unique_id,
       name: `<div class="resourceList rowResourceEvent" style="--main-color: ${color};">
         <ul class="resourceMan">
-          <li>${data.number}</li>
+          <li style="white-space: nowrap;">${data.number}</li>
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M5 4C4.72386 4 4.5 4.22386 4.5 4.5C4.5 4.77614 4.72386 5 5 5H11C11.2761 5 11.5 4.77614 11.5 4.5C11.5 4.22386 11.2761 4 11 4H5Z" fill="${data.is_invoice_created ? "#17B26A" : "#98A2B3"
@@ -122,11 +124,14 @@ function loadData(responses) {
             <span class='${jobsStatus}'>${data.jobs_done}/${data.jobs_count
         }</span>
           </li>
+
+          <li class="float-end w-100 text-end pe-2">
+          ${status}
+          </li>
         </ul>
         <div class="project-content" unique-id="${data.unique_id}" project-id="${data.id}" number="${data?.number}" reference="${data?.reference}">
           <span class="small project-content-name" unique-id="${data.unique_id}">${data?.client?.name}</span>
           <h2 class="project-content-name" unique-id="${data.unique_id}">${data.reference}</h2>
-          ${status}
         </div>
       </div>`,
       children: [...data.tasks, { title: 'create-task', id: data.number }].map((task) => {
@@ -230,7 +235,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     scale: "Day",
     separators: [{ color: "#48C1FF", width: 4 }],
     treeImage: "img/nochildren.png",
-    rowMinHeight: 130,
+    rowMinHeight: 110,
     eventEndSpec: "Date",
     durationBarVisible: false,
     eventArrangement: "Cascade",

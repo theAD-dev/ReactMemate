@@ -4,10 +4,12 @@ import { initJobScheduler, reInitializeJobScheduler } from './job-scheduler-cale
 import './job-scheduler-calendar.scss';
 import style from './job-scheduler-calendar.scss';
 import { getJobDashboardData } from '../../../../APIs/jobs-api';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import CreateJob from '../create-job/create-job';
 
 const CALENDAR_ID = "job-scheduler";
 const JobSchedulerCalendarModule = () => {
+    const { trialHeight } = useTrialHeight();
     const [visible, setVisible] = useState(false);
     const [workerId, setWorkerId] = useState("");
 
@@ -87,11 +89,14 @@ const JobSchedulerCalendarModule = () => {
 
                 </div>
             </div>
-            <div id={CALENDAR_ID} className={style.jobScheduler}>
-                <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>
+
+            <div className={trialHeight && 'trial-height-added'}>
+                <div id={CALENDAR_ID} className={style.jobScheduler}>
+                    <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+                        <Spinner animation="border" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div>
                 </div>
             </div>
 

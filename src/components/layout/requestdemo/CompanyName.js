@@ -25,7 +25,7 @@ const CompanyName = () => {
   const [company_name, setCompanyname] = useState("");
   const [company_description, setCompanydescription] = useState("");
   const [company_size, setCompanySize] = useState("");
-  const [is_agree_marketing, setAgree] = useState(false);
+  const [is_agree_marketing, setAgree] = useState(true);
 
   const [emailError, setEmailError] = useState("");
   const [checkError, setCheckError] = useState("");
@@ -34,14 +34,6 @@ const CompanyName = () => {
     // Email validation
     if (!email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
       setEmailError("Please enter a valid email address.");
-      return;
-    }
-
-    // Checkbox validation
-    if (!is_agree_marketing) {
-      setCheckError(
-        "Please agree to receive marketing communications from MeMate."
-      );
       return;
     }
 
@@ -178,7 +170,7 @@ const CompanyName = () => {
                           name="is_agree_marketing"
                           checked={is_agree_marketing}
                           onChange={(e) => {
-                            setAgree(e.target.value);
+                            setAgree(e.target.checked);
                           }}
                         />
                         <span

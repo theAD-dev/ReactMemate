@@ -25,7 +25,8 @@
 
 .newButton,
 .newButton:hover,
-.newButton:focus {
+.newButton:focus,
+.newButton:active {
   gap: 8px;
   display: flex;
   padding: 4px 14px;
@@ -33,7 +34,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--Orange-600, #d59346);
-  background: var(--Orange-600, #d59346);
+  background: var(--Orange-600, #d59346) !important;
 }
 
 .total {

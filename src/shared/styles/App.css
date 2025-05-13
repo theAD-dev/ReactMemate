@@ -638,13 +638,17 @@ table.department-calculation tbody tr.selected td {
 }
 
 #calender .scheduler_default_rowheader_scroll,
-#calender .scheduler_default_scrollable {
+#calender .scheduler_default_scrollable,
+#job-scheduler .scheduler_default_rowheader_scroll,
+#job-scheduler .scheduler_default_scrollable {
   height: calc(100vh - 234px) !important;
   height: calc(100dvh -234px) !important;
 }
 
 .trial-height-added #calender .scheduler_default_rowheader_scroll,
-.trial-height-added #calender .scheduler_default_scrollable {
+.trial-height-added #calender .scheduler_default_scrollable,
+.trial-height-added #job-scheduler .scheduler_default_rowheader_scroll,
+.trial-height-added #job-scheduler .scheduler_default_scrollable {
   height: calc(100vh - 264px) !important;
   height: calc(100dvh -264px) !important;
 }
@@ -882,14 +886,14 @@ ul.resourceMan li span.not-done {
   background-image: url('data:image/svg+xml,<svg width="1em" height="1em" fill="667085" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.7 11.3l-6-6c-0.4-0.4-1-0.4-1.4 0s-0.4 1 0 1.4l5.3 5.3-5.3 5.3c-0.4 0.4-0.4 1 0 1.4 0.2 0.2 0.4 0.3 0.7 0.3s0.5-0.1 0.7-0.3l6-6c0.4-0.4 0.4-1 0-1.4z"></path></svg>') !important;
   width: 17px !important;
   height: 14px !important;
-  top: 9px !important;
+  top: 18px !important;
 }
 
 .scheduler_default_tree_image_collapse {
   background-image: url('data:image/svg+xml,<svg width="1em" height="1em" fill="%231AB2FF" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.7 11.3l-6-6c-0.4-0.4-1-0.4-1.4 0s-0.4 1 0 1.4l5.3 5.3-5.3 5.3c-0.4 0.4-0.4 1 0 1.4 0.2 0.2 0.4 0.3 0.7 0.3s0.5-0.1 0.7-0.3l6-6c0.4-0.4 0.4-1 0-1.4z"></path></svg>') !important;
   width: 17px !important;
   height: 17px !important;
-  top: 9px !important;
+  top: 18px !important;
   transform: rotate(-90deg);
   background: #ebf8ff;
   border-radius: 100%;
@@ -1152,12 +1156,12 @@ ul.eventStyleCal {
 
 #calender .scheduler_default_tree_image_collapse::after {
   position: absolute;
-  top: -300px;
-  right: 29px;
+  top: -345px;
+  right: 37px;
   content: "";
   background: #f2faff;
-  width: 100px;
-  height: 323px;
+  width: 196px;
+  height: 368px;
   z-index: -1;
 }
 

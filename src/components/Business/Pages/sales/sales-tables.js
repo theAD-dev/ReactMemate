@@ -116,7 +116,8 @@ export const mapSalesData = (salesData, refreshData) => {
     LostQuote: (sale.number, sale.status),
     amountData: sale.amount,
     Actions: "Actions",
-    history: sale?.previous_versions
+    history: sale?.previous_versions,
+    has_recurring: sale.has_recurring,
   }));
 };
 
@@ -207,8 +208,18 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       ),
       width: 118,
       renderCell: (params) => (
-        <div className={`statusInfo ${params.value}`}>
-          <Link to="/" style={{ pointerEvents: 'none' }}>{params.value}</Link>
+        <div className={"d-flex align-items-center justify-content-center"}>
+          <div className={`statusInfo ${params.value}`}>
+            <Link to="/" style={{ pointerEvents: 'none' }}>{params.value}</Link>
+          </div>
+          {
+            params.row.has_recurring && <Link to={`/settings/quotesjobs/recurring-quotes?recurringId=${params.row.unique_id}`} className="ms-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="14" viewBox="0 0 17 14" fill="none">
+                <path d="M11.5 4.46622V2.99998H5.5C3.29086 2.99998 1.5 4.79085 1.5 6.99998C1.5 7.63948 1.6497 8.24258 1.91552 8.77747C2.03841 9.02476 1.93757 9.32485 1.69028 9.44774C1.44299 9.57063 1.1429 9.46979 1.02 9.2225C0.687005 8.55243 0.5 7.79733 0.5 6.99998C0.5 4.23856 2.73858 1.99998 5.5 1.99998H11.5V0.533742C11.5 0.321783 11.7472 0.205993 11.91 0.341687L14.2695 2.30793C14.3895 2.40788 14.3895 2.59209 14.2695 2.69204L11.91 4.65828C11.7472 4.79397 11.5 4.67818 11.5 4.46622Z" fill="#158ECC" />
+                <path d="M15.3097 4.55223C15.557 4.42934 15.8571 4.53018 15.98 4.77747C16.313 5.44754 16.5 6.20264 16.5 6.99998C16.5 9.76141 14.2614 12 11.5 12H5.5V13.4662C5.5 13.6782 5.25279 13.794 5.08995 13.6583L2.73047 11.692C2.61053 11.5921 2.61053 11.4079 2.73047 11.3079L5.08995 9.34169C5.25279 9.20599 5.5 9.32178 5.5 9.53374V11H11.5C13.7091 11 15.5 9.20912 15.5 6.99998C15.5 6.36049 15.3503 5.75739 15.0845 5.2225C14.9616 4.97521 15.0624 4.67512 15.3097 4.55223Z" fill="#158ECC" />
+              </svg>
+            </Link>
+          }
         </div>
       ),
     },
