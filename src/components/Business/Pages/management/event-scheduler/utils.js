@@ -84,7 +84,7 @@ function loadData(responses) {
       expanded: expandRow === data.unique_id,
       name: `<div class="resourceList rowResourceEvent" style="--main-color: ${color};">
         <ul class="resourceMan">
-          <li>${data.number}</li>
+          <li style="white-space: nowrap;">${data.number}</li>
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M5 4C4.72386 4 4.5 4.22386 4.5 4.5C4.5 4.77614 4.72386 5 5 5H11C11.2761 5 11.5 4.77614 11.5 4.5C11.5 4.22386 11.2761 4 11 4H5Z" fill="${data.is_invoice_created ? "#17B26A" : "#98A2B3"

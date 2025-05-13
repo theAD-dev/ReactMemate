@@ -261,7 +261,7 @@ function EventScheduler() {
       <div className="featureName" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
         <h1 className="title mx-0">Management</h1>
       </div>
-      <div className="d-flex gap-2 justify-content-end align-items-center">
+      <div className="d-flex gap-2 justify-content-end align-items-center" style={{ position: 'absolute', left: '40px', top: '56px', zIndex: 1000 }}>
         <Dropdown>
           <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px", position: "relative" }}>
             <span className="font-14">{sortBy || "Sort By"}</span>
