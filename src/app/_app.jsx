@@ -7,13 +7,14 @@ import { AuthProvider } from "./providers/auth-provider";
 import { ReactQueryProvider } from "./providers/query-client-provider";
 import { TrialHeightProvider } from "./providers/trial-height-provider";
 import routes from "./router";
+import UnknownError from "../pages/error/unknown/unknown";
 
 const App = () => {
   const content = createBrowserRouter(routes);
 
   return (
     <ErrorBoundary
-      FallbackComponent={<>Error</>}
+      FallbackComponent={UnknownError}
       onReset={() => window.location.replace("/")}
     >
       <HelmetProvider>

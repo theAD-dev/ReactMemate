@@ -1,9 +1,10 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
+import Login from '../components/layout/Login/login-page';
+import UnknownError from "../pages/error/unknown/unknown";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import SettingsLayout from "../shared/ui/layout/settings-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
-import Login from '../components/layout/Login/login-page';
 
 // pages
 const ClientPage = LazyLoader(lazy(() => import('../components/Business/Pages/clients')));
@@ -209,6 +210,10 @@ const routes = [
         element: <NotFoundError />,
     },
     {
+        path: "/500",
+        element: <UnknownError />,
+    },
+    {
         path: "/",
         element: <ProtectedLayout />,
         children: [
@@ -361,6 +366,7 @@ const routes = [
             {
                 path: "approval",
                 element: <ApprovalPage />,
+                errorElement: <UnknownError />,
             },
             {
                 path: "jobs",

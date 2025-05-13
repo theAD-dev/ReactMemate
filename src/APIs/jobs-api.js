@@ -54,3 +54,13 @@ export const updateJob = async (id, data) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const getApprovedJob = async (id) => {
+    const endpoint = `/jobs/to-approve/${id}/`;
+    const options = {
+        method: 'GET'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+

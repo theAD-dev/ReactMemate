@@ -15,6 +15,7 @@ import WeekNavigator from './week-navigator';
 import { getJobsToApprove, getApproveNotInvoice } from '../../../../APIs/approval-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { FallbackImage } from '../../../../ui/image-with-fallback/image-avatar';
+import ApproveJob from '../../features/approve-job/approve-job';
 
 const ApprovalTable = React.memo(() => {
     const { trialHeight } = useTrialHeight();
@@ -26,6 +27,9 @@ const ApprovalTable = React.memo(() => {
         startDate: null,
         endDate: null
     });
+
+    const [isApproveJobVisible, setIsApproveJobVisible] = useState(false);
+    const [selectedJobId, setSelectedJobId] = useState(null);
 
     const handleWeekChange = useCallback((periodData) => {
         setSelectedPeriod(periodData);
@@ -142,25 +146,15 @@ const ApprovalTable = React.memo(() => {
         );
     };
 
-    const statusBody = (rowData) => {
-        if (rowData.status === 'approved') {
-            return <Chip className={`status ${style.finished}`} label="Approved" />;
-        } else if (rowData.status === 'rejected') {
-            return <Chip className={`status ${style.assign}`} label="Rejected" />;
-        } else if (rowData.status === 'pending') {
-            return <Chip className={`status ${style.defaultStatus}`} label="Pending" />;
-        } else {
-            return "N/A";
-        }
+    const statusBody = () => {
+        return <Chip className={`status ${style.approved}`} label="Approved" />;
     };
 
     const handleApprove = React.useCallback((id) => {
-        toast.info(`Approving job #${id}...`);
+        setSelectedJobId(id);
+        setIsApproveJobVisible(true);
     }, []);
 
-    const handleReject = React.useCallback((id) => {
-        toast.info(`Rejecting job #${id}...`);
-    }, []);
 
     const formatDate = React.useCallback((dateString) => {
         if (!dateString) return 'N/A';
@@ -358,6 +352,8 @@ const ApprovalTable = React.memo(() => {
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="id" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={clsx(`${style.shadowLeft}`, 'text-center')} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
+
+            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} />
         </>
     );
 });
