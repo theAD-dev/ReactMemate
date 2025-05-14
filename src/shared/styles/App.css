@@ -661,14 +661,14 @@ table.department-calculation tbody tr.selected td {
   font-weight: 600;
   line-height: 24px;
   letter-spacing: 0.08px;
-  max-width: 268px;
+  max-width: 300px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 #calender .scheduler_default_rowheader_inner_text span {
-  max-width: 268px;
+  max-width: 300px;
   overflow: hidden;
   display: block;
   white-space: nowrap;
