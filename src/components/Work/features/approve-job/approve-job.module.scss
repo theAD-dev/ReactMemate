@@ -186,11 +186,19 @@
 }
 
 .InputTextarea {
-    width: 100% !important;
+  width: 100% !important;
   border-radius: 4px !important;
   border: 1px solid var(--Gray-300, #d0d5dd) !important;
   background: var(--Base-White, #fff) !important;
   box-shadow: none !important;
   outline: none !important;
   resize: none !important;
+}
+
+.activeOutlineButton,
+.activeOutlineButton:hover,
+.activeOutlineButton:focus {
+  color: #fff !important;
+  background: var(--Primary-600, #158ecc) !important;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
 }

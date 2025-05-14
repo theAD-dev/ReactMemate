@@ -269,10 +269,32 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                                 <span className='font-16' style={{ color: '#344054' }}>Total</span>
                                             </td>
                                             <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
-                                                <span className='font-14'>${plannedTotal}</span>
+                                                <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "planned" ? style.activeOutlineButton : "")}>
+                                                    ${plannedTotal}
+                                                    {
+                                                        selectedColumn === "planned" ?
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
+                                                            </svg> :
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
+                                                            </svg>
+                                                    }
+                                                </Button>
                                             </td>
                                             <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                <span className='font-14'>${actualTotal}</span>
+                                                <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "actual" ? style.activeOutlineButton : "")}>
+                                                    ${actualTotal}
+                                                    {
+                                                        selectedColumn === "actual" ?
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
+                                                            </svg> :
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
+                                                            </svg>
+                                                    }
+                                                </Button>
                                             </td>
                                         </tr>
                                     </table>
