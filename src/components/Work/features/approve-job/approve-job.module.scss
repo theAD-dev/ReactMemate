@@ -70,6 +70,10 @@
   border-bottom: 1px solid var(--Gray-200, #eaecf0);
 }
 
+.whiteTr td {
+  background: #fff !important;
+}
+
 .plannedTable td:nth-child(2),
 .plannedTable td:nth-child(3) {
   text-align: right;

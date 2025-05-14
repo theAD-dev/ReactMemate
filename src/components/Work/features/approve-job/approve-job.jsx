@@ -204,7 +204,7 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                                 </div>
                                             </th>
                                         </tr>
-                                        <tr>
+                                        <tr className={style.whiteTr}>
                                             <td>
                                                 <span className='font-16' style={{ color: '#344054' }}>Start</span>
                                             </td>
@@ -215,7 +215,7 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                                 <span className='font-14'>{job?.start ? formatTime(job.start) : "N/A"} | {formatDate(job?.start_date)}</span>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr className={style.whiteTr}>
                                             <td>
                                                 <span className='font-16' style={{ color: '#344054' }}>Finish</span>
                                             </td>
@@ -226,7 +226,7 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                                 <span className='font-14'>{job?.finish ? formatTime(job.finish) : "N/A"} | {formatDate(job?.end_date)}</span>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr className={style.whiteTr}>
                                             <td>
                                                 <span className='font-16' style={{ color: '#344054' }}>Hours</span>
                                             </td>
@@ -237,7 +237,7 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                                 <span className='font-14'>{calculateActualHours()}</span>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr className={style.whiteTr}>
                                             <td>
                                                 <span className='font-16' style={{ color: '#344054' }}>Rate per hour</span>
                                             </td>
@@ -256,7 +256,7 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                                 <span className='font-14'>${actualSubtotal}</span>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr className={style.whiteTr}>
                                             <td>
                                                 <span className='font-16' style={{ color: '#344054' }}>Variation</span>
                                             </td>
