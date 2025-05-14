@@ -17,13 +17,18 @@ import ViewJob from '../../features/view-job/view-job';
 
 
 export const formatDate = (timestamp) => {
-  const date = new Date(timestamp * 1000);
-  const day = date.getDate();
-  const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-  }).format(date);
-  const year = date.getFullYear();
-  return `${day} ${monthAbbreviation} ${year}`;
+  try {
+    const date = new Date(timestamp * 1000);
+    const day = date.getDate();
+    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+    }).format(date);
+    const year = date.getFullYear();
+    return `${day} ${monthAbbreviation} ${year}`;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return '';
+  }
 };
 
 const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
