@@ -291,8 +291,9 @@ const KeyResultsPage = () => {
 
                 <div className='d-flex flex-column align-items-center'>
                     {topStatistics?.map((stat) => {
+                        const statSum = parseFloat(stat.sum) > 0 ? parseFloat(stat.sum) : 0;
                         let progressWidth = parseFloat(stat.target_value) > 0
-                            ? (parseFloat(stat.sum) / parseFloat(stat.target_value) * 100)
+                            ? (parseFloat(statSum) / parseFloat(stat.target_value) * 100)
                             : 0;
                         const progressWidthText = progressWidth;
                         progressWidth = progressWidth > 100 ? 100 : progressWidth;
