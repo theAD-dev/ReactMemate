@@ -109,6 +109,14 @@ const Executive = () => {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [
                 {
+                    label: 'Total Income',
+                    data: total_income,
+                    fill: true,
+                    tension: 0.4,
+                    borderColor: '#475467',
+                    backgroundColor: getGradientForTotalIncome(),
+                },
+                {
                     label: 'Operational Profit',
                     data: operating_profit,
                     fill: true,
@@ -142,6 +150,17 @@ const Executive = () => {
                 }
             ]
         };
+
+        function getGradientForTotalIncome() {
+            const ctx = document.createElement('canvas').getContext('2d');
+            if (!ctx) return 'rgba(71, 84, 103, 0.2)';
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(71, 84, 103, 0.20)');
+            gradient.addColorStop(1, 'rgba(71, 84, 103, 0.00)');
+
+            return gradient;
+        }
 
         function getGradientForOperationalProfit() {
             const ctx = document.createElement('canvas').getContext('2d');
