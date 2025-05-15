@@ -17,10 +17,10 @@ function loadData(responses) {
     let font = data?.custom_status?.font;
 
     const status = data?.custom_status?.title
-      ? `<em style='color:${font}; background:${background}; border: 1px solid ${color}; padding-top: 4px;'>
-         <div style='max-width: 50px; overflow: hidden; text-overflow: ellipsis; display: inline-block; position: relative; top: 4px'>${data.custom_status.title}</div>
-      </em>`
-      : `<em style='color: #344054; background: #F2F4F7; border: 1px solid rgba(0, 0, 0, 0.498);' class="pb-1">No status</em>`;
+      ? `<div style='color:${font}; background:${background}; border: 1px solid ${color}; width: fit-content; max-width: 85px; border-radius: 10px; padding: 2px 6px; font-weight: 500; margin-left: auto;' title="${data.custom_status.title}">
+         <div style='max-width: 80px; overflow: hidden; text-overflow: ellipsis; display: inline-block; position: relative; top: 2px; white-space: nowrap; font-size: 12px;'>${data.custom_status.title}</div>
+      </div>`
+      : `<div style='font-size: 12px;color: #344054; background: #F2F4F7; border: 1px solid rgba(0, 0, 0, 0.498); width: fit-content; border-radius: 10px; padding: 2px 6px; font-weight: 500; margin-left: auto;'>No status</div>`;
 
     let jobsStatus = "not-started";
     if (data.jobs_count === 0 && data.jobs_count === 0)
@@ -84,7 +84,9 @@ function loadData(responses) {
       expanded: expandRow === data.unique_id,
       name: `<div class="resourceList rowResourceEvent" style="--main-color: ${color};">
         <ul class="resourceMan">
-          <li style="white-space: nowrap;">${data.number}</li>
+          <li title="${data.number}">
+            <div style="width: 70px; overflow: hidden; text-overflow: ellipsis; display: inline-block; position: relative; top: 2px; white-space: nowrap;" class="">${data.number}</div>
+          </li>
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M5 4C4.72386 4 4.5 4.22386 4.5 4.5C4.5 4.77614 4.72386 5 5 5H11C11.2761 5 11.5 4.77614 11.5 4.5C11.5 4.22386 11.2761 4 11 4H5Z" fill="${data.is_invoice_created ? "#17B26A" : "#98A2B3"
@@ -125,7 +127,7 @@ function loadData(responses) {
         }</span>
           </li>
 
-          <li class="float-end w-100 text-end pe-2">
+          <li class="text-end" style="width: 100px;">
           ${status}
           </li>
         </ul>
@@ -243,7 +245,7 @@ function startDaypilot(elementId, responses, viewTaskDetails) {
     eventResizingStartEndEnabled: true,
     timeRangeSelectedHandling: "Disabled",
     treeImageNoChildren: false,
-    rowHeaderWidth: 324,
+    rowHeaderWidth: 380,
     timeHeaders: [
       { groupBy: "Month", format: "MMMM yyyy" },
       { groupBy: "Day", format: "d" }
