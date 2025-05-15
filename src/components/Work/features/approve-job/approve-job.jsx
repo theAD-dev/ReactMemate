@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Calendar3, ClockHistory, X } from 'react-bootstrap-icons';
+import { ClockHistory, QuestionCircle, X } from 'react-bootstrap-icons';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { Checkbox } from 'primereact/checkbox';
-import { Chip } from 'primereact/chip';
-import { Image } from 'primereact/image';
-import { InputText } from 'primereact/inputtext';
+import { InputNumber } from 'primereact/inputnumber';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import style from './approve-job.module.scss';
 import { getApprovedJob } from '../../../../APIs/jobs-api';
+import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 
 const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
@@ -20,6 +19,11 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
     const [isOpenVariationSection, setIsOpenVariationSection] = useState(true);
     const [isOpenJobTrackingSection, setIsOpenJobTrackingSection] = useState(true);
     const [selectedColumn, setSelectedColumn] = useState("planned");
+    const [amount, setAmount] = useState(0);
+    const [currentClient, setCurrentClient] = useState(null);
+
+    const increment = () => setAmount(prev => prev + 1);
+    const decrement = () => setAmount(prev => Math.max(0, prev - 1));
 
     const jobQuery = useQuery({
         queryKey: ["getApprovedJob", jobId],
@@ -29,6 +33,20 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
     });
     const job = jobQuery?.data;
     console.log('job: ', job);
+
+    const mobileUserQuery = useQuery({
+        queryKey: ["mobileuser"],
+        queryFn: getTeamMobileUser,
+    });
+
+    useEffect(() => {
+        if (job && mobileUserQuery?.data?.users) {
+            let findClient = mobileUserQuery?.data?.users?.find(user => user?.id === job?.worker?.id);
+            console.log('findClient: ', findClient, job?.worker?.id, mobileUserQuery?.data?.users);
+            setCurrentClient(findClient);
+        }
+    }, [mobileUserQuery?.data, job]);
+
 
     const formatTime = (timestamp) => {
         const date = new Date(parseInt(timestamp) * 1000);
@@ -53,22 +71,8 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
         return "0:00";
     };
 
-    const formatDateTimeIST = (timestamp) => {
-        const date = new Date(parseInt(timestamp) * 1000);
-        return date.toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            year: 'numeric',
-            month: 'short',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-        });
-    };
-
     const plannedHours = "1:00";
-    const plannedRate = 35.00;
+    const plannedRate = parseFloat(currentClient?.hourly_rate || 0);
     const plannedSubtotal = parseInt(plannedHours.split(':')[0]) * plannedRate;
     const actualHours = job?.spent_time || 0;
     const actualSubtotal = (actualHours * plannedRate).toFixed(2);
@@ -144,11 +148,11 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                     <Row>
                                         <Col sm={6}>
                                             <label className={clsx(style.customLabel)}>Start Date</label>
-                                            <p className={clsx(style.text)}>{formatDate(job?.start_date)}</p>
+                                            <p className={clsx(style.text)}>{job?.start_date ? formatDate(job?.start_date) : "N/A"}</p>
                                         </Col>
                                         <Col sm={6}>
                                             <label className={clsx(style.customLabel)}>End Date</label>
-                                            <p className={clsx(style.text)}>{formatDate(job?.end_date)}</p>
+                                            <p className={clsx(style.text)}>{job?.end_date ? formatDate(job?.end_date) : "N/A"}</p>
                                         </Col>
                                     </Row>
                                 </Card.Header>
@@ -174,129 +178,133 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                 isOpenPlannedVsActualSection &&
                                 <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between px-0 py-0', style.borderBottom)}>
                                     <table className={clsx('w-100', style.plannedTable)}>
-                                        <tr>
-                                            <th>
-                                                <div className='d-flex align-items-center gap-2'>
-                                                    <div className={style.fixRateBox}>Fix Rate</div>
-                                                    <div>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                            <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#667085" />
-                                                        </svg>
-                                                    </div>
-                                                    <div className={style.shiftBox}>Shift</div>
-                                                </div>
-                                            </th>
-                                            <th className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                <div className='d-flex align-items-center gap-2'>
-                                                    <Checkbox checked={selectedColumn === "planned"} onChange={() => setSelectedColumn(selectedColumn === "planned" ? null : "planned")} />
-                                                    <label className={clsx(style.customLabel)}>Planned</label>
-                                                </div>
-                                            </th>
-                                            <th className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                <div className='d-flex justify-content-between'>
+                                        <thead>
+                                            <tr>
+                                                <th>
                                                     <div className='d-flex align-items-center gap-2'>
-                                                        <Checkbox checked={selectedColumn === "actual"} onChange={() => setSelectedColumn(selectedColumn === "actual" ? null : "actual")} />
-                                                        <label className={clsx(style.customLabel)}>Actual</label>
-                                                    </div>
-                                                    <div className={style.clockIcon}>
-                                                        <ClockHistory color='#475467' size={16} />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                        <tr className={style.whiteTr}>
-                                            <td>
-                                                <span className='font-16' style={{ color: '#344054' }}>Start</span>
-                                            </td>
-                                            <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                <span className='font-14'>{job?.start ? formatTime(job.start) : "N/A"} | {formatDate(job?.start_date)}</span>
-                                            </td>
-                                            <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                <span className='font-14'>{job?.start ? formatTime(job.start) : "N/A"} | {formatDate(job?.start_date)}</span>
-                                            </td>
-                                        </tr>
-                                        <tr className={style.whiteTr}>
-                                            <td>
-                                                <span className='font-16' style={{ color: '#344054' }}>Finish</span>
-                                            </td>
-                                            <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                <span className='font-14'>{job?.finish ? formatTime(job.finish) : "N/A"} | {formatDate(job?.end_date)}</span>
-                                            </td>
-                                            <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                <span className='font-14'>{job?.finish ? formatTime(job.finish) : "N/A"} | {formatDate(job?.end_date)}</span>
-                                            </td>
-                                        </tr>
-                                        <tr className={style.whiteTr}>
-                                            <td>
-                                                <span className='font-16' style={{ color: '#344054' }}>Hours</span>
-                                            </td>
-                                            <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                <span className='font-14'>{plannedHours}</span>
-                                            </td>
-                                            <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                <span className='font-14'>{calculateActualHours()}</span>
-                                            </td>
-                                        </tr>
-                                        <tr className={style.whiteTr}>
-                                            <td>
-                                                <span className='font-16' style={{ color: '#344054' }}>Rate per hour</span>
-                                            </td>
-                                            <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', style.borderRightNone)}>
-                                                <div className={clsx(style.moneyBox)}>${plannedRate.toFixed(2)}</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span className='font-16' style={{ color: '#344054' }}>Subtotal</span>
-                                            </td>
-                                            <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
-                                                <span className='font-14'>${plannedSubtotal.toFixed(2)}</span>
-                                            </td>
-                                            <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                <span className='font-14'>${actualSubtotal}</span>
-                                            </td>
-                                        </tr>
-                                        <tr className={style.whiteTr}>
-                                            <td>
-                                                <span className='font-16' style={{ color: '#344054' }}>Variation</span>
-                                            </td>
-                                            <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
-                                                <div className={clsx(style.moneyBox)}>${variation.toFixed(2)}</div>
-                                            </td>
-                                        </tr>
-                                        <tr className={clsx(style.lastRow)}>
-                                            <td>
-                                                <span className='font-16' style={{ color: '#344054' }}>Total</span>
-                                            </td>
-                                            <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
-                                                <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "planned" ? style.activeOutlineButton : "")}>
-                                                    ${plannedTotal}
-                                                    {
-                                                        selectedColumn === "planned" ?
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
-                                                            </svg> :
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
-                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
+                                                        <div className={style.fixRateBox}>Fix Rate</div>
+                                                        <div>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                                <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#667085" />
                                                             </svg>
-                                                    }
-                                                </Button>
-                                            </td>
-                                            <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "actual" ? style.activeOutlineButton : "")}>
-                                                    ${actualTotal}
-                                                    {
-                                                        selectedColumn === "actual" ?
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
-                                                            </svg> :
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
-                                                                <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
-                                                            </svg>
-                                                    }
-                                                </Button>
-                                            </td>
-                                        </tr>
+                                                        </div>
+                                                        <div className={style.shiftBox}>Shift</div>
+                                                    </div>
+                                                </th>
+                                                <th className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                    <div className='d-flex align-items-center gap-2'>
+                                                        <Checkbox checked={selectedColumn === "planned"} onChange={() => setSelectedColumn(selectedColumn === "planned" ? null : "planned")} />
+                                                        <label className={clsx(style.customLabel)}>Planned</label>
+                                                    </div>
+                                                </th>
+                                                <th className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                    <div className='d-flex justify-content-between'>
+                                                        <div className='d-flex align-items-center gap-2'>
+                                                            <Checkbox checked={selectedColumn === "actual"} onChange={() => setSelectedColumn(selectedColumn === "actual" ? null : "actual")} />
+                                                            <label className={clsx(style.customLabel)}>Actual</label>
+                                                        </div>
+                                                        <div className={style.clockIcon}>
+                                                            <ClockHistory color='#475467' size={16} />
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr className={style.whiteTr}>
+                                                <td>
+                                                    <span className='font-16' style={{ color: '#344054' }}>Start</span>
+                                                </td>
+                                                <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                    <span className='font-14'>{job?.start ? formatTime(job.start) : "N/A"} | {job?.start_date ? formatDate(job?.start_date) : "N/A"}</span>
+                                                </td>
+                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                    <span className='font-14'>{job?.start ? formatTime(job.start) : "N/A"} | {job?.start_date ? formatDate(job?.start_date) : "N/A"}</span>
+                                                </td>
+                                            </tr>
+                                            <tr className={style.whiteTr}>
+                                                <td>
+                                                    <span className='font-16' style={{ color: '#344054' }}>Finish</span>
+                                                </td>
+                                                <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                    <span className='font-14'>{job?.finish ? formatTime(job.finish) : "N/A"} | {job?.end_date ? formatDate(job?.end_date) : "N/A"}</span>
+                                                </td>
+                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                    <span className='font-14'>{job?.finish ? formatTime(job.finish) : "N/A"} | {job?.end_date ? formatDate(job?.end_date) : "N/A"}</span>
+                                                </td>
+                                            </tr>
+                                            <tr className={style.whiteTr}>
+                                                <td>
+                                                    <span className='font-16' style={{ color: '#344054' }}>Hours</span>
+                                                </td>
+                                                <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                    <span className='font-14'>{plannedHours}</span>
+                                                </td>
+                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                    <span className='font-14'>{calculateActualHours()}</span>
+                                                </td>
+                                            </tr>
+                                            <tr className={style.whiteTr}>
+                                                <td>
+                                                    <span className='font-16' style={{ color: '#344054' }}>Rate per hour</span>
+                                                </td>
+                                                <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', style.borderRightNone)}>
+                                                    <div className={clsx(style.moneyBox)}>${plannedRate.toFixed(2)}</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span className='font-16' style={{ color: '#344054' }}>Subtotal</span>
+                                                </td>
+                                                <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
+                                                    <span className='font-14'>${plannedSubtotal.toFixed(2)}</span>
+                                                </td>
+                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                    <span className='font-14'>${actualSubtotal}</span>
+                                                </td>
+                                            </tr>
+                                            <tr className={style.whiteTr}>
+                                                <td>
+                                                    <span className='font-16' style={{ color: '#344054' }}>Variation</span>
+                                                </td>
+                                                <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
+                                                    <div className={clsx(style.moneyBox)}>${variation.toFixed(2)}</div>
+                                                </td>
+                                            </tr>
+                                            <tr className={clsx(style.lastRow)}>
+                                                <td>
+                                                    <span className='font-16' style={{ color: '#344054' }}>Total</span>
+                                                </td>
+                                                <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
+                                                    <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "planned" ? style.activeOutlineButton : "")}>
+                                                        ${plannedTotal}
+                                                        {
+                                                            selectedColumn === "planned" ?
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
+                                                                </svg> :
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
+                                                                </svg>
+                                                        }
+                                                    </Button>
+                                                </td>
+                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                    <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "actual" ? style.activeOutlineButton : "")}>
+                                                        ${actualTotal}
+                                                        {
+                                                            selectedColumn === "actual" ?
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
+                                                                </svg> :
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
+                                                                </svg>
+                                                        }
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </Card.Header>
                             }
@@ -322,12 +330,40 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                 <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
                                     <div className='form-group mb-3 w-100'>
                                         <label className={clsx(style.customLabel)}>Amount</label>
-                                        <InputText className={clsx('w-100', style.InputText)} />
+                                        <div className={style.amountRow}>
+                                            <div className={style.amountInputBox}>
+                                                <span className={style.dollar}>$</span>
+                                                <InputNumber
+                                                    className={clsx(style.inputText)}
+                                                    value={amount}
+                                                    onChange={(e) => setAmount(parseFloat(e.value || 0))}
+                                                />
+                                                <span className={style.helpIcon}>
+                                                    <QuestionCircle size={16} color='#98A2B3' />
+                                                </span>
+                                            </div>
+                                            <div className={style.buttonGroup}>
+                                                <button className='info-button p-0' style={{ width: '44px', height: '44px' }} onClick={increment}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <path fillRule="evenodd" clipRule="evenodd" d="M8 0.5C8.34518 0.5 8.625 0.779822 8.625 1.125V7.375H14.875C15.2202 7.375 15.5 7.65482 15.5 8C15.5 8.34518 15.2202 8.625 14.875 8.625H8.625V14.875C8.625 15.2202 8.34518 15.5 8 15.5C7.65482 15.5 7.375 15.2202 7.375 14.875V8.625H1.125C0.779822 8.625 0.5 8.34518 0.5 8C0.5 7.65482 0.779822 7.375 1.125 7.375H7.375V1.125C7.375 0.779822 7.65482 0.5 8 0.5Z" fill="#158ECC" />
+                                                    </svg>
+                                                </button>
+                                                <button className='outline-button p-0' style={{ width: '44px', height: '44px' }} onClick={decrement}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2" fill="none">
+                                                        <path d="M0 1C0 0.447715 0.447715 0 1 0H9C9.55229 0 10 0.447715 10 1C10 1.55228 9.55229 2 9 2H1C0.447715 2 0 1.55228 0 1Z" fill="#B42318" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div className='form-group mb-3 w-100'>
                                         <label className={clsx(style.customLabel)}>Reason</label>
-                                        <InputTextarea className={clsx('w-100', style.InputTextarea)} rows={3} placeholder='Enter a reason...' />
+                                        <InputTextarea
+                                            className={clsx('w-100', style.InputTextarea)}
+                                            rows={4}
+                                            placeholder="Enter the detailed quote for the client contract here. Include all relevant information such as project scope, deliverables, timelines, costs, payment terms, and any special conditions. Ensure the quote is clear, comprehensive, and aligns with the client's requirements and expectations."
+                                        />
                                     </div>
                                 </Card.Header>
                             }
@@ -350,10 +386,9 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                             </Card.Body>
                             {
                                 isOpenJobTrackingSection &&
-                                <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
+                                <Card.Header className={clsx(style.background, 'border-0 p-0', style.borderBottom)}>
                                     {mapEmbedUrl ? (
                                         <>
-                                            <label className={clsx(style.customLabel)}>Job Location</label>
                                             <iframe
                                                 width="100%"
                                                 height="300"
@@ -362,17 +397,6 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                                                 src={mapEmbedUrl}
                                                 allowFullScreen
                                             ></iframe>
-                                            {/* Display the timestamps of the location entries */}
-                                            {job?.locations?.length > 0 && (
-                                                <>
-                                                    <label className={clsx(style.customLabel, 'mt-3')}>Location Tracking Timestamps (IST)</label>
-                                                    {job.locations.map((loc, index) => (
-                                                        <p key={index} className={clsx(style.text)}>
-                                                            Recorded at: {formatDateTimeIST(loc.date)}
-                                                        </p>
-                                                    ))}
-                                                </>
-                                            )}
                                         </>
                                     ) : (
                                         <p className={clsx(style.text)}>Location map unavailable: No coordinates provided.</p>
@@ -384,8 +408,9 @@ const ApproveJob = ({ jobId = null, visible = false, setVisible }) => {
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={() => { }} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='danger-outline-button'>Decline</Button>
+                        <Button type='button' onClick={() => { }} className='info-button' style={{ minWidth: '75px' }}>Approve</Button>
+                        <Button type='button' onClick={() => { }} className='solid-button' style={{ minWidth: '75px' }}>Approve & See Next  {false && <ProgressSpinner
                             style={{ width: "20px", height: "20px", color: "#fff" }}
                         />}</Button>
                     </div>

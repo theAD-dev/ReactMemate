@@ -202,3 +202,57 @@
   background: var(--Primary-600, #158ecc) !important;
   border: 1px solid var(--Primary-600, #158ecc) !important;
 }
+
+.amountRow {
+  gap: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.dollar {
+  font-size: 1rem;
+  padding: 0 0.25rem;
+}
+
+.helpIcon {
+  font-size: 1rem;
+  color: #9e9e9e;
+  cursor: help;
+  padding-left: 0.5rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.iconButton {
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.amountInputBox {
+  position: relative;
+  display: flex;
+  padding: 0px 14px;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 6px;
+  border: 1px solid var(--Primary-300, #76d1ff);
+  background: var(--Base-White, #fff);
+
+  .inputText {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+     border-left: 1px solid var(--Primary-300, #76d1ff);
+  }
+}
