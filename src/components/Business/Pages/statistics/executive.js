@@ -17,12 +17,12 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 const verticalLinePlugin = {
     id: 'verticalLine',
     afterDraw: (chart) => {
-        const tooltip = chart.tooltip;
-        const ctx = chart.ctx;
-        const chartArea = chart.chartArea;
+        const tooltip = chart?.tooltip;
+        const ctx = chart?.ctx;
+        const chartArea = chart?.chartArea;
 
         // Only proceed if the tooltip is active and has data
-        if (tooltip._active && tooltip._active.length > 0) {
+        if (tooltip && tooltip._active && tooltip._active.length > 0) {
             const activePoint = tooltip._active[0];
             const xPos = activePoint.element.x;
 
