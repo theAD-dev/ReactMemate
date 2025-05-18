@@ -94,7 +94,7 @@ table.p-datatable-table tr:hover .show-on-hover .p-checkbox {
 
 tr.p-datatable-emptymessage td {
   text-align: center;
-} 
+}
 
 .custom-modal .p-dialog-header-icons {
   margin-top: 8px;
@@ -325,7 +325,8 @@ tr.p-datatable-emptymessage td {
   padding: 5px 10px;
 }
 
-.ql-snow .ql-editor code, .ql-snow .ql-editor .ql-code-block-container {
+.ql-snow .ql-editor code,
+.ql-snow .ql-editor .ql-code-block-container {
   border-radius: 3px;
 }
 
@@ -580,4 +581,12 @@ tr.p-datatable-emptymessage td {
 
 .p-datepicker {
   z-index: 10001 !important;
+}
+
+.p-rating .p-rating-item .p-rating-icon {
+  color: #ffcb45 !important;
+}
+
+.p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
+  color: #ffcb45 !important;
 }
