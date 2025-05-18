@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link45deg, Person, Repeat } from 'react-bootstrap-icons';
+import { ClockHistory, Link45deg, Repeat } from 'react-bootstrap-icons';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Chip } from 'primereact/chip';
@@ -14,6 +14,7 @@ import style from './approval.module.scss';
 import WeekNavigator from './week-navigator';
 import { getJobsToApprove, getApproveNotInvoice } from '../../../../APIs/approval-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 import { FallbackImage } from '../../../../ui/image-with-fallback/image-avatar';
 import ApproveJob from '../../features/approve-job/approve-job';
 
@@ -38,7 +39,8 @@ const ApprovalTable = React.memo(() => {
     const {
         data: approveData = [],
         isLoading: isLoadingApprove,
-        error: approveError
+        error: approveError,
+        refetch: refetchApproveData
     } = useQuery({
         queryKey: ['jobsToApprove'],
         queryFn: getJobsToApprove,
@@ -72,10 +74,10 @@ const ApprovalTable = React.memo(() => {
     });
 
     const paymentBody = (rowData) => {
-        const paymentType = rowData.time_type === "1" ? "Hours" : "Fix";
+        const paymentType = rowData.type === "2" ? "Fix" : rowData.type === "3" ? "Hours" : "TimeTracker";
         return (
             <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-                <div className={`${style.payment} ${paymentType === 'Hours' ? style.paymentHours : style.paymentFix}`}>
+                <div className={`${style.payment} ${paymentType === 'Hours' ? style.paymentHours : paymentType === 'Fix' ? style.paymentFix : style.paymentTracker}`}>
                     {paymentType}
                 </div>
                 <Repeat color='#158ECC' />
@@ -84,10 +86,10 @@ const ApprovalTable = React.memo(() => {
     };
 
     const timeBody = (rowData) => {
-        const timeType = rowData.type === "2" ? "TimeFrame" : "TimeTracker";
+        const timeType = rowData.time_type === "T" ? "Time Frame" : "Shift";
         return (
             <div className={`d-flex align-items-center show-on-hover`}>
-                <div className={`${style.time} ${timeType === 'TimeFrame' ? style.frame : style.tracker}`}>
+                <div className={`${style.time} ${timeType === 'Shift' ? style.shift : style.frame}`}>
                     {timeType}
                 </div>
             </div>
@@ -95,13 +97,21 @@ const ApprovalTable = React.memo(() => {
     };
 
     const clientHeader = () => {
-        return <div className='d-flex align-items-center'>
+        return <div className='d-flex align-items-center gap-1'>
             Client
             <small>A→Z</small>
         </div>;
     };
 
+    const workerHeader = () => {
+        return <div className='d-flex align-items-center gap-1'>
+            Name
+            <small>A→Z</small>
+        </div>;
+    };
+
     const clientBody = (rowData) => {
+        if (!rowData.client) return 'N/A';
         return <div className='d-flex align-items-center'>
             <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
                 <FallbackImage
@@ -182,12 +192,30 @@ const ApprovalTable = React.memo(() => {
         ) : 'N/A';
     };
 
-    const totalBody = (rowData) => {
-        return <Tag value={rowData.total} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>;
+    const calculateHours = (spentTime) => {
+        const [h, m, s] = spentTime.split(':');
+        const totalSeconds = parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s);
+        const totalHours = totalSeconds / 3600;
+        return totalHours.toFixed(2); // returns string like "0.01"
     };
 
-    const thisWeekTotalBody = (rowData) => {
-        return <span style={{ fontWeight: 'bold' }}>{rowData.total}</span>;
+    const realTimeBody = (rowData) => {
+        const hours = calculateHours(rowData.spent_time || "0:00:00.000000");
+
+        return (
+            <div className="d-flex align-items-center gap-1">
+                <span className="me-1">{hours}h</span>
+                <ClockHistory color='#667085' size={16} />
+            </div>
+        );
+    };
+
+    const totalBody = (rowData) => {
+        return <Tag value={`$${formatAUD(rowData.total)}`} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>;
+    };
+
+    const realTotalBody = (rowData) => {
+        return <span>${formatAUD(rowData.real_total)}</span>;
     };
 
     const header = (
@@ -301,9 +329,10 @@ const ApprovalTable = React.memo(() => {
                 <Column field="short_description" header="Job Reference" style={{ minWidth: '270px' }}></Column>
                 <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
                 <Column field="project.number" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="worker.first_name" header="Worker" body={nameBody} style={{ minWidth: '205px' }}></Column>
-                <Column field="spent_time" header="Spent Time" style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="real_total" header="Real Total" body={thisWeekTotalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="worker.first_name" header={workerHeader} body={nameBody} style={{ minWidth: '205px' }}></Column>
+                <Column field="variations" header="Variations" style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="real_total" header="Real Total" body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="spent_time" header="Real Time" body={realTimeBody} style={{ minWidth: '105px' }}></Column>
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="id" header="Actions" body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
@@ -347,13 +376,14 @@ const ApprovalTable = React.memo(() => {
                 <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
                 <Column field="project.number" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
                 <Column field="worker.first_name" header="Worker" body={nameBody} style={{ minWidth: '205px' }}></Column>
-                <Column field="spent_time" header="Spent Time" style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="real_total" header="Real Total" body={thisWeekTotalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="variations" header="Variations" style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="real_total" header="Real Total" body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="spent_time" header="Real Time" body={realTimeBody} style={{ minWidth: '105px' }}></Column>
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="id" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={clsx(`${style.shadowLeft}`, 'text-center')} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
 
-            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} />
+            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} refetch={refetchApproveData} />
         </>
     );
 });
