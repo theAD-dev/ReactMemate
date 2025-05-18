@@ -45,6 +45,7 @@ import './shared/styles/prime.css';
 import './shared/styles/index.css';
 import './shared/styles/App.css';
 import './shared/styles/global.scss';
+import 'leaflet/dist/leaflet.css';
 import "@fontsource/inter";
 import "@fontsource/roboto";
 import App from './app/_app';
