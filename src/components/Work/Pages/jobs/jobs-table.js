@@ -104,6 +104,11 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <div className={`${style.payment} ${style.paymentHours}`}>{rowData.type_display}</div>
         {rowData?.is_recurring && <Repeat color='#158ECC' />}
       </div>;
+    if (rowData.type_display === 'Time Tracker')
+      return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
+        <div className={`${style.payment} ${style.paymentTracker}`}>{rowData.type_display}</div>
+        {rowData?.is_recurring && <Repeat color='#158ECC' />}
+      </div>;
     else
       return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
         <div className={`${style.payment} ${style.paymentFix}`}>{rowData.type_display}</div>
@@ -118,12 +123,12 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     </div>;
   };
 
-  const timeBody = (rowdata) => {
+  const timeBody = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-center show-on-hover`}>
-      <div className={`${style.time} ${rowdata.time_type === '1' ? style.frame : style.tracker}`}>
-        {rowdata.time_type_display}
+      <div className={`${style.time} ${rowData.time_type === '1' ? style.frame : style.tracker}`}>
+        {rowData.time_type_display}
       </div>
-      <Button label="Open" onClick={() => openDeatils(rowdata)} className='primary-text-button ms-3 show-on-hover-element' text />
+      <Button label="Open" onClick={() => openDeatils(rowData)} className='primary-text-button ms-3 show-on-hover-element' text />
     </div>;
   };
 
