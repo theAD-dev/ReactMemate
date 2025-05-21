@@ -255,7 +255,7 @@ const ApprovalTable = React.memo(() => {
         return (
             <ColumnGroup>
                 <Row className='w-100'>
-                    <Column colSpan={12} />
+                    <Column colSpan={13} />
                     <Column
                         footer={`Total= $${formattedTotal}`}
                         footerStyle={{ position: 'sticky', right: 0 }}
@@ -274,7 +274,7 @@ const ApprovalTable = React.memo(() => {
         return (
             <ColumnGroup>
                 <Row className='w-100'>
-                    <Column colSpan={12} />
+                    <Column colSpan={13} />
                     <Column
                         footer={`Total= $${formattedTotal}`}
                         footerStyle={{ position: 'sticky', right: 0 }}
