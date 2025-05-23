@@ -1,16 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Col, Row } from 'react-bootstrap';
-import { ClipboardData, Google, InfoSquareFill, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Button, Card, Col, Dropdown, Row } from 'react-bootstrap';
+import { Calendar3 as CalendarIcon, ClipboardData, Google, InfoSquareFill, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { Calendar } from 'primereact/calendar';
 import { Chart } from 'primereact/chart';
+import { getOverviewStatistics } from './api/statistics-api';
 import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const Overview = () => {
+    const today = new Date();
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const { trialHeight } = useTrialHeight();
+    const [type, setType] = useState('Month to Date');
+    const [dates, setDates] = useState([startOfMonth, today]);
+    const [range, setRange] = useState('Previous year');
+
+    const overviewQuery = useQuery({
+        queryKey: ["getOverviewStatistics", dates[0], dates[1]],
+        queryFn: () => getOverviewStatistics(dates[0], dates[1]),
+        enabled: !!dates,
+        retry: 1
+    });
+    console.log('overviewQuery: ', overviewQuery.data);
+
+    useEffect(() => {
+        if (type === 'Month to Date') {
+            setDates([startOfMonth, today]);
+        } else if (type === 'Last Month') {
+            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+            setDates([lastMonth, lastMonthEnd]);
+        } else if (type === 'Last 7 Days') {
+            const last7Days = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6);
+            setDates([last7Days, today]);
+        } else if (type === 'Last 4 Weeks') {
+            const last4Weeks = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 28);
+            setDates([last4Weeks, today]);
+        } else if (type === 'Last 12 Months') {
+            const last12Months = new Date(today.getFullYear() - 1, today.getMonth(), 1);
+            setDates([last12Months, today]);
+        }
+    }, [type]);
 
     // Sample data based on the image with 12 months
     const reportsData = {
@@ -69,7 +104,7 @@ const Overview = () => {
             },
             elements: {
                 line: {
-                    tension: 0.4, // Matches the curved line in the image
+                    tension: 0, // Matches the curved line in the image
                     borderWidth: 2,
                 },
                 point: {
@@ -86,7 +121,7 @@ const Overview = () => {
                     label: 'Gross Volume',
                     data: [1014.38, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1375, 1390, 1400, 1402.50],
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
                     borderColor: '#1AB2FF', // Blue line to match the image
                     backgroundColor: getGradient('#1AB2FF', 0.2, 0.04), // Light blue gradient
                 },
@@ -102,7 +137,7 @@ const Overview = () => {
                     label: 'Active Quotes',
                     data: [26.48, 30, 35, 38, 40, 42, 44, 45, 46, 46.5, 47, 47],
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
                     borderColor: '#1AB2FF',
                     backgroundColor: getGradient('#1AB2FF', 0.2, 0.04),
                 },
@@ -118,7 +153,7 @@ const Overview = () => {
                     label: 'Orders',
                     data: [1014.38, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 1],
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
                     borderColor: '#1AB2FF',
                     backgroundColor: getGradient('#1AB2FF', 0.2, 0.04),
                 },
@@ -134,7 +169,7 @@ const Overview = () => {
                     label: 'Unpaid Invoices',
                     data: [1014.38, 1200, 1400, 1600, 1800, 2000, 2200, 2500, 2800, 3000, 3200, 3444.69],
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
                     borderColor: '#1AB2FF',
                     backgroundColor: getGradient('#1AB2FF', 0.2, 0.04),
                 },
@@ -150,7 +185,7 @@ const Overview = () => {
                     label: 'Spend per Order',
                     data: [1014.38, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 0.00],
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
                     borderColor: '#1AB2FF',
                     backgroundColor: getGradient('#1AB2FF', 0.2, 0.04),
                 },
@@ -166,7 +201,7 @@ const Overview = () => {
                     label: 'Jobs Completed',
                     data: [1014.38, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 0],
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
                     borderColor: '#1AB2FF',
                     backgroundColor: getGradient('#1AB2FF', 0.2, 0.04),
                 },
@@ -182,7 +217,7 @@ const Overview = () => {
                     label: 'Contractor Expense',
                     data: [0, 500, 1000, 1500, 2000, 2500, 3000, 3200, 3300, 3400, 3422, 3444.69],
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
                     borderColor: '#1AB2FF',
                     backgroundColor: getGradient('#1AB2FF', 0.2, 0.04),
                 },
@@ -214,7 +249,7 @@ const Overview = () => {
                 <title>MeMate - Overview</title>
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                {/* Executive - disabled */}
+                {/* Executive */}
                 <Link to="/statistics/executive" className={clsx('d-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
@@ -224,8 +259,8 @@ const Overview = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                {/* Overview - disabled (current page) */}
-                <Link to="/statistics/overview" style={{ background: "#FEF3F2" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1', style.disabledLink)}>
+                {/* Overview - (current page) */}
+                <Link to="/statistics/overview" style={{ background: "#FEF3F2" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: "#F04438" }}>Overview</span>
                 </Link>
@@ -250,20 +285,105 @@ const Overview = () => {
                 <h2 className={clsx(style.keyResultsTitle)}>Reports Overview</h2>
 
                 <div className={clsx(style.dateRangeSelector)}>
-                    <select className={style.dateRangeDropdown}>
-                        <option>Year to date</option>
-                    </select>
-                    <span>1 Jan - 26 Feb</span>
+                    <div className='d-flex align-items-center'>
+                        <Dropdown>
+                            <Dropdown.Toggle as={Button} className={clsx(style.button, style.borderRadiusRightZero, "outline-button mx-auto")}>
+                                <span style={{ color: '#344054', fontWeight: 600 }}>{type}</span>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    key={'Month to Date'}
+                                    eventKey={'Month to Date'}
+                                    active={type === 'Month to Date'}
+                                    onClick={() => setType('Month to Date')}
+                                >
+                                    Month to Date
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    key={'Last Month'}
+                                    eventKey={'Last Month'}
+                                    active={type === 'Last Month'}
+                                    onClick={() => setType('Last Month')}
+                                >
+                                    Last Month
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    key={'Last 7 Days'}
+                                    eventKey={'Last 7 Days'}
+                                    active={type === 'Last 7 Days'}
+                                    onClick={() => setType('Last 7 Days')}
+                                >
+                                    Last 7 Days
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    key={'Last 4 Weeks'}
+                                    eventKey={'Last 4 Weeks'}
+                                    active={type === 'Last 4 Weeks'}
+                                    onClick={() => setType('Last 4 Weeks')}
+                                >
+                                    Last 4 Weeks
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    key={'Last 12 Months'}
+                                    eventKey={'Last 12 Months'}
+                                    active={type === 'Last 12 Months'}
+                                    onClick={() => setType('Last 12 Months')}
+                                >
+                                    Last 12 Months
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    key={'Custom'}
+                                    eventKey={'Custom'}
+                                    active={type === 'Custom'}
+                                    onClick={() => setType('Custom')}
+                                >
+                                    Custom
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <div style={{ position: 'relative', marginTop: '16px' }}>
+                            <CalendarIcon color='#475467' size={16} style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 10 }} />
+                            <Calendar
+                                value={dates}
+                                onChange={(e) => setDates(e.value)}
+                                selectionMode="range"
+                                readOnlyInput
+                                disabled={type !== 'Custom'}
+                                hideOnRangeSelection
+                                numberOfMonths={2}
+                                className={clsx(style.calendar)}
+                                dateFormat='dd M yy'
+                            />
+                        </div>
 
-                    <span>Compared to </span>
+                    </div>
 
-                    <select className={style.dateRangeDropdown}>
-                        <option>Previous year</option>
-                    </select>
 
-                    <select className={style.dateRangeDropdown}>
-                        <option>Daily</option>
-                    </select>
+                    <div className='mt-3'>Compared to </div>
+
+                    <Dropdown>
+                        <Dropdown.Toggle as={Button} className={clsx(style.button, "outline-button mx-auto")}>
+                            <span style={{ color: '#344054', fontWeight: 600 }}>{range}</span>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item
+                                key={'Previous year'}
+                                eventKey={'Previous year'}
+                                active={range === 'Previous year'}
+                                onClick={() => setRange('Previous year')}
+                            >
+                                Previous year
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                                key={'Previous month'}
+                                eventKey={'Previous month'}
+                                active={range === 'Previous month'}
+                                onClick={() => setRange('Previous month')}
+                            >
+                                Previous month
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
 
                 <Card className='rounded-0 border-0'>

@@ -259,7 +259,7 @@ const SalesConversion = () => {
                 <title>MeMate - Sales Conversion</title>
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                {/* Executive - disabled */}
+                {/* Executive */}
                 <Link to={"/statistics/executive"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext}>Executive</span>
@@ -269,8 +269,8 @@ const SalesConversion = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: '#17B26A' }}>Conversion</span>
                 </Link>
-                {/* Overview - disabled */}
-                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                {/* Overview */}
+                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
