@@ -95,8 +95,8 @@ const KeyResultsPage = () => {
     }, []);
 
     // Calculate dash offsets dynamically
-    const outerDashOffset = outerPathLength * (1 - outerProgress / 100);
-    const innerDashOffset = innerPathLength * (1 - innerProgress / 100);
+    const outerDashOffset = outerPathLength * (1 - (outerProgress > 100 ? 100 : outerProgress) / 100);
+    const innerDashOffset = innerPathLength * (1 - (innerProgress > 100 ? 100 : innerProgress) / 100);
 
     const statistics = selectedType === 'Generated revenue' ? (keyResultStaticsQuery?.data?.revenue || []) : (keyResultStaticsQuery?.data?.statistics || []);
     const topStatistics = [...statistics]

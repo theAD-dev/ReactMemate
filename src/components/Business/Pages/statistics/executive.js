@@ -249,7 +249,7 @@ const Executive = () => {
                     backgroundColor: '#fff',  // Tooltip background color
                     titleColor: '#667085',
                     bodyColor: '#667085',
-                    borderColor: '#fff',
+                    borderColor: '#f2f2f2',
                     borderWidth: 1,
                     callbacks: {
                         label: function (tooltipItem) {
