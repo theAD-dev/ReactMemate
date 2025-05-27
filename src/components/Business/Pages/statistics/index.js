@@ -25,8 +25,7 @@ const StatisticsPage = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                {/* Overview - disabled */}
-                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
@@ -66,7 +65,7 @@ const StatisticsPage = () => {
                             Provides analytics that display the overall direction of turnover, along with the proportions of operational profit and expenses.
                         </p>
                     </Link>
-                    <Link to={"/statistics/overview"} className={clsx(style.box, style.disabledLink)}>
+                    <Link to={"/statistics/overview"} className={clsx(style.box)}>
                         <div className={clsx(style.executiveBox, style.executiveBox3)}>
                             <TextParagraph color='#F04438' size={40} />
                         </div>

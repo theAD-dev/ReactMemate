@@ -109,7 +109,7 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
     };
 
     const handleChangeSave = () => {
-        if (!selectClient || !selectContact) return toast.error('Please select a client and contact person');
+        if (!selectClient) return toast.error('Please select a client');
         setPayload((prev) => ({ ...prev, client: selectClient, contact_person: selectContact }));
         setIsEdit(false);
     };
@@ -140,7 +140,7 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
                 {isEdit ? (
                     <>
                         <Col sm={6} style={{ minHeight: '190px' }}>
-                            <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Company</p>
+                            <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Company<span className='required'>*</span></p>
                             <Dropdown
                                 ref={dropdownRef}
                                 value={selectClient}

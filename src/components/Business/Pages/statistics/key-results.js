@@ -95,8 +95,8 @@ const KeyResultsPage = () => {
     }, []);
 
     // Calculate dash offsets dynamically
-    const outerDashOffset = outerPathLength * (1 - outerProgress / 100);
-    const innerDashOffset = innerPathLength * (1 - innerProgress / 100);
+    const outerDashOffset = outerPathLength * (1 - (outerProgress > 100 ? 100 : outerProgress) / 100);
+    const innerDashOffset = innerPathLength * (1 - (innerProgress > 100 ? 100 : innerProgress) / 100);
 
     const statistics = selectedType === 'Generated revenue' ? (keyResultStaticsQuery?.data?.revenue || []) : (keyResultStaticsQuery?.data?.statistics || []);
     const topStatistics = [...statistics]
@@ -118,8 +118,7 @@ const KeyResultsPage = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                {/* Overview - disabled */}
-                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>

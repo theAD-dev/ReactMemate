@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Plus, Calendar3, QuestionCircle, CloudUpload, ExclamationCircleFill } from 'react-bootstrap-icons';
+import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, UpcScan } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import { useForm, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -482,10 +482,11 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 </Col>
 
                 <Col sm={12}>
-                    <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '16px' }}>
+                    <label className={clsx(styles.lable)}>Upload & Read With AI</label>
+                    <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
                         <input {...getInputProps()} />
                         <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
-                            <CloudUpload />
+                            <UpcScan />
                         </button>
                         <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
                         <span style={{ color: '#475467', fontSize: '12px' }}>PDF files only • Max size: 5MB</span>

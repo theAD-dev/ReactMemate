@@ -116,7 +116,7 @@ const CalculateQuote = () => {
         if (payload.merges) delete payload.merges;
 
         if (!payload?.client) return toast.error('Client is required');
-        if (!payload?.contact_person && action !== "draft") return toast.error('Contact person is required');
+        // if (!payload?.contact_person && action !== "draft") return toast.error('Contact person is required');
         if ((!payload?.managers || !payload.managers?.length) && action !== "draft") return toast.error('Project manager is required');
         if ((!payload?.calculations || !payload.calculations.length) && action !== "draft") return toast.error('At least one calculation is required');
         if (!payload?.xero_tax && action !== "draft") return toast.error('Tax details is required');

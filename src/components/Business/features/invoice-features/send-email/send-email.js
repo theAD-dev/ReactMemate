@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { toast } from 'sonner';
 import { getClientById } from '../../../../../APIs/ClientsApi';
-import { resendInvoiceEmail } from '../../../../../APIs/invoice-api';
+import { sendInvoiceEmail } from '../../../../../APIs/invoice-api';
 import SendDynamicEmailForm from '../../../../../ui/send-email-2/send-email';
 
 const SendInvoiceEmail = ({ projectId, clientId, isAction }) => {
@@ -18,7 +18,7 @@ const SendInvoiceEmail = ({ projectId, clientId, isAction }) => {
     });
 
     const mutation = useMutation({
-        mutationFn: (data) => resendInvoiceEmail(projectId, data),
+        mutationFn: (data) => sendInvoiceEmail(projectId, data),
         onSuccess: () => {
             setShow(false);
             toast.success(`Email sent successfully.`);

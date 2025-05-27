@@ -112,7 +112,8 @@ const Executive = () => {
                     label: 'Total Income',
                     data: total_income,
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
+                    borderWidth: 2,
                     borderColor: '#475467',
                     backgroundColor: getGradientForTotalIncome(),
                 },
@@ -120,7 +121,8 @@ const Executive = () => {
                     label: 'Operational Profit',
                     data: operating_profit,
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
+                    borderWidth: 2,
                     borderColor: '#17B26A',
                     backgroundColor: getGradientForOperationalProfit(),
                 },
@@ -128,7 +130,8 @@ const Executive = () => {
                     label: 'Cost of Sale',
                     data: cost_of_sale,
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
+                    borderWidth: 2,
                     borderColor: '#F04438',
                     backgroundColor: getGradientCostOfSale(),
                 },
@@ -136,16 +139,18 @@ const Executive = () => {
                     label: 'Labor',
                     data: labor,
                     fill: true,
-                    tension: 0.4,
+                    tension: 0,
+                    borderWidth: 2,
                     borderColor: '#F79009',
                     backgroundColor: getGradientLabor(),
                 },
                 {
                     label: 'Operating Expense',
                     data: operating_expense,
+                    tension: 0,
                     fill: true,
+                    borderWidth: 2,
                     borderColor: '#1AB2FF',
-                    tension: 0.4,
                     backgroundColor: getGradientCyan()
                 }
             ]
@@ -249,7 +254,7 @@ const Executive = () => {
                     backgroundColor: '#fff',  // Tooltip background color
                     titleColor: '#667085',
                     bodyColor: '#667085',
-                    borderColor: '#fff',
+                    borderColor: '#f2f2f2',
                     borderWidth: 1,
                     callbacks: {
                         label: function (tooltipItem) {
@@ -328,8 +333,7 @@ const Executive = () => {
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
                 </Link>
-                {/* Overview - disabled */}
-                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/overview"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>

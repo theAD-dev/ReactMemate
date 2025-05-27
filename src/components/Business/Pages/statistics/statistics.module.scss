@@ -95,6 +95,8 @@
 
 .keyResults {
   .keyResultsTitle {
+    margin: auto;
+    width: fit-content;
     color: var(--Gray-800, #1d2939);
     text-align: center;
     font-family: Inter;
@@ -444,6 +446,7 @@
   position: relative;
 
   .keyResultsTitle {
+    width: fit-content;
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 16px;
@@ -516,4 +519,26 @@
   letter-spacing: 0.14px;
   color: var(--Gray-500, #667085);
   margin: 20px 0px;
+}
+
+.calendar {
+  border-right: 1px solid #d0d5dd;
+  border-top: 1px solid #d0d5dd;
+  border-bottom: 1px solid #d0d5dd;
+  input {
+    color: #344054;
+    width: 245px;
+    padding: 10px;
+    padding-left: 40px;
+    font-weight: 600;
+  }
+  input:disabled {
+    color: #344054 !important;
+    opacity: 1;
+  }
+}
+
+.borderRadiusRightZero {
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
 }
