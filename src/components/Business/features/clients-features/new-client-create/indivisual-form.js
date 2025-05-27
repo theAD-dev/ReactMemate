@@ -17,9 +17,6 @@ import { getCities, getClientCategories, getCountries, getStates } from '../../.
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
-
-
-
 const schema = yup
     .object({
         firstname: yup.string().required("First name is required"),

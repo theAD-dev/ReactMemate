@@ -113,6 +113,7 @@ const Executive = () => {
                     data: total_income,
                     fill: true,
                     tension: 0,
+                    borderWidth: 2,
                     borderColor: '#475467',
                     backgroundColor: getGradientForTotalIncome(),
                 },
@@ -121,6 +122,7 @@ const Executive = () => {
                     data: operating_profit,
                     fill: true,
                     tension: 0,
+                    borderWidth: 2,
                     borderColor: '#17B26A',
                     backgroundColor: getGradientForOperationalProfit(),
                 },
@@ -129,6 +131,7 @@ const Executive = () => {
                     data: cost_of_sale,
                     fill: true,
                     tension: 0,
+                    borderWidth: 2,
                     borderColor: '#F04438',
                     backgroundColor: getGradientCostOfSale(),
                 },
@@ -137,15 +140,17 @@ const Executive = () => {
                     data: labor,
                     fill: true,
                     tension: 0,
+                    borderWidth: 2,
                     borderColor: '#F79009',
                     backgroundColor: getGradientLabor(),
                 },
                 {
                     label: 'Operating Expense',
                     data: operating_expense,
-                    fill: true,
-                    borderColor: '#1AB2FF',
                     tension: 0,
+                    fill: true,
+                    borderWidth: 2,
+                    borderColor: '#1AB2FF',
                     backgroundColor: getGradientCyan()
                 }
             ]

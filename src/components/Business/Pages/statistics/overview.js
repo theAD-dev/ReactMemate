@@ -14,12 +14,12 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 
 const Overview = () => {
-    const today = new Date(); // Today is May 24, 2025
+    const today = new Date();
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const { trialHeight } = useTrialHeight();
     const [type, setType] = useState('Month to Date');
     const [dates, setDates] = useState([startOfMonth, today]);
-    const [range, setRange] = useState('Previous year');
+    const [range, setRange] = useState('Previous month');
 
     const overviewQuery = useQuery({
         queryKey: ["getOverviewStatistics", dates[0], dates[1]],
@@ -99,7 +99,7 @@ const Overview = () => {
                             const datasetLabel = tooltipItem.dataset.label; // "This Year" or "Last Year"
                             const value = tooltipItem.raw; // The value for the hovered dataset
                             const prevDate = getPreviousPeriodDateLabel(tooltipItem.label);
-                            return `${datasetLabel} (${datasetLabel === 'This Year' ? tooltipItem.label : prevDate}): ${formatAUD(value)}`;
+                            return `${datasetLabel} (${(datasetLabel === 'This Year' || datasetLabel === 'This Month') ? tooltipItem.label : prevDate}): $${formatAUD(value)}`;
                         }
                     }
                 },
@@ -178,18 +178,11 @@ const Overview = () => {
                 return isNaN(value) ? 0 : value;
             });
 
-            // Log the dataset for debugging
-            console.log(`Chart data for ${key}:`, {
-                labels: currentData.map(d => d.date),
-                thisYearData,
-                lastYearData
-            });
-
             return {
                 labels: currentData.map(d => d.date),
                 datasets: [
                     {
-                        label: 'This Year',
+                        label: range === 'Previous year' ? 'This Year' : 'This Month',
                         data: thisYearData,
                         fill: true,
                         tension: 0,
@@ -198,7 +191,7 @@ const Overview = () => {
                         borderWidth: 2,
                     },
                     {
-                        label: 'Last Year',
+                        label: range === 'Previous year' ? 'Last Year' : 'Last Month',
                         data: lastYearData,
                         fill: false, // No fill for Last Year to avoid overlap
                         tension: 0,
@@ -449,6 +442,14 @@ const Overview = () => {
                                 onClick={() => setRange('Previous year')}
                             >
                                 Previous year
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                                key={'Previous month'}
+                                eventKey={'Previous month'}
+                                active={range === 'Previous month'}
+                                onClick={() => setRange('Previous month')}
+                            >
+                                Previous month
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
