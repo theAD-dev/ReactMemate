@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Menu } from 'primereact/menu';
@@ -6,16 +6,129 @@ import styles from './chat-area.module.scss';
 import ChatHeader from '../chat-header/chat-header';
 import MessageList from '../message-list/message-list';
 
-const ChatArea = ({ currentChat }) => {
+const ChatArea = ({ currentChat, socket, userId, chatId }) => {
   const [message, setMessage] = useState('');
   const [menuRef, setMenuRef] = useState(null);
   const [menuVisible, setMenuVisible] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+  const [hasMore, setHasMore] = useState(true);
+
+  // Fetch messages when chatId, userId, or page changes
+  useEffect(() => {
+    if (!chatId || !userId || !socket) return;
+    setLoading(true);
+    socket.emit(
+      'get_group_messages',
+      {
+        user_id: userId,
+        group_id: chatId,
+        page,
+        page_size: pageSize,
+      },
+      (res) => {
+        setLoading(false);
+        if (res && res.messages) {
+          if (page === 1) {
+            setMessages(res.messages);
+          } else {
+            setMessages((prev) => [...res.messages, ...prev]);
+          }
+          setHasMore(page < (res.total_pages || 1));
+        }
+      }
+    );
+    // Listen for async response as well
+    const handler = (payload) => {
+      if (payload.group_id === chatId) {
+        if (page === 1) {
+          setMessages(payload.messages);
+        } else {
+          setMessages((prev) => [...payload.messages, ...prev]);
+        }
+        setHasMore(page < (payload.total_pages || 1));
+        setLoading(false);
+      }
+    };
+    socket.on('get_group_messages_response', handler);
+    return () => socket.off('get_group_messages_response', handler);
+  }, [chatId, userId, socket, page, pageSize]);
+
+  // Listen for new messages and send_message_response
+  useEffect(() => {
+    if (!socket || !chatId) return;
+
+    // Handler for new incoming messages
+    const handleNewMessage = (msg) => {
+      if (msg.chat_group === chatId) {
+        setMessages((prev) => {
+          // Prevent duplicate messages (by id)
+          if (prev.some((m) => m.id === msg.message_id)) return prev;
+          return [msg, ...prev];
+        });
+      }
+    };
+
+    // Handler for send_message_response (for sender confirmation)
+    const handleSendMessageResponse = (msg) => {
+      if (msg?.sent_message?.chat_group == chatId) {
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === msg.message_id)) return prev;
+          return [msg.sent_message, ...prev];
+        });
+      }
+    };
+
+    socket.on('new_message', handleNewMessage);
+    socket.on('send_message_response', handleSendMessageResponse);
+
+    return () => {
+      socket.off('new_message', handleNewMessage);
+      socket.off('send_message_response', handleSendMessageResponse);
+    };
+  }, [socket, chatId]);
+
+  // Infinite scroll handler
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const handleScroll = () => {
+      if (container.scrollTop === 0 && hasMore && !loading) {
+        // setPage((p) => p + 1);
+      }
+    };
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [hasMore, loading]);
+
+  // Scroll to bottom on new messages (only on first load or when sending)
+  useEffect(() => {
+    if (page === 1 && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, page]);
 
   const handleSendMessage = () => {
-    if (message.trim()) {
-      // In a real app, this would send the message to the backend
-      console.log('Sending message:', message);
+    if (message.trim() && currentChat && socket && userId) {
+      const msgPayload = {
+        user_id: userId,
+        chat_group_id: chatId,
+        message: message.trim(),
+      };
+      socket.emit('send_message', msgPayload, (response) => {
+        // Optimistically add the message if response is successful and contains the message
+        if (response && response.id) {
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === response.id)) return prev;
+            return [...prev, response];
+          });
+        }
+      });
       setMessage('');
     }
   };
@@ -67,7 +180,14 @@ const ChatArea = ({ currentChat }) => {
             className={styles.chatMenu}
           />
 
-          <MessageList messages={currentChat.messages || []} isTyping={isTyping} />
+          <div
+            className={styles.messagesContainer}
+            ref={messagesContainerRef}
+            style={{ overflowY: 'auto', height: '100%' }}
+          >
+            <MessageList messages={messages} isTyping={isTyping} loading={loading} currentUserId={userId} />
+            <div ref={messagesEndRef} />
+          </div>
 
           <div className={styles.messageInputContainer}>
             <div className="position-relative w-100">
@@ -76,28 +196,22 @@ const ChatArea = ({ currentChat }) => {
                 value={message}
                 onChange={(e) => {
                   setMessage(e.target.value);
-                  // Simulate typing indicator when user types
-                  if (e.target.value.trim() !== '') {
-                    setIsTyping(true);
-                    // Auto-hide typing indicator after 3 seconds
-                    setTimeout(() => setIsTyping(false), 3000);
-                  }
                 }}
-                onKeyPress={handleKeyPress}
+                onKeyUp={handleKeyPress}
                 className={styles.messageInput}
               />
               <div className={styles.messageInputIcons}>
                 <button className={styles.attachButton}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18.0833 8.33333L9.16667 17.25C8.17221 18.2444 6.82407 18.8042 5.41667 18.8042C4.00926 18.8042 2.66112 18.2444 1.66667 17.25C0.672214 16.2556 0.112446 14.9074 0.112446 13.5C0.112446 12.0926 0.672214 10.7444 1.66667 9.75L10.5833 0.833329C11.2486 0.167998 12.1514 -0.149151 13.0833 0.0666624C14.0153 0.282476 14.8056 0.947998 15.25 1.83333C15.6944 2.71866 15.7361 3.75 15.3333 4.66666C14.9306 5.58333 14.1389 6.29166 13.1667 6.5L5.08333 14.5833C4.75 14.9167 4.31944 15.0833 3.83333 15.0833C3.34722 15.0833 2.91667 14.9167 2.58333 14.5833C2.25 14.25 2.08333 13.8194 2.08333 13.3333C2.08333 12.8472 2.25 12.4167 2.58333 12.0833L9.16667 5.5" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M18.0833 8.33333L9.16667 17.25C8.17221 18.2444 6.82407 18.8042 5.41667 18.8042C4.00926 18.8042 2.66112 18.2444 1.66667 17.25C0.672214 16.2556 0.112446 14.9074 0.112446 13.5C0.112446 12.0926 0.672214 10.7444 1.66667 9.75L10.5833 0.833329C11.2486 0.167998 12.1514 -0.149151 13.0833 0.0666624C14.0153 0.282476 14.8056 0.947998 15.25 1.83333C15.6944 2.71866 15.7361 3.75 15.3333 4.66666C14.9306 5.58333 14.1389 6.29166 13.1667 6.5L5.08333 14.5833C4.75 14.9167 4.31944 15.0833 3.83333 15.0833C3.34722 15.0833 2.91667 14.9167 2.58333 14.5833C2.25 14.25 2.08333 13.8194 2.08333 13.3333C2.08333 12.8472 2.25 12.4167 2.58333 12.0833L9.16667 5.5" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
                 <button className={styles.emojiButton}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 18.3333C14.6024 18.3333 18.3334 14.6024 18.3334 10C18.3334 5.39763 14.6024 1.66667 10 1.66667C5.39765 1.66667 1.66669 5.39763 1.66669 10C1.66669 14.6024 5.39765 18.3333 10 18.3333Z" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M6.66669 11.6667C6.66669 11.6667 7.91669 13.3333 10 13.3333C12.0834 13.3333 13.3334 11.6667 13.3334 11.6667" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M7.5 7.5H7.50833" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M12.5 7.5H12.5083" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M10 18.3333C14.6024 18.3333 18.3334 14.6024 18.3334 10C18.3334 5.39763 14.6024 1.66667 10 1.66667C5.39765 1.66667 1.66669 5.39763 1.66669 10C1.66669 14.6024 5.39765 18.3333 10 18.3333Z" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M6.66669 11.6667C6.66669 11.6667 7.91669 13.3333 10 13.3333C12.0834 13.3333 13.3334 11.6667 13.3334 11.6667" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M7.5 7.5H7.50833" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M12.5 7.5H12.5083" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               </div>

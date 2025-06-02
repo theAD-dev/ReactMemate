@@ -3,6 +3,7 @@ import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import styles from './chat-header.module.scss';
 
 const ChatHeader = ({ chat, onMenuToggle, menuRef }) => {
+  const status = 'offline';
   const isProject = chat.projectRef && chat.projectName;
   return (
     <div className={styles.chatHeader}>
@@ -25,9 +26,9 @@ const ChatHeader = ({ chat, onMenuToggle, menuRef }) => {
               <div className={styles.statusContainer}>
                 <span
                   className={styles.statusIndicator}
-                  data-status={chat.status}
+                  data-status={status}
                 ></span>
-                <span className={styles.statusText}>{chat.status}</span>
+                <span className={styles.statusText}>{status}</span>
               </div>
             </div>
           </div>

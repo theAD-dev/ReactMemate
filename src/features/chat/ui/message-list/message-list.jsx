@@ -1,43 +1,72 @@
-import React, { useEffect, useRef } from 'react';
-import FileAttachment from '../file-attachment/file-attachment';
+import React, { useEffect, useRef, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import styles from './message-list.module.scss';
+import FileAttachment from '../file-attachment/file-attachment';
 
-const MessageList = ({ messages, isTyping = false }) => {
+const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
   const messagesEndRef = useRef(null);
 
+  // Normalize messages for display
+  const normalizedMessages = useMemo(() => {
+    if (!Array.isArray(messages)) {
+      console.warn('Messages is not an array:', messages);
+      return [];
+    }
+
+    return messages.map((msg, index) => {
+      const timestamp = Number(msg.sent_at);
+      return {
+        id: msg.id || `fallback-${index}`,
+        text: msg.message || '',
+        sender: msg.sender || 'Unknown',
+        time: !isNaN(timestamp)
+          ? new Date(timestamp * 1000).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
+          : 'Unknown Time',
+        isOwn: currentUserId && msg.sender === currentUserId,
+        attachment: msg.file_url ? { url: msg.file_url, type: msg.file_type } : undefined,
+      };
+    }).reverse();
+  }, [messages, currentUserId]);
+
+  // Group messages by date
+  const groupedMessages = useMemo(() => {
+    return normalizedMessages.reduce((groups, message) => {
+      const date = message.time.split(',')[0] || 'Unknown Date';
+      if (!groups[date]) groups[date] = [];
+      groups[date].push(message);
+      return groups;
+    }, {});
+  }, [normalizedMessages]);
+
+  const sortedDates = useMemo(() => {
+    return Object.keys(groupedMessages).sort((a, b) => new Date(a) - new Date(b));
+  }, [groupedMessages]);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
-
-  // Group messages by date
-  const groupedMessages = messages.reduce((groups, message) => {
-    const date = message.time.includes('Today') ? 'Today' : message.time.split(' ')[0]; // Extract date part
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(message);
-    return groups;
-  }, {});
+  }, [messages, normalizedMessages, groupedMessages, sortedDates]);
 
   return (
     <div className={styles.messageList}>
-      {Object.entries(groupedMessages).map(([date, dateMessages]) => (
+      {sortedDates.map(date => (
         <div key={date} className={styles.messageGroup}>
           <div className={styles.dateHeader}>
             <span>{date}</span>
           </div>
 
-          {dateMessages.map((message, index) => (
+          {groupedMessages[date].map((message, index) => (
             <div
-              key={index}
-              className={`${styles.message} ${message.sender === 'You' ? styles.sent : styles.received}`}
+              key={message.id || `msg-${index}-${message.time}`}
+              className={`${styles.message} ${message.isOwn ? styles.sent : styles.received}`}
             >
               <span className={styles.messageTime}>
-                {message.time.includes('Today') ? message.time.replace('Today', '') : message.time.split(' ')[1]}
+                {message.time.split(',')[2] || ''}
               </span>
               <div className={styles.messageContent}>
                 <p className={styles.messageText}>{message.text}</p>
@@ -52,7 +81,7 @@ const MessageList = ({ messages, isTyping = false }) => {
         </div>
       ))}
 
-      {messages.length === 0 && (
+      {normalizedMessages.length === 0 && (
         <div className={styles.emptyMessages}>
           <p>No messages yet. Start the conversation!</p>
         </div>
@@ -69,6 +98,21 @@ const MessageList = ({ messages, isTyping = false }) => {
       <div ref={messagesEndRef} />
     </div>
   );
+};
+
+MessageList.propTypes = {
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      message: PropTypes.string,
+      sender: PropTypes.string,
+      sent_at: PropTypes.number,
+      file_url: PropTypes.string,
+      file_type: PropTypes.string,
+    })
+  ),
+  isTyping: PropTypes.bool,
+  currentUserId: PropTypes.string,
 };
 
 export default MessageList;

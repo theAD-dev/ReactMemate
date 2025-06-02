@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { InputSwitch } from 'primereact/inputswitch';
-import { InputText } from 'primereact/inputtext';
+import clsx from 'clsx';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import clsx from 'clsx';
-import UserList from '../user-list/user-list';
-import ProjectList from '../project-list/project-list';
+import { InputSwitch } from 'primereact/inputswitch';
+import { InputText } from 'primereact/inputtext';
 import styles from './chat-sidebar.module.scss';
+import ProjectList from '../project-list/project-list';
+import UserList from '../user-list/user-list';
 
 const ChatSidebar = ({ 
   activeTab, 
