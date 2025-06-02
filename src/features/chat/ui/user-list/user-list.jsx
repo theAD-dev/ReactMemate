@@ -13,7 +13,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
 
   // Helper to get last message and unread count
   const getLastMessage = (group) => {
-    return group.last_message.message || null;
+    return group?.last_message?.message || null;
   };
 
   const getUnreadCount = (group) => {
