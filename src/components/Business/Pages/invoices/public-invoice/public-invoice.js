@@ -197,7 +197,7 @@ const PublicInvoice = () => {
                             <Button onClick={() => setPayment({})} className="outline-button">
                                 Back
                             </Button>
-                            <Button onClick={handlePareentPay} className="success-button text-nowrap">
+                            <Button onClick={handlePareentPay} disabled={isPaymentProcess} className="success-button text-nowrap">
                                 Pay ${formatAUD(invoice?.outstanding_amount)}
                                 {isPaymentProcess && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                             </Button>
