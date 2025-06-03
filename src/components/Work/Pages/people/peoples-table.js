@@ -26,7 +26,7 @@ const PeoplesTable = () => {
     const socketRef = useRef(null);
 
     if (!socketRef.current) {
-        socketRef.current = io('https://chatd.memate.com.au/', {
+        socketRef.current = io(process.env.REACT_APP_CHAT_API_URL, {
             transports: ['websocket'],
             autoConnect: true,
         });

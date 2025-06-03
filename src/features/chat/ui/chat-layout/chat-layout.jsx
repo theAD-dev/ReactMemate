@@ -22,7 +22,7 @@ const ChatLayout = () => {
 
   useEffect(() => {
     // Connect to socket.io server
-    const socket = io('https://chatd.memate.com.au/', {
+    const socket = io(process.env.REACT_APP_CHAT_API_URL, {
       transports: ['websocket'],
       autoConnect: true,
     });
