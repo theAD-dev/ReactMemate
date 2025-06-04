@@ -8,6 +8,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Rating } from 'primereact/rating';
 import { io } from 'socket.io-client';
+import { toast } from 'sonner';
 import style from './people.module.scss';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
@@ -54,7 +55,7 @@ const PeoplesTable = () => {
 
     const nameBody = (rowdata) => {
         return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
-            <ImageAvatar has_photo={rowdata.has_photo} photo={rowdata.photo} is_business={false}/>
+            <ImageAvatar has_photo={rowdata.has_photo} photo={rowdata.photo} is_business={false} />
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
                 {rowdata?.first_name} {rowdata?.last_name}
             </div>
@@ -149,7 +150,8 @@ const PeoplesTable = () => {
                     if (res.status === 'ok' && res.chat_group_id) {
                         window.location.href = `/work/chat?id=${res.chat_group_id}`;
                     } else {
-                        alert(res.message || 'Failed to create chat group');
+                        console.log("Error during creation chat group: ", res);
+                        toast.error("Chat group already exists or Failed to create chat group");
                     }
                 }
             );
@@ -168,7 +170,7 @@ const PeoplesTable = () => {
 
     return (
         <>
-           <h1 className={clsx(style.tableCaption, 'mt-2')}>Mobile App Users</h1>
+            <h1 className={clsx(style.tableCaption, 'mt-2')}>Mobile App Users</h1>
             <DataTable value={peoples}
                 scrollable selectionMode={'checkbox'} removableSort
                 columnResizeMode="expand" resizableColumns showGridlines

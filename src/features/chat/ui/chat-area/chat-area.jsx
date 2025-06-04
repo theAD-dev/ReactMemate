@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Menu } from 'primereact/menu';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import styles from './chat-area.module.scss';
 import ChatHeader from '../chat-header/chat-header';
 import MessageList from '../message-list/message-list';
@@ -10,6 +11,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
   const [message, setMessage] = useState('');
   const [menuRef, setMenuRef] = useState(null);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
@@ -65,10 +67,9 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
 
     // Handler for new incoming messages
     const handleNewMessage = (msg) => {
-      if (msg.chat_group === chatId) {
+      if (msg.chat_group == chatId) {
         setMessages((prev) => {
-          // Prevent duplicate messages (by id)
-          if (prev.some((m) => m.id === msg.message_id)) return prev;
+          if (prev.some((m) => m.id == msg.id)) return prev;
           return [msg, ...prev];
         });
       }
@@ -81,6 +82,8 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
           if (prev.some((m) => m.id === msg.message_id)) return prev;
           return [msg.sent_message, ...prev];
         });
+        setIsSending(false);
+        setMessage('');
       }
     };
 
@@ -91,7 +94,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
       socket.off('new_message', handleNewMessage);
       socket.off('send_message_response', handleSendMessageResponse);
     };
-  }, [socket, chatId]);
+  }, [socket, chatId, messages]);
 
   // Infinite scroll handler
   useEffect(() => {
@@ -109,27 +112,19 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
   // Scroll to bottom on new messages (only on first load or when sending)
   useEffect(() => {
     if (page === 1 && messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
     }
   }, [messages, page]);
 
   const handleSendMessage = () => {
-    if (message.trim() && currentChat && socket && userId) {
+    if (message.trim() && currentChat && socket && userId && !isSending) {
       const msgPayload = {
         user_id: userId,
         chat_group_id: chatId,
         message: message.trim(),
       };
-      socket.emit('send_message', msgPayload, (response) => {
-        // Optimistically add the message if response is successful and contains the message
-        if (response && response.id) {
-          setMessages((prev) => {
-            if (prev.some((m) => m.id === response.id)) return prev;
-            return [...prev, response];
-          });
-        }
-      });
-      setMessage('');
+      setIsSending(true);
+      socket.emit('send_message', msgPayload);
     }
   };
 
@@ -169,6 +164,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
             chat={currentChat}
             onMenuToggle={toggleMenu}
             menuRef={setMenuRef}
+            userId={userId}
           />
 
           <Menu
@@ -201,6 +197,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
                 className={styles.messageInput}
               />
               <div className={styles.messageInputIcons}>
+                {isSending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                 <button className={styles.attachButton}>
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18.0833 8.33333L9.16667 17.25C8.17221 18.2444 6.82407 18.8042 5.41667 18.8042C4.00926 18.8042 2.66112 18.2444 1.66667 17.25C0.672214 16.2556 0.112446 14.9074 0.112446 13.5C0.112446 12.0926 0.672214 10.7444 1.66667 9.75L10.5833 0.833329C11.2486 0.167998 12.1514 -0.149151 13.0833 0.0666624C14.0153 0.282476 14.8056 0.947998 15.25 1.83333C15.6944 2.71866 15.7361 3.75 15.3333 4.66666C14.9306 5.58333 14.1389 6.29166 13.1667 6.5L5.08333 14.5833C4.75 14.9167 4.31944 15.0833 3.83333 15.0833C3.34722 15.0833 2.91667 14.9167 2.58333 14.5833C2.25 14.25 2.08333 13.8194 2.08333 13.3333C2.08333 12.8472 2.25 12.4167 2.58333 12.0833L9.16667 5.5" stroke="#667085" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
@@ -219,7 +216,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
             <Button
               className={styles.sendButton}
               onClick={handleSendMessage}
-              disabled={!message.trim()}
+              disabled={!message.trim() || isSending}
             >
               Send
             </Button>

@@ -8,6 +8,7 @@ import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { io } from 'socket.io-client';
+import { toast } from 'sonner';
 import style from './people.module.scss';
 import { getPrivilegesList } from '../../../../APIs/settings-user-api';
 import { getTeamDesktopUser } from '../../../../APIs/team-api';
@@ -100,7 +101,6 @@ const DesktopPeoplesTable = () => {
     };
 
     const chatBody = (rowData) => {
-        console.log('rowData: ', rowData);
         const id = rowData.id;
         const isSelf = currentUserId === id;
         if (isSelf) return null;
@@ -123,7 +123,8 @@ const DesktopPeoplesTable = () => {
                     if (res.status === 'ok' && res.chat_group_id) {
                         window.location.href = `/work/chat?id=${res.chat_group_id}`;
                     } else {
-                        alert(res.message || 'Failed to create chat group');
+                        console.log("Error during creation chat group: ", res);
+                        toast.error("Chat group already exists or Failed to create chat group");
                     }
                 }
             );

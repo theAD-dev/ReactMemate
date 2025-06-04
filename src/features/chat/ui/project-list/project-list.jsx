@@ -5,7 +5,7 @@ import styles from './project-list.module.scss';
 const ProjectList = ({ chatData, searchQuery, showArchived }) => {
   // Filter and transform data to project-based view
   const projectData = Object.entries(chatData)
-    .filter(([_, user]) => user.projectRef && user.projectName) // Only include entries with project info
+    .filter(([_, user]) => user.project_id && user.task_id) // Only include entries with project info
     .map(([id, user]) => ({
       id,
       projectRef: user.projectRef,

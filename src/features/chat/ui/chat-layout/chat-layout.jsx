@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import styles from './chat-layout.module.scss';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import Loader from '../../../../shared/ui/loader/loader';
 import ChatArea from '../chat-area/chat-area';
 import ChatSidebar from '../chat-sidebar/chat-sidebar';
 
@@ -14,6 +15,7 @@ const ChatLayout = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const chatId = params.get("id");
+  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('users');
   const [archivedVisible, setArchivedVisible] = useState(false);
   const [chatData, setChatData] = useState({});
@@ -47,6 +49,7 @@ const ChatLayout = () => {
           chatGroups[group.id] = group;
         });
         setChatData(chatGroups);
+        setIsLoading(false);
       }
     });
 
@@ -77,14 +80,14 @@ const ChatLayout = () => {
 
   return (
     <div className="container-fluid px-0">
-      <div className={styles.chatContainer} style={{ height: `calc(100vh - 150px - ${trialHeight}px)` }}>
+      <div className={styles.chatContainer} style={{ height: `calc(100vh - 130px - ${trialHeight}px)` }}>
         <ChatSidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           archivedVisible={archivedVisible}
           setArchivedVisible={setArchivedVisible}
           chatData={chatData}
-          userId={user_id} // Pass userId to ChatSidebar so UserList can show unread count and last message for each group.
+          userId={user_id}
         />
         <ChatArea
           currentChat={currentChat}
@@ -94,6 +97,7 @@ const ChatLayout = () => {
           chatId={chatId}
         />
       </div>
+      {isLoading && <Loader />}
     </div>
   );
 };

@@ -6,7 +6,9 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
   // Filter users based on search query
   const filteredUsers = Object.entries(chatData)
     .filter(([, group]) => {
-      const matchesSearch = group.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const participant = group.participants.find((participant) => participant.id !== +userId);
+      const groupName = participant?.name || group?.name || "Unknown User";
+      const matchesSearch = groupName.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesArchived = showArchived ? true : !group.archived;
       return matchesSearch && matchesArchived;
     });
@@ -18,8 +20,20 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
 
   const getUnreadCount = (group) => {
     if (!group.messages || !userId) return 0;
-    // Assume each message has a seen_by: [userId] array
     return group.messages.filter(msg => !msg.seen_by || !msg.seen_by.includes(userId)).length;
+  };
+
+  const getChatGroupName = (group) => {
+    const participant = group.participants.find((participant) => participant.id !== +userId);
+    return participant?.name || group?.name || "Unknown User";
+  };
+
+  const getSenderName = (group) => {
+    const lastMessageDetails = group?.last_message;
+    if (!lastMessageDetails) return '';
+    const sender = group.participants.find((participant) => participant.id === lastMessageDetails.sender);
+    if (sender.id === userId) return 'You: ';
+    return `${sender?.name}: ` || "Unknown Sender: `";
   };
 
   return (
@@ -27,20 +41,22 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
       {filteredUsers.map(([id, group]) => {
         const lastMessage = getLastMessage(group);
         const unreadCount = getUnreadCount(group);
+        const sender = getSenderName(group);
+        const groupName = getChatGroupName(group);
         return (
           <Link to={`?id=${id}`} key={id} className={styles.userItem}>
             <div className={styles.userItemContent}>
               <div className={styles.userAvatarWrapper}>
                 {/* Optionally show online indicator if available */}
                 <div className={styles.userAvatar}>
-                  {group.name.split(' ').map(n => n[0]).join('')}
+                  {groupName?.split(' ').map(n => n[0]).join('')}
                 </div>
               </div>
               <div className={styles.userInfo}>
-                <span className={styles.userName}>{group.name}</span>
+                <span className={styles.userName}>{groupName}</span>
                 <p className={styles.lastMessage}>
                   {lastMessage
-                    ? `${lastMessage.sender_name || ''}: ${lastMessage ? lastMessage.substring(0, 30) : ''}`
+                    ? `${sender} ${lastMessage ? lastMessage.substring(0, 30) : ''}`
                     : 'No messages yet'}
                 </p>
               </div>

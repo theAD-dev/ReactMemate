@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useMemo } from 'react';
-import PropTypes from 'prop-types';
 import styles from './message-list.module.scss';
 import FileAttachment from '../file-attachment/file-attachment';
 
@@ -44,7 +43,7 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
     }
   };
 
@@ -98,21 +97,6 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
       <div ref={messagesEndRef} />
     </div>
   );
-};
-
-MessageList.propTypes = {
-  messages: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      message: PropTypes.string,
-      sender: PropTypes.string,
-      sent_at: PropTypes.number,
-      file_url: PropTypes.string,
-      file_type: PropTypes.string,
-    })
-  ),
-  isTyping: PropTypes.bool,
-  currentUserId: PropTypes.string,
 };
 
 export default MessageList;
