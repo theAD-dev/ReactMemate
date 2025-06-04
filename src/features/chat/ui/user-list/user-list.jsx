@@ -1,8 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 import styles from './user-list.module.scss';
 
 const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const chatId = params.get("id");
+
   // Filter users based on search query
   const filteredUsers = Object.entries(chatData)
     .filter(([, group]) => {
@@ -44,7 +49,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
         const sender = getSenderName(group);
         const groupName = getChatGroupName(group);
         return (
-          <Link to={`?id=${id}`} key={id} className={styles.userItem}>
+          <Link to={`?id=${id}`} key={id} className={clsx(styles.userItem, { [styles.active]: chatId == id })}>
             <div className={styles.userItemContent}>
               <div className={styles.userAvatarWrapper}>
                 {/* Optionally show online indicator if available */}

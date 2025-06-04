@@ -26,6 +26,10 @@
   }
 }
 
+.userItem.active {
+  background: var(--primary-25, #f2faff);
+}
+
 .userItemContent {
   display: flex;
   width: 100%;
