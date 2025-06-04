@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import styles from './chat-header.module.scss';
 
-const ChatHeader = ({ chat, onMenuToggle, menuRef, userId}) => {
+const ChatHeader = ({ chat, onMenuToggle, menuRef, userId, setParticipants }) => {
   const status = 'offline';
+  const idWithName = React.useMemo(() => {
+    const participants = chat?.participants || [];
+    return participants?.reduce((acc, curr) => {
+      acc[curr.id] = curr.name;
+      return acc;
+    }, {});
+  }, [chat?.participants]);
+  
+  useEffect(() => {
+    setParticipants(idWithName);
+  }, [idWithName, setParticipants]);
+  
   const isProject = chat.project_id || chat.task_id;
   const getChatGroupName = (group) => {
     const participant = group.participants.find((participant) => participant.id !== +userId);

@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useMemo } from 'react';
+import clsx from 'clsx';
+import { Divider } from 'primereact/divider';
 import styles from './message-list.module.scss';
 import FileAttachment from '../file-attachment/file-attachment';
 
-const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
+const MessageList = ({ messages = [], isTyping = false, currentUserId, participants }) => {
   const messagesEndRef = useRef(null);
 
   // Normalize messages for display
@@ -14,6 +16,19 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
 
     return messages.map((msg, index) => {
       const timestamp = Number(msg.sent_at);
+      // Friday 2:20pm
+      let sendingTime = 'Unknown Time';
+      if (!isNaN(timestamp)) {
+        const date = new Date(timestamp * 1000);
+        const weekday = date.toLocaleString('en-US', { weekday: 'long' });
+        let hour = date.getHours();
+        const minute = date.getMinutes().toString().padStart(2, '0');
+        const ampm = hour >= 12 ? 'pm' : 'am';
+        hour = hour % 12;
+        if (hour === 0) hour = 12;
+        sendingTime = `${weekday} ${hour}:${minute}${ampm}`;
+      }
+
       return {
         id: msg.id || `fallback-${index}`,
         text: msg.message || '',
@@ -21,20 +36,51 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
         time: !isNaN(timestamp)
           ? new Date(timestamp * 1000).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
           : 'Unknown Time',
+        sendingTime,
         isOwn: currentUserId && msg.sender === currentUserId,
         attachment: msg.file_url ? { url: msg.file_url, type: msg.file_type } : undefined,
       };
     }).reverse();
   }, [messages, currentUserId]);
 
-  // Group messages by date
+  // Group messages by 'Today', 'Yesterday', or full date (e.g., 'Jun 2, 2025')
   const groupedMessages = useMemo(() => {
-    return normalizedMessages.reduce((groups, message) => {
-      const date = message.time.split(',')[0] || 'Unknown Date';
-      if (!groups[date]) groups[date] = [];
-      groups[date].push(message);
-      return groups;
-    }, {});
+    const groups = {};
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    normalizedMessages.forEach((message) => {
+      // message.time is like 'Jun 2, 2025, 2:20 PM'
+      const parts = message.time.split(',');
+      const dateStr = parts[0]?.trim();
+      const yearStr = parts[1]?.trim();
+      let label = dateStr;
+      if (parts.length >= 2) {
+        // Try to parse the date for Today/Yesterday logic
+        const msgDate = new Date(`${dateStr}, ${yearStr}`);
+        if (!isNaN(msgDate)) {
+          if (
+            msgDate.getDate() === today.getDate() &&
+            msgDate.getMonth() === today.getMonth() &&
+            msgDate.getFullYear() === today.getFullYear()
+          ) {
+            label = 'Today';
+          } else if (
+            msgDate.getDate() === yesterday.getDate() &&
+            msgDate.getMonth() === yesterday.getMonth() &&
+            msgDate.getFullYear() === yesterday.getFullYear()
+          ) {
+            label = 'Yesterday';
+          } else {
+            label = `${dateStr}, ${yearStr}`;
+          }
+        }
+      }
+      if (!groups[label]) groups[label] = [];
+      groups[label].push(message);
+    });
+    return groups;
   }, [normalizedMessages]);
 
   const sortedDates = useMemo(() => {
@@ -56,7 +102,9 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
       {sortedDates.map(date => (
         <div key={date} className={styles.messageGroup}>
           <div className={styles.dateHeader}>
-            <span>{date}</span>
+            <Divider align="center">
+              <span>{date}</span>
+            </Divider>
           </div>
 
           {groupedMessages[date].map((message, index) => (
@@ -64,10 +112,25 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId }) => {
               key={message.id || `msg-${index}-${message.time}`}
               className={`${styles.message} ${message.isOwn ? styles.sent : styles.received}`}
             >
-              <span className={styles.messageTime}>
-                {message.time.split(',')[2] || ''}
-              </span>
-              <div className={styles.messageContent}>
+              <div className={clsx('w-100 d-flex align-items-center gap-2', { ['justify-content-between']: message.isOwn })}>
+                {message.isOwn && (<span className={styles.messageSenderName}>You</span>)}
+                {!message.isOwn && (
+                  <div className='d-flex gap-2'>
+                    <div
+                      className={styles.userAvatar}
+                      style={{ position: 'relative' }}
+                    >
+                      {participants?.[message?.sender] && participants?.[message?.sender]?.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <span className={styles.messageSenderName}>{participants?.[message?.sender] || ""}</span>
+                  </div>
+                )}
+                <span className={clsx(styles.messageTime, { [styles.messageTimeSent]: !message.isOwn })}>
+                  {message.sendingTime || ''}
+                </span>
+              </div>
+
+              <div className={clsx(styles.messageContent, { [styles.messageContentSent]: !message.isOwn })}>
                 <p className={styles.messageText}>{message.text}</p>
               </div>
               {message.attachment && (
