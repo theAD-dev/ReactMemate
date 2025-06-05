@@ -145,7 +145,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
     if (!container) return;
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+  }, [handleScroll, messages]);
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.focus();

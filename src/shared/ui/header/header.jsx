@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Placeholder, Row } from "react-bootstrap";
 import { XCircle } from "react-bootstrap-icons";
-import { Navigate, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, useLocation } from "react-router-dom";
 import SelectLocation from "./components/location-selection";
 import ProfileInfo from "./components/profile-info";
 import style from './header.module.scss';
@@ -28,19 +28,19 @@ import "../../../components/layout/header.css";
 
 const Header = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const { session } = useAuth();
-    const { setTrialHeight } = useTrialHeight();
-    const [isVisibleTrial, setIsVisibleTrial] = useState(false);
+    const { trialHeight, setTrialHeight } = useTrialHeight(30);
+    const [isVisibleNotificationBar, setIsVisibleNotificationBar] = useState(false);
     const [menuSwitch, SetMenuSwitch] = useState(true);
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const isSuspended = session?.is_suspended ? true : false;
+    const hasSubscriptionPaymentFailed = !!session?.suspension_date;
 
     useEffect(() => {
         if (session) {
-            setIsVisibleTrial(session?.is_trial || false);
+            setIsVisibleNotificationBar(session?.is_trial || hasSubscriptionPaymentFailed || false);
         }
-    }, [session]);
+    }, [session, hasSubscriptionPaymentFailed]);
 
     useEffect(() => {
         if (location.pathname.startsWith("/work")) {
@@ -51,22 +51,48 @@ const Header = () => {
     }, [location.pathname]);
 
     useEffect(() => {
-        setTrialHeight(isVisibleTrial ? 30 : 0);
-    }, [isVisibleTrial, setTrialHeight]);
+        setTrialHeight(isVisibleNotificationBar ? (hasSubscriptionPaymentFailed ? 35 : 30) : 0);
+    }, [isVisibleNotificationBar, setTrialHeight, hasSubscriptionPaymentFailed]);
 
     if (!isLoggedIn) return <Navigate to={"/login"} replace />;
     if (isSuspended) return <Navigate to={"/suspended"} replace />;
 
+    function getDaysUntilSuspension(suspensionDate) {
+        try {
+            if (!suspensionDate) {
+                throw new Error("Suspension date is not provided.");
+            }
+
+            const suspension = new Date(suspensionDate);
+            if (isNaN(suspension.getTime())) {
+                throw new Error("Invalid date format.");
+            }
+
+            const now = new Date();
+            const diffInMs = suspension - now;
+            const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+
+            return diffInDays >= 0 ? diffInDays : 0;
+        } catch (err) {
+            console.error("Error getting days until suspension:", err.message);
+            return 0;
+        }
+    }
+
     return (
         <>
-            {isVisibleTrial && (
-                <div className={style.trialNote}>
-                    <small>Your trial will end soon on {formatDate(session?.trial_end)}</small>
+            {isVisibleNotificationBar && (
+                <div className={hasSubscriptionPaymentFailed ? style.subscriptionFailedNote : style.trialNote} style={{ height: `${trialHeight}px` }}>
+                    {hasSubscriptionPaymentFailed ? (
+                        <small><b>Payment for your subscription has failed. Please update your payment method.</b> Your subscription will be suspended in <b>{getDaysUntilSuspension(session?.suspension_date)} days</b> if no action is taken.</small>
+                    ) : (
+                        <small>Your trial will end soon on {formatDate(session?.trial_end)}</small>
+                    )}
                     <XCircle
                         color="#fff"
                         size={14}
                         style={{ position: 'absolute', right: '15px', cursor: 'pointer' }}
-                        onClick={() => setIsVisibleTrial(false)}
+                        onClick={() => setIsVisibleNotificationBar(false)}
                     />
                 </div>
             )}
@@ -396,7 +422,6 @@ const Header = () => {
                     </>
                 }
             </div>
-
         </>
     );
 };
