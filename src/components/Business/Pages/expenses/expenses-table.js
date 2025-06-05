@@ -10,13 +10,17 @@ import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './expenses.module.scss';
 import { deleteExpense, getListOfExpense } from "../../../../APIs/expenses-api";
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { PERMISSIONS } from '../../../../shared/lib/access-control/permission';
+import { hasPermission } from '../../../../shared/lib/access-control/role-permission';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
+
 
 
 const formatDate = (timestamp) => {
@@ -30,6 +34,7 @@ const formatDate = (timestamp) => {
 };
 
 const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
+    const { role } = useAuth();
     const observerRef = useRef(null);
     const { trialHeight } = useTrialHeight();
     const [expenses, setExpenses] = useState([]);
@@ -218,7 +223,10 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
                 <Column field="file" header="File" body={(rowData) => rowData.file ? <Link to={rowData.file} target='_blank'><FileEarmarkPdf color='#667085' size={16} /></Link> : ""} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column>
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft text-center' headerClassName="shadowLeft text-center" frozen alignFrozen='right'></Column>
-                <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
+                {
+                    hasPermission(role, PERMISSIONS.EXPENSE.DELETE) &&
+                    <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
+                }
             </DataTable>
             <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
             <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />

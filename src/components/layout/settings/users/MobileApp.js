@@ -14,12 +14,16 @@ import { toast } from 'sonner';
 import CreateMobileUser from './features/create-mobile-user';
 import style from './users.module.scss';
 import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../../../APIs/settings-user-api';
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
+import { PERMISSIONS } from '../../../../shared/lib/access-control/permission';
+import { hasPermission } from '../../../../shared/lib/access-control/role-permission';
 import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 const MobileApp = React.memo(() => {
+    const { role } = useAuth();
     const { trialHeight } = useTrialHeight();
     const profileDataLocal = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const hasWorkSubscription = profileDataLocal?.has_work_subscription || false;
@@ -141,8 +145,9 @@ const MobileApp = React.memo(() => {
                             </ul>
                             {
                                 hasWorkSubscription &&
-                                <Button
-                                    disabled={parseInt(mobileUsersQuery?.data?.limits?.total) === parseInt(mobileUsersQuery?.data?.limits?.number)} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                                hasPermission(role, PERMISSIONS.SETTINGS.USERS.MOBILE_APP.ADD) && (
+                                    <Button disabled={parseInt(mobileUsersQuery?.data?.limits?.total) === parseInt(mobileUsersQuery?.data?.limits?.number)} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                                )
                             }
                         </div>
                     </div>
