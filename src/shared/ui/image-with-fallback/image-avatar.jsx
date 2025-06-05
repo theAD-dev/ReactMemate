@@ -21,7 +21,7 @@ const ImageAvatar = ({ has_photo, photo, is_business }) => {
     );
 };
 
-export const FallbackImage = ({ has_photo, photo, is_business, size }) => {
+export const FallbackImage = ({ has_photo, photo, is_business, size, isObjectFit }) => {
     const [imgError, setImgError] = useState(false);
     const Icon = is_business ? Building : Person;
 
@@ -31,7 +31,7 @@ export const FallbackImage = ({ has_photo, photo, is_business, size }) => {
 
     return <>
         {has_photo && photo && !imgError ? (
-            <img src={photo} alt="client avatar" className="w-100" onError={() => setImgError(true)} />
+            <img src={photo} alt="client avatar" className="w-100" onError={() => setImgError(true)} style={{ objectFit: isObjectFit ? 'contain' : '' }}/>
         ) : (
             <Icon color="#667085" size={size} />
         )}
