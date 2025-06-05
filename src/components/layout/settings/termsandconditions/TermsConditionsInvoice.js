@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useMutation } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { Editor } from "primereact/editor";
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './terms-.module.scss';
 import { getInvoiceTerms, updateTerms } from "../../../../APIs/terms-and-condition";
@@ -136,8 +137,8 @@ const TermsConditionsInvoice = () => {
                                             <Button className='outline-button me-2' onClick={handleCancelClick}>
                                                 Cancel
                                             </Button>
-                                            <Button className='solid-button' onClick={handleSaveClick}>
-                                                Save
+                                            <Button className='solid-button' disabled={updateMutation.isPending} onClick={handleSaveClick}>
+                                                Save {updateMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
                                             </Button>
                                         </div>
                                     </>
