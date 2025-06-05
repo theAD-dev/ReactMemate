@@ -4,138 +4,134 @@ import { Divider } from 'primereact/divider';
 import styles from './message-list.module.scss';
 import FileAttachment from '../file-attachment/file-attachment';
 
+const formatTime = (timestamp) => {
+  const date = new Date(timestamp * 1000);
+  const weekday = date.toLocaleString('en-US', { weekday: 'long' });
+  let hour = date.getHours();
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hour >= 12 ? 'pm' : 'am';
+  hour = hour % 12 || 12;
+  return `${weekday} ${hour}:${minute}${ampm}`;
+};
+
+const isSameDate = (date1, date2) =>
+  date1.getFullYear() === date2.getFullYear() &&
+  date1.getMonth() === date2.getMonth() &&
+  date1.getDate() === date2.getDate();
+
 const MessageList = ({ messages = [], isTyping = false, currentUserId, participants }) => {
   const messagesEndRef = useRef(null);
 
-  // Normalize messages for display
   const normalizedMessages = useMemo(() => {
     if (!Array.isArray(messages)) {
       console.warn('Messages is not an array:', messages);
       return [];
     }
 
-    return messages.map((msg, index) => {
-      const timestamp = Number(msg.sent_at);
-      // Friday 2:20pm
-      let sendingTime = 'Unknown Time';
-      if (!isNaN(timestamp)) {
+    return messages
+      .filter(msg => msg?.sent_at)
+      .map((msg, index) => {
+        const timestamp = Number(msg.sent_at);
         const date = new Date(timestamp * 1000);
-        const weekday = date.toLocaleString('en-US', { weekday: 'long' });
-        let hour = date.getHours();
-        const minute = date.getMinutes().toString().padStart(2, '0');
-        const ampm = hour >= 12 ? 'pm' : 'am';
-        hour = hour % 12;
-        if (hour === 0) hour = 12;
-        sendingTime = `${weekday} ${hour}:${minute}${ampm}`;
-      }
 
-      return {
-        id: msg.id || `fallback-${index}`,
-        text: msg.message || '',
-        sender: msg.sender || 'Unknown',
-        time: !isNaN(timestamp)
-          ? new Date(timestamp * 1000).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
-          : 'Unknown Time',
-        sendingTime,
-        isOwn: currentUserId && msg.sender === currentUserId,
-        attachment: msg.file_url ? { url: msg.file_url, type: msg.file_type } : undefined,
-      };
-    }).reverse();
+        return {
+          id: msg.id || `msg-${index}`,
+          text: msg.message || '',
+          sender: msg.sender || 'Unknown',
+          timestamp,
+          sendingTime: formatTime(timestamp),
+          isOwn: currentUserId === msg.sender,
+          attachment: msg.file_url ? { url: msg.file_url, type: msg.file_type } : undefined,
+          displayDate: date,
+          fullDate: date.toLocaleDateString('en-US', { dateStyle: 'medium' }),
+        };
+      })
+      .sort((a, b) => a.timestamp - b.timestamp); // ensure messages are chronologically sorted
   }, [messages, currentUserId]);
 
-  // Group messages by 'Today', 'Yesterday', or full date (e.g., 'Jun 2, 2025')
   const groupedMessages = useMemo(() => {
     const groups = {};
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
 
-    normalizedMessages.forEach((message) => {
-      // message.time is like 'Jun 2, 2025, 2:20 PM'
-      const parts = message.time.split(',');
-      const dateStr = parts[0]?.trim();
-      const yearStr = parts[1]?.trim();
-      let label = dateStr;
-      if (parts.length >= 2) {
-        // Try to parse the date for Today/Yesterday logic
-        const msgDate = new Date(`${dateStr}, ${yearStr}`);
-        if (!isNaN(msgDate)) {
-          if (
-            msgDate.getDate() === today.getDate() &&
-            msgDate.getMonth() === today.getMonth() &&
-            msgDate.getFullYear() === today.getFullYear()
-          ) {
-            label = 'Today';
-          } else if (
-            msgDate.getDate() === yesterday.getDate() &&
-            msgDate.getMonth() === yesterday.getMonth() &&
-            msgDate.getFullYear() === yesterday.getFullYear()
-          ) {
-            label = 'Yesterday';
-          } else {
-            label = `${dateStr}, ${yearStr}`;
-          }
-        }
+    normalizedMessages.forEach((msg) => {
+      let label = msg.fullDate;
+      if (isSameDate(msg.displayDate, today)) {
+        label = 'Today';
+      } else if (isSameDate(msg.displayDate, yesterday)) {
+        label = 'Yesterday';
       }
+
       if (!groups[label]) groups[label] = [];
-      groups[label].push(message);
+      groups[label].push(msg);
     });
+
     return groups;
   }, [normalizedMessages]);
 
-  const sortedDates = useMemo(() => {
-    return Object.keys(groupedMessages).sort((a, b) => new Date(a) - new Date(b));
+  const sortedGroupKeys = useMemo(() => {
+    return Object.entries(groupedMessages)
+      .sort(([, msgsA], [, msgsB]) => msgsA[0].timestamp - msgsB[0].timestamp)
+      .map(([key]) => key);
   }, [groupedMessages]);
 
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, normalizedMessages, groupedMessages, sortedDates]);
+  }, [normalizedMessages]);
 
   return (
-    <div className={styles.messageList}>
-      {sortedDates.map(date => (
+    <>
+      {sortedGroupKeys.map((date) => (
         <div key={date} className={styles.messageGroup}>
           <div className={styles.dateHeader}>
-            <Divider align="center">
-              <span>{date}</span>
-            </Divider>
+            <Divider align="center"><span>{date}</span></Divider>
           </div>
 
-          {groupedMessages[date].map((message, index) => (
+          {groupedMessages[date].map((msg) => (
             <div
-              key={message.id || `msg-${index}-${message.time}`}
-              className={`${styles.message} ${message.isOwn ? styles.sent : styles.received}`}
+              key={msg.id}
+              className={clsx(styles.message, msg.isOwn ? styles.sent : styles.received)}
             >
-              <div className={clsx('w-100 d-flex align-items-center gap-2', { ['justify-content-between']: message.isOwn })}>
-                {message.isOwn && (<span className={styles.messageSenderName}>You</span>)}
-                {!message.isOwn && (
-                  <div className='d-flex gap-2'>
-                    <div
-                      className={styles.userAvatar}
-                      style={{ position: 'relative' }}
-                    >
-                      {participants?.[message?.sender] && participants?.[message?.sender]?.split(' ').map(n => n[0]).join('')}
+              <div className={clsx('w-100 d-flex align-items-center gap-2', {
+                'justify-content-between': msg.isOwn
+              })}>
+                {msg.isOwn ? (
+                  <span className={styles.messageSenderName}>You</span>
+                ) : (
+                  <div className="d-flex gap-2">
+                    <div className={styles.userAvatar}>
+                      {participants?.[msg.sender]
+                        ?.split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()}
                     </div>
-                    <span className={styles.messageSenderName}>{participants?.[message?.sender] || ""}</span>
+                    <span className={styles.messageSenderName}>
+                      {participants?.[msg.sender] || 'Unknown'}
+                    </span>
                   </div>
                 )}
-                <span className={clsx(styles.messageTime, { [styles.messageTimeSent]: !message.isOwn })}>
-                  {message.sendingTime || ''}
+                <span className={clsx(styles.messageTime, {
+                  [styles.messageTimeSent]: !msg.isOwn
+                })}>
+                  {msg.sendingTime}
                 </span>
               </div>
 
-              <div className={clsx(styles.messageContent, { [styles.messageContentSent]: !message.isOwn })}>
-                <p className={styles.messageText}>{message.text}</p>
+              <div className={clsx(styles.messageContent, {
+                [styles.messageContentSent]: !msg.isOwn
+              })}>
+                <p className={styles.messageText}>{msg.text}</p>
               </div>
-              {message.attachment && (
+
+              {msg.attachment && (
                 <div className={styles.messageAttachment}>
-                  <FileAttachment file={message.attachment} />
+                  <FileAttachment file={msg.attachment} />
                 </div>
               )}
             </div>
@@ -158,7 +154,7 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId, participa
       )}
 
       <div ref={messagesEndRef} />
-    </div>
+    </>
   );
 };
 

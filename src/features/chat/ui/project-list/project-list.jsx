@@ -1,8 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 import styles from './project-list.module.scss';
 
 const ProjectList = ({ chatData, searchQuery, showArchived }) => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const chatId = params.get("id");
+
   // Filter and transform data to project-based view
   const projectData = Object.entries(chatData)
     .filter(([_, user]) => user.project_id && user.task_id) // Only include entries with project info
@@ -29,7 +33,7 @@ const ProjectList = ({ chatData, searchQuery, showArchived }) => {
   return (
     <div className={styles.projectList}>
       {projectData.map((project) => (
-        <Link to={`?id=${project.id}`} key={project.id} className={styles.projectItem}>
+        <Link to={`?id=${project.id}`} key={project.id} className={clsx(styles.projectItem, { [styles.active]: chatId == project.id })}>
           <div className={styles.projectHeader}>
             <div className={styles.projectInfo}>
               <div className={styles.projectTitleRow}>

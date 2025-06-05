@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import styles from './chat-header.module.scss';
 
-const ChatHeader = ({ chat, onMenuToggle, menuRef, userId, setParticipants }) => {
+const ChatHeader = ({ chat, userId, setParticipants }) => {
+  const [menuRef, setMenuRef] = useState(null);
+  const [menuVisible, setMenuVisible] = useState(false);
+
   const status = 'offline';
   const idWithName = React.useMemo(() => {
     const participants = chat?.participants || [];
@@ -11,11 +14,11 @@ const ChatHeader = ({ chat, onMenuToggle, menuRef, userId, setParticipants }) =>
       return acc;
     }, {});
   }, [chat?.participants]);
-  
+
   useEffect(() => {
     setParticipants(idWithName);
   }, [idWithName, setParticipants]);
-  
+
   const isProject = chat.project_id || chat.task_id;
   const getChatGroupName = (group) => {
     const participant = group.participants.find((participant) => participant.id !== +userId);
@@ -51,7 +54,7 @@ const ChatHeader = ({ chat, onMenuToggle, menuRef, userId, setParticipants }) =>
           <div className={styles.headerActions}>
             <button
               className={styles.menuButton}
-              onClick={onMenuToggle}
+              onClick={() => setMenuVisible(!menuVisible)}
               ref={menuRef}
             >
               <ThreeDotsVertical size={20} color="#667085" />
