@@ -19,7 +19,7 @@ const isSameDate = (date1, date2) =>
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate();
 
-const MessageList = ({ messages = [], isTyping = false, currentUserId, participants }) => {
+const MessageList = ({ messages = [], isTyping = false, loading = true, currentUserId, participants }) => {
   const messagesEndRef = useRef(null);
 
   const normalizedMessages = useMemo(() => {
@@ -139,7 +139,7 @@ const MessageList = ({ messages = [], isTyping = false, currentUserId, participa
         </div>
       ))}
 
-      {normalizedMessages.length === 0 && (
+      {normalizedMessages.length === 0 && !loading && (
         <div className={styles.emptyMessages}>
           <p>No messages yet. Start the conversation!</p>
         </div>

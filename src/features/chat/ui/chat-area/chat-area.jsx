@@ -16,7 +16,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
   const [messages, setMessages] = useState([]);
   const [participants, setParticipants] = useState({});
   const [page, setPage] = useState(1);
-  const [pageSize] = useState(5);
+  const [pageSize] = useState(20);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -24,6 +24,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const scrollHeightRef = useRef(0);
+  const inputRef = useRef(null);
 
   const updateMessages = useCallback((newMessages, totalPages, currentPage) => {
     setMessages((prev) => {
@@ -34,7 +35,6 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
     setLoading(false);
   }, []);
 
-  // Fetch messages when chatId, userId, or page changes
   useEffect(() => {
     if (!chatId || !userId || !socket) return;
     setLoading(true);
@@ -59,11 +59,9 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
     );
   }, [chatId, userId, socket, page, pageSize, updateMessages]);
 
-  // Listen for new messages and send_message_response
   useEffect(() => {
     if (!socket || !chatId) return;
 
-    // Handler for new incoming messages
     const handleNewMessage = (msg) => {
       if (msg.chat_group == chatId) {
         setMessages((prev) => {
@@ -73,7 +71,6 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
       }
     };
 
-    // Handler for send_message_response (for sender confirmation)
     const handleSendMessageResponse = (msg) => {
       if (msg?.sent_message?.chat_group == chatId) {
         setMessages((prev) => {
@@ -83,6 +80,9 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
         setIsSending(false);
         setMessage('');
         scrollHeightRef.current = 0;
+        setTimeout(() => {
+          if (inputRef.current) inputRef.current.focus();
+        }, 500);
       }
     };
 
@@ -95,7 +95,6 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
     };
   }, [socket, chatId, messages]);
 
-  // Scroll to bottom on new messages (only on first load or when sending)
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (!container) return;
@@ -148,6 +147,15 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
     return () => container.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.focus();
+    scrollHeightRef.current = 0;
+    setPage(1);
+    setMessages([]);
+    setHasMore(true);
+    setLoading(false);
+  }, [chatId]);
+
   return (
     <div className={styles.chatArea}>
       {currentChat ? (
@@ -179,6 +187,8 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
                 onChange={(e) => {
                   setMessage(e.target.value);
                 }}
+                autoFocus
+                ref={inputRef}
                 disabled={isSending}
                 onKeyUp={handleKeyPress}
                 className={styles.messageInput}
