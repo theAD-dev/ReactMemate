@@ -4,6 +4,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import style from './supplier-history.module.scss';
 import { getSupplierHistory } from '../../../../../APIs/SuppliersApi';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 import Loader from '../../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
@@ -98,7 +99,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
   const TotalBody = (rowData) => {
 
     return <div className={` show-on-hover ${style.boxBorderRound}`}>
-      $ {(rowData.total).toFixed(2)}
+      ${formatAUD(rowData.total)}
     </div>;
   };
 
@@ -110,7 +111,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
 
   const gstbody = (rowData) => {
     return <div className={` show-on-hover ${style.boxBorderCorner}`} >
-      $ {rowData.gst}
+      ${formatAUD(rowData.gst)}
     </div>;
   };
 

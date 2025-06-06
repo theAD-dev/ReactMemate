@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import style from './client-order-history.module.scss';
 import { bringBack, clientOrderHistory } from '../../../../../APIs/ClientsApi';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 import Loader from '../../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
@@ -98,20 +99,20 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
     const status = rowData.status;
     switch (status) {
       case 'Lost':
-        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$ ${rowData.profit}`} />;
+        return <Tag className={`profit ${style.lostProfit} rounded`} value={`$${formatAUD(rowData.profit)}`} />;
       case 'Completed':
-        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$ ${rowData.profit}`} />;
+        return <Tag className={`profit ${style.completeProfit} rounded`} value={`$${formatAUD(rowData.profit)}`} />;
       case 'In progress':
-        return <Tag className={`profit ${style.inprogressProfit}`} value={`$ ${rowData.profit}`} />;
+        return <Tag className={`profit ${style.inprogressProfit}`} value={`$${formatAUD(rowData.profit)}`} />;
       case 'Declined':
-        return <Tag className={`profit ${style.declinedProfit} rounded`} value={`$ ${rowData.profit}`} />;
+        return <Tag className={`profit ${style.declinedProfit} rounded`} value={`$${formatAUD(rowData.profit)}`} />;
       default:
-        return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$ ${rowData.profit}`} />;
+        return <Tag className={`profit ${style.defaultProfit} rounded`} value={`$${formatAUD(rowData.profit)}`} />;
     }
   };
 
   const totalBodyTemplate = (rowData) => {
-    return `$${rowData.total}`;
+    return `$${formatAUD(rowData.total)}`;
   };
 
   const InvoiceBodyTemplate = (rowData) => {
