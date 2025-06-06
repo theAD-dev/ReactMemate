@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Row } from 'react-bootstrap';
 import { CardList, ChevronLeft, InfoSquare, Person } from 'react-bootstrap-icons';
 import { Link, NavLink, useParams, useNavigate } from 'react-router-dom';
+import parsePhoneNumberFromString from 'libphonenumber-js';
 import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
 import IndivisualForm from '../../../features/clients-features/new-client-create/indivisual-form';
@@ -32,7 +33,8 @@ const IndividualClientInformation = () => {
         formData.append("firstname", data.firstname);
         formData.append("lastname", data.lastname);
         formData.append("email", data.email);
-        formData.append("phone", data.phone);
+        const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
+        if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
 
         if (data.category != "0") formData.append("category", data.category);
         formData.append("payment_terms", data.payment_terms);

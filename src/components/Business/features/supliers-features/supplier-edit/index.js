@@ -1,5 +1,6 @@
 import React, { forwardRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import parsePhoneNumberFromString from 'libphonenumber-js';
 import { nanoid } from 'nanoid';
 import { toast } from 'sonner';
 import SupplierForm from '../../../shared/ui/supliers-ui/supplier-form';
@@ -29,11 +30,12 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
 
         formData.append("name", data.name);
         formData.append("email", data.email);
-        formData.append("website", data.website);
-        formData.append("abn", data.abn);
-        formData.append("phone", data.phone);
+        if (data.website) formData.append("website", data.website);
+        if (data.abn) formData.append("abn", data.abn);
+        const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
+        if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
         formData.append("services", data.services);
-        formData.append("note", data.note);
+        if (data.note) formData.append("note", data.note);
 
         data.addresses.forEach((address, index) => {
             if (address.city) {
@@ -51,7 +53,8 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
                 formData.append(`contact_persons[${index}]firstname`, person.firstname);
                 formData.append(`contact_persons[${index}]lastname`, person.lastname);
                 formData.append(`contact_persons[${index}]email`, person.email);
-                formData.append(`contact_persons[${index}]phone`, person.phone);
+                const phoneNumber = person?.phone && parsePhoneNumberFromString(person.phone);
+                if (phoneNumber?.nationalNumber) formData.append(`contact_persons[${index}]phone`, person.phone);
                 formData.append(`contact_persons[${index}]position`, person.position);
                 formData.append(`contact_persons[${index}]is_main`, person.is_main);
                 if (person?.id) formData.append(`contact_persons[${index}]id`, person?.id);

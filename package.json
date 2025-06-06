@@ -33,6 +33,7 @@
     "google-libphonenumber": "^3.2.40",
     "immutable": "^4.3.7",
     "leaflet": "^1.9.4",
+    "libphonenumber-js": "^1.12.9",
     "nanoid": "^5.0.7",
     "npm": "^10.8.3",
     "nprogress": "^0.2.0",
