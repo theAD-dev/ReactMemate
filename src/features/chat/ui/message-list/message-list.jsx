@@ -1,50 +1,137 @@
-import React, { useEffect, useRef } from 'react';
-import FileAttachment from '../file-attachment/file-attachment';
+import React, { useEffect, useRef, useMemo } from 'react';
+import clsx from 'clsx';
+import { Divider } from 'primereact/divider';
 import styles from './message-list.module.scss';
+import FileAttachment from '../file-attachment/file-attachment';
 
-const MessageList = ({ messages, isTyping = false }) => {
+const formatTime = (timestamp) => {
+  const date = new Date(timestamp * 1000);
+  const weekday = date.toLocaleString('en-US', { weekday: 'long' });
+  let hour = date.getHours();
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hour >= 12 ? 'pm' : 'am';
+  hour = hour % 12 || 12;
+  return `${weekday} ${hour}:${minute}${ampm}`;
+};
+
+const isSameDate = (date1, date2) =>
+  date1.getFullYear() === date2.getFullYear() &&
+  date1.getMonth() === date2.getMonth() &&
+  date1.getDate() === date2.getDate();
+
+const MessageList = ({ messages = [], isTyping = false, loading = true, currentUserId, participants }) => {
   const messagesEndRef = useRef(null);
 
+  const normalizedMessages = useMemo(() => {
+    if (!Array.isArray(messages)) {
+      console.warn('Messages is not an array:', messages);
+      return [];
+    }
+
+    return messages
+      .filter(msg => msg?.sent_at)
+      .map((msg, index) => {
+        const timestamp = Number(msg.sent_at);
+        const date = new Date(timestamp * 1000);
+
+        return {
+          id: msg.id || `msg-${index}`,
+          text: msg.message || '',
+          sender: msg.sender || 'Unknown',
+          timestamp,
+          sendingTime: formatTime(timestamp),
+          isOwn: currentUserId === msg.sender,
+          attachment: msg.file_url ? { url: msg.file_url, type: msg.file_type } : undefined,
+          displayDate: date,
+          fullDate: date.toLocaleDateString('en-US', { dateStyle: 'medium' }),
+        };
+      })
+      .sort((a, b) => a.timestamp - b.timestamp); // ensure messages are chronologically sorted
+  }, [messages, currentUserId]);
+
+  const groupedMessages = useMemo(() => {
+    const groups = {};
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    normalizedMessages.forEach((msg) => {
+      let label = msg.fullDate;
+      if (isSameDate(msg.displayDate, today)) {
+        label = 'Today';
+      } else if (isSameDate(msg.displayDate, yesterday)) {
+        label = 'Yesterday';
+      }
+
+      if (!groups[label]) groups[label] = [];
+      groups[label].push(msg);
+    });
+
+    return groups;
+  }, [normalizedMessages]);
+
+  const sortedGroupKeys = useMemo(() => {
+    return Object.entries(groupedMessages)
+      .sort(([, msgsA], [, msgsB]) => msgsA[0].timestamp - msgsB[0].timestamp)
+      .map(([key]) => key);
+  }, [groupedMessages]);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
-
-  // Group messages by date
-  const groupedMessages = messages.reduce((groups, message) => {
-    const date = message.time.includes('Today') ? 'Today' : message.time.split(' ')[0]; // Extract date part
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(message);
-    return groups;
-  }, {});
+  }, [normalizedMessages]);
 
   return (
-    <div className={styles.messageList}>
-      {Object.entries(groupedMessages).map(([date, dateMessages]) => (
+    <>
+      {sortedGroupKeys.map((date) => (
         <div key={date} className={styles.messageGroup}>
           <div className={styles.dateHeader}>
-            <span>{date}</span>
+            <Divider align="center"><span>{date}</span></Divider>
           </div>
 
-          {dateMessages.map((message, index) => (
+          {groupedMessages[date].map((msg) => (
             <div
-              key={index}
-              className={`${styles.message} ${message.sender === 'You' ? styles.sent : styles.received}`}
+              key={msg.id}
+              className={clsx(styles.message, msg.isOwn ? styles.sent : styles.received)}
             >
-              <span className={styles.messageTime}>
-                {message.time.includes('Today') ? message.time.replace('Today', '') : message.time.split(' ')[1]}
-              </span>
-              <div className={styles.messageContent}>
-                <p className={styles.messageText}>{message.text}</p>
+              <div className={clsx('w-100 d-flex align-items-center gap-2', {
+                'justify-content-between': msg.isOwn
+              })}>
+                {msg.isOwn ? (
+                  <span className={styles.messageSenderName}>You</span>
+                ) : (
+                  <div className="d-flex gap-2">
+                    <div className={styles.userAvatar}>
+                      {participants?.[msg.sender]
+                        ?.split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()}
+                    </div>
+                    <span className={styles.messageSenderName}>
+                      {participants?.[msg.sender] || 'Unknown'}
+                    </span>
+                  </div>
+                )}
+                <span className={clsx(styles.messageTime, {
+                  [styles.messageTimeSent]: !msg.isOwn
+                })}>
+                  {msg.sendingTime}
+                </span>
               </div>
-              {message.attachment && (
+
+              <div className={clsx(styles.messageContent, {
+                [styles.messageContentSent]: !msg.isOwn
+              })}>
+                <p className={styles.messageText}>{msg.text}</p>
+              </div>
+
+              {msg.attachment && (
                 <div className={styles.messageAttachment}>
-                  <FileAttachment file={message.attachment} />
+                  <FileAttachment file={msg.attachment} />
                 </div>
               )}
             </div>
@@ -52,7 +139,7 @@ const MessageList = ({ messages, isTyping = false }) => {
         </div>
       ))}
 
-      {messages.length === 0 && (
+      {normalizedMessages.length === 0 && !loading && (
         <div className={styles.emptyMessages}>
           <p>No messages yet. Start the conversation!</p>
         </div>
@@ -67,7 +154,7 @@ const MessageList = ({ messages, isTyping = false }) => {
       )}
 
       <div ref={messagesEndRef} />
-    </div>
+    </>
   );
 };
 

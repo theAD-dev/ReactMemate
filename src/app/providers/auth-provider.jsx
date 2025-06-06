@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('profileData', JSON.stringify(data));
     }
 
-    const value = { session: data || null, isLoading, isError, error: error || null, refetchSession: refetch };
+    const value = { session: data || null, role: data?.type, isLoading, isError, error: error || null, refetchSession: refetch };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -1,12 +1,3 @@
-.messageList {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .messageGroup {
   display: flex;
   flex-direction: column;
@@ -37,6 +28,7 @@
 
   &.sent {
     align-self: flex-end;
+    align-items: end;
 
     .messageContent {
       border-radius: 6px 6px 0 6px;
@@ -46,6 +38,7 @@
 
     .messageTime {
       text-align: right;
+      margin-bottom: 6px;
     }
   }
 
@@ -60,6 +53,7 @@
 
     .messageTime {
       text-align: right;
+      margin-bottom: 6px;
     }
   }
 }
@@ -69,6 +63,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: fit-content;
+  text-align: left;
 }
 
 .messageAttachment {
@@ -147,4 +143,42 @@
     transform: translateY(-4px);
     opacity: 1;
   }
+}
+
+.userAvatar {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--gray-200, #eaecf0);
+  background: var(--gray-50, #f9fafb);
+  color: var(--gray-700, #344054);
+  font-size: 14px;
+  font-weight: 500;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.messageContentSent {
+  position: relative;
+  left: 45px;
+  top: -12px;
+}
+
+.messageSenderName {
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  text-transform: capitalize;
+  margin-bottom: 6px;
+}
+
+.messageTimeSent {
+  top: -5px;
+  position: relative;
 }

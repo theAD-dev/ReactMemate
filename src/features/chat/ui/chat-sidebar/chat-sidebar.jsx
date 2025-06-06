@@ -1,25 +1,29 @@
 import React, { useState } from 'react';
-import { InputSwitch } from 'primereact/inputswitch';
-import { InputText } from 'primereact/inputtext';
+import clsx from 'clsx';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import clsx from 'clsx';
-import UserList from '../user-list/user-list';
-import ProjectList from '../project-list/project-list';
+import { InputSwitch } from 'primereact/inputswitch';
+import { InputText } from 'primereact/inputtext';
 import styles from './chat-sidebar.module.scss';
+import ProjectList from '../project-list/project-list';
+import UserList from '../user-list/user-list';
 
 const ChatSidebar = ({ 
   activeTab, 
   setActiveTab, 
   archivedVisible, 
   setArchivedVisible,
-  chatData
+  chatData,
+  userId
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
+
+  const totalUserGroup = Object.entries(chatData).filter(([, group]) => !group.project_id && !group.task_id);
+  const projectGroup = Object.entries(chatData).filter(([, group]) => group.project_id || group.task_id);
 
   return (
     <div className={styles.chatSidebar}>
@@ -65,14 +69,14 @@ const ChatSidebar = ({
             onClick={() => setActiveTab('users')}
           >
             <span>Users</span>
-            <div>12</div>
+            <div>{totalUserGroup?.length || 0}</div>
           </div>
           <div 
             className={clsx(styles.tabButton, { [styles.active]: activeTab === 'projects' })}
             onClick={() => setActiveTab('projects')}
           >
             <span>Projects</span>
-            <div>4</div>
+            <div>{projectGroup?.length || 0}</div>
           </div>
         </div>
       </div>
@@ -83,12 +87,14 @@ const ChatSidebar = ({
             chatData={chatData} 
             searchQuery={searchQuery}
             showArchived={archivedVisible}
+            userId={userId}
           />
         ) : (
           <ProjectList 
             chatData={chatData} 
             searchQuery={searchQuery}
             showArchived={archivedVisible}
+            userId={userId}
           />
         )}
       </div>

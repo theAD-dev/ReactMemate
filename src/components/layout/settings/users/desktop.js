@@ -12,11 +12,15 @@ import { toast } from 'sonner';
 import CreateDesktopUser from './features/create-desktop-user';
 import style from './users.module.scss';
 import { deleteDesktopUser, getDesktopUserList, getPrivilegesList, restoreDesktopUser } from '../../../../APIs/settings-user-api';
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { PERMISSIONS } from '../../../../shared/lib/access-control/permission';
+import { hasPermission } from '../../../../shared/lib/access-control/role-permission';
 import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 const Desktop = ({ visible, setVisible }) => {
+    const { role } = useAuth();
     const { trialHeight } = useTrialHeight();
     const navigate = useNavigate();
     const [id, setId] = useState(null);
@@ -118,7 +122,11 @@ const Desktop = ({ visible, setVisible }) => {
                             <li className='menuActive'><Link to="/settings/users/desktop">Desktop</Link></li>
                             <li><Link to="/settings/users/mobile-app">Mobile App</Link></li>
                         </ul>
-                        <Button disabled={desktopUsersQuery?.data?.limits?.total <= activeUserCount?.length} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                        {
+                            hasPermission(role, PERMISSIONS.SETTINGS.USERS.DESKTOP.ADD) && (
+                                <Button disabled={desktopUsersQuery?.data?.limits?.total <= activeUserCount?.length} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                            )
+                        }
                     </div>
                 </div>
                 <div className={`content_wrap_main ${style.contentwrapmain}`} style={{ paddingBottom: `${trialHeight}px` }}>

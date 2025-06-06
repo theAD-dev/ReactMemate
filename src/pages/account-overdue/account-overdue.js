@@ -62,7 +62,9 @@ const AccountOverdue = () => {
                             </div>
                             <Button className="text-button bg-transparent" onClick={() => setVisible(true)}>Change</Button>
                         </div>
-                        <button className={styles.payButton} onClick={handleRetryPayment}>Retry payment</button>
+                        <button className={styles.payButton} onClick={handleRetryPayment} disabled={mutation.isPending}>
+                            {mutation.isPending ? "Loading..." : "Retry payment"}
+                        </button>
                     </div>
                     <div className="copywrite">© Memate {new Date().getFullYear()}</div>
                 </Col>

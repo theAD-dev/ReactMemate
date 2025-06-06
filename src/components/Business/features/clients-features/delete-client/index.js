@@ -7,17 +7,21 @@ import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import { deleteClient } from '../../../../../APIs/ClientsApi';
-
+import { useAuth } from '../../../../../app/providers/auth-provider';
+import { PERMISSIONS } from '../../../../../shared/lib/access-control/permission';
+import { hasPermission } from '../../../../../shared/lib/access-control/role-permission';
 
 const DeleteClient = ({ id }) => {
+    const { role } = useAuth();
     const navigate = useNavigate();
     const deleteMutation = useMutation({
-        mutationFn: (data) => deleteClient(id),
+        mutationFn: () => deleteClient(id),
         onSuccess: () => {
             navigate('/clients');
             toast.success(`Client deleted successfully`);
         },
         onError: (error) => {
+            console.log('Failed to delete client: ', error);
             toast.error(`Failed to delete client. Please try again.`);
         }
     });
@@ -30,7 +34,6 @@ const DeleteClient = ({ id }) => {
 
     const handleDeleteClient = (event) => {
         if (!id) return toast.error("Id not found");
-        console.log('id: ', id);
         confirmPopup({
             target: event.currentTarget,
             message: 'Do you want to delete this record?',
@@ -43,13 +46,17 @@ const DeleteClient = ({ id }) => {
     return (
         <>
             <ConfirmPopup />
-            <Button type='button' onClick={handleDeleteClient} disabled={deleteMutation.isPending} className='outline-button'>
-                {
-                    deleteMutation.isPending ? (
-                        <ProgressSpinner style={{ width: '20px', height: '20px' }} />
-                    ) : <Trash color='#344054' size={20} />
-                }
-            </Button>
+            {
+                hasPermission(role, PERMISSIONS.CLIENTS.DELETE) ? (
+                    <Button type='button' onClick={handleDeleteClient} disabled={deleteMutation.isPending} className='outline-button'>
+                        {
+                            deleteMutation.isPending ? (
+                                <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+                            ) : <Trash color='#344054' size={20} />
+                        }
+                    </Button>
+                ) : <span></span>
+            }
         </>
 
     );

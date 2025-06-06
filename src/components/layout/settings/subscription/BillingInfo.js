@@ -9,8 +9,9 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { Skeleton } from "primereact/skeleton";
 import { toast } from "sonner";
 import ChangePaymentMethod from "./features/change-payment-method";
-import { getBillingPersonalInfo, getPaymentMethodInfo, updateBillingPersonalInfo } from "../../../../APIs/SettingsGeneral";
+import { getBillingPersonalInfo, getPaymentMethodInfo, getUpcomingPayment, updateBillingPersonalInfo } from "../../../../APIs/SettingsGeneral";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
+import { formatAUD } from "../../../../shared/lib/format-aud";
 
 
 const BillingInfo = () => {
@@ -23,6 +24,12 @@ const BillingInfo = () => {
   const billingInfoQuery = useQuery({
     queryKey: ['getBillingPersonalInfo'],
     queryFn: getBillingPersonalInfo,
+    retry: 1,
+  });
+
+  const upcomingPaymentQuery = useQuery({
+    queryKey: ['getUpcomingPayment'],
+    queryFn: getUpcomingPayment,
     retry: 1,
   });
 
@@ -81,6 +88,24 @@ const BillingInfo = () => {
     }
   };
 
+  const formatDate = (isoDateString) => {
+    try {
+      const date = new Date(isoDateString);
+      if (isNaN(date.getTime())) {
+        throw new Error("Invalid ISO date format. Use 'YYYY-MM-DDTHH:mm:ssZ' (e.g., '2025-03-25T14:15:22Z').");
+      }
+
+      const day = date.getUTCDate();
+      const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+      const year = date.getUTCFullYear();
+
+      return `${day} ${month} ${year}`;
+    } catch (err) {
+      console.log('err: ', err);
+      return "";
+    }
+  };
+
   useEffect(() => {
     if (billingInfoQuery?.data) {
       setGeneralData(billingInfoQuery?.data);
@@ -123,8 +148,7 @@ const BillingInfo = () => {
                     <span>
                       <ExclamationCircle color="#344054" size={20} />
                     </span>
-                    <strong> Next Payment </strong> Your next monthly payment
-                    $xxx is scheduled.
+                    <strong> Next Payment: </strong> Your next monthly payment ${formatAUD(upcomingPaymentQuery?.data?.total || 0)} is scheduled on {formatDate(upcomingPaymentQuery?.data?.next_payment_attempt)}.
                   </h2>
                 </div>
               </div>

@@ -7,9 +7,12 @@ import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import { deleteSupplier } from '../../../../../APIs/SuppliersApi';
-
+import { useAuth } from '../../../../../app/providers/auth-provider';
+import { PERMISSIONS } from '../../../../../shared/lib/access-control/permission';
+import { hasPermission } from '../../../../../shared/lib/access-control/role-permission';
 
 const DeleteSupplier = ({ id }) => {
+  const { role } = useAuth();
   const navigate = useNavigate();
   const deleteMutation = useMutation({
     mutationFn: () => deleteSupplier(id),
@@ -43,13 +46,17 @@ const DeleteSupplier = ({ id }) => {
   return (
     <>
       <ConfirmPopup />
-      <Button type='button' disabled={deleteMutation.isPending} onClick={handleDeleteClient} className='outline-button'>
-        {
-          deleteMutation.isPending ? (
-            <ProgressSpinner style={{ width: '20px', height: '20px' }} />
-          ) : <Trash color='#344054' size={20} />
-        }
-      </Button>
+      {
+        hasPermission(role, PERMISSIONS.SUPPLIERS.DELETE) ? (
+          <Button type='button' onClick={handleDeleteClient} disabled={deleteMutation.isPending} className='outline-button'>
+            {
+              deleteMutation.isPending ? (
+                <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+              ) : <Trash color='#344054' size={20} />
+            }
+          </Button>
+        ) : <span></span>
+      }
     </>
 
   );

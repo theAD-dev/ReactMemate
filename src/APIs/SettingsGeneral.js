@@ -56,6 +56,15 @@ export const getBillingPersonalInfo = async () => {
   return fetchAPI(url.toString(), options);
 };
 
+export const getUpcomingPayment = async () => {
+  const endpoint = `/settings/subscriptions/upcoming/`;
+  const options = {
+    method: 'GET'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
 export const updateBillingPersonalInfo = async (data) => {
   const endpoint = `/settings/subscriptions/tax-id/`;
   const options = {

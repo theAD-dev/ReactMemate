@@ -29,6 +29,10 @@
   }
 }
 
+.projectItem.active {
+  background: var(--primary-25, #f2faff);
+}
+
 .projectHeader {
   gap: 12px;
   width: 100%;

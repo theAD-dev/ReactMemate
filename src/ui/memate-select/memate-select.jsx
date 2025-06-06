@@ -35,7 +35,6 @@ const selectStyles = {
 };
 
 const MemateSelect = forwardRef(({ options, onChange, value, hasError }, ref) => {
-  console.log('value: ', value);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelectChange = (selectedOption) => {

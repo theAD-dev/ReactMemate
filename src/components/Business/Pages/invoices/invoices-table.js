@@ -17,7 +17,10 @@ import { toast } from 'sonner';
 import style from './invoice.module.scss';
 import { deleteInvoice, getListOfInvoice } from '../../../../APIs/invoice-api';
 import { fetchduplicateData } from '../../../../APIs/SalesApi';
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { PERMISSIONS } from '../../../../shared/lib/access-control/permission';
+import { hasPermission } from '../../../../shared/lib/access-control/role-permission';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
@@ -25,7 +28,6 @@ import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-t
 import InvoicePartialPayment from '../../features/invoice-features/invoice-partial-payment/invoice-partial-payment';
 import ResendInvoiceEmail from '../../features/invoice-features/resend-email/resend-email';
 import SendInvoiceEmail from '../../features/invoice-features/send-email/send-email';
-
 
 const formatDate = (timestamp) => {
     try {
@@ -43,6 +45,7 @@ const formatDate = (timestamp) => {
 };
 
 const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
+    const { role } = useAuth();
     const observerRef = useRef(null);
     const navigate = useNavigate();
     const { trialHeight } = useTrialHeight();
@@ -322,11 +325,15 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                         <FileEarmarkSpreadsheet color='#667085' size={20} />
                         <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
                     </div>
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
-                        <Trash color='#B42318' size={20} />
-                        <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
-                        {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
-                    </div>
+                    {
+                        hasPermission(role, PERMISSIONS.INVOICE.DELETE) && (
+                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
+                                <Trash color='#B42318' size={20} />
+                                <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
+                                {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                            </div>
+                        )
+                    }
                 </div>
             </ControlledMenu>
         </React.Fragment>;
