@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { BuildingAdd, PersonAdd, PlusCircle, X } from 'react-bootstrap-icons';
 import clsx from 'clsx';
+import parsePhoneNumberFromString from 'libphonenumber-js';
 import { nanoid } from 'nanoid';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
@@ -15,14 +16,14 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
     const [isPending, setIsPending] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [tab, setTab] = useState('1');
-    const [businessDefaultValues, ] = useState({
+    const [businessDefaultValues,] = useState({
         payment_terms: 1,
         category: '',
         phone: { country: '', number: '' },
         contact_persons: [{}],
         addresses: [{ title: "Main Location", country: 1 }],
     });
-    const [individualDefaultValues, ] = useState({
+    const [individualDefaultValues,] = useState({
         payment_terms: 1,
         category: '',
         address: { country: 1 },
@@ -58,7 +59,8 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
 
         formData.append("name", data.name);
         if (data.abn) formData.append("abn", data.abn);
-        formData.append("phone", data.phone);
+        const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
+        if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
         formData.append("email", data.email);
         if (data.website) formData.append("website", data.website);
         formData.append("payment_terms", data.payment_terms);
@@ -81,7 +83,8 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
                 formData.append(`contact_persons[${index}]firstname`, person.firstname);
                 formData.append(`contact_persons[${index}]lastname`, person.lastname);
                 formData.append(`contact_persons[${index}]email`, person.email);
-                formData.append(`contact_persons[${index}]phone`, person.phone);
+                const phoneNumber = person?.phone && parsePhoneNumberFromString(person.phone);
+                if (phoneNumber?.nationalNumber) formData.append(`contact_persons[${index}]phone`, person.phone);
                 formData.append(`contact_persons[${index}]position`, person.position);
                 formData.append(`contact_persons[${index}]is_main`, person.is_main);
             }
