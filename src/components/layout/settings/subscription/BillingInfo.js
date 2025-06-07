@@ -88,9 +88,9 @@ const BillingInfo = () => {
     }
   };
 
-  const formatDate = (isoDateString) => {
+  const formatDate = (timestamp) => {
     try {
-      const date = new Date(isoDateString);
+      const date = new Date(timestamp * 1000);
       if (isNaN(date.getTime())) {
         throw new Error("Invalid ISO date format. Use 'YYYY-MM-DDTHH:mm:ssZ' (e.g., '2025-03-25T14:15:22Z').");
       }
