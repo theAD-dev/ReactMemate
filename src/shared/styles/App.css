@@ -492,7 +492,6 @@ span.lightColorStyle {
 }
 
 .flatpickr-day.today {
-  border-color: #1ab2ff;
   border-radius: 20px;
   background: #1ab2ff;
   color: #fff;
@@ -500,6 +499,7 @@ span.lightColorStyle {
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
+  border-color: #1ab2ff !important;
 }
 
 .flatpickr-day {
@@ -541,11 +541,11 @@ span.flatpickr-day.nextMonthDay {
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: #158ecc !important;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  color: #fff;
-  border-color: #158ecc !important;
+  background: #1ab2ff !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  color: #fff !important;
+  border-color: #1ab2ff !important;
 }
 
 span.flatpickr-weekday {
@@ -2459,21 +2459,6 @@ color: #4285F4;
   border-radius: 40px;
 }
 
-.salesTableWrap
-  .flatpickr-day.selected.startRange
-  + .endRange:not(:nth-child(7n + 1)),
-.salesTableWrap
-  .flatpickr-day.startRange.startRange
-  + .endRange:not(:nth-child(7n + 1)),
-.salesTableWrap
-  .flatpickr-day.endRange.startRange
-  + .endRange:not(:nth-child(7n + 1)) {
-  box-shadow: -13px 0 0 #7f56d9c7, 13px 0 0 #7f56d9c7 !important;
-}
-
-.salesTableWrap .flatpickr-day.inRange {
-  box-shadow: -13px 0 0 #e2e2e2, 13px 0 0 #e2e2e2 !important;
-}
 
 .salesTableWrap table.innerTableStyle tr td {
   width: 109px;
@@ -4562,8 +4547,8 @@ Due to the split circle of progress-left and progress right, we must use the ani
 
 .salesTableWrap .radio-custom:checked + .radio-custom-label:before {
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--primary-500, #9e77ed);
-  background: var(--primary-50, #f9f5ff);
+  border: 1px solid var(--primary-500, #1ab2ff);
+  background: var(--primary-50, #ebf8ff);
 }
 
 .salesTableWrap .radio-custom:checked + .radio-custom-label:before {
@@ -5288,8 +5273,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 
 .salesTableWrap .colfilterSmall .nav-item a.active {
   border-radius: 6px;
-  background: var(--Primary-50, #f9f5ff);
-  color: var(--Primary-500, #9e77ed);
+  background: var(--Primary-50, #ebf8ff);
+  color: var(--Primary-500, #1ab2ff);
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -5328,7 +5313,7 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 }
 
 .salesTableWrap .colfilterSmall .nav-item a.active svg {
-  fill: #9e77ed;
+  fill: #1ab2ff;
 }
 
 .salesTableWrap .ClosePopover {
@@ -5380,8 +5365,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 
 .salesTableWrap .ProgressTag .option input:checked ~ .checkmark {
   border-radius: var(--radius-sm, 6px);
-  border: 1px solid var(--Primary-500, #9e77ed) !important;
-  background: var(--Primary-50, #f9f5ff);
+  border: 1px solid var(--Primary-500, #1ab2ff) !important;
+  background: var(--Primary-50, #ebf8ff);
 }
 
 .salesTableWrap .ProgressTag .option .checkmark {

@@ -556,7 +556,7 @@ const TableTopBar = ({
                               onChange={() => handleProgressChange(item.label)}
                             />
                             <span className="checkmark">
-                              <Check color="#9E77ED" size={20} />
+                              <Check color="#1ab2ff" size={20} />
                             </span>
                             <div className="progressWrapper">
                               <div className="labelInfo">
@@ -626,7 +626,7 @@ const TableTopBar = ({
                         onChange={() => handleStatusChange(itemName)}
                       />
                       <span className="checkmark">
-                        <Check color="#9E77ED" size={20} />
+                        <Check color="#1ab2ff" size={20} />
                       </span>
                       <div className="userName">
                         <span className={clsx('statusInfo', itemName)}><a>{itemName}</a></span>{" "}
@@ -683,7 +683,7 @@ const TableTopBar = ({
                           onChange={() => handleProjectManagerChange(itemName.name)}
                         />
                         <span className="checkmark">
-                          <Check color="#9E77ED" size={20} />
+                          <Check color="#1ab2ff" size={20} />
                         </span>
                         <div className="ms-3 d-flex justify-content-center align-items-center">
                           <ImageAvatar has_photo={itemName.has_photo} photo={itemName.photo} is_business={false} />

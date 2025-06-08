@@ -1471,8 +1471,8 @@ div#controlled-tab-example-tabpane-Status span.checkmark {
 
 div#controlled-tab-example-tabpane-Status .customCheckBox input:checked~.checkmark {
   border-radius: var(--radius-sm, 6px) !important;
-  border: 1px solid var(--Primary-500, #9e77ed) !important;
-  background: var(--Primary-50, #f9f5ff) !important;
+  border: 1px solid var(--Primary-500, #1ab2ff) !important;
+  background: var(--Primary-50, #ebf8ff) !important;
 }
 
 #controlled-tab-example-tabpane-Status label .userName {
