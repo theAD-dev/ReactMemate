@@ -14,7 +14,7 @@ import { useTrialHeight } from '../../../../app/providers/trial-height-provider'
 import { formatAUD } from '../../../../shared/lib/format-aud';
 
 
-const verticalLinePlugin = {
+export const verticalLinePlugin = {
     id: 'verticalLine',
     afterDraw: (chart) => {
         const tooltip = chart?.tooltip;
@@ -83,6 +83,11 @@ const Executive = () => {
         const labor = [];
         const operating_expense = [];
 
+        const isCurrentYear = selectedYear === currentYear;
+        const currentMonth = new Date().getMonth();
+        const monthsToShow = isCurrentYear ? currentMonth : 12;
+        const filteredMonths = months.slice(0, monthsToShow);
+        
         for (const key in datasetObj) {
             total_income.push(parseFloat(datasetObj[key].total_income));
             operating_profit.push(parseFloat(datasetObj[key].operating_profit));
@@ -106,7 +111,7 @@ const Executive = () => {
         });
 
         const data = {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: filteredMonths,
             datasets: [
                 {
                     label: 'Total Income',

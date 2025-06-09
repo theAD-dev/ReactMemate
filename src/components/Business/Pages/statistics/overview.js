@@ -4,14 +4,19 @@ import { Calendar3 as CalendarIcon, ClipboardData, Google, InfoSquareFill, PieCh
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Chart as ChartJS, registerables } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import clsx from 'clsx';
 import { Calendar } from 'primereact/calendar';
 import { Chart } from 'primereact/chart';
 import { getOverviewStatistics } from './api/statistics-api';
+import { verticalLinePlugin } from './executive';
 import style from './statistics.module.scss';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
+
+ChartJS.register(...registerables, annotationPlugin, verticalLinePlugin);
 
 const Overview = () => {
     const today = new Date();
@@ -20,6 +25,14 @@ const Overview = () => {
     const [type, setType] = useState('Month to Date');
     const [dates, setDates] = useState([startOfMonth, today]);
     const [range, setRange] = useState('Previous month');
+
+    const [grossVolume, setGrossVolume] = useState({ current: { date: '', value: 0 }, previous: { date: '', value: 0 } });
+    const [activeQuotes, setActiveQuotes] = useState({ current: { date: '', value: 0 }, previous: { date: '', value: 0 } });
+    const [orders, setOrders] = useState({ current: { date: '', value: 0 }, previous: { date: '', value: 0 } });
+    const [unpaidInvoices, setUnpaidInvoices] = useState({ current: { date: '', value: 0 }, previous: { date: '', value: 0 } });
+    const [spendPerOrder, setSpendPerOrder] = useState({ current: { date: '', value: 0 }, previous: { date: '', value: 0 } });
+    const [jobsCompleted, setJobsCompleted] = useState({ current: { date: '', value: 0 }, previous: { date: '', value: 0 } });
+    const [contractorExpense, setContractorExpense] = useState({ current: { date: '', value: 0 }, previous: { date: '', value: 0 } });
 
     const overviewQuery = useQuery({
         queryKey: ["getOverviewStatistics", dates[0], dates[1]],
@@ -69,7 +82,7 @@ const Overview = () => {
             } else if (range === 'Previous month') {
                 date.setMonth(date.getMonth() - 1);
             }
-            return date.toISOString().slice(0, 10); // Format as YYYY-MM-DD
+            return date.toISOString().slice(0, 10);
         };
 
         const formatMonthYear = (date) => {
@@ -85,23 +98,55 @@ const Overview = () => {
                 legend: { display: false },
                 title: { display: false },
                 tooltip: {
-                    enabled: true,
+                    enabled: false,
+                    external: () => {},
+                    mode: 'index',
+                    intersect: false,
                     backgroundColor: '#fff',
                     titleColor: '#667085',
                     bodyColor: '#667085',
                     borderColor: '#f2f2f2',
                     borderWidth: 1,
                     callbacks: {
-                        title: function (tooltipItems) {
-                            return tooltipItems[0].label; // Display date like 2025-05-08
+                        title(tooltipItems) {
+                            return tooltipItems[0].label;
                         },
-                        label: function (tooltipItem) {
-                            const datasetLabel = tooltipItem.dataset.label; // "This Year" or "Last Year"
-                            const value = tooltipItem.raw; // The value for the hovered dataset
+                        label(tooltipItem) {
+                            const datasetLabel = tooltipItem.dataset.label;
+                            const value = tooltipItem.raw;
+                            const key = tooltipItem.dataset.key;
                             const prevDate = getPreviousPeriodDateLabel(tooltipItem.label);
+
+                            const setters = {
+                                gross_volume: setGrossVolume,
+                                active_quotes: setActiveQuotes,
+                                orders: setOrders,
+                                unpaid_invoices: setUnpaidInvoices,
+                                spend_per_order: setSpendPerOrder,
+                                jobs_completed: setJobsCompleted,
+                                contractor_expense: setContractorExpense,
+                            };
+
+                            const setter = setters[key];
+                            if (setter) {
+                                const isCurrent = datasetLabel === 'This Year' || datasetLabel === 'This Month';
+                                const date = isCurrent
+                                    ? datasetLabel
+                                    : new Date(prevDate).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    });
+
+                                setter(data => ({
+                                    ...data,
+                                    [isCurrent ? 'current' : 'previous']: { date, value },
+                                }));
+                            }
+
                             return `${datasetLabel} (${(datasetLabel === 'This Year' || datasetLabel === 'This Month') ? tooltipItem.label : prevDate}): $${formatAUD(value)}`;
-                        }
-                    }
+                        },
+                    },
                 },
                 interaction: {
                     mode: 'index',
@@ -168,7 +213,6 @@ const Overview = () => {
             const currentData = overviewQuery.data[key].current_data || [];
             const previousData = overviewQuery.data[key].previous_data || [];
 
-            // Validate and map data, default to 0 if invalid
             const thisYearData = currentData.map(d => {
                 const value = parseFloat(d.value);
                 return isNaN(value) ? 0 : value;
@@ -182,6 +226,7 @@ const Overview = () => {
                 labels: currentData.map(d => d.date),
                 datasets: [
                     {
+                        key: key,
                         label: range === 'Previous year' ? 'This Year' : 'This Month',
                         data: thisYearData,
                         fill: true,
@@ -191,11 +236,12 @@ const Overview = () => {
                         borderWidth: 2,
                     },
                     {
+                        key: key,
                         label: range === 'Previous year' ? 'Last Year' : 'Last Month',
                         data: lastYearData,
-                        fill: false, // No fill for Last Year to avoid overlap
+                        fill: false,
                         tension: 0,
-                        borderColor: '#EAECF0', // Gray for Last Year
+                        borderColor: '#EAECF0',
                         borderWidth: 2,
                     },
                 ],
@@ -319,6 +365,37 @@ const Overview = () => {
         jobsCompleted: { value: 0, change: 0, date: formatDateForLabel(new Date()), prevValue: 0 },
         contractorExpense: { value: 0, change: 0, date: formatDateForLabel(new Date()), prevValue: 0 },
     };
+
+    useEffect(() => {
+        setGrossVolume({
+            current: { date: '', value: reportsData.grossVolume.value },
+            previous: { date: reportsData.grossVolume.date, value: reportsData.grossVolume.prevValue }
+        });
+        setActiveQuotes({
+            current: { date: '', value: reportsData.activeQuotesVolume.value },
+            previous: { date: reportsData.activeQuotesVolume.date, value: reportsData.activeQuotesVolume.prevValue }
+        });
+        setOrders({
+            current: { date: '', value: reportsData.orders.value },
+            previous: { date: reportsData.orders.date, value: reportsData.orders.prevValue }
+        });
+        setUnpaidInvoices({
+            current: { date: '', value: reportsData.unpaidInvoicesVolume.value },
+            previous: { date: reportsData.unpaidInvoicesVolume.date, value: reportsData.unpaidInvoicesVolume.prevValue }
+        });
+        setSpendPerOrder({
+            current: { date: '', value: reportsData.spendPerOrder.value },
+            previous: { date: reportsData.spendPerOrder.date, value: reportsData.spendPerOrder.prevValue }
+        });
+        setJobsCompleted({
+            current: { date: '', value: reportsData.jobsCompleted.value },
+            previous: { date: reportsData.jobsCompleted.date, value: reportsData.jobsCompleted.prevValue }
+        });
+        setContractorExpense({
+            current: { date: '', value: reportsData.contractorExpense.value },
+            previous: { date: reportsData.contractorExpense.date, value: reportsData.contractorExpense.prevValue }
+        });
+    }, [reportsData.grossVolume.value, reportsData.grossVolume.date, reportsData.grossVolume.prevValue, reportsData.activeQuotesVolume.value, reportsData.activeQuotesVolume.date, reportsData.activeQuotesVolume.prevValue, reportsData.orders.value, reportsData.orders.date, reportsData.orders.prevValue, reportsData.unpaidInvoicesVolume.value, reportsData.unpaidInvoicesVolume.date, reportsData.unpaidInvoicesVolume.prevValue, reportsData.spendPerOrder.value, reportsData.spendPerOrder.date, reportsData.spendPerOrder.prevValue, reportsData.jobsCompleted.value, reportsData.jobsCompleted.date, reportsData.jobsCompleted.prevValue, reportsData.contractorExpense.value, reportsData.contractorExpense.date, reportsData.contractorExpense.prevValue, dates]);
 
     return (
         <>
@@ -463,13 +540,13 @@ const Overview = () => {
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Gross Volume</span>
                                         <InfoSquareFill size={12} color='#8792A2' />
-                                        <span className={reportsData.grossVolume.change > 0 ? style.changePositive : style.changeNeutral}>
-                                            {Math.abs(reportsData.grossVolume.change) || 'N/A'}%
+                                        <span className={grossVolume.current.value > grossVolume.previous.value ? style.changePositive : style.changeNeutral}>
+                                            {Math.abs(calculateChange(grossVolume.current.value, grossVolume.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{reportsData.grossVolume.date}<br /> ${formatAUD(reportsData.grossVolume.prevValue)}</span>
+                                    <span className={style.dateLabel}>{grossVolume.previous.date}<br /> ${formatAUD(grossVolume.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(reportsData.grossVolume.value)}</div>
+                                <div className={style.value}>${formatAUD(grossVolume.current.value)}</div>
                                 <Chart type="line" data={grossVolumeChartData} options={grossVolumeChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -478,13 +555,13 @@ const Overview = () => {
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Active Quotes Volume</span>
                                         <InfoSquareFill size={12} color='#8792A2' />
-                                        <span className={reportsData.activeQuotesVolume.change > 0 ? style.changePositive : style.changeNeutral}>
-                                            {Math.abs(reportsData.activeQuotesVolume.change) || 'N/A'}%
+                                        <span className={activeQuotes.current.value > activeQuotes.previous.value ? style.changePositive : style.changeNeutral}>
+                                            {Math.abs(calculateChange(activeQuotes.current.value, activeQuotes.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{reportsData.activeQuotesVolume.date}<br /> ${formatAUD(reportsData.activeQuotesVolume.prevValue)}</span>
+                                    <span className={style.dateLabel}>{activeQuotes.previous.date}<br /> ${formatAUD(activeQuotes.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(reportsData.activeQuotesVolume.value)}</div>
+                                <div className={style.value}>${formatAUD(activeQuotes.current.value)}</div>
                                 <Chart type="line" data={activeQuotesChartData} options={activeQuotesChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -493,13 +570,13 @@ const Overview = () => {
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Orders</span>
                                         <InfoSquareFill size={12} color='#8792A2' />
-                                        <span className={reportsData.orders.change > 0 ? style.changePositive : style.changeNeutral}>
-                                            {Math.abs(reportsData.orders.change) || 'N/A'}%
+                                        <span className={orders.current.value > orders.previous.value ? style.changePositive : style.changeNeutral}>
+                                            {Math.abs(calculateChange(orders.current.value, orders.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{reportsData.orders.date}<br /> ${formatAUD(reportsData.orders.prevValue)}</span>
+                                    <span className={style.dateLabel}>{orders.previous.date}<br /> ${formatAUD(orders.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(reportsData.orders.value)}</div>
+                                <div className={style.value}>${formatAUD(orders.current.value)}</div>
                                 <Chart type="line" data={ordersChartData} options={ordersChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -508,13 +585,13 @@ const Overview = () => {
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Unpaid Invoices Volume</span>
                                         <InfoSquareFill size={12} color='#8792A2' />
-                                        <span className={reportsData.unpaidInvoicesVolume.change > 0 ? style.changePositive : style.changeNeutral}>
-                                            {Math.abs(reportsData.unpaidInvoicesVolume.change) || 'N/A'}%
+                                        <span className={unpaidInvoices.current.value > unpaidInvoices.previous.value ? style.changePositive : style.changeNeutral}>
+                                            {Math.abs(calculateChange(unpaidInvoices.current.value, unpaidInvoices.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{reportsData.unpaidInvoicesVolume.date}<br /> ${formatAUD(reportsData.unpaidInvoicesVolume.prevValue)}</span>
+                                    <span className={style.dateLabel}>{unpaidInvoices.previous.date}<br /> ${formatAUD(unpaidInvoices.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(reportsData.unpaidInvoicesVolume.value)}</div>
+                                <div className={style.value}>${formatAUD(unpaidInvoices.current.value)}</div>
                                 <Chart type="line" data={unpaidInvoicesChartData} options={unpaidInvoicesChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -523,13 +600,13 @@ const Overview = () => {
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Spend per Order</span>
                                         <InfoSquareFill size={12} color='#8792A2' />
-                                        <span className={reportsData.spendPerOrder.change > 0 ? style.changePositive : style.changeNeutral}>
-                                            {Math.abs(reportsData.spendPerOrder.change) || 'N/A'}%
+                                        <span className={spendPerOrder.current.value > spendPerOrder.previous.value ? style.changePositive : style.changeNeutral}>
+                                            {Math.abs(calculateChange(spendPerOrder.current.value, spendPerOrder.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{reportsData.spendPerOrder.date}<br /> ${formatAUD(reportsData.spendPerOrder.prevValue)}</span>
+                                    <span className={style.dateLabel}>{spendPerOrder.previous.date}<br /> ${formatAUD(spendPerOrder.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(reportsData.spendPerOrder.value)}</div>
+                                <div className={style.value}>${formatAUD(spendPerOrder.current.value)}</div>
                                 <Chart type="line" data={spendPerOrderChartData} options={spendPerOrderChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -538,13 +615,13 @@ const Overview = () => {
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Jobs Completed</span>
                                         <InfoSquareFill size={12} color='#8792A2' />
-                                        <span className={reportsData.jobsCompleted.change > 0 ? style.changePositive : style.changeNeutral}>
-                                            {Math.abs(reportsData.jobsCompleted.change) || 'N/A'}%
+                                        <span className={jobsCompleted.current.value > jobsCompleted.previous.value ? style.changePositive : style.changeNeutral}>
+                                            {Math.abs(calculateChange(jobsCompleted.current.value, jobsCompleted.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{reportsData.jobsCompleted.date}<br /> ${formatAUD(reportsData.jobsCompleted.prevValue)}</span>
+                                    <span className={style.dateLabel}>{jobsCompleted.previous.date}<br /> ${formatAUD(jobsCompleted.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(reportsData.jobsCompleted.value)}</div>
+                                <div className={style.value}>${formatAUD(jobsCompleted.current.value)}</div>
                                 <Chart type="line" data={jobsCompletedChartData} options={jobsCompletedChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -553,13 +630,13 @@ const Overview = () => {
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Contractor Expense</span>
                                         <InfoSquareFill size={12} color='#8792A2' />
-                                        <span className={reportsData.contractorExpense.change > 0 ? style.changePositive : style.changeNeutral}>
-                                            {Math.abs(reportsData.contractorExpense.change) || 'N/A'}%
+                                        <span className={contractorExpense.current.value > contractorExpense.previous.value ? style.changePositive : style.changeNeutral}>
+                                            {Math.abs(calculateChange(contractorExpense.current.value, contractorExpense.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{reportsData.contractorExpense.date}<br /> ${formatAUD(reportsData.contractorExpense.prevValue)}</span>
+                                    <span className={style.dateLabel}>{contractorExpense.previous.date}<br /> ${formatAUD(contractorExpense.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(reportsData.contractorExpense.value)}</div>
+                                <div className={style.value}>${formatAUD(contractorExpense.current.value)}</div>
                                 <Chart type="line" data={contractorExpenseChartData} options={contractorExpenseChartData.options} style={{ height: '200px' }} />
                             </Col>
                         </Row>
