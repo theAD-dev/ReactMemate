@@ -15,34 +15,29 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 
 
 export const verticalLinePlugin = {
-    id: 'verticalLine',
-    afterDraw: (chart) => {
-        const tooltip = chart?.tooltip;
-        const ctx = chart?.ctx;
-        const chartArea = chart?.chartArea;
+  id: 'verticalLine',
+  beforeDatasetsDraw: (chart) => {
+    const tooltip = chart?.tooltip;
+    const ctx = chart?.ctx;
+    const chartArea = chart?.chartArea;
 
-        // Only proceed if the tooltip is active and has data
-        if (tooltip && tooltip._active && tooltip._active.length > 0) {
-            const activePoint = tooltip._active[0];
-            const xPos = activePoint.element.x;
+    if (tooltip && tooltip._active && tooltip._active.length > 0) {
+      const activePoint = tooltip._active[0];
+      const xPos = activePoint.element.x;
 
-            // Save the current canvas state to avoid conflicts
-            ctx.save();
+      ctx.save();
 
-            // Set the line style properties
-            ctx.lineWidth = 2; // Single line with width of 2
-            ctx.strokeStyle = '#1AB2FF'; // Blue color
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#1AB2FF';
 
-            // Draw the vertical line at the xPos of the active point
-            ctx.beginPath();
-            ctx.moveTo(xPos, chartArea.top);
-            ctx.lineTo(xPos, chartArea.bottom);
-            ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(xPos, chartArea.top);
+      ctx.lineTo(xPos, chartArea.bottom);
+      ctx.stroke();
 
-            // Restore the canvas state to avoid drawing multiple lines
-            ctx.restore();
-        }
+      ctx.restore();
     }
+  }
 };
 
 ChartJS.register(...registerables, annotationPlugin, verticalLinePlugin);
@@ -87,7 +82,7 @@ const Executive = () => {
         const currentMonth = new Date().getMonth();
         const monthsToShow = isCurrentYear ? currentMonth : 12;
         const filteredMonths = months.slice(0, monthsToShow);
-        
+
         for (const key in datasetObj) {
             total_income.push(parseFloat(datasetObj[key].total_income));
             operating_profit.push(parseFloat(datasetObj[key].operating_profit));
@@ -121,6 +116,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#475467',
                     backgroundColor: getGradientForTotalIncome(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#475467',
+                    pointBorderColor: '#475467',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Operational Profit',
@@ -130,6 +130,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#17B26A',
                     backgroundColor: getGradientForOperationalProfit(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#17B26A',
+                    pointBorderColor: '#17B26A',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Cost of Sale',
@@ -139,6 +144,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#F04438',
                     backgroundColor: getGradientCostOfSale(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#F04438',
+                    pointBorderColor: '#F04438',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Labor',
@@ -148,6 +158,11 @@ const Executive = () => {
                     borderWidth: 2,
                     borderColor: '#F79009',
                     backgroundColor: getGradientLabor(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#F79009',
+                    pointBorderColor: '#F79009',
+                    pointBorderWidth: 0
                 },
                 {
                     label: 'Operating Expense',
@@ -156,7 +171,12 @@ const Executive = () => {
                     fill: true,
                     borderWidth: 2,
                     borderColor: '#1AB2FF',
-                    backgroundColor: getGradientCyan()
+                    backgroundColor: getGradientCyan(),
+                    pointRadius: 4,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#1AB2FF',
+                    pointBorderColor: '#1AB2FF',
+                    pointBorderWidth: 0
                 }
             ]
         };
@@ -227,7 +247,17 @@ const Executive = () => {
                         usePointStyle: true,
                         pointStyle: 'circle',
                         color: textColor,
-                        boxHeight: 4,
+                        boxHeight: 5,
+                        generateLabels: (chart) => {
+                            return chart.data.datasets.map((dataset, i) => ({
+                                text: dataset.label,
+                                fillStyle: dataset.borderColor || dataset.backgroundColor,
+                                strokeStyle: dataset.borderColor,
+                                pointStyle: 'circle',
+                                hidden: !chart.isDatasetVisible(i),
+                                index: i
+                            }));
+                        }
                     }
                 },
                 title: {
@@ -299,7 +329,7 @@ const Executive = () => {
                     ticks: {
                         color: textColorSecondary,
                         // Format the tick values to be more readable
-                        callback: function(value) {
+                        callback: function (value) {
                             if (Math.abs(value) >= 1000) {
                                 return '$' + (value / 1000).toFixed(1) + 'k';
                             }

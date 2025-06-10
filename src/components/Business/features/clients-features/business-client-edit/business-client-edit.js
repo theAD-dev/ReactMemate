@@ -36,7 +36,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
       }))
   } || null);
 
-  if (defaultValues?.addresses?.length === 0) defaultValues.addresses.push({ deleted: false });
+  if (defaultValues?.addresses?.length === 0) defaultValues.addresses.push({ title: "Main Location", country: 1 });
   if (defaultValues?.contact_persons?.length === 0) defaultValues.contact_persons.push({ deleted: false });
 
   const businessFormSubmit = async (data) => {

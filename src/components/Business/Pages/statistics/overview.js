@@ -99,7 +99,7 @@ const Overview = () => {
                 title: { display: false },
                 tooltip: {
                     enabled: false,
-                    external: () => {},
+                    external: () => { },
                     mode: 'index',
                     intersect: false,
                     backgroundColor: '#fff',
@@ -182,13 +182,19 @@ const Overview = () => {
                     grid: {
                         color: surfaceBorder,
                         drawBorder: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
                     },
                 },
                 y: {
-                    ticks: { display: false },
+                    ticks: {
+                        display: false,
+                    },
                     grid: {
                         color: surfaceBorder,
                         drawBorder: false,
+                        drawOnChartArea: false,
+                        drawTicks: false,
                     },
                 },
             },
@@ -625,7 +631,7 @@ const Overview = () => {
                                 <Chart type="line" data={jobsCompletedChartData} options={jobsCompletedChartData.options} style={{ height: '200px' }} />
                             </Col>
 
-                            <Col sm={4} className='border' style={{ height: '340px', padding: '20px' }}>
+                            <Col sm={4} className='border-bottom border-right border-left' style={{ height: '340px', padding: '20px' }}>
                                 <div className={style.graphHeader}>
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Contractor Expense</span>
