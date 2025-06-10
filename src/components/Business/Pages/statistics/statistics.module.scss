@@ -116,7 +116,7 @@
     line-height: 20px;
     padding: 10px 14px;
     margin-top: 16px;
-    border-radius: var(--radius-xs, 4px);
+    border-radius: var(--radius-xs, 40px);
     border: 1px solid var(--Gray-300, #d0d5dd);
     background: var(--Base-White, #fff);
   }
@@ -525,12 +525,16 @@
   border-right: 1px solid #d0d5dd;
   border-top: 1px solid #d0d5dd;
   border-bottom: 1px solid #d0d5dd;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
   input {
     color: #344054;
     width: 245px;
     padding: 10px;
     padding-left: 40px;
     font-weight: 600;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
   }
   input:disabled {
     color: #344054 !important;

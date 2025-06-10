@@ -372,7 +372,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 <Col sm={6}></Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
-                {<Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteContactIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "contact" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "contact" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
+                {index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteContactIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "contact" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "contact" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
                 {index === contactFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendContact({})}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>
@@ -482,7 +482,9 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                             style={{ height: '46px' }}
                             value={field.value}
                             loading={stateIndexId === stateId && citiesQuery?.isFetching}
+                            disabled={citiesQuery?.isFetching}
                             placeholder={"Select a city"}
+                            emptyMessage={!stateIndexId ? "Select a state first" : "No cities found"}
                             filter
                           />
                         );
@@ -515,7 +517,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                 </Col>
               </Row>
               <Col sm={12} className="d-flex justify-content-end gap-3 mb-4">
-                {<Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteAddressIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "address" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "address" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
+                { index !== 0 && <Button type="button" className={clsx(styles.tempDelete)} onClick={() => deleteAddressIndex(index, item.uniqeId)} disabled={!!(deleteIndex?.type === "address" && deleteIndex.index === index)}>Delete {deleteIndex?.type === "address" && deleteIndex.index === index ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : ''}</Button>}
                 {index === addressFields.length - 1 && <Button type="button" className={clsx(styles.tempAdd)} onClick={() => appendAddress({ country: 1 })}>Add New <Plus size={24} color="#106b99" /></Button>}
               </Col>
             </div>

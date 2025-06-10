@@ -150,8 +150,8 @@
   outline: none !important;
 }
 
-.tempDelete, .tempDelete:hover, .tempDelete:focus {
-  color: #b42318;
+.tempDelete, .tempDelete:hover, .tempDelete:focus, .tempDelete:active {
+  color: #b42318 !important;
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -163,12 +163,12 @@
   align-items: center;
   gap: var(--spacing-md, 8px);
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Error-200, #fecdca);
-  background: var(--Error-50, #fef3f2);
+  border: 1px solid var(--Error-200, #fecdca) !important;
+  background: var(--Error-50, #fef3f2) !important;
 }
 
-.tempAdd, .tempAdd:hover, .tempAdd:focus {
-  color: var(--Primary-700, #106b99);
+.tempAdd, .tempAdd:hover, .tempAdd:focus, .tempAdd:active {
+  color: var(--Primary-700, #106b99) !important;
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -180,6 +180,6 @@
   align-items: center;
   gap: var(--spacing-md, 8px);
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid var(--Primary-200, #a3e0ff);
-  background: var(--Primary-50, #ebf8ff);
+  border: 1px solid var(--Primary-200, #a3e0ff) !important;
+  background: var(--Primary-50, #ebf8ff) !important;
 }

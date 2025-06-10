@@ -400,7 +400,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
                     onChange={handleSelectAllCheckboxChange}
                   />
                   <span className="checkmark">
-                    <Check color="#1AB2FF" size={20} />
+                    <Check color="#1ab2ff" size={20} />
                   </span>
                 </label>
               </th>

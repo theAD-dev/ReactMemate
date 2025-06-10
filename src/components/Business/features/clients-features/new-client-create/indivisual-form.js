@@ -286,7 +286,9 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     style={{ height: '46px' }}
                                     value={field.value}
                                     loading={citiesQuery?.isFetching}
+                                    disabled={citiesQuery?.isFetching}
                                     placeholder={"Select a city"}
+                                    emptyMessage={!stateId ? "Select a state first" : "No cities found"}
                                     filter
                                 />
                             )}
