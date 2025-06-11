@@ -1,17 +1,21 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Download, Filter } from 'react-bootstrap-icons';
+import { Download, Filter, Eye, EyeSlash } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
+import { TieredMenu } from 'primereact/tieredmenu';
 import { SupplierTable } from './supplier-table';
 import style from './suppliers.module.scss';
 import SupplierCreate from '../../features/supliers-features/supplier-create';
 
 const SupplierPage = () => {
     const dt = useRef(null);
+    const menu = useRef(null);
     const [refetch, setRefetch] = useState(false);
     const [totalSuppliers, setTotalSuppliers] = useState(0);
     const [visible, setVisible] = useState(false);
+    const [isShowDeleted, setIsShowDeleted] = useState(false);
     const [selectedSuppliers, setSelectedSuppliers] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
@@ -42,7 +46,15 @@ const SupplierPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
+                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20} /></button>
+                                        <TieredMenu model={[{
+                                            label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
+                                                {
+                                                    isShowDeleted ? (<>Hide Deleted Clients <EyeSlash /></>)
+                                                        : (<>Show Deleted Clients <Eye /></>)
+                                                }
+                                            </div>,
+                                        }]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -67,7 +79,7 @@ const SupplierPage = () => {
                     <div className={`${style.totalCount}`}>{totalSuppliers} Suppliers</div>
                 </div>
             </div>
-            <SupplierTable ref={dt} searchValue={debouncedValue} setTotalSuppliers={setTotalSuppliers} selectedSuppliers={selectedSuppliers} setSelectedSuppliers={setSelectedSuppliers} refetch={refetch} />
+            <SupplierTable ref={dt} searchValue={debouncedValue} setTotalSuppliers={setTotalSuppliers} selectedSuppliers={selectedSuppliers} setSelectedSuppliers={setSelectedSuppliers} isShowDeleted={isShowDeleted} refetch={refetch} />
             <SupplierCreate visible={visible} setVisible={setVisible} refetch={setRefetch} />
         </div>
     );

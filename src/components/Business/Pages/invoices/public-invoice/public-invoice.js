@@ -56,12 +56,12 @@ const PublicInvoice = () => {
             city: '',
             postal_code: '',
             address: '',
-            country: '',
+            country: 1,
             state: ''
         }
     });
 
-    const [countryId, setCountryId] = useState('');
+    const [countryId, setCountryId] = useState(1);
     const [stateId, setStateId] = useState('');
     const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
     const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
@@ -620,7 +620,9 @@ const PublicInvoice = () => {
                                                     style={{ height: '46px' }}
                                                     value={field.value}
                                                     loading={citiesQuery?.isFetching}
+                                                    disabled={citiesQuery?.isFetching}
                                                     placeholder={"Select a city"}
+                                                    emptyMessage={!stateId ? "Select a state first" : "No cities found"}
                                                     filter
                                                 />
                                             )}

@@ -17,7 +17,7 @@ import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-t
 
 
 
-export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers, refetch }, ref) => {
+export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers, isShowDeleted, refetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
     const { trialHeight } = useTrialHeight();
@@ -32,7 +32,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch]);
+    }, [searchValue, refetch, isShowDeleted]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -42,7 +42,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            const data = await getListOfSuppliers(page, limit, searchValue, order);
+            const data = await getListOfSuppliers(page, limit, searchValue, order, isShowDeleted);
             setTotalSuppliers(() => (data?.count || 0));
             if (page === 1) setSuppliers(data.results);
             else {
@@ -60,7 +60,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch]);
+    }, [page, searchValue, tempSort, refetch, isShowDeleted]);
 
     useEffect(() => {
         if (suppliers.length > 0 && hasMoreData) {
@@ -86,7 +86,11 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     const nameBodyTemplate = (rowData) => {
         return <div className='d-flex align-items-center gap-1 show-on-hover'>
             <ImageAvatar has_photo={rowData.has_photo} photo={rowData.photo} is_business={true} />
-            <div className={`${style.ellipsis}`}>{rowData.name}</div>
+            <div className='d-flex flex-column gap-1'>
+                <div className={`${style.ellipsis}`}>{rowData.name}</div>
+                {rowData.deleted ?
+                    <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
+            </div>
             <Button label="Open" onClick={() => navigate(`/suppliers/${rowData.id}/history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>;
     };
@@ -198,6 +202,8 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
         setPage(1);  // Reset to page 1 whenever searchValue changes
     };
 
+    const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
+
     return (
         <DataTable ref={ref} value={suppliers} scrollable selectionMode={'checkbox'}
             columnResizeMode="expand" resizableColumns
@@ -207,10 +213,11 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
             onSelectionChange={(e) => setSelectedSuppliers(e.value)}
             loading={loading}
             loadingIcon={Loader}
-            emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
+            emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted} />}
             sortField={sort?.sortField}
             sortOrder={sort?.sortOrder}
             onSort={onSort}
+            rowClassName={rowClassName}
         >
             <Column selectionMode="multiple" headerClassName='border-end-0 ps-4' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
             <Column field="number" header="Supplier ID" body={supplierIdBodyTemplate} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
