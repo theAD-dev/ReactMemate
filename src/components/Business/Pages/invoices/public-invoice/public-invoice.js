@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Col, Row as BootstrapRow, Button, Card } from 'react-bootstrap';
-import { CardList, Check2Circle, CheckCircleFill, FilePdf, Person } from 'react-bootstrap-icons';
+import { CardList, Check2Circle, CheckCircleFill, EyeSlash, FilePdf, Person } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,6 +11,7 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { Dropdown } from 'primereact/dropdown';
+import { Editor } from 'primereact/editor';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
@@ -21,6 +22,7 @@ import * as yup from 'yup';
 import style from './public-invoice.module.scss';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import { getInvoice, paymentIntentCreate } from '../../../../../APIs/invoice-api';
+import { getInvoiceTerms } from '../../../../../APIs/terms-and-condition';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
@@ -39,6 +41,7 @@ const PublicInvoice = () => {
     const { id } = useParams();
     const paymentRef = useRef();
     const [isPaymentProcess, setIsPaymentProcess] = useState(false);
+    const [termAndConditionShow, setTermAndConditionShow] = useState(false);
 
     const [invoice, setInvoice] = useState();
     const [isLoading, setIsLoading] = useState(false);
@@ -67,6 +70,8 @@ const PublicInvoice = () => {
     const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
     const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
+    const termAndConditionQuery = useQuery({ queryKey: ['getTerms&Condition', id], queryFn: () => getInvoiceTerms(), enabled: termAndConditionShow, retry: 1 });
+    
     const fetchData = async () => {
         try {
             setIsLoading(true);
@@ -441,8 +446,29 @@ const PublicInvoice = () => {
                             </Col>
                         </BootstrapRow>
                     </div>
-                    <div className={style.logoWrapperFooter}>
-                        <p><span>Powered by</span><img src="/logo.svg" alt='Logo' /></p>
+                    <div className={clsx(style.logoWrapperFooter, 'd-flex flex-column align-items-center')}>
+                        <p className='mb-1'><span>Powered by</span><img src="/logo.svg" alt='Logo' /></p>
+                        <Button className='bg-transparent border-0 p-0 font-14 mb-4' onClick={() => setTermAndConditionShow(true)} style={{ color: '#158ECC' }}>Term and Conditions</Button>
+                        {
+                            termAndConditionShow && (
+                                <>
+                                    <Button className='outline-button mb-2' onClick={() => setTermAndConditionShow(false)}>Hide <EyeSlash size={20} color='#344054' /></Button>
+                                    <div className={clsx(style.termsCondition, 'p-4 mx-auto')} style={{ width: '825px' }}>
+                                      {
+                                        termAndConditionQuery.isFetching ? (
+                                            <Skeleton width="100%" height="200px" />
+                                        ) : (
+                                            <Editor readOnly showHeader={false} modules={{}}
+                                                style={{ border: "none", fontSize: "16px", background: 'transparent', color: '#475467' }}
+                                                value={termAndConditionQuery.data?.terms_invoice}
+                                            />
+                                        )
+                                      }
+                                    </div>
+                                </>
+                            )
+                        }
+
                     </div>
                 </div>
 

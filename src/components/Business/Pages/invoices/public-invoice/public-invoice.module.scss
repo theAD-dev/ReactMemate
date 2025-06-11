@@ -651,7 +651,7 @@
 .stepper {
   display: flex;
   margin: auto;
-  gap: calc(70px + 83px) ;
+  gap: calc(70px + 83px);
   position: relative;
   padding-right: 60px;
 }
@@ -663,7 +663,7 @@
   top: 20px;
   left: 50px;
   z-index: 0;
-  background-color: #EAECF0;
+  background-color: #eaecf0;
   position: absolute;
 }
 
@@ -702,4 +702,16 @@
   color: unset !important;
   cursor: default !important;
   padding: 4px !important;
+}
+
+.termsCondition {
+  display: flex;
+  padding: 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-200, #eaecf0);
 }
