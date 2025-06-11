@@ -7,9 +7,12 @@ import { PhoneInput } from 'react-international-phone';
 import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Dropdown } from 'primereact/dropdown';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 import styles from "./general.module.scss";
+import { getCities, getCountries, getStates } from '../../../../APIs/ClientsApi';
 import { SettingsGeneralInformation, updateGeneralInformation } from '../../../../APIs/SettingsGeneral';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
@@ -19,7 +22,7 @@ import FileUploader from '../../../../ui/file-uploader/file-uploader';
 
 const schema = yup.object().shape({
   legal_name: yup.string().required('Company Legal Name is required'),
-  trading_name: yup.string(),
+  trading_name: yup.string().required('Trading Name is required'),
   abn: yup.string()
     .nullable()
     .transform((value) => (value === "" ? null : value))
@@ -27,11 +30,12 @@ const schema = yup.object().shape({
     .notRequired(),
   main_email: yup.string().email('Invalid email').required('Main Company Email is required'),
   main_phone: yup.string(),
+  country: yup.string().required('Country is required'),
+  state: yup.string().required('State is required'),
+  city: yup.string().required('City is required'),
   address: yup.string(),
-  state: yup.string(),
   postcode: yup.string(),
   company_logo: yup.mixed().nullable(),
-
 });
 
 function GeneralInformation() {
@@ -39,9 +43,21 @@ function GeneralInformation() {
   const [isEditingGroup, setIsEditingGroup] = useState(false);
   const editingHeight = isEditingGroup ? 100 : 0;
   const [photo, setPhoto] = useState({});
+
+  const [countryId, setCountryId] = useState(1);
+  const [stateId, setStateId] = useState('');
+  const [cityId, setCityId] = useState('');
+  const countriesQuery = useQuery({ queryKey: ['countries'], queryFn: getCountries, enabled: true });
+  const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
+  const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
+
   const { register, handleSubmit, control, formState: { errors }, reset, setValue } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      country: 1,
+    }
   });
+  console.log('errors: ', errors);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['generalInfo'],
@@ -71,7 +87,15 @@ function GeneralInformation() {
     if (data?.main_phone) setValue('main_phone', data.main_phone);
   }, [data]);
 
-  if (isLoading || error) return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
+  useEffect(() => {
+    if (data) {
+      setCountryId(data.country);
+      setStateId(data.state);
+      setCityId(data.city);
+    }
+  }, [data]);
+
+  if (isLoading) return <div style={{ position: 'fixed', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
     <Spinner animation="border" role="status">
       <span className="visually-hidden">Loading...</span>
     </Spinner>
@@ -87,7 +111,7 @@ function GeneralInformation() {
         <title>MeMate - General Information</title>
       </Helmet>
       <div className='headSticky'>
-        <h1>Company Information </h1>
+        <h1>Company Information</h1>
         <div className='contentMenuTab'>
           <ul>
             <li className='menuActive'><Link to="/settings/generalinformation">General Information</Link></li>
@@ -117,9 +141,13 @@ function GeneralInformation() {
             <ul>
               <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
                 <div className={styles.editinfo}>
-                  <span>Company Legal Name</span>
+                  <span>Company Legal Name
+                    {isEditingGroup && (
+                      <span className="required">*</span>
+                    )}
+                  </span>
                   {!isEditingGroup ? (
-                    <strong>{data?.legal_name} </strong>
+                    <strong>{data?.legal_name}</strong>
                   ) : (
                     <div>
                       <div className={`inputInfo ${errors?.legal_name ? 'error-border' : ''}`}>
@@ -145,7 +173,11 @@ function GeneralInformation() {
               </li>
               <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
                 <div className={styles.editinfo}>
-                  <span>Company Trading name</span>
+                  <span>Company Trading name
+                    {isEditingGroup && (
+                      <span className="required">*</span>
+                    )}
+                  </span>
                   {!isEditingGroup ? (
                     <strong>{data.trading_name} </strong>
                   ) : (
@@ -211,7 +243,11 @@ function GeneralInformation() {
               </li>
               <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
                 <div className={styles.editinfo}>
-                  <span>Main Company Email</span>
+                  <span>Main Company Email
+                    {isEditingGroup && (
+                      <span className="required">*</span>
+                    )}
+                  </span>
                   {!isEditingGroup ? (
                     <strong>{data.main_email} <Link45deg color="#158ECC" size={20} /></strong>
                   ) : (
@@ -271,6 +307,117 @@ function GeneralInformation() {
                   </div>
                 )}
               </li>
+
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>Country
+                    {isEditingGroup && (
+                      <span className="required">*</span>
+                    )}
+                  </span>
+                  {!isEditingGroup ? (
+                    <strong>{data.country_name}</strong>
+                  ) : (
+                    <div>
+                      <div className='inputInfo' style={{ width: '320px' }}>
+                        <Dropdown
+                          value={countryId}
+                          defaultValue={data.country}
+                          options={(countriesQuery && countriesQuery.data?.map((country) => ({
+                            value: country.id,
+                            label: country.name
+                          }))) || []}
+                          placeholder="Select a country"
+                          className={clsx('w-100 rounded', { 'error-border': errors.country })}
+                          onChange={(e) => {
+                            setValue("country", e.value);
+                            setCountryId(e.value);
+                          }}
+                          loading={countriesQuery?.isFetching}
+                          disabled={countriesQuery?.isFetching}
+                          filter
+                        />
+                      </div>
+                      {errors.country && <p className="error-message">{errors.country.message}</p>}
+                    </div>
+                  )}
+                </div>
+              </li>
+
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>State
+                    {isEditingGroup && (
+                      <span className="required">*</span>
+                    )}
+                  </span>
+                  {!isEditingGroup ? (
+                    <strong>{data.state_name}</strong>
+                  ) : (
+                    <div>
+                      <div className='inputInfo' style={{ width: '320px' }}>
+                        <Dropdown
+                          value={stateId}
+                          defaultValue={data.state}
+                          options={(statesQuery && statesQuery.data?.map((state) => ({
+                            value: state.id,
+                            label: state.name
+                          }))) || []}
+                          placeholder="Select a state"
+                          className={clsx('w-100 rounded', { 'error-border': errors.state })}
+                          onChange={(e) => {
+                            setValue("state", e.value);
+                            setStateId(e.value);
+                          }}
+                          loading={statesQuery?.isFetching}
+                          disabled={statesQuery?.isFetching}
+                          emptyMessage={!countryId ? "Select a country first" : "No states found"}
+                          filter
+                        />
+                      </div>
+                      {errors.state && <p className="error-message">{errors.state.message}</p>}
+                    </div>
+                  )}
+                </div>
+              </li>
+
+              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
+                <div className={styles.editinfo}>
+                  <span>City
+                    {isEditingGroup && (
+                      <span className="required">*</span>
+                    )}
+                  </span>
+                  {!isEditingGroup ? (
+                    <strong>{data.city_name}</strong>
+                  ) : (
+                    <div>
+                      <div className='inputInfo' style={{ width: '320px' }}>
+                        <Dropdown
+                          value={cityId}
+                          defaultValue={data.city}
+                          options={(citiesQuery && citiesQuery.data?.map((city) => ({
+                            value: city.id,
+                            label: city.name
+                          }))) || []}
+                          placeholder="Select a city"
+                          className={clsx('w-100 rounded', { 'error-border': errors.city })}
+                          onChange={(e) => {
+                            setValue("city", e.value);
+                            setCityId(e.value);
+                          }}
+                          loading={citiesQuery?.isFetching}
+                          disabled={citiesQuery?.isFetching}
+                          emptyMessage={!stateId ? "Select a state first" : "No cities found"}
+                          filter
+                        />
+                      </div>
+                      {errors.city && <p className="error-message">{errors.city.message}</p>}
+                    </div>
+                  )}
+                </div>
+              </li>
+
               <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
                 <div className={styles.editinfo}>
                   <span>Street Address</span>
@@ -299,34 +446,7 @@ function GeneralInformation() {
                   </div>
                 )}
               </li>
-              <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
-                <div className={styles.editinfo}>
-                  <span>State</span>
-                  {!isEditingGroup ? (
-                    <strong>{data.state}</strong>
-                  ) : (
-                    <div>
-                      <div className={`inputInfo ${errors.state ? 'error-border' : ''}`}>
-                        <input
-                          {...register("state")}
-                          placeholder='Enter state'
-                          defaultValue={data.state}
-                        />
-                        {errors.state && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
-                      </div>
-                      {errors.state && <p className="error-message">{errors.state.message}</p>}
-                    </div>
-                  )}
-                </div>
-                {!isEditingGroup ? (
-                  <>
-                  </>
-                ) : (
-                  <div className={styles.editpara}>
-                    <p></p>
-                  </div>
-                )}
-              </li>
+
               <li className={`${isEditingGroup ? `${styles.editBorderWrap}` : `${styles.viewBorderWrap}`}`}>
                 <div className={styles.editinfo}>
                   <span>Postcode</span>
@@ -339,6 +459,7 @@ function GeneralInformation() {
                           {...register("postcode")}
                           placeholder='Enter postcode'
                           defaultValue={data.postcode}
+                          type="number"
                         />
                         {errors.postcode && <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />}
                       </div>
