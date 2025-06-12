@@ -28,6 +28,17 @@ export const PERMISSIONS = Object.freeze({
         DELETE: 'DELETE_INVOICE',
     },
     SETTINGS: {
+        SUBSCRIPTION: {
+            BUY_BUSINESS_SUBSCRIPTION: 'BUY_BUSINESS_SUBSCRIPTION',
+            CANCEL_BUSINESS_SUBSCRIPTION: 'CANCEL_BUSINESS_SUBSCRIPTION',
+            BUY_COMPANY_USER_SUBSCRIPTION: 'BUY_COMPANY_USER_SUBSCRIPTION',
+            BUY_WORK_SUBSCRIPTION: 'BUY_WORK_SUBSCRIPTION',
+            CANCEL_WORK_SUBSCRIPTION: 'CANCEL_WORK_SUBSCRIPTION',
+            ACTIVE_WORK_SUBSCRIPTION: 'ACTIVE_WORK_SUBSCRIPTION',
+            BUY_WORK_USER_SUBSCRIPTION: 'BUY_WORK_USER_SUBSCRIPTION',
+            BUY_LOCATION_SUBSCRIPTION: 'BUY_LOCATION_SUBSCRIPTION',
+            REMOVE_LOCATION_SUBSCRIPTION: 'REMOVE_LOCATION_SUBSCRIPTION',
+        },
         USERS: {
             MOBILE_APP: {
                 ADD: 'ADD_USER',
@@ -36,7 +47,6 @@ export const PERMISSIONS = Object.freeze({
                 DISCONNECT_USER: 'DISCONNECT_USER',
                 RECONNECT_USER: 'RECONNECT_USER',
                 SHOW_DISCONNECTED_USERS: 'SHOW_DISCONNECTED_USERS',
-                BUY_USER: 'BUY_USER',
             },
             DESKTOP: {
                 ADD: 'ADD_USER',
@@ -45,8 +55,13 @@ export const PERMISSIONS = Object.freeze({
                 UPDATE: 'UPDATE_USER',
                 RESTORE: 'RESTORE_USER',
                 SHOW_DELETED_USERS: 'SHOW_DELETED_USERS',
-                BUY_USER: 'BUY_USER',
             },
-        }
+        },
+        LOCATION: {
+            ADD: 'ADD_LOCATION',
+            READ: 'READ_LOCATION',
+            UPDATE: 'UPDATE_LOCATION',
+            DELETE: 'DELETE_LOCATION'
+        },
     }
 });
