@@ -51,7 +51,7 @@ const SupplierPage = () => {
                                             label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
                                                 {
                                                     isShowDeleted ? (<>Hide Deleted Clients <EyeSlash /></>)
-                                                        : (<>Show Deleted Clients <Eye /></>)
+                                                        : (<>Show Deleted Suppliers <Eye /></>)
                                                 }
                                             </div>,
                                         }]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />

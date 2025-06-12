@@ -161,17 +161,29 @@ const MobileApp = React.memo(() => {
                                                 <h2>Mobile App Users</h2>
                                                 <p className='d-flex align-items-center gap-2'>
                                                     {mobileUsersQuery?.data?.limits?.number || 0} / {mobileUsersQuery?.data?.limits?.total || 0}
-                                                    <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
+                                                    {
+                                                        hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.BUY_WORK_USER_SUBSCRIPTION) && (
+                                                            <Link to={"/settings/generalinformation/subscription"} className='p-0 border-0' style={{ background: 'transparent' }}><span className='cursor-pointer'>Buy More</span></Link>
+                                                        )
+                                                    }
                                                 </p>
                                             </div>
-                                            <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={style.showDeleteBut}>{!isShowDeleted ? "Show" : "Hide"} Disconnected</Button>
+                                            {
+                                                hasPermission(role, PERMISSIONS.SETTINGS.USERS.MOBILE_APP.RECONNECT_USER) && (
+                                                    <Button onClick={() => setIsShowDeleted(!isShowDeleted)} className={style.showDeleteBut}>{!isShowDeleted ? "Show" : "Hide"} Disconnected</Button>
+                                                )
+                                            }
                                         </div>
                                         <DataTable value={mobileUsers} showGridlines tableStyle={{ minWidth: '50rem' }}>
                                             <Column field="name" style={{ width: 'auto' }} body={nameBody} header="Name"></Column>
                                             <Column field="email" style={{ width: '447px' }} header="Email"></Column>
                                             <Column field="phone" style={{ width: '210px' }} header="Phone"></Column>
                                             <Column field="status" body={StatusBody} style={{ width: '85px' }} header="Status"></Column>
-                                            <Column field="privilege" body={ActionBody} style={{ width: '64px' }} header="Action"></Column>
+                                            {
+                                                hasPermission(role, PERMISSIONS.SETTINGS.USERS.MOBILE_APP.DISCONNECT_USER) && (
+                                                    <Column field="privilege" body={ActionBody} style={{ width: '64px' }} header="Action"></Column>
+                                                )
+                                            }
                                         </DataTable>
                                     </> : <div className='d-flex flex-column justify-content-center align-items-center'>
                                         <img src={ExpertsCuate} alt='expired-subscription' style={{ width: '300px' }} />

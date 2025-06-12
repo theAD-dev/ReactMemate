@@ -9,11 +9,15 @@ import AddRemoveMobileUser from "./features/add-remove-mobile-user";
 import styles from "./subscription.module.scss";
 import { activeWorkSubscription, cancelSubscription, cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
+import { useAuth } from "../../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 import ThemeImages from '../../../../assets/imgconstant';
+import { PERMISSIONS } from "../../../../shared/lib/access-control/permission";
+import { hasPermission } from "../../../../shared/lib/access-control/role-permission";
 import { formatAUD } from "../../../../shared/lib/format-aud";
 
 const Subscription = () => {
+  const { role } = useAuth();
   const { trialHeight } = useTrialHeight();
   const [visible, setVisible] = useState(false);
   const [mobileUserVisible, setMobileUserVisible] = useState(false);
@@ -145,7 +149,13 @@ const Subscription = () => {
                             <span>{subscriptionQuery?.data?.business?.total_users || 0}/{subscriptionQuery?.data?.business?.max_users || 0}</span>
                           </div>
                           <div className="progressButton">
-                            <button className="paynow" onClick={() => setVisible(true)}>Add or Remove Users</button>
+                            {
+                              hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.BUY_COMPANY_USER_SUBSCRIPTION) && (
+                                <button className="paynow" onClick={() => setVisible(true)}>
+                                  Add or Remove Users
+                                </button>
+                              )
+                            }
                           </div>
                         </div>
                       </div>
@@ -178,16 +188,20 @@ const Subscription = () => {
                           <div className="progressButton">
                             {
                               hasWorkSubscription ?
-                                <button className="close d-flex gap-1 align-items-center" disabled={cancelWorkMutation.isPending} onClick={() => cancelWorkMutation.mutate()}>
-                                  Cancel Subscription
-                                  {cancelWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
-                                </button>
-                                : <button className="paynow d-flex gap-1 align-items-center" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
-                                  Active Work Subscription
-                                  {
-                                    activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>
-                                  }
-                                </button>
+                                hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.CANCEL_WORK_SUBSCRIPTION) && (
+                                  <button className="close d-flex gap-1 align-items-center" disabled={cancelWorkMutation.isPending} onClick={() => cancelWorkMutation.mutate()}>
+                                    Cancel Subscription
+                                    {cancelWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
+                                  </button>
+                                ) :
+                                hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.ACTIVE_WORK_SUBSCRIPTION) && (
+                                  <button className="paynow d-flex gap-1 align-items-center" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
+                                    Active Work Subscription
+                                    {
+                                      activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>
+                                    }
+                                  </button>
+                                )
                             }
                           </div>
                         </div>
@@ -219,9 +233,13 @@ const Subscription = () => {
                             <span>{subscriptionQuery?.data?.work?.total_workers || 0}/{subscriptionQuery?.data?.work?.max_workers || 0}</span>
                           </div>
                           <div className="progressButton">
-                            <button disabled={!hasWorkSubscription} className="paynow" onClick={() => setMobileUserVisible(true)}>
-                              Add or Remove Users
-                            </button>
+                            {
+                              hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.BUY_WORK_USER_SUBSCRIPTION) && (
+                                <button disabled={!hasWorkSubscription} className="paynow" onClick={() => setMobileUserVisible(true)}>
+                                  Add or Remove Users
+                                </button>
+                              )
+                            }
                           </div>
                         </div>
                       </div>
@@ -253,18 +271,33 @@ const Subscription = () => {
                           </div>
 
                           <div className="progressButton">
-                            <button className="paynow" disabled>Purchase Locations</button>
-                            <button className="close" disabled>Remove Locations</button>
+                            {
+                              hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.BUY_LOCATION_SUBSCRIPTION) && (
+                                <button className="paynow" disabled>
+                                  Purchase Locations
+                                </button>
+                              )
+                            }
+                            {
+                              hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.REMOVE_LOCATION_SUBSCRIPTION) && (
+                                <button className="close" disabled>
+                                  Remove Locations
+                                </button>
+                              )
+                            }
                           </div>
                         </div>
                       </div>
                     </div>
                   </li>
-
-                  <button className="closeSubscription" disabled={cancelSubscriptionMutation.isPending} onClick={() => cancelSubscriptionMutation.mutate()}>
-                    Cancel Subscription
-                    {cancelSubscriptionMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
-                  </button>
+                  {
+                    hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.CANCEL_BUSINESS_SUBSCRIPTION) && (
+                      <button className="closeSubscription" disabled={cancelSubscriptionMutation.isPending} onClick={() => cancelSubscriptionMutation.mutate()}>
+                        Cancel Subscription
+                        {cancelSubscriptionMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
+                      </button>
+                    )
+                  }
                 </ul>
               </div>
               <div className="rightText">

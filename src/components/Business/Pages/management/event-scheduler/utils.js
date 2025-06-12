@@ -29,6 +29,15 @@ function loadData(responses) {
     else if (data.jobs_done === 0) jobsStatus = "not-done";
     else if (data.jobs_done) jobsStatus = "pending";
 
+    let isJobOverdue = new Date(parseInt(data.booking_end) * 1000) < new Date();
+    let overdueIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="24" height="24" rx="12" fill="#FEE4E2" />
+            <path d="M12.515 5.01896C12.344 5.00635 12.1722 5 12 5V4C12.1968 4 12.3931 4.00726 12.5885 4.02167L12.515 5.01896ZM14.5193 5.46905C14.1985 5.34533 13.8691 5.2454 13.5337 5.17008L13.7528 4.19438C14.1361 4.28046 14.5126 4.39467 14.8792 4.53605L14.5193 5.46905ZM15.889 6.17971C15.7458 6.08402 15.5994 5.99388 15.4503 5.90939L15.9432 5.0393C16.1136 5.13586 16.2809 5.23888 16.4446 5.34824C16.6082 5.4576 16.7674 5.5727 16.9219 5.69322L16.3066 6.48158C16.1715 6.37612 16.0322 6.27541 15.889 6.17971ZM17.7231 7.96934C17.5252 7.68829 17.3068 7.42218 17.0697 7.17321L17.794 6.48368C18.0649 6.76821 18.3145 7.07233 18.5407 7.39353L17.7231 7.96934ZM18.4672 9.32122C18.4012 9.16208 18.3296 9.00583 18.2526 8.85271L19.1458 8.40311C19.2339 8.5781 19.3157 8.75667 19.391 8.93853C19.4664 9.12039 19.5348 9.30453 19.5962 9.49054L18.6467 9.80423C18.5929 9.64147 18.5331 9.48035 18.4672 9.32122ZM18.9979 11.8282C18.9895 11.4846 18.9557 11.142 18.8969 10.8033L19.8822 10.6323C19.9494 11.0194 19.988 11.4109 19.9976 11.8037L18.9979 11.8282ZM18.8655 13.3656C18.8991 13.1967 18.9264 13.027 18.9474 12.8569L19.9398 12.9793C19.9159 13.1737 19.8847 13.3677 19.8463 13.5607C19.8079 13.7538 19.7625 13.9449 19.7102 14.1337L18.7464 13.867C18.7922 13.7018 18.8319 13.5346 18.8655 13.3656ZM17.914 15.745C18.0979 15.4546 18.2602 15.151 18.3995 14.8367L19.3137 15.2419C19.1545 15.6011 18.969 15.9481 18.7588 16.28L17.914 15.745ZM16.9497 16.9497C17.0715 16.828 17.1885 16.702 17.3005 16.5722L18.0577 17.2254C17.9297 17.3737 17.796 17.5177 17.6569 17.6569L16.9497 16.9497Z" fill="#F04438" />
+            <path d="M12 5C10.8488 5 9.71545 5.2839 8.70022 5.82655C7.68499 6.3692 6.81926 7.15386 6.17971 8.11101C5.54017 9.06816 5.14654 10.1683 5.03371 11.3139C4.92088 12.4595 5.09232 13.6153 5.53285 14.6788C5.97337 15.7423 6.66939 16.6808 7.55925 17.4111C8.44911 18.1414 9.50533 18.6409 10.6344 18.8655C11.7634 19.0901 12.9304 19.0327 14.032 18.6986C15.1336 18.3644 16.1358 17.7637 16.9497 16.9497L17.6569 17.6569C16.7266 18.5871 15.5812 19.2736 14.3223 19.6555C13.0633 20.0374 11.7296 20.1029 10.4393 19.8463C9.14895 19.5896 7.94183 19.0187 6.92486 18.1841C5.90788 17.3495 5.11243 16.2769 4.60897 15.0615C4.1055 13.846 3.90957 12.5251 4.03852 11.2159C4.16748 9.90659 4.61733 8.64933 5.34825 7.55544C6.07916 6.46155 7.06857 5.5648 8.22883 4.94463C9.38909 4.32446 10.6844 4 12 4V5Z" fill="#F04438" />
+            <path d="M11.5 7C11.7761 7 12 7.22386 12 7.5V12.7098L15.2481 14.5659C15.4878 14.7029 15.5711 15.0083 15.4341 15.2481C15.2971 15.4878 14.9917 15.5711 14.7519 15.4341L11.2519 13.4341C11.0961 13.3451 11 13.1794 11 13V7.5C11 7.22386 11.2239 7 11.5 7Z" fill="#F04438" />
+          </svg>`;
+
+
     // add job-event
     events.push({
       start: parseTimestamp(1000 * +data.booking_start),
@@ -83,7 +92,7 @@ function loadData(responses) {
       id: data.unique_id,
       expanded: expandRow === data.unique_id,
       name: `<div class="resourceList rowResourceEvent" style="--main-color: ${color};">
-        <ul class="resourceMan">
+        <ul class="resourceMan me-2">
           <li title="${data.number}">
             <div style="width: 70px; overflow: hidden; text-overflow: ellipsis; display: inline-block; position: relative; top: 2px; white-space: nowrap;" class="">${data.number}</div>
           </li>
@@ -123,11 +132,13 @@ function loadData(responses) {
             </svg>
           </li>
           <li>
-            <span class='${jobsStatus}'>${data.jobs_done}/${data.jobs_count
-        }</span>
+            <span class='${jobsStatus}'>${data.jobs_done}/${data.jobs_count}</span>
+          </li>
+          <li>
+            ${isJobOverdue ? overdueIcon : ''}
           </li>
 
-          <li class="text-end" style="width: 100px;">
+          <li class="text-end float-end me-3" style="width: 100px; flex: 1">
           ${status}
           </li>
         </ul>
@@ -142,15 +153,15 @@ function loadData(responses) {
         if (task.title === 'create-task') {
           return {
             id: task.id,
-            name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${color}; height: ${data.tasks?.length ? '85px' : '65px'}">
+            name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${color}; height: ${data.tasks?.length ? '45px' : '65px'}">
               <button class="create-task-button" project-id="${data.id}" number="${data?.number}" reference="${data?.reference}" style="margin-bottom: ${data.tasks?.length ? '16px' : '6px'}">Create Task
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#106B99"/>
               </svg>
               </button> 
             </div>`,
-            minHeight: 75,
-            marginBottom: 10,
+            minHeight: 40,
+            marginBottom: 0,
           };
         }
 
