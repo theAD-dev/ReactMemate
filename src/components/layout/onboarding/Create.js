@@ -165,13 +165,12 @@ const Create = () => {
               </div>
             </div>
             <div className="videoPlayerWrapSection w-50" style={{ padding: '0px 40px' }}>
-              <div className='videoPlayerWrap' style={{ zIndex: 10 }}>
-                <h1 className='videoIntroHeading'>More Business - Less Busyness</h1>
-                <div style={{ borderRadius: '24px', zIndex: 100, overflow: 'hidden', border: "7px solid #F6F8FB", background: '#FFF', boxShadow: '0px 3.042px 21.982px 1.521px rgba(26, 178, 255, 0.25), 0px 24.34px 48.68px -9.127px rgba(16, 24, 40, 0.14)', position: 'relative' }}>
+              <div className='videoPlayerWrap d-flex flex-column align-items-center' style={{ zIndex: 10 }}>
+                <h2 className='videoIntroHeading'>More Business - Less Busyness</h2>
+                <div style={{ borderRadius: '24px', zIndex: 100, overflow: 'hidden', border: "7px solid #F6F8FB", background: '#FFF', boxShadow: '0px 3.042px 21.982px 1.521px rgba(26, 178, 255, 0.25), 0px 24.34px 48.68px -9.127px rgba(16, 24, 40, 0.14)', position: 'relative', maxWidth: '1008px' }}>
                   <CustomVideoPlayer />
                 </div>
               </div>
-
             </div>
           </div>
         </form>
