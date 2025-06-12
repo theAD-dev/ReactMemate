@@ -22,7 +22,6 @@ import * as yup from 'yup';
 import style from './public-invoice.module.scss';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import { getInvoice, paymentIntentCreate } from '../../../../../APIs/invoice-api';
-import { getInvoiceTerms } from '../../../../../APIs/terms-and-condition';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
@@ -70,8 +69,6 @@ const PublicInvoice = () => {
     const statesQuery = useQuery({ queryKey: ['states', countryId], queryFn: () => getStates(countryId), enabled: !!countryId, retry: 1 });
     const citiesQuery = useQuery({ queryKey: ['cities', stateId], queryFn: () => getCities(stateId), enabled: !!stateId });
 
-    const termAndConditionQuery = useQuery({ queryKey: ['getTerms&Condition', id], queryFn: () => getInvoiceTerms(), enabled: termAndConditionShow, retry: 1 });
-    
     const fetchData = async () => {
         try {
             setIsLoading(true);
@@ -454,16 +451,10 @@ const PublicInvoice = () => {
                                 <>
                                     <Button className='outline-button mb-2' onClick={() => setTermAndConditionShow(false)}>Hide <EyeSlash size={20} color='#344054' /></Button>
                                     <div className={clsx(style.termsCondition, 'p-4 mx-auto')} style={{ width: '825px' }}>
-                                      {
-                                        termAndConditionQuery.isFetching ? (
-                                            <Skeleton width="100%" height="200px" />
-                                        ) : (
-                                            <Editor readOnly showHeader={false} modules={{}}
-                                                style={{ border: "none", fontSize: "16px", background: 'transparent', color: '#475467' }}
-                                                value={termAndConditionQuery.data?.terms_invoice}
-                                            />
-                                        )
-                                      }
+                                        <Editor readOnly showHeader={false} modules={{}}
+                                            style={{ border: "none", fontSize: "16px", background: 'transparent', color: '#475467' }}
+                                            value={invoice?.terms_and_conditions}
+                                        />
                                     </div>
                                 </>
                             )
