@@ -19,16 +19,15 @@ export const updateTermsapp = async (terms) => {
   return fetchAPI(url.toString(), options);
 };
 
-
-
 export const getInvoiceTerms = async () => {
   const endpoint = `/settings/invoice-terms/`;
   const options = {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+  return fetchAPI(url.toString(), options, false);
 };
+
 export const updateTerms = async (terms) => {
   const endpoint = `/settings/invoice-terms/`;
   const options = {

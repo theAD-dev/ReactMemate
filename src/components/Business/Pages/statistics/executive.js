@@ -15,29 +15,29 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 
 
 export const verticalLinePlugin = {
-  id: 'verticalLine',
-  beforeDatasetsDraw: (chart) => {
-    const tooltip = chart?.tooltip;
-    const ctx = chart?.ctx;
-    const chartArea = chart?.chartArea;
+    id: 'verticalLine',
+    beforeDatasetsDraw: (chart) => {
+        const tooltip = chart?.tooltip;
+        const ctx = chart?.ctx;
+        const chartArea = chart?.chartArea;
 
-    if (tooltip && tooltip._active && tooltip._active.length > 0) {
-      const activePoint = tooltip._active[0];
-      const xPos = activePoint.element.x;
+        if (tooltip && tooltip._active && tooltip._active.length > 0) {
+            const activePoint = tooltip._active[0];
+            const xPos = activePoint.element.x;
 
-      ctx.save();
+            ctx.save();
 
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = '#1AB2FF';
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#1AB2FF';
 
-      ctx.beginPath();
-      ctx.moveTo(xPos, chartArea.top);
-      ctx.lineTo(xPos, chartArea.bottom);
-      ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(xPos, chartArea.top);
+            ctx.lineTo(xPos, chartArea.bottom);
+            ctx.stroke();
 
-      ctx.restore();
+            ctx.restore();
+        }
     }
-  }
 };
 
 ChartJS.register(...registerables, annotationPlugin, verticalLinePlugin);
@@ -72,16 +72,11 @@ const Executive = () => {
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
         const datasetObj = executiveQuery?.data?.statistics;
 
-        const total_income = [];
-        const operating_profit = [];
-        const cost_of_sale = [];
-        const labor = [];
-        const operating_expense = [];
-
-        const isCurrentYear = selectedYear === currentYear;
-        const currentMonth = new Date().getMonth();
-        const monthsToShow = isCurrentYear ? currentMonth : 12;
-        const filteredMonths = months.slice(0, monthsToShow);
+        let total_income = [];
+        let operating_profit = [];
+        let cost_of_sale = [];
+        let labor = [];
+        let operating_expense = [];
 
         for (const key in datasetObj) {
             total_income.push(parseFloat(datasetObj[key].total_income));
@@ -89,6 +84,16 @@ const Executive = () => {
             cost_of_sale.push(parseFloat(datasetObj[key].cost_of_sale));
             labor.push(parseFloat(datasetObj[key].labor));
             operating_expense.push(parseFloat(datasetObj[key].operating_expense));
+        }
+
+        const isCurrentYear = selectedYear === currentYear;
+        if (isCurrentYear) {
+            const currentMonth = new Date().getMonth();
+            total_income = total_income.slice(0, currentMonth);
+            operating_profit = operating_profit.slice(0, currentMonth);
+            cost_of_sale = cost_of_sale.slice(0, currentMonth);
+            labor = labor.slice(0, currentMonth);
+            operating_expense = operating_expense.slice(0, currentMonth);
         }
 
         const total_income_sum = total_income.reduce((sum, val) => sum + val, 0);
@@ -106,7 +111,7 @@ const Executive = () => {
         });
 
         const data = {
-            labels: filteredMonths,
+            labels: months,
             datasets: [
                 {
                     label: 'Total Income',

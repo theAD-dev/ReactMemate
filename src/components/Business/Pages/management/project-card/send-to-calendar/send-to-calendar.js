@@ -29,6 +29,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
   const [guests, setGuests] = useState([]);
   const [from, setFrom] = useState('');
   const [filteredEmails, setFilteredEmails] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const clientQuery = useQuery({
     queryKey: ['getClientById', project?.client],
@@ -183,28 +184,38 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
   };
 
   const validateForm = () => {
+    const err = {};
+  
     if (!eventTitle.trim()) {
-      toast.error('Event title is required');
-      return false;
+      err.eventTitle = 'Event title is required';
     }
 
-    if (!startDate || !endDate) {
-      toast.error('Start and end dates are required');
-      return false;
+    if (!startDate) {
+      err.startDate = 'Start date is required';
+    }
+
+    if (!endDate) {
+      err.endDate = 'End date is required';
     }
 
     if (startDate > endDate) {
-      toast.error('End date must be after start date');
-      return false;
+      err.endDate = 'End date must be after start date';
     }
 
     if (guests.length === 0) {
-      toast.error('At least one guest is required');
-      return false;
+      err.guests = 'Guests are required';
     }
 
     if (!from) {
-      toast.error('From email is required');
+      err.from = 'From email is required';
+    }
+
+    if (!eventDescription.trim()) {
+      err.eventDescription = 'Description is required';
+    }
+
+    if (Object.keys(err).length > 0) {
+      setErrors(err);
       return false;
     }
 
@@ -309,23 +320,24 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>Event Title</Form.Label>
+              <Form.Label className={styles.formLabel}>Event Title<span className="required">*</span></Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter event title"
                 value={eventTitle}
                 onChange={(e) => setEventTitle(e.target.value)}
-                required
-                className='border outline-none'
+                className={clsx('border outline-none', errors?.eventTitle && 'border-danger')}
               />
+              {errors?.eventTitle && <Form.Text className="error-message">{errors.eventTitle}</Form.Text>}
             </Form.Group>
 
             <Row className="mb-3">
               <Col>
                 <Form.Group>
-                  <Form.Label className={styles.formLabel}>Start Date & Time</Form.Label>
+                  <Form.Label className={styles.formLabel}>Start Date & Time<span className="required">*</span></Form.Label>
                   <Calendar
                     value={startDate}
+                    dateFormat="dd/mm/yy"
                     onChange={(e) => {
                       setStartDate(e.value);
                     }}
@@ -344,18 +356,20 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                     todayButtonClassName="p-button-sm p-button-outlined"
                     clearButtonClassName="p-button-sm p-button-outlined p-button-danger"
                     icon={<Calendar3 color='#667085' size={20} />}
-                    className="w-100 border rounded"
+                    className={clsx('w-100 border rounded', errors?.startDate && 'border-danger')}
                     appendTo={document.body}
                     style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                     panelClassName="calendar-panel-higher-z"
                   />
+                  {errors?.startDate && <Form.Text className="error-message">{errors?.startDate}</Form.Text>}
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group>
-                  <Form.Label className={styles.formLabel}>End Date & Time</Form.Label>
+                  <Form.Label className={styles.formLabel}>End Date & Time<span className="required">*</span></Form.Label>
                   <Calendar
                     value={endDate}
+                    dateFormat="dd/mm/yy"
                     onChange={(e) => {
                       setEndDate(e.value);
                     }}
@@ -374,17 +388,18 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                     todayButtonClassName="p-button-sm p-button-outlined"
                     clearButtonClassName="p-button-sm p-button-outlined p-button-danger"
                     icon={<Calendar3 color='#667085' size={20} />}
-                    className="w-100 border rounded"
+                    className={clsx('w-100 border rounded', errors?.endDate && 'border-danger')}
                     appendTo={document.body}
                     style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                     panelClassName="calendar-panel-higher-z"
                   />
+                  {errors?.endDate && <Form.Text className="error-message">{errors?.endDate}</Form.Text>}
                 </Form.Group>
               </Col>
             </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>Add Guests</Form.Label>
+              <Form.Label className={styles.formLabel}>Add Guests<span className="required">*</span></Form.Label>
               <AutoComplete
                 ref={autoCompleteRef}
                 value={guests}
@@ -404,9 +419,10 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                     e.target.value = '';
                   }
                 }}
-                className={clsx(styles.AutoComplete, "w-100")}
+                className={clsx(styles.AutoComplete, "w-100", errors?.guests && styles.borderDanger)}
                 placeholder="Add guests"
               />
+              {errors?.guests && <Form.Text className="error-message">{errors?.guests}</Form.Text>}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -432,15 +448,16 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label className={styles.formLabel}>Description</Form.Label>
+              <Form.Label className={styles.formLabel}>Description<span className="required">*</span></Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
-                className='border outline-none'
+                className={clsx('border outline-none', errors?.eventDescription && 'border-danger')}
                 placeholder="Enter event description"
                 value={eventDescription}
                 onChange={(e) => setEventDescription(e.target.value)}
               />
+              {errors?.eventDescription && <Form.Text className="error-message">{errors?.eventDescription}</Form.Text>}
             </Form.Group>
 
             <div className="d-flex justify-content-end gap-2 mt-4 border-top pt-4">
