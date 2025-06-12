@@ -9,12 +9,14 @@ import Modal from 'react-bootstrap/Modal';
 import SelectDate from './select-date';
 import { getMobileUserList, getUserList } from '../../../../../APIs/task-api';
 import { fetchTasksNew } from '../../../../../APIs/TasksApi';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import newTask from '../../../../../assets/images/new-task.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
 
 const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) => {
     const dropdownRef = useRef(null);
+    const { session } = useAuth();
     const [taskTitle, setTaskTitle] = useState('');
     const [description, setDescription] = useState('');
     const [user, setUser] = useState(null);
@@ -150,22 +152,32 @@ const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) =
                         options={[
                             {
                                 label: 'Desktop User',
-                                items: usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
-                                    value: user?.id,
-                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                    photo: user?.photo || "",
-                                    has_photo: user?.has_photo
-                                })) || []
+                                items:
+                                    usersList?.data?.users
+                                        ?.filter((user) => user?.is_active)
+                                        ?.map((user) => ({
+                                            value: user?.id,
+                                            label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                            photo: user?.photo || "",
+                                            has_photo: user?.has_photo,
+                                        })) || [],
                             },
-                            {
-                                label: 'Mobile User',
-                                items: mobileUsersList?.data?.users?.filter((user) => user?.status !== 'disconnected')?.map((user) => ({
-                                    value: user?.id,
-                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                    photo: user?.photo || "",
-                                    has_photo: user?.has_photo
-                                })) || []
-                            }
+                            ...(session?.has_work_subscription
+                                ? [
+                                    {
+                                        label: 'Mobile User',
+                                        items:
+                                            mobileUsersList?.data?.users
+                                                ?.filter((user) => user?.status !== 'disconnected')
+                                                ?.map((user) => ({
+                                                    value: user?.id,
+                                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                                    photo: user?.photo || "",
+                                                    has_photo: user?.has_photo,
+                                                })) || [],
+                                    },
+                                ]
+                                : []),
                         ]}
                         onChange={(e) => {
                             setUser(e.value);
