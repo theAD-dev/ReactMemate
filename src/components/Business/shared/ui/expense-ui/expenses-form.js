@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, UpcScan } from 'react-bootstrap-icons';
+import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, Upload, PlusCircle, CheckCircleFill } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import { useForm, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -25,6 +25,7 @@ import styles from './expenses-form.module.scss';
 import { getDepartments } from '../../../../../APIs/CalApi';
 import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-api';
 import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
+import aiScanImg from '../../../../../assets/ai-scan.png';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import { extractAIResponseData, formatExpenseDataFromAI } from '../../../../../shared/lib/extract-ai-response';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
@@ -84,7 +85,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState(defaultSupplier?.name || "");
     const [hasMoreData, setHasMoreData] = useState(true);
-    const [isRecognizing, setIsRecognizing] = useState(false);
     const limit = 25;
 
     const { control, reset, register, handleSubmit, setValue, getValues, watch, setError, trigger, formState: { errors } } = useForm({
@@ -104,11 +104,31 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 progress: 0,
             }));
             setFiles(() => [
-                // ...prevFiles,
                 ...newFiles,
             ]);
-            fileUploadBySignedURL(newFiles);
+            fileUploadBySignedURL(newFiles, false);
         }
+    });
+
+    const {
+        getRootProps: getAIRootProps,
+        getInputProps: getAIInputProps,
+    } = useDropzone({
+        maxFiles: 1,
+        multiple: false,
+        accept: { 'application/pdf': ['.pdf'] },
+        maxSize: 5 * 1024 * 1024,
+        onDrop: (acceptedFiles) => {
+            const newFiles = acceptedFiles.map((file) =>
+                Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                    progress: 0,
+                    aiAnalysis: true,
+                })
+            );
+            setFiles(() => [...newFiles]);
+            fileUploadBySignedURL(newFiles, true);
+        },
     });
 
     const uploadToS3 = async (file, url) => {
@@ -140,7 +160,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         });
     };
 
-    const fileUploadBySignedURL = async (files) => {
+    const fileUploadBySignedURL = async (files, isAIAnalysis) => {
         if (!files.length) return;
 
         for (const file of files) {
@@ -169,35 +189,46 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 // step 3: Get the AI recognize response
                 const fileUrl = url.split("?")[0] || "";
 
-                // Set recognizing state to true to show loader
-                setIsRecognizing(true);
+                if (!isAIAnalysis) {
+                    // set the file url
+                    setValue('file', fileUrl);
 
-                // Update file progress to show AI processing
-                setFiles((prevFiles) => {
-                    return prevFiles.map((f) =>
-                        f.name === file.name
-                            ? Object.assign(f, { progress: 100, aiProcessing: true })
-                            : f
-                    );
-                });
+                    // Update file progress to show AI processing
+                    setFiles((prevFiles) => {
+                        return prevFiles.map((f) =>
+                            f.name === file.name
+                                ? Object.assign(f, { progress: 100 })
+                                : f
+                        );
+                    });
+                    return;
+                }
 
-                // Show toast notification for AI processing
-                toast.info('AI is analyzing your document...', {
-                    duration: 3000,
-                });
+                if (isAIAnalysis) {
+                    // Update file progress to show AI processing
+                    setFiles((prevFiles) => {
+                        return prevFiles.map((f) =>
+                            f.name === file.name
+                                ? Object.assign(f, { progress: 100, aiProcessing: true })
+                                : f
+                        );
+                    });
 
-                try {
-                    const aiResponse = await axios.post(
-                        `${process.env.REACT_APP_BACKEND_API_URL}/expenses/recognize/`,
-                        { file_url: fileUrl },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${accessToken}`,
-                            },
-                        }
-                    );
+                    // Show toast notification for AI processing
+                    toast.info('AI is analyzing your document...', {
+                        duration: 3000,
+                    });
 
-                    console.log('aiResponse: ', aiResponse?.data);
+                    try {
+                        const aiResponse = await axios.post(
+                            `${process.env.REACT_APP_BACKEND_API_URL}/expenses/recognize/`,
+                            { file_url: fileUrl },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${accessToken}`,
+                                },
+                            }
+                        );
 
                     // Extract and process the AI response data
                     const extractedData = extractAIResponseData(aiResponse?.data);
@@ -213,20 +244,31 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                 setValue(key, value);
                             });
 
-                            // Trigger validation for required fields
-                            trigger(['invoice_reference', 'amount', 'gst', 'nogst']);
+                                // Trigger validation for required fields
+                                trigger(['invoice_reference', 'amount', 'gst', 'nogst']);
 
-                            // Show success message
-                            toast.success('Form prefilled with invoice data');
+                                // Show success message
+                                toast.success('Form prefilled with invoice data');
 
-                            // Update file to show success
-                            setFiles((prevFiles) => {
-                                return prevFiles.map((f) =>
-                                    f.name === file.name
-                                        ? Object.assign(f, { aiProcessing: false, aiSuccess: true })
-                                        : f
-                                );
-                            });
+                                // Update file to show success
+                                setFiles((prevFiles) => {
+                                    return prevFiles.map((f) =>
+                                        f.name === file.name
+                                            ? Object.assign(f, { aiProcessing: false, aiSuccess: true })
+                                            : f
+                                    );
+                                });
+                            } else {
+                                // Update file to show no data extracted
+                                setFiles((prevFiles) => {
+                                    return prevFiles.map((f) =>
+                                        f.name === file.name
+                                            ? Object.assign(f, { aiProcessing: false, aiNoData: true })
+                                            : f
+                                    );
+                                });
+                                toast.warning('No invoice data could be extracted from the document');
+                            }
                         } else {
                             // Update file to show no data extracted
                             setFiles((prevFiles) => {
@@ -238,31 +280,18 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             });
                             toast.warning('No invoice data could be extracted from the document');
                         }
-                    } else {
-                        // Update file to show no data extracted
+                    } catch (aiError) {
+                        console.error("Error during AI recognition:", aiError);
+                        // Update file to show AI error
                         setFiles((prevFiles) => {
                             return prevFiles.map((f) =>
                                 f.name === file.name
-                                    ? Object.assign(f, { aiProcessing: false, aiNoData: true })
+                                    ? Object.assign(f, { aiProcessing: false, aiError: true })
                                     : f
                             );
                         });
-                        toast.warning('No invoice data could be extracted from the document');
+                        toast.error('Failed to analyze the document. Please try again.');
                     }
-                } catch (aiError) {
-                    console.error("Error during AI recognition:", aiError);
-                    // Update file to show AI error
-                    setFiles((prevFiles) => {
-                        return prevFiles.map((f) =>
-                            f.name === file.name
-                                ? Object.assign(f, { aiProcessing: false, aiError: true })
-                                : f
-                        );
-                    });
-                    toast.error('Failed to analyze the document. Please try again.');
-                } finally {
-                    // Set recognizing state back to false
-                    setIsRecognizing(false);
                 }
             } catch (error) {
                 console.error("Error uploading file:", file.name, error);
@@ -369,7 +398,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const departmentsList = useQuery({ queryKey: ['getDepartments'], queryFn: getDepartments });
     const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
 
-    const options = ['Assign to order', 'Assign to timeframe'];
+    const options = ['Assign to project', 'Assign to timeframe'];
     const [option, setOptionValue] = useState(defaultValues?.option || options[0]);
 
     const watchOrder = watch('order');
@@ -378,7 +407,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     }, [watchOrder]);
     const watchType = watch('type');
     const validateFields = () => {
-        if (option === 'Assign to order' && !watchOrder) {
+        if (option === 'Assign to project' && !watchOrder) {
             setError("order", { type: "manual", message: "Order is required" });
         }
 
@@ -396,7 +425,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         if (option === 'Assign to timeframe') {
             setValue('order', '');
             if (defaultValues?.type) setValue('type', defaultValues?.type);
-        } else if (option === 'Assign to order') {
+        } else if (option === 'Assign to project') {
             setValue('type', '');
             if (defaultValues?.order) setValue('order', defaultValues?.order);
         }
@@ -481,18 +510,46 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </div>
                 </Col>
 
-                <Col sm={12}>
-                    <label className={clsx(styles.lable)}>Upload & Read With AI</label>
-                    <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
-                        <input {...getInputProps()} />
-                        <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
-                            <UpcScan />
-                        </button>
-                        <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-                        <span style={{ color: '#475467', fontSize: '12px' }}>PDF files only • Max size: 5MB</span>
+                <Col sm={12} className='mb-4'>
+                    <div className="d-flex flex-column gap-1">
+                        <label className={clsx(styles.lable)}>Invoice/#Ref<span className='required'>*</span></label>
+                        <IconField>
+                            <InputIcon>{errors?.invoice_reference && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                            <InputText {...register("invoice_reference")} className={clsx(styles.inputText, { [styles.error]: errors.invoice_reference })} placeholder='Enter invoice reference' />
+                        </IconField>
+                        {errors?.invoice_reference && <p className="error-message">{errors.invoice_reference?.message}</p>}
                     </div>
+                </Col>
 
-                    <div className='d-flex flex-column gap-3 mb-4'>
+                <Col sm={12}>
+                    <Row>
+                        <Col sm={6}>
+                            <label className={clsx(styles.lable)}>Upload Only</label>
+                            <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
+                                <input {...getInputProps()} />
+                                <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
+                                    <Upload size={20} color='#475467' />
+                                </button>
+                                <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
+                                <span style={{ color: '#475467', fontSize: '12px' }}>PDF, SVG, PNG, JPG files • Max size: 5MB</span>
+                            </div>
+                        </Col>
+                        <Col sm={6}>
+                            <label className={clsx(styles.lable)}>Upload & Read With AI</label>
+                            <div {...getAIRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
+                                <input {...getAIInputProps()} />
+                                <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #FFF', background: '#f2f2f2', borderRadius: '8px', marginBottom: '16px' }}>
+                                    <img src={aiScanImg} className='w-100' />
+                                </button>
+                                <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
+                                <span style={{ color: '#475467', fontSize: '12px' }}>PDF files only • Max size: 5MB</span>
+                            </div>
+                        </Col>
+                    </Row>
+
+
+                    <div className='d-flex flex-column'>
+                        {files?.length > 0 && <label className={clsx(styles.lable, 'mt-4 mb-1')}>Photo/Document Of The Expense</label>}
                         {
                             files?.map((file, index) => (
                                 <div key={index} className={styles.fileBox}>
@@ -531,6 +588,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                                     <ExclamationCircleFill color='#F04438' size={16} />
                                                     <span className={styles.aiErrorText}>AI error</span>
                                                 </div>
+                                            ) : file.progress == 100 ? (
+                                                <CheckCircleFill color='#12B76A' size={20} />
                                             ) : (
                                                 <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
                                             )
@@ -540,17 +599,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                 </div>
                             ))
                         }
-                    </div>
-                </Col>
-
-                <Col sm={12}>
-                    <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Invoice/#Ref<span className='required'>*</span></label>
-                        <IconField>
-                            <InputIcon>{errors?.invoice_reference && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                            <InputText {...register("invoice_reference")} className={clsx(styles.inputText, { [styles.error]: errors.invoice_reference })} placeholder='Enter invoice reference' />
-                        </IconField>
-                        {errors?.invoice_reference && <p className="error-message">{errors.invoice_reference?.message}</p>}
                     </div>
                 </Col>
 
@@ -617,7 +665,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
 
                 <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4">
+                    <div className="d-flex flex-column gap-1">
                         <label className={clsx(styles.lable)}>Total Amount<span className='required'>*</span></label>
                         <IconField>
                             <InputNumber
@@ -641,7 +689,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </div>
                 </Col>
                 <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                    <div className="d-flex flex-column gap-1 mb-2">
                         <label className={clsx(styles.lable)}>GST<span className='required'>*</span></label>
                         <input type="hidden" {...register("nogst")} />
                         <Controller
@@ -670,24 +718,31 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </div>
                 </Col>
             </Row>
+
             <Row className={`${styles.expTotalRow}`}>
-                <Col className='mb-4'>
+                <Col className='d-flex align-items-center justify-content-end' style={{ position: 'relative' }}>
                     <div className={styles.CalItem}>
                         <div>
                             <span>Subtotal</span>
                             <strong>${formatAUD(watch('subtotal') || "0.00")}</strong>
                         </div>
                     </div>
+                    <div className={styles.dividerIcon}>
+                        <PlusCircle color='#667085' size={20} />
+                    </div>
                 </Col>
-                <Col className='mb-4'>
+                <Col className='d-flex align-items-center justify-content-end' style={{ position: 'relative' }}>
                     <div className={styles.CalItem}>
                         <div>
                             <span>Tax</span>
                             <strong>${formatAUD(watch('tax') || "0.00")}</strong>
                         </div>
                     </div>
+                    <div className={styles.dividerIcon}>
+                        <span style={{ color: '#1D2939', fontSize: '14px', fontWeight: 600 }}>=</span>
+                    </div>
                 </Col>
-                <Col className='mb-4'>
+                <Col style={{ position: 'relative' }}>
                     <div className={`${styles.CalItemActive} ${styles.CalItem}`}>
                         <div>
                             <span>Total</span>
@@ -700,12 +755,12 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
             <Row className={clsx(styles.bgGreay, 'customSelectButton')}>
                 <SelectButton value={option} onChange={(e) => setOptionValue(e.value)} options={options} />
                 {
-                    option === 'Assign to order'
+                    option === 'Assign to project'
                         ? (
-                            <Col sm={6}>
+                            <Col sm={12}>
                                 <div className="d-flex flex-column gap-1 mt-4 mb-4">
                                     <Tooltip position='top' target={`.info-timeinterval`} />
-                                    <label className={clsx(styles.lable)}>Search Project<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
+                                    <label className={clsx(styles.lable)}>Link to Project<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Select an existing project to assign expenses and display the exact cost of using this asset." /></label>
                                     <Controller
                                         name="order"
                                         control={control}
@@ -733,7 +788,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             </Col>
                         )
                         : (
-                            <Col sm={6}>
+                            <Col sm={12}>
                                 <div className="d-flex flex-column gap-1 mt-4 mb-4">
                                     <Tooltip position='top' target={`.info-timeinterval`} />
                                     <label className={clsx(styles.lable)}>Expense time interval<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>

@@ -23,7 +23,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
 
     const formRef = useRef(null);
     const [defaultValues, ] = useState({
-        option: 'Assign to order',
+        option: 'Assign to project',
         notification: false,
         date: today,
         due_date: tomorrow
@@ -83,7 +83,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
 
                     <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
-                            <h5>Supplier Details</h5>
+                            <h5>Expense Details</h5>
                         </div>
                         <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} setVisible={setVisible} projectId={projectId} />
                     </div>

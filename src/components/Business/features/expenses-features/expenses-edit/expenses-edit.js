@@ -109,7 +109,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
         subtotal,
         tax,
         totalAmount,
-        option: expense?.data?.order ? 'Assign to order' : 'Assign to timeframe',
+        option: expense?.data?.order ? 'Assign to project' : 'Assign to timeframe',
       }));
     }
   }, [expense?.data]);
@@ -138,7 +138,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
             {!expense?.isFetching && defaultValues?.option
               ? <>
                 <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
-                  <h5>Supplier Details</h5>
+                  <h5>Expense Details</h5>
                   <h6>Expense ID: {expense?.data?.number || "-"}</h6>
                 </div>
                 <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} />
