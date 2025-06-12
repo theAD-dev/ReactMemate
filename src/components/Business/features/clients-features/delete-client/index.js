@@ -11,12 +11,13 @@ import { useAuth } from '../../../../../app/providers/auth-provider';
 import { PERMISSIONS } from '../../../../../shared/lib/access-control/permission';
 import { hasPermission } from '../../../../../shared/lib/access-control/role-permission';
 
-const DeleteClient = ({ id }) => {
+const DeleteClient = ({ id, refetch }) => {
     const { role } = useAuth();
     const navigate = useNavigate();
     const deleteMutation = useMutation({
         mutationFn: () => deleteClient(id),
         onSuccess: () => {
+            refetch();
             navigate('/clients');
             toast.success(`Client deleted successfully`);
         },

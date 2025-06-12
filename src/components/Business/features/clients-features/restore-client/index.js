@@ -16,6 +16,7 @@ const Restore = ({ id, refetch }) => {
             setIsRestoring(true);
             const res = await restoreClient(id);
             if (res?.detail) {
+                refetch();
                 navigate('/clients');
                 toast.success(`Client restored successfully`);
             }

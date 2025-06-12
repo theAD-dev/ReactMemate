@@ -63,7 +63,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
 
         <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
           {
-            !client.deleted ? (<DeleteClient id={client?.id} />) : <span></span>
+            !client.deleted ? (<DeleteClient id={client?.id} refetch={refetch} />) : <span></span>
           }
 
           {
