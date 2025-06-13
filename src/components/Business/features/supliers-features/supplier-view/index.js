@@ -3,9 +3,11 @@ import { Button, Row, Col } from 'react-bootstrap';
 import { X } from 'react-bootstrap-icons';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
+import { Tag } from 'primereact/tag';
 import style from './supplier-view.module.scss';
 import mapicon from '../../../../../assets/images/google_maps_ico.png';
 import { FallbackImage } from '../../../../../ui/image-with-fallback/image-avatar';
+import RestoreSupplier from '../restore-suplier';
 import DeleteSupplier from '../supplier-delete';
 import SupplierEdit from '../supplier-edit';
 
@@ -29,7 +31,10 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                         <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
                             <FallbackImage has_photo={data.has_photo} photo={data.photo} is_business={true} size={26} />
                         </div>
-                        <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{data?.name}</span>
+                        <div className='d-flex align-items-center gap-2'>
+                            <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{data?.name}</span>
+                            {data.deleted ? <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
+                        </div>
                     </div>
                     <span>
                         <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -50,15 +55,15 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                 </div>
 
                 <div className='modal-footer d-flex align-items-center justify-content-between h-100' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)" }}>
-                    <DeleteSupplier id={id} />
+                    {data.deleted ? <span></span> : <DeleteSupplier id={id} refetch={refetch} />}
                     {
                         isEdit ? <div className='d-flex align-items-center gap-3'>
                             <Button type='button' onClick={() => setIsEdit(false)} className='outline-button'>Cancel</Button>
                             <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '75px' }}>{isPending ? "Loading..." : "Save"}</Button>
                         </div>
-                            : <div className='d-flex align-items-center gap-3'>
-                                <Button type='button' onClick={() => setIsEdit(true)} className='solid-button'>Edit</Button>
-                            </div>
+                            : data.deleted
+                                ? <RestoreSupplier id={id} refetch={refetch} />
+                                : <Button type='button' onClick={() => setIsEdit(true)} className='solid-button'>Edit</Button>
                     }
                 </div>
             </div>
