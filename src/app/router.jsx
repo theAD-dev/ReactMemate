@@ -29,7 +29,7 @@ const Overview = LazyLoader(lazy(() => import('../components/Business/Pages/stat
 const SalesConversion = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/sales-conversion')));
 const SupplierPage = LazyLoader(lazy(() => import('../components/Business/Pages/suppliers')));
 const SupplierHistoryPage = LazyLoader(lazy(() => import('../components/Business/Pages/suppliers/suppliers-history')));
-const QuotationEmail = LazyLoader(lazy(() => import('../components/layout/browser-web/quotation-email')));
+const PublicQuotation = LazyLoader(lazy(() => import('../components/Business/Pages/sales/public-quotation/quotation')));
 const ChangePassword = LazyLoader(lazy(() => import('../components/layout/Login/change-password')));
 const CheckMail = LazyLoader(lazy(() => import('../components/layout/Login/check-mail')));
 const ForgotPassword = LazyLoader(lazy(() => import('../components/layout/Login/forgot-password')));
@@ -187,7 +187,7 @@ const routes = [
     },
     {
         path: "/quote/:id",
-        element: <QuotationEmail />
+        element: <PublicQuotation />
     },
     {
         path: "/invoice/:id",

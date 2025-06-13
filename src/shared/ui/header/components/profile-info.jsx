@@ -3,8 +3,8 @@ import { Placeholder } from "react-bootstrap";
 import { QuestionCircle, Search, PlusLg, Bell } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
-import style from '../header.module.scss';
 import Support from "../../support/support";
+import style from '../header.module.scss';
 
 const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
     const [visible, setVisible] = React.useState(false);
