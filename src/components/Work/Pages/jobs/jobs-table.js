@@ -15,7 +15,6 @@ import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-t
 import JobDetails from '../../features/job-table-actions/job-details-dialog';
 import ViewJob from '../../features/view-job/view-job';
 
-
 export const formatDate = (timestamp) => {
   try {
     const date = new Date(timestamp * 1000);
@@ -31,12 +30,13 @@ export const formatDate = (timestamp) => {
   }
 };
 
-const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
+const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, createJobVisible }, ref) => {
   const navigate = useNavigate();
   const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [show, setShow] = useState({ visible: false, jobId: null });
+  const [editMode, setEditMode] = useState(false);
   const [jobDetails, setJobDetails] = useState({});
   const [jobs, setJobs] = useState([]);
   const [page, setPage] = useState(1);
@@ -119,7 +119,14 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const jobIDTemplate = (rowdata) => {
     return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
       <span>{rowdata.number}</span>
-      <Button label="Open" onClick={() => setShow({ jobId: rowdata.id, visible: true })} className='primary-text-button ms-3 show-on-hover-element' text />
+      <Button label="Open"
+        onClick={() => {
+          createJobVisible(false);
+          setEditMode(false);
+          setShow({ jobId: rowdata.id, visible: true });
+        }}
+        className='primary-text-button ms-3 show-on-hover-element' text
+      />
     </div>;
   };
 
@@ -173,6 +180,10 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const statusBody = (rowData) => {
+    if (rowData.action_status) {
+      return <Chip className={`status ${style.open} font-14`} label={"In Progress"} />;
+    }
+
     const status = rowData.status;
     switch (status) {
       case '1':
@@ -265,7 +276,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
-      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} />
+      <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} editMode={editMode} setEditMode={setEditMode} />
     </>
   );
 });

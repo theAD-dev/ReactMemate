@@ -13,8 +13,6 @@ import { getJob } from '../../../../APIs/jobs-api';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import CreateJob from '../create-job/create-job';
 
-
-
 const statusBody = (status) => {
     switch (status) {
         case '1':
@@ -38,9 +36,8 @@ const statusBody = (status) => {
     }
 };
 
-const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
+const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode }) => {
     const [show, setShow] = useState(false);
-    const [editMode, setEditMode] = useState(false);
 
     let paymentCycleObj = {
         "7": "WEEK",
@@ -59,6 +56,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
     const job = jobQuery?.data;
 
     const handleEditClick = () => {
+        setVisible(false);
         setEditMode(true);
     };
 
