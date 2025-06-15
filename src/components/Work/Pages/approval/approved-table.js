@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ClockHistory, Link45deg, Repeat } from 'react-bootstrap-icons';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -10,32 +10,47 @@ import { Row } from 'primereact/row';
 import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './approval.module.scss';
-import { getJobsToApprove } from '../../../../APIs/approval-api';
+import WeekNavigator from './week-navigator';
+import { getApproveNotInvoice } from '../../../../APIs/approval-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import { FallbackImage } from '../../../../ui/image-with-fallback/image-avatar';
-import ApproveJob from '../../features/approve-job/approve-job';
 
-const ApprovalTable = React.memo(() => {
+const ApprovedTable = React.memo(() => {
     const { trialHeight } = useTrialHeight();
-    const [selectedApprovals, setSelectedApprovals] = useState(null);
+    const [selectedInvoiceApprovals, setSelectedInvoiceApprovals] = useState(null);
+    const [weekData, setSelectedPeriod] = useState({
+        week: null,
+        year: null,
+        startDate: null,
+        endDate: null
+    });
 
-    const [isApproveJobVisible, setIsApproveJobVisible] = useState(false);
-    const [selectedJobId, setSelectedJobId] = useState(null);
+    const handleWeekChange = useCallback((periodData) => {
+        setSelectedPeriod(periodData);
+    }, []);
+
+    const fetchInvoiceData = React.useCallback(() => {
+        if (!weekData?.week || !weekData?.year) {
+            return Promise.resolve([]);
+        }
+        return getApproveNotInvoice(weekData.year, weekData.week);
+    }, [weekData?.week, weekData?.year]);
 
     const {
-        data: approveData = [],
-        isLoading: isLoadingApprove,
-        error: approveError,
-        refetch: refetchApproveData
+        data: invoiceData = [],
+        isLoading: isLoadingInvoice,
+        error: invoiceError
     } = useQuery({
-        queryKey: ['jobsToApprove'],
-        queryFn: getJobsToApprove,
-        refetchOnWindowFocus: false,
+        queryKey: ['jobsToInvoice', weekData?.week, weekData?.year],
+        queryFn: fetchInvoiceData,
+        enabled: !!weekData?.week && !!weekData?.year,
+        refetchOnWindowFocus: true,
+        staleTime: 0,
         onError: (error) => {
-            toast.error('Failed to load jobs to approve');
-            console.error('Error loading jobs to approve:', error);
+            toast.error('Failed to load approved jobs for invoicing');
+            console.error('Error loading jobs to invoice:', error);
         }
     });
 
@@ -65,13 +80,6 @@ const ApprovalTable = React.memo(() => {
     const clientHeader = () => {
         return <div className='d-flex align-items-center gap-1'>
             Client
-            <small>A→Z</small>
-        </div>;
-    };
-
-    const workerHeader = () => {
-        return <div className='d-flex align-items-center gap-1'>
-            Name
             <small>A→Z</small>
         </div>;
     };
@@ -110,22 +118,9 @@ const ApprovalTable = React.memo(() => {
         </div>;
     };
 
-    const actionBody = (rowData) => {
-        return (
-            <div className='d-flex justify-content-center gap-2'>
-                <Chip
-                    className={`status ${style.finishedAction} cursor-pointer`}
-                    label="Approve"
-                    onClick={() => handleApprove(rowData.id)}
-                />
-            </div>
-        );
+    const statusBody = () => {
+        return <Chip className={`status ${style.approved}`} label="Approved" />;
     };
-
-    const handleApprove = React.useCallback((id) => {
-        setSelectedJobId(id);
-        setIsApproveJobVisible(true);
-    }, []);
 
 
     const formatDate = React.useCallback((dateString) => {
@@ -180,13 +175,14 @@ const ApprovalTable = React.memo(() => {
         return <span>${formatAUD(rowData.real_total)}</span>;
     };
 
-    const approveTotal = React.useMemo(() => {
-        if (!approveData || approveData.length === 0) return 0;
-        return approveData.reduce((sum, job) => sum + parseFloat(job.total || 0), 0);
-    }, [approveData]);
+    const invoiceTotal = React.useMemo(() => {
+        if (!invoiceData || invoiceData.length === 0) return 0;
+        return invoiceData.reduce((sum, job) => sum + parseFloat(job.total || 0), 0);
+    }, [invoiceData]);
 
-    const approveFooterGroup = React.useMemo(() => {
-        const formattedTotal = approveTotal.toLocaleString('en-US', {
+
+    const invoiceFooterGroup = React.useMemo(() => {
+        const formattedTotal = invoiceTotal.toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
@@ -202,21 +198,24 @@ const ApprovalTable = React.memo(() => {
                 </Row>
             </ColumnGroup>
         );
-    }, [approveTotal]);
-
+    }, [invoiceTotal]);
 
     useEffect(() => {
-        if (approveError) {
-            toast.error(`Error loading jobs to approve: ${approveError.message || 'Please try again later'}`);
+        if (invoiceError) {
+            toast.error(`Error loading jobs to invoice: ${invoiceError.message || 'Please try again later'}`);
         }
-    }, [approveError]);
+    }, [invoiceError]);
 
     return (
         <>
-            {/* Jobs to Approve DataTable */}
+            <div className="topbar d-flex justify-content-center text-center w-100" style={{ padding: '4px 0px', position: 'relative', height: '48px', borderTop: '1px solid #dedede', borderBottom: '0px solid #dedede', background: '#F9FAFB' }}>
+                <WeekNavigator onWeekChange={handleWeekChange} />
+            </div>
+
+            {/* Jobs to Invoice DataTable */}
             <DataTable
-                value={approveData}
-                footerColumnGroup={approveFooterGroup}
+                value={invoiceData || []}
+                footerColumnGroup={invoiceFooterGroup}
                 scrollable
                 selectionMode={'checkbox'}
                 removableSort
@@ -224,12 +223,12 @@ const ApprovalTable = React.memo(() => {
                 resizableColumns
                 showGridlines
                 size={'large'}
-                scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`}
-                className="border"
-                selection={selectedApprovals}
-                onSelectionChange={(e) => setSelectedApprovals(e.value)}
-                emptyMessage="No jobs to approve"
-                loading={isLoadingApprove}
+                scrollHeight={`calc(100vh - 175px - 45px - ${trialHeight}px)`}
+                className="border-0"
+                selection={selectedInvoiceApprovals}
+                onSelectionChange={(e) => setSelectedInvoiceApprovals(e.value)}
+                emptyMessage="No approved jobs waiting to be invoiced"
+                loading={isLoadingInvoice}
                 loadingIcon={Loader}
             >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
@@ -246,16 +245,15 @@ const ApprovalTable = React.memo(() => {
                 <Column field="short_description" header="Job Reference" style={{ minWidth: '270px' }}></Column>
                 <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
                 <Column field="project.number" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="worker.first_name" header={workerHeader} body={nameBody} style={{ minWidth: '205px' }}></Column>
+                <Column field="worker.first_name" header="Worker" body={nameBody} style={{ minWidth: '205px' }}></Column>
                 <Column field="variations" header="Variations" style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="real_total" header="Real Total" body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="spent_time" header="Real Time" body={realTimeBody} style={{ minWidth: '105px' }}></Column>
                 <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="id" header="Actions" body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
+                <Column field="id" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={clsx(`${style.shadowLeft}`, 'text-center')} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
-            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} refetch={refetchApproveData} />
         </>
     );
 });
 
-export default ApprovalTable;
+export default ApprovedTable;
