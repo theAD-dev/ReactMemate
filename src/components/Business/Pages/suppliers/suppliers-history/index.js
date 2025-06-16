@@ -22,7 +22,7 @@ const SupplierHistoryPage = () => {
   const [selected, setSelected] = useState(null);
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
-  const supplierDetails = useQuery({ queryKey: ['client-read'], queryFn: () => getSupplierById(id), enabled: !!id, retry: 1 });
+  const supplierDetails = useQuery({ queryKey: ['supplier-read', id], queryFn: () => getSupplierById(id), enabled: !!id, retry: 1, cacheTime: 0 });
 
   const exportCSV = (selectionOnly) => {
     if (dt.current) {

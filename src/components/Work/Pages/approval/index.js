@@ -1,10 +1,13 @@
-import React from 'react';
-import { Filter } from 'react-bootstrap-icons';
+import { useState } from 'react';
+import { CardList, CheckCircle, Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import clsx from 'clsx';
 import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
+import ApprovedTable from './approved-table';
 
 const ApprovalPage = () => {
+    const [tab, setTab] = useState('review-approve');
     const handleSearch = () => { };
 
     return (
@@ -28,7 +31,10 @@ const ApprovalPage = () => {
                 </div>
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <h1 className="title p-0 mt-1">Approval</h1>
+                    <div className={clsx(style.approvalTab, 'd-flex align-items-center gap-2')}>
+                        <button className={clsx(style.tabButton, tab === 'review-approve' && style.activeReviewApprove)} onClick={() => setTab('review-approve')}><CardList size={20} color={'#17B26A'} /> Review & Approve</button>
+                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Jobs (Not Invoiced) </button>
+                    </div>
                 </div>
 
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
@@ -36,8 +42,8 @@ const ApprovalPage = () => {
                     <div className={`${style.totalCount}`}>30 Jobs</div>
                 </div>
             </div>
-
-            <ApprovalTable />
+            {tab === 'review-approve' && <ApprovalTable />}
+            {tab === 'approved' && <ApprovedTable />}
         </div>
     );
 };

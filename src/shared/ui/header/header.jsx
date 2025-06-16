@@ -24,7 +24,7 @@ import SuppliersIcon from "../../../assets/images/icon/suppliersIcon.svg";
 import Logo from "../../../assets/images/logo.svg";
 import { formatDate } from "../../lib/date-format";
 import { FallbackImage } from "../image-with-fallback/image-avatar";
-import "../../../components/layout/header.css";
+import "./header.css";
 
 const Header = () => {
     const location = useLocation();

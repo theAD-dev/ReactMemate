@@ -66,7 +66,7 @@ const JobsPage = () => {
                 </div>
             </div>
             <JobsTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch}
-                setRefetch={setRefetch} />
+                setRefetch={setRefetch} createJobVisible={setVisible}/>
             <JobChat />
             <CreateJob visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
         </div>

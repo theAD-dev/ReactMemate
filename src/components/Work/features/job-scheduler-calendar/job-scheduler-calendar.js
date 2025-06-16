@@ -2,7 +2,11 @@ import { fetchAPI } from "../../../../APIs/base-api";
 
 let dp, DP, expandRow;
 
-const getStatusLabel = (status) => {
+const getStatusLabel = (status, actionStatus) => {
+  if (actionStatus) {
+    return { label: "In Progress", className: "open", color: '#065b76', backColor: '#ecf7fd' };
+  }
+
   const statusMap = {
     "1": { label: "Open", className: "open", color: '#065b76', backColor: '#ecf7fd' },
     "2": { label: "Assign", className: "ASSIGN", color: '#520676', backColor: '#f6ecfd' },
@@ -57,8 +61,8 @@ function loadData(data) {
            <small class='d-block'>${job?.number}</small>
            <small class='d-block job-reference-ellipsis' title="${job?.reference}">${job?.reference}</small>
           </div>
-          <div class="status ${getStatusLabel(job?.status).className}">
-            ${getStatusLabel(job?.status).label}
+          <div class="status ${getStatusLabel(job?.status, job?.action_status).className}">
+            ${getStatusLabel(job?.status, job?.action_status).label}
           </div >
          </div >
       </div > `,

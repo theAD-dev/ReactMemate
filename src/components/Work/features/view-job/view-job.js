@@ -13,8 +13,6 @@ import { getJob } from '../../../../APIs/jobs-api';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import CreateJob from '../create-job/create-job';
 
-
-
 const statusBody = (status) => {
     switch (status) {
         case '1':
@@ -38,9 +36,8 @@ const statusBody = (status) => {
     }
 };
 
-const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
+const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode }) => {
     const [show, setShow] = useState(false);
-    const [editMode, setEditMode] = useState(false);
 
     let paymentCycleObj = {
         "7": "WEEK",
@@ -59,6 +56,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
     const job = jobQuery?.data;
 
     const handleEditClick = () => {
+        setVisible(false);
         setEditMode(true);
     };
 
@@ -279,12 +277,13 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch }) => {
                                 <Card.Header className={clsx(style.background, 'border-0')}>
                                     <label className={clsx(style.customLabel)}>Before</label>
                                     <div className='d-flex gap-2' style={{ overflowX: 'auto' }}>
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
+                                        <p className='mb-0 font-12'>No Photos</p>
+                                        {/* <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria11.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria12.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria13.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
+                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview /> */}
                                     </div>
                                 </Card.Header>
                             </Card>

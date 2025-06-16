@@ -79,7 +79,7 @@ export const fetchSuppliers = async (limit, offset) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Clients fetch error:', error);
+    console.error('Suppliers fetch error:', error);
     throw error;
   }
 };
@@ -97,6 +97,15 @@ export const deleteSupplier = async (id) => {
   const endpoint = `/suppliers/${id}/`;
   const options = {
     method: 'DELETE',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const restoreSupplier = async (id) => {
+  const endpoint = `/suppliers/restore/${id}/`;
+  const options = {
+    method: 'POST'
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);

@@ -10,9 +10,9 @@ import { Skeleton } from 'primereact/skeleton';
 import Button from "react-bootstrap/Button";
 import { toast } from 'sonner';
 import style from './quote.module.scss';
-import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } from "../../../APIs/quoteation-api";
-import googleReview from "../../../assets/images/icon/checbold.svg";
-import { formatAUD } from '../../../shared/lib/format-aud';
+import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } from "../../../../../APIs/quoteation-api";
+import googleReview from "../../../../../assets/images/icon/checbold.svg";
+import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 const formatTimeStamp = (timestamp) => {
     if (!timestamp) return "-";
@@ -26,7 +26,7 @@ const formatTimeStamp = (timestamp) => {
     return `${monthAbbreviation} ${day}, ${year}`;
 };
 
-const QuotationEmail = () => {
+const Quotation = () => {
     const { id } = useParams();
     const [quote, setQuote] = useState();
     const [isLoading, setIsLoading] = useState(false);
@@ -419,4 +419,4 @@ const QuotationEmail = () => {
     );
 };
 
-export default QuotationEmail;
+export default Quotation;

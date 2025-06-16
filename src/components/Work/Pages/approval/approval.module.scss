@@ -22,6 +22,49 @@
   letter-spacing: 0.08px;
 }
 
+.tabButton {
+  color: var(--Gray-700, #344054);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.activeReviewApprove {
+  color: var(--Success-500, #17b26a);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  background: var(--Success-50, #ecfdf3);
+}
+
+.activeApproved {
+  color: var(--Primary-700, #106b99);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+  border-radius: 6px;
+  background: var(--Primary-50, #ebf8ff);
+}
+
 .totalCount {
   color: #ffc301;
   text-align: center;
@@ -80,7 +123,6 @@
   background: var(--Primary-50, #ebf8ff);
   border: 1px solid var(--Primary-200, #a3e0ff);
 }
-
 
 .time {
   color: var(--Primary-700, #106b99);

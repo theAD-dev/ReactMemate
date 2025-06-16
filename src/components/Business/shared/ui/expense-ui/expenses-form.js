@@ -116,7 +116,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     } = useDropzone({
         maxFiles: 1,
         multiple: false,
-        accept: { 'application/pdf': ['.pdf'] },
+        accept: { 'application/pdf': ['.pdf', '.png', '.jpg', '.jpeg'] },
         maxSize: 5 * 1024 * 1024,
         onDrop: (acceptedFiles) => {
             const newFiles = acceptedFiles.map((file) =>
@@ -542,7 +542,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     <img src={aiScanImg} className='w-100' />
                                 </button>
                                 <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-                                <span style={{ color: '#475467', fontSize: '12px' }}>PDF files only • Max size: 5MB</span>
+                                <span style={{ color: '#475467', fontSize: '12px' }}>PDF, PNG, JPG, JPEG files • Max size: 5MB</span>
                             </div>
                         </Col>
                     </Row>

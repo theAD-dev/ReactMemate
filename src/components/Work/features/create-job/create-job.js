@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Calendar3, ClockHistory, CloudUpload, X } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
@@ -70,8 +70,9 @@ export function getFileIcon(fileType) {
 }
 
 
-const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, refetch = () => { } }) => {
+const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
+    const publishRef = useRef(null);
 
     const [templateId, setTemplatedId] = useState("");
     const [isOpenRepeatSection, setIsOpenRepeatSection] = useState(false);
@@ -417,14 +418,16 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             toast.success(`Job ${isEditMode ? 'updated' : 'created'} successfully`);
             setVisible(false);
             reset();
+            publishRef.current = null;
         },
         onError: (error) => {
+            publishRef.current = null;
             console.error(`Error ${isEditMode ? 'updating' : 'creating'} job:`, error);
             toast.error(`Failed to ${isEditMode ? 'update' : 'create'} job. Please try again.`);
         }
     });
 
-    const onSubmit = () => {
+    const onSubmit = (isPublish) => {
         // Initialize a temporary errors object
         const tempErrors = {
             jobReference: false,
@@ -473,6 +476,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (projectPhotoDeliver)
             payload.project_photos = projectPhotoDeliver;
 
+        payload.published = isPublish;
+        publishRef.current = isPublish;
+
         // Batch update errors at the end
         setErrors(tempErrors);
 
@@ -507,6 +513,12 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             workerDetailsSet(+workerId || "");
         }
     }, [workerId, workerDetailsSet]);
+
+    useEffect(() => {
+        if (jobProjectId) {
+            setProjectId(jobProjectId);
+        }
+    }, [jobProjectId]);
 
     // Populate form with job data when in edit mode
     useEffect(() => {
@@ -1317,10 +1329,13 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={onSubmit} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
-                            {isEditMode ? 'Update' : 'Create'} {mutation?.isPending && <ProgressSpinner
-                                style={{ width: "20px", height: "20px", color: "#fff" }}
-                            />}
+                        <Button type='button' onClick={() => onSubmit(false)} className='outline-button active-outline-button' disabled={mutation?.isPending}>
+                            {isEditMode ? "Update and Unpublished" : "Save and Unpublished"} 
+                            {mutation?.isPending && !publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
+                        </Button>
+                        <Button type='button' onClick={() => onSubmit(true)} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>
+                            {isEditMode ? 'Update and Publish' : 'Save and Publish'}
+                            {mutation?.isPending && publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
                         </Button>
                     </div>
                 </div>

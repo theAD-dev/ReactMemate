@@ -4,7 +4,9 @@ import clsx from "clsx";
 import { initDaypilot, reInitializeData } from "./utils";
 import { getManagement } from "../../../../../APIs/management-api";
 import { ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
+import { useAuth } from "../../../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../../../app/providers/trial-height-provider";
+import CreateJob from "../../../../Work/features/create-job/create-job";
 import ProjectCardModel from "../project-card/project-card-model";
 import CreateTask from "../task/create-task";
 import ViewTask from "../task/view-task";
@@ -12,6 +14,8 @@ import ViewTask from "../task/view-task";
 
 const CALENDAR_ID = "calender";
 function EventScheduler() {
+  const { session } = useAuth();
+  const hasWorkSubscription = session?.has_work_subscription || false;
   const timeoutRef = useRef(null);
   const { trialHeight } = useTrialHeight();
   const [search, setSearch] = useState("");
@@ -26,6 +30,8 @@ function EventScheduler() {
   const [projectDetails, setProjectDetails] = useState({});
   const [filterBy, setFilterBy] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [jobProjectId, setJobProjectId] = useState(null);
 
   // show project model from invoice
   const url = window.location.href;
@@ -70,6 +76,12 @@ function EventScheduler() {
   useEffect(() => {
     const handleClick = (e) => {
       if (!(e.target instanceof HTMLSelectElement)) {
+        if (e.target.closest('.createJobButton')) {
+          const projectId = e.target.getAttribute('project-id');
+          setJobProjectId(projectId);
+          setVisible(true);
+        }
+
         if (e.target.closest('.create-task-button')) {
           const number = e.target.getAttribute('number');
           const reference = e.target.getAttribute('reference');
@@ -100,6 +112,19 @@ function EventScheduler() {
     };
   }, []);
 
+  const reInitialize = async () => {
+    try {
+      setIsReinitialize(true);
+      const response = await getManagement();
+      setManagement(response);
+      if (search) searchData(search, response);
+      else reInitializeData(response, hasWorkSubscription);
+      setIsReinitialize(false);
+    } catch (error) {
+      console.error("Error initializing DayPilot:", error);
+    }
+  };
+
   useEffect(() => {
     const daypilotScript = document.createElement("script");
     daypilotScript.src =
@@ -114,7 +139,7 @@ function EventScheduler() {
       try {
         const response = await getManagement();
         setManagement(response);
-        initDaypilot(CALENDAR_ID, response, viewTaskDetails);
+        initDaypilot(CALENDAR_ID, response, viewTaskDetails, reInitialize, hasWorkSubscription);
       } catch (error) {
         console.error("Error initializing DayPilot:", error);
       }
@@ -134,23 +159,8 @@ function EventScheduler() {
     };
   }, []);
 
-
-  const reInitialize = async () => {
-    try {
-      setIsReinitialize(true);
-      const response = await getManagement();
-      setManagement(response);
-      if (search) searchData(search, response);
-      else reInitializeData(response);
-      setIsReinitialize(false);
-    } catch (error) {
-      console.error("Error initializing DayPilot:", error);
-    }
-  };
-
   const handleViewTask = () => {
-    console.log('handleViewTask: ',);
-
+    console.log('handleViewTask: ');
   };
 
   useEffect(() => {
@@ -187,7 +197,7 @@ function EventScheduler() {
         ) return true;
         else return false;
       });
-      reInitializeData(filteredResponse || []);
+      reInitializeData(filteredResponse || [], hasWorkSubscription);
     }, 600);
   };
 
@@ -228,8 +238,8 @@ function EventScheduler() {
       });
     }
 
-    reInitializeData(filteredData);
-  }, [management, filterBy, sortBy, search]);
+    reInitializeData(filteredData, hasWorkSubscription);
+  }, [management, filterBy, sortBy, search, hasWorkSubscription]);
 
   useEffect(() => {
     applyFiltersAndSort();
@@ -288,7 +298,7 @@ function EventScheduler() {
                 }}
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 3L3 9M3 3L9 9" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 3L3 9M3 3L9 9" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
             )}
@@ -335,7 +345,7 @@ function EventScheduler() {
                 }}
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 3L3 9M3 3L9 9" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 3L3 9M3 3L9 9" stroke="#667085" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
             )}
@@ -369,6 +379,7 @@ function EventScheduler() {
     <CreateTask show={show} setShow={setShow} project={projectDetails} reInitialize={reInitialize} />
 
     <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} statusOptions={statusOptions} reInitialize={reInitialize} />
+    <CreateJob visible={visible} setVisible={setVisible} setRefetch={reInitialize} jobProjectId={jobProjectId} />
 
     {
       isReinitialize && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
