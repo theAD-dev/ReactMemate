@@ -277,12 +277,13 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                 <Card.Header className={clsx(style.background, 'border-0')}>
                                     <label className={clsx(style.customLabel)}>Before</label>
                                     <div className='d-flex gap-2' style={{ overflowX: 'auto' }}>
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
+                                        <p className='mb-0 font-12'>No Photos</p>
+                                        {/* <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria11.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria12.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria13.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
-                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
+                                        <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview /> */}
                                     </div>
                                 </Card.Header>
                             </Card>

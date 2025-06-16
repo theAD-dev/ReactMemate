@@ -9,13 +9,12 @@ import SupplierForm from '../../../shared/ui/supliers-ui/supplier-form';
 const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref) => {
     const { id } = useParams();
     const [photo, setPhoto] = useState(null);
-    if (data?.addresses?.length === 0) data.addresses.push({});
-    if (data?.contact_persons?.length === 0) data.contact_persons.push({});
 
-    const [defaultValues, setDefaultValues] = useState({
+    const [defaultValues] = useState({
         ...data,
-        addresses: data?.addresses?.map((address) => ({
+        addresses: data?.addresses?.filter((address) => !address?.deleted)?.map((address) => ({
             id: address?.id || "",
+            title: address?.title || "",
             country: address?.country_id || "",
             state: address?.state_id || "",
             city: address?.city || "",
@@ -23,6 +22,9 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
             postcode: address?.postcode || ""
         }))
     } || null);
+
+    if (defaultValues?.addresses?.length === 0) defaultValues.addresses.push({ title: "Main Location", country: 1 });
+    if (defaultValues?.contact_persons?.length === 0) defaultValues.contact_persons.push({ deleted: false });
 
     const formSubmit = async (data) => {
         console.log('data: ', data);

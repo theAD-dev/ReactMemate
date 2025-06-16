@@ -16,6 +16,10 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
     const params = new URLSearchParams(urlObj.search);
     const projectId = params.get('projectId');
     if (projectId) setVisible(true);
+    
+    // remove projectId from url
+    urlObj.searchParams.delete('projectId');
+    window.history.replaceState({}, '', urlObj);
 
     const today = new Date();
     const tomorrow = new Date(today);

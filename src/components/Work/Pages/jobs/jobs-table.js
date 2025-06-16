@@ -236,6 +236,10 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     return <span style={{ color: '#667085' }}>${formatAUD(rowData.total || 0)}</span>;
   };
 
+  const linkToBody = (rowData) => {
+    return <Button className='text-button bg-tranparent p-0 text-dark font-14' onClick={() => navigate(`/management?unique_id=${rowData?.project?.unique_id}&reference=${rowData?.project?.reference}&number=${rowData?.project?.number}`)}>{rowData.project?.number}</Button>;
+  };
+
   const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
   const onSort = (event) => {
@@ -273,7 +277,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="real_time" header="Real Time" body={realTimeBody} bodyClassName={'text-end'} headerClassName='text-center' style={{ minWidth: '88px' }}></Column>
         <Column field="bonus" header="Bonus" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>
         <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-        <Column field="linkTo" header="Linked To" style={{ minWidth: '105px' }}></Column>
+        <Column field="linkTo" header="Linked To" body={linkToBody} style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
       <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} editMode={editMode} setEditMode={setEditMode} />

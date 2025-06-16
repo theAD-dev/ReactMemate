@@ -223,6 +223,11 @@ const ViewSection = ({ data }) => {
 
                     <Row>
                         <Col>
+                            <label className={clsx(style.label)}>Location Name</label>
+                            <h4 className={clsx(style.text)}>{`${address.title || "-"}`}</h4>
+                        </Col>
+                        
+                        <Col>
                             <label className={clsx(style.label)}>Country</label>
                             <h4 className={clsx(style.text)}>{`${address.country || "-"}`}</h4>
                         </Col>
