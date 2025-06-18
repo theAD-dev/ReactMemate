@@ -40,12 +40,12 @@ function loadData(responses, hasWorkSubscription) {
           </svg>`;
 
 
-    // add job-event
+    // add project event
     events.push({
       start: parseTimestamp(1000 * +data.booking_start),
       end: parseTimestamp(1000 * +data.booking_end),
       id: data.unique_id,
-      cssClass: 'job-item',
+      cssClass: 'project-item',
       resource: data.unique_id,
       backColor: background,
       borderColor: color,
@@ -73,18 +73,36 @@ function loadData(responses, hasWorkSubscription) {
     const unfinishedTasks = data.tasks.filter(task => !task.finished)?.length || 0;
     const childResource = [];
 
+    childResource.push({
+      id: data.number,
+      name: `<div class="d-flex flex-column rowResourceEvent">
+            <div class="d-flex gap-1 task-heading rowResourceEvent" style="--main-color: ${color}; height: 34px">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none">
+                <path d="M10.875 2.25C11.0821 2.25 11.25 2.41789 11.25 2.625V9.375C11.25 9.58211 11.0821 9.75 10.875 9.75H1.125C0.917893 9.75 0.75 9.58211 0.75 9.375V2.625C0.75 2.41789 0.917893 2.25 1.125 2.25H10.875ZM1.125 1.5C0.50368 1.5 0 2.00368 0 2.625V9.375C0 9.99632 0.50368 10.5 1.125 10.5H10.875C11.4963 10.5 12 9.99632 12 9.375V2.625C12 2.00368 11.4963 1.5 10.875 1.5H1.125Z" fill="#475467"/>
+                <path d="M5.25 4.125C5.25 3.91789 5.41789 3.75 5.625 3.75H9.375C9.58211 3.75 9.75 3.91789 9.75 4.125C9.75 4.33211 9.58211 4.5 9.375 4.5H5.625C5.41789 4.5 5.25 4.33211 5.25 4.125Z" fill="#475467"/>
+                <path d="M4.12767 3.48484C4.27411 3.63128 4.27411 3.86872 4.12767 4.01516L3.00267 5.14016C2.85622 5.28661 2.61878 5.28661 2.47234 5.14016L2.09734 4.76516C1.95089 4.61872 1.95089 4.38128 2.09734 4.23484C2.24378 4.08839 2.48122 4.08839 2.62767 4.23484L2.7375 4.34467L3.59734 3.48484C3.74378 3.33839 3.98122 3.33839 4.12767 3.48484Z" fill="#475467"/>
+                <path d="M5.25 7.125C5.25 6.91789 5.41789 6.75 5.625 6.75H9.375C9.58211 6.75 9.75 6.91789 9.75 7.125C9.75 7.33211 9.58211 7.5 9.375 7.5H5.625C5.41789 7.5 5.25 7.33211 5.25 7.125Z" fill="#475467"/>
+                <path d="M4.12767 6.48484C4.27411 6.63128 4.27411 6.86872 4.12767 7.01516L3.00267 8.14017C2.85622 8.28661 2.61878 8.28661 2.47234 8.14017L2.09734 7.76517C1.95089 7.61872 1.95089 7.38128 2.09734 7.23484C2.24378 7.08839 2.48122 7.08839 2.62767 7.23484L2.7375 7.34467L3.59734 6.48484C3.74378 6.33839 3.98122 6.33839 4.12767 6.48484Z" fill="#475467"/>
+              </svg>
+              <span class="font-14">Tasks</span>
+            </div>
+           </div>`,
+      minHeight: 40,
+      marginBottom: 4,
+    });
+
     // Task child resource
-    data?.tasks?.forEach((task, index) => {
+    data?.tasks?.forEach((task) => {
       events.push({
         start: parseTimestamp(1000 * +task.from_date),
         end: parseTimestamp(1000 * +task.to_date),
         id: task.id,
         cssClass: "childEvent task-item",
         resource: task.id,
-        backColor: "#F2F4F7",
-        borderColor: "#F2F4F7",
+        backColor: task.finished ? "#DCFAE6" : "#F2F4F7",
+        borderColor: task.finished ? "#DCFAE6" : "#F2F4F7",
         text: task.title,
-        tag: { type: "task", task: task }
+        tag: { type: "task", task: task },
       });
 
       const statusIMG = task.finished
@@ -98,17 +116,6 @@ function loadData(responses, hasWorkSubscription) {
       childResource.push({
         id: task.id,
         name: `<div class="d-flex flex-column">
-           ${index === 0 ? `<div class="d-flex gap-1 task-heading">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M10.875 2.25C11.0821 2.25 11.25 2.41789 11.25 2.625V9.375C11.25 9.58211 11.0821 9.75 10.875 9.75H1.125C0.917893 9.75 0.75 9.58211 0.75 9.375V2.625C0.75 2.41789 0.917893 2.25 1.125 2.25H10.875ZM1.125 1.5C0.50368 1.5 0 2.00368 0 2.625V9.375C0 9.99632 0.50368 10.5 1.125 10.5H10.875C11.4963 10.5 12 9.99632 12 9.375V2.625C12 2.00368 11.4963 1.5 10.875 1.5H1.125Z" fill="#475467"/>
-                <path d="M5.25 4.125C5.25 3.91789 5.41789 3.75 5.625 3.75H9.375C9.58211 3.75 9.75 3.91789 9.75 4.125C9.75 4.33211 9.58211 4.5 9.375 4.5H5.625C5.41789 4.5 5.25 4.33211 5.25 4.125Z" fill="#475467"/>
-                <path d="M4.12767 3.48484C4.27411 3.63128 4.27411 3.86872 4.12767 4.01516L3.00267 5.14016C2.85622 5.28661 2.61878 5.28661 2.47234 5.14016L2.09734 4.76516C1.95089 4.61872 1.95089 4.38128 2.09734 4.23484C2.24378 4.08839 2.48122 4.08839 2.62767 4.23484L2.7375 4.34467L3.59734 3.48484C3.74378 3.33839 3.98122 3.33839 4.12767 3.48484Z" fill="#475467"/>
-                <path d="M5.25 7.125C5.25 6.91789 5.41789 6.75 5.625 6.75H9.375C9.58211 6.75 9.75 6.91789 9.75 7.125C9.75 7.33211 9.58211 7.5 9.375 7.5H5.625C5.41789 7.5 5.25 7.33211 5.25 7.125Z" fill="#475467"/>
-                <path d="M4.12767 6.48484C4.27411 6.63128 4.27411 6.86872 4.12767 7.01516L3.00267 8.14017C2.85622 8.28661 2.61878 8.28661 2.47234 8.14017L2.09734 7.76517C1.95089 7.61872 1.95089 7.38128 2.09734 7.23484C2.24378 7.08839 2.48122 7.08839 2.62767 7.23484L2.7375 7.34467L3.59734 6.48484C3.74378 6.33839 3.98122 6.33839 4.12767 6.48484Z" fill="#475467"/>
-              </svg>
-              <span class="font-12">Tasks</span>
-            </div>` : ''
-          }
             <div task-id="${task.id}" class="task-list rowResourceEvent" style="--main-color: ${color}" task-id="${task.id}">
               <div class="flex">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_5999_560822)"><rect width="16" height="16" rx="8" fill="url(#paint0_linear_5999_560822)"/><g opacity="0.08"><rect x="0.375" y="0.375" width="15.25" height="15.25" rx="7.625" stroke="#101828" stroke-width="0.75"/></g>
@@ -126,7 +133,7 @@ function loadData(responses, hasWorkSubscription) {
               </div>
             </div>
           </div>`,
-        minHeight: index === 0 ? 70 : 40,
+        minHeight: 40,
         marginBottom: 4,
       });
     });
@@ -144,23 +151,21 @@ function loadData(responses, hasWorkSubscription) {
       marginBottom: 0,
     });
 
-
     if (hasWorkSubscription) {
-      if (true) {
-        childResource.push({
-          id: data.number,
-          name: `<div class="d-flex flex-column rowResourceEvent">
+      childResource.push({
+        id: data.number,
+        name: `<div class="d-flex flex-column rowResourceEvent">
             <div class="d-flex gap-1 task-heading rowResourceEvent" style="--main-color: ${color}; height: 34px">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none">
                 <path d="M4.875 0.75C4.2538 0.75 3.75 1.25338 3.75 1.87482V2.25H1.125C0.50368 2.25 0 2.75368 0 3.375V9.375C0 9.99632 0.50368 10.5 1.125 10.5H10.875C11.4963 10.5 12 9.99632 12 9.375V3.375C12 2.75368 11.4963 2.25 10.875 2.25H8.25V1.87482C8.25 1.25338 7.7462 0.75 7.125 0.75H4.875ZM4.875 1.5H7.125C7.33223 1.5 7.5 1.66847 7.5 1.87546V2.25H4.5V1.87482C4.5 1.66783 4.66777 1.5 4.875 1.5ZM6.28987 6.68581L11.25 5.3631V9.375C11.25 9.58211 11.0821 9.75 10.875 9.75H1.125C0.917893 9.75 0.75 9.58211 0.75 9.375V5.3631L5.71013 6.68581C5.90006 6.73645 6.09994 6.73645 6.28987 6.68581ZM1.125 3H10.875C11.0821 3 11.25 3.16789 11.25 3.375V4.5869L6.09662 5.96113C6.03331 5.97801 5.96669 5.97801 5.90338 5.96113L0.75 4.5869V3.375C0.75 3.16789 0.917893 3 1.125 3Z" fill="#475467"/>
               </svg>
-              <span class="font-12">Jobs</span>
+              <span class="font-14">Jobs</span>
             </div>
            </div>`,
-          minHeight: 40,
-          marginBottom: 4,
-        });
-      }
+        minHeight: 40,
+        marginBottom: 4,
+      });
+
       childResource.push({
         id: data.number,
         name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${color}; height: ${data.tasks?.length ? '45px' : '40px'}">
@@ -225,6 +230,7 @@ function loadData(responses, hasWorkSubscription) {
         </div>
       </div>`,
       children: childResource,
+      minHeight: 95,
     };
   });
 
@@ -293,7 +299,7 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
     const taskId = args.e.id();
     if (args.div.className.includes("task-item") && taskId) {
       viewTaskDetails(taskId, false);
-    } else if (args.div.className.includes("job-item") && taskId) {
+    } else if (args.div.className.includes("project-item") && taskId) {
       const projectDetails = args.e.tag();
       viewTaskDetails(taskId, true, projectDetails);
     }

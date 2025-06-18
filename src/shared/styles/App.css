@@ -665,6 +665,7 @@ table.department-calculation tbody tr.selected td {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin-bottom: 0px;
 }
 
 #calender .scheduler_default_rowheader_inner_text span {
@@ -744,7 +745,7 @@ ul.resourceMan {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 9px 4px 9px 25px;
+  padding: 9px 4px 2px 25px;
   background: #fcfcfd;
 }
 
@@ -838,9 +839,13 @@ ul.resourceMan li span.not-done {
   border: 1px solid var(--Warning-200, #fedf89); */
 }
 
-.scheduler_default_event.job-item {
-  margin-top: 40px !important;
+.scheduler_default_event.project-item {
+  margin-top: 25px !important;
   height: 40px !important;
+}
+
+.scheduler_default_event.task-item {
+  height: 42px !important;
 }
 
 .scheduler_default_event_inner {
@@ -884,20 +889,24 @@ ul.resourceMan li span.not-done {
 
 .scheduler_default_tree_image_expand {
   background-image: url('data:image/svg+xml,<svg width="1em" height="1em" fill="667085" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.7 11.3l-6-6c-0.4-0.4-1-0.4-1.4 0s-0.4 1 0 1.4l5.3 5.3-5.3 5.3c-0.4 0.4-0.4 1 0 1.4 0.2 0.2 0.4 0.3 0.7 0.3s0.5-0.1 0.7-0.3l6-6c0.4-0.4 0.4-1 0-1.4z"></path></svg>') !important;
-  width: 17px !important;
-  height: 14px !important;
-  top: 15px !important;
+  width: 25px !important;
+  height: 25px !important;
+  top: 12px !important;
+  background-size: 20px;
+  background-position: center;
 }
 
 .scheduler_default_tree_image_collapse {
   background-image: url('data:image/svg+xml,<svg width="1em" height="1em" fill="%231AB2FF" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.7 11.3l-6-6c-0.4-0.4-1-0.4-1.4 0s-0.4 1 0 1.4l5.3 5.3-5.3 5.3c-0.4 0.4-0.4 1 0 1.4 0.2 0.2 0.4 0.3 0.7 0.3s0.5-0.1 0.7-0.3l6-6c0.4-0.4 0.4-1 0-1.4z"></path></svg>') !important;
-  width: 17px !important;
-  height: 17px !important;
-  top: 15px !important;
+  width: 25px !important;
+  height: 25px !important;
+  top: 11px !important;
   transform: rotate(-90deg);
   background: #ebf8ff;
   border-radius: 100%;
   display: inline-block;
+  background-size: 20px;
+  background-position: center;
 }
 
 .scheduler_default_event_float ul li span {
@@ -933,7 +942,7 @@ ul.eventStyleCal li:first-child {
   padding-left: 14px;
 }
 
-.scheduler_default_event.job-item .scheduler_default_event_float_inner::after {
+.scheduler_default_event.project-item .scheduler_default_event_float_inner::after {
   top: 10px !important;
 }
 
@@ -1012,18 +1021,17 @@ ul.eventStyleCal {
 }
 
 .scheduler_default_tree_image_collapse {
-  right: 8px;
+  right: 2px;
 }
 
 .scheduler_default_tree_image_expand {
-  right: 8px;
+  right: 2px;
 }
 
 .scheduler_default_event_inner {
-  padding: 9px 19px 9px 0 !important;
+  padding: 11px 19px 11px 9px !important;
   border-radius: 10px !important;
-  box-shadow: 0px 3px 5px 0px rgba(16, 24, 40, 0.1),
-    0px 3px 4px 0px rgba(16, 24, 40, 0.06) !important;
+  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06) !important;
   border: 0 !important;
   display: block !important;
 }
@@ -1073,7 +1081,6 @@ ul.eventStyleCal {
   line-height: 22px;
   letter-spacing: 0.12px;
   text-align: left;
-  padding: 7px !important;
 }
 
 .task-heading {
@@ -1162,7 +1169,7 @@ ul.eventStyleCal {
   position: relative;
 }
 
-#calender .scheduler_default_tree_image_collapse::after {
+/* #calender .scheduler_default_tree_image_collapse::after {
   position: absolute;
   top: -380px;
   right: 37px;
@@ -1171,10 +1178,9 @@ ul.eventStyleCal {
   width: 196px;
   height: 400px;
   z-index: -1;
-}
+} */
 
 .project-content {
-  padding-top: 10px;
   position: relative;
   z-index: 10;
   cursor: pointer;

@@ -207,7 +207,7 @@ const Header = () => {
                                 </Col>
                                 <Col>
                                     <ul className="middle">
-                                        <li>
+                                        {/* <li>
                                             <NavLink
                                                 to="/enquiries"
                                                 className={({ isActive }) =>
@@ -217,7 +217,7 @@ const Header = () => {
                                                 <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
                                                 Enquiries
                                             </NavLink>
-                                        </li>
+                                        </li> */}
                                         <li>
                                             <NavLink
                                                 to="/sales"
@@ -377,17 +377,6 @@ const Header = () => {
                                                 Team
                                             </NavLink>
                                         </li>
-                                        <li>
-                                            <NavLink
-                                                to="/work/jobs"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " jobs"
-                                                }
-                                            >
-                                                <img src={Briefcase} alt="briefcase" />
-                                                Jobs
-                                            </NavLink>
-                                        </li>
                                     </ul>
                                 </Col>
                                 <Col>
@@ -420,15 +409,13 @@ const Header = () => {
                                     <ul className="right d-flex flex-nowrap justify-content-end">
                                         <li>
                                             <NavLink
-                                                to="/work/chat"
+                                                to="/work/jobs"
                                                 className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " chat"
+                                                    (isActive ? "menuActive" : "link") + " jobs"
                                                 }
                                             >
-                                                <div style={{ width: '25px', height: '25px', overflow: 'hidden', marginRight: '6px' }}>
-                                                    <img src={chatIcon} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
-                                                </div>
-                                                Chat
+                                                <img src={Briefcase} alt="briefcase" />
+                                                Jobs
                                             </NavLink>
                                         </li>
                                     </ul>
