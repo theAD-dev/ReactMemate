@@ -43,7 +43,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
     delete data.tax;
 
     if (!data.order) delete data.order;
-    if (!data.type) data.type = 1;
+    if (!data.type) data.type = 2;
     if (data.date) data.date = new Date(data.date).toISOString().split('T')[0];
     if (data.due_date) data.due_date = new Date(data.due_date).toISOString().split('T')[0];
     console.log('data: ', data);
@@ -86,7 +86,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
 
   useEffect(() => {
     if (expense?.data) {
-      console.log('call......');
+      console.log('call......', expense?.data);
       const gstType = calculateGST(expense?.data?.nogst, expense?.data?.gst);
       const { subtotal, tax, totalAmount } = calculateAmounts(+expense?.data?.amount, gstType);
 

@@ -16,27 +16,30 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
     const params = new URLSearchParams(urlObj.search);
     const [projectId, setProjectId] = useState(null);
 
-    useEffect(() => {
-        const projectParamId = params.get('projectId');
-        if (projectParamId) {
-            setVisible(true);
-            setProjectId(projectParamId);
-            urlObj.searchParams.delete('projectId');
-            window.history.replaceState({}, '', urlObj);
-        }
-    }, [projectId, setVisible]);
-
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const formRef = useRef(null);
-    const [defaultValues,] = useState({
+    const [defaultValues, setDefaultValues] = useState({
         option: 'Assign to timeframe',
+        type: 2,
         notification: false,
         date: today,
         due_date: tomorrow
     });
+
+    useEffect(() => {
+        const projectParamId = params.get('projectId');
+        if (projectParamId) {
+            setVisible(true);
+            setProjectId(projectParamId);
+            setDefaultValues((prev) => ({ ...prev, option: 'Assign to project' }));
+            urlObj.searchParams.delete('projectId');
+            window.history.replaceState({}, '', urlObj);
+        }
+    }, [projectId, setVisible]);
+
     const mutation = useMutation({
         mutationFn: (data) => createNewExpense(data),
         onSuccess: (response) => {
@@ -74,6 +77,13 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
     const handleClose = () => {
         setVisible(false);
         setProjectId(null);
+        setDefaultValues({
+            option: 'Assign to timeframe',
+            type: 2,
+            notification: false,
+            date: today,
+            due_date: tomorrow
+        });
     };
     return (
         <Sidebar visible={visible} position="right" onHide={handleClose} modal={false} dismissable={false} style={{ width: '702px' }}
