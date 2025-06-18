@@ -2361,7 +2361,7 @@ color: #4285F4;
 
 .projectCardModel .szh-menu {
   width: 204px;
-  height: 238px;
+  max-height: 600px !important;
   overflow-y: auto;
 }
 
