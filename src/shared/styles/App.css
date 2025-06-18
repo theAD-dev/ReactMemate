@@ -5923,7 +5923,7 @@ li.szh-menu__item:hover {
 
 ul.szh-menu {
   width: 230px;
-  max-height: 300px !important;
+  max-height: 300px;
   overflow-y: auto !important;
 }
 

@@ -74,7 +74,7 @@ const schema = yup
     })
     .required();
 
-const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier, setVisible, projectId }, ref) => {
+const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier, projectId }, ref) => {
     const autoCompleteRef = useRef(null);
     const observerRef = useRef(null);
     const accessToken = localStorage.getItem("access_token");

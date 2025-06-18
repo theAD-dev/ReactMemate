@@ -11,10 +11,11 @@ import chat from "../../../assets/chat.png";
 import Briefcase from "../../../assets/images/icon/briefcase.svg";
 import calendarTick from "../../../assets/images/icon/calendar-tick.svg";
 import clipboardTick from "../../../assets/images/icon/clipboard-tick.svg";
+import EnquiriesIcon from "../../../assets/images/icon/enquiries.png";
 import ExpenseIcon from "../../../assets/images/icon/ExpenseIcon.svg";
 import InvoicesIcon from "../../../assets/images/icon/InvoicesIcon.svg";
 import ManagementIcon from "../../../assets/images/icon/ManagementIcon.svg";
-import OrdersIcon from "../../../assets/images/icon/OrdersIcon.svg";
+import chatIcon from '../../../assets/images/icon/message-text.svg';
 import ClientsIcon from "../../../assets/images/icon/profile-2user.svg";
 import Profile3user from "../../../assets/images/icon/profile-3user.svg";
 import SalesIcon from "../../../assets/images/icon/SalesIcon.svg";
@@ -118,6 +119,19 @@ const Header = () => {
                                         <div className="SelectOptionHead">
                                             <SelectLocation currentLocation={session?.location} locations={session?.organization?.locations || []} profileUserName={session?.organization?.name || ""} />
                                         </div>
+                                        <ul>
+                                            <li>
+                                                <NavLink
+                                                    to="/statistics"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " statistics"
+                                                    }
+                                                >
+                                                    <img src={StatisticsIcon} alt="StatisticsIcon" />
+                                                    Statistics
+                                                </NavLink>
+                                            </li>
+                                        </ul>
                                     </Col>
                                     <Col className="d-flex align-items-center justify-content-center">
                                         <nav className="colMinWidth">
@@ -165,7 +179,7 @@ const Header = () => {
                         </div>
                         <Container fluid className="headerNav" style={{ width: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
                             <Row className="flex-nowrap">
-                                <Col xs={3} md={3}>
+                                <Col>
                                     <ul className="left d-flex flex-nowrap">
                                         <li>
                                             <NavLink
@@ -191,8 +205,19 @@ const Header = () => {
                                         </li>
                                     </ul>
                                 </Col>
-                                <Col xs={6} md={6}>
+                                <Col>
                                     <ul className="middle">
+                                        <li>
+                                            <NavLink
+                                                to="/enquiries"
+                                                className={({ isActive }) =>
+                                                    (isActive ? "menuActive" : "link") + " enquiries"
+                                                }
+                                            >
+                                                <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
+                                                Enquiries
+                                            </NavLink>
+                                        </li>
                                         <li>
                                             <NavLink
                                                 to="/sales"
@@ -215,32 +240,22 @@ const Header = () => {
                                                 Management
                                             </NavLink>
                                         </li>
-                                        <li>
-                                            <NavLink
-                                                to="/projects"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " orders"
-                                                }
-                                            >
-                                                <img src={OrdersIcon} alt="OrdersIcon" />
-                                                Projects
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink
-                                                to="/statistics"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " statistics"
-                                                }
-                                            >
-                                                <img src={StatisticsIcon} alt="StatisticsIcon" />
-                                                Statistics
-                                            </NavLink>
-                                        </li>
                                     </ul>
                                 </Col>
-                                <Col xs={3} md={3} style={{ textAlign: "right" }}>
+                                <Col style={{ textAlign: "right" }}>
                                     <ul className="right d-flex flex-nowrap justify-content-end">
+                                        <li>
+                                            <NavLink
+                                                to="/tasks"
+                                                className={({ isActive }) =>
+                                                    (isActive ? "menuActive" : "link") + " tasks"
+                                                }
+
+                                            >
+                                                <img src={calendarTick} alt="calendarTick" />
+                                                Tasks
+                                            </NavLink>
+                                        </li>
                                         <li>
                                             <NavLink
                                                 to="/expenses"
@@ -289,6 +304,19 @@ const Header = () => {
                                         <div className="SelectOptionHead">
                                             <SelectLocation currentLocation={session?.location} locations={session?.organization?.locations || []} profileUserName={session?.organization?.name || ""} />
                                         </div>
+                                        <ul>
+                                            <li>
+                                                <NavLink
+                                                    to="/statistics"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " statistics"
+                                                    }
+                                                >
+                                                    <img src={StatisticsIcon} alt="StatisticsIcon" />
+                                                    Statistics
+                                                </NavLink>
+                                            </li>
+                                        </ul>
                                     </Col>
                                     <Col className="d-flex align-items-center justify-content-center">
                                         <nav className="colMinWidth">
@@ -336,7 +364,7 @@ const Header = () => {
                         </div>
                         <Container fluid className="headerNav">
                             <Row>
-                                <Col xs={3} md={3}>
+                                <Col>
                                     <ul className="left d-flex flex-nowrap">
                                         <li>
                                             <NavLink
@@ -362,7 +390,7 @@ const Header = () => {
                                         </li>
                                     </ul>
                                 </Col>
-                                <Col xs={6} md={6}>
+                                <Col>
                                     <ul className="middle">
                                         <li>
                                             <NavLink
@@ -388,29 +416,17 @@ const Header = () => {
                                         </li>
                                     </ul>
                                 </Col>
-                                <Col xs={3} md={3} style={{ textAlign: "right" }}>
+                                <Col style={{ textAlign: "right" }}>
                                     <ul className="right d-flex flex-nowrap justify-content-end">
-                                        <li>
-                                            <NavLink
-                                                to="/work/tasks"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " tasks"
-                                                }
-
-                                            >
-                                                <img src={calendarTick} alt="calendarTick" />
-                                                Tasks
-                                            </NavLink>
-                                        </li>
                                         <li>
                                             <NavLink
                                                 to="/work/chat"
                                                 className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " news"
+                                                    (isActive ? "menuActive" : "link") + " chat"
                                                 }
                                             >
                                                 <div style={{ width: '25px', height: '25px', overflow: 'hidden', marginRight: '6px' }}>
-                                                    <img src={chat} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
+                                                    <img src={chatIcon} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
                                                 </div>
                                                 Chat
                                             </NavLink>

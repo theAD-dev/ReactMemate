@@ -1,7 +1,8 @@
 import React from "react";
 import { Placeholder } from "react-bootstrap";
 import { QuestionCircle, Search, PlusLg, Bell } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import chatIcon from '../../../../assets/images/icon/message-text.svg';
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
 import Support from "../../support/support";
 import style from '../header.module.scss';
@@ -15,6 +16,20 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
         <>
             <div className="avatar-wrap flexEndbox colMinWidth">
                 <ul className="d-flex flex-nowrap">
+                    <li className="mx-1">
+                        <NavLink
+                            to="/chat"
+                            className={({ isActive }) =>
+                                (isActive ? "menuActive" : "link") + " chat"
+                            }
+                        >
+
+                            Chat
+                            <div style={{ width: '25px', height: '25px', overflow: 'hidden', marginLeft: '0px', paddingTop: '2px' }}>
+                                <img src={chatIcon} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
+                            </div>
+                        </NavLink>
+                    </li>
                     <li className={style.navbarActionIcon}>
                         <Bell color="#667085" size={20} />
                     </li>

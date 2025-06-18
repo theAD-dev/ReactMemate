@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, Col, Dropdown, Row } from 'react-bootstrap';
-import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Calendar as CalendarIcon, ClipboardData, Google, PieChart, ShopWindow, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -363,12 +363,10 @@ const Executive = () => {
                 <title>MeMate - Executive</title>
             </Helmet>
             <div className={`topbar ${style.borderTopbar}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
-                {/* Current page - Executive */}
                 <Link to={"/statistics/executive"} style={{ background: "#F9F5FF" }} className={clsx(style.activeTab, 'd-flex align-items-center px-2 py-1')}>
                     <PieChart color='#9E77ED' size={16} className='me-2' />
                     <span className={style.topbartext} style={{ color: "#9E77ED" }}>Executive</span>
                 </Link>
-                {/* Conversion - disabled */}
                 <Link to={"/statistics/sales-conversion"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Speedometer2 color='#17B26A' size={16} className='me-2' />
                     <span className={style.topbartext}>Conversion</span>
@@ -377,20 +375,21 @@ const Executive = () => {
                     <TextParagraph color='#F04438' size={16} className='me-2' />
                     <span className={style.topbartext}>Overview</span>
                 </Link>
-                {/* Key Results - enabled */}
                 <Link to={"/statistics/key-results"} className='d-flex align-items-center px-2 py-1'>
                     <WindowDesktop color='#667085' size={16} className='me-2' />
                     <span className={style.topbartext}>Key Results</span>
                 </Link>
-                {/* Reports - disabled */}
                 <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
                 </Link>
-                {/* GA Widgets - disabled */}
                 <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
+                </Link>
+                <Link to={"/statistics/profitability"} className={clsx('d-flex align-items-center px-2 py-1')}>
+                    <ShopWindow color='#15B79E' size={16} className='me-2' />
+                    <span className={style.topbartext}>Profitability</span>
                 </Link>
             </div>
             <div className={clsx(style.keyResults)} style={{ padding: "24px", marginBottom: '20px', overflow: 'auto', height: `calc(100vh - 175px - ${trialHeight}px)`, background: '#F8F9FC' }}>

@@ -6,15 +6,15 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from "primereact/dialog";
 import { Tag } from 'primereact/tag';
-import style from './project.module.scss';
-import { getListOfOrder } from '../../../../APIs/OrdersApi';
-import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import exploreOperatingimg from "../../../../assets/images/icon/exploreOperatingimg.png";
-import { formatDate } from '../../../../shared/lib/date-format';
-import { formatAUD } from '../../../../shared/lib/format-aud';
-import Loader from '../../../../shared/ui/loader/loader';
-import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
-import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+import style from './profitability.module.scss';
+import { getListOfOrder } from '../../../../../APIs/OrdersApi';
+import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
+import exploreOperatingimg from "../../../../../assets/images/icon/exploreOperatingimg.png";
+import { formatDate } from '../../../../../shared/lib/date-format';
+import { formatAUD } from '../../../../../shared/lib/format-aud';
+import Loader from '../../../../../shared/ui/loader/loader';
+import ImageAvatar from '../../../../../ui/image-with-fallback/image-avatar';
+import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
 const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
   const observerRef = useRef(null);
@@ -290,7 +290,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     <>
       <DataTable ref={ref} value={orders} scrollable selectionMode={'checkbox'}
         columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-        scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selectedOrder}
+        scrollHeight={`calc(100vh - 175px - 48px - ${trialHeight}px)`} className="border" selection={selectedOrder}
         onSelectionChange={(e) => setSelectedOrder(e.value)}
         loading={loading}
         loadingIcon={Loader}

@@ -155,6 +155,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   }}
                   className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.industry })}
                   style={{ height: '46px' }}
+                  scrollHeight="380px"
                   value={field.value}
                   loading={industriesQuery?.isFetching}
                   placeholder="Select Industry"

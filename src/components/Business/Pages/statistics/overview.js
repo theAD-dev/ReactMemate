@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Col, Dropdown, Row } from 'react-bootstrap';
-import { Calendar3 as CalendarIcon, ClipboardData, Google, InfoSquareFill, PieChart, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Calendar3 as CalendarIcon, ClipboardData, Google, InfoSquareFill, PieChart, ShopWindow, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -432,6 +432,10 @@ const Overview = () => {
                 <Link to={"#"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
+                </Link>
+                <Link to={"/statistics/profitability"} className={clsx('d-flex align-items-center px-2 py-1')}>
+                    <ShopWindow color='#15B79E' size={16} className='me-2' />
+                    <span className={style.topbartext}>Profitability</span>
                 </Link>
             </div>
 

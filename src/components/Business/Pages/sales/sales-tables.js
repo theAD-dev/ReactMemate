@@ -174,13 +174,9 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
       ),
 
       renderCell: (params) => (
-        <div className="userImgStyle">
-          <div className="innerFlex styleColor2 d-flex justify-content-between">
-            <div className="leftStyle d-flex align-items-center">
-              <ImageAvatar has_photo={params.row.hasPhoto} photo={params.row?.photo} is_business={params.row?.is_business} />
-              <div className="ellipsis-width" style={{ maxWidth: '200px' }} title={params.value}>{params.value}</div>
-            </div>
-          </div>
+        <div className="d-flex align-items-center">
+          <ImageAvatar has_photo={params.row.hasPhoto} photo={params.row?.photo} is_business={params.row?.is_business} />
+          <div className="ellipsis-width" style={{ maxWidth: '200px' }} title={params.value}>{params.value}</div>
         </div>
       ),
 

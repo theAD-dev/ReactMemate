@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { Download, Filter } from 'react-bootstrap-icons';
+import { ClipboardData, Download, Filter, Google, Link, PieChart, ShopWindow, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
 import { TieredMenu } from 'primereact/tieredmenu';
-import ProjectsTable from './project-table';
-import style from './project.module.scss';
+import ProjectsTable from './profitability-table';
+import style from './profitability.module.scss';
+import StatisticsHeader from '../ui/statistics-header';
 
-const ProjectPage = () => {
+const Profitability = () => {
     const dt = useRef(null);
     const menu = useRef(null);
 
@@ -26,8 +27,9 @@ const ProjectPage = () => {
     return (
         <div className='peoples-page'>
             <Helmet>
-                <title>MeMate - Projects</title>
+                <title>MeMate - Profitability</title>
             </Helmet>
+            <StatisticsHeader page="profitability"/>
             <div className={`topbar ${selectedOrder?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
                     {
@@ -42,7 +44,7 @@ const ProjectPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter size={20}/></button>
+                                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
@@ -60,13 +62,12 @@ const ProjectPage = () => {
                 </div>
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Projects</h1>
+                    <h1 className="title p-0" style={{ marginRight: '16px' }}>Order</h1>
                 </div>
-
             </div>
-            <ProjectsTable ref={dt} searchValue={debouncedValue}  selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
+            <ProjectsTable ref={dt} searchValue={debouncedValue} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
         </div>
     );
 };
 
-export default ProjectPage;
+export default Profitability;
