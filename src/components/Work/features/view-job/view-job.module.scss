@@ -49,6 +49,18 @@
   letter-spacing: 0.08px;
 }
 
+.toggleButton {
+  color: #158ECC; /* blue-600 */
+  background: none;
+  border: none;
+  padding: 0px 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+
 .description {
   overflow: hidden;
   text-overflow: ellipsis;

@@ -478,11 +478,11 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             suggestions={suppliers}
                             itemTemplate={(option) => {
                                 return (
-                                    <div className='d-flex gap-2 align-items-center'>
+                                    <div className='d-flex gap-2 align-items-center w-100'>
                                         <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
                                             <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
                                         </div>
-                                        {option?.name}
+                                        <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
                                     </div>
                                 );
                             }}
@@ -494,7 +494,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                 setSearchValue("");
                                 setHasMoreData(true);
                             }}
-                            style={{ height: '46px' }}
+                            style={{ minHeight: '46px' }}
+                            scrollHeight='450px'
                             className={clsx(styles.autoComplete, "w-100", { [styles.error]: errors.supplier })}
                             placeholder="Search for supplier"
                         />

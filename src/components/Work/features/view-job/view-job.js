@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Calendar3, X } from 'react-bootstrap-icons';
+import { Calendar3, Link, X } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { Chip } from 'primereact/chip';
-import { Image } from 'primereact/image';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import ViewAttachements from './view-attachements';
@@ -38,6 +38,8 @@ const statusBody = (status) => {
 
 const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode }) => {
     const [show, setShow] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    const navigate = useNavigate();
 
     let paymentCycleObj = {
         "7": "WEEK",
@@ -98,7 +100,14 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                     </div>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Job Description</label>
-                                        <p className={clsx(style.text, style.description)}>{job?.long_description || "-"}</p>
+                                        <p className={clsx(style.text, !expanded && style.description, "mb-0")}>
+                                            {job?.long_description || "-"}
+                                        </p>
+                                        {job?.long_description?.length > 200 && (
+                                            <button onClick={() => setExpanded(!expanded)} className={style.toggleButton}>
+                                                {expanded ? "Show Less" : "Show More"}
+                                            </button>
+                                        )}
                                     </div>
                                 </Card.Header>
                             </Card>
@@ -259,7 +268,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                 <Card.Header className={clsx(style.background, 'border-0')}>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Project</label>
-                                        <p className={clsx(style.text)}>{job?.project?.number || "-"}</p>
+                                        <p className={clsx(style.text, 'd-flex align-items-center gap-1')}>{job?.project?.number || "-"} <Button className='text-button p-0' onClick={() => navigate(`/management?unique_id=${job?.project?.unique_id}&reference=${job?.project?.reference}&number=${job?.project?.number}`)}><Link size={16} color='#158ECC' /></Button></p>
                                     </div>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Reference</label>
@@ -271,23 +280,35 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                     </div>
                                 </Card.Header>
                             </Card>
-
-                            <h1 className={clsx(style.heading, 'mb-3')}>Project Photos</h1>
-                            <Card className={clsx(style.border, 'mb-3')}>
-                                <Card.Header className={clsx(style.background, 'border-0')}>
-                                    <label className={clsx(style.customLabel)}>Before</label>
-                                    <div className='d-flex gap-2' style={{ overflowX: 'auto' }}>
-                                        <p className='mb-0 font-12'>No Photos</p>
-                                        {/* <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
+                            {
+                                job?.project_photos && <>
+                                    <h1 className={clsx(style.heading, 'mb-3')}>Project Photos</h1>
+                                    <Card className={clsx(style.border, 'mb-3')}>
+                                        <Card.Header className={clsx(style.background, 'border-0')}>
+                                            <div className='d-flex flex-column gap-1' style={{ overflowX: 'auto' }}>
+                                                {
+                                                    job?.project_photos == 1 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>Before & After</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : job?.project_photos == 2 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>In Process</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : job?.project_photos == 3 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>All</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : null
+                                                }
+                                            </div>
+                                            {/* <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria10.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria11.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria12.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria13.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg" alt="Image" className={style.jobGalleri} width="124" preview />
                                         <Image src="https://primefaces.org/cdn/primereact/images/galleria/galleria15.jpg" alt="Image" className={style.jobGalleri} width="124" preview /> */}
-                                    </div>
-                                </Card.Header>
-                            </Card>
-
+                                        </Card.Header>
+                                    </Card>
+                                </>
+                            }
                             <h1 className={clsx(style.heading, 'mb-3')}>Documents</h1>
                             <Card className={clsx(style.border, 'mb-3')}>
                                 <Card.Header className={clsx(style.background, 'border-0')}>
