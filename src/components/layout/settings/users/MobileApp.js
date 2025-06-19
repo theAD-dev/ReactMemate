@@ -13,7 +13,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import CreateMobileUser from './features/create-mobile-user';
 import style from './users.module.scss';
-import { deleteMobileUser, getMobileUserList, restoreMobileUser } from '../../../../APIs/settings-user-api';
+import { deleteMobileUser, getMobileUserList, resendInvite, restoreMobileUser } from '../../../../APIs/settings-user-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ExpertsCuate from '../../../../assets/Experts-cuate.svg';
@@ -81,6 +81,19 @@ const MobileApp = React.memo(() => {
         }
     });
 
+    const resendInviteMutation = useMutation({
+        mutationFn: (data) => resendInvite(data),
+        onSuccess: () => {
+            mobileUsersQuery.refetch();
+            toast.success(`Invite resent successfully`);
+            resendInviteMutation.reset();
+        },
+        onError: (error) => {
+            console.log('error: ', error);
+            toast.error(`Failed to resend invite. Please try again.`);
+        }
+    });
+
     const restoreUser = (id) => {
         if (parseInt(mobileUsersQuery?.data?.limits?.total) > parseInt(mobileUsersQuery?.data?.limits?.number)) {
             restoreMutation.mutate(id);
@@ -103,7 +116,7 @@ const MobileApp = React.memo(() => {
                 className={"threeDots-setting"}
                 menuStyle={{ padding: '4px', width: '171px', textAlign: 'left' }}
             >
-                <div className='d-flex flex-column gap-2'>
+                <div className='d-flex flex-column'>
                     {
                         (data.status === "invited" || data.status === "connected") && <>
                             <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2 w-100' style={{ width: 'fit-content ' }} onClick={() => { deleteMutation.mutate(data?.id); }}>
@@ -112,12 +125,18 @@ const MobileApp = React.memo(() => {
                                     {deleteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                                 </span>
                             </div>
+                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2 w-100' style={{ width: 'fit-content ' }} onClick={() => { resendInviteMutation.mutate(data?.id); }}>
+                                <span className='d-flex align-items-center justify-content-between gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
+                                    Resend Invite
+                                    {resendInviteMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                                </span>
+                            </div>
                         </>
                     }
                     {
                         (data.status === "disconnected") && <>
                             <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2 w-100' style={{ width: 'fit-content ' }} onClick={() => restoreUser(data.id)}>
-                                <span className='d-flex align-items-center gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
+                                <span className='d-flex align-items-center justify-content-between gap-2' style={{ color: '#344054', fontSize: '14px', fontWeight: 400 }}>
                                     Reconnect User
                                     {restoreMutation?.variables === data?.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
                                 </span>
@@ -146,7 +165,7 @@ const MobileApp = React.memo(() => {
                             {
                                 hasWorkSubscription &&
                                 hasPermission(role, PERMISSIONS.SETTINGS.USERS.MOBILE_APP.ADD) && (
-                                    <Button disabled={parseInt(mobileUsersQuery?.data?.limits?.total) === parseInt(mobileUsersQuery?.data?.limits?.number)} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
+                                    <Button disabled={parseInt(mobileUsersQuery?.data?.limits?.total) <= parseInt(mobileUsersQuery?.data?.limits?.number)} onClick={() => setVisible(true)} className={clsx(style.addUserBut, 'outline-none')}>Add <Plus size={20} color="#000" /></Button>
                                 )
                             }
                         </div>
