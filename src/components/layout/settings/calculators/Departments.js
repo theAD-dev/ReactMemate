@@ -454,7 +454,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                     <>
 
                         <h6>Description</h6>
-                        <p>{calculator?.description || ""}</p>
+                        <p style={{ whiteSpace: "pre-line" }}>{calculator?.description || ""}</p>
                         <Row>
                             <Col>
                                 <label>Cost</label>
@@ -503,7 +503,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
 const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [tempCalculator, setTempCalculator] = useState({
-        profit_type: "MRG", // Default profit type
+        profit_type: "MRK", // Default profit type
         profit_type_value: 0,
         cost: undefined,
         quantity: 1,

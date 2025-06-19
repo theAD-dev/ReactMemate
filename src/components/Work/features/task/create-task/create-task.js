@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { getProjectsList } from '../../../../../APIs/expenses-api';
 import { createNewTask, getMobileUserList, getUserList, updateTask } from '../../../../../APIs/task-api';
 import { fetchTasksDelete } from '../../../../../APIs/TasksApi';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import taskEditIcon from '../../../../../assets/images/icon/taskEditIcon.svg';
 import newTaskImg from '../../../../../assets/images/new-task.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
@@ -27,6 +28,7 @@ const dateFormat = (dateInMiliSec) => {
 
 const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue }) => {
     const dropdownRef = useRef(null);
+    const { session } = useAuth();
     const [submitted, setSubmitted] = useState(false);
 
     const [taskTitle, setTaskTitle] = useState('');
@@ -220,15 +222,22 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                                     has_photo: user?.has_photo
                                 })) || []
                             },
-                            {
-                                label: 'Mobile User',
-                                items: mobileUsersList?.data?.users?.filter((user) => user?.status !== 'disconnected')?.map((user) => ({
-                                    value: user?.id,
-                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                    photo: user?.photo || "",
-                                    has_photo: user?.has_photo
-                                })) || []
-                            }
+                            ...(session?.has_work_subscription
+                                ? [
+                                    {
+                                        label: 'Mobile User',
+                                        items:
+                                            mobileUsersList?.data?.users
+                                                ?.filter((user) => user?.status !== 'disconnected')
+                                                ?.map((user) => ({
+                                                    value: user?.id,
+                                                    label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                                    photo: user?.photo || "",
+                                                    has_photo: user?.has_photo,
+                                                })) || [],
+                                    },
+                                ]
+                                : []),
                         ]}
                         onChange={(e) => {
                             setUser(e.value);

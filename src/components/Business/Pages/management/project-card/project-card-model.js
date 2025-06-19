@@ -167,7 +167,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     mutationFn: (data) => projectsComplete(data),
     onSuccess: (response) => {
       if (response) {
-        navigate('/sales');
+        handleClose();
         toast.success('Project has been successfully completed');
       } else {
         toast.error(`Failed to complete the project. Please try again.`);

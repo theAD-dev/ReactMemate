@@ -47,6 +47,28 @@ export function getFileIcon(fileType) {
         'application/vnd.ms-publisher': { name: 'Publisher', color: '#4CAF50' },
         'application/x-shockwave-flash': { name: 'SWF', color: '#FFEB3B' },
         'application/x-tar': { name: 'TAR', color: '#FFC107' },
+        'zip': { name: 'ZIP', color: '#FFD700' },
+        'rar': { name: 'RAR', color: '#F44336' },
+        'ppt': { name: 'PPT', color: '#FF9800' },
+        'pub': { name: 'Publisher', color: '#4CAF50' },
+        'swf': { name: 'SWF', color: '#FFEB3B' },
+        'tar': { name: 'TAR', color: '#FFC107' },
+        'pdf': { name: 'PDF', color: '#D92D20' },
+        'doc': { name: 'Word', color: '#2368E1' },
+        'docx': { name: 'Word', color: '#2368E1' },
+        'xls': { name: 'Excel', color: '#22A746' },
+        'xlsx': { name: 'Excel', color: '#22A746' },
+        'jpg': { name: 'JPEG', color: '#FFAA00' },
+        'jpeg': { name: 'JPEG', color: '#FFAA00' },
+        'png': { name: 'PNG', color: '#00ADEF' },
+        'gif': { name: 'GIF', color: '#F64A8A' },
+        'mp4': { name: 'MP4', color: '#9C27B0' },
+        'mp3': { name: 'MP3', color: '#4CAF50' },
+        'wav': { name: 'WAV', color: '#795548' },
+        'txt': { name: 'Text', color: '#8E8E8E' },
+        'json': { name: 'JSON', color: '#22A746' },
+        'svg': { name: 'SVG', color: '#FF5722' },
+        'pptx': { name: 'PPT', color: '#FF9800' },
     };
 
     const fileData = fileTypes[fileType] || { name: 'Unknown', color: '#000000' };
@@ -537,7 +559,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
             // Set project
             if (jobData.project) {
-                setProjectId(jobData.project.id);
+                setProjectId(jobData.project.unique_id);
             }
 
             // Set payment type and cost
@@ -674,7 +696,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 style={{
                                                     height: '126px'
                                                 }}
-                                                placeholder="Enter the detailed quote for the client contract here. Include all relevant information such as project scope, deliverables, timelines, costs, payment terms, and any special conditions. Ensure the quote is clear, comprehensive, and aligns with the client's requirements and expectations."
+                                                placeholder="Enter a description..."
                                             />
                                         </IconField>
                                     </div>
@@ -1330,7 +1352,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
                         <Button type='button' onClick={() => onSubmit(false)} className='outline-button active-outline-button' disabled={mutation?.isPending}>
-                            {isEditMode ? "Update and Unpublished" : "Save and Unpublished"} 
+                            {isEditMode ? "Update Draft" : "Save Draft"} 
                             {mutation?.isPending && !publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
                         </Button>
                         <Button type='button' onClick={() => onSubmit(true)} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>

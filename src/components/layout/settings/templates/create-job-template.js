@@ -5,55 +5,15 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Editor } from 'primereact/editor';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './job-template.module.scss';
 import { createJobTemplate, deleteJobTemplate, getJobTemplate, updateJobTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-
-const renderHeader = () => (
-    <span className="ql-formats">
-        <button className="ql-bold" aria-label="Bold"></button>
-        <button className="ql-italic" aria-label="Italic"></button>
-        <button className="ql-underline" aria-label="Underline"></button>
-        <button className="ql-strike" aria-label="Strikethrough"></button>
-        <button className="ql-blockquote" aria-label="Blockquote"></button>
-        <button
-            className="ql-list"
-            value="ordered"
-            aria-label="Ordered List"
-        ></button>
-        <button
-            className="ql-list"
-            value="bullet"
-            aria-label="Bullet List"
-        ></button>
-        <button className="ql-align" value="" aria-label="Align Left"></button>
-        <button
-            className="ql-align"
-            value="center"
-            aria-label="Align Center"
-        ></button>
-        <button
-            className="ql-align"
-            value="right"
-            aria-label="Align Right"
-        ></button>
-        <button
-            className="ql-align"
-            value="justify"
-            aria-label="Justify"
-        ></button>
-        <button className="ql-link" aria-label="Insert Link"></button>
-        <button className="ql-image" aria-label="Insert Image"></button>
-        <button className="ql-code-block" aria-label="Code Block"></button>
-    </span>
-);
-const header = renderHeader();
 
 const CreateJobTemplate = () => {
     const { trialHeight } = useTrialHeight();
@@ -61,8 +21,6 @@ const CreateJobTemplate = () => {
     const has_twilio = !!profileData?.has_twilio;
     const navigate = useNavigate();
     const { id } = useParams();
-    console.log('id: ', id);
-    const editorRef = useRef(null);
     const subjectRef = useRef(null);
     const [name, setName] = useState("");
     const [subject, setSubject] = useState('');
@@ -237,16 +195,14 @@ const CreateJobTemplate = () => {
                             <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                 {jobQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                             </InputIcon>
-                            <Editor
-                                ref={editorRef}
-                                style={{ minHeight: "299px" }}
-                                headerTemplate={header}
+                            <InputTextarea
                                 value={text}
-                                placeholder='Enter a description...'
-                                onTextChange={(e) => {
-                                    setText(e.htmlValue);
+                                onChange={(e) => {
+                                    setText(e.target.value);
                                     setErrors((others) => ({ ...others, text: false }));
                                 }}
+                                rows={10}
+                                cols={30}
                             />
                         </div>
                         {errors?.text && (

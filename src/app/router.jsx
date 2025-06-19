@@ -13,7 +13,7 @@ const ExpensesPage = LazyLoader(lazy(() => import('../components/Business/Pages/
 const InvoicePage = LazyLoader(lazy(() => import('../components/Business/Pages/invoices')));
 const PublicInvoice = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/public-invoice/public-invoice')));
 const Management = LazyLoader(lazy(() => import('../components/Business/Pages/management/management-page')));
-const ProjectPage = LazyLoader(lazy(() => import('../components/Business/Pages/projects')));
+const Profitability = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/profitability')));
 const BusinessClientInformation = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/business-client-information')));
 const CalculateQuote = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/calculate-quote')));
 const ExistingClients = LazyLoader(lazy(() => import('../components/Business/Pages/sales/new-request/existing-clients')));
@@ -238,16 +238,24 @@ const routes = [
                 element: <SupplierHistoryPage />,
             },
             {
+                path: "enquiries",
+                element: <>Enquires</>,
+            },
+            {
+                path: "tasks",
+                element: <TaskPage />,
+            },
+            {
+                path: "chat",
+                element: <Chat />,
+            },
+            {
                 path: "expenses",
                 element: <ExpensesPage />,
             },
             {
                 path: "invoices",
                 element: <InvoicePage />,
-            },
-            {
-                path: "projects",
-                element: <ProjectPage />,
             },
             {
                 path: "statistics",
@@ -271,6 +279,10 @@ const routes = [
                     {
                         path: "overview",
                         element: <Overview />,
+                    },
+                    {
+                        path: "profitability",
+                        element: <Profitability />,
                     },
                 ],
             },
@@ -354,10 +366,6 @@ const routes = [
             {
                 path: "dashboard",
                 element: <WorkDashboard />,
-            },
-            {
-                path: "tasks",
-                element: <TaskPage />,
             },
             {
                 path: "news",

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Dropdown, Spinner } from "react-bootstrap";
+import { CalendarWeek, SortDown } from "react-bootstrap-icons";
 import clsx from "clsx";
 import { initDaypilot, reInitializeData } from "./utils";
 import { getManagement } from "../../../../../APIs/management-api";
@@ -274,7 +275,10 @@ function EventScheduler() {
       <div className="d-flex gap-2 justify-content-end align-items-center" style={{ position: 'absolute', left: '40px', top: '56px', zIndex: 1000 }}>
         <Dropdown>
           <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px", position: "relative" }}>
-            <span className="font-14">{sortBy || "Sort By"}</span>
+            <span className="font-14 d-flex align-items-center">
+              <SortDown size={16} color="#667085" className="me-2" />
+              {sortBy || "Sort By"}
+            </span>
             {sortBy && (
               <span
                 onClick={(e) => {
@@ -321,7 +325,10 @@ function EventScheduler() {
 
         <Dropdown>
           <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px", position: "relative" }}>
-            <span className="font-14">{filterBy || "Filter By"}</span>
+            <span className="font-14 d-flex align-items-center">
+              <CalendarWeek size={16} color="#667085" className="me-2" />
+              {filterBy || "Filter By"}
+            </span>
             {filterBy && (
               <span
                 onClick={(e) => {
@@ -362,6 +369,8 @@ function EventScheduler() {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+
+
       </div>
     </div>
 

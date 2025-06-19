@@ -212,10 +212,10 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
       <FileText color='#667085' size={16} className='cursor-pointer' ref={ref} {...anchorProps} />
       <div className='fixedMenu' style={{ position: 'fixed', top: '50%', left: '40%' }} key={rowData.id}>
         <ControlledMenu
-          state={isOpen ? 'open' : 'closed'}
+          state={isOpen ? 'open' : ''}
           anchorRef={ref}
           onClose={() => setOpen(false)}
-          menuStyle={{ padding: '24px 24px 20px 24px', width: '405px', textAlign: 'left' }}
+          menuStyle={{ padding: '24px 24px 20px 24px', width: '600px', maxHeight: '80vh', textAlign: 'left' }}
         >
           <div className='d-flex justify-content-between mb-4'>
             <div className='BoxNo'>
@@ -225,8 +225,36 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
             </div>
             <CloseButton onClick={() => setOpen(false)} />
           </div>
-          <h1 className={clsx(style.orderHeading, 'mb-3')}>Order card history </h1>
-          <div style={{ maxHeight: '300px', overflow: 'auto' }}>
+          <h1 className={clsx(style.orderHeading, 'mb-2 pb-1')}>Order card history </h1>
+          <div style={{ maxHeight: 'calc(80vh - 200px)', overflow: 'auto' }}>
+            {
+              rowData?.history?.map((history, index) => (
+                <div key={`${rowData.unique_id}-${index}`} className='d-flex flex-column mb-4 text-start'>
+                  <div className='d-flex align-items-center gap-1'>
+                    {getIconByType(history.type)}
+                    <p className={clsx(style.historyTitle, 'mb-0')}>{history?.title || "-"}</p>
+                  </div>
+                  {history?.text && <p className={clsx(style.historyText, 'mb-1')} dangerouslySetInnerHTML={{ __html: history?.text }} />}
+                  <p className={clsx(style.historyDescription, 'mb-0')}>
+                    {historyDescription(history)}
+                  </p>
+                </div>
+              ))
+            }
+            {
+              rowData?.history?.map((history, index) => (
+                <div key={`${rowData.unique_id}-${index}`} className='d-flex flex-column mb-4 text-start'>
+                  <div className='d-flex align-items-center gap-1'>
+                    {getIconByType(history.type)}
+                    <p className={clsx(style.historyTitle, 'mb-0')}>{history?.title || "-"}</p>
+                  </div>
+                  {history?.text && <p className={clsx(style.historyText, 'mb-1')} dangerouslySetInnerHTML={{ __html: history?.text }} />}
+                  <p className={clsx(style.historyDescription, 'mb-0')}>
+                    {historyDescription(history)}
+                  </p>
+                </div>
+              ))
+            }
             {
               rowData?.history?.map((history, index) => (
                 <div key={`${rowData.unique_id}-${index}`} className='d-flex flex-column mb-4 text-start'>
