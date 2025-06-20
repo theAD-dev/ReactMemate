@@ -86,7 +86,15 @@ const CalculateQuote = () => {
         },
         onError: (error) => {
             setIsLoading(false);
-            console.error('Error updating new calculation quote:', error);
+            console.log('Error updating new calculation quote:', error, error?.data?.client?.[0]);
+
+            if (error?.status === 400) {
+                const msg = error?.data?.client?.[0];
+                if (msg?.includes('Invalid pk') && msg?.includes('object does not exist')) {
+                    return toast.error("This client has been deleted. Please restore it before continuing.");
+                }
+            }
+
             toast.error(`Failed to update calculation quote. Please try again.`);
         }
     });
