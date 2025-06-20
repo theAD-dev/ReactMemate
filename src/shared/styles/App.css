@@ -942,7 +942,8 @@ ul.eventStyleCal li:first-child {
   padding-left: 14px;
 }
 
-.scheduler_default_event.project-item .scheduler_default_event_float_inner::after {
+.scheduler_default_event.project-item
+  .scheduler_default_event_float_inner::after {
   top: 10px !important;
 }
 
@@ -1031,7 +1032,8 @@ ul.eventStyleCal {
 .scheduler_default_event_inner {
   padding: 11px 19px 11px 9px !important;
   border-radius: 10px !important;
-  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.10), 0px 1px 2px 0px rgba(16, 24, 40, 0.06) !important;
+  box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.1),
+    0px 1px 2px 0px rgba(16, 24, 40, 0.06) !important;
   border: 0 !important;
   display: block !important;
 }
@@ -5935,7 +5937,7 @@ ul.szh-menu {
 
 .departmentSelect ul.szh-menu {
   max-height: 500px !important;
- }
+}
 
 .szh-menu__submenu {
   width: 220px;
@@ -6085,8 +6087,24 @@ ul.szh-menu {
   background: var(--Base-White, #fff);
   box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
   padding: 40px;
-  width: 617px;
+  width: 650px;
   margin: 0 auto;
+}
+
+.formBoxDiscover {
+  padding: 6px 16px 25px 16px;
+  border-radius: 4px;
+  background: #f9fafb;
+}
+
+.termconditionP {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
 }
 
 .requestDemoWrap .BusinessPlanwrap {
@@ -6098,35 +6116,60 @@ ul.szh-menu {
   align-items: center;
 }
 
+.badgePlan {
+  display: flex;
+  padding: 4px 8px;
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid #1ab2ff;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(4px);
+}
+
 .requestDemoWrap .BusinessPlanBox .headPlan {
   text-align: center;
 }
 
 .requestDemoWrap .BusinessPlanBox .headPlan h1 {
   color: var(--Gray-900, #101828);
-  text-align: center;
+  text-align: left;
   font-size: 48px;
   font-style: normal;
   font-weight: 600;
   line-height: 60px;
   letter-spacing: -0.96px;
+  font-weight: bold;
+  background: radial-gradient(circle at center, #ffb258, #1ab2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .requestDemoWrap .BusinessPlanBox .headPlan h3 {
-  color: var(--Gray-900, #101828);
-  text-align: center;
-  font-size: 20px;
+  color: var(--Gray-800, #1d2939);
+  font-feature-settings: "liga" off, "clig" off;
+  font-family: Inter;
+  font-size: 56px;
   font-style: normal;
   font-weight: 600;
-  line-height: 30px;
-  margin: 0;
+  line-height: 63.873px; /* 114.058% */
+  letter-spacing: -2.24px;
+}
+
+.requestDemoWrap .BusinessPlanBox .headPlan h3 span {
+  color: var(--Gray-800, #1d2939);
+  font-feature-settings: "liga" off, "clig" off;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 21.291px; /* 118.283% */
 }
 
 .requestDemoWrap .BusinessPlanBox .headPlan p {
   color: var(--Gray-600, #475467);
-  text-align: center;
+  text-align: left;
   font-size: 16px;
-  font-style: normal;
+  font-style: italic;
   font-weight: 400;
   line-height: 24px;
   margin: 0;

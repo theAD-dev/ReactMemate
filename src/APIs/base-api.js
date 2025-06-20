@@ -13,7 +13,7 @@ export const fetchAPI = async (endpoint, options = {}, isRequiredLoggedin = true
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
         ...headers
     };
-    
+
     if (isRequiredLoggedin) {
         defaultHeaders['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -26,19 +26,31 @@ export const fetchAPI = async (endpoint, options = {}, isRequiredLoggedin = true
     };
 
     try {
-        const url = new URL(`${endpoint}`);
+        const url = new URL(endpoint);
         const response = await fetch(url, requestOptions);
+        const contentType = response.headers.get('Content-Type');
+
         if (!response.ok) {
+            let errorData = null;
+
+            if (contentType && contentType.includes('application/json')) {
+                errorData = await response.json();
+            } else {
+                errorData = await response.text();
+            }
+
             if (response.status === 401) {
-                window.localStorage.clear();
-                window.sessionStorage.clear();
+                localStorage.clear();
+                sessionStorage.clear();
                 window.location.replace("/login");
             }
-            
-            if (response.status === 404) throw new Error('Not found');
-            throw new Error(`HTTP error! Status: ${response.status}`);
+
+            const error = new Error(errorData?.message || `HTTP error! Status: ${response.status}`);
+            error.status = response.status;
+            error.data = errorData;
+            throw error;
         }
-        const contentType = response.headers.get('Content-Type');
+
         if (contentType && contentType.includes('application/json')) {
             return await response.json();
         } else {
@@ -47,7 +59,7 @@ export const fetchAPI = async (endpoint, options = {}, isRequiredLoggedin = true
         }
     } catch (error) {
         console.error('Fetch API error:', error);
+        // Rethrow to propagate to useMutation
         throw error;
     }
 };
-
