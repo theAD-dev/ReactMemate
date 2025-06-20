@@ -5933,6 +5933,10 @@ ul.szh-menu {
   overflow-y: auto !important;
 }
 
+.departmentSelect ul.szh-menu {
+  max-height: 500px !important;
+ }
+
 .szh-menu__submenu {
   width: 220px;
   white-space: nowrap;
