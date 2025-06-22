@@ -1298,6 +1298,7 @@ strong.dollorIcon {
   line-height: 24px;
   letter-spacing: -0.08px;
   padding-right: 22px;
+  white-space: pre-line;
 }
 
 .orderDiscription strong {
