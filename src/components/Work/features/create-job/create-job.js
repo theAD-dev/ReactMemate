@@ -95,6 +95,9 @@ export function getFileIcon(fileType) {
 const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
     const publishRef = useRef(null);
+    const url = React.useMemo(() => window.location.href, []);
+    const urlObj = React.useMemo(() => new URL(url), [url]);
+    const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
 
     const [templateId, setTemplatedId] = useState("");
     const [isOpenRepeatSection, setIsOpenRepeatSection] = useState(false);
@@ -143,7 +146,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const [type, setType] = useState('2');
     const [cost, setCost] = useState(0.00);
     const [time_type, set_time_type] = useState('');
-    const [start, setStart] = useState("");
+    const today = new Date();
+    const [start, setStart] = useState(today);
     const [end, setEnd] = useState("");
     const [duration, setDuration] = useState("");
 
@@ -251,6 +255,17 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             setErrors((others) => ({ ...others, description: false }));
         }
     }, [getTemplateByIDQuery?.data]);
+
+    useEffect(() => {
+        const projectParamId = params.get('projectId');
+        console.log('projectParamId: ', projectParamId);
+        if (projectParamId) {
+            setVisible(true);
+            setProjectId(projectParamId);
+            urlObj.searchParams.delete('projectId');
+            window.history.replaceState({}, '', urlObj);
+        }
+    }, [projectId, setVisible, params, urlObj]);
 
     const uploadToS3 = async (file, url) => {
         try {
@@ -1352,7 +1367,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                         <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
                         <Button type='button' onClick={() => onSubmit(false)} className='outline-button active-outline-button' disabled={mutation?.isPending}>
-                            {isEditMode ? "Update Draft" : "Save Draft"} 
+                            {isEditMode ? "Update Draft" : "Save Draft"}
                             {mutation?.isPending && !publishRef.current && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#fff" }} />}
                         </Button>
                         <Button type='button' onClick={() => onSubmit(true)} className='solid-button' style={{ minWidth: '75px' }} disabled={mutation?.isPending}>

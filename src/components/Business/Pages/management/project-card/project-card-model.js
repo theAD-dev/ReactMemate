@@ -747,7 +747,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
                   profileData?.has_work_subscription &&
-                  <Button className='createJob jobActive'>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
+                  <Link to={`/work/jobs?projectId=${projectId}`}>
+                    <Button className='createJob jobActive'>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
+                  </Link>
                 }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 {/* <FilesModel /> */}
@@ -873,7 +875,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       </div>
                       <div>
                         <div>
-                          <PauseCircle size={20} color='#106B99' style={{ transform: 'rotate(90deg)' }}/>
+                          <PauseCircle size={20} color='#106B99' style={{ transform: 'rotate(90deg)' }} />
                         </div>
                       </div>
                       <div className='d-flex flex-column align-items-end'>
