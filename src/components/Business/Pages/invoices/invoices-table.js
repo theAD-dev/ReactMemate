@@ -109,7 +109,10 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
 
     const InvoiceIDBody = (rowData) => {
         return <div className={`d-flex align-items-center gap-2 justify-content-between show-on-hover`}>
-            <span>{rowData.number}</span>
+            <div className='d-flex flex-column'>
+                <span>{rowData.number}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
+            </div>
             <Button label="Open" onClick={() => navigate(`/management?unique_id=${rowData.unique_id}&reference=${rowData?.reference}&number=${rowData?.number}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>;
     };
@@ -363,10 +366,10 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 rowClassName={rowClassName}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-                <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px' }} frozen></Column>
+                <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '160px', maxWidth: '160px', width: '160px' }} frozen sortable></Column>
+                <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }} frozen></Column>
                 <Column field="client.name" header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-                <Column field="reference" header="Invoice Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.reference} style={{ maxWidth: '250px' }}>{rowData.reference}</div>} style={{ minWidth: '56px' }}></Column>
+                <Column field="reference" header="Invoice Reference"  style={{ minWidth: '250px' }}></Column>
                 <Column field="due_date" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
                 <Column field='amount' header="Amount + GST" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>

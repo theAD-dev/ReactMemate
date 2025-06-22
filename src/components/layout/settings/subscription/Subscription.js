@@ -109,7 +109,7 @@ const Subscription = () => {
 
                 <ul>
                   <li>
-                    <div className="progressSubsstart actibeSubscription">
+                    <div className="progressSubsstart actibeSubscription" style={{ marginTop: '40px' }}>
                       <div className="progressSubsWrap">
                         <div className="progressSubsIcon">
                           <img src={ThemeImages.buildingCheck} alt="buildingCheck" />
@@ -129,7 +129,7 @@ const Subscription = () => {
                       </div>
                     </div>
 
-                    <div className="progressSubsstart marginTopSpance ">
+                    <div className="progressSubsstart marginTopSpance" style={{ marginTop: '30px' }}>
                       <div className="progressSubsWrap">
                         <div className="progressSubsIcon">
                           <img src={ThemeImages.buildingssubs} alt="buildingssubs" />
@@ -301,7 +301,7 @@ const Subscription = () => {
                 </ul>
               </div>
               <div className="rightText">
-                <div className="editwrapper">
+                <div className="editwrapper pt-1">
                   <div className="repaymentStatusBox w-100 mb-4">
                     <p className="repaymentStatusBox-text-1">Current  repayments</p>
                     <p className="repaymentStatusBox-text-2">${formatAUD(subscriptionQuery?.data?.total_amount || "0.00")}</p>
@@ -314,7 +314,7 @@ const Subscription = () => {
                     managing Clients and Suppliers
                   </p>
 
-                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
+                  <p className="border-bottom py-2 mb-2 mt-0 font-16"></p>
 
                   <p className="mb-0">
                     <strong>Company Users</strong> can operate the desktop
@@ -323,9 +323,8 @@ const Subscription = () => {
                     Manager, or Accounts.
                   </p>
 
-                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
 
-                  <p className="mb-0">
+                  <p className="mb-0" style={{ marginTop: '120px' }}>
                     <strong>Work Subscription</strong> enables you to utilise
                     the application to assign jobs to contractors, employees,
                     or shift workers. You can manage jobs assigned to your app
@@ -333,9 +332,7 @@ const Subscription = () => {
                     to participate in projects remotely.
                   </p>
 
-                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
-
-                  <p className="mb-0">
+                  <p className="mb-0" style={{ marginTop: '65px' }}>
                     <strong>Mobile users:</strong> Mobile application users
                     can communicate with independent contractors and shift
                     workers for time tracking on location. This app is ideal
@@ -343,9 +340,8 @@ const Subscription = () => {
                     Management Desktop system.
                   </p>
 
-                  <p className="border-bottom py-2 mb-3 mt-1 font-16"></p>
-
-                  <p>
+                  
+                  <p style={{ marginTop: '60px' }}>
                     <strong>Locations:</strong> Additional features for
                     Companies with multiple branches/Locations. It allows you
                     to operate multiple locations simultaneously{" "}

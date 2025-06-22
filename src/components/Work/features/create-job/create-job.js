@@ -610,6 +610,16 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         }
     }, [isEditMode, jobData, workerDetailsSet]);
 
+    useEffect(() => {
+       if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === '1' && type === '3') || (time_type === 'T' && type === '4'))) {
+        const findUser = mobileUserQuery?.data?.users.find((user) => user.id === userId);
+        if (findUser) {
+           let duration =  cost / findUser?.hourly_rate;
+           setDuration(parseFloat(duration).toFixed(2)); 
+        }
+       }
+    }, [cost, mobileUserQuery?.data, userId, time_type, type]);
+
     return (
         <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
@@ -949,6 +959,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                             showButtonBar
                                             placeholder='17 Jun 2021'
                                             dateFormat="dd M yy"
+                                            locale="en"
                                             showIcon
                                             style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                             icon={<Calendar3 color='#667085' size={20} />}
@@ -973,6 +984,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 showButtonBar
                                                 placeholder='20 Jun 2021'
                                                 dateFormat="dd M yy"
+                                                locale="en"
                                                 showIcon
                                                 style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                                                 icon={<Calendar3 color='#667085' size={20} />}
@@ -1159,6 +1171,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                             showButtonBar
                                             placeholder='17 Jun 2021'
                                             dateFormat="dd M yy"
+                                            locale="en"
                                             showIcon
                                             style={{ height: '46px', width: '180px', overflow: 'hidden' }}
                                             icon={<Calendar3 color='#667085' size={20} />}
@@ -1182,6 +1195,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                     showButtonBar
                                                     placeholder='20 Jun 2021'
                                                     dateFormat="dd M yy"
+                                                    locale="en"
                                                     showIcon
                                                     style={{ height: '46px', width: '180px', overflow: 'hidden' }}
                                                     icon={<Calendar3 color='#667085' size={20} />}

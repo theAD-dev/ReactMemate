@@ -338,6 +338,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                   <Calendar
                     value={startDate}
                     dateFormat="dd/mm/yy"
+                    locale="en"
                     onChange={(e) => {
                       setStartDate(e.value);
                     }}
@@ -370,6 +371,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                   <Calendar
                     value={endDate}
                     dateFormat="dd/mm/yy"
+                    locale="en"
                     onChange={(e) => {
                       setEndDate(e.value);
                     }}

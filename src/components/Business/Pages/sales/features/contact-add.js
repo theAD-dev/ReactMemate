@@ -147,7 +147,7 @@ const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) =>
               </ButtonGroup>
 
               <Form.Label className="flexRemove mt-3 mb-0">Date<sup className="required">*</sup></Form.Label>
-              <Calendar value={value} onChange={(e) => setValue(e.value)} dateFormat="dd/mm/yy" disabled={isLoading} 
+              <Calendar value={value} onChange={(e) => setValue(e.value)} dateFormat="dd/mm/yy" disabled={isLoading} locale="en"
                 className='w-100 outline-none border rounded'
                 style={{ height: '46px', width: '230px', overflow: 'hidden' }}
                 showIcon

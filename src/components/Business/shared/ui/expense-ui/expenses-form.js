@@ -651,6 +651,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                         showButtonBar
                                         placeholder='DD/MM/YY'
                                         dateFormat="dd/mm/yy"
+                                        locale="en"
                                         showIcon
                                         minDate={minDate}
                                         style={{ height: '46px' }}

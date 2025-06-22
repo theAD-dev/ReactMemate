@@ -511,6 +511,7 @@ const Overview = () => {
                                 numberOfMonths={2}
                                 className={clsx(style.calendar)}
                                 dateFormat='dd M yy'
+                                locale="en"
                             />
                         </div>
                     </div>

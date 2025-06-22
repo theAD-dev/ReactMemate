@@ -131,12 +131,9 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const timeBody = (rowData) => {
-    return <div className={`d-flex align-items-center justify-content-center show-on-hover`}>
-      <div className={`${style.time} ${rowData.time_type === '1' ? style.frame : style.tracker}`}>
+    return <div className={`${style.time} ${rowData.time_type === '1' ? style.frame : style.tracker} text-center`} style={{ width: 'fit-content' }}>
         {rowData.time_type_display}
-      </div>
-      <Button label="Open" onClick={() => openDeatils(rowData)} className='primary-text-button ms-3 show-on-hover-element' text />
-    </div>;
+      </div>;
   };
 
   const clientHeader = () => {

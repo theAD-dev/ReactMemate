@@ -1,7 +1,7 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { HelmetProvider } from "react-helmet-async";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { PrimeReactProvider } from "primereact/api";
+import { PrimeReactProvider, addLocale } from "primereact/api";
 import { Toaster } from "sonner";
 import { AuthProvider } from "./providers/auth-provider";
 import { ReactQueryProvider } from "./providers/query-client-provider";
@@ -11,6 +11,9 @@ import UnknownError from "../pages/error/unknown/unknown";
 
 const App = () => {
   const content = createBrowserRouter(routes);
+  addLocale('en', {
+      firstDayOfWeek: 1,
+  });
 
   return (
     <ErrorBoundary

@@ -44,7 +44,7 @@ const SelectComponent = ({ departments, handleChange, title, keyValue }) => {
                             direction="right"
                             align="start"
                             menuStyle={{
-                                maxHeight: '320px',
+                                maxHeight: '500px',
                                 overflow: 'auto',
                                 textAlign: 'left'
                             }}
