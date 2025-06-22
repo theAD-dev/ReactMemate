@@ -92,6 +92,9 @@ function GeneralInformation() {
       setCountryId(data.country);
       setStateId(data.state);
       setCityId(data.city);
+      setValue("city", data.city);
+      setValue("state", data.state);
+      setValue("country", data.country);
     }
   }, [data]);
 

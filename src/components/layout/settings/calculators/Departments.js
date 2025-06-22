@@ -119,7 +119,7 @@ const Departments = () => {
                                                         </div>
                                                         <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
                                                             <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
-                                                            <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Sub Department</Button>
+                                                            <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Product / Service</Button>
                                                         </div>
                                                     </span>
                                                 }
@@ -157,7 +157,7 @@ const Departments = () => {
                                                                         </div>
 
                                                                         <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
-                                                                            <DeleteConfirmationModal title={"Sub Department"} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
+                                                                            <DeleteConfirmationModal title={"Product / Service "} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
                                                                             <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
                                                                         </div>
                                                                     </span>
@@ -340,7 +340,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             {
                 isEdit ? (
                     <>
-                        <h6>Full Description <span style={{ color: "#f04438" }}>*</span></h6>
+                        <h6 className='font-14' style={{ color: '#475467' }}>Full Description <span style={{ color: "#f04438" }}>*</span></h6>
                         <InputTextarea autoResize value={tempCalculator?.description}
                             onChange={(e) => setTempCalculator((others) => ({ ...others, description: e.target.value }))}
                             className='w-100 border mb-3' rows={5} style={{ height: '145px', overflow: 'auto', resize: 'none' }} />
@@ -439,8 +439,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <div className='d-flex justify-content-between align-items-center mt-4'>
                             <span></span>
                             <div className={clsx(style.RItem)}>
-                                <Button className={style.delete} onClick={() => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
-                                <Button className={style.create} disabled={isLoading} onClick={saveCalculator}>
+                                <Button className={style.deleteOutline} onClick={() => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
+                                <Button className={style.editBut} disabled={isLoading} onClick={saveCalculator}>
                                     {
                                         isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
                                             : <Save color="#106B99" size={18} className='me-2' />
@@ -453,7 +453,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                 ) : (
                     <>
 
-                        <h6>Description</h6>
+                        <h6 className='font-14' style={{ color: '#667085', fontWeight: 400 }}>Description</h6>
                         <p style={{ whiteSpace: "pre-line" }}>{calculator?.description || ""}</p>
                         <Row>
                             <Col>
@@ -489,8 +489,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <div className='d-flex justify-content-between align-items-center mt-4'>
                             <span></span>
                             <div className={clsx(style.RItem)}>
-                                <DeleteConfirmationModal title={"Calculator"} api={`/references/calculators/delete/${calculator.id}/`} refetch={() => refetch(index)} />
-                                <Button className={style.create} onClick={() => setIsEdit(true)}><PencilSquare color="#106B99" size={18} className='me-2' />Edit Calculator</Button>
+                                <DeleteConfirmationModal title={"Calculator"} isOutline={true} api={`/references/calculators/delete/${calculator.id}/`} refetch={() => refetch(index)} />
+                                <Button className={style.editBut} onClick={() => setIsEdit(true)}><PencilSquare color="#106B99" size={18} className='me-2' />Edit Calculator</Button>
                             </div>
                         </div>
                     </>
@@ -745,6 +745,10 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
                     </li>
                     <li>
                         <div className={`${style.boxcal}`}>
+                            <h6>Total + GST</h6>
+                            <strong>${formatAUD(+summary.total + +summary.tax)}</strong>
+                        </div>
+                        <div className={`${style.boxcal}`}>
                             <h6>Total</h6>
                             <strong>${formatAUD(+summary.total)}</strong>
                         </div>
@@ -901,19 +905,19 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
 
                 if (editSubDepartment?.id) {
                     await updateSubDepartment(editSubDepartment?.id, { name: subDepartment, parent });
-                    toast.success(`Sub department updated successfully.`);
+                    toast.success(`Product or Service updated successfully.`);
                     setEditSubDepartment({ id: null, name: null, parent: null });
                 } else {
                     await createSubDepartment({ name: subDepartment, parent });
-                    toast.success(`New sub department created successfully.`);
+                    toast.success(`New product or service created successfully.`);
                 }
 
                 refetch();
                 handleClose();
             }
         } catch (error) {
-            console.error(`Error ${editSubDepartment?.id ? 'updating' : 'creating'} sub department:`, error);
-            toast.error(`Failed to ${editSubDepartment?.id ? 'update' : 'create'} sub department. Please try again.`);
+            console.error(`Error ${editSubDepartment?.id ? 'updating' : 'creating'} product or service :`, error);
+            toast.error(`Failed to ${editSubDepartment?.id ? 'update' : 'create'} product or service . Please try again.`);
         } finally {
             setIsLoading(false);
         }
@@ -928,7 +932,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
                     </div>
                 </div>
                 <span className={`white-space-nowrap ${style.headerTitle}`}>
-                    {editSubDepartment?.id ? "Edit Sub Department" : "Create Sub Department"}
+                    {editSubDepartment?.id ? "Edit Product / Service " : "Create Product / Service "}
                 </span>
             </div>
         </div>
@@ -945,7 +949,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
         <>
             <Dialog visible={visible2} modal={true} header={headerElement} footer={footerContent} className={`${style.modal} custom-modal`} onHide={handleClose}>
                 <div className="d-flex flex-column">
-                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Sub Department name <span style={{ color: "#f04438" }}>*</span></p>
+                    <p className="font-14 mb-1" style={{ color: '#475467', fontWeight: 500 }}>Product or Service Name <span style={{ color: "#f04438" }}>*</span></p>
                     <InputText value={subDepartment} onChange={(e) => setSubDepartment(e.target.value)} className={style.inputBox} />
                 </div>
             </Dialog>

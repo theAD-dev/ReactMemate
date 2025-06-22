@@ -186,6 +186,36 @@
   .RItem {
     display: flex;
     align-items: center;
+    .deleteOutline {
+      color: #b42318;
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 20px; /* 142.857% */
+      padding: var(--spacing-md, 8px) 14px;
+      background: #fff;
+      border-radius: 40px;
+      border: 1px solid var(--Error-300, #FDA29B);
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      &:hover {
+        color: #b42318;
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px; /* 142.857% */
+        padding: var(--spacing-md, 8px) 14px;
+        background: #fff;
+        border-radius: 40px;
+        border: 1px solid var(--Error-300, #FDA29B);
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+      }
+    }
     .delete {
       color: #b42318;
       font-family: Inter;
@@ -246,8 +276,9 @@
       font-weight: 600;
       line-height: 20px; /* 142.857% */
       display: flex;
+      padding: var(--spacing-md, 8px) 14px;
       align-items: center;
-      border-radius: var(--radius-xs, 4px);
+      border-radius: 40px;
       border: 1px solid var(--Gray-300, #d0d5dd);
       background: #fff;
       &:hover {
@@ -256,8 +287,9 @@
         font-size: 14px;
         font-style: normal;
         font-weight: 600;
+       padding: var(--spacing-md, 8px) 14px;
         line-height: 20px; /* 142.857% */
-        border-radius: var(--radius-xs, 4px);
+        border-radius: 40px;
         border: 1px solid var(--Gray-300, #d0d5dd);
         background: #fff;
 

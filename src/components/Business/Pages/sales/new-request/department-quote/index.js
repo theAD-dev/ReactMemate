@@ -396,6 +396,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 showButtonBar
                 placeholder='DD/MM/YY'
                 dateFormat="dd/mm/yy"
+                locale="en"
                 style={{ height: '46px' }}
                 className='w-100 outline-none border rounded'
               />
@@ -439,6 +440,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                       showButtonBar
                       placeholder='DD/MM/YY'
                       dateFormat="dd/mm/yy"
+                      locale="en"
                       style={{ height: '46px' }}
                       className='w-100 outline-none border rounded'
                     />

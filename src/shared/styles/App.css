@@ -5717,11 +5717,10 @@ li.szh-menu__item {
   margin: 0 auto;
   color: var(--Gray-900, #101828);
   font-family: Inter;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
-  white-space: normal;
+  font-weight: 400;
+  white-space: pre-line;
 }
 
 .szh-menu__submenu .szh-menu {
@@ -5758,10 +5757,9 @@ li.szh-menu__item:hover {
   padding: 10px 10px 10px var(--spacing-md, 8px);
   color: var(--Primary-600, #158ecc);
   font-family: Inter;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
+  font-weight: 400;
 }
 
 .DepartmentQuote .select-menu .options {
@@ -5938,14 +5936,19 @@ ul.szh-menu {
 
 .departmentSelect ul.szh-menu {
   max-height: 500px !important;
+  margin-top: -10px !important;
 }
 
 .szh-menu__submenu {
   width: 220px;
-  white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
   text-align: left;
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
 }
 
 .szh-menu__submenu > .szh-menu__item::after {
