@@ -95,9 +95,9 @@ export function getFileIcon(fileType) {
 const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
     const publishRef = useRef(null);
-    const url = React.useMemo(() => window.location.href, []);
-    const urlObj = React.useMemo(() => new URL(url), [url]);
-    const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
+    const url = window.location.href;
+    const urlObj = new URL(url);
+    const params = new URLSearchParams(urlObj.search);
 
     const [templateId, setTemplatedId] = useState("");
     const [isOpenRepeatSection, setIsOpenRepeatSection] = useState(false);
@@ -258,14 +258,13 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     useEffect(() => {
         const projectParamId = params.get('projectId');
-        console.log('projectParamId: ', projectParamId);
         if (projectParamId) {
             setVisible(true);
             setProjectId(projectParamId);
             urlObj.searchParams.delete('projectId');
             window.history.replaceState({}, '', urlObj);
         }
-    }, [projectId, setVisible, params, urlObj]);
+    }, [projectId, setVisible]);
 
     const uploadToS3 = async (file, url) => {
         try {
