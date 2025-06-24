@@ -71,6 +71,7 @@ function loadData(responses, hasWorkSubscription) {
     });
 
     const unfinishedTasks = data.tasks.filter(task => !task.finished)?.length || 0;
+    const totalTasks = data.tasks.length;
     const childResource = [];
 
     childResource.push({
@@ -151,7 +152,12 @@ function loadData(responses, hasWorkSubscription) {
       marginBottom: 0,
     });
 
+    let unfinishedJobs = 0;
+    let totalJobs = 0;
     if (hasWorkSubscription) {
+      unfinishedJobs = data?.jobs?.filter(job => !job.finished)?.length || 0;
+      totalJobs = data?.jobs?.length || 0;
+
       childResource.push({
         id: data.number,
         name: `<div class="d-flex flex-column rowResourceEvent">
@@ -164,6 +170,55 @@ function loadData(responses, hasWorkSubscription) {
            </div>`,
         minHeight: 40,
         marginBottom: 4,
+      });
+
+      // Job child resource
+      data?.jobs?.forEach((job, index) => {
+        events.push({
+          start: parseTimestamp(1000 * +job.start_date),
+          end: parseTimestamp(1000 * +job.end_date),
+          id: `job_${job.id}_${index}`,
+          cssClass: "childEvent task-item",
+          resource: job.id,
+          backColor: job.finished ? "#DCFAE6" : "#F2F4F7",
+          borderColor: job.finished ? "#DCFAE6" : "#F2F4F7",
+          text: job.short_description,
+        });
+
+        const statusIMG = job.status === '5'
+          ? `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="10" fill="#DCFAE6"/>
+              <path d="M13.5524 6.97725C13.7692 6.75758 14.1206 6.75758 14.3374 6.97725C14.5515 7.19423 14.5542 7.54436 14.3453 7.7646L9.91018 13.0073C9.90592 13.0127 9.90136 13.0179 9.89654 13.0227C9.67975 13.2424 9.32828 13.2424 9.11149 13.0227L6.41259 10.2879C6.1958 10.0682 6.1958 9.71209 6.41259 9.49242C6.62937 9.27275 6.98085 9.27275 7.19763 9.49242L9.48729 11.8126L13.5376 6.99408C13.5422 6.98818 13.5471 6.98256 13.5524 6.97725Z" fill="#085D3A"/>
+            </svg>`
+          : `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="10" fill="#F2F4F7"/>
+              <path d="M13.5524 6.97725C13.7692 6.75758 14.1206 6.75758 14.3374 6.97725C14.5515 7.19423 14.5542 7.54436 14.3453 7.7646L9.91018 13.0073C9.90592 13.0127 9.90136 13.0179 9.89654 13.0227C9.67975 13.2424 9.32828 13.2424 9.11149 13.0227L6.41259 10.2879C6.1958 10.0682 6.1958 9.71209 6.41259 9.49242C6.62937 9.27275 6.98085 9.27275 7.19763 9.49242L9.48729 11.8126L13.5376 6.99408C13.5422 6.98818 13.5471 6.98256 13.5524 6.97725Z" fill="#475467"/>
+            </svg>`;
+
+        const alias = job?.worker?.alias || '';
+        const jobImg = job?.worker?.has_photo
+          ? `<img src="${job?.worker?.photo}" style="width: 20px; height: 20px; border-radius: 50%;" onerror="this.outerHTML='<div class=\\'job-alias\\'>${alias}</div>'" />`
+          : `<div class="job-alias">${alias}</div>`;
+
+        childResource.push({
+          id: job.id,
+          name: `<div class="d-flex flex-column">
+            <div class="task-list rowResourceEvent" style="--main-color: ${color}">
+              <div class="flex">
+                <div class="job-icon">
+                 ${jobImg}
+                </div>
+                <div class="title-description-section">
+                  <span class="task-assigner">${job?.worker?.full_name}</span>
+                  <span class="task-title">${job.short_description}</span>
+                </div> 
+              </div>
+              <div class="completion-status ${statusIMG === 'completed' ? 'completed-class' : 'incomplete-class'}">
+                ${statusIMG}
+              </div>
+            </div>
+          </div>`,
+          minHeight: 40,
+          marginBottom: 4,
+        });
       });
 
       childResource.push({
@@ -180,6 +235,9 @@ function loadData(responses, hasWorkSubscription) {
         marginBottom: 0,
       });
     }
+
+    const unfinished = unfinishedTasks + unfinishedJobs;
+    const total = totalTasks + totalJobs;
 
     return {
       id: data.unique_id,
@@ -220,8 +278,8 @@ function loadData(responses, hasWorkSubscription) {
             ${status}
           </li>
           <li class="me-3" style="position: relative;">
-            ${unfinishedTasks !== 0 ? `<div class="taskUnreadCount">${unfinishedTasks}</div>` : ''}
-            <div class="taskCount">${data?.tasks?.length || 0}</div>
+            ${unfinished !== 0 ? `<div class="taskUnreadCount">${unfinished}</div>` : ''}
+            <div class="taskCount">${total || 0}</div>
           </li>
         </ul>
         <div class="project-content" unique-id="${data.unique_id}" project-id="${data.id}" number="${data?.number}" reference="${data?.reference}">

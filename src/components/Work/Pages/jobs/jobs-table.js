@@ -146,7 +146,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const clientBody = (rowData) => {
     return <div className='d-flex align-items-center'>
       <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
-        <FallbackImage photo={rowData?.client?.photo} is_business={false} has_photo={rowData?.client?.has_photo || false} />
+        <FallbackImage photo={rowData?.client?.photo} is_business={rowData?.client?.is_business || false} has_photo={rowData?.client?.has_photo || false} />
       </div>
       {rowData?.client?.name}
     </div>;

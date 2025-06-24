@@ -212,7 +212,7 @@ tr.p-datatable-emptymessage td {
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   white-space: nowrap;
-  max-width: 500px;
+  max-width: 620px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
