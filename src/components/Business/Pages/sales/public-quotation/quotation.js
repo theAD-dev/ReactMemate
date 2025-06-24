@@ -156,7 +156,7 @@ const Quotation = () => {
                 <Column colSpan={4} style={{ position: 'relative' }} footer={
                     <div className='pe-4' style={{ position: 'absolute' }}>
                         <b>Note:</b>
-                        <p className='mt-3' style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
+                        <p className='mt-1' style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
                     </div>
                 } />
                 <Column footer="Subtotal" className={`${style.footerBoldTextLight} ${style.footerBorder}`} footerStyle={{ textAlign: 'right' }} />

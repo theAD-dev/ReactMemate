@@ -381,7 +381,7 @@ const PublicInvoice = () => {
                             <Col sm={8} className='ps-4'>
                                 <div className={style.qupteMainColFooter} style={{ marginTop: '0px' }}>
                                     <h2>Note:</h2>
-                                    <p style={{ whiteSpace: 'pre-line' }}>{invoice?.note}</p>
+                                    <p className='mt-1' style={{ whiteSpace: 'pre-line' }}>{invoice?.note}</p>
                                 </div>
                             </Col>
                             <Col sm={4}>
