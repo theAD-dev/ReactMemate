@@ -576,7 +576,7 @@ const Overview = () => {
                                 <Chart type="line" data={activeQuotesChartData} options={activeQuotesChartData.options} style={{ height: '200px' }} />
                             </Col>
 
-                            <Col sm={4} className='border-top border-right border-left' style={{ height: '340px', padding: '20px' }}>
+                            <Col sm={4} className='border' style={{ height: '340px', padding: '20px' }}>
                                 <div className={style.graphHeader}>
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Orders</span>
@@ -585,9 +585,9 @@ const Overview = () => {
                                             {Math.abs(calculateChange(orders.current.value, orders.previous.value)) || 'N/A'}%
                                         </span>
                                     </div>
-                                    <span className={style.dateLabel}>{orders.previous.date}<br /> ${formatAUD(orders.previous.value)}</span>
+                                    <span className={style.dateLabel}>{orders.previous.date}<br /> {parseInt(orders.previous.value)}</span>
                                 </div>
-                                <div className={style.value}>${formatAUD(orders.current.value)}</div>
+                                <div className={style.value}>{parseInt(orders.current.value)}</div>
                                 <Chart type="line" data={ordersChartData} options={ordersChartData.options} style={{ height: '200px' }} />
                             </Col>
 
@@ -606,7 +606,7 @@ const Overview = () => {
                                 <Chart type="line" data={unpaidInvoicesChartData} options={unpaidInvoicesChartData.options} style={{ height: '200px' }} />
                             </Col>
 
-                            <Col sm={4} className='border-top border-bottom' style={{ height: '340px', padding: '20px' }}>
+                            {/* <Col sm={4} className='border-top border-bottom' style={{ height: '340px', padding: '20px' }}>
                                 <div className={style.graphHeader}>
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Spend per Order</span>
@@ -619,9 +619,9 @@ const Overview = () => {
                                 </div>
                                 <div className={style.value}>${formatAUD(spendPerOrder.current.value)}</div>
                                 <Chart type="line" data={spendPerOrderChartData} options={spendPerOrderChartData.options} style={{ height: '200px' }} />
-                            </Col>
+                            </Col> */}
 
-                            <Col sm={4} className='border' style={{ height: '340px', padding: '20px' }}>
+                            {/* <Col sm={4} className='border' style={{ height: '340px', padding: '20px' }}>
                                 <div className={style.graphHeader}>
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Jobs Completed</span>
@@ -634,9 +634,9 @@ const Overview = () => {
                                 </div>
                                 <div className={style.value}>${formatAUD(jobsCompleted.current.value)}</div>
                                 <Chart type="line" data={jobsCompletedChartData} options={jobsCompletedChartData.options} style={{ height: '200px' }} />
-                            </Col>
+                            </Col> */}
 
-                            <Col sm={4} className='border-bottom border-right border-left' style={{ height: '340px', padding: '20px' }}>
+                            <Col sm={4} className='border-bottom border-right border-top' style={{ height: '340px', padding: '20px' }}>
                                 <div className={style.graphHeader}>
                                     <div className={style.graphHeaderLeft}>
                                         <span className={style.graphHeaderLeftText}>Contractor Expense</span>
