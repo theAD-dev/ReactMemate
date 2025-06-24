@@ -479,8 +479,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             itemTemplate={(option) => {
                                 return (
                                     <div className='d-flex gap-2 align-items-center w-100'>
-                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
-                                            <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
+                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                            <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
                                         </div>
                                         <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
                                     </div>
