@@ -98,58 +98,60 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     setVisible(true);
   }
 
-  const paymentBody = (rowData) => {
-    if (rowData.type_display === 'Hours')
-      return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-        <div className={`${style.payment} ${style.paymentHours}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>;
-    if (rowData.type_display === 'Time Tracker')
-      return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-        <div className={`${style.payment} ${style.paymentTracker}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>;
-    else
-      return <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-        <div className={`${style.payment} ${style.paymentFix}`}>{rowData.type_display}</div>
-        {rowData?.is_recurring && <Repeat color='#158ECC' />}
-      </div>;
-  };
-
-  const jobIDTemplate = (rowdata) => {
+  const jobIDTemplate = (rowData) => {
     return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
-      <span>{rowdata.number}</span>
+      <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+        <span>{rowData.number}</span>
+        <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created || rowData.start_date)}</span>
+      </div>
+      {rowData?.is_recurring && <Repeat color='#158ECC' />}
       <Button label="Open"
         onClick={() => {
           createJobVisible(false);
           setEditMode(false);
-          setShow({ jobId: rowdata.id, visible: true });
+          setShow({ jobId: rowData.id, visible: true });
         }}
         className='primary-text-button ms-3 show-on-hover-element' text
       />
     </div>;
   };
 
-  const timeBody = (rowData) => {
-    return <div className={`${style.time} ${rowData.time_type === '1' ? style.frame : style.tracker} text-center`} style={{ width: 'fit-content' }}>
-        {rowData.time_type_display}
+  const jobTypeBody = (rowData) => {
+    if (rowData.type_display === "Fix" && rowData.time_type_display === "Shift") {
+      return <div className={style.type}>
+        <div className={style.shift}>Shift</div>
+        <div className={style.fix}>Fix</div>
       </div>;
-  };
+    }
 
-  const clientHeader = () => {
-    return <div className='d-flex align-items-center'>
-      Client
-      <small>A→Z</small>
-    </div>;
-  };
+    if (rowData.type_display === "Fix" && rowData.time_type_display === "Time frame") {
+      return <div className={style.type}>
+        <div className={style.timeFrame}>Time Frame</div>
+        <div className={style.fix}>Fix</div>
+      </div>;
+    }
 
-  const clientBody = (rowData) => {
-    return <div className='d-flex align-items-center'>
-      <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
-        <FallbackImage photo={rowData?.client?.photo} is_business={rowData?.client?.is_business || false} has_photo={rowData?.client?.has_photo || false} />
-      </div>
-      {rowData?.client?.name}
-    </div>;
+    if (rowData.type_display === "Hours" && rowData.time_type_display === "Shift") {
+      return <div className={style.type}>
+        <div className={style.shift}>Shift</div>
+        <div className={style.hours}>Hours</div>
+      </div>;
+    }
+
+    if (rowData.type_display === "Hours" && rowData.time_type_display === "Time frame") {
+      return <div className={style.type}>
+        <div className={style.timeFrame}>Time Frame</div>
+        <div className={style.hours}>Hours</div>
+      </div>;
+    }
+
+    if (rowData.type_display === "Time Tracker" && rowData.time_type_display === "Time frame") {
+      return <div className={style.type}>
+        <div className={style.timeTracker}>Time Tracker</div>
+        <div className={style.timeFrame2}>Time Frame</div>
+      </div>;
+    }
+    return "";
   };
 
   const nameBody = (rowData) => {
@@ -177,6 +179,10 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const statusBody = (rowData) => {
+    if (!rowData.published) {
+      return <Chip className={`status ${style.Draft} font-14`} label={"Unpublished"} />;
+    }
+
     if (rowData.action_status) {
       return <Chip className={`status ${style.open} font-14`} label={"In Progress"} />;
     }
@@ -186,22 +192,14 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       case '1':
         return <Chip className={`status ${style.open} font-14`} label={"Open"} />;
       case '2':
-        return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assign"} />;
-      case '3':
-        return <Chip className={`status ${style.NotConfirmed} font-14`} label={"Not Confirmed"} />;
-      case '4':
-        return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
-      case '5':
-        return <Chip className={`status ${style.COMPLETED} font-14`} label={"Completed"} />;
+        return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assigned"} />;
       case '6':
-        return <Chip className={`status ${style.MANAGER_DECLINED} font-14`} label={"Canceled"} />;
-      case 'a':
-        return <Chip className={`status ${style.Accepted} font-14`} label={"Accepted"} />;
-      case 'd':
         return <div className='d-flex gap-2 align-items-center'>
-          <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />
-          <ChatText size={16} />
+          <Chip className={`status ${style.NotConfirmed} font-14`} label={"Declined"} />
+          <ChatText color='#158ECC' />
         </div>;
+      case 'a':
+        return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
       default:
         return <Chip className={`status ${style.defaultStatus} font-14`} label={status} />;
     }
@@ -234,7 +232,17 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const linkToBody = (rowData) => {
-    return <Button className='text-button bg-tranparent p-0 text-dark font-14' onClick={() => navigate(`/management?unique_id=${rowData?.project?.unique_id}&reference=${rowData?.project?.reference}&number=${rowData?.project?.number}`)}>{rowData.project?.number}</Button>;
+    if (!rowData?.project) return '-';
+
+    return <div className='d-flex align-items-center gap-2'>
+      <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
+        <FallbackImage photo={rowData?.client?.photo} is_business={rowData?.client?.is_business || false} has_photo={rowData?.client?.has_photo || false} />
+      </div>
+      <div className='d-flex flex-column'>
+        <span>{rowData?.project?.reference}</span>
+        <span className='font-12' style={{ color: '#98A2B3' }}>{rowData?.project?.number} | {rowData?.client?.name}</span>
+      </div>
+    </div>;
   };
 
   const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
@@ -261,20 +269,18 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         rowClassName={rowClassName}
       >
         <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-        <Column field="number" header="Job ID" body={jobIDTemplate} style={{ minWidth: '100px' }} frozen sortable></Column>
-        <Column field="type_display" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
-        <Column field="time_type" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>
+        <Column field="number" header="Job ID" body={jobIDTemplate} style={{ minWidth: '100px' }} className='ps-0' headerClassName='ps-0' frozen sortable></Column>
+        <Column field='type' header="Job Type" body={jobTypeBody} style={{ minWidth: '100px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>
         <Column field="start_date" header="Start" body={startDateBody} style={{ minWidth: '122px' }} sortable></Column>
         <Column field="end_date" header="Finish" body={endDateBody} style={{ minWidth: '122px' }} sortable></Column>
-        <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
-        <Column field="reference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
         <Column field="worker.firstname" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
+        <Column field="reference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
+        <Column field='project.number' header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }} />
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
         <Column field="time_assigned" header="Time Assigned" body={assignedTimeBody} style={{ minWidth: '117px' }} ></Column>
         <Column field="real_time" header="Real Time" body={realTimeBody} bodyClassName={'text-end'} headerClassName='text-center' style={{ minWidth: '88px' }}></Column>
         <Column field="bonus" header="Bonus" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>
         <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-        <Column field="linkTo" header="Linked To" body={linkToBody} style={{ minWidth: '105px' }}></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
       <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} editMode={editMode} setEditMode={setEditMode} />

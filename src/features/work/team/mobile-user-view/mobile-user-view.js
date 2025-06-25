@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Person, StarFill, Trash, X } from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
+import { Person, Trash, X } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 import style from './mobile-user-view.module.scss';
 import { dateFormat } from '../../../../components/Business/shared/utils/helper';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import MobileUserEdit from '../mobile-user-edit/mobile-user-edit';
 
 const MobileUserView = ({ user, refetch, closeIconRef, hide }) => {
   const formRef = useRef(null);
@@ -31,7 +31,7 @@ const MobileUserView = ({ user, refetch, closeIconRef, hide }) => {
               }
             </div>
             <div className='d-flex align-items-center gap-2'>
-              <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{user?.name}</span>
+              <span style={{ color: '344054', fontSize: '22px', fontWeight: 600 }}>{user?.name || "John Doe"}</span>
               {user?.deleted ? <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
             </div>
           </div>
@@ -48,7 +48,7 @@ const MobileUserView = ({ user, refetch, closeIconRef, hide }) => {
             <h6 className={clsx(style.boxLabel2)}>user ID: {user?.number}</h6>
           </div>
           {
-            isEdit ? <>Edit Mode</>
+            isEdit ? <MobileUserEdit user={user} />
               : <ViewSection user={user} />
           }
         </div>
@@ -91,11 +91,11 @@ const ViewSection = ({ user }) => {
             <label className={clsx(style.label)}>Last Name</label>
             <p className={clsx(style.text)}>{user?.lastName || 'Doe'}</p>
           </Col>
-          <Col sm={6} className='mb-3'>
+          <Col sm={6} className='mb-0'>
             <label className={clsx(style.label)}>Date of Birthday</label>
             <p className={clsx(style.text)}>{dateFormat(user?.dob || '1995-12-17')}</p>
           </Col>
-          <Col sm={6} className='mb-3'>
+          <Col sm={6} className='mb-0'>
             <label className={clsx(style.label)}>ABN/TFN</label>
             <p className={clsx(style.text)}>{user?.abn || '32 635 443 221'}</p>
           </Col>
@@ -103,14 +103,14 @@ const ViewSection = ({ user }) => {
       </div>
 
       {/* Contact Person */}
+      <h5 className={clsx(style.boxLabel, 'mb-2')}>Contact Person</h5>
       <div className={clsx(style.box)}>
-        <h5 className={clsx(style.boxLabel)}>Contact Person</h5>
         <Row>
-          <Col sm={6} className='mb-3'>
+          <Col sm={6} className='mb-0'>
             <label className={clsx(style.label)}>Email</label>
             <p className={clsx(style.text)}>{user?.email || 'client@email.com'}</p>
           </Col>
-          <Col sm={6} className='mb-3'>
+          <Col sm={6} className='mb-0'>
             <label className={clsx(style.label)}>Phone</label>
             <p className={clsx(style.text)}>{user?.phone || '07 3803 4998'}</p>
           </Col>
@@ -118,13 +118,14 @@ const ViewSection = ({ user }) => {
       </div>
 
       {/* Address */}
+      <h5 className={clsx(style.boxLabel, 'mb-2')}>Address</h5>
       <div className={clsx(style.box)}>
-        <h5 className={clsx(style.boxLabel)}>Address</h5>
         <Row>
           <Col sm={6} className='mb-3'>
             <label className={clsx(style.label)}>Country</label>
             <p className={clsx(style.text)}>{user?.country || 'Australia'}</p>
           </Col>
+          <Col sm={6}></Col>
           <Col sm={6} className='mb-3'>
             <label className={clsx(style.label)}>State</label>
             <p className={clsx(style.text)}>{user?.state || 'New South Wales'}</p>
@@ -133,7 +134,7 @@ const ViewSection = ({ user }) => {
             <label className={clsx(style.label)}>City/Suburb</label>
             <p className={clsx(style.text)}>{user?.city || 'Winburndale'}</p>
           </Col>
-          <Col sm={6} className='mb-3'>
+          <Col sm={6}>
             <label className={clsx(style.label)}>Street Address</label>
             <p className={clsx(style.text)}>{user?.street || 'Sydney Street of 914'}</p>
           </Col>
@@ -145,18 +146,18 @@ const ViewSection = ({ user }) => {
       </div>
 
       {/* Payment */}
+      <h5 className={clsx(style.boxLabel, 'mb-2')}>Payment</h5>
       <div className={clsx(style.box)}>
-        <h5 className={clsx(style.boxLabel)}>Payment</h5>
         <Row>
-          <Col sm={4} className='mb-3'>
+          <Col sm={4}>
             <label className={clsx(style.label)}>P/H</label>
             <p className={clsx(style.text)}>{formatAUD(user?.payRate || 20)}</p>
           </Col>
-          <Col sm={4} className='mb-3'>
+          <Col sm={4}>
             <label className={clsx(style.label)}>Payment cycle</label>
             <p className={clsx(style.text)}>{user?.paymentCycle || 'Week'}</p>
           </Col>
-          <Col sm={4} className='mb-3'>
+          <Col sm={4}>
             <label className={clsx(style.label)}>Format</label>
             <p className={clsx(style.text)}>{user?.format || 'Contractor'}</p>
           </Col>
@@ -164,21 +165,21 @@ const ViewSection = ({ user }) => {
       </div>
 
       {/* Groups */}
+      {/* <h5 className={clsx(style.boxLabel, 'mb-2')}>Groups</h5>
       <div className={clsx(style.box)}>
-        <h5 className={clsx(style.boxLabel)}>Groups</h5>
         <Row>
           <Col sm={12}>
             <label className={clsx(style.label)}>Group Name</label>
             <p className={clsx(style.text)}>{user?.group || 'Group 1'}</p>
           </Col>
         </Row>
-      </div>
+      </div> */}
 
       {/* Emergency Contact */}
+      <h5 className={clsx(style.boxLabel, 'mb-2')}>Emergency Contact</h5>
       <div className={clsx(style.box)}>
-        <h5 className={clsx(style.boxLabel)}>Emergency Contact</h5>
         <Row>
-          <Col sm={6} className='mb-3'>
+          <Col sm={6}>
             <label className={clsx(style.label)}>Full Name</label>
             <p className={clsx(style.text)}>{user?.emergencyContactName || 'Paul Stein'}</p>
           </Col>
@@ -190,9 +191,9 @@ const ViewSection = ({ user }) => {
       </div>
 
       {/* Manager Notes */}
+      <h5 className={clsx(style.boxLabel, 'mb-2')}>Manager Notes</h5>
       <div className={clsx(style.box)}>
-        <h5 className={clsx(style.boxLabel)}>Manager Notes</h5>
-        <p className={clsx(style.text)}>
+        <p className='mb-0 font-14'>
           {user?.managerNotes || `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text...`}
         </p>
       </div>

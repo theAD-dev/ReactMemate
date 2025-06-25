@@ -82,7 +82,7 @@ const TeamInvoiceHistory = () => {
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
-                    <MobileUserView />
+                    <MobileUserView closeIconRef={closeIconRef} hide={hide} setVisible={setVisible} />
                 )}
             ></Sidebar>
         </div>

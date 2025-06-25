@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Envelope } from 'react-bootstrap-icons';
+import { Envelope, FilePdf } from 'react-bootstrap-icons';
 import { Link, useParams } from 'react-router-dom';
 import { Badge } from 'primereact/badge';
 import { Column } from 'primereact/column';
@@ -101,6 +101,13 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
       </div>;
   };
 
+  const InvoiceIDBody = (rowData) => {
+    return <div className={`d-flex align-items-center justify-content-between gap-2`}>
+        <span>{rowData.number}</span>
+        <Link to={`${process.env.REACT_APP_URL}/${rowData.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+    </div>;
+  };
+
   return (
     <DataTable ref={ref} value={userInvoices} scrollable selectionMode={'checkbox'}
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
@@ -113,13 +120,14 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
       sortOrder={sort?.sortOrder}
       onSort={onSort}
     >
-      <Column field="number" header="Invoice ID" frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
+      <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
+      <Column field="number" header="Invoice ID" body={InvoiceIDBody} frozen sortable style={{ minWidth: '180px', maxWidth: '180px', width: '180px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
       <Column field="date_from" header="Date From" body={(rowData) => formatDate(rowData.date_from)} style={{ minWidth: '154px' }}></Column>
       <Column field="date_to" header="Date To" body={(rowData) => formatDate(rowData.date_to)} sortable style={{ minWidth: '113px' }}></Column>
-      <Column field='total_hours' header="Total Hours" body={(rowData) => `${rowData.total_hours}h`} style={{ minWidth: '114px' }}></Column>
+      <Column field='total_hours' header="Total Hours" body={(rowData) => `${rowData.total_hours}h`} bodyClassName={'text-end'} style={{ minWidth: '114px' }}></Column>
       <Column field='total_amount' header="Total Amount" body={(rowData) => `$${formatAUD(rowData.total_amount)}`} style={{ minWidth: '114px' }}></Column>
-      <Column field='status' header="Status" body={statusBodyTemplate} style={{ minWidth: '114px' }}></Column>
-      <Column field='id' header="Send Receipt" body={sendEmailBodyTemplate} style={{ minWidth: '114px' }}></Column>
+      <Column field='status' header="Status" body={statusBodyTemplate} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }}></Column>
+      <Column field='id' header="Send Receipt" body={sendEmailBodyTemplate} style={{ minWidth: '100px', maxWidth: '100px', width: '100px' }}></Column>
     </DataTable>
   );
 });
