@@ -90,6 +90,7 @@ const WorkDashboard = LazyLoader(lazy(() => import('../components/Work/Pages/Das
 const JobsPage = LazyLoader(lazy(() => import('../components/Work/Pages/jobs')));
 const News = LazyLoader(lazy(() => import('../components/Work/Pages/News')));
 const PeoplePage = LazyLoader(lazy(() => import('../components/Work/Pages/people')));
+const TeamInvoiceHistory = LazyLoader(lazy(() => import('../pages/work/team/invoice-history/')));
 const TaskPage = LazyLoader(lazy(() => import('../components/Work/Pages/tasks')));
 const AccountOverdue = LazyLoader(lazy(() => import('../pages/account-overdue/account-overdue')));
 const Logout = LazyLoader(lazy(() => import('../pages/setting/logout/logout')));
@@ -383,6 +384,10 @@ const routes = [
             {
                 path: "people",
                 element: <PeoplePage />,
+            },
+            {
+                path: "people/:id/invoice-history",
+                element: <TeamInvoiceHistory />
             },
             {
                 path: "chat",
