@@ -118,7 +118,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             <div className={clsx(style.projectImg, 'd-flex align-items-center justify-content-center')}>
                 <FileText color='#475467' size={13} />
             </div>
-            <div>
+            <div style={{ lineHeight: '1.385' }}>
                 <h1 className={clsx(style.projectText, 'mb-0')}>{rowData?.project?.reference}</h1>
                 <h6 className={clsx(style.projectNumber, 'mb-0')}>{rowData?.project?.number}</h6>
             </div>
