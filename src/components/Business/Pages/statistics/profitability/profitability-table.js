@@ -84,7 +84,7 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
 
   const orderBody = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-      <div className={`d-flex flex-column`}>
+      <div className={`d-flex flex-column`} style={{ lineHeight: '1.385' }}>
         {rowData.number}
         <span style={{ color: '#98A2B3' }} className='font-12'>{formatDate(rowData.created)}</span>
       </div>
