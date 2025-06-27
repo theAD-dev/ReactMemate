@@ -39,34 +39,52 @@ const ApprovalTable = React.memo(() => {
         }
     });
 
-    const paymentBody = (rowData) => {
-        const paymentType = rowData.type === "2" ? "Fix" : rowData.type === "3" ? "Hours" : "TimeTracker";
-        return (
-            <div className='d-flex justify-content-center align-items-center' style={{ gap: '10px' }}>
-                <div className={`${style.payment} ${paymentType === 'Hours' ? style.paymentHours : paymentType === 'Fix' ? style.paymentFix : style.paymentTracker}`}>
-                    {paymentType}
-                </div>
-                <Repeat color='#158ECC' />
+    const jobIDTemplate = (rowData) => {
+        return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
+            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+                <span>{rowData.number}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created || rowData.start_date)}</span>
             </div>
-        );
-    };
-
-    const timeBody = (rowData) => {
-        const timeType = rowData.time_type === "T" ? "Time Frame" : "Shift";
-        return (
-            <div className={`d-flex align-items-center show-on-hover`}>
-                <div className={`${style.time} ${timeType === 'Shift' ? style.shift : style.frame}`}>
-                    {timeType}
-                </div>
-            </div>
-        );
-    };
-
-    const clientHeader = () => {
-        return <div className='d-flex align-items-center gap-1'>
-            Client
-            <small>A→Z</small>
+            {rowData?.is_recurring && <Repeat color='#158ECC' />}
         </div>;
+    };
+
+    const jobTypeBody = (rowData) => {
+        if (rowData.type === "2" && rowData.time_type === "1") {
+            return <div className={style.type}>
+                <div className={style.shift}>Shift</div>
+                <div className={style.fix}>Fix</div>
+            </div>;
+        }
+
+        if (rowData.type === "2" && rowData.time_type === "T") {
+            return <div className={style.type}>
+                <div className={style.timeFrame}>Time Frame</div>
+                <div className={style.fix}>Fix</div>
+            </div>;
+        }
+
+        if (rowData.type === "3" && rowData.time_type === "1") {
+            return <div className={style.type}>
+                <div className={style.shift}>Shift</div>
+                <div className={style.hours}>Hours</div>
+            </div>;
+        }
+
+        if (rowData.type === "3" && rowData.time_type === "T") {
+            return <div className={style.type}>
+                <div className={style.timeFrame}>Time Frame</div>
+                <div className={style.hours}>Hours</div>
+            </div>;
+        }
+
+        if (rowData.type === "Time Tracker" && rowData.time_type === "T") {
+            return <div className={style.type}>
+                <div className={style.timeTracker}>Time Tracker</div>
+                <div className={style.timeFrame2}>Time Frame</div>
+            </div>;
+        }
+        return "";
     };
 
     const workerHeader = () => {
@@ -76,20 +94,6 @@ const ApprovalTable = React.memo(() => {
         </div>;
     };
 
-    const clientBody = (rowData) => {
-        if (!rowData.client) return 'N/A';
-        return <div className='d-flex align-items-center'>
-            <div className={`d-flex justify-content-center align-items-center ${style.clientImg}`}>
-                <FallbackImage
-                    has_photo={rowData.client?.has_photo}
-                    photo={rowData.client?.photo}
-                    is_business={true}
-                    size={16}
-                />
-            </div>
-            {rowData.client?.name || 'N/A'}
-        </div>;
-    };
 
     const nameBody = (rowData) => {
         const fullName = `${rowData.worker?.first_name || ''} ${rowData.worker?.last_name || ''}`.trim();
@@ -146,12 +150,17 @@ const ApprovalTable = React.memo(() => {
     }, []);
 
     const linkToBody = (rowData) => {
-        return rowData.project ? (
-            <div className='d-flex align-items-center' style={{ gap: '10px' }}>
-                {rowData.project.number}
-                <Link45deg color='#3366CC' />
+        if (!rowData?.project) return '-';
+
+        return <div className='d-flex align-items-center'>
+            <div className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData?.client?.is_business ? style.square : 'rounded-circle'}`}>
+                <FallbackImage photo={rowData?.client?.photo} is_business={rowData?.client?.is_business || false} has_photo={rowData?.client?.has_photo || false} />
             </div>
-        ) : 'N/A';
+            <div className='d-flex flex-column'>
+                <span>{rowData?.project?.reference}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}>{rowData?.project?.number} | {rowData?.client?.name}</span>
+            </div>
+        </div>;
     };
 
     const calculateHours = (spentTime) => {
@@ -194,7 +203,7 @@ const ApprovalTable = React.memo(() => {
         return (
             <ColumnGroup>
                 <Row className='w-100'>
-                    <Column colSpan={13} />
+                    <Column colSpan={11} />
                     <Column
                         footer={`Total= $${formattedTotal}`}
                         footerStyle={{ position: 'sticky', right: 0 }}
@@ -233,20 +242,12 @@ const ApprovalTable = React.memo(() => {
                 loadingIcon={Loader}
             >
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-                <Column field="number" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="time_type" header="Payment Type" body={paymentBody} style={{ minWidth: '130px' }} frozen sortable></Column>
-                <Column field="type" header="Time" body={timeBody} style={{ minWidth: '118px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
-                <Column
-                    field="submitted"
-                    header="Submitted"
-                    style={{ minWidth: '122px' }}
-                    sortable
-                    body={(rowData) => formatDate(rowData.submitted)}
-                ></Column>
-                <Column field="short_description" header="Job Reference" style={{ minWidth: '270px' }}></Column>
-                <Column field="client.name" header={clientHeader} body={clientBody} style={{ minWidth: '162px' }}></Column>
-                <Column field="project.number" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
+                <Column field="number" header="Job ID" body={jobIDTemplate} style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field='type' header="Job Type" body={jobTypeBody} style={{ minWidth: '100px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>
+                <Column field="submitted" header="Submitted" style={{ minWidth: '122px' }} sortable body={(rowData) => formatDate(rowData.submitted)}></Column>
                 <Column field="worker.first_name" header={workerHeader} body={nameBody} style={{ minWidth: '205px' }}></Column>
+                <Column field="short_description" header="Job Reference" style={{ minWidth: '270px' }}></Column>
+                <Column field='project.number' header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }} />
                 <Column field="variations" header="Variations" style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="real_total" header="Real Total" body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="spent_time" header="Real Time" body={realTimeBody} style={{ minWidth: '105px' }}></Column>

@@ -54,12 +54,13 @@ const PeoplesTable = () => {
     }, []);
 
     const nameBody = (rowdata) => {
+        const name = `${rowdata?.first_name} ${rowdata?.last_name}`;
         return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
             <ImageAvatar has_photo={rowdata.has_photo} photo={rowdata.photo} is_business={false} />
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
-                {rowdata?.first_name} {rowdata?.last_name}
+                {name}
             </div>
-            <Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text />
+            <Link to={`/work/people/${rowdata.id}/invoice-history?name=${name}`}><Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text /></Link>
         </div>;
     };
 

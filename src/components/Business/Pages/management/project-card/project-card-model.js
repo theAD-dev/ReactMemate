@@ -440,7 +440,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       <tr>
                         <th>#</th>
                         <th>Reference</th>
-                        <th>Supplier</th>
+                        <th>Provider</th>
                         <th>Estimate/Total</th>
                         <th>Status</th>
                       </tr>
@@ -575,15 +575,19 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                   placement={'top'}
                                   overlay={
                                     <Tooltip className='TooltipOverlay' id={`tooltip-${top}`}>
-                                      {data?.supplier?.name || "Job"}
+                                      {
+                                        data?.type === 'job'
+                                          ? data?.worker?.full_name || ""
+                                          : data?.supplier?.name || ""
+                                      }
                                     </Tooltip>
                                   }
                                 >
-                                  <div className='mx-auto ps-2' title={data?.supplier?.name} style={{ width: 'fit-content' }}>
+                                  <div className='mx-auto d-flex align-items-center justify-content-center ps-2' style={{ width: 'fit-content' }}>
                                     {
                                       data?.type === 'job'
-                                        ? <Github size={24} color='#101828' />
-                                        : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true} />)
+                                        ? (<ImageAvatar has_photo={data?.worker?.has_photo} photo={data?.worker?.photo} is_business={false} size={16}/>)
+                                        : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true} size={16}/>)
                                     }
                                   </div>
                                 </OverlayTrigger>

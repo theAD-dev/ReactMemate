@@ -35,7 +35,7 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
           <div className="d-flex align-items-center gap-2">
             <div className={clsx(style.profileBox, 'd-flex align-items-center justify-content-center')}>
               {
-                client.photo ? <img src={client.photo} alt='client-photo' /> : <Building color='#667085' size={26} />
+                client.has_photo ? <img src={client.photo} alt='client-photo' /> : <Building color='#667085' size={26} />
               }
             </div>
             <div className='d-flex align-items-center gap-2'>

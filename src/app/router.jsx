@@ -49,6 +49,7 @@ const SelectDate = LazyLoader(lazy(() => import('../components/layout/requestdem
 const SignUp = LazyLoader(lazy(() => import('../components/layout/requestdemo/SignUp')));
 const DepartmentTurnoverPlan = LazyLoader(lazy(() => import('../components/layout/settings/accounting/DepartmentTurnoverPlan')));
 const ExpensesAccount = LazyLoader(lazy(() => import('../components/layout/settings/accounting/ExpensesAccount')));
+const IndustryService = LazyLoader(lazy(() => import('../components/layout/settings/accounting/industry-service')));
 const Departments = LazyLoader(lazy(() => import('../components/layout/settings/calculators/Departments')));
 const CompanyEthos = LazyLoader(lazy(() => import('../components/layout/settings/companyethos/CompanyEthos')));
 const CustomersDiscountCategory = LazyLoader(lazy(() => import('../components/layout/settings/customerssettings/CustomersDiscountCategory')));
@@ -90,6 +91,7 @@ const WorkDashboard = LazyLoader(lazy(() => import('../components/Work/Pages/Das
 const JobsPage = LazyLoader(lazy(() => import('../components/Work/Pages/jobs')));
 const News = LazyLoader(lazy(() => import('../components/Work/Pages/News')));
 const PeoplePage = LazyLoader(lazy(() => import('../components/Work/Pages/people')));
+const TeamInvoiceHistory = LazyLoader(lazy(() => import('../pages/work/team/invoice-history/')));
 const TaskPage = LazyLoader(lazy(() => import('../components/Work/Pages/tasks')));
 const AccountOverdue = LazyLoader(lazy(() => import('../pages/account-overdue/account-overdue')));
 const Logout = LazyLoader(lazy(() => import('../pages/setting/logout/logout')));
@@ -385,6 +387,10 @@ const routes = [
                 element: <PeoplePage />,
             },
             {
+                path: "people/:id/invoice-history",
+                element: <TeamInvoiceHistory />
+            },
+            {
                 path: "chat",
                 element: <Chat />,
             },
@@ -587,6 +593,10 @@ const routes = [
                             {
                                 path: "department-turnover-plan",
                                 element: <DepartmentTurnoverPlan />,
+                            },
+                            {
+                                path: "industry-service",
+                                element: <IndustryService />,
                             },
                         ],
                     },

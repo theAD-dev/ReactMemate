@@ -590,3 +590,15 @@ tr.p-datatable-emptymessage td {
 .p-rating .p-rating-item.p-rating-item-active .p-rating-icon {
   color: #ffcb45 !important;
 }
+
+.custom-multiselect .p-multiselect-label {
+  padding: 3px !important;
+  font-size: 14px !important;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--Gray-700, #667085);
+}
+
+.p-rating .p-rating-item.p-focus {
+  box-shadow: none !important;
+}

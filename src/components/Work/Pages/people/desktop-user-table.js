@@ -55,12 +55,12 @@ const DesktopPeoplesTable = () => {
     }, []);
 
     const nameBody = (rowdata) => {
-        return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hover`}>
+        return <div className={`d-flex align-items-center justify-content-start gap-2 show-on-hove`}>
             <ImageAvatar has_photo={rowdata.has_photo} photo={rowdata.photo} is_business={false} />
             <div className={`${style.time} ${rowdata.time === 'TimeFrame' ? style.frame : style.tracker}`}>
                 {rowdata?.first_name} {rowdata?.last_name}
             </div>
-            <Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text />
+            {/* <Button label="View Details" onClick={() => { }} className='primary-text-button ms-3 show-on-hover-element' text /> */}
         </div>;
     };
 
