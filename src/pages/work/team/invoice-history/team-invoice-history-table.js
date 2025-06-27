@@ -104,7 +104,9 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
   const InvoiceIDBody = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between gap-2`}>
         <span>{rowData.number}</span>
-        <Link to={`${process.env.REACT_APP_URL}/${rowData.invoice_url}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+        {
+          rowData?.pdf_path && <Link to={`${process.env.REACT_APP_URL}${rowData.pdf_path}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+        }
     </div>;
   };
 
