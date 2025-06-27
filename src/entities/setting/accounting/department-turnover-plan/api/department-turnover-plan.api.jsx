@@ -16,3 +16,28 @@ export const updateAccountingTarget = async (id, data) => {
     };
     return fetchInstance(path, options);
 };
+
+export const getIndustryServiceList = async () => {
+    const path = `/suppliers/industries/`;
+    const options = {
+        method: 'GET',
+    };
+    return fetchInstance(path, options);
+};
+
+export const updateIndustryServiceCode = async (id, data) => {
+    const path = `/suppliers/industries/${id}/`;
+    const options = {
+        method: 'PUT',
+        body: data
+    };
+    return fetchInstance(path, options);
+};
+
+export const getXeroCodesList = async () => {
+    const path = `/references/xero-codes/`;
+    const options = {
+        method: 'GET',
+    };
+    return fetchInstance(path, options);
+};

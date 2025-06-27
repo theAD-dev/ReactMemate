@@ -49,6 +49,7 @@ const SelectDate = LazyLoader(lazy(() => import('../components/layout/requestdem
 const SignUp = LazyLoader(lazy(() => import('../components/layout/requestdemo/SignUp')));
 const DepartmentTurnoverPlan = LazyLoader(lazy(() => import('../components/layout/settings/accounting/DepartmentTurnoverPlan')));
 const ExpensesAccount = LazyLoader(lazy(() => import('../components/layout/settings/accounting/ExpensesAccount')));
+const IndustryService = LazyLoader(lazy(() => import('../components/layout/settings/accounting/industry-service')));
 const Departments = LazyLoader(lazy(() => import('../components/layout/settings/calculators/Departments')));
 const CompanyEthos = LazyLoader(lazy(() => import('../components/layout/settings/companyethos/CompanyEthos')));
 const CustomersDiscountCategory = LazyLoader(lazy(() => import('../components/layout/settings/customerssettings/CustomersDiscountCategory')));
@@ -592,6 +593,10 @@ const routes = [
                             {
                                 path: "department-turnover-plan",
                                 element: <DepartmentTurnoverPlan />,
+                            },
+                            {
+                                path: "industry-service",
+                                element: <IndustryService />,
                             },
                         ],
                     },
