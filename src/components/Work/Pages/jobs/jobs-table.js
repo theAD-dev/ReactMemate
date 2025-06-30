@@ -1,6 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { ChatText, Repeat } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
@@ -13,6 +12,7 @@ import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-a
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import JobDetails from '../../features/job-table-actions/job-details-dialog';
+import JobDeclined from '../../features/show-job-declined/show-job-declined';
 import ViewJob from '../../features/view-job/view-job';
 
 export const formatDate = (timestamp) => {
@@ -30,11 +30,12 @@ export const formatDate = (timestamp) => {
   }
 };
 
-const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, createJobVisible }, ref) => {
-  const navigate = useNavigate();
+const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, createJobVisible, isCreateJobVisible }, ref) => {
   const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
+  const [showDeclined, setShowDeclined] = useState(false);
+  const [declineMessage, setDeclineMessage] = useState('');
   const [show, setShow] = useState({ visible: false, jobId: null });
   const [editMode, setEditMode] = useState(false);
   const [jobDetails, setJobDetails] = useState({});
@@ -93,7 +94,14 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     };
   }, [jobs, hasMoreData]);
 
-  function openDeatils(data) {
+  useEffect(() => {
+    if (isCreateJobVisible) {
+      setEditMode(false);
+      setShow({ jobId: null, visible: false });
+    }
+  }, [isCreateJobVisible]);
+
+  function openDetails(data) {
     setJobDetails(data);
     setVisible(true);
   }
@@ -196,7 +204,11 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       case '6':
         return <div className='d-flex gap-2 align-items-center'>
           <Chip className={`status ${style.NotConfirmed} font-14`} label={"Declined"} />
-          <ChatText color='#158ECC' />
+          <ChatText color='#158ECC' className="cursor-pointer" onClick={() => {
+            setShowDeclined(true);
+            setDeclineMessage(rowData.decline_message);
+          }}
+          />
         </div>;
       case 'a':
         return <Chip className={`status ${style.CONFIRMED} font-14`} label={"Confirmed"} />;
@@ -283,6 +295,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />
+      <JobDeclined showDeclined={showDeclined} setShowDeclined={setShowDeclined} message={declineMessage} />
       <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={setRefetch} editMode={editMode} setEditMode={setEditMode} />
     </>
   );

@@ -225,15 +225,60 @@
   background: #f9fafb;
 }
 
+.linkToProjectCard {
+  color: var(--Gray-400, #98a2b3);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+tr:hover .linkToProjectCard {
+  color: var(--Primary-600, #158ecc);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+}
+
 .finishedAction {
+  color: var(--Gray-800, #1d2939);
+
+  /* Body small */
+  font-family: Inter;
   font-size: 12px;
-  padding: 4px 6px;
-  line-height: 18px;
-  font-weight: 500;
-  color: #6941c6;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
   border-radius: 4px;
-  border: 1px solid #e9d7fe;
-  background: #f9fafb;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
+
+tr:hover .finishedAction {
+  border-radius: 4px;
+  border: 1px solid var(--Success-300, #75e0a7);
+  background: var(--Success-50, #ecfdf3);
 }
 
 .assign {
