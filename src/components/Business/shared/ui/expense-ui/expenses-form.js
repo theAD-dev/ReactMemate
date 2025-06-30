@@ -230,19 +230,19 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             }
                         );
 
-                    // Extract and process the AI response data
-                    const extractedData = extractAIResponseData(aiResponse?.data);
-                    if (extractedData) {
-                        // Format the data for the form
-                        const formattedData = formatExpenseDataFromAI(extractedData);
-                        if (formattedData) {
-                            // set the file url
-                            setValue('file', fileUrl);
+                        // Extract and process the AI response data
+                        const extractedData = extractAIResponseData(aiResponse?.data);
+                        if (extractedData) {
+                            // Format the data for the form
+                            const formattedData = formatExpenseDataFromAI(extractedData);
+                            if (formattedData) {
+                                // set the file url
+                                setValue('file', fileUrl);
 
-                            // Prefill the form with the extracted data
-                            Object.entries(formattedData).forEach(([key, value]) => {
-                                setValue(key, value);
-                            });
+                                // Prefill the form with the extracted data
+                                Object.entries(formattedData).forEach(([key, value]) => {
+                                    setValue(key, value);
+                                });
 
                                 // Trigger validation for required fields
                                 trigger(['invoice_reference', 'amount', 'gst', 'nogst']);
@@ -299,12 +299,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
             }
         }
     };
-
-    useEffect(() => {
-        setValue('supplier', +supplierValue?.id);
-        if (supplierValue?.id) trigger(['supplier']);
-
-    }, [supplierValue]);
 
     const onFocus = () => {
         if (autoCompleteRef.current) autoCompleteRef.current.show();
@@ -457,6 +451,17 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     useEffect(() => {
         if (!id) setValue('gst-calculation', 'in');
     }, []);
+
+    useEffect(() => {
+        setValue('supplier', +supplierValue?.id);
+        if (supplierValue?.id) trigger(['supplier']);
+        if (supplierValue?.service?.code && xeroCodesList?.data?.length) {
+            let findCode = xeroCodesList?.data?.find(code => code.code === supplierValue?.service?.code);
+            setValue('account_code', findCode?.id);
+        } else {
+            setValue('account_code', defaultValues.account_code || '');
+        }
+    }, [supplierValue, xeroCodesList?.data, setValue, trigger, defaultValues.account_code]);
 
     return (
         <form ref={ref} onSubmit={handleSubmit(handleFormSubmit)} >

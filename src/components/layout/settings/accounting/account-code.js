@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import ComingSoon from '../../../../shared/ui/coming-soon';
 
-const ExpensesAccount = () => {
+const AccountCode = () => {
     const { trialHeight } = useTrialHeight();
 
     return (
@@ -18,7 +18,7 @@ const ExpensesAccount = () => {
                     <ul>
                         <li><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
                         <li><Link to="/settings/accounting/industry-service">Industry Service</Link></li>
-                        <li className='menuActive'><Link to="/settings/accounting/expenses">Expenses</Link></li>
+                        <li className='menuActive'><Link to="/settings/accounting/account-code">Account Code</Link></li>
                     </ul>
                 </div>
             </div>
@@ -29,4 +29,4 @@ const ExpensesAccount = () => {
     );
 };
 
-export default ExpensesAccount;
+export default AccountCode;

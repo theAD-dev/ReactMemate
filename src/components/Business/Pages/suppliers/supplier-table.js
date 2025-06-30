@@ -14,9 +14,6 @@ import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
-
-
-
 export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selectedSuppliers, setSelectedSuppliers, isShowDeleted, refetch }, ref) => {
     const navigate = useNavigate();
     const observerRef = useRef(null);
@@ -96,42 +93,8 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
     };
 
     const ServicesBodyTemplate = (rowData) => {
-        const op = useRef(null);
-        const handleServiceClick = (event) => {
-            if (op.current) op.current.toggle(event);
-        };
-
-        let services = rowData?.services?.split(",") || [];
-
-        const displayedServices = services.slice(0, 5);
-        const hiddenServices = services.slice(5);
-        const hiddenCount = services.length - 5;
-
-        return (
-            <div className='d-flex align-items-center gap-2'>
-                {displayedServices.map((service, index) => (
-                    <div key={`${rowData.id}-service-${index}`} className={style.serviceTag}>
-                        <span className={style.serviceName} title={service}>{service}</span>
-                    </div>
-                ))}
-                {hiddenCount > 0 && (
-                    <div
-                        className={style.serviceTag}
-                        onClick={handleServiceClick}
-                        style={{ color: '#106B99', cursor: "pointer", border: '1px solid #76D1FF', background: '#F2FAFF' }}
-                    >
-                        +{hiddenCount}
-                    </div>
-                )}
-                <OverlayPanel ref={op} className="servicesOverlay">
-                    <div className="flex flex-column">
-                        {hiddenServices.map((service, index) => (
-                            <div key={`${rowData.id}-service-full-${index}`} className={style.serviceTag}>{service}</div>
-                        ))}
-                    </div>
-                </OverlayPanel>
-            </div>
-        );
+        if (!rowData?.service) return "-";
+        return `${rowData?.service?.industry_name}: ${rowData?.service?.name} `;
     };
 
     const emailBodyTemplate = (rowData) => {

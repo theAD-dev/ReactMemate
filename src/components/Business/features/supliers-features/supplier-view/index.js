@@ -137,11 +137,16 @@ const ViewSection = ({ data }) => {
 
         <h5 className={clsx(style.boxLabel)}>Services</h5>
         <div className={clsx(style.box)}>
-            <div className='d-flex gap-2 align-items-center'>
-                {
-                    services?.length ? (services.map((service, index) => <div key={index} className={style.serviceTag}>{service}</div>)) : "-"
-                }
-            </div>
+            <Row>
+                <Col sm={6}>
+                    <label className={clsx(style.label)}>Industry</label>
+                    <h4 className={clsx(style.text, 'ellipsis-width')}>{data?.service?.industry_name || "-"}</h4>
+                </Col>
+                <Col sm={6}>
+                    <label className={clsx(style.label)}>Service</label>
+                    <h4 className={clsx(style.text, 'ellipsis-width')}>{data?.service?.name || "-"}</h4>
+                </Col>
+            </Row>
         </div>
 
         <h5 className={clsx(style.boxLabel)}>Note</h5>
@@ -226,7 +231,7 @@ const ViewSection = ({ data }) => {
                             <label className={clsx(style.label)}>Location Name</label>
                             <h4 className={clsx(style.text)}>{`${address.title || "-"}`}</h4>
                         </Col>
-                        
+
                         <Col>
                             <label className={clsx(style.label)}>Country</label>
                             <h4 className={clsx(style.text)}>{`${address.country || "-"}`}</h4>

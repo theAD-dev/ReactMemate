@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getAccountingList, getIndustryServiceList, getXeroCodesList } from "../api/department-turnover-plan.api";
 
 export const useAccountingGetQuery = () => {

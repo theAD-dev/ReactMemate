@@ -12,6 +12,8 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
 
     const [defaultValues] = useState({
         ...data,
+        industry: data?.service?.industry_id,
+        service: data?.service?.id,
         addresses: data?.addresses?.filter((address) => !address?.deleted)?.map((address) => ({
             id: address?.id || "",
             title: address?.title || "",
@@ -27,7 +29,6 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
     if (defaultValues?.contact_persons?.length === 0) defaultValues.contact_persons.push({ deleted: false });
 
     const formSubmit = async (data) => {
-        console.log('data: ', data);
         const formData = new FormData();
 
         formData.append("name", data.name);
@@ -36,7 +37,7 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
         if (data.abn) formData.append("abn", data.abn);
         const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
         if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
-        formData.append("services", data.services);
+        formData.append("service", data.service);
         if (data.note) formData.append("note", data.note);
 
         data.addresses.forEach((address, index) => {
