@@ -15,7 +15,7 @@ const AddNote = ({ projectId, projectCardData }) => {
     description: '',
   });
 
-  const MAX_LENGTH = 500; // Maximum allowed characters
+  const MAX_LENGTH = 1000; // Maximum allowed characters
   const MIN_LENGTH = 3;   // Minimum required characters
 
   const handleClose = () => setViewShow(false);
