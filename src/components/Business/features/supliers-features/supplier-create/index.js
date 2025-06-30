@@ -30,7 +30,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
     if (data.abn) formData.append("abn", data.abn);
     const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
     if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
-    formData.append("services", data.services);
+    formData.append("service", data.service);
     if (data.note) formData.append("note", data.note);
 
     data.addresses.forEach((address, index) => {

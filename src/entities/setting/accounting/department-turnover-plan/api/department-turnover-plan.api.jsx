@@ -41,3 +41,11 @@ export const getXeroCodesList = async () => {
     };
     return fetchInstance(path, options);
 };
+
+export const getAccountCodeList = async () => {
+    const path = `/account_codes/`;
+    const options = {
+        method: 'GET',
+    };
+    return fetchInstance(path, options);
+};

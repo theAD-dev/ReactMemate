@@ -101,7 +101,7 @@ function IndustryService() {
           <ul>
             <li><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
             <li className='menuActive'><Link to="/settings/accounting/industry-service">Industry Service</Link></li>
-            <li><Link to="/settings/accounting/expenses">Expenses</Link></li>
+            <li><Link to="/settings/accounting/account-code">Account Code</Link></li>
           </ul>
         </div>
       </div>
@@ -112,7 +112,7 @@ function IndustryService() {
               <h2>Industry Service</h2>
             </div>
 
-            <DataTable className='w-100' value={industryService || []} tableStyle={{ minWidth: '100%', border: '1px solid #f2f2f2' }}>
+            <DataTable className='w-100' showGridlines rowGroupMode="rowspan" groupRowsBy="industryName" value={industryService || []} tableStyle={{ minWidth: '100%', border: '1px solid #f2f2f2' }}>
               <Column field="industryName" header="Industry"></Column>
               <Column field="name" header="Service"></Column>
               <Column field='description' header="Description"></Column>
@@ -131,11 +131,13 @@ function IndustryService() {
                       <Dropdown
                         {...field}
                         options={xeroCodesQuery?.data?.map(code => ({
-                          value: code,
-                          label: code
+                          value: code.code,
+                          label: `${code.code} - ${code.name}`
                         })) || []}
                         onChange={(e) => field.onChange(e.value)}
                         placeholder="Select Code"
+                        filter
+                        scrollHeight="400px"
                       />
                     )}
                   />
