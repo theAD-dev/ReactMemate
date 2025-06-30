@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ClockHistory, Link45deg, Repeat } from 'react-bootstrap-icons';
+import { CheckCircle, ClockHistory, Repeat } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Chip } from 'primereact/chip';
+import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
 import { DataTable } from 'primereact/datatable';
 import { Row } from 'primereact/row';
-import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './approval.module.scss';
 import { getJobsToApprove } from '../../../../APIs/approval-api';
@@ -117,11 +117,10 @@ const ApprovalTable = React.memo(() => {
     const actionBody = (rowData) => {
         return (
             <div className='d-flex justify-content-center gap-2'>
-                <Chip
-                    className={`status ${style.finishedAction} cursor-pointer`}
-                    label="Approve"
-                    onClick={() => handleApprove(rowData.id)}
-                />
+                <Button onClick={() => handleApprove(rowData.id)} className={`gap-1 status ${style.finishedAction} cursor-pointer`}>
+                    Approve
+                    <CheckCircle color='#079455' size={16} />
+                </Button>
             </div>
         );
     };
@@ -158,7 +157,7 @@ const ApprovalTable = React.memo(() => {
             </div>
             <div className='d-flex flex-column'>
                 <span>{rowData?.project?.reference}</span>
-                <span className='font-12' style={{ color: '#98A2B3' }}>{rowData?.project?.number} | {rowData?.client?.name}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.project?.unique_id}&reference=${rowData?.project?.reference}&number=${rowData?.project?.number}`}>{rowData?.project?.number}</Link> | {rowData?.client?.name}</span>
             </div>
         </div>;
     };
@@ -182,7 +181,7 @@ const ApprovalTable = React.memo(() => {
     };
 
     const totalBody = (rowData) => {
-        return <Tag value={`$${formatAUD(rowData.total)}`} style={{ border: "2px solid var(--Orange-200, #FFE0BC)", background: '#FFF7EE', color: '#FFB258', fontSize: '12px', fontWeight: 500 }} rounded></Tag>;
+        return `$${formatAUD(rowData.total)}`;
     };
 
     const realTotalBody = (rowData) => {
@@ -203,11 +202,12 @@ const ApprovalTable = React.memo(() => {
         return (
             <ColumnGroup>
                 <Row className='w-100'>
-                    <Column colSpan={11} />
+                    <Column colSpan={10} />
                     <Column
                         footer={`Total= $${formattedTotal}`}
                         footerStyle={{ position: 'sticky', right: 0 }}
                     />
+                    <Column colSpan={1} />
                 </Row>
             </ColumnGroup>
         );
