@@ -717,7 +717,7 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
     const uniqueCalculators = calculators.filter((item, index, self) =>
         index === self.findIndex((t) => t.id === item.id && !item?.deleted)
     );
-    const summary = calculateSummary(uniqueCalculators, 'no');
+    const summary = calculateSummary(uniqueCalculators, 'ex');
 
     return (
         <div>
