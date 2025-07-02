@@ -15,7 +15,7 @@ const AddNote = ({ projectId, projectCardData }) => {
     description: '',
   });
 
-  const MAX_LENGTH = 1000; // Maximum allowed characters
+  const MAX_LENGTH = 2000; // Maximum allowed characters
   const MIN_LENGTH = 3;   // Minimum required characters
 
   const handleClose = () => setViewShow(false);
@@ -93,6 +93,7 @@ const AddNote = ({ projectId, projectCardData }) => {
         className="taskModelProject"
         onHide={handleClose}
         animation={false}
+        size="lg"
       >
         <Modal.Header className="mb-0 pb-0 border-0">
           <div className="modelHeader d-flex justify-content-between align-items-start">
@@ -120,7 +121,7 @@ const AddNote = ({ projectId, projectCardData }) => {
                       placeholder='Enter a message here...'
                       onChange={handleChange}
                       maxLength={MAX_LENGTH}
-                      rows={4}
+                      rows={10}
                       className="w-100"
                     />
                   </div>

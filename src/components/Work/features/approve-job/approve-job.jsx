@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { ClockHistory, EmojiFrown, EmojiFrownFill, EmojiNeutral, EmojiNeutralFill, EmojiSmile, EmojiSmileFill, QuestionCircle, X } from 'react-bootstrap-icons';
+import { Briefcase, Calendar3, ClockHistory, EmojiFrown, EmojiFrownFill, EmojiNeutral, EmojiNeutralFill, EmojiSmile, EmojiSmileFill, QuestionCircle, X } from 'react-bootstrap-icons';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
@@ -18,6 +18,7 @@ import { createApproval, getApprovedJob } from '../../../../APIs/jobs-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import 'leaflet/dist/leaflet.css';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 // Fix default icon issues with Leaflet in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -84,7 +85,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
     };
 
     const plannedRate = parseFloat(job?.worker?.hourly_rate || 0).toFixed(2);
-    const plannedSubtotal = parseFloat(job?.cost || 0);
+    const plannedSubtotal = parseFloat(job?.worker?.hourly_rate || 0) * parseFloat(job?.duration || 0);
     const actualSubtotal = parseFloat(job?.real_total || 0);
     const variation = parseFloat(amount || 0);
     const addOnPrice = isBonus ? variation : -variation;
@@ -112,13 +113,54 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
         setVisible(false);
     };
 
+    const jobTypeBody = (rowData) => {
+        if (rowData?.type_display === "Fix" && rowData?.time_type_display === "Shift") {
+            return <div className={style.type}>
+                <div className={style.shift}>Shift</div>
+                <div className={style.fix}>Fix</div>
+            </div>;
+        }
+
+        if (rowData?.type_display === "Fix" && rowData?.time_type_display === "Time frame") {
+            return <div className={style.type}>
+                <div className={style.timeFrame}>Time Frame</div>
+                <div className={style.fix}>Fix</div>
+            </div>;
+        }
+
+        if (rowData?.type_display === "Hours" && rowData?.time_type_display === "Shift") {
+            return <div className={style.type}>
+                <div className={style.shift}>Shift</div>
+                <div className={style.hours}>Hours</div>
+            </div>;
+        }
+
+        if (rowData?.type_display === "Hours" && rowData?.time_type_display === "Time frame") {
+            return <div className={style.type}>
+                <div className={style.timeFrame}>Time Frame</div>
+                <div className={style.hours}>Hours</div>
+            </div>;
+        }
+
+        if (rowData?.type_display === "Time Tracker" && rowData?.time_type_display === "Time frame") {
+            return <div className={style.type}>
+                <div className={style.timeTracker}>Time Tracker</div>
+                <div className={style.timeFrame2}>Time Frame</div>
+            </div>;
+        }
+        return "";
+    };
+
     return (
         <Sidebar visible={visible} position="right" onHide={resetAndClose} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
                         <div className="d-flex align-items-center gap-3">
-                            <span className={style.heading}>{job?.id}-{job?.number}</span>
+                            <div className={style.viewBox}>
+                                <Briefcase size={24} color='#079455' />
+                            </div>
+                            <span className={style.heading}>{job?.number}</span>
                         </div>
                         <span>
                             <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
@@ -128,55 +170,42 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
                     </div>
 
                     <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
+                        <h1 className={clsx(style.jobDetailHeading, 'mb-3')}>Job Details</h1>
 
                         <Card className={clsx(style.border, 'mb-4')}>
-                            <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenJobDetailsSection(!isOpenJobDetailsSection)}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Details</h1>
-                                    <button className='text-button p-0'>
-                                        {
-                                            isOpenJobDetailsSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
-                                            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
-                                            </svg>
-                                        }
-                                    </button>
-                                </div>
-                            </Card.Body>
-                            {
-                                isOpenJobDetailsSection &&
-                                <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
-                                    <h1 className={clsx(style.jobDetailHeading, 'mb-3')}>Link to Project</h1>
+                            <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
+                                <label className={clsx(style.customLabel)}>Job Reference</label>
+                                <p className={clsx(style.text)}>{job?.short_description}</p>
 
-                                    <label className={clsx(style.customLabel)}>Short Description</label>
-                                    <p className={clsx(style.text)}>{job?.short_description}</p>
+                                <label className={clsx(style.customLabel)}>Description</label>
+                                <p className={clsx(style.text)}>{job?.long_description}</p>
+                            </Card.Header>
+                        </Card>
 
-                                    <label className={clsx(style.customLabel)}>Long Description</label>
-                                    <p className={clsx(style.text)}>{job?.long_description}</p>
-
-                                    <Row>
-                                        <Col sm={6}>
-                                            <label className={clsx(style.customLabel)}>Client</label>
-                                            <p className={clsx(style.text)}>{job?.client?.name}</p>
-                                        </Col>
-                                        <Col sm={6}>
-                                            <label className={clsx(style.customLabel)}>Location</label>
-                                            <p className={clsx(style.text)}>{job?.location?.name}</p>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col sm={6}>
-                                            <label className={clsx(style.customLabel)}>From</label>
-                                            <p className={clsx(style.text)}>{job?.start_date ? formatDate(job?.start_date) : "N/A"}</p>
-                                        </Col>
-                                        <Col sm={6}>
-                                            <label className={clsx(style.customLabel)}>To</label>
-                                            <p className={clsx(style.text)}>{job?.end_date ? formatDate(job?.end_date) : "N/A"}</p>
-                                        </Col>
-                                    </Row>
-                                </Card.Header>
-                            }
+                        <Card className={clsx(style.border, 'mb-4')}>
+                            <Card.Header className={clsx(style.background, 'border-0 px-4 py-3', style.borderBottom)}>
+                                <Row className={clsx(style.chooseUserBox, 'flex-nowrap')}>
+                                    <Col sm={2} className='p-0'>
+                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                            <FallbackImage photo={job?.worker?.photo} has_photo={job?.worker?.has_photo} is_business={false} size={40} />
+                                        </div>
+                                    </Col>
+                                    <Col sm={5} className='pe-0 ps-0'>
+                                        <p className={clsx('text-nowrap font-16 mb-2')} style={{ fontWeight: 600 }}>{job?.worker?.first_name} {job?.worker?.last_name}</p>
+                                        <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', width: 'fit-content', padding: '4px 16px' }}>Employee</div>
+                                    </Col>
+                                    <Col sm={5} className=''>
+                                        <div className='d-flex align-items-center gap-2 mb-3'>
+                                            <div style={{ width: '28px', height: '28px', background: '#EBF8FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
+                                            <span>{job?.worker?.hourly_rate || "-"} AUD</span>
+                                        </div>
+                                        <div className='d-flex align-items-center gap-2'>
+                                            <div style={{ width: '28px', height: '28px', background: '#EBF8FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
+                                            <span>{job?.worker?.payment_cycle || "Weekly"}</span>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Card.Header>
                         </Card>
 
                         <Card className={clsx(style.border, 'mb-4')}>
@@ -201,14 +230,8 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    <div className='d-flex align-items-center gap-2'>
-                                                        <div className={style.fixRateBox}>Fix Rate</div>
-                                                        <div>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                                <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#667085" />
-                                                            </svg>
-                                                        </div>
-                                                        <div className={style.shiftBox}>Shift</div>
+                                                    <div className='d-flex'>
+                                                        {jobTypeBody(job)}
                                                     </div>
                                                 </th>
                                                 <th className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
@@ -236,10 +259,10 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
                                                     <span className='font-16' style={{ color: '#344054' }}>Start</span>
                                                 </td>
                                                 <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                    <span className='font-14'>{job?.start_date ? formatTime(job.start_date) : "N/A"} | {job?.start_date ? formatDate(job?.start_date) : "N/A"}</span>
+                                                    <span className='font-14'>{job?.start_date ? formatDate(job?.start_date) : "N/A"}</span>
                                                 </td>
                                                 <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <span className='font-14'>{job?.start ? formatTime(job.start) : "N/A"} | {job?.start ? formatDate(job?.start) : "N/A"}</span>
+                                                    <span className='font-14'>{job?.start ? formatDate(job?.start) : "N/A"}</span>
                                                 </td>
                                             </tr>
                                             <tr className={style.whiteTr}>
@@ -247,10 +270,10 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
                                                     <span className='font-16' style={{ color: '#344054' }}>Finish</span>
                                                 </td>
                                                 <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                    <span className='font-14'>{job?.end_date ? formatTime(job.end_date) : "N/A"} | {job?.end_date ? formatDate(job?.end_date) : "N/A"}</span>
+                                                    <span className='font-14'>{job?.end_date ? formatDate(job?.end_date) : "N/A"}</span>
                                                 </td>
                                                 <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <span className='font-14'>{job?.finish ? formatTime(job.finish) : "N/A"} | {job?.finish ? formatDate(job?.finish) : "N/A"}</span>
+                                                    <span className='font-14'>{job?.finish ? formatDate(job?.finish) : "N/A"}</span>
                                                 </td>
                                             </tr>
                                             <tr className={style.whiteTr}>
@@ -258,7 +281,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
                                                     <span className='font-16' style={{ color: '#344054' }}>Hours</span>
                                                 </td>
                                                 <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                    <span className='font-14'>{calculatePlannedHours()}</span>
+                                                    <span className='font-14'>{ job?.type_display === "Fix" ? "-" : job?.duration }</span>
                                                 </td>
                                                 <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
                                                     <span className='font-14'>{calculateActualHours()}</span>
@@ -429,7 +452,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
     );
 };
 
-const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, refetch,  resetAndClose}) => {
+const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, refetch, resetAndClose }) => {
     const [visible, setVisible] = useState(false);
     const [quality, setQuality] = useState(null);
     const [speed, setSpeed] = useState(null);

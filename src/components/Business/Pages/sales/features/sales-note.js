@@ -15,7 +15,7 @@ const SalesNote = ({ saleUniqueId, noteData, onNoteUpdate, refreshData }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const MAX_LENGTH = 1000;
+  const MAX_LENGTH = 2000;
   const MIN_LENGTH = 3;
 
   const validateNote = (text) => {

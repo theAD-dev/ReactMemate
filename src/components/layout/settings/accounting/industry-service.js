@@ -113,6 +113,7 @@ function IndustryService() {
             </div>
 
             <DataTable className='w-100' showGridlines rowGroupMode="rowspan" groupRowsBy="industryName" value={industryService || []} tableStyle={{ minWidth: '100%', border: '1px solid #f2f2f2' }}>
+              <Column header="#" body={(data, options) => options.rowIndex + 1}></Column>
               <Column field="industryName" header="Industry"></Column>
               <Column field="name" header="Service"></Column>
               <Column field='description' header="Description"></Column>

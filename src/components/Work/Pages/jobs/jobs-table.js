@@ -1,5 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { ChatText, Repeat } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
@@ -110,7 +111,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
       <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
         <span>{rowData.number}</span>
-        <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created || rowData.start_date)}</span>
+        <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
       </div>
       {rowData?.is_recurring && <Repeat color='#158ECC' />}
       <Button label="Open"
@@ -188,7 +189,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
   const statusBody = (rowData) => {
     if (!rowData.published) {
-      return <Chip className={`status ${style.Draft} font-14`} label={"Unpublished"} />;
+      return <Chip className={`status ${style.Draft} font-14`} label={"Draft"} />;
     }
 
     if (rowData.action_status) {
@@ -236,7 +237,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const bonusBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>${formatAUD(rowData.bonus || 0)}</span>;
+    return <span style={{ color: '#667085' }}>{parseFloat(rowData.variations || 0 ) < 0 ? `-$${rowData.variations || 0}` : `$${rowData.variations}`}</span>;
   };
 
   const totalBody = (rowData) => {
@@ -252,7 +253,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       </div>
       <div className='d-flex flex-column'>
         <span>{rowData?.project?.reference}</span>
-        <span className='font-12' style={{ color: '#98A2B3' }}>{rowData?.project?.number} | {rowData?.client?.name}</span>
+        <span className='font-12' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.project?.unique_id}&reference=${rowData?.project?.reference}&number=${rowData?.project?.number}`}>{rowData?.project?.number}</Link> | {rowData?.client?.name}</span>
       </div>
     </div>;
   };
@@ -291,7 +292,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
         <Column field="time_assigned" header="Time Assigned" body={assignedTimeBody} style={{ minWidth: '117px' }} ></Column>
         <Column field="real_time" header="Real Time" body={realTimeBody} bodyClassName={'text-end'} headerClassName='text-center' style={{ minWidth: '88px' }}></Column>
-        <Column field="bonus" header="Bonus" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>
+        <Column field="variations" header="Variation" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>
         <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
       </DataTable>
       <JobDetails visible={visible} setVisible={setVisible} jobDetails={jobDetails} />

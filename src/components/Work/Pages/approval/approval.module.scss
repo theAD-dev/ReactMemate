@@ -462,3 +462,18 @@ tr:hover .finishedAction {
   border: 1px solid var(--statuses-types-light-yellow, #eecbff);
   background: #fff;
 }
+
+.totalStyle {
+  color: var(--Gray-800, #1d2939);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+  margin-bottom: 0px;
+}
+
+.verticalTop {
+  vertical-align: baseline !important;
+}
