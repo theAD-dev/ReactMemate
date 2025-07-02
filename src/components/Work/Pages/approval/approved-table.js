@@ -1,18 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ClockHistory } from 'react-bootstrap-icons';
+import { Repeat } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Chip } from 'primereact/chip';
 import { Column } from 'primereact/column';
-import { ColumnGroup } from 'primereact/columngroup';
 import { DataTable } from 'primereact/datatable';
-import { Row } from 'primereact/row';
 import { toast } from 'sonner';
 import style from './approval.module.scss';
 import WeekNavigator from './week-navigator';
 import { getApproveNotInvoice } from '../../../../APIs/approval-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatDate as formateMillisecond } from '../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import { FallbackImage } from '../../../../ui/image-with-fallback/image-avatar';
@@ -54,6 +53,16 @@ const ApprovedTable = React.memo(() => {
         }
     });
 
+    const jobIDTemplate = (rowData) => {
+        return <div className={`d-flex gap-2 align-items-center justify-content-center show-on-hover`}>
+            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+                <span>{rowData.number}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}>{formateMillisecond(rowData.created)}</span>
+            </div>
+            {rowData?.is_recurring && <Repeat color='#158ECC' />}
+        </div>;
+    };
+
     const jobTypeBody = (rowData) => {
         if (rowData.type === "2" && rowData.time_type === "1") {
             return <div className={style.type}>
@@ -83,7 +92,7 @@ const ApprovedTable = React.memo(() => {
             </div>;
         }
 
-        if (rowData.type === "Time Tracker" && rowData.time_type === "T") {
+        if (rowData.type === "4" && rowData.time_type === "T") {
             return <div className={style.type}>
                 <div className={style.timeTracker}>Time Tracker</div>
                 <div className={style.timeFrame2}>Time Frame</div>
@@ -147,30 +156,36 @@ const ApprovedTable = React.memo(() => {
         </div>;
     };
 
-    const calculateHours = (spentTime) => {
-        const [h, m, s] = spentTime.split(':');
-        const totalSeconds = parseInt(h) * 3600 + parseInt(m) * 60 + parseFloat(s);
-        const totalHours = totalSeconds / 3600;
-        return totalHours.toFixed(2); // returns string like "0.01"
-    };
-
-    const realTimeBody = (rowData) => {
-        const hours = calculateHours(rowData.spent_time || "0:00:00.000000");
-
-        return (
-            <div className="d-flex align-items-center gap-1">
-                <span className="me-1">{hours}h</span>
-                <ClockHistory color='#667085' size={16} />
-            </div>
-        );
-    };
-
     const totalBody = (rowData) => {
         return `$${formatAUD(rowData.total)}`;
     };
 
     const realTotalBody = (rowData) => {
         return <span>${formatAUD(rowData.real_total)}</span>;
+    };
+
+    const plannedTotal = React.useMemo(() => {
+        if (!invoiceData || invoiceData.length === 0) return 0;
+        return invoiceData.reduce((sum, job) => sum + parseFloat(job.total || 0), 0);
+    }, [invoiceData]);
+
+    const realTotal = React.useMemo(() => {
+        if (!invoiceData || invoiceData.length === 0) return 0;
+        return invoiceData.reduce((sum, job) => sum + parseFloat(job.real_total || 0), 0);
+    }, [invoiceData]);
+
+    const plannedTotalHead = () => {
+        return <div className='d-flex flex-column'>
+            <span>Planned Total</span>
+            <p className={style.totalStyle}>${formatAUD(plannedTotal)}</p>
+        </div>;
+    };
+
+    const realTimeHead = () => {
+        return <div className='d-flex flex-column'>
+            <span>Real Total</span>
+            <p className={style.totalStyle}>${formatAUD(realTotal)}</p>
+        </div>;
     };
 
     const workerHeader = () => {
@@ -180,31 +195,12 @@ const ApprovedTable = React.memo(() => {
         </div>;
     };
 
-    const invoiceTotal = React.useMemo(() => {
-        if (!invoiceData || invoiceData.length === 0) return 0;
-        return invoiceData.reduce((sum, job) => sum + parseFloat(job.total || 0), 0);
-    }, [invoiceData]);
-
-
-    const invoiceFooterGroup = React.useMemo(() => {
-        const formattedTotal = invoiceTotal.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-
-        return (
-            <ColumnGroup>
-                <Row className='w-100'>
-                    <Column colSpan={10} />
-                    <Column
-                        footer={`Total= $${formattedTotal}`}
-                        footerStyle={{ position: 'sticky', right: 0 }}
-                    />
-                    <Column colSpan={1} />
-                </Row>
-            </ColumnGroup>
-        );
-    }, [invoiceTotal]);
+    const actionHeader = () => {
+        return <div className='d-flex flex-column'>
+            <span>Actions</span>
+            <p className='pb-2'></p>
+        </div>;
+    };
 
     useEffect(() => {
         if (invoiceError) {
@@ -219,36 +215,17 @@ const ApprovedTable = React.memo(() => {
             </div>
 
             {/* Jobs to Invoice DataTable */}
-            <DataTable
-                value={invoiceData || []}
-                footerColumnGroup={invoiceFooterGroup}
-                scrollable
-                selectionMode={'checkbox'}
-                removableSort
-                columnResizeMode="expand"
-                resizableColumns
-                showGridlines
-                size={'large'}
-                scrollHeight={`calc(100vh - 175px - 45px - ${trialHeight}px)`}
-                className="border-0"
-                selection={selectedInvoiceApprovals}
-                onSelectionChange={(e) => setSelectedInvoiceApprovals(e.value)}
-                emptyMessage="No approved jobs waiting to be invoiced"
-                loading={isLoadingInvoice}
-                loadingIcon={Loader}
-            >
+            <DataTable value={invoiceData || []} scrollable selectionMode={'checkbox'} removableSort columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border-0" selection={selectedInvoiceApprovals} onSelectionChange={(e) => setSelectedInvoiceApprovals(e.value)} emptyMessage="No approved jobs waiting to be invoiced" loading={isLoadingInvoice} loadingIcon={Loader}>
                 <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
-                <Column field="number" header="Job ID" style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field='type' header="Job Type" body={jobTypeBody} style={{ minWidth: '100px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen sortable></Column>
-                <Column field="submitted" header="Approved" style={{ minWidth: '122px' }} sortable body={(rowData) => formatDate(rowData.submitted)}></Column>
-               <Column field="worker.first_name" header={workerHeader} body={nameBody} style={{ minWidth: '205px' }}></Column>
-                <Column field="short_description" header="Job Reference" style={{ minWidth: '270px' }}></Column>
-                <Column field="project.number" header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="variations" header="Variations" style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="real_total" header="Real Total" body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="spent_time" header="Real Time" body={realTimeBody} style={{ minWidth: '105px' }}></Column>
-                <Column field="total" header="Total" body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
-                <Column field="id" header="Status" body={statusBody} style={{ minWidth: '120px' }} bodyClassName={clsx(`${style.shadowLeft}`, 'text-center')} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
+                <Column field="number" header="Job ID" headerClassName={style.verticalTop} body={jobIDTemplate} style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field='type' header="Job Type" headerClassName={clsx(style.shadowRight, style.verticalTop)} body={jobTypeBody} style={{ minWidth: '100px' }} bodyClassName={`${style.shadowRight}`} frozen sortable></Column>
+                <Column field="submitted" header="Approved" headerClassName={style.verticalTop} style={{ minWidth: '122px' }} sortable body={(rowData) => formatDate(rowData.submitted)}></Column>
+                <Column field="worker.first_name" header={workerHeader} headerClassName={style.verticalTop} body={nameBody} style={{ minWidth: '205px' }}></Column>
+                <Column field="short_description" header="Job Reference" headerClassName={style.verticalTop} style={{ minWidth: '270px' }}></Column>
+                <Column field="project.number" header="Linked To Project" headerClassName={style.verticalTop} body={linkToBody} style={{ minWidth: '105px' }}></Column>
+                <Column field="real_total" header={realTimeHead} headerClassName={style.verticalTop} body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="total" header={plannedTotalHead} headerClassName={style.verticalTop} body={totalBody} style={{ minWidth: '105px' }} sortable></Column>
+                <Column field="id" header={actionHeader} body={statusBody} style={{ minWidth: '120px' }} bodyClassName={clsx(`${style.shadowLeft}`, 'text-center')} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
         </>
     );
