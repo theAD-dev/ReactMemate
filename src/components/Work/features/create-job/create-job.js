@@ -17,12 +17,11 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import style from './create-job.module.scss';
 import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
+import { getProjectsList } from '../../../../APIs/expenses-api';
 import { createNewJob, updateJob } from '../../../../APIs/jobs-api';
-import { getManagement } from '../../../../APIs/management-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
-
 
 export function getFileIcon(fileType) {
     const fileTypes = {
@@ -90,7 +89,6 @@ export function getFileIcon(fileType) {
         </div>
     );
 }
-
 
 const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
@@ -169,11 +167,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         queryFn: getTeamMobileUser,
     });
 
-    const projectQuery = useQuery({
-        queryKey: ["getManagement"],
-        queryFn: getManagement,
-        staleTime: Infinity,
-    });
+    const projectQuery = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
 
     const itemTemplate = (option) => {
         return (
@@ -258,10 +252,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     useEffect(() => {
         const projectParamId = params.get('projectId');
-        console.log('projectParamId: ', projectParamId);
         if (projectParamId) {
             setVisible(true);
-            setProjectId(projectParamId);
+            setProjectId(+projectParamId);
             urlObj.searchParams.delete('projectId');
             window.history.replaceState({}, '', urlObj);
         }
@@ -1023,8 +1016,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         options={
                                             (projectQuery &&
                                                 projectQuery.data?.map((project) => ({
-                                                    value: project.unique_id,
-                                                    label: `${project.reference} - ${project.number}`
+                                                    value: project.id,
+                                                    label: `${project.number}: ${project.reference}`
                                                 }))) ||
                                             []
                                         }
