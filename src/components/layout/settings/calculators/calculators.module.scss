@@ -19,7 +19,10 @@
   justify-content: center;
   background: #f2f4f7;
   border-radius: 22px;
-  margin-right: 12px;
+  margin-right: 18px;
+  position: relative;
+  top: 2px;
+  left: 25px;
 }
 
 .innerCollapseIcon {
@@ -30,7 +33,10 @@
   justify-content: center;
   background: #bae8ff;
   border-radius: 22px;
-  margin-right: 12px;
+  margin-right: 18px;
+  position: relative;
+  top: 2px;
+  left: 25px;
 }
 
 .accorHeadbox {
@@ -196,7 +202,7 @@
       padding: var(--spacing-md, 8px) 14px;
       background: #fff;
       border-radius: 40px;
-      border: 1px solid var(--Error-300, #FDA29B);
+      border: 1px solid var(--Error-300, #fda29b);
       display: flex;
       align-items: center;
       margin-right: 10px;
@@ -210,7 +216,7 @@
         padding: var(--spacing-md, 8px) 14px;
         background: #fff;
         border-radius: 40px;
-        border: 1px solid var(--Error-300, #FDA29B);
+        border: 1px solid var(--Error-300, #fda29b);
         display: flex;
         align-items: center;
         margin-right: 10px;
@@ -287,7 +293,7 @@
         font-size: 14px;
         font-style: normal;
         font-weight: 600;
-       padding: var(--spacing-md, 8px) 14px;
+        padding: var(--spacing-md, 8px) 14px;
         line-height: 20px; /* 142.857% */
         border-radius: 40px;
         border: 1px solid var(--Gray-300, #d0d5dd);
