@@ -147,10 +147,11 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 ></textarea>
               </p>
             ) : (
-              <div>
-                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '16px', whiteSpace: "pre-line" }}>
+              <div className='mb-4'>
+                <p style={{ color: '#475467', fontSize: '16px', fontWeight: '400', marginBottom: '0px', whiteSpace: "pre-line", maxHeight: '200px', overflow: 'auto' }}>
                   {payload.description}
-                  <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} className='ms-2' style={{ cursor: 'pointer' }} /></p>
+                </p>
+                <PencilSquare size={16} color="#106B99" onClick={handleEditDescription} className='ms-1' style={{ cursor: 'pointer' }} />
               </div>
             )}
 

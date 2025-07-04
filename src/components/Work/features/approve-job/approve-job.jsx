@@ -16,9 +16,10 @@ import { toast } from 'sonner';
 import style from './approve-job.module.scss';
 import { createApproval, getApprovedJob } from '../../../../APIs/jobs-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import 'leaflet/dist/leaflet.css';
-import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
+import ViewAttachements from '../view-job/view-attachements';
 
 // Fix default icon issues with Leaflet in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -29,14 +30,15 @@ L.Icon.Default.mergeOptions({
 });
 
 const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisible, refetch }) => {
-    const [isOpenJobDetailsSection, setIsOpenJobDetailsSection] = useState(true);
     const [isOpenPlannedVsActualSection, setIsOpenPlannedVsActualSection] = useState(true);
-    const [isOpenVariationSection, setIsOpenVariationSection] = useState(true);
-    const [isOpenJobTrackingSection, setIsOpenJobTrackingSection] = useState(true);
+    const [isOpenVariationSection, setIsOpenVariationSection] = useState(false);
+    const [isOpenHistorySection, setIsOpenHistorySection] = useState(false);
+    const [isOpenJobTrackingSection, setIsOpenJobTrackingSection] = useState(false);
     const [selectedColumn, setSelectedColumn] = useState("planned");
     const [amount, setAmount] = useState(0);
     const [isBonus, setIsBonus] = useState(true);
     const [reason, setReason] = useState("");
+    const [show, setShow] = useState(false);
 
     const jobQuery = useQuery({
         queryKey: ["getApprovedJob", jobId],
@@ -102,7 +104,6 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
     };
 
     const resetAndClose = () => {
-        setIsOpenJobDetailsSection(true);
         setIsOpenPlannedVsActualSection(true);
         setIsOpenVariationSection(true);
         setIsOpenJobTrackingSection(true);
@@ -152,307 +153,378 @@ const ApproveJob = ({ jobId = null, nextJobId = null, visible = false, setVisibl
     };
 
     return (
-        <Sidebar visible={visible} position="right" onHide={resetAndClose} modal={false} dismissable={false} style={{ width: '702px' }}
-            content={({ closeIconRef, hide }) => (
-                <div className='create-sidebar d-flex flex-column'>
-                    <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
-                        <div className="d-flex align-items-center gap-3">
-                            <div className={style.viewBox}>
-                                <Briefcase size={24} color='#079455' />
+        <>
+            <Sidebar visible={visible} position="right" onHide={resetAndClose} modal={false} dismissable={false} style={{ width: '702px' }}
+                content={({ closeIconRef, hide }) => (
+                    <div className='create-sidebar d-flex flex-column'>
+                        <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
+                            <div className="d-flex align-items-center gap-3">
+                                <div className={style.viewBox}>
+                                    <Briefcase size={24} color='#079455' />
+                                </div>
+                                <span className={style.heading}>{job?.number}</span>
                             </div>
-                            <span className={style.heading}>{job?.number}</span>
+                            <span>
+                                <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
+                                    <X size={24} color='#667085' />
+                                </Button>
+                            </span>
                         </div>
-                        <span>
-                            <Button type="button" className='text-button' ref={closeIconRef} onClick={(e) => hide(e)}>
-                                <X size={24} color='#667085' />
-                            </Button>
-                        </span>
-                    </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
-                        <h1 className={clsx(style.jobDetailHeading, 'mb-3')}>Job Details</h1>
+                        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
+                            <h1 className={clsx(style.jobDetailHeading, 'mb-3')}>Job Details</h1>
 
-                        <Card className={clsx(style.border, 'mb-4')}>
-                            <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
-                                <label className={clsx(style.customLabel)}>Job Reference</label>
-                                <p className={clsx(style.text)}>{job?.short_description}</p>
-
-                                <label className={clsx(style.customLabel)}>Description</label>
-                                <p className={clsx(style.text)}>{job?.long_description}</p>
-                            </Card.Header>
-                        </Card>
-
-                        <Card className={clsx(style.border, 'mb-4')}>
-                            <Card.Header className={clsx(style.background, 'border-0 px-4 py-3', style.borderBottom)}>
-                                <Row className={clsx(style.chooseUserBox, 'flex-nowrap')}>
-                                    <Col sm={2} className='p-0'>
-                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
-                                            <FallbackImage photo={job?.worker?.photo} has_photo={job?.worker?.has_photo} is_business={false} size={40} />
-                                        </div>
-                                    </Col>
-                                    <Col sm={5} className='pe-0 ps-0'>
-                                        <p className={clsx('text-nowrap font-16 mb-2')} style={{ fontWeight: 600 }}>{job?.worker?.first_name} {job?.worker?.last_name}</p>
-                                        <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', width: 'fit-content', padding: '4px 16px' }}>Employee</div>
-                                    </Col>
-                                    <Col sm={5} className=''>
-                                        <div className='d-flex align-items-center gap-2 mb-3'>
-                                            <div style={{ width: '28px', height: '28px', background: '#EBF8FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
-                                            <span>{job?.worker?.hourly_rate || "-"} AUD</span>
-                                        </div>
-                                        <div className='d-flex align-items-center gap-2'>
-                                            <div style={{ width: '28px', height: '28px', background: '#EBF8FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
-                                            <span>{job?.worker?.payment_cycle || "Weekly"}</span>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Card.Header>
-                        </Card>
-
-                        <Card className={clsx(style.border, 'mb-4')}>
-                            <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenPlannedVsActualSection(!isOpenPlannedVsActualSection)}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Planned vs Actual</h1>
-                                    <button className='text-button p-0'>
-                                        {
-                                            isOpenPlannedVsActualSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
-                                            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
-                                            </svg>
-                                        }
-                                    </button>
-                                </div>
-                            </Card.Body>
-                            {
-                                isOpenPlannedVsActualSection &&
-                                <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between px-0 py-0', style.borderBottom)}>
-                                    <table className={clsx('w-100', style.plannedTable)}>
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    <div className='d-flex'>
-                                                        {jobTypeBody(job)}
-                                                    </div>
-                                                </th>
-                                                <th className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                    <div className='d-flex align-items-center gap-2'>
-                                                        <Checkbox checked={selectedColumn === "planned"} onChange={() => setSelectedColumn(selectedColumn === "planned" ? null : "planned")} />
-                                                        <label className={clsx(style.customLabel)}>Planned</label>
-                                                    </div>
-                                                </th>
-                                                <th className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <div className='d-flex justify-content-between'>
-                                                        <div className='d-flex align-items-center gap-2'>
-                                                            <Checkbox checked={selectedColumn === "actual"} onChange={() => setSelectedColumn(selectedColumn === "actual" ? null : "actual")} />
-                                                            <label className={clsx(style.customLabel)}>Actual</label>
-                                                        </div>
-                                                        <div className={style.clockIcon}>
-                                                            <ClockHistory color='#475467' size={16} />
-                                                        </div>
-                                                    </div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr className={style.whiteTr}>
-                                                <td>
-                                                    <span className='font-16' style={{ color: '#344054' }}>Start</span>
-                                                </td>
-                                                <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                    <span className='font-14'>{job?.start_date ? formatDate(job?.start_date) : "N/A"}</span>
-                                                </td>
-                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <span className='font-14'>{job?.start ? formatDate(job?.start) : "N/A"}</span>
-                                                </td>
-                                            </tr>
-                                            <tr className={style.whiteTr}>
-                                                <td>
-                                                    <span className='font-16' style={{ color: '#344054' }}>Finish</span>
-                                                </td>
-                                                <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                    <span className='font-14'>{job?.end_date ? formatDate(job?.end_date) : "N/A"}</span>
-                                                </td>
-                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <span className='font-14'>{job?.finish ? formatDate(job?.finish) : "N/A"}</span>
-                                                </td>
-                                            </tr>
-                                            <tr className={style.whiteTr}>
-                                                <td>
-                                                    <span className='font-16' style={{ color: '#344054' }}>Hours</span>
-                                                </td>
-                                                <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                    <span className='font-14'>{ job?.type_display === "Fix" ? "-" : job?.duration }</span>
-                                                </td>
-                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <span className='font-14'>{calculateActualHours()}</span>
-                                                </td>
-                                            </tr>
-                                            <tr className={style.whiteTr}>
-                                                <td>
-                                                    <span className='font-16' style={{ color: '#344054' }}>Rate per hour</span>
-                                                </td>
-                                                <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', style.borderRightNone)}>
-                                                    <div className={clsx(style.moneyBox)}>${formatAUD(plannedRate)}</div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <span className='font-16' style={{ color: '#344054' }}>Subtotal</span>
-                                                </td>
-                                                <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
-                                                    <span className='font-14'>${formatAUD(plannedSubtotal)}</span>
-                                                </td>
-                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <span className='font-14'>${formatAUD(actualSubtotal)}</span>
-                                                </td>
-                                            </tr>
-                                            <tr className={style.whiteTr}>
-                                                <td>
-                                                    <span className='font-16' style={{ color: '#344054' }}>Variation</span>
-                                                </td>
-                                                <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
-                                                    <div className={clsx(style.moneyBox, variation === parseFloat(0) ? "" : isBonus ? style.bonusBox : style.deductionBox)}>{isBonus ? "+" : "-"} ${formatAUD(parseFloat(variation || 0).toFixed(2))}</div>
-                                                </td>
-                                            </tr>
-                                            <tr className={clsx(style.lastRow)}>
-                                                <td>
-                                                    <span className='font-16' style={{ color: '#344054' }}>Total</span>
-                                                </td>
-                                                <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
-                                                    <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "planned" ? style.activeOutlineButton : "")}>
-                                                        ${formatAUD(plannedTotal)}
-                                                        {
-                                                            selectedColumn === "planned" ?
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
-                                                                </svg> :
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
-                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
-                                                                </svg>
-                                                        }
-                                                    </Button>
-                                                </td>
-                                                <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                    <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "actual" ? style.activeOutlineButton : "")}>
-                                                        ${formatAUD(actualTotal)}
-                                                        {
-                                                            selectedColumn === "actual" ?
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
-                                                                </svg> :
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
-                                                                    <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
-                                                                </svg>
-                                                        }
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </Card.Header>
-                            }
-                        </Card>
-
-                        <Card className={clsx(style.border, 'mb-4')}>
-                            <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenVariationSection(!isOpenVariationSection)}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Variation</h1>
-                                    <button className='text-button p-0'>
-                                        {
-                                            isOpenVariationSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
-                                            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
-                                            </svg>
-                                        }
-                                    </button>
-                                </div>
-                            </Card.Body>
-                            {
-                                isOpenVariationSection &&
+                            <Card className={clsx(style.border, 'mb-4')}>
                                 <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
-                                    <div className='form-group mb-3 w-100'>
-                                        <label className={clsx(style.customLabel)}>Amount</label>
-                                        <div className={style.amountRow}>
-                                            <div className={clsx(style.amountInputBox, isBonus ? style.bonusInputBox : style.deductionInputBox)}>
-                                                <span className={style.dollar}>$</span>
-                                                <InputNumber
-                                                    className={clsx(style.inputText)}
-                                                    value={amount}
-                                                    onChange={(e) => setAmount(parseFloat(e.value || 0))}
-                                                />
-                                                <span className={style.helpIcon}>
-                                                    <QuestionCircle size={16} color='#98A2B3' />
-                                                </span>
+                                    <label className={clsx(style.customLabel)}>Job Reference</label>
+                                    <p className={clsx(style.text)}>{job?.short_description}</p>
+
+                                    <label className={clsx(style.customLabel)}>Description</label>
+                                    <p className={clsx(style.text)}>{job?.long_description}</p>
+                                </Card.Header>
+                            </Card>
+
+                            <Card className={clsx(style.border, 'mb-4')}>
+                                <Card.Header className={clsx(style.background, 'border-0 px-4 py-3', style.borderBottom)}>
+                                    <Row className={clsx(style.chooseUserBox, 'flex-nowrap')}>
+                                        <Col sm={2} className='p-0'>
+                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                <FallbackImage photo={job?.worker?.photo} has_photo={job?.worker?.has_photo} is_business={false} size={40} />
                                             </div>
-                                            <div className={style.buttonGroup}>
-                                                <button className={clsx(isBonus ? "info-button" : 'outline-button', "p-0")} style={{ width: '44px', height: '44px' }} onClick={() => setIsBonus(true)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                        <path fillRule="evenodd" clipRule="evenodd" d="M8 0.5C8.34518 0.5 8.625 0.779822 8.625 1.125V7.375H14.875C15.2202 7.375 15.5 7.65482 15.5 8C15.5 8.34518 15.2202 8.625 14.875 8.625H8.625V14.875C8.625 15.2202 8.34518 15.5 8 15.5C7.65482 15.5 7.375 15.2202 7.375 14.875V8.625H1.125C0.779822 8.625 0.5 8.34518 0.5 8C0.5 7.65482 0.779822 7.375 1.125 7.375H7.375V1.125C7.375 0.779822 7.65482 0.5 8 0.5Z" fill="#158ECC" />
-                                                    </svg>
-                                                </button>
-                                                <button className={clsx(!isBonus ? "danger-outline-button" : 'outline-button', "p-0")} style={{ width: '44px', height: '44px' }} onClick={() => setIsBonus(false)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2" fill="none">
-                                                        <path d="M0 1C0 0.447715 0.447715 0 1 0H9C9.55229 0 10 0.447715 10 1C10 1.55228 9.55229 2 9 2H1C0.447715 2 0 1.55228 0 1Z" fill="#B42318" />
-                                                    </svg>
-                                                </button>
+                                        </Col>
+                                        <Col sm={5} className='pe-0 ps-0'>
+                                            <p className={clsx('text-nowrap font-16 mb-2')} style={{ fontWeight: 600 }}>{job?.worker?.first_name} {job?.worker?.last_name}</p>
+                                            <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', width: 'fit-content', padding: '4px 16px' }}>Employee</div>
+                                        </Col>
+                                        <Col sm={5} className=''>
+                                            <div className='d-flex align-items-center gap-2 mb-3'>
+                                                <div style={{ width: '28px', height: '28px', background: '#EBF8FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
+                                                <span>{job?.worker?.hourly_rate || "-"} AUD</span>
+                                            </div>
+                                            <div className='d-flex align-items-center gap-2'>
+                                                <div style={{ width: '28px', height: '28px', background: '#EBF8FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
+                                                <span>{job?.worker?.payment_cycle || "Weekly"}</span>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </Card.Header>
+                            </Card>
+
+                            <Card className={clsx(style.border, 'mb-4')}>
+                                <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenPlannedVsActualSection(!isOpenPlannedVsActualSection)}>
+                                    <div className='d-flex justify-content-between align-items-center'>
+                                        <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Planned vs Actual</h1>
+                                        <button className='text-button p-0'>
+                                            {
+                                                isOpenPlannedVsActualSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                </svg>
+                                            }
+                                        </button>
+                                    </div>
+                                </Card.Body>
+                                {
+                                    isOpenPlannedVsActualSection &&
+                                    <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between px-0 py-0', style.borderBottom)}>
+                                        <table className={clsx('w-100', style.plannedTable)}>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <div className='d-flex text-nowrap'>
+                                                            {jobTypeBody(job)}
+                                                        </div>
+                                                    </th>
+                                                    <th className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                        <div className='d-flex align-items-center gap-2'>
+                                                            <Checkbox checked={selectedColumn === "planned"} onChange={() => setSelectedColumn(selectedColumn === "planned" ? null : "planned")} />
+                                                            <label className={clsx(style.customLabel)}>Planned</label>
+                                                        </div>
+                                                    </th>
+                                                    <th className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                        <div className='d-flex justify-content-between'>
+                                                            <div className='d-flex align-items-center gap-2'>
+                                                                <Checkbox checked={selectedColumn === "actual"} onChange={() => setSelectedColumn(selectedColumn === "actual" ? null : "actual")} />
+                                                                <label className={clsx(style.customLabel)}>Actual</label>
+                                                            </div>
+                                                            <div className={style.clockIcon}>
+                                                                <ClockHistory color='#475467' size={16} />
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr className={style.whiteTr}>
+                                                    <td>
+                                                        <span className='font-16' style={{ color: '#344054' }}>Start</span>
+                                                    </td>
+                                                    <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                        <span className='font-14'>{job?.start_date ? formatDate(job?.start_date) : "N/A"}</span>
+                                                    </td>
+                                                    <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                        <span className='font-14'>{job?.start ? formatDate(job?.start) : "N/A"}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr className={style.whiteTr}>
+                                                    <td>
+                                                        <span className='font-16' style={{ color: '#344054' }}>Finish</span>
+                                                    </td>
+                                                    <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                        <span className='font-14'>{job?.end_date ? formatDate(job?.end_date) : "N/A"}</span>
+                                                    </td>
+                                                    <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                        <span className='font-14'>{job?.finish ? formatDate(job?.finish) : "N/A"}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr className={style.whiteTr}>
+                                                    <td>
+                                                        <span className='font-16' style={{ color: '#344054' }}>Hours</span>
+                                                    </td>
+                                                    <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
+                                                        <span className='font-14'>{job?.type_display === "Fix" ? "-" : job?.duration}</span>
+                                                    </td>
+                                                    <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                        <span className='font-14'>{calculateActualHours()}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr className={style.whiteTr}>
+                                                    <td>
+                                                        <span className='font-16 text-nowrap' style={{ color: '#344054' }}>Rate per hour</span>
+                                                    </td>
+                                                    <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', style.borderRightNone)}>
+                                                        <div className={clsx(style.moneyBox)}>${formatAUD(plannedRate)}</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span className='font-16' style={{ color: '#344054' }}>Subtotal</span>
+                                                    </td>
+                                                    <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
+                                                        <span className='font-14'>${formatAUD(plannedSubtotal)}</span>
+                                                    </td>
+                                                    <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                        <span className='font-14'>${formatAUD(actualSubtotal)}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr className={style.whiteTr}>
+                                                    <td>
+                                                        <span className='font-16' style={{ color: '#344054' }}>Variation</span>
+                                                    </td>
+                                                    <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
+                                                        <div className={clsx(style.moneyBox, variation === parseFloat(0) ? "" : isBonus ? style.bonusBox : style.deductionBox)}>{isBonus ? "+" : "-"} ${formatAUD(parseFloat(variation || 0).toFixed(2))}</div>
+                                                    </td>
+                                                </tr>
+                                                <tr className={clsx(style.lastRow)}>
+                                                    <td>
+                                                        <span className='font-16' style={{ color: '#344054' }}>Total</span>
+                                                    </td>
+                                                    <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
+                                                        <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "planned" ? style.activeOutlineButton : "")}>
+                                                            ${formatAUD(plannedTotal)}
+                                                            {
+                                                                selectedColumn === "planned" ?
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                                        <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
+                                                                    </svg> :
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                                                                        <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
+                                                                    </svg>
+                                                            }
+                                                        </Button>
+                                                    </td>
+                                                    <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                        <Button className={clsx("outline-button px-3 py-1 font-14 mx-auto gap-2", selectedColumn === "actual" ? style.activeOutlineButton : "")}>
+                                                            ${formatAUD(actualTotal)}
+                                                            {
+                                                                selectedColumn === "actual" ?
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                                                        <path fillRule="evenodd" clipRule="evenodd" d="M0 5C0 4.65482 0.279822 4.375 0.625 4.375L7.86612 4.375L5.18306 1.69194C4.93898 1.44786 4.93898 1.05214 5.18306 0.808058C5.42714 0.56398 5.82286 0.56398 6.06694 0.808058L9.81694 4.55806C10.061 4.80213 10.061 5.19786 9.81694 5.44194L6.06694 9.19194C5.82286 9.43602 5.42714 9.43602 5.18306 9.19194C4.93898 8.94786 4.93898 8.55213 5.18306 8.30806L7.86612 5.625H0.625C0.279822 5.625 0 5.34518 0 5Z" fill="white" />
+                                                                    </svg> :
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="10" viewBox="0 0 11 10" fill="none">
+                                                                        <path fillRule="evenodd" clipRule="evenodd" d="M0.5 5C0.5 4.65482 0.779822 4.375 1.125 4.375L8.36612 4.375L5.68306 1.69194C5.43898 1.44786 5.43898 1.05214 5.68306 0.808058C5.92714 0.56398 6.32286 0.56398 6.56694 0.808058L10.3169 4.55806C10.561 4.80213 10.561 5.19786 10.3169 5.44194L6.56694 9.19194C6.32286 9.43602 5.92714 9.43602 5.68306 9.19194C5.43898 8.94786 5.43898 8.55213 5.68306 8.30806L8.36612 5.625H1.125C0.779822 5.625 0.5 5.34518 0.5 5Z" fill="#344054" />
+                                                                    </svg>
+                                                            }
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </Card.Header>
+                                }
+                            </Card>
+
+                            <Card className={clsx(style.border, 'mb-4')}>
+                                <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenVariationSection(!isOpenVariationSection)}>
+                                    <div className='d-flex justify-content-between align-items-center'>
+                                        <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Variation</h1>
+                                        <button className='text-button p-0'>
+                                            {
+                                                isOpenVariationSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                </svg>
+                                            }
+                                        </button>
+                                    </div>
+                                </Card.Body>
+                                {
+                                    isOpenVariationSection &&
+                                    <Card.Header className={clsx(style.background, 'border-0', style.borderBottom)}>
+                                        <div className='form-group mb-3 w-100'>
+                                            <label className={clsx(style.customLabel)}>Amount</label>
+                                            <div className={style.amountRow}>
+                                                <div className={clsx(style.amountInputBox, isBonus ? style.bonusInputBox : style.deductionInputBox)}>
+                                                    <span className={style.dollar}>$</span>
+                                                    <InputNumber
+                                                        className={clsx(style.inputText)}
+                                                        value={amount}
+                                                        onChange={(e) => setAmount(parseFloat(e.value || 0))}
+                                                    />
+                                                    <span className={style.helpIcon}>
+                                                        <QuestionCircle size={16} color='#98A2B3' />
+                                                    </span>
+                                                </div>
+                                                <div className={style.buttonGroup}>
+                                                    <button className={clsx(isBonus ? "info-button" : 'outline-button', "p-0")} style={{ width: '44px', height: '44px' }} onClick={() => setIsBonus(true)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <path fillRule="evenodd" clipRule="evenodd" d="M8 0.5C8.34518 0.5 8.625 0.779822 8.625 1.125V7.375H14.875C15.2202 7.375 15.5 7.65482 15.5 8C15.5 8.34518 15.2202 8.625 14.875 8.625H8.625V14.875C8.625 15.2202 8.34518 15.5 8 15.5C7.65482 15.5 7.375 15.2202 7.375 14.875V8.625H1.125C0.779822 8.625 0.5 8.34518 0.5 8C0.5 7.65482 0.779822 7.375 1.125 7.375H7.375V1.125C7.375 0.779822 7.65482 0.5 8 0.5Z" fill="#158ECC" />
+                                                        </svg>
+                                                    </button>
+                                                    <button className={clsx(!isBonus ? "danger-outline-button" : 'outline-button', "p-0")} style={{ width: '44px', height: '44px' }} onClick={() => setIsBonus(false)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" viewBox="0 0 10 2" fill="none">
+                                                            <path d="M0 1C0 0.447715 0.447715 0 1 0H9C9.55229 0 10 0.447715 10 1C10 1.55228 9.55229 2 9 2H1C0.447715 2 0 1.55228 0 1Z" fill="#B42318" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className='form-group mb-3 w-100'>
-                                        <label className={clsx(style.customLabel)}>Reason</label>
-                                        <InputTextarea
-                                            className={clsx('w-100', style.InputTextarea)}
-                                            rows={4}
-                                            value={reason}
-                                            onChange={(e) => setReason(e.target.value)}
-                                            placeholder="Enter the detailed quote for the client contract here. Include all relevant information such as project scope, deliverables, timelines, costs, payment terms, and any special conditions. Ensure the quote is clear, comprehensive, and aligns with the client's requirements and expectations."
-                                        />
-                                    </div>
-                                </Card.Header>
-                            }
-                        </Card>
+                                        <div className='form-group mb-3 w-100'>
+                                            <label className={clsx(style.customLabel)}>Reason</label>
+                                            <InputTextarea
+                                                className={clsx('w-100', style.InputTextarea)}
+                                                rows={4}
+                                                value={reason}
+                                                onChange={(e) => setReason(e.target.value)}
+                                                placeholder="Enter a reason..."
+                                            />
+                                        </div>
+                                    </Card.Header>
+                                }
+                            </Card>
 
-                        <Card className={clsx(style.border, 'mb-4')}>
-                            <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenJobTrackingSection(!isOpenJobTrackingSection)}>
-                                <div className='d-flex justify-content-between align-items-center'>
-                                    <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Tracking</h1>
-                                    <button className='text-button p-0'>
-                                        {
-                                            isOpenJobTrackingSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
-                                            </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
-                                            </svg>
-                                        }
-                                    </button>
-                                </div>
-                            </Card.Body>
+                            <Card className={clsx(style.border, 'mb-4')}>
+                                <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenHistorySection(!isOpenHistorySection)}>
+                                    <div className='d-flex justify-content-between align-items-center'>
+                                        <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>History</h1>
+                                        <button className='text-button p-0'>
+                                            {
+                                                isOpenHistorySection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                </svg>
+                                            }
+                                        </button>
+                                    </div>
+                                </Card.Body>
+                                {
+                                    isOpenHistorySection &&
+                                    <Card.Header className={clsx(style.background, 'border-0 p-0', style.borderBottom)} style={{ overflow: 'auto', maxHeight: '250px' }}>
+                                        <div className='d-flex flex-column gap-3 p-3'>
+                                            {
+                                                job?.history.map((history, index) => (
+                                                    <div key={index}>
+                                                        <h2 className={style.historyTitle}>{history.title}</h2>
+                                                        <p className={style.historySubtitle}>{new Date(history.created).toLocaleDateString() || 'N/A'}</p>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </Card.Header>
+                                }
+                            </Card>
+
                             {
-                                isOpenJobTrackingSection &&
-                                <Card.Header className={clsx(style.background, 'border-0 p-0', style.borderBottom)}>
-                                    <JobLocationsMap locations={job?.locations || []} />
-                                </Card.Header>
+                                job?.project_photos && <>
+                                    <h1 className={clsx(style.heading, 'mb-3')}>Project Photos</h1>
+                                    <Card className={clsx(style.border, 'mb-3')}>
+                                        <Card.Header className={clsx(style.background, 'border-0')}>
+                                            <div className='d-flex flex-column gap-1' style={{ overflowX: 'auto' }}>
+                                                {
+                                                    job?.project_photos == 1 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>Before & After</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : job?.project_photos == 2 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>In Process</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : job?.project_photos == 3 ? (<>
+                                                        <label className={clsx(style.customLabel, 'd-block')}>All</label>
+                                                        <div style={{ width: '124px', height: '124px', background: '#f0f0f0' }}></div>
+                                                    </>) : null
+                                                }
+                                            </div>
+                                        </Card.Header>
+                                    </Card>
+                                </>
                             }
-                        </Card>
 
-                    </div>
+                            <h1 className={clsx(style.heading, 'mb-3')}>Documents</h1>
+                            <Card className={clsx(style.border, 'mb-3')}>
+                                <Card.Header className={clsx(style.background, 'border-0')}>
+                                    <Button className='outline-button d-flex gap-2' onClick={() => setShow(true)} style={{ borderRadius: '40px' }}>
+                                        Viw All Documents
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                            <path d="M1.25 4.375C1.25 3.33947 2.08947 2.5 3.125 2.5H6.57992C7.77713 2.5 8.78091 3.19995 9.46927 3.97997C9.98156 4.56048 10.5984 5 11.25 5H16.8759C17.912 5 18.75 5.84003 18.75 6.875V15.625C18.75 16.6605 17.9105 17.5 16.875 17.5H3.125C2.08947 17.5 1.25 16.6605 1.25 15.625V4.375ZM3.125 3.75C2.77982 3.75 2.5 4.02982 2.5 4.375V7.5H17.5V6.875C17.5 6.52926 17.2205 6.25 16.8759 6.25H11.25C10.0451 6.25 9.11184 5.46409 8.53203 4.80706C7.96726 4.16709 7.27657 3.75 6.57992 3.75H3.125ZM17.5 8.75H2.5V15.625C2.5 15.9702 2.77982 16.25 3.125 16.25H16.875C17.2202 16.25 17.5 15.9702 17.5 15.625V8.75Z" fill="#344054" />
+                                        </svg>
+                                    </Button>
+                                </Card.Header>
+                            </Card>
 
-                    <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); resetAndClose(); }} className='danger-outline-button'>Decline</Button>
-                        <Feedback jobId={jobId} variation={variation} reason={reason} isBonus={isBonus} value={selectedColumn === "planned" ? plannedTotal : actualTotal} planned={plannedSubtotal} actual={actualSubtotal} refetch={refetch} resetAndClose={resetAndClose} />
-                        <Button type='button' onClick={() => { }} className='solid-button' style={{ minWidth: '75px' }}>Approve & See Next  {false && <ProgressSpinner
-                            style={{ width: "20px", height: "20px", color: "#fff" }}
-                        />}</Button>
+
+                            <Card className={clsx(style.border, 'mb-4')}>
+                                <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenJobTrackingSection(!isOpenJobTrackingSection)}>
+                                    <div className='d-flex justify-content-between align-items-center'>
+                                        <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Tracking</h1>
+                                        <button className='text-button p-0'>
+                                            {
+                                                isOpenJobTrackingSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                </svg>
+                                            }
+                                        </button>
+                                    </div>
+                                </Card.Body>
+                                {
+                                    isOpenJobTrackingSection &&
+                                    <Card.Header className={clsx(style.background, 'border-0 p-0', style.borderBottom)}>
+                                        <JobLocationsMap locations={job?.locations || []} />
+                                    </Card.Header>
+                                }
+                            </Card>
+                        </div>
+
+                        <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
+                            <Button type='button' onClick={(e) => { e.stopPropagation(); resetAndClose(); }} className='danger-outline-button'>Decline</Button>
+                            <Feedback jobId={jobId} variation={variation} reason={reason} isBonus={isBonus} value={selectedColumn === "planned" ? plannedTotal : actualTotal} planned={plannedSubtotal} actual={actualSubtotal} selectedColumn={selectedColumn} refetch={refetch} resetAndClose={resetAndClose} />
+                            <Button type='button' onClick={() => { }} className='solid-button' style={{ minWidth: '75px' }}>Approve & See Next  {false && <ProgressSpinner
+                                style={{ width: "20px", height: "20px", color: "#fff" }}
+                            />}</Button>
+                        </div>
                     </div>
-                </div>
-            )}
-        ></Sidebar>
+                )}
+            ></Sidebar>
+            <ViewAttachements attachments={job?.attachments || []} show={show} setShow={setShow} />
+        </>
     );
 };
 
-const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, refetch, resetAndClose }) => {
+const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, selectedColumn, refetch, resetAndClose }) => {
     const [visible, setVisible] = useState(false);
     const [quality, setQuality] = useState(null);
     const [speed, setSpeed] = useState(null);
@@ -487,7 +559,8 @@ const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, r
             is_bonus: isBonus,
             planned,
             actual,
-            value
+            value,
+            type: selectedColumn
         });
     };
 

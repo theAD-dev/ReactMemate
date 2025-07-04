@@ -258,7 +258,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             urlObj.searchParams.delete('projectId');
             window.history.replaceState({}, '', urlObj);
         }
-    }, [projectId, setVisible, params, urlObj]);
+    }, [setVisible, params, urlObj]);
 
     const uploadToS3 = async (file, url) => {
         try {
@@ -500,8 +500,10 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (time_type !== '1' && !end) tempErrors.end = true;
         else if (end) payload.end_date = new Date(end).toISOString();
 
-        // if (!projectId) tempErrors.projectId = true;
-        if (projectId) payload.project = projectId;
+        if (projectId) {
+            const project = projectQuery?.data?.find(project => project.id === projectId);
+            if (project) payload.project = project.unique_id;
+        }
 
         if (projectPhotoDeliver)
             payload.project_photos = projectPhotoDeliver;
@@ -552,7 +554,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     // Populate form with job data when in edit mode
     useEffect(() => {
-        if (isEditMode && jobData) {
+        if (isEditMode && jobData && projectQuery?.data) {
             // Set job reference and description
             setJobReference(jobData.short_description || "");
             setDescription(jobData.long_description || "");
@@ -567,7 +569,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
             // Set project
             if (jobData.project) {
-                setProjectId(jobData.project.unique_id);
+                const project = projectQuery?.data?.find(project => project.unique_id === jobData.project.unique_id);
+                setProjectId(project?.id || "");
             }
 
             // Set payment type and cost
@@ -602,16 +605,16 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 })));
             }
         }
-    }, [isEditMode, jobData, workerDetailsSet]);
+    }, [isEditMode, jobData, workerDetailsSet, projectQuery?.data]);
 
     useEffect(() => {
-       if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === '1' && type === '3') || (time_type === 'T' && type === '4'))) {
-        const findUser = mobileUserQuery?.data?.users.find((user) => user.id === userId);
-        if (findUser) {
-           let duration =  cost / findUser?.hourly_rate;
-           setDuration(parseFloat(duration).toFixed(2)); 
+        if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === '1' && type === '3') || (time_type === 'T' && type === '4'))) {
+            const findUser = mobileUserQuery?.data?.users.find((user) => user.id === userId);
+            if (findUser) {
+                let duration = cost / findUser?.hourly_rate;
+                setDuration(parseFloat(duration).toFixed(2));
+            }
         }
-       }
     }, [cost, mobileUserQuery?.data, userId, time_type, type]);
 
     return (
@@ -762,6 +765,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 value={userId}
                                                 valueTemplate={selectedItemTemplate}
                                                 loading={mobileUserQuery?.isFetching}
+                                                scrollHeight="350px"
                                                 filter
                                             />
                                             {errors?.userId && (
@@ -1036,6 +1040,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         }}
                                         value={projectId}
                                         loading={projectQuery?.isFetching}
+                                        scrollHeight="400px"
                                         filter
                                     />
                                     {errors?.projectId && (

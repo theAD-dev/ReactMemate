@@ -35,6 +35,7 @@ const QuoteToClient = ({ isLoading, data, setPayload }) => {
     });
 
     const contactOptions = clientQuery.data?.contact_persons || [];
+    const isBusiness = clientQuery.data?.is_business;
 
     useEffect(() => {
         setPage(1);
@@ -156,20 +157,23 @@ const QuoteToClient = ({ isLoading, data, setPayload }) => {
                             className="w-100"
                         />
                     </Col>
-                    <Col sm={6} style={{ minHeight: '190px' }}>
-                        <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Main Contact</p>
-                        <Dropdown
-                            value={selectContact}
-                            onChange={(e) => setSelectContact(e.value)}
-                            options={contactOptions}
-                            optionLabel={(option) => `${option.firstname} ${option.lastname}`}
-                            optionValue='id'
-                            placeholder="Select contact"
-                            filter
-                            loading={clientQuery.isLoading}
-                            className="w-100"
-                        />
-                    </Col>
+                    {
+                        isBusiness &&
+                        <Col sm={6} style={{ minHeight: '190px' }}>
+                            <p style={{ color: '#667085', fontSize: '14px', fontWeight: '600', marginBottom: '4px' }}>Main Contact</p>
+                            <Dropdown
+                                value={selectContact}
+                                onChange={(e) => setSelectContact(e.value)}
+                                options={contactOptions}
+                                optionLabel={(option) => `${option.firstname} ${option.lastname}`}
+                                optionValue='id'
+                                placeholder="Select contact"
+                                filter
+                                loading={clientQuery.isLoading}
+                                className="w-100"
+                            />
+                        </Col>
+                    }
                 </>
             ) : (
                 <Col sm={12}>

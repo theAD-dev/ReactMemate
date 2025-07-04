@@ -336,6 +336,8 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                 value={templateId}
                                 loading={proposalTemplateQuery?.isFetching}
                                 showClear
+                                scrollHeight="380px"
+                                filter
                             />
                         </div>
                     </Col>

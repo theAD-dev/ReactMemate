@@ -153,6 +153,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     style={{ height: '46px' }}
                                     value={field.value}
                                     placeholder="Select payment terms"
+                                    scrollHeight="380px"
                                 />
                             )}
                         />
@@ -183,6 +184,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={categoriesQuery?.isFetching}
                                     placeholder="Select a category"
+                                    scrollHeight="380px"
                                 />
                             )}
                         />
@@ -227,6 +229,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={countriesQuery?.isFetching}
                                     placeholder="Select a country"
+                                    scrollHeight="380px"
                                 />
                             )}
                         />
@@ -257,6 +260,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     loading={statesQuery?.isFetching}
                                     placeholder={"Select a state"}
+                                    scrollHeight="380px"
                                     filter
                                 />
                             )}
@@ -289,6 +293,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     disabled={citiesQuery?.isFetching}
                                     placeholder={"Select a city"}
                                     emptyMessage={!stateId ? "Select a state first" : "No cities found"}
+                                    scrollHeight="380px"
                                     filter
                                 />
                             )}

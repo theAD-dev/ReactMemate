@@ -260,6 +260,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.payment_terms })}
                   style={{ height: '46px' }}
                   value={field.value}
+                  scrollHeight="380px"
                   placeholder="Select payment terms"
                 />
               )}
@@ -291,6 +292,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   value={field.value}
                   loading={categoriesQuery?.isFetching}
                   placeholder="Select a category"
+                  scrollHeight="380px"
                 />
               )}
             />
@@ -422,6 +424,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                           value={field.value}
                           loading={countriesQuery?.isFetching}
                           placeholder="Select a country"
+                          scrollHeight="380px"
                         />
                       )}
                     />
@@ -452,6 +455,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                           value={field.value}
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
+                          scrollHeight="380px"
                           filter
                         />
                       )}
@@ -486,6 +490,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                             disabled={citiesQuery?.isFetching}
                             placeholder={"Select a city"}
                             emptyMessage={!stateIndexId ? "Select a state first" : "No cities found"}
+                            scrollHeight="380px"
                             filter
                           />
                         );
