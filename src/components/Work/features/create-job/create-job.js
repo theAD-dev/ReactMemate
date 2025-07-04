@@ -258,11 +258,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             urlObj.searchParams.delete('projectId');
             window.history.replaceState({}, '', urlObj);
         }
-<<<<<<< HEAD
-    }, [projectId, setVisible]);
-=======
     }, [setVisible, params, urlObj]);
->>>>>>> origin/master
 
     const uploadToS3 = async (file, url) => {
         try {
