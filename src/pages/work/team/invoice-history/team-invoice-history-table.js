@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { Envelope, FilePdf } from 'react-bootstrap-icons';
+import { CheckCircle, Envelope, FilePdf, XCircle } from 'react-bootstrap-icons';
 import { Link, useParams } from 'react-router-dom';
-import { Badge } from 'primereact/badge';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import style from './team-invoice-history.module.scss';
@@ -79,25 +78,21 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
     setTempSort({ sortField, sortOrder });
   };
 
-  const sendEmailBodyTemplate = (rowData) => {
-    return <div className='d-flex align-items-center justify-content-center'>
-      <Link to='#'
-        onClick={(e) => {
-          e.preventDefault();
-          window.location.href = `mailto:${rowData?.email}`;
-        }}
-      >
-        <Envelope size={20} color='#98A2B3' className='email-icon' />
-      </Link>
-    </div>;
+  const calculateWeekNumberByStartAndEndDate = (rowData) => {
+    const startDate = new Date(rowData.date_from * 1000);
+    const endDate = new Date(rowData.date_to * 1000);
+    const diffInMs = Math.abs(endDate - startDate);
+    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+    const weekNumber = Math.ceil(diffInDays / 7);
+    return `Week ${weekNumber}`;
   };
 
   const statusBodyTemplate = (rowData) => {
     return rowData.status === "1" ?
-      <div className={`${style.status} ${style.paid}`}>
-        <Badge severity="success"></Badge> Paid
-      </div> : <div className={`${style.status} ${style.unpaid}`}>
-        Not Paid <Badge severity="warning"></Badge>
+      <div className={`${style.clickButton} ${style.paid}`}>
+        Paid <CheckCircle color='#079455' size={16} />
+      </div> : <div className={`${style.clickButton} ${style.unpaid}`}>
+        Not Paid <XCircle color='#F04438' size={16} />
       </div>;
   };
 
@@ -124,12 +119,11 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
     >
       <Column selectionMode="multiple" bodyClassName={'show-on-hover'} headerStyle={{ width: '3rem' }} frozen></Column>
       <Column field="number" header="Invoice ID" body={InvoiceIDBody} frozen sortable style={{ minWidth: '180px', maxWidth: '180px', width: '180px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
-      <Column field="date_from" header="Date From" body={(rowData) => formatDate(rowData.date_from)} style={{ minWidth: '154px' }}></Column>
-      <Column field="date_to" header="Date To" body={(rowData) => formatDate(rowData.date_to)} sortable style={{ minWidth: '113px' }}></Column>
+      <Column field="date_from" header="Week" body={calculateWeekNumberByStartAndEndDate} style={{ minWidth: '154px' }}></Column>
+      <Column field="date_to" header="Date" body={(rowData) => `${formatDate(rowData.date_from)} - ${formatDate(rowData.date_to)}`} sortable style={{ minWidth: '113px' }}></Column>
       <Column field='total_hours' header="Total Hours" body={(rowData) => `${rowData.total_hours}h`} bodyClassName={'text-end'} style={{ minWidth: '114px' }}></Column>
       <Column field='total_amount' header="Total Amount" body={(rowData) => `$${formatAUD(rowData.total_amount)}`} style={{ minWidth: '114px' }}></Column>
       <Column field='status' header="Status" body={statusBodyTemplate} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }}></Column>
-      <Column field='id' header="Send Receipt" body={sendEmailBodyTemplate} style={{ minWidth: '100px', maxWidth: '100px', width: '100px' }}></Column>
     </DataTable>
   );
 });

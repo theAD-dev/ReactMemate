@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { PlusLg, PencilSquare, ChevronDown, ChevronUp, X, PlusCircle, Save, Backspace } from "react-bootstrap-icons";
+import { PlusLg, PencilSquare, ChevronDown, ChevronUp, X, PlusCircle, Save, Backspace, GripVertical } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -112,7 +112,8 @@ const Departments = () => {
                                                 header={
                                                     <span className="d-flex align-items-center justify-content-between">
                                                         <div className='d-flex align-items-center'>
-                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{department.name}</span>
+                                                            <GripVertical color="#98A2B3" size={16} style={{ cursor: 'move' }} />
+                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text ms-2')}>{department.name}</span>
                                                             <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
                                                                 <PencilSquare color="#106B99" size={16} />
                                                             </div>
@@ -150,6 +151,7 @@ const Departments = () => {
                                                                 header={(
                                                                     <span className="d-flex align-items-center justify-content-between">
                                                                         <div className='d-flex align-items-center'>
+                                                                            <GripVertical color="#98A2B3" size={16} style={{ cursor: 'move', position: 'relative', top: '2px', left: '-40px' }} />
                                                                             <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
                                                                             <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
                                                                                 <PencilSquare color="#106B99" size={16} />
