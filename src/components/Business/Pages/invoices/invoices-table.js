@@ -113,7 +113,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 <span>{rowData.number}</span>
                 <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
             </div>
-            <Button label="Open" onClick={() => navigate(`/management?unique_id=${rowData.unique_id}&reference=${rowData?.reference}&number=${rowData?.number}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+            <Button label="Open" onClick={() => navigate(`/management?unique_id=${rowData.unique_id}&reference=${rowData?.reference}&number=${rowData?.number}&value=${rowData.id}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>;
     };
 

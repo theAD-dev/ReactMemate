@@ -44,7 +44,8 @@ function EventScheduler() {
 
     const reference = params.get('reference');
     const number = params.get('number');
-    setProjectDetails({ number: number || "", reference, value: unique_id });
+    const value = params.get('value');
+    setProjectDetails({ number: number || "", reference, value: value });
     setViewProjectModel(true);
   }
 

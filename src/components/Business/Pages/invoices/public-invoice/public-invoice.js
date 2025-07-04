@@ -606,6 +606,7 @@ const PublicInvoice = () => {
                                                     value={field.value}
                                                     loading={statesQuery?.isFetching}
                                                     placeholder={"Select a state"}
+                                                    scrollHeight="380px"
                                                     filter
                                                 />
                                             )}
@@ -640,6 +641,7 @@ const PublicInvoice = () => {
                                                     disabled={citiesQuery?.isFetching}
                                                     placeholder={"Select a city"}
                                                     emptyMessage={!stateId ? "Select a state first" : "No cities found"}
+                                                    scrollHeight="380px"
                                                     filter
                                                 />
                                             )}

@@ -17,12 +17,11 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import style from './create-job.module.scss';
 import { getJobTemplate, getJobTemplates } from '../../../../APIs/email-template';
+import { getProjectsList } from '../../../../APIs/expenses-api';
 import { createNewJob, updateJob } from '../../../../APIs/jobs-api';
-import { getManagement } from '../../../../APIs/management-api';
 import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
-
 
 export function getFileIcon(fileType) {
     const fileTypes = {
@@ -90,7 +89,6 @@ export function getFileIcon(fileType) {
         </div>
     );
 }
-
 
 const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
@@ -169,11 +167,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         queryFn: getTeamMobileUser,
     });
 
-    const projectQuery = useQuery({
-        queryKey: ["getManagement"],
-        queryFn: getManagement,
-        staleTime: Infinity,
-    });
+    const projectQuery = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
 
     const itemTemplate = (option) => {
         return (
@@ -260,11 +254,15 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         const projectParamId = params.get('projectId');
         if (projectParamId) {
             setVisible(true);
-            setProjectId(projectParamId);
+            setProjectId(+projectParamId);
             urlObj.searchParams.delete('projectId');
             window.history.replaceState({}, '', urlObj);
         }
+<<<<<<< HEAD
     }, [projectId, setVisible]);
+=======
+    }, [setVisible, params, urlObj]);
+>>>>>>> origin/master
 
     const uploadToS3 = async (file, url) => {
         try {
@@ -506,8 +504,10 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (time_type !== '1' && !end) tempErrors.end = true;
         else if (end) payload.end_date = new Date(end).toISOString();
 
-        // if (!projectId) tempErrors.projectId = true;
-        if (projectId) payload.project = projectId;
+        if (projectId) {
+            const project = projectQuery?.data?.find(project => project.id === projectId);
+            if (project) payload.project = project.unique_id;
+        }
 
         if (projectPhotoDeliver)
             payload.project_photos = projectPhotoDeliver;
@@ -558,7 +558,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     // Populate form with job data when in edit mode
     useEffect(() => {
-        if (isEditMode && jobData) {
+        if (isEditMode && jobData && projectQuery?.data) {
             // Set job reference and description
             setJobReference(jobData.short_description || "");
             setDescription(jobData.long_description || "");
@@ -573,7 +573,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
             // Set project
             if (jobData.project) {
-                setProjectId(jobData.project.unique_id);
+                const project = projectQuery?.data?.find(project => project.unique_id === jobData.project.unique_id);
+                setProjectId(project?.id || "");
             }
 
             // Set payment type and cost
@@ -608,16 +609,16 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 })));
             }
         }
-    }, [isEditMode, jobData, workerDetailsSet]);
+    }, [isEditMode, jobData, workerDetailsSet, projectQuery?.data]);
 
     useEffect(() => {
-       if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === '1' && type === '3') || (time_type === 'T' && type === '4'))) {
-        const findUser = mobileUserQuery?.data?.users.find((user) => user.id === userId);
-        if (findUser) {
-           let duration =  cost / findUser?.hourly_rate;
-           setDuration(parseFloat(duration).toFixed(2)); 
+        if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === '1' && type === '3') || (time_type === 'T' && type === '4'))) {
+            const findUser = mobileUserQuery?.data?.users.find((user) => user.id === userId);
+            if (findUser) {
+                let duration = cost / findUser?.hourly_rate;
+                setDuration(parseFloat(duration).toFixed(2));
+            }
         }
-       }
     }, [cost, mobileUserQuery?.data, userId, time_type, type]);
 
     return (
@@ -768,6 +769,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 value={userId}
                                                 valueTemplate={selectedItemTemplate}
                                                 loading={mobileUserQuery?.isFetching}
+                                                scrollHeight="350px"
                                                 filter
                                             />
                                             {errors?.userId && (
@@ -1022,8 +1024,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         options={
                                             (projectQuery &&
                                                 projectQuery.data?.map((project) => ({
-                                                    value: project.unique_id,
-                                                    label: `${project.reference} - ${project.number}`
+                                                    value: project.id,
+                                                    label: `${project.number}: ${project.reference}`
                                                 }))) ||
                                             []
                                         }
@@ -1042,6 +1044,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         }}
                                         value={projectId}
                                         loading={projectQuery?.isFetching}
+                                        scrollHeight="400px"
                                         filter
                                     />
                                     {errors?.projectId && (

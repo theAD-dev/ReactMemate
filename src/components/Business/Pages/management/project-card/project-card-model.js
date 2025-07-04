@@ -751,7 +751,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
                   profileData?.has_work_subscription &&
-                  <Link to={`/work/jobs?projectId=${projectId}`}>
+                  <Link to={`/work/jobs?projectId=${project?.value}`}>
                     <Button className='createJob jobActive'>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
                   </Link>
                 }
