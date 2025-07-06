@@ -110,6 +110,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
         tax,
         totalAmount,
         option: expense?.data?.order ? 'Assign to project' : 'Assign to timeframe',
+        file: expense?.data?.file
       }));
     }
   }, [expense?.data]);

@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, Upload, PlusCircle, CheckCircleFill } from 'react-bootstrap-icons';
+import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, Upload, PlusCircle, CheckCircleFill, Trash } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import { useForm, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -909,6 +909,34 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </div>
                 </Col>
             </Row>
+
+            {defaultValues?.file &&
+                <Row className={clsx(styles.bgGreay)}>
+                    <Col sm={12}>
+                        <div className="d-flex flex-column gap-1">
+                            <div className='d-flex flex-column'>
+                                <label className={clsx(styles.lable, 'mb-2')}>Photo/Document Of The Expense</label>
+                                {
+                                    defaultValues?.file && (
+                                        <div className={styles.fileBox}>
+                                            {getFileIcon(defaultValues?.file?.split(".")?.[defaultValues?.file?.split(".").length - 1] || "")}
+                                            <div className={styles.fileNameBox}>
+                                                <p className='mb-0'>{defaultValues?.file?.split("/")?.[defaultValues?.file?.split("/").length - 1] || ""}</p>
+                                                <p className='mb-0'></p>
+                                            </div>
+                                            <div className='ms-auto'>
+                                                <div className='d-flex align-items-center justify-content-center' style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
+                                                    <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} onClick={() => { }} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            }
 
             <div className="flex align-items-center">
                 <Controller
