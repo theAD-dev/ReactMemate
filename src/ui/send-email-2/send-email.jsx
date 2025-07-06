@@ -293,6 +293,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                     setErrors((others) => ({ ...others, from: false }));
                                 }}
                                 value={from}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                         {errors?.from && (
@@ -322,6 +323,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                 }}
                                 value={emailTemplateId}
                                 loading={emailTemplateQuery?.isFetching}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                     </Col>
@@ -500,6 +502,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                                 }}
                                 value={signature}
                                 loading={signatureQuery?.isFetching}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                     </Col>

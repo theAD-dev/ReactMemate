@@ -123,6 +123,7 @@ const Regionalsettings = () => {
                       })}
                       onChange={(e) => setCountryId(e.value)}
                       filter
+                      filterInputAutoFocus={true}
                     />
                     {fieldErrors.country && <small className="error-message">{fieldErrors.country}</small>}
                   </div>
@@ -156,6 +157,7 @@ const Regionalsettings = () => {
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
                           filter
+                          filterInputAutoFocus={true}
                         />
                         {fieldErrors.state && <small className="error-message">{fieldErrors.state}</small>}
                       </div>
@@ -177,6 +179,7 @@ const Regionalsettings = () => {
                           placeholder={"Select a city"}
                           emptyMessage={!stateId ? "Select a state first" : "No cities found"}
                           filter
+                          filterInputAutoFocus={true}
                         />
                         {fieldErrors.city && <small className="error-message">{fieldErrors.city}</small>}
                       </div>
@@ -209,6 +212,7 @@ const Regionalsettings = () => {
                           className={`w-100 ml-2 dropdown-height-fixed customDropdownSelect ${fieldErrors.timezone ? "error-border" : ""}`}
                           onChange={(e) => setTimezone(e.value)}
                           scrollHeight='300px'
+                          filterInputAutoFocus={true}
                         />
                         {fieldErrors.timezone && <small className="error-message">{fieldErrors.timezone}</small>}
                       </div>

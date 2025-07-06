@@ -386,6 +386,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 ]}
                 className="w-100 outline-none"
                 placeholder="Select frequency"
+                filterInputAutoFocus={true}
               />
             </div>
 
@@ -416,6 +417,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 style={{ height: '46px', minWidth: '260px' }}
                 className="w-100 outline-none"
                 placeholder="Select an end"
+                filterInputAutoFocus={true}
               />
             </div>
 

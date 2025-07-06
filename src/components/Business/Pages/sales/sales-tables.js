@@ -184,6 +184,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
     {
       field: "Reference",
       sortable: false,
+      width: 500,
       headerName: "Reference",
       renderCell: (params) => (
         <div

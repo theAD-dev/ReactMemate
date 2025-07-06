@@ -39,7 +39,7 @@ const Departments = () => {
         const calculation = await getCalculationByReferenceId(subindexId);
         setActiveCalculations((prev) => ({
             ...prev,
-            [subindexId]: calculation, // Store calculation data for the specific subindex
+            [subindexId]: calculation || [], // Store calculation data for the specific subindex
         }));
     };
 
@@ -101,6 +101,9 @@ const Departments = () => {
                                 collapseIcon={<div className='collapseIcon'>
                                     <ChevronDown size={16} color='#106B99' />
                                 </div>}
+                                onTabOpen={() => {
+                                    setAccordionActiveTab2(undefined);
+                                }}
                             >
                                 {
                                     departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => {
@@ -200,11 +203,11 @@ const calculateSummary = (calculators, taxType) => {
     let budget = 0;
     let subtotal = 0;
     calculators?.forEach(item => {
-        let rate = parseFloat(item.cost) || 0;
-        let quantity = parseFloat(item.quantity) || 0;
+        let rate = parseFloat(item?.cost) || 0;
+        let quantity = parseFloat(item?.quantity) || 0;
         let cost = rate * quantity;
         budget += parseFloat(cost || 0);
-        subtotal += parseFloat(item.total || 0);
+        subtotal += parseFloat(item?.total || 0);
     });
 
     let tax = 0;
@@ -249,9 +252,8 @@ const calculateUnitPrice = (item) => {
     return formatAUD(parseFloat(unit_price).toFixed(2));
 };
 
-const ViewSectionComponent = ({ calculator, index, refetch }) => {
+const ViewSectionComponent = ({ calculator, index, refetch, tempCalculator, setTempCalculator, editId, setEditId }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [tempCalculator, setTempCalculator] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
 
     useEffect(() => {
@@ -298,7 +300,9 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
             await updateCalculator(index, calculator.id, payload);
             toast.success(`Calculator updated successfully.`);
             setIsEdit(false);
+            setEditId(null);
             refetch(index);
+            setTempCalculator(null);
         } catch (error) {
             console.log('Error during updating calculator', error);
             toast.error(`Failed to update calculator. Please try again.`);
@@ -308,13 +312,13 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
     };
 
     useEffect(() => {
-        if (isEdit && tempCalculator !== calculator) {
+        if (isEdit && tempCalculator !== calculator && editId === calculator.id) {
             setTempCalculator(calculator);
         }
-    }, [isEdit, calculator]);
+    }, [isEdit, calculator, editId]);
 
     useEffect(() => {
-        if (isEdit && tempCalculator) {
+        if (isEdit && tempCalculator && editId === calculator.id) {
             let rate = parseFloat(tempCalculator?.cost) || 0;
             let quantity = parseFloat(tempCalculator?.quantity) || 0;
             let subtotal = rate * quantity;
@@ -335,12 +339,12 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                 setTempCalculator((others) => ({ ...others, total }));
             }
         }
-    }, [tempCalculator, isEdit]);
+    }, [tempCalculator, isEdit, editId, calculator.id, setTempCalculator]);
 
     return (
         <div className={`${style.contentStyle}`}>
             {
-                isEdit ? (
+                isEdit && editId === calculator.id ? (
                     <>
                         <h6 className='font-14' style={{ color: '#475467' }}>Full Description <span style={{ color: "#f04438" }}>*</span></h6>
                         <InputTextarea autoResize value={tempCalculator?.description}
@@ -441,7 +445,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                         <div className='d-flex justify-content-between align-items-center mt-4'>
                             <span></span>
                             <div className={clsx(style.RItem)}>
-                                <Button className={style.deleteOutline} onClick={() => setIsEdit(false)}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
+                                <Button className={style.deleteOutline} onClick={() => { setIsEdit(false); setEditId(null); setTempCalculator(null); }}><Backspace color="#B42318" size={18} className='me-2' />Cancel</Button>
                                 <Button className={style.editBut} disabled={isLoading} onClick={saveCalculator}>
                                     {
                                         isLoading ? <ProgressSpinner className='me-2' style={{ width: '18px', height: '18px' }} />
@@ -492,7 +496,7 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
                             <span></span>
                             <div className={clsx(style.RItem)}>
                                 <DeleteConfirmationModal title={"Calculator"} isOutline={true} api={`/references/calculators/delete/${calculator.id}/`} refetch={() => refetch(index)} />
-                                <Button className={style.editBut} onClick={() => setIsEdit(true)}><PencilSquare color="#106B99" size={18} className='me-2' />Edit Calculator</Button>
+                                <Button className={style.editBut} onClick={() => { setIsEdit(true); setEditId(calculator.id); }}><PencilSquare color="#106B99" size={18} className='me-2' />Edit Calculator</Button>
                             </div>
                         </div>
                     </>
@@ -502,18 +506,8 @@ const ViewSectionComponent = ({ calculator, index, refetch }) => {
     );
 };
 
-const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
+const NewCalculator = ({ tempCalculator, setTempCalculator, index, name, refetch, cancelCreateCalculator }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [tempCalculator, setTempCalculator] = useState({
-        profit_type: "MRK", // Default profit type
-        profit_type_value: 0,
-        cost: undefined,
-        quantity: 1,
-        discount: 0,
-        total: 0,
-        description: "",
-        type: "Cost",
-    });
 
     // Ensure profit_type_value does not exceed 99.99 for "MRG"
     useEffect(() => {
@@ -588,6 +582,16 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
             toast.success("Calculator created successfully.");
             cancelCreateCalculator(null);
             refetch(index);
+            setTempCalculator({
+                profit_type: "MRK",
+                profit_type_value: 0,
+                cost: undefined,
+                quantity: 1,
+                discount: 0,
+                total: 0,
+                description: "",
+                type: "Cost",
+            });
         } catch (error) {
             console.error("Error during creating calculator", error);
             toast.error("Failed to create calculator. Please try again.");
@@ -716,20 +720,51 @@ const NewCalculator = ({ index, name, refetch, cancelCreateCalculator }) => {
 };
 
 const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, cancelCreateCalculator }) => {
+    const [editId, setEditId] = useState(null);
+    const [editTempCalculator, setEditTempCalculator] = useState(null);
+    const [tempCalculator, setTempCalculator] = useState({
+        profit_type: "MRK",
+        profit_type_value: 0,
+        cost: undefined,
+        quantity: 1,
+        discount: 0,
+        total: 0,
+        description: "",
+        type: "Cost",
+    });
     const uniqueCalculators = calculators.filter((item, index, self) =>
         index === self.findIndex((t) => t.id === item.id && !item?.deleted)
     );
-    const summary = calculateSummary(uniqueCalculators, 'ex');
+    let withoutEditCalculators = uniqueCalculators;
+    if (editTempCalculator?.id) {
+        withoutEditCalculators = uniqueCalculators.filter(item => item.id !== editTempCalculator.id);
+    }
+    const summary = calculateSummary([...withoutEditCalculators, tempCalculator, editTempCalculator], 'ex');
+
+    useEffect(() => {
+        if (isNewCreate) {
+            setTempCalculator({
+                profit_type: "MRK",
+                profit_type_value: 0,
+                cost: undefined,
+                quantity: 1,
+                discount: 0,
+                total: 0,
+                description: "",
+                type: "Cost",
+            });
+        }
+    }, [isNewCreate]);
 
     return (
         <div>
             {
-                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} />
+                isNewCreate && <NewCalculator index={index} name={name} refetch={refetch} cancelCreateCalculator={cancelCreateCalculator} tempCalculator={tempCalculator} setTempCalculator={setTempCalculator} />
             }
 
             {
                 uniqueCalculators?.map(calculator => (
-                    <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} />
+                    <ViewSectionComponent key={calculator.id} index={index} calculator={calculator} refetch={refetch} tempCalculator={editTempCalculator} setTempCalculator={setEditTempCalculator} editId={editId} setEditId={setEditId} />
                 ))
             }
 

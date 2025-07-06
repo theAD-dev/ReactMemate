@@ -284,6 +284,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                                 setErrors((others) => ({ ...others, from: false }));
                             }}
                             value={from}
+                            filterInputAutoFocus={true}
                         />
                     </div>
                     {errors?.from && (
@@ -313,6 +314,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                             }}
                             value={emailTemplateId}
                             loading={emailTemplateQuery?.isFetching}
+                            filterInputAutoFocus={true}
                         />
                     </div>
                 </Col>
@@ -491,6 +493,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
                             }}
                             value={signature}
                             loading={signatureQuery?.isFetching}
+                            filterInputAutoFocus={true}
                         />
                     </div>
                 </Col>

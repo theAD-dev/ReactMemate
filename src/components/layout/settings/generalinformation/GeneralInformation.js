@@ -339,6 +339,7 @@ function GeneralInformation() {
                           loading={countriesQuery?.isFetching}
                           disabled={countriesQuery?.isFetching}
                           filter
+                          filterInputAutoFocus={true}
                         />
                       </div>
                       {errors.country && <p className="error-message">{errors.country.message}</p>}
@@ -376,6 +377,7 @@ function GeneralInformation() {
                           disabled={statesQuery?.isFetching}
                           emptyMessage={!countryId ? "Select a country first" : "No states found"}
                           filter
+                          filterInputAutoFocus={true}
                         />
                       </div>
                       {errors.state && <p className="error-message">{errors.state.message}</p>}
@@ -413,6 +415,7 @@ function GeneralInformation() {
                           disabled={citiesQuery?.isFetching}
                           emptyMessage={!stateId ? "Select a state first" : "No cities found"}
                           filter
+                          filterInputAutoFocus={true}
                         />
                       </div>
                       {errors.city && <p className="error-message">{errors.city.message}</p>}

@@ -31,6 +31,13 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
 
     useEffect(() => {
         const projectParamId = params.get('projectId');
+        const reference = params.get('reference');
+        if (reference) {
+            setDefaultValues((prev) => ({ ...prev, invoice_reference: reference }));
+            urlObj.searchParams.delete('reference');
+            window.history.replaceState({}, '', urlObj);
+        }
+ 
         if (projectParamId) {
             setVisible(true);
             setProjectId(projectParamId);

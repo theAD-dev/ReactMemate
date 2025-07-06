@@ -214,6 +214,7 @@ const CreateTask = ({ show, setShow, project, reInitialize, projectCardData }) =
                         collapseIcon={<></>}
                         placeholder="Select project"
                         filter
+                        filterInputAutoFocus={true}
                         optionGroupLabel="label"
                         optionGroupChildren="items"
                     />

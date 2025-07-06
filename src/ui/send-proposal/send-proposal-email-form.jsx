@@ -285,6 +285,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                                 setErrors((others) => ({ ...others, from: false }));
                             }}
                             value={from}
+                            filterInputAutoFocus={true}
                         />
                     </div>
                     {errors?.from && (
@@ -314,6 +315,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                             }}
                             value={emailTemplateId}
                             loading={emailTemplateQuery?.isFetching}
+                            filterInputAutoFocus={true}
                         />
                     </div>
                 </Col>
@@ -492,6 +494,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                             }}
                             value={signature}
                             loading={signatureQuery?.isFetching}
+                            filterInputAutoFocus={true}
                         />
                     </div>
                 </Col>

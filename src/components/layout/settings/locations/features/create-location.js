@@ -180,6 +180,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
                                             value={field.value}
                                             loading={countriesQuery?.isFetching}
                                             placeholder="Select a country"
+                                            filterInputAutoFocus={true}
                                         />
                                     )}
                                 />
@@ -210,6 +211,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
                                             loading={statesQuery?.isFetching}
                                             placeholder={"Select a state"}
                                             filter
+                                            filterInputAutoFocus={true}
                                         />
                                     )}
                                 />
@@ -239,6 +241,7 @@ const CreateLocation = ({ visible, setVisible, defaultValues = {}, id = null, re
                                             loading={citiesQuery?.isFetching}
                                             placeholder={"Select a city"}
                                             filter
+                                            filterInputAutoFocus={true}
                                         />
                                     )}
                                 />
