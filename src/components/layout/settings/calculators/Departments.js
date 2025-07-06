@@ -237,7 +237,7 @@ const calculateSummary = (calculators, taxType) => {
 };
 
 const calculateUnitPrice = (item) => {
-    let cost = parseFloat(item?.cost) || 0;
+    let cost = parseFloat(item?.cost || 0);
     let unit_price = 0.00;
 
     let margin = parseFloat(item?.profit_type_value) || 0;
@@ -249,6 +249,7 @@ const calculateUnitPrice = (item) => {
         unit_price = cost + margin;
     }
 
+    console.log('unit_price: ', unit_price, item);
     return formatAUD(parseFloat(unit_price).toFixed(2));
 };
 
@@ -725,7 +726,7 @@ const ViewCalculators = ({ calculators = [], index, name, refetch, isNewCreate, 
     const [tempCalculator, setTempCalculator] = useState({
         profit_type: "MRK",
         profit_type_value: 0,
-        cost: undefined,
+        cost: 0,
         quantity: 1,
         discount: 0,
         total: 0,
