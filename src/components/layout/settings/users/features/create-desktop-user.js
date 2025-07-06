@@ -323,6 +323,7 @@ const CreateDesktopUser = ({ visible, setVisible, id = null, setId, refetch, pri
                                                 value={field.value}
                                                 style={{ height: '46px' }}
                                                 onChange={(e) => field.onChange(e.value)}
+                                                filterInputAutoFocus={true}
                                             />
                                         )}
                                     />

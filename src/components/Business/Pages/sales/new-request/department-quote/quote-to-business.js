@@ -157,6 +157,7 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
                                 filterTemplate={filterTemplate}
                                 virtualScrollerOptions={{ itemSize: 46, lazy: true, onLazyLoad: setupObserver }}
                                 className="w-100"
+                                filterInputAutoFocus={true}
                             />
                         </Col>
                         {isBusiness &&
@@ -172,6 +173,7 @@ const QuoteToBusiness = ({ isLoading, data, setPayload }) => {
                                     filter
                                     loading={clientQuery.isLoading}
                                     className="w-100"
+                                    filterInputAutoFocus={true}
                                 />
                             </Col>
                         }

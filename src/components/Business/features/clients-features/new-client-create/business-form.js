@@ -160,6 +160,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   loading={industriesQuery?.isFetching}
                   placeholder="Select Industry"
                   filter
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -262,6 +263,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   value={field.value}
                   scrollHeight="380px"
                   placeholder="Select payment terms"
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -293,6 +295,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                   loading={categoriesQuery?.isFetching}
                   placeholder="Select a category"
                   scrollHeight="380px"
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -425,6 +428,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                           loading={countriesQuery?.isFetching}
                           placeholder="Select a country"
                           scrollHeight="380px"
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -457,6 +461,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                           placeholder={"Select a state"}
                           scrollHeight="380px"
                           filter
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -492,6 +497,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
                             emptyMessage={!stateIndexId ? "Select a state first" : "No cities found"}
                             scrollHeight="380px"
                             filter
+                            filterInputAutoFocus={true}
                           />
                         );
                       }}

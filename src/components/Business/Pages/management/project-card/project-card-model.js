@@ -28,6 +28,7 @@ import ScheduleUpdate from './schedule-update';
 import SelectStatus from './select-status';
 import SendSMS from './send-sms/send-sms';
 import SendToCalendar from './send-to-calendar';
+import CurrentJobAndExpenseLoading from './ui/current-job-and-expense-loading';
 import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
@@ -438,7 +439,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   <Table responsive>
                     <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
                       <tr>
-                        <th>#</th>
+                        <th className='border-right'>#</th>
                         <th>Reference</th>
                         <th>Provider</th>
                         <th>Estimate/Total</th>
@@ -449,119 +450,27 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       {
                         isFetching ? (
                           <>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '80%', height: '14px', position: 'relative', left: '-10px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                              <td>
-                                <Placeholder as="p" animation="wave" className="mb-0">
-                                  <Placeholder xs={12} bg="secondary" className="rounded-0" size='sm' style={{ width: '100%', height: '14px' }} />
-                                </Placeholder>
-                              </td>
-                            </tr>
+                            <CurrentJobAndExpenseLoading />
+                            <CurrentJobAndExpenseLoading />
+                            <CurrentJobAndExpenseLoading />
+                            <CurrentJobAndExpenseLoading />
                           </>
                         ) : expenseJobsMapping?.length ? (
                           expenseJobsMapping.map((data, index) => (
                             <tr key={data.number || `je-${index}`}>
-                              <td>{data?.number || "-"}</td>
+                              <td className='border-right'>
+                                {
+                                  data?.type === 'job' ? (
+                                    <Link to={`/work/jobs?projectId=${project?.value}&reference=${data?.reference}`} className='linkText' target='_blank'>
+                                      {data?.number}
+                                    </Link>
+                                  ) : (
+                                    <Link to={`/expenses?projectId=${project?.value}&reference=${data?.invoice_reference}`} className='linkText' target='_blank'>
+                                      {data?.number}
+                                    </Link>
+                                  )
+                                }
+                              </td>
                               <td>
                                 <div className='ellipsis-width'>
                                   {data?.type === 'job'
@@ -586,8 +495,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                                   <div className='mx-auto d-flex align-items-center justify-content-center ps-2' style={{ width: 'fit-content' }}>
                                     {
                                       data?.type === 'job'
-                                        ? (<ImageAvatar has_photo={data?.worker?.has_photo} photo={data?.worker?.photo} is_business={false} size={16}/>)
-                                        : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true} size={16}/>)
+                                        ? (<ImageAvatar has_photo={data?.worker?.has_photo} photo={data?.worker?.photo} is_business={false} size={16} />)
+                                        : (<ImageAvatar has_photo={data?.supplier?.has_photo} photo={data?.supplier?.photo} is_business={true} size={16} />)
                                     }
                                   </div>
                                 </OverlayTrigger>
@@ -747,11 +656,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <Row className='projectCardButWrap'>
               <Col>
                 <ScheduleUpdate key={projectId} projectId={projectId} projectCardData={projectCardData} isFetching={isFetching} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
-                <Link to={`/expenses?projectId=${project?.value}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
+                <Link to={`/expenses?projectId=${project?.value}&reference=${project?.reference}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
                   profileData?.has_work_subscription &&
-                  <Link to={`/work/jobs?projectId=${project?.value}`}>
+                  <Link to={`/work/jobs?projectId=${project?.value}&reference=${project?.reference}`}>
                     <Button className='createJob jobActive'>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
                   </Link>
                 }

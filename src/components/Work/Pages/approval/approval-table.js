@@ -19,6 +19,7 @@ import ApproveJob from '../../features/approve-job/approve-job';
 const ApprovalTable = React.memo(() => {
     const { trialHeight } = useTrialHeight();
     const [selectedApprovals, setSelectedApprovals] = useState(null);
+    const [nextJobId, setNextJobId] = useState(null);
 
     const [isApproveJobVisible, setIsApproveJobVisible] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState(null);
@@ -127,7 +128,20 @@ const ApprovalTable = React.memo(() => {
     const handleApprove = React.useCallback((id) => {
         setSelectedJobId(id);
         setIsApproveJobVisible(true);
-    }, []);
+        const nextJob = approveData.findIndex((job) => job.id === id);
+        setNextJobId(approveData[nextJob + 1]?.id);
+    }, [approveData]);
+
+    const handleNextJob = React.useCallback((nextId) => {
+        setIsApproveJobVisible(false);
+        refetchApproveData();
+        setTimeout(() => {
+            setIsApproveJobVisible(true);
+            setSelectedJobId(nextId);
+            const nextJob = approveData.findIndex((job) => job.id === nextId);
+            setNextJobId(approveData[nextJob + 1]?.id);
+        }, 300);
+    }, [approveData]);
 
 
     const formatDate = React.useCallback((dateString) => {
@@ -221,7 +235,7 @@ const ApprovalTable = React.memo(() => {
                 <Column field="real_total" header={realTimeHead} headerClassName={style.verticalTop} body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="id" header={actionHeader} body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
-            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} refetch={refetchApproveData} />
+            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} handleNextJob={handleNextJob} refetch={refetchApproveData} nextJobId={nextJobId} />
         </>
     );
 });

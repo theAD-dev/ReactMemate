@@ -248,6 +248,7 @@ const CreateMobileUser = React.memo(({ visible, setVisible, id = null, refetch }
                                                 value={field.value}
                                                 style={{ height: '46px' }}
                                                 onChange={(e) => field.onChange(e.value)}
+                                                filterInputAutoFocus={true}
                                             />
                                         )}
                                     />

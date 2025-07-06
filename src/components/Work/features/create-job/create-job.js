@@ -252,6 +252,13 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     useEffect(() => {
         const projectParamId = params.get('projectId');
+        const reference = params.get('reference');
+        if (reference) {
+            setJobReference(reference);
+            urlObj.searchParams.delete('reference');
+            window.history.replaceState({}, '', urlObj);
+        }
+
         if (projectParamId) {
             setVisible(true);
             setProjectId(+projectParamId);
@@ -618,7 +625,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     }, [cost, mobileUserQuery?.data, userId, time_type, type]);
 
     return (
-        <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '702px' }}
+        <Sidebar visible={visible} position="right" onHide={() => {setVisible(false); reset();}} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
@@ -647,6 +654,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         value={templateId}
                                         loading={templateQuery?.isFetching}
                                         filter
+                                        filterInputAutoFocus={true}
                                     />
                                 </div>
                             )}
@@ -767,6 +775,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 loading={mobileUserQuery?.isFetching}
                                                 scrollHeight="350px"
                                                 filter
+                                                filterInputAutoFocus={true}
                                             />
                                             {errors?.userId && (
                                                 <p className="error-message mb-0">{"Worker is required"}</p>
@@ -1042,6 +1051,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         loading={projectQuery?.isFetching}
                                         scrollHeight="400px"
                                         filter
+                                        filterInputAutoFocus={true}
                                     />
                                     {errors?.projectId && (
                                         <p className="error-message mb-0">{"Project is required"}</p>
@@ -1234,6 +1244,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 value={projectId}
                                                 loading={projectQuery?.isFetching}
                                                 filter
+                                                filterInputAutoFocus={true}
                                             />
                                         </div>
                                     </Card.Header>
@@ -1263,6 +1274,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 setOccurrences(e.value);
                                             }}
                                             value={occurrences}
+                                            filterInputAutoFocus={true}
                                         />
                                     </Card.Header>
                                     <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between', style.borderBottom)}>

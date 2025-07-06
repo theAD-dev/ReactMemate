@@ -2765,9 +2765,9 @@ div#popoverStyleChange {
 
 .salesTableWrap .statusInfo.Saved a,
 .salesTableWrap .Saved .NameStatus {
-  color: #1ab2ff;
-  border: 1px solid #a3e0ff;
-  background: #ebf8ff;
+  color: #6941C6;
+  border: 1px solid #E9D7FE;
+  background: #F9FAFB;
 }
 
 .MuiButtonBase-roo.LmenuList {
@@ -2805,9 +2805,9 @@ div#popoverStyleChange {
 }
 
 .salesTableWrap .statusInfo.Recurring a {
-  color: #175cd3;
-  border: 1px solid #b2ddff;
-  background: #eff8ff;
+  color: #175CD3;
+  border: 1px solid #B2DDFF;
+  background: #EFF8FF;
 }
 
 .salesTableWrap .statusInfo.Review a {
@@ -2846,7 +2846,7 @@ div#popoverStyleChange {
 }
 
 .mainStyleMin {
-  width: 297px;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap !important;
@@ -4831,7 +4831,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 
 .salesTableWrap .innerTableStyle {
   display: grid;
-  justify-content: center;
+  justify-content: start;
   align-content: center;
 }
 
@@ -5536,6 +5536,8 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 
 .salesTableWrap table tbody tr td:nth-child(4),
 .salesTableWrap table thead tr th:nth-child(4) {
+  width: 254px !important;
+  max-width: 500px !important;
   box-shadow: 0 0 6px #dedede;
   clip-path: inset(0px -6px 0px 0px);
 }
@@ -11803,4 +11805,14 @@ ul.eventStyleCal li:first-child,
 
 .modal-header .btn-close {
   font-size: 12px;
+}
+
+.linkText {
+  color: #344054;
+  text-decoration: none;
+}
+
+tr:hover .linkText {
+  color: #158ecc;
+  text-decoration: underline;
 }

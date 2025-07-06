@@ -338,6 +338,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                 showClear
                                 scrollHeight="380px"
                                 filter
+                                filterInputAutoFocus={true}
                             />
                         </div>
                     </Col>

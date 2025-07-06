@@ -565,6 +565,7 @@ const PublicInvoice = () => {
                                                     value={field.value}
                                                     loading={countriesQuery?.isFetching}
                                                     placeholder="Select a country"
+                                                    filterInputAutoFocus={true}
                                                 />
                                             )}
                                         />
@@ -608,6 +609,7 @@ const PublicInvoice = () => {
                                                     placeholder={"Select a state"}
                                                     scrollHeight="380px"
                                                     filter
+
                                                 />
                                             )}
                                         />
@@ -643,6 +645,7 @@ const PublicInvoice = () => {
                                                     emptyMessage={!stateId ? "Select a state first" : "No cities found"}
                                                     scrollHeight="380px"
                                                     filter
+                                                    filterInputAutoFocus={true}
                                                 />
                                             )}
                                         />

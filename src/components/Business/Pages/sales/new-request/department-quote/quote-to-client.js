@@ -155,6 +155,7 @@ const QuoteToClient = ({ isLoading, data, setPayload }) => {
                             filterTemplate={filterTemplate}
                             virtualScrollerOptions={{ itemSize: 46, lazy: true, onLazyLoad: setupObserver }}
                             className="w-100"
+                            filterInputAutoFocus={true}
                         />
                     </Col>
                     {
@@ -171,6 +172,7 @@ const QuoteToClient = ({ isLoading, data, setPayload }) => {
                                 filter
                                 loading={clientQuery.isLoading}
                                 className="w-100"
+                                filterInputAutoFocus={true}
                             />
                         </Col>
                     }

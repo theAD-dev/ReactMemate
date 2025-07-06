@@ -154,6 +154,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     value={field.value}
                                     placeholder="Select payment terms"
                                     scrollHeight="380px"
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -185,6 +186,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     loading={categoriesQuery?.isFetching}
                                     placeholder="Select a category"
                                     scrollHeight="380px"
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -230,6 +232,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     loading={countriesQuery?.isFetching}
                                     placeholder="Select a country"
                                     scrollHeight="380px"
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -262,6 +265,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     placeholder={"Select a state"}
                                     scrollHeight="380px"
                                     filter
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -295,6 +299,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
                                     emptyMessage={!stateId ? "Select a state first" : "No cities found"}
                                     scrollHeight="380px"
                                     filter
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />

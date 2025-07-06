@@ -1254,6 +1254,7 @@ const CreateEmailSignatureTemplate = () => {
                                                             ]}
                                                             style={{ width: '520px', outline: 'none', boxShadow: 'none' }}
                                                             placeholder="Select a font family"
+                                                            filterInputAutoFocus={true}
                                                         />
                                                     </Form.Group>
 
@@ -1339,6 +1340,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                     onChange={(e) => setFontSize(e.value)}
                                                                     style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
                                                                     placeholder="Select font size"
+                                                                    filterInputAutoFocus={true}
                                                                 />
                                                             </Form.Group>
                                                         </Col>
@@ -1358,6 +1360,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                     onChange={(e) => setDividerStyle(e.value)}
                                                                     style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
                                                                     placeholder="Select divider style"
+                                                                    filterInputAutoFocus={true}
                                                                 />
                                                             </Form.Group>
                                                         </Col>
@@ -1374,6 +1377,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                     onChange={(e) => setDividerWidth(e.value)}
                                                                     style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
                                                                     placeholder="Select divider width"
+                                                                    filterInputAutoFocus={true}
                                                                 />
                                                             </Form.Group>
                                                         </Col>
@@ -1407,6 +1411,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                         setPreviewKey(prev => prev + 1); // Force preview re-render
                                                                     }}
                                                                     placeholder="Select image style"
+                                                                    filterInputAutoFocus={true}
                                                                 />
                                                             </Form.Group>
                                                         </Col>
@@ -1426,6 +1431,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                     }}
                                                                     style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
                                                                     placeholder="Select image size"
+                                                                    filterInputAutoFocus={true}
                                                                 />
                                                             </Form.Group>
                                                         </Col>
@@ -1445,6 +1451,7 @@ const CreateEmailSignatureTemplate = () => {
                                                                     }}
                                                                     style={{ width: '100%', outline: 'none', boxShadow: 'none' }}
                                                                     placeholder="Select logo size"
+                                                                    filterInputAutoFocus={true}
                                                                 />
                                                             </Form.Group>
                                                         </Col>

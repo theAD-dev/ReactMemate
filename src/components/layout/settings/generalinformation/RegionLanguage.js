@@ -127,6 +127,7 @@ const RegionLanguage = () => {
                       className='w-100 rounded'
                       onChange={(e) => setCountry(e.value)}
                       filter
+                      filterInputAutoFocus={true}
                     />
                   )}
                 </li>
@@ -141,6 +142,7 @@ const RegionLanguage = () => {
                       placeholder="Select timezone"
                       className='w-100'
                       onChange={(e) => setTimezone(e.value)}
+                      filterInputAutoFocus={true}
                     />
                   )}
                 </li>

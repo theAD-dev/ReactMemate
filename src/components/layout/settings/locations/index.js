@@ -242,6 +242,7 @@ const Location = () => {
                                             className='outline-none'
                                             style={{ width: '230px' }}
                                             loading={desktopUser?.isFetching}
+                                            filterInputAutoFocus={true}
                                         />
                                     </div>
                                 </div>

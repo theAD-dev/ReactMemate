@@ -227,6 +227,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   loading={industryServiceQuery?.isFetching}
                   placeholder="Select Industry"
                   filter
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -257,6 +258,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   placeholder="Select Service"
                   emptyMessage={!watch('industry') ? "Select an industry first" : "No services found"}
                   filter
+                  filterInputAutoFocus={true}
                 />
               )}
             />
@@ -397,6 +399,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                           value={field.value}
                           loading={countriesQuery?.isFetching}
                           placeholder="Select a country"
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -428,6 +431,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                           loading={statesQuery?.isFetching}
                           placeholder={"Select a state"}
                           filter
+                          filterInputAutoFocus={true}
                         />
                       )}
                     />
@@ -460,6 +464,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                             loading={stateIndexId === stateId && citiesQuery?.isFetching}
                             placeholder={"Select a city"}
                             filter
+                            filterInputAutoFocus={true}
                           />
                         );
                       }}

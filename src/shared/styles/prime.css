@@ -602,3 +602,39 @@ tr.p-datatable-emptymessage td {
 .p-rating .p-rating-item.p-focus {
   box-shadow: none !important;
 }
+
+.p-multiselect .p-multiselect-trigger {
+  width: 20px !important;
+}
+
+.p-multiselect .p-multiselect-trigger .p-icon {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.management-multiselect .p-multiselect-clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 80%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 14px !important;
+  height: 14px !important;
+  color: #424242;
+  padding: 2px !important;
+  border-radius: 50%;
+  font-weight: 600;
+  background-color: rgb(242, 244, 247);
+}
+
+.p-autocomplete-dropdown {
+  border-left: 0px solid #d0d5dd !important;
+  border-right: 1px solid #d0d5dd !important;
+  border-bottom: 1px solid #d0d5dd !important;
+  border-top: 1px solid #d0d5dd !important;
+  background-color: #fff !important;
+}
+
+.p-autocomplete-dropdown svg {
+  color: #475467 !important;
+}

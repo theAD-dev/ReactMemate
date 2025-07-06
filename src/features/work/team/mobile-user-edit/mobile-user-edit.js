@@ -118,6 +118,7 @@ const MobileUserEdit = ({ user }) => {
                             value={paymentCycle}
                             style={{ height: '46px', width: '180px' }}
                             onChange={(e) => setPaymentCycle(e.value)}
+                            filterInputAutoFocus={true}
                         />
                     </Col>
                     <Col sm={2} className='d-flex align-items-center pt-4 gap-2'>

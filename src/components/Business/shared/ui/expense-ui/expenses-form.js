@@ -478,7 +478,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                 if (!e.value) setSearchValue("");
                                 setSupplierValue(e.value);
                             }}
-                            dropdownAutoFocus
+                            dropdownAutoFocus={true}
                             field="name"
                             suggestions={suppliers}
                             itemTemplate={(option) => {
@@ -718,6 +718,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     style={{ height: '46px' }}
                                     value={field.value}
                                     placeholder="Select GST"
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -787,6 +788,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                                 loading={projectsList?.isFetching}
                                                 placeholder="Select project"
                                                 filter
+                                                filterInputAutoFocus={true}
+                                                scrollHeight="400px"
                                             />
                                         )}
                                     />
@@ -816,6 +819,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                                 style={{ height: '46px' }}
                                                 value={field.value}
                                                 placeholder="Select expense time interval"
+                                                filterInputAutoFocus={true}
                                             />
                                         )}
                                     />
@@ -865,6 +869,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     loading={xeroCodesList?.isFetching}
                                     placeholder="Select account code"
                                     filter
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />
@@ -896,6 +901,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                     loading={departmentsList?.isFetching}
                                     placeholder="Select department"
                                     filter
+                                    filterInputAutoFocus={true}
                                 />
                             )}
                         />

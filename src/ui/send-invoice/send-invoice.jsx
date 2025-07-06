@@ -294,6 +294,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                                     setErrors((others) => ({ ...others, from: false }));
                                 }}
                                 value={from}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                         {errors?.from && (
@@ -323,6 +324,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                                 }}
                                 value={emailTemplateId}
                                 loading={emailTemplateQuery?.isFetching}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                     </Col>
@@ -501,6 +503,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                                 }}
                                 value={signature}
                                 loading={signatureQuery?.isFetching}
+                                filterInputAutoFocus={true}
                             />
                         </div>
                     </Col>

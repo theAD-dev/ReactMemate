@@ -199,6 +199,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                         loading={projectsList?.isFetching}
                         placeholder="Select project"
                         filter
+                        filterInputAutoFocus={true}
                     />
                     {errors.project && <Form.Text className="text-danger">Project task is required</Form.Text>}
                 </Form.Group>
@@ -274,6 +275,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                         collapseIcon={<></>}
                         placeholder="Select project"
                         filter
+                        filterInputAutoFocus={true}
                         optionGroupLabel="label"
                         optionGroupChildren="items"
                     />

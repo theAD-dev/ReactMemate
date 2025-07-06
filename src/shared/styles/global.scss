@@ -145,8 +145,8 @@ input {
   font-family: "Inter";
   border-radius: 40px;
   box-shadow: none !important;
-  border: 1px solid var(--Error-600, #d92d20);
-  background: var(--Error-600, #d92d20);
+  border: 1px solid var(--Error-600, #d92d20) !important;
+  background: var(--Error-600, #d92d20) !important;
   align-items: center;
   justify-content: center;
 }

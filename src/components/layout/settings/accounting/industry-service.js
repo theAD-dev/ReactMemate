@@ -138,6 +138,7 @@ function IndustryService() {
                         onChange={(e) => field.onChange(e.value)}
                         placeholder="Select Code"
                         filter
+                        filterInputAutoFocus={true}
                         scrollHeight="400px"
                       />
                     )}

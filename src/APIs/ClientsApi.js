@@ -63,7 +63,9 @@ export const getCountries = async () => {
     method: 'GET',
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options, false);
+  const response = await fetchAPI(url.toString(), options, false);
+  const allowedCountries = [1];
+  return response?.filter(country => allowedCountries.includes(country.id)) || [];
 };
 
 export const getStates = async (country) => {

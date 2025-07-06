@@ -216,6 +216,7 @@ const EditTask = ({ show, setShow, data, reInitialize }) => {
                             collapseIcon={<></>}
                             placeholder="Select project"
                             filter
+                            filterInputAutoFocus={true}
                             optionGroupLabel="label"
                             optionGroupChildren="items"
                         />
