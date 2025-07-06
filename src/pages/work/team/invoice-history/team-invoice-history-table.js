@@ -123,7 +123,7 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
       <Column field="date_to" header="Date" body={(rowData) => `${formatDate(rowData.date_from)} - ${formatDate(rowData.date_to)}`} sortable style={{ minWidth: '113px' }}></Column>
       <Column field='total_hours' header="Total Hours" body={(rowData) => `${rowData.total_hours}h`} bodyClassName={'text-end'} style={{ minWidth: '114px' }}></Column>
       <Column field='total_amount' header="Total Amount" body={(rowData) => `$${formatAUD(rowData.total_amount)}`} style={{ minWidth: '114px' }}></Column>
-      <Column field='status' header="Status" body={statusBodyTemplate} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }}></Column>
+      <Column field='status' header="Status" body={statusBodyTemplate} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }}></Column>
     </DataTable>
   );
 });
