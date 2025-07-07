@@ -2765,9 +2765,9 @@ div#popoverStyleChange {
 
 .salesTableWrap .statusInfo.Saved a,
 .salesTableWrap .Saved .NameStatus {
-  color: #6941C6;
-  border: 1px solid #E9D7FE;
-  background: #F9FAFB;
+  color: #6941c6;
+  border: 1px solid #e9d7fe;
+  background: #f9fafb;
 }
 
 .MuiButtonBase-roo.LmenuList {
@@ -2805,9 +2805,9 @@ div#popoverStyleChange {
 }
 
 .salesTableWrap .statusInfo.Recurring a {
-  color: #175CD3;
-  border: 1px solid #B2DDFF;
-  background: #EFF8FF;
+  color: #175cd3;
+  border: 1px solid #b2ddff;
+  background: #eff8ff;
 }
 
 .salesTableWrap .statusInfo.Review a {
@@ -11812,7 +11812,8 @@ ul.eventStyleCal li:first-child,
   text-decoration: none;
 }
 
-tr:hover .linkText {
-  color: #158ecc;
+tr:hover .linkText,
+.linkText:hover {
+  color: #158ecc !important;
   text-decoration: underline;
 }
