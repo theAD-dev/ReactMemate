@@ -24,6 +24,8 @@ import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar'
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 export function getFileIcon(fileType) {
+    if (fileType) fileType = fileType?.toLowerCase();
+    
     const fileTypes = {
         'application/pdf': { name: 'PDF', color: '#D92D20' },
         'application/vnd.ms-excel': { name: 'Excel', color: '#22A746' },

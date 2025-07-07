@@ -921,7 +921,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                         <div className={styles.fileBox}>
                                             {getFileIcon(defaultValues?.file?.split(".")?.[defaultValues?.file?.split(".").length - 1] || "")}
                                             <div className={styles.fileNameBox}>
-                                                <p className='mb-0'>{defaultValues?.file?.split("/")?.[defaultValues?.file?.split("/").length - 1] || ""}</p>
+                                                <Link className='linkText' to={defaultValues?.file} target='_blank'><p className='mb-0'>{defaultValues?.file?.split("/")?.[defaultValues?.file?.split("/").length - 1] || ""}</p></Link>
                                                 <p className='mb-0'></p>
                                             </div>
                                             <div className='ms-auto'>
