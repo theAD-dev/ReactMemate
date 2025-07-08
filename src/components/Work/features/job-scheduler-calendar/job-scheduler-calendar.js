@@ -2,20 +2,22 @@ import { fetchAPI } from "../../../../APIs/base-api";
 
 let dp, DP, expandRow;
 
-const getStatusLabel = (status, actionStatus) => {
-  if (actionStatus) {
-    return { label: "In Progress", className: "open", color: '#065b76', backColor: '#ecf7fd' };
+const getStatusLabel = (status, actionStatus, published) => {
+  if (!published) {
+    return { label: "Draft", className: "DRAFT", color: '#344054', backColor: '#f9fafb', borderColor: '#eaecf0' };
+  }
+
+  if (status === 'a' && actionStatus) {
+    return { label: "In Progress", className: "IN_PROGRESS", color: '#3D5AFE', backColor: '#EEF1FF', borderColor: '#C3CCFF' };
   }
 
   const statusMap = {
-    "1": { label: "Open", className: "open", color: '#065b76', backColor: '#ecf7fd' },
-    "2": { label: "Assign", className: "ASSIGN", color: '#520676', backColor: '#f6ecfd' },
-    "3": { label: "Not Confirmed", className: "NotConfirmed", color: '#b42318', backColor: '#fef3f2' },
-    "4": { label: "Confirmed", className: "CONFIRMED", color: '#067647', backColor: '#ecfdf3' },
-    "5": { label: "Completed", className: "COMPLETED", color: '#067647', backColor: '#ecfdf3' },
-    "6": { label: "Canceled", className: "MANAGER_DECLINED", color: '#b54708', backColor: '#fffaeb' },
-    "a": { label: "Accepted", className: "Accepted", color: '#067611', backColor: '#f2fdec' },
-    "d": { label: "Declined", className: "DECLINED", color: '#b42318', backColor: '#fef3f2' },
+    "1": { label: "Open", className: "OPEN", color: '#065b76', backColor: '#ecf7fd', borderColor: '#a9d6ef' },
+    "2": { label: "Assigned", className: "ASSIGNED", color: '#520676', backColor: '#f6ecfd', borderColor: '#dda9ef' },
+    "3": { label: "Submitted", className: "SUBMITTED", color: '#344054', backColor: '#f9fafb', borderColor: '#eaecf0' },
+    "4": { label: "Finished", className: "FINISHED", color: '#29B27C', backColor: '#BBFFE4', borderColor: '#BBFFE4' },
+    "6": { label: "Declined", className: "DECLINED", color: '#b42318', backColor: '#fef3f2', borderColor: '#fecdca' },
+    'a': { label: "Confirmed", className: "CONFIRMED", color: '#067647', backColor: '#ecfdf3', borderColor: '#a9efc5' },
   };
 
   return statusMap[status] || { label: status, className: "defaultStatus" };
@@ -61,8 +63,8 @@ function loadData(data) {
            <small class='d-block'>${job?.number}</small>
            <small class='d-block job-reference-ellipsis' title="${job?.reference}">${job?.reference}</small>
           </div>
-          <div class="status ${getStatusLabel(job?.status, job?.action_status).className}">
-            ${getStatusLabel(job?.status, job?.action_status).label}
+          <div class="status ${getStatusLabel(job?.status, job?.action_status, job?.published).className}">
+            ${getStatusLabel(job?.status, job?.action_status, job?.published).label}
           </div >
          </div >
       </div > `,
@@ -114,8 +116,8 @@ function loadData(data) {
           end: job?.time_type === 'T' ? parseTimestamp(1000 * job.end_date).toISOString() : parseTimestamp(1000 * job.start_date).toISOString(),
           resource: job.id,
           text: job?.reference || 'No Reference',
-          cssClass: `childEvent jobEvent ${getStatusLabel(job?.status).className}`,
-          backColor: `${getStatusLabel(job?.status).backColor}`,
+          cssClass: `childEvent jobEvent ${getStatusLabel(job?.status, job?.action_status, job?.published).className}`,
+          backColor: `${getStatusLabel(job?.status, job?.action_status, job?.published).backColor}`,
         };
         events.push(event);
       }
@@ -179,8 +181,8 @@ function initDayPilot(elementId, data) {
               end: job?.time_type === 'T' ? parseTimestamp(1000 * job.end_date).toISOString() : parseTimestamp(1000 * job.start_date).toISOString(),
               resource: job.id,
               text: job?.reference || 'No Reference',
-              cssClass: `childEvent jobEvent ${getStatusLabel(job?.status).className}`,
-              backColor: `${getStatusLabel(job?.status).backColor}`,
+              cssClass: `childEvent jobEvent ${getStatusLabel(job?.status, job?.action_status, job?.published).className}`,
+              backColor: `${getStatusLabel(job?.status, job?.action_status, job?.published).backColor}`,
             };
 
             eventsArray.push(event);

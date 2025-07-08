@@ -188,23 +188,28 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const statusBody = (rowData) => {
-    if (!rowData.published) {
-      return <Chip className={`status ${style.Draft} font-14`} label={"Draft"} />;
-    }
-
-    if (rowData.action_status) {
-      return <Chip className={`status ${style.open} font-14`} label={"In Progress"} />;
-    }
-
     const status = rowData.status;
+
+    if (!rowData.published) {
+      return <Chip className={`status ${style.DRAFT} font-14`} label={"Draft"} />;
+    }
+
+    if (status === 'a' && rowData.action_status) {
+      return <Chip className={`status ${style.IN_PROGRESS} font-14`} label={"In Progress"} />;
+    }
+
     switch (status) {
       case '1':
-        return <Chip className={`status ${style.open} font-14`} label={"Open"} />;
+        return <Chip className={`status ${style.OPEN} font-14`} label={"Open"} />;
       case '2':
-        return <Chip className={`status ${style.ASSIGN} font-14`} label={"Assigned"} />;
+        return <Chip className={`status ${style.ASSIGNED} font-14`} label={"Assigned"} />;
+      case '3':
+        return <Chip className={`status ${style.SUBMITTED} font-14`} label={"Submitted"} />;
+      case '4':
+        return <Chip className={`status ${style.FINISHED} font-14`} label={"Finished"} />;
       case '6':
         return <div className='d-flex gap-2 align-items-center'>
-          <Chip className={`status ${style.NotConfirmed} font-14`} label={"Declined"} />
+          <Chip className={`status ${style.DECLINED} font-14`} label={"Declined"} />
           <ChatText color='#158ECC' className="cursor-pointer" onClick={() => {
             setShowDeclined(true);
             setDeclineMessage(rowData.decline_message);
@@ -288,8 +293,8 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         <Column field="end_date" header="Finish" body={endDateBody} style={{ minWidth: '122px' }} sortable></Column>
         <Column field="worker.firstname" header="Name A→Z" body={nameBody} style={{ minWidth: '205px' }}></Column>
         <Column field="reference" header="Job Reference" style={{ minWidth: '270px' }}></Column>
-        <Column field='project.number' header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }} />
         <Column field="status" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+        <Column field='project.number' header="Linked To Project" body={linkToBody} style={{ minWidth: '105px' }} />
         <Column field="time_assigned" header="Time Assigned" body={assignedTimeBody} style={{ minWidth: '117px' }} ></Column>
         <Column field="real_time" header="Real Time" body={realTimeBody} bodyClassName={'text-end'} headerClassName='text-center' style={{ minWidth: '88px' }}></Column>
         <Column field="variations" header="Variation" body={bonusBody} style={{ minWidth: '88px' }} sortable></Column>

@@ -168,18 +168,6 @@
   background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
 }
 
-.inProgress {
-  font-size: 12px;
-  padding: 2px 6px;
-  line-height: 18px;
-  font-weight: 500;
-  color: var(--Warning-700, #b54708);
-  border-radius: 16px;
-  border: 1px solid var(--Warning-200, #fedf89);
-  background: var(--Warning-50, #fffaeb);
-  //
-}
-
 .defaultStatus {
   font-size: 12px;
   padding: 2px 6px;
@@ -199,43 +187,25 @@
   border-radius: 16px;
 }
 
-.open {
-  color: #065b76;
-  border: 1px solid #a9d6ef;
-  background: #ecf7fd;
-}
-
-.Draft {
+.DRAFT {
   color: #344054;
   border: 1px solid var(--Gray-200, #eaecf0);
   background: var(--Gray-50, #f9fafb);
 }
 
-.Accepted {
-  color: #067611;
-  border: 1px solid #c4efa9;
-  background: #f2fdec;
+.OPEN {
+  color: #065b76;
+  border: 1px solid #a9d6ef;
+  background: #ecf7fd;
 }
 
-.CONFIRMED {
-  color: #067647;
-  border: 1px solid #a9efc5;
-  background: #ecfdf3;
-}
-
-.ASSIGN {
+.ASSIGNED {
   color: #520676;
   border: 1px solid #dda9ef;
   background: #f6ecfd;
 }
 
-.NotConfirmed {
-  color: #b42318;
-  border: 1px solid #fecdca;
-  background: #fef3f2;
-}
-
-.COMPLETED {
+.CONFIRMED {
   color: #067647;
   border: 1px solid #a9efc5;
   background: #ecfdf3;
@@ -247,32 +217,22 @@
   background: #fef3f2;
 }
 
-.MANAGER_DECLINED {
-  color: #b54708;
-  border: 1px solid #fedf89;
-  background: #fffaeb;
+.SUBMITTED {
+  color: #344054;
+  border: 1px solid #EAECF0;
+  background: #F9FAFB;
 }
 
-.finished {
-  font-size: 12px;
-  padding: 2px 6px;
-  line-height: 18px;
-  font-weight: 500;
-  color: #6941c6;
-  border-radius: 16px;
-  border: 1px solid #e9d7fe;
-  background: #f9fafb;
+.FINISHED {
+  color: #29B27C;
+  border: 1px solid #BBFFE4;
+  background: #F4FFFB;
 }
 
-.assign {
-  font-size: 12px;
-  padding: 2px 6px;
-  line-height: 18px;
-  font-weight: 500;
-  color: var(--Error-700, #b42318);
-  border-radius: 16px;
-  border: 1px solid var(--Error-200, #fecdca);
-  background: var(--Error-50, #fef3f2);
+.IN_PROGRESS {
+  color: #3D5AFE;
+  border: 1px solid #C3CCFF;
+  background: #EEF1FF;
 }
 
 .type {
