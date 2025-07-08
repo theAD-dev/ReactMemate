@@ -6,12 +6,15 @@ import style from './job-scheduler-calendar.scss';
 import { getJobDashboardData } from '../../../../APIs/jobs-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import CreateJob from '../create-job/create-job';
+import ViewJob from '../view-job/view-job';
 
 const CALENDAR_ID = "job-scheduler";
 const JobSchedulerCalendarModule = () => {
     const { trialHeight } = useTrialHeight();
     const [visible, setVisible] = useState(false);
     const [workerId, setWorkerId] = useState("");
+    const [show, setShow] = useState({ visible: false, jobId: null });
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         const daypilotScript = document.createElement("script");
@@ -26,7 +29,7 @@ const JobSchedulerCalendarModule = () => {
         const handleLoad = async () => {
             try {
                 const data = await getJobDashboardData();
-                initJobScheduler(CALENDAR_ID, data);
+                initJobScheduler(CALENDAR_ID, data, setShow);
             } catch (error) {
                 console.error("Error initializing DayPilot:", error);
             }
@@ -63,6 +66,9 @@ const JobSchedulerCalendarModule = () => {
                     const workerId = e.target.getAttribute('workerId');
                     setVisible(true);
                     setWorkerId(workerId);
+                } else if (e.target.closest('.job-resource-child')) {
+                    const jobId = e.target.closest('.job-resource-child').getAttribute('job-id');
+                    setShow({ visible: true, jobId });
                 }
             }
         };
@@ -101,6 +107,7 @@ const JobSchedulerCalendarModule = () => {
             </div>
 
             <CreateJob visible={visible} setVisible={setVisible} setRefetch={refetchAndReInit} workerId={workerId} />
+            <ViewJob visible={show?.visible} jobId={show?.jobId} setVisible={(bool) => setShow((others) => ({ ...others, visible: bool }))} setRefetch={refetchAndReInit} editMode={editMode} setEditMode={setEditMode} />
         </React.Fragment>
     );
 };

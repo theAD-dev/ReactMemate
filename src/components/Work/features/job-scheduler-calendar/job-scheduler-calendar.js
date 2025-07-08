@@ -50,7 +50,7 @@ function loadData(data) {
   data?.forEach((worker, index) => {
     const childResource = worker?.jobs?.map((job) => ({
       id: job.id,
-      html: `<div class="job-resource-child d-flex">
+      html: `<div class="job-resource-child d-flex cursor-pointer" job-id="${job.id}">
          <div class="d-flex justify-content-center align-items-center icon-box">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path d="M7.14307 6.57171C6.82748 6.57171 6.57164 6.82754 6.57164 7.14314C6.57164 7.45873 6.82748 7.71457 7.14307 7.71457H12.8574C13.1729 7.71457 13.4288 7.45873 13.4288 7.14314C13.4288 6.82754 13.1729 6.57171 12.8574 6.57171H7.14307Z" fill="#475467"/>
@@ -116,6 +116,7 @@ function loadData(data) {
           end: job?.time_type === 'T' ? parseTimestamp(1000 * job.end_date).toISOString() : parseTimestamp(1000 * job.start_date).toISOString(),
           resource: job.id,
           text: job?.reference || 'No Reference',
+          tag: { jobId: job.id },
           cssClass: `childEvent jobEvent ${getStatusLabel(job?.status, job?.action_status, job?.published).className}`,
           backColor: `${getStatusLabel(job?.status, job?.action_status, job?.published).backColor}`,
         };
@@ -130,7 +131,7 @@ function loadData(data) {
   };
 }
 
-function initDayPilot(elementId, data) {
+function initDayPilot(elementId, data, setShow) {
   const isDayPilotLoaded = typeof window !== undefined && Boolean(window.DayPilot);
   if (!isDayPilotLoaded) return;
 
@@ -181,6 +182,7 @@ function initDayPilot(elementId, data) {
               end: job?.time_type === 'T' ? parseTimestamp(1000 * job.end_date).toISOString() : parseTimestamp(1000 * job.start_date).toISOString(),
               resource: job.id,
               text: job?.reference || 'No Reference',
+              tag: { jobId: job.id },
               cssClass: `childEvent jobEvent ${getStatusLabel(job?.status, job?.action_status, job?.published).className}`,
               backColor: `${getStatusLabel(job?.status, job?.action_status, job?.published).backColor}`,
             };
@@ -191,7 +193,6 @@ function initDayPilot(elementId, data) {
       });
 
       args.events = eventsArray;
-      console.log('eventsArray: ', eventsArray);
 
       args.loaded();
     },
@@ -210,12 +211,18 @@ function initDayPilot(elementId, data) {
     }
   };
 
+  dp.onEventClicked = function (args) {
+    const jobId = args.e.tag().jobId;
+    if (!jobId) return;
+    setShow({ visible: true, jobId: jobId });
+  };
+
   loadData(data);
 }
 
-export function initJobScheduler(elementId, data) {
+export function initJobScheduler(elementId, data, setShow) {
   try {
-    initDayPilot(elementId, data);
+    initDayPilot(elementId, data, setShow);
   } catch (error) {
     console.log(error);
   }
