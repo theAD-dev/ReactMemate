@@ -66,26 +66,27 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
     };
 
-    const calculateActualHours = () => {
-        if (job?.start && job?.finish) {
-            const start = parseInt(job.start) * 1000;
-            const finish = parseInt(job.finish) * 1000;
-            const diffMs = finish - start;
-            const hours = diffMs / (1000 * 60 * 60);
-            return formatHours(hours);
-        }
-        return "00:00:00";
+    const calculateHMSFromHours = (hrs) => {
+        if (!hrs) return "00:00:00";
+
+        const totalSeconds = Math.floor(hrs * 3600);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        const pad = (n) => n.toString().padStart(2, '0');
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
     };
 
-    const calculatePlannedHours = () => {
-        if (job?.start_date && job?.end_date) {
-            const start = parseInt(job.start_date) * 1000;
-            const finish = parseInt(job.end_date) * 1000;
-            const diffMs = finish - start;
-            const hours = diffMs / (1000 * 60 * 60);
-            return formatHours(hours);
-        }
-        return "00:00:00";
+    const calculateHMSFromSeconds = (totalSeconds) => {
+        if (!totalSeconds) return "00:00:00";
+
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        const pad = (n) => n.toString().padStart(2, '0');
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
     };
 
     const plannedRate = parseFloat(job?.worker?.hourly_rate || 0).toFixed(2);
@@ -285,10 +286,10 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                         <span className='font-16' style={{ color: '#344054' }}>Hours</span>
                                                     </td>
                                                     <td className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
-                                                        <span className='font-14'>{job?.type_display === "Fix" ? parseFloat(job?.cost / job?.worker.hourly_rate).toFixed(2) : job?.duration}</span>
+                                                        <span className='font-14'>{job?.type_display === "Fix" ? calculateHMSFromHours(parseFloat(job?.cost / job?.worker.hourly_rate).toFixed(2) || 0) : calculateHMSFromHours(job?.duration || 0)}</span>
                                                     </td>
                                                     <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
-                                                        <span className='font-14'>{calculateActualHours()}</span>
+                                                        <span className='font-14'>{calculateHMSFromSeconds(job?.spent_time || 0)}</span>
                                                     </td>
                                                 </tr>
                                                 <tr className={style.whiteTr}>
