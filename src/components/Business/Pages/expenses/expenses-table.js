@@ -64,7 +64,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
             window.history.replaceState({}, '', urlObj);
             urlObj.searchParams.delete('supplierName');
             window.history.replaceState({}, '', urlObj);
-        } else {
+        } else if (expenseId === 'undefined') {
             toast.error("Expense id not found");
             urlObj.searchParams.delete('expenseId');
             window.history.replaceState({}, '', urlObj);
