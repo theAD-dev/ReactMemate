@@ -482,7 +482,7 @@ const ViewSectionComponent = ({ calculator, index, refetch, tempCalculator, setT
                             </Col>
                             <Col>
                                 <label>Unit Price</label>
-                                <strong>${formatAUD(calculateUnitPrice(calculator))}</strong>
+                                <strong>${calculateUnitPrice(calculator)}</strong>
                             </Col>
                             <Col>
                                 <label>Quantity/Hours</label>
