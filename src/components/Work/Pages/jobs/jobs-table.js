@@ -48,9 +48,21 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   const [loading, setLoading] = useState(false);
   const limit = 25;
 
+  const url = React.useMemo(() => window.location.href, []);
+  const urlObj = React.useMemo(() => new URL(url), [url]);
+  const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
+
   useEffect(() => {
     setPage(1);  // Reset to page 1 whenever searchValue changes
   }, [searchValue, refetch]);
+
+  useEffect(() => {
+    if (params.get('jobId')) {
+      setShow({ visible: true, jobId: params.get('jobId') });
+      urlObj.searchParams.delete('jobId');
+      window.history.replaceState({}, '', urlObj);
+    }
+  }, [params]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -242,7 +254,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
   };
 
   const bonusBody = (rowData) => {
-    return <span style={{ color: '#667085' }}>{parseFloat(rowData.variations || 0 ) < 0 ? `-$${rowData.variations || 0}` : `$${rowData.variations}`}</span>;
+    return <span style={{ color: '#667085' }}>{parseFloat(rowData.variations || 0) < 0 ? `-$${rowData.variations || 0}` : `$${rowData.variations}`}</span>;
   };
 
   const totalBody = (rowData) => {

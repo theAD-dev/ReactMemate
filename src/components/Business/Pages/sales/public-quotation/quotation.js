@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { FilePdf } from 'react-bootstrap-icons';
+import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
@@ -367,6 +368,7 @@ const Quotation = () => {
                                 </button>
                             </div>
                             <div className={style.right}>
+                                <Link to={`${process.env.REACT_APP_URL}${quote?.quote_url}`} target='_blank'><button className='me-3'>Save PDF <FilePdf size={20} color='#344054' className='ms-1' /></button></Link>
                                 <button
                                     onClick={() => { setVisible(true); }}
                                 >

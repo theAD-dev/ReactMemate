@@ -938,7 +938,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 </Row>
             }
 
-            <div className="flex align-items-center">
+            {/* <div className="flex align-items-center">
                 <Controller
                     name="notification"
                     control={control}
@@ -954,7 +954,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     )}
                 />
                 <label className="ms-2" style={{ position: 'relative', top: '1px', color: '#344054', fontWeight: 500, fontSize: '14px' }}>Send Email Notification when paid</label>
-            </div>
+            </div> */}
         </form>
     );
 });

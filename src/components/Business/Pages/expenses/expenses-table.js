@@ -48,6 +48,30 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     const [editData, setEditData] = useState("");
     const [visible, setVisible] = useState(false);
     const [showDialog, setShowDialog] = useState({ data: null, show: false });
+    
+    const url = React.useMemo(() => window.location.href, []);
+    const urlObj = React.useMemo(() => new URL(url), [url]);
+    const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
+
+    useEffect(() => {
+        const expenseId = params.get('expenseId');
+        console.log('expenseId: ', expenseId);
+        if (expenseId && expenseId !== 'undefined') {
+            const supplierName = params.get('supplierName');
+            setEditData({ id: expenseId, name: supplierName });
+            setVisible(true);
+            urlObj.searchParams.delete('expenseId');
+            window.history.replaceState({}, '', urlObj);
+            urlObj.searchParams.delete('supplierName');
+            window.history.replaceState({}, '', urlObj);
+        } else {
+            toast.error("Expense id not found");
+            urlObj.searchParams.delete('expenseId');
+            window.history.replaceState({}, '', urlObj);
+            urlObj.searchParams.delete('supplierName');
+            window.history.replaceState({}, '', urlObj);
+        }
+    }, [params]);
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes

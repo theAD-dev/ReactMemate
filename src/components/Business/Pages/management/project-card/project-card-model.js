@@ -29,6 +29,7 @@ import SelectStatus from './select-status';
 import SendSMS from './send-sms/send-sms';
 import SendToCalendar from './send-to-calendar';
 import CurrentJobAndExpenseLoading from './ui/current-job-and-expense-loading';
+import JobStatus from './ui/job-status/job-status';
 import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
@@ -461,11 +462,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                               <td className='border-right'>
                                 {
                                   data?.type === 'job' ? (
-                                    <Link to={`/work/jobs?projectId=${project?.value}&reference=${data?.reference}`} className='linkText' target='_blank'>
+                                    <Link to={`/work/jobs?jobId=${data?.id}`} className='linkText' target='_blank'>
                                       {data?.number}
                                     </Link>
                                   ) : (
-                                    <Link to={`/expenses?projectId=${project?.value}&reference=${data?.invoice_reference}`} className='linkText' target='_blank'>
+                                    <Link to={`/expenses?expenseId=${data?.id}&supplierName=${data?.supplier?.name}`} className='linkText' target='_blank'>
                                       {data?.number}
                                     </Link>
                                   )
@@ -504,7 +505,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                               <td>${formatAUD(data?.total) || "-"}</td>
                               <td className='status'>
                                 {data?.type === 'job'
-                                  ? <span>{data?.status || "-"}</span>
+                                  ? <JobStatus status={data?.status} actionStatus={data?.action_status} published={data?.published} />
                                   : <span className={data?.paid ? 'paid' : 'unpaid'}>
                                     {data?.paid ? 'Paid' : 'Not Paid'}
                                   </span>}
@@ -513,7 +514,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                           ))
                         ) : (
                           <tr>
-                            <td colSpan={5} className='noDataAvilable text-center'> No history available</td>
+                            <td colSpan={5} className='noDataAvilable text-center'> No data available</td>
                           </tr>
                         )}
                     </tbody>
