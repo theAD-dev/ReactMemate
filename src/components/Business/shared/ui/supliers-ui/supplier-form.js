@@ -24,8 +24,8 @@ const schema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
   // abn: yup.string().required('ABN is required'),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-  industry: yup.number().required('Industry is required'),
-  service: yup.string().required('Service is required'),
+  // industry: yup.number().required('Industry is required'),
+  // service: yup.string().required('Service is required'),
   // note: yup.string().required('Note is required'),
   contact_persons: yup.array().of(
     yup.object({
@@ -206,7 +206,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
       <Row className={clsx(styles.bgGreay, '')}>
         <Col sm={6}>
           <div className="d-flex flex-column gap-1">
-            <label className={clsx(styles.label)}>Industry<span className='required'>*</span></label>
+            <label className={clsx(styles.label)}>Industry</label>
             <Controller
               name="industry"
               control={control}
@@ -236,7 +236,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
         </Col>
         <Col sm={6}>
           <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.label)}>Service<span className='required'>*</span></label>
+            <label className={clsx(styles.label)}>Service</label>
             <Controller
               name="service"
               control={control}

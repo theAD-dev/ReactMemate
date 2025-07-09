@@ -13,7 +13,7 @@ export const getListOfJobs = async (page, limit, name = "", order = "", isShowDe
     if (name) url.searchParams.append("name", name);
     if (order) url.searchParams.append("ordering", order);
     if (isShowDeleted) url.searchParams.append('deleted', 1);
-    url.searchParams.append('status', '3,2,1,6');
+    url.searchParams.append('status', '3,2,1,6,4,a');
 
     return fetchAPI(url.toString(), options);
 };
