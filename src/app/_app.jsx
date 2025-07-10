@@ -8,6 +8,7 @@ import { ReactQueryProvider } from "./providers/query-client-provider";
 import { TrialHeightProvider } from "./providers/trial-height-provider";
 import routes from "./router";
 import UnknownError from "../pages/error/unknown/unknown";
+import '../shared/lib/pdf-worker';
 
 const App = () => {
   const content = createBrowserRouter(routes);

@@ -11817,3 +11817,7 @@ tr:hover .linkText,
   color: #158ecc !important;
   text-decoration: underline;
 }
+
+.p-sidebar-mask-document {
+  z-index: 1000 !important;
+}
