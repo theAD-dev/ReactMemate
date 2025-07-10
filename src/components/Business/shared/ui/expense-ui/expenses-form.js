@@ -1,8 +1,9 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, Upload, PlusCircle, CheckCircleFill, Trash } from 'react-bootstrap-icons';
+import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, Upload, PlusCircle, CheckCircleFill, Trash, InfoCircle } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
 import { useForm, Controller } from 'react-hook-form';
+import { Document, Page } from 'react-pdf';
 import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
@@ -10,7 +11,6 @@ import axios from 'axios';
 import clsx from 'clsx';
 import { AutoComplete } from 'primereact/autocomplete';
 import { Calendar } from 'primereact/calendar';
-import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -18,6 +18,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from 'primereact/inputtextarea';
 import { SelectButton } from 'primereact/selectbutton';
+import { Sidebar } from 'primereact/sidebar';
 import { Tooltip } from 'primereact/tooltip';
 import { toast } from 'sonner';
 import * as yup from 'yup';
@@ -32,7 +33,7 @@ import { formatAUD } from '../../../../../shared/lib/format-aud';
 import { CircularProgressBar } from '../../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 import { getFileIcon } from '../../../../Work/features/create-job/create-job';
-
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 function debounce(fn, delay) {
     let timeoutId;
@@ -85,6 +86,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState(defaultSupplier?.name || "");
     const [hasMoreData, setHasMoreData] = useState(true);
+    const [showDocumentSideBar, setShowDocumentSidebar] = useState(true);
+    const [links, setLinks] = useState([]);
     const limit = 25;
 
     const { control, reset, register, handleSubmit, setValue, getValues, watch, setError, trigger, formState: { errors } } = useForm({
@@ -463,482 +466,506 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         }
     }, [supplierValue, xeroCodesList?.data, setValue, trigger, defaultValues.account_code]);
 
+    const documentSidebarHeader = (
+        <div className="d-flex align-items-center justify-content-between flex-shrink-0 w-100" style={{ borderBottom: '1px solid #EAECF0', padding: '4px 10px 24px 0px' }}>
+            <div className="d-flex align-items-center gap-2">
+                <div className={styles.circledesignstyle}>
+                    <div className={styles.out}>
+                        <InfoCircle size={24} color="#17B26A" />
+                    </div>
+                </div>
+                <span style={{ color: '344054', fontSize: '20px', fontWeight: 600 }}>Document Preview</span>
+            </div>
+        </div>
+    );
+
+    useEffect(() => {
+      if (defaultValues?.file) {
+        setLinks([defaultValues?.file]);
+      }
+
+      if (watch('file')) {
+        setLinks([watch('file')]);
+      }
+    }, [defaultValues?.file, watch('file')]);
+
     return (
-        <form ref={ref} onSubmit={handleSubmit(handleFormSubmit)} >
-            <Row className={clsx(styles.bgGreay, 'pt-3')}>
-                <Col sm={8}>
-                    <div className="d-flex flex-column gap-1 mb-3">
-                        <label className={clsx(styles.lable)}>Supplier<span className='required'>*</span></label>
-                        <input type="hidden" {...register("supplier")} />
-                        <AutoComplete
-                            ref={autoCompleteRef}
-                            value={supplierValue || ""}
-                            completeMethod={search}
-                            onChange={(e) => {
-                                if (!e.value) setSearchValue("");
-                                setSupplierValue(e.value);
-                            }}
-                            dropdownAutoFocus={true}
-                            field="name"
-                            suggestions={suppliers}
-                            itemTemplate={(option) => {
-                                return (
-                                    <div className='d-flex gap-2 align-items-center w-100'>
-                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
-                                            <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
+        <div>
+            <form ref={ref} onSubmit={handleSubmit(handleFormSubmit)} >
+                <Row className={clsx(styles.bgGreay, 'pt-3')}>
+                    <Col sm={8}>
+                        <div className="d-flex flex-column gap-1 mb-3">
+                            <label className={clsx(styles.lable)}>Supplier<span className='required'>*</span></label>
+                            <input type="hidden" {...register("supplier")} />
+                            <AutoComplete
+                                ref={autoCompleteRef}
+                                value={supplierValue || ""}
+                                completeMethod={search}
+                                onChange={(e) => {
+                                    if (!e.value) setSearchValue("");
+                                    setSupplierValue(e.value);
+                                }}
+                                dropdownAutoFocus={true}
+                                field="name"
+                                suggestions={suppliers}
+                                itemTemplate={(option) => {
+                                    return (
+                                        <div className='d-flex gap-2 align-items-center w-100'>
+                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
+                                            </div>
+                                            <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
                                         </div>
-                                        <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
-                                    </div>
-                                );
-                            }}
-                            onClick={onFocus}
-                            onFocus={onFocus}
-                            onBlur={() => {
-                                console.log('blur');
-                                setPage(1);
-                                setSearchValue("");
-                                setHasMoreData(true);
-                            }}
-                            style={{ minHeight: '46px' }}
-                            scrollHeight='450px'
-                            className={clsx(styles.autoComplete, "w-100", { [styles.error]: errors.supplier })}
-                            placeholder="Search for supplier"
-                        />
-                        {errors.supplier && <p className="error-message">{errors.supplier.message}</p>}
-                    </div>
-                </Col>
+                                    );
+                                }}
+                                onClick={onFocus}
+                                onFocus={onFocus}
+                                onBlur={() => {
+                                    console.log('blur');
+                                    setPage(1);
+                                    setSearchValue("");
+                                    setHasMoreData(true);
+                                }}
+                                style={{ minHeight: '46px' }}
+                                scrollHeight='450px'
+                                className={clsx(styles.autoComplete, "w-100", { [styles.error]: errors.supplier })}
+                                placeholder="Search for supplier"
+                            />
+                            {errors.supplier && <p className="error-message">{errors.supplier.message}</p>}
+                        </div>
+                    </Col>
 
-                <Col sm={4}>
-                    <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-3">
-                        <Link to={"/suppliers?addNewSupplier=true"} target='_blank'>
-                            <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
-                        </Link>
-                    </div>
-                </Col>
+                    <Col sm={4}>
+                        <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-3">
+                            <Link to={"/suppliers?addNewSupplier=true"} target='_blank'>
+                                <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
+                            </Link>
+                        </div>
+                    </Col>
 
-                <Col sm={12} className='mb-4'>
-                    <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Invoice/#Ref<span className='required'>*</span></label>
-                        <IconField>
-                            <InputIcon>{errors?.invoice_reference && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                            <InputText {...register("invoice_reference")} className={clsx(styles.inputText, { [styles.error]: errors.invoice_reference })} placeholder='Enter invoice reference' />
-                        </IconField>
-                        {errors?.invoice_reference && <p className="error-message">{errors.invoice_reference?.message}</p>}
-                    </div>
-                </Col>
+                    <Col sm={12} className='mb-4'>
+                        <div className="d-flex flex-column gap-1">
+                            <label className={clsx(styles.lable)}>Invoice/#Ref<span className='required'>*</span></label>
+                            <IconField>
+                                <InputIcon>{errors?.invoice_reference && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                                <InputText {...register("invoice_reference")} className={clsx(styles.inputText, { [styles.error]: errors.invoice_reference })} placeholder='Enter invoice reference' />
+                            </IconField>
+                            {errors?.invoice_reference && <p className="error-message">{errors.invoice_reference?.message}</p>}
+                        </div>
+                    </Col>
 
-                <Col sm={12}>
-                    <Row>
-                        <Col sm={6}>
-                            <label className={clsx(styles.lable)}>Upload Only</label>
-                            <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
-                                <input {...getInputProps()} />
-                                <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
-                                    <Upload size={20} color='#475467' />
-                                </button>
-                                <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-                                <span style={{ color: '#475467', fontSize: '12px' }}>PDF, SVG, PNG, JPG files • Max size: 5MB</span>
-                            </div>
-                        </Col>
-                        <Col sm={6}>
-                            <label className={clsx(styles.lable)}>Upload & Read With AI</label>
-                            <div {...getAIRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
-                                <input {...getAIInputProps()} />
-                                <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #FFF', background: '#f2f2f2', borderRadius: '8px', marginBottom: '16px' }}>
-                                    <img src={aiScanImg} className='w-100' />
-                                </button>
-                                <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-                                <span style={{ color: '#475467', fontSize: '12px' }}>PDF, PNG, JPG, JPEG files • Max size: 5MB</span>
-                            </div>
-                        </Col>
-                    </Row>
-
-
-                    <div className='d-flex flex-column'>
-                        {files?.length > 0 && <label className={clsx(styles.lable, 'mt-4 mb-1')}>Photo/Document Of The Expense</label>}
-                        {
-                            files?.map((file, index) => (
-                                <div key={index} className={styles.fileBox}>
-                                    {getFileIcon(file.type)}
-                                    <div className={styles.fileNameBox}>
-                                        <p className='mb-0'>{file?.name || ""}</p>
-                                        <p className='mb-0'>{parseFloat(file?.size / 1024).toFixed(2)} KB - {parseInt(file?.progress) || 0}% uploaded</p>
-                                    </div>
-                                    <div className='ms-auto'>
-                                        {
-                                            file.error ? (
-                                                <div className={styles.deleteBox}>
-                                                    <ExclamationCircleFill color='#F04438' size={16} />
-                                                </div>
-                                            ) : file.aiProcessing ? (
-                                                <div className={styles.aiProcessingBox}>
-                                                    <div className={styles.aiProcessingSpinner}></div>
-                                                    <span className={styles.aiProcessingText}>AI analyzing...</span>
-                                                </div>
-                                            ) : file.aiSuccess ? (
-                                                <div className={styles.aiSuccessBox}>
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM7 11.4L3.6 8L5 6.6L7 8.6L11 4.6L12.4 6L7 11.4Z" fill="#12B76A" />
-                                                    </svg>
-                                                    <span className={styles.aiSuccessText}>Data extracted</span>
-                                                </div>
-                                            ) : file.aiNoData ? (
-                                                <div className={styles.aiNoDataBox}>
-                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM8 12C7.4 12 7 11.6 7 11C7 10.4 7.4 10 8 10C8.6 10 9 10.4 9 11C9 11.6 8.6 12 8 12ZM9 9H7V4H9V9Z" fill="#F79009" />
-                                                    </svg>
-                                                    <span className={styles.aiNoDataText}>No data found</span>
-                                                </div>
-                                            ) : file.aiError ? (
-                                                <div className={styles.aiErrorBox}>
-                                                    <ExclamationCircleFill color='#F04438' size={16} />
-                                                    <span className={styles.aiErrorText}>AI error</span>
-                                                </div>
-                                            ) : file.progress == 100 ? (
-                                                <CheckCircleFill color='#12B76A' size={20} />
-                                            ) : (
-                                                <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
-                                            )
-                                        }
-
-                                    </div>
+                    <Col sm={12}>
+                        <Row>
+                            <Col sm={6}>
+                                <label className={clsx(styles.lable)}>Upload Only</label>
+                                <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
+                                    <input {...getInputProps()} />
+                                    <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
+                                        <Upload size={20} color='#475467' />
+                                    </button>
+                                    <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
+                                    <span style={{ color: '#475467', fontSize: '12px' }}>PDF, SVG, PNG, JPG files • Max size: 5MB</span>
                                 </div>
-                            ))
-                        }
-                    </div>
-                </Col>
+                            </Col>
+                            <Col sm={6}>
+                                <label className={clsx(styles.lable)}>Upload & Read With AI</label>
+                                <div {...getAIRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '5px' }}>
+                                    <input {...getAIInputProps()} />
+                                    <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #FFF', background: '#f2f2f2', borderRadius: '8px', marginBottom: '16px' }}>
+                                        <img src={aiScanImg} className='w-100' />
+                                    </button>
+                                    <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
+                                    <span style={{ color: '#475467', fontSize: '12px' }}>PDF, PNG, JPG, JPEG files • Max size: 5MB</span>
+                                </div>
+                            </Col>
+                        </Row>
 
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>Date<span className='required'>*</span></label>
-                        <Controller
-                            name="date"
-                            control={control}
-                            render={({ field }) => (
-                                <Calendar {...field}
-                                    onChange={(e) => {
-                                        field.onChange(e.value);
-                                        // Trigger validation for due_date when invoice date changes
-                                        setTimeout(() => trigger('due_date'), 0);
-                                    }}
-                                    showButtonBar
-                                    placeholder='DD/MM/YY'
-                                    dateFormat="dd/mm/yy"
-                                    showIcon
-                                    style={{ height: '46px' }}
-                                    icon={<Calendar3 color='#667085' size={20} />}
-                                    className={clsx(styles.inputText, { [styles.error]: errors.date }, 'p-0 outline-none')}
-                                />
-                            )}
-                        />
-                        {errors?.date && <p className="error-message">{errors.date?.message}</p>}
-                    </div>
-                </Col>
 
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>Due Date<span className='required'>*</span></label>
-                        <Controller
-                            name="due_date"
-                            control={control}
-                            render={({ field }) => {
-                                // Get the current invoice date value to set as minimum date
-                                const invoiceDate = watch('date');
-                                const minDate = invoiceDate ? new Date(invoiceDate) : null;
+                        <div className='d-flex flex-column'>
+                            {files?.length > 0 && <label className={clsx(styles.lable, 'mt-4 mb-1')}>Photo/Document Of The Expense</label>}
+                            {
+                                files?.map((file, index) => (
+                                    <div key={index} className={styles.fileBox}>
+                                        {getFileIcon(file.type)}
+                                        <div className={styles.fileNameBox}>
+                                            <p className='mb-0'>{file?.name || ""}</p>
+                                            <p className='mb-0'>{parseFloat(file?.size / 1024).toFixed(2)} KB - {parseInt(file?.progress) || 0}% uploaded</p>
+                                        </div>
+                                        <div className='ms-auto'>
+                                            {
+                                                file.error ? (
+                                                    <div className={styles.deleteBox}>
+                                                        <ExclamationCircleFill color='#F04438' size={16} />
+                                                    </div>
+                                                ) : file.aiProcessing ? (
+                                                    <div className={styles.aiProcessingBox}>
+                                                        <div className={styles.aiProcessingSpinner}></div>
+                                                        <span className={styles.aiProcessingText}>AI analyzing...</span>
+                                                    </div>
+                                                ) : file.aiSuccess ? (
+                                                    <div className={styles.aiSuccessBox}>
+                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM7 11.4L3.6 8L5 6.6L7 8.6L11 4.6L12.4 6L7 11.4Z" fill="#12B76A" />
+                                                        </svg>
+                                                        <span className={styles.aiSuccessText}>Data extracted</span>
+                                                    </div>
+                                                ) : file.aiNoData ? (
+                                                    <div className={styles.aiNoDataBox}>
+                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM8 12C7.4 12 7 11.6 7 11C7 10.4 7.4 10 8 10C8.6 10 9 10.4 9 11C9 11.6 8.6 12 8 12ZM9 9H7V4H9V9Z" fill="#F79009" />
+                                                        </svg>
+                                                        <span className={styles.aiNoDataText}>No data found</span>
+                                                    </div>
+                                                ) : file.aiError ? (
+                                                    <div className={styles.aiErrorBox}>
+                                                        <ExclamationCircleFill color='#F04438' size={16} />
+                                                        <span className={styles.aiErrorText}>AI error</span>
+                                                    </div>
+                                                ) : file.progress == 100 ? (
+                                                    <CheckCircleFill color='#12B76A' size={20} />
+                                                ) : (
+                                                    <CircularProgressBar percentage={parseInt(file?.progress) || 0} size={30} color="#158ECC" />
+                                                )
+                                            }
 
-                                return (
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                            <label className={clsx(styles.lable)}>Date<span className='required'>*</span></label>
+                            <Controller
+                                name="date"
+                                control={control}
+                                render={({ field }) => (
                                     <Calendar {...field}
                                         onChange={(e) => {
                                             field.onChange(e.value);
-                                            // Trigger validation after date change
-                                            trigger('due_date');
+                                            // Trigger validation for due_date when invoice date changes
+                                            setTimeout(() => trigger('due_date'), 0);
                                         }}
                                         showButtonBar
                                         placeholder='DD/MM/YY'
                                         dateFormat="dd/mm/yy"
-                                        locale="en"
                                         showIcon
-                                        minDate={minDate}
                                         style={{ height: '46px' }}
                                         icon={<Calendar3 color='#667085' size={20} />}
-                                        className={clsx(styles.inputText, { [styles.error]: errors.due_date }, 'p-0 outline-none')}
+                                        className={clsx(styles.inputText, { [styles.error]: errors.date }, 'p-0 outline-none')}
                                     />
-                                );
-                            }}
-                        />
-                        {errors?.due_date && <p className="error-message">{errors.due_date?.message}</p>}
-                    </div>
-                </Col>
-
-
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Total Amount<span className='required'>*</span></label>
-                        <IconField>
-                            <InputNumber
-                                prefix="$"
-                                value={watch('amount')}
-                                onValueChange={(e) => {
-                                    setValue('amount', e.value);
-                                    handleGstChange(getValues('gst-calculation'));
-                                }}
-                                onBlur={() => handleGstChange(getValues('gst-calculation'))}
-                                style={{ height: '46px', padding: '0px' }}
-                                className={clsx(styles.inputText, { [styles.error]: errors.amount })}
-                                placeholder='$ Enter total amount'
-                                maxFractionDigits={2}
-                                minFractionDigits={2}
-                                inputId="minmaxfraction"
+                                )}
                             />
-                            <InputIcon>{errors.amount && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
-                        </IconField>
-                        {errors?.amount && <p className="error-message">{errors.amount?.message}</p>}
-                    </div>
-                </Col>
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mb-2">
-                        <label className={clsx(styles.lable)}>GST<span className='required'>*</span></label>
-                        <input type="hidden" {...register("nogst")} />
-                        <Controller
-                            name="gst-calculation"
-                            control={control}
-                            render={({ field }) => (
-                                <Dropdown
-                                    {...field}
-                                    options={[
-                                        { value: 'ex', label: "GST Exclusive" },
-                                        { value: 'in', label: "GST Inclusive" },
-                                        { value: 'no', label: "No GST" },
-                                    ] || []}
-                                    onChange={(e) => {
-                                        field.onChange(e.value);
-                                        handleGstChange(e.value);
-                                    }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.gst })}
-                                    style={{ height: '46px' }}
-                                    value={field.value}
-                                    placeholder="Select GST"
-                                    filterInputAutoFocus={true}
-                                />
-                            )}
-                        />
-                        {errors?.gst && <p className="error-message">{errors.gst?.message}</p>}
-                    </div>
-                </Col>
-            </Row>
-
-            <Row className={`${styles.expTotalRow}`}>
-                <Col className='d-flex align-items-center justify-content-end' style={{ position: 'relative' }}>
-                    <div className={styles.CalItem}>
-                        <div>
-                            <span>Subtotal</span>
-                            <strong>${formatAUD(watch('subtotal') || "0.00")}</strong>
+                            {errors?.date && <p className="error-message">{errors.date?.message}</p>}
                         </div>
-                    </div>
-                    <div className={styles.dividerIcon}>
-                        <PlusCircle color='#667085' size={20} />
-                    </div>
-                </Col>
-                <Col className='d-flex align-items-center justify-content-end' style={{ position: 'relative' }}>
-                    <div className={styles.CalItem}>
-                        <div>
-                            <span>Tax</span>
-                            <strong>${formatAUD(watch('tax') || "0.00")}</strong>
+                    </Col>
+
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                            <label className={clsx(styles.lable)}>Due Date<span className='required'>*</span></label>
+                            <Controller
+                                name="due_date"
+                                control={control}
+                                render={({ field }) => {
+                                    // Get the current invoice date value to set as minimum date
+                                    const invoiceDate = watch('date');
+                                    const minDate = invoiceDate ? new Date(invoiceDate) : null;
+
+                                    return (
+                                        <Calendar {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e.value);
+                                                // Trigger validation after date change
+                                                trigger('due_date');
+                                            }}
+                                            showButtonBar
+                                            placeholder='DD/MM/YY'
+                                            dateFormat="dd/mm/yy"
+                                            locale="en"
+                                            showIcon
+                                            minDate={minDate}
+                                            style={{ height: '46px' }}
+                                            icon={<Calendar3 color='#667085' size={20} />}
+                                            className={clsx(styles.inputText, { [styles.error]: errors.due_date }, 'p-0 outline-none')}
+                                        />
+                                    );
+                                }}
+                            />
+                            {errors?.due_date && <p className="error-message">{errors.due_date?.message}</p>}
                         </div>
-                    </div>
-                    <div className={styles.dividerIcon}>
-                        <span style={{ color: '#1D2939', fontSize: '14px', fontWeight: 600 }}>=</span>
-                    </div>
-                </Col>
-                <Col style={{ position: 'relative' }}>
-                    <div className={`${styles.CalItemActive} ${styles.CalItem}`}>
-                        <div>
-                            <span>Total</span>
-                            <strong className='text-nowrap'>${formatAUD(watch('totalAmount') || "0.00")}</strong>
-                        </div>
-                    </div>
-                </Col>
-            </Row>
+                    </Col>
 
-            <Row className={clsx(styles.bgGreay, 'customSelectButton')}>
-                <SelectButton value={option} onChange={(e) => setOptionValue(e.value)} options={options} />
-                {
-                    option === 'Assign to project'
-                        ? (
-                            <Col sm={12}>
-                                <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                                    <Tooltip position='top' target={`.info-timeinterval`} />
-                                    <label className={clsx(styles.lable)}>Link to Project<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Select an existing project to assign expenses and display the exact cost of using this asset." /></label>
-                                    <Controller
-                                        name="order"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Dropdown
-                                                {...field}
-                                                options={projectsList?.data?.map((project) => ({
-                                                    value: project.id,
-                                                    label: `${project.number}: ${project.reference}`
-                                                })) || []}
-                                                onChange={(e) => {
-                                                    field.onChange(e.value);
-                                                }}
-                                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.order })}
-                                                style={{ height: '46px' }}
-                                                value={field.value}
-                                                loading={projectsList?.isFetching}
-                                                placeholder="Select project"
-                                                filter
-                                                filterInputAutoFocus={true}
-                                                scrollHeight="400px"
-                                            />
-                                        )}
-                                    />
-                                    {errors?.order && <p className="error-message">{errors.order?.message}</p>}
-                                </div>
-                            </Col>
-                        )
-                        : (
-                            <Col sm={12}>
-                                <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                                    <Tooltip position='top' target={`.info-timeinterval`} />
-                                    <label className={clsx(styles.lable)}>Expense time interval<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
-                                    <Controller
-                                        name="type"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Dropdown
-                                                {...field}
-                                                options={[
-                                                    { value: 1, label: 'Monthly' },
-                                                    { value: 2, label: 'Yearly' }
-                                                ]}
-                                                onChange={(e) => {
-                                                    field.onChange(e.value);
-                                                }}
-                                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.type })}
-                                                style={{ height: '46px' }}
-                                                value={field.value}
-                                                placeholder="Select expense time interval"
-                                                filterInputAutoFocus={true}
-                                            />
-                                        )}
-                                    />
-                                    {errors?.type && <p className="error-message">{errors.type?.message}</p>}
-                                </div>
-                            </Col>
-                        )
-                }
-            </Row>
 
-            <Row className={clsx(styles.bgGreay)}>
-                <Col sm={12}>
-                    <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Notes</label>
-                        <IconField>
-                            <InputIcon style={{ top: '75%' }}>{errors.note && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
-                            <InputTextarea {...register("note")} rows={3} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.note })} style={{ resize: 'none' }} placeholder='Enter a note...' />
-                        </IconField>
-                        {errors.note && <p className="error-message">{errors.note.message}</p>}
-                    </div>
-                </Col>
-            </Row>
-
-            <Row className={clsx(styles.bgGreay)}>
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>Account Code</label>
-                        <Controller
-                            name="account_code"
-                            control={control}
-                            render={({ field }) => (
-                                <Dropdown
-                                    {...field}
-                                    options={[
-                                        ...(xeroCodesList && xeroCodesList?.data?.map((code) => ({
-                                            value: code.id,
-                                            label: `${code.code}: ${code.name}`
-                                        }))) || []
-                                    ] || []}
-                                    onChange={(e) => {
-                                        field.onChange(e.value);
-                                    }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.account_code })}
-                                    style={{ height: '46px' }}
-                                    scrollHeight="400px"
-                                    value={field.value}
-                                    loading={xeroCodesList?.isFetching}
-                                    placeholder="Select account code"
-                                    filter
-                                    filterInputAutoFocus={true}
-                                />
-                            )}
-                        />
-                        {errors?.account_code && <p className="error-message">{errors.account_code?.message}</p>}
-                    </div>
-                </Col>
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
-                        <label className={clsx(styles.lable)}>Department</label>
-                        <Controller
-                            name="department"
-                            control={control}
-                            render={({ field }) => (
-                                <Dropdown
-                                    {...field}
-                                    options={[
-                                        ...(departmentsList && departmentsList?.data?.map((department) => ({
-                                            value: department.id,
-                                            label: `${department.name}`
-                                        }))) || []
-                                    ] || []}
-                                    onChange={(e) => {
-                                        field.onChange(e.value);
-                                    }}
-                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.department })}
-                                    style={{ height: '46px' }}
-                                    scrollHeight="400px"
-                                    value={field.value}
-                                    loading={departmentsList?.isFetching}
-                                    placeholder="Select department"
-                                    filter
-                                    filterInputAutoFocus={true}
-                                />
-                            )}
-                        />
-                        {errors?.department && <p className="error-message">{errors.department?.message}</p>}
-                    </div>
-                </Col>
-            </Row>
-
-            {defaultValues?.file &&
-                <Row className={clsx(styles.bgGreay)}>
-                    <Col sm={12}>
+                    <Col sm={6}>
                         <div className="d-flex flex-column gap-1">
-                            <div className='d-flex flex-column'>
-                                <label className={clsx(styles.lable, 'mb-2')}>Photo/Document Of The Expense</label>
-                                {
-                                    defaultValues?.file && (
-                                        <div className={styles.fileBox}>
-                                            {getFileIcon(defaultValues?.file?.split(".")?.[defaultValues?.file?.split(".").length - 1] || "")}
-                                            <div className={styles.fileNameBox}>
-                                                <Link className='linkText' to={defaultValues?.file} target='_blank'><p className='mb-0'>{defaultValues?.file?.split("/")?.[defaultValues?.file?.split("/").length - 1] || ""}</p></Link>
-                                                <p className='mb-0'></p>
-                                            </div>
-                                            <div className='ms-auto'>
-                                                <div className='d-flex align-items-center justify-content-center' style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
-                                                    <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} onClick={() => { }} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                }
+                            <label className={clsx(styles.lable)}>Total Amount<span className='required'>*</span></label>
+                            <IconField>
+                                <InputNumber
+                                    prefix="$"
+                                    value={watch('amount')}
+                                    onValueChange={(e) => {
+                                        setValue('amount', e.value);
+                                        handleGstChange(getValues('gst-calculation'));
+                                    }}
+                                    onBlur={() => handleGstChange(getValues('gst-calculation'))}
+                                    style={{ height: '46px', padding: '0px' }}
+                                    className={clsx(styles.inputText, { [styles.error]: errors.amount })}
+                                    placeholder='$ Enter total amount'
+                                    maxFractionDigits={2}
+                                    minFractionDigits={2}
+                                    inputId="minmaxfraction"
+                                />
+                                <InputIcon>{errors.amount && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
+                            </IconField>
+                            {errors?.amount && <p className="error-message">{errors.amount?.message}</p>}
+                        </div>
+                    </Col>
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mb-2">
+                            <label className={clsx(styles.lable)}>GST<span className='required'>*</span></label>
+                            <input type="hidden" {...register("nogst")} />
+                            <Controller
+                                name="gst-calculation"
+                                control={control}
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={[
+                                            { value: 'ex', label: "GST Exclusive" },
+                                            { value: 'in', label: "GST Inclusive" },
+                                            { value: 'no', label: "No GST" },
+                                        ] || []}
+                                        onChange={(e) => {
+                                            field.onChange(e.value);
+                                            handleGstChange(e.value);
+                                        }}
+                                        className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.gst })}
+                                        style={{ height: '46px' }}
+                                        value={field.value}
+                                        placeholder="Select GST"
+                                        filterInputAutoFocus={true}
+                                    />
+                                )}
+                            />
+                            {errors?.gst && <p className="error-message">{errors.gst?.message}</p>}
+                        </div>
+                    </Col>
+                </Row>
+
+                <Row className={`${styles.expTotalRow}`}>
+                    <Col className='d-flex align-items-center justify-content-end' style={{ position: 'relative' }}>
+                        <div className={styles.CalItem}>
+                            <div>
+                                <span>Subtotal</span>
+                                <strong>${formatAUD(watch('subtotal') || "0.00")}</strong>
+                            </div>
+                        </div>
+                        <div className={styles.dividerIcon}>
+                            <PlusCircle color='#667085' size={20} />
+                        </div>
+                    </Col>
+                    <Col className='d-flex align-items-center justify-content-end' style={{ position: 'relative' }}>
+                        <div className={styles.CalItem}>
+                            <div>
+                                <span>Tax</span>
+                                <strong>${formatAUD(watch('tax') || "0.00")}</strong>
+                            </div>
+                        </div>
+                        <div className={styles.dividerIcon}>
+                            <span style={{ color: '#1D2939', fontSize: '14px', fontWeight: 600 }}>=</span>
+                        </div>
+                    </Col>
+                    <Col style={{ position: 'relative' }}>
+                        <div className={`${styles.CalItemActive} ${styles.CalItem}`}>
+                            <div>
+                                <span>Total</span>
+                                <strong className='text-nowrap'>${formatAUD(watch('totalAmount') || "0.00")}</strong>
                             </div>
                         </div>
                     </Col>
                 </Row>
-            }
 
-            {/* <div className="flex align-items-center">
+                <Row className={clsx(styles.bgGreay, 'customSelectButton')}>
+                    <SelectButton value={option} onChange={(e) => setOptionValue(e.value)} options={options} />
+                    {
+                        option === 'Assign to project'
+                            ? (
+                                <Col sm={12}>
+                                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                                        <Tooltip position='top' target={`.info-timeinterval`} />
+                                        <label className={clsx(styles.lable)}>Link to Project<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Select an existing project to assign expenses and display the exact cost of using this asset." /></label>
+                                        <Controller
+                                            name="order"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Dropdown
+                                                    {...field}
+                                                    options={projectsList?.data?.map((project) => ({
+                                                        value: project.id,
+                                                        label: `${project.number}: ${project.reference}`
+                                                    })) || []}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.value);
+                                                    }}
+                                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.order })}
+                                                    style={{ height: '46px' }}
+                                                    value={field.value}
+                                                    loading={projectsList?.isFetching}
+                                                    placeholder="Select project"
+                                                    filter
+                                                    filterInputAutoFocus={true}
+                                                    scrollHeight="400px"
+                                                />
+                                            )}
+                                        />
+                                        {errors?.order && <p className="error-message">{errors.order?.message}</p>}
+                                    </div>
+                                </Col>
+                            )
+                            : (
+                                <Col sm={12}>
+                                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                                        <Tooltip position='top' target={`.info-timeinterval`} />
+                                        <label className={clsx(styles.lable)}>Expense time interval<span className='required'>*</span> <QuestionCircle color='#667085' style={{ position: 'relative', top: '-1px' }} className={`ms-1 info-timeinterval`} data-pr-tooltip="Selecting this option will categorize the expense under 'Operational Expense' and distribute it evenly over the chosen timeframe." /></label>
+                                        <Controller
+                                            name="type"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Dropdown
+                                                    {...field}
+                                                    options={[
+                                                        { value: 1, label: 'Monthly' },
+                                                        { value: 2, label: 'Yearly' }
+                                                    ]}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.value);
+                                                    }}
+                                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.type })}
+                                                    style={{ height: '46px' }}
+                                                    value={field.value}
+                                                    placeholder="Select expense time interval"
+                                                    filterInputAutoFocus={true}
+                                                />
+                                            )}
+                                        />
+                                        {errors?.type && <p className="error-message">{errors.type?.message}</p>}
+                                    </div>
+                                </Col>
+                            )
+                    }
+                </Row>
+
+                <Row className={clsx(styles.bgGreay)}>
+                    <Col sm={12}>
+                        <div className="d-flex flex-column gap-1">
+                            <label className={clsx(styles.lable)}>Notes</label>
+                            <IconField>
+                                <InputIcon style={{ top: '75%' }}>{errors.note && <img src={exclamationCircle} alt='error-icon' />}</InputIcon>
+                                <InputTextarea {...register("note")} rows={3} cols={30} className={clsx(styles.inputText, { [styles.error]: errors.note })} style={{ resize: 'none' }} placeholder='Enter a note...' />
+                            </IconField>
+                            {errors.note && <p className="error-message">{errors.note.message}</p>}
+                        </div>
+                    </Col>
+                </Row>
+
+                <Row className={clsx(styles.bgGreay)}>
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                            <label className={clsx(styles.lable)}>Account Code</label>
+                            <Controller
+                                name="account_code"
+                                control={control}
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={[
+                                            ...(xeroCodesList && xeroCodesList?.data?.map((code) => ({
+                                                value: code.id,
+                                                label: `${code.code}: ${code.name}`
+                                            }))) || []
+                                        ] || []}
+                                        onChange={(e) => {
+                                            field.onChange(e.value);
+                                        }}
+                                        className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.account_code })}
+                                        style={{ height: '46px' }}
+                                        scrollHeight="400px"
+                                        value={field.value}
+                                        loading={xeroCodesList?.isFetching}
+                                        placeholder="Select account code"
+                                        filter
+                                        filterInputAutoFocus={true}
+                                    />
+                                )}
+                            />
+                            {errors?.account_code && <p className="error-message">{errors.account_code?.message}</p>}
+                        </div>
+                    </Col>
+                    <Col sm={6}>
+                        <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                            <label className={clsx(styles.lable)}>Department</label>
+                            <Controller
+                                name="department"
+                                control={control}
+                                render={({ field }) => (
+                                    <Dropdown
+                                        {...field}
+                                        options={[
+                                            ...(departmentsList && departmentsList?.data?.map((department) => ({
+                                                value: department.id,
+                                                label: `${department.name}`
+                                            }))) || []
+                                        ] || []}
+                                        onChange={(e) => {
+                                            field.onChange(e.value);
+                                        }}
+                                        className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.department })}
+                                        style={{ height: '46px' }}
+                                        scrollHeight="400px"
+                                        value={field.value}
+                                        loading={departmentsList?.isFetching}
+                                        placeholder="Select department"
+                                        filter
+                                        filterInputAutoFocus={true}
+                                    />
+                                )}
+                            />
+                            {errors?.department && <p className="error-message">{errors.department?.message}</p>}
+                        </div>
+                    </Col>
+                </Row>
+
+                {defaultValues?.file &&
+                    <Row className={clsx(styles.bgGreay)}>
+                        <Col sm={12}>
+                            <div className="d-flex flex-column gap-1">
+                                <div className='d-flex flex-column'>
+                                    <label className={clsx(styles.lable, 'mb-2')}>Photo/Document Of The Expense</label>
+                                    {
+                                        defaultValues?.file && (
+                                            <div className={styles.fileBox}>
+                                                {getFileIcon(defaultValues?.file?.split(".")?.[defaultValues?.file?.split(".").length - 1] || "")}
+                                                <div className={styles.fileNameBox}>
+                                                    <Link className='linkText' to={defaultValues?.file} target='_blank'><p className='mb-0'>{defaultValues?.file?.split("/")?.[defaultValues?.file?.split("/").length - 1] || ""}</p></Link>
+                                                    <p className='mb-0'></p>
+                                                </div>
+                                                <div className='ms-auto'>
+                                                    <div className='d-flex align-items-center justify-content-center' style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
+                                                        <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} onClick={() => { }} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                }
+
+                {/* <div className="flex align-items-center">
                 <Controller
                     name="notification"
                     control={control}
@@ -955,8 +982,52 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 />
                 <label className="ms-2" style={{ position: 'relative', top: '1px', color: '#344054', fontWeight: 500, fontSize: '14px' }}>Send Email Notification when paid</label>
             </div> */}
-        </form>
+            </form>
+
+            {
+                <Sidebar visible={showDocumentSideBar && links?.length} header={documentSidebarHeader} position="right" modal={false} dismissable={false} style={{ width: '1200px', paddingRight: '720px' }} maskClassName="p-sidebar-mask-document" onHide={() => setShowDocumentSidebar(false)}>
+                    <FilePreview files={links} />
+                </Sidebar>
+            }
+        </div>
     );
 });
+
+const FilePreview = ({ files }) => {
+    const isImage = (url) => /\.(jpeg|jpg|png|webp|gif)$/i.test(url);
+    const isPDF = (url) => /\.pdf$/i.test(url);
+
+    return (
+        <div style={{ display: 'grid', gap: '1rem' }}>
+            {files.map((file, index) => {
+                if (isImage(file)) {
+                    return (
+                        <img
+                            key={index}
+                            src={file}
+                            alt={`preview-${index}`}
+                            style={{ maxWidth: '100%', maxHeight: '400px', border: '1px solid #ccc' }}
+                        />
+                    );
+                }
+
+                if (isPDF(file)) {
+                    return (
+                        <div key={index} style={{ border: '1px solid #ccc', padding: '1rem' }}>
+                            <Document
+                                file={file}
+                                onLoadError={(error) => console.error('PDF load error:', error)}
+                            >
+                                <Page pageNumber={1} width={400} />
+                            </Document>
+                        </div>
+                    );
+                }
+
+                return <p key={index}>Unsupported file type: {file}</p>;
+            })}
+        </div>
+    );
+};
 
 export default ExpensesForm;
