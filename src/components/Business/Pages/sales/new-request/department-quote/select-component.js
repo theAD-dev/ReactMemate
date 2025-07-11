@@ -49,7 +49,7 @@ const SelectComponent = ({ departments, handleChange, title, keyValue }) => {
                                 textAlign: 'left'
                             }}
                         >
-                            {department.subindexes?.filter((data) => !data?.deleted)?.order((a, b) => a.order - b.order).map((subitem) => (
+                            {department.subindexes?.filter((data) => !data?.deleted)?.sort((a, b) => a.order - b.order).map((subitem) => (
                                 <MenuItem
                                     key={subitem.id}
                                     onClick={() => handleSubMenuClick(subitem?.name, subitem?.id)}
