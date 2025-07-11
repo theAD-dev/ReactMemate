@@ -164,3 +164,13 @@ export const createQuoteProposal = async (id, data) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 };
+
+export const reorderDepartments = async (departments) => {
+  const endpoint = '/settings/departments/order/';
+  const options = {
+    method: 'POST',
+    body: departments.map((d, idx) => ({ id: d.id, order: idx + 1 })),
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};

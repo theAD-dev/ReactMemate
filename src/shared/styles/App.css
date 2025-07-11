@@ -11821,3 +11821,13 @@ tr:hover .linkText,
 .p-sidebar-mask-document {
   z-index: 1000 !important;
 }
+
+.departments-droppable .p-accordion-tab:not(.p-accordion-tab-active),
+.departments-droppable .p-accordion-tab .main-accordion-header{
+ border: none !important;
+}
+
+.departments-droppable .p-accordion-tab:not(.p-accordion-tab-active) .departmentAccordionHeadContainer {
+  border-radius: 4px;
+  border: 1px solid #eaecf0 !important;
+}

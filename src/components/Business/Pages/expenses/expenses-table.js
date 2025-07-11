@@ -18,6 +18,7 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+import { getFileIcon } from '../../../Work/features/create-job/create-job';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
 
@@ -176,6 +177,15 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         </div>;
     };
 
+    const FileBody = (rowData) => {
+        if (!rowData.file) return "";
+        
+        const extension = rowData.file ? rowData.file.split(".")?.[rowData.file.split(".")?.length - 1] : "";
+        if (rowData.file) return <Link to={rowData.file} target='_blank'>
+            {getFileIcon(extension, 28)}
+        </Link>;
+    };
+
     const StatusBody = (rowData) => {
         if (rowData.paid)
             return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='success-outline-button font-14 mx-auto' style={{ width: '86px', height: '36px' }}>Paid</Button>;
@@ -245,7 +255,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field='account_code.code' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
                 <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
-                <Column field="file" header="File" body={(rowData) => rowData.file ? <Link to={rowData.file} target='_blank'><FileEarmarkPdf color='#667085' size={16} /></Link> : ""} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column>
+                <Column field="file" header="File" body={FileBody} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column>
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft text-center' headerClassName="shadowLeft text-center" frozen alignFrozen='right'></Column>
                 {
                     hasPermission(role, PERMISSIONS.EXPENSE.DELETE) &&

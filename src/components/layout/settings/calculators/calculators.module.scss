@@ -22,7 +22,7 @@
   margin-right: 18px;
   position: relative;
   top: 2px;
-  left: 25px;
+  left: 40px;
 }
 
 .innerCollapseIcon {
@@ -36,13 +36,12 @@
   margin-right: 18px;
   position: relative;
   top: 2px;
-  left: 25px;
+  left: 40px;
 }
 
 .accorHeadbox {
   border-radius: var(--radius-xs, 4px);
-  border: 1px solid #fff;
-  background: #fff;
+  background: transparent !important;
   .p-icon {
     display: none;
   }
@@ -58,7 +57,6 @@
   }
   &:hover {
     border-radius: var(--radius-xs, 4px);
-    border: 1px solid var(--Primary-200, #a3e0ff);
     background: var(--Primary-25, #f2faff);
     .hoverToShow {
       opacity: 1;
@@ -93,9 +91,9 @@
 
   a {
     border-radius: var(--radius-xs, 4px);
-    border: 1px solid #eaecf0;
+    border: 1px solid green;
     background: transparent;
-    padding: var(--spacing-xl, 16px);
+    padding: 0px !important;
     border: 0;
   }
   .accorHeadStyle {

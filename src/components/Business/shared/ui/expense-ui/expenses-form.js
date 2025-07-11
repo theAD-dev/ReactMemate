@@ -86,7 +86,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState(defaultSupplier?.name || "");
     const [hasMoreData, setHasMoreData] = useState(true);
-    const [showDocumentSideBar, setShowDocumentSidebar] = useState(true);
+    const [showDocumentSideBar, setShowDocumentSidebar] = useState(false);
     const [links, setLinks] = useState([]);
     const limit = 25;
 
@@ -101,6 +101,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     } = useDropzone({
         maxFiles: 1,
         multiple: false,
+        accept: { 'application/pdf': ['.pdf', '.png', '.jpg', '.jpeg'] },
+        maxSize: 5 * 1024 * 1024,
         onDrop: acceptedFiles => {
             const newFiles = acceptedFiles.map(file => Object.assign(file, {
                 preview: URL.createObjectURL(file),
@@ -191,6 +193,10 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                 // step 3: Get the AI recognize response
                 const fileUrl = url.split("?")[0] || "";
+                if (fileUrl) {
+                    setLinks([fileUrl]);
+                    setShowDocumentSidebar(true);
+                }
 
                 if (!isAIAnalysis) {
                     // set the file url
@@ -480,14 +486,33 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     );
 
     useEffect(() => {
-      if (defaultValues?.file) {
-        setLinks([defaultValues?.file]);
-      }
+        if (defaultValues?.file) {
+            setLinks([defaultValues?.file]);
+            setShowDocumentSidebar(true);
+        }
+    }, [defaultValues?.file]);
 
-      if (watch('file')) {
-        setLinks([watch('file')]);
-      }
-    }, [defaultValues?.file, watch('file')]);
+    useEffect(() => {
+        if (defaultValues) {
+            setValue('supplier', defaultValues?.supplier);
+            setValue('invoice_reference', defaultValues?.invoice_reference);
+            setValue('date', defaultValues?.date);
+            setValue('due_date', defaultValues?.due_date);
+            setValue('amount', defaultValues?.amount);
+            setValue('nogst', defaultValues?.nogst);
+            setValue('gst', defaultValues?.gst);
+            setValue('order', defaultValues?.order);
+            setValue('type', defaultValues?.type);
+            setValue('account_code', defaultValues?.account_code);
+            setValue('department', defaultValues?.department);
+            setValue('note', defaultValues?.note);
+            setValue('option', defaultValues?.option);
+            setValue('gst-calculation', defaultValues?.gst ? 'ex' : defaultValues?.nogst ? 'no' : 'in');
+            setValue('subtotal', defaultValues?.subtotal);
+            setValue('tax', defaultValues?.tax);
+            setValue('totalAmount', defaultValues?.totalAmount);
+        }
+    }, [defaultValues, setValue]);
 
     return (
         <div>
@@ -994,11 +1019,35 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 });
 
 const FilePreview = ({ files }) => {
-    const isImage = (url) => /\.(jpeg|jpg|png|webp|gif)$/i.test(url);
+    const [pageStates, setPageStates] = useState({});
+
+    const isImage = (url) => /\.(jpeg|jpg|png|webp|gif|svg)$/i.test(url);
     const isPDF = (url) => /\.pdf$/i.test(url);
 
+    const handleLoadSuccess = (file, { numPages }) => {
+        setPageStates((prev) => ({
+            ...prev,
+            [file]: { ...prev[file], numPages, currentPage: 1 },
+        }));
+    };
+
+    const changePage = (file, offset) => {
+        setPageStates((prev) => {
+            const current = prev[file]?.currentPage || 1;
+            const numPages = prev[file]?.numPages || 1;
+            const newPage = Math.min(Math.max(current + offset, 1), numPages);
+            return {
+                ...prev,
+                [file]: {
+                    ...prev[file],
+                    currentPage: newPage,
+                },
+            };
+        });
+    };
+
     return (
-        <div style={{ display: 'grid', gap: '1rem' }}>
+        <div style={{ display: 'grid', gap: '2rem' }}>
             {files.map((file, index) => {
                 if (isImage(file)) {
                     return (
@@ -1006,20 +1055,69 @@ const FilePreview = ({ files }) => {
                             key={index}
                             src={file}
                             alt={`preview-${index}`}
-                            style={{ maxWidth: '100%', maxHeight: '400px', border: '1px solid #ccc' }}
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '400px',
+                                border: '1px solid #ccc',
+                            }}
                         />
                     );
                 }
 
                 if (isPDF(file)) {
+                    const currentState = pageStates[file] || {};
+                    const { numPages = null, currentPage = 1 } = currentState;
+
                     return (
-                        <div key={index} style={{ border: '1px solid #ccc', padding: '1rem' }}>
+                        <div
+                            key={index}
+                            style={{
+                                border: '1px solid #ccc',
+                                padding: '1rem',
+                                maxWidth: '420px',
+                            }}
+                        >
                             <Document
                                 file={file}
-                                onLoadError={(error) => console.error('PDF load error:', error)}
+                                onLoadSuccess={(e) => handleLoadSuccess(file, e)}
+                                onLoadError={(err) =>
+                                    console.error('PDF load error:', err)
+                                }
                             >
-                                <Page pageNumber={1} width={400} />
+                                <Page pageNumber={currentPage} width={400} />
                             </Document>
+
+                            {numPages && (
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: '1rem',
+                                        gap: '1rem',
+                                    }}
+                                >
+                                    <button
+                                        className='outline-button px-2'
+                                        style={{ height: '30px' }}
+                                        onClick={() => changePage(file, -1)}
+                                        disabled={currentPage <= 1}
+                                    >
+                                        ‹
+                                    </button>
+                                    <span>
+                                        {currentPage} of {numPages}
+                                    </span>
+                                    <button
+                                        className='outline-button px-2'
+                                        style={{ height: '30px' }}
+                                        onClick={() => changePage(file, 1)}
+                                        disabled={currentPage >= numPages}
+                                    >
+                                        ›
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     );
                 }

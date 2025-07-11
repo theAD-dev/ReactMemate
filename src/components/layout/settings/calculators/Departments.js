@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { PlusLg, PencilSquare, ChevronDown, ChevronUp, X, PlusCircle, Save, Backspace, GripVertical } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Accordion, AccordionTab } from 'primereact/accordion';
@@ -15,7 +16,7 @@ import Button from 'react-bootstrap/Button';
 import { toast } from 'sonner';
 import style from './calculators.module.scss';
 import DeleteConfirmationModal from './delete-confirmation-modal';
-import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
+import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, reorderDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const Departments = () => {
@@ -25,6 +26,7 @@ const Departments = () => {
     const [editDepartment, setEditDepartment] = useState({ id: null, name: null });
     const [subDepartment, setSubDepartment] = useState(null);
     const [activeCalculations, setActiveCalculations] = useState({});
+    const [orderDepartments, setOrderDepartments] = useState([]);
 
     const [AccordionActiveTab, setAccordionActiveTab] = useState(undefined);
     const [AccordionActiveTab2, setAccordionActiveTab2] = useState(undefined);
@@ -76,6 +78,40 @@ const Departments = () => {
         setVisible2(true);
     };
 
+    const handleReorderDepartments = async (department) => {
+        try {
+            await reorderDepartments(department);
+            toast.success('Departments reordered successfully.');
+        } catch (error) {
+            console.error('Error reordering departments:', error);
+            toast.error('Failed to reorder departments. Please try again.');
+        }
+    };
+
+    const onDragEnd = (result) => {
+        const { source, destination } = result;
+
+        if (!destination) {
+            return;
+        }
+
+        const reorderedDepartments = Array.from(orderDepartments);
+        const [removedDepartment] = reorderedDepartments.splice(source.index, 1);
+        reorderedDepartments.splice(destination.index, 0, removedDepartment);
+
+        setOrderDepartments(reorderedDepartments);
+        handleReorderDepartments(reorderedDepartments);
+    };
+
+    useEffect(() => {
+        if (departmentQuery?.data) {
+            const sortedDepartments = Array.isArray(departmentQuery.data)
+                ? departmentQuery.data?.filter((data) => !data?.deleted)?.sort((a, b) => a.order - b.order)
+                : [];
+            setOrderDepartments(sortedDepartments);
+        }
+    }, [departmentQuery?.data]);
+
     return (
         <>
             <Helmet>
@@ -91,105 +127,128 @@ const Departments = () => {
                             <h2>Departments</h2>
                             <button onClick={() => setVisible(true)} className={"outline-button"}>Create Department <PlusLg color="#000000" size={20} className='mb-1 ms-1' /></button>
                         </div>
-                        <div>
-                            <Accordion
-                                activeIndex={AccordionActiveTab}
-                                onTabChange={(e) => setAccordionActiveTab(e.index)}
-                                expandIcon={<div className='expandIcon'>
-                                    <ChevronUp size={16} color='#344054' />
-                                </div>}
-                                collapseIcon={<div className='collapseIcon'>
-                                    <ChevronDown size={16} color='#106B99' />
-                                </div>}
-                                onTabOpen={() => {
-                                    setAccordionActiveTab2(undefined);
-                                }}
-                            >
-                                {
-                                    departmentQuery?.data?.filter((data) => !data?.deleted)?.map((department, i) => {
-                                        const subDepartment = department?.subindexes?.filter((data) => !data?.deleted);
-                                        return (
-                                            <AccordionTab
-                                                className={clsx(style.accorHeadbox, 'main-accordion-header')}
-                                                key={department.id}
-                                                header={
-                                                    <span className="d-flex align-items-center justify-content-between">
-                                                        <div className='d-flex align-items-center'>
-                                                            <GripVertical color="#98A2B3" size={16} style={{ cursor: 'move' }} />
-                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text ms-2')}>{department.name}</span>
-                                                            <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
-                                                                <PencilSquare color="#106B99" size={16} />
-                                                            </div>
-                                                        </div>
-                                                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
-                                                            <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
-                                                            <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Product / Service</Button>
-                                                        </div>
-                                                    </span>
-                                                }
-                                            >
-                                                <Accordion
-                                                    activeIndex={AccordionActiveTab2}
-                                                    onTabChange={(e) => setAccordionActiveTab2(e.index)}
-                                                    className='innnerAccordian'
-                                                    expandIcon={<div className={clsx(style.innerExpandIcon)}>
-                                                        <ChevronUp size={16} color='#344054' />
-                                                    </div>}
-                                                    collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
-                                                        <ChevronDown size={16} color='#106B99' />
-                                                    </div>}
-                                                    onTabOpen={(e) => {
-                                                        const subindexId = subDepartment[e.index].id;
-                                                        getCalculator(subindexId);
-                                                    }}
-                                                    onTabClose={() => {
-                                                        return false;
-                                                    }}
-                                                >
-                                                    {
-                                                        subDepartment?.map((subindex, i) => (
-                                                            <AccordionTab
-                                                                className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
-                                                                key={subindex.id}
-                                                                header={(
-                                                                    <span className="d-flex align-items-center justify-content-between">
-                                                                        <div className='d-flex align-items-center'>
-                                                                            <GripVertical color="#98A2B3" size={16} style={{ cursor: 'move', position: 'relative', top: '2px', left: '-40px' }} />
-                                                                            <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
-                                                                            <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
-                                                                                <PencilSquare color="#106B99" size={16} />
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="departments" type="DEPARTMENTS">
+                                {(provided) => (
+                                    <div className="departments-droppable" {...provided.droppableProps} ref={provided.innerRef}>
+                                        <Accordion
+                                            activeIndex={AccordionActiveTab}
+                                            onTabChange={(e) => setAccordionActiveTab(e.index)}
+                                            expandIcon={<div className='expandIcon'>
+                                                <ChevronUp size={16} color='#344054' />
+                                            </div>}
+                                            collapseIcon={<div className='collapseIcon'>
+                                                <ChevronDown size={16} color='#106B99' />
+                                            </div>}
+                                            onTabOpen={() => {
+                                                setAccordionActiveTab2(undefined);
+                                            }}
+                                        >
+                                            {
+                                                orderDepartments?.map((department, i) => {
+                                                    const subDepartment = department?.subindexes?.filter((data) => !data?.deleted);
+                                                    return (
+                                                        <AccordionTab
+                                                            className={clsx(style.accorHeadbox, 'main-accordion-header')}
+                                                            key={department.id}
+                                                            header={
+                                                                <Draggable key={department.id} draggableId={`department-${department.id}`} index={i}>
+                                                                    {(provided, snapshot) => (
+                                                                        <div
+                                                                            ref={provided.innerRef}
+                                                                            {...provided.draggableProps}
+                                                                            className={clsx('d-flex align-items-center justify-content-between p-3 departmentAccordionHeadContainer', style.accordionHeadContainer ,{
+                                                                                'dragging': snapshot.isDragging,
+                                                                            })}
+                                                                            style={{
+                                                                                ...provided.draggableProps.style,
+                                                                                backgroundColor: snapshot.isDragging ? '#f0f0f0' : '#fff',
+                                                                                border: snapshot.isDragging ? '1px solid #ccc' : 'none',
+                                                                            }}
+                                                                        >
+                                                                            <div className='d-flex align-items-center'>
+                                                                                <div {...provided.dragHandleProps} style={{ cursor: 'move' }} onClick={(e) => e.stopPropagation()}>
+                                                                                    <GripVertical color="#98A2B3" size={16} />
+                                                                                </div>
+                                                                                <span className={clsx(style.accorHeadStyle, 'active-header-text ms-2')}>{department.name}</span>
+                                                                                <div className={clsx(style.editIconBox, 'editItem')} onClick={(e) => editHandleDepartment(e, { id: department.id, name: department.name })} style={{ visibility: 'hidden' }}>
+                                                                                    <PencilSquare color="#106B99" size={16} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden', marginRight: '14px' }}>
+                                                                                <DeleteConfirmationModal title={"Department"} api={`/settings/departments/delete/${department.id}/`} refetch={departmentQuery.refetch} />
+                                                                                <Button className={style.create} onClick={(e) => createSubDepartmentOpen(e, department.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Product / Service</Button>
                                                                             </div>
                                                                         </div>
-
-                                                                        <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
-                                                                            <DeleteConfirmationModal title={"Product / Service "} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
-                                                                            <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
-                                                                        </div>
-                                                                    </span>
-                                                                )}
+                                                                    )}
+                                                                </Draggable>
+                                                            }
+                                                        >
+                                                            <Accordion
+                                                                activeIndex={AccordionActiveTab2}
+                                                                onTabChange={(e) => setAccordionActiveTab2(e.index)}
+                                                                className='innnerAccordian'
+                                                                expandIcon={<div className={clsx(style.innerExpandIcon)}>
+                                                                    <ChevronUp size={16} color='#344054' />
+                                                                </div>}
+                                                                collapseIcon={<div className={clsx(style.innerCollapseIcon)}>
+                                                                    <ChevronDown size={16} color='#106B99' />
+                                                                </div>}
+                                                                onTabOpen={(e) => {
+                                                                    const subindexId = subDepartment[e.index].id;
+                                                                    getCalculator(subindexId);
+                                                                }}
+                                                                onTabClose={() => {
+                                                                    return false;
+                                                                }}
                                                             >
                                                                 {
-                                                                    activeCalculations[subindex.id] ? (
-                                                                        <ViewCalculators index={subindex.id}
-                                                                            isNewCreate={createCalculatorId === subindex.id}
-                                                                            cancelCreateCalculator={setCreateCalculatorId}
-                                                                            refetch={getCalculator}
-                                                                            calculators={activeCalculations[subindex.id]}
-                                                                            name={subindex.name}
-                                                                        />
-                                                                    ) : <LoadingCalculator />
-                                                                }
+                                                                    subDepartment?.map((subindex, i) => (
+                                                                        <AccordionTab
+                                                                            className={clsx(style.innerBoxStyle, style.innerAccordionTab)}
+                                                                            key={subindex.id}
+                                                                            header={(
+                                                                                <span className="d-flex align-items-center justify-content-between p-3">
+                                                                                    <div className='d-flex align-items-center'>
+                                                                                        <GripVertical color="#98A2B3" size={16} style={{ cursor: 'move', position: 'relative', top: '2px', left: '-40px' }} />
+                                                                                        <span className={clsx(style.accorHeadStyle, 'active-header-text')}>{subindex.name}</span>
+                                                                                        <div className={clsx(style.editIconBox2, 'editItem')} onClick={(e) => updateSubDepartment(e, subindex.id, department.id, subindex.name)} style={{ visibility: 'hidden' }}>
+                                                                                            <PencilSquare color="#106B99" size={16} />
+                                                                                        </div>
+                                                                                    </div>
 
-                                                            </AccordionTab>
-                                                        ))
-                                                    }
-                                                </Accordion>
-                                            </AccordionTab>
-                                        );
-                                    })
-                                }
-                            </Accordion>
-                        </div>
+                                                                                    <div className={clsx(style.RItem, 'editItem')} style={{ visibility: 'hidden' }}>
+                                                                                        <DeleteConfirmationModal title={"Product / Service "} api={`/settings/sub-departments/delete/${subindex.id}/`} refetch={departmentQuery.refetch} />
+                                                                                        <Button className={style.create} onClick={(e) => handleCreateCalculator(e, subindex.id, i)}><PlusLg color="#106B99" size={18} className='me-2' />Create Calculator</Button>
+                                                                                    </div>
+                                                                                </span>
+                                                                            )}
+                                                                        >
+                                                                            {
+                                                                                activeCalculations[subindex.id] ? (
+                                                                                    <ViewCalculators index={subindex.id}
+                                                                                        isNewCreate={createCalculatorId === subindex.id}
+                                                                                        cancelCreateCalculator={setCreateCalculatorId}
+                                                                                        refetch={getCalculator}
+                                                                                        calculators={activeCalculations[subindex.id]}
+                                                                                        name={subindex.name}
+                                                                                    />
+                                                                                ) : <LoadingCalculator />
+                                                                            }
+
+                                                                        </AccordionTab>
+                                                                    ))
+                                                                }
+                                                            </Accordion>
+                                                        </AccordionTab>
+                                                    );
+                                                })
+                                            }
+                                        </Accordion>
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
                     </div>
                 </div>
             </div>

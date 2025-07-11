@@ -35,7 +35,7 @@ const SelectComponent = ({ departments, handleChange, title, keyValue }) => {
             portal
             className='departmentSelect'
         >
-            {departments?.filter((data) => !data?.deleted)?.map((department) => (
+            {departments?.filter((data) => !data?.deleted)?.sort((a, b) => a.order - b.order).map((department) => (
                 <React.Fragment key={department.id}>
                     {department?.subindexes?.length ? (
                         <SubMenu
