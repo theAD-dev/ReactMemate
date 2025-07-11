@@ -23,7 +23,7 @@ import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
-export function getFileIcon(fileType) {
+export function getFileIcon(fileType, size = 32) {
     if (fileType) fileType = fileType?.toLowerCase();
     
     const fileTypes = {
@@ -76,7 +76,7 @@ export function getFileIcon(fileType) {
 
     return (
         <div className={style.imgBox}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="41" viewBox="0 0 32 41" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 32 41" fill="none">
                 <path
                     d="M0 4.5874C0 2.37826 1.79086 0.587402 4 0.587402H20L32 12.5874V36.5874C32 38.7965 30.2091 40.5874 28 40.5874H4C1.79086 40.5874 0 38.7965 0 36.5874V4.5874Z"
                     fill={fileData.color}
@@ -87,7 +87,7 @@ export function getFileIcon(fileType) {
                     fill="white"
                 />
             </svg>
-            <div className={style.fileType}>{fileData.name}</div>
+            <div className={`${style.fileType} ${size != 32 ? style.fileTypeSmall : ''}`}>{fileData.name}</div>
         </div>
     );
 }

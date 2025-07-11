@@ -35,7 +35,7 @@ const SelectComponent = ({ departments, handleChange, title, keyValue }) => {
             portal
             className='departmentSelect'
         >
-            {departments?.filter((data) => !data?.deleted)?.map((department) => (
+            {departments?.filter((data) => !data?.deleted)?.sort((a, b) => a.order - b.order).map((department) => (
                 <React.Fragment key={department.id}>
                     {department?.subindexes?.length ? (
                         <SubMenu
@@ -49,7 +49,7 @@ const SelectComponent = ({ departments, handleChange, title, keyValue }) => {
                                 textAlign: 'left'
                             }}
                         >
-                            {department.subindexes?.filter((data) => !data?.deleted)?.map((subitem) => (
+                            {department.subindexes?.filter((data) => !data?.deleted)?.order((a, b) => a.order - b.order).map((subitem) => (
                                 <MenuItem
                                     key={subitem.id}
                                     onClick={() => handleSubMenuClick(subitem?.name, subitem?.id)}
