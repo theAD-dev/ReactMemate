@@ -16,6 +16,7 @@ import { emailIntegrationsSet } from "../../../../APIs/integrations-api";
 const schema = yup.object().shape({
     outgoing_email: yup
         .string()
+        .email("Invalid email address")
         .required("Outgoing email is required"),
 });
 
@@ -39,7 +40,7 @@ const EmailIntegrations = ({ visible, setVisible, email, refetch }) => {
     };
 
     useEffect(() => {
-        if (email) {
+        if (email && email?.outgoing_email !== 'no-reply@memate.com.au') {
             reset({
                 outgoing_email: email.outgoing_email || "",
             });

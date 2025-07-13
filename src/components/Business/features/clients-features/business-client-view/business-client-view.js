@@ -68,8 +68,8 @@ const BusinessClientView = ({ client, refetch, closeIconRef, hide }) => {
 
           {
             isEdit ? <div className='d-flex align-items-center gap-3'>
-              <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false); }} className='outline-button'>Cancel</Button>
-              <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ width: '180px' }}>{isPending ? "Loading..." : "Save Client Details"}</Button>
+              <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(false); }} className='outline-button' disabled={isPending}>Cancel</Button>
+              <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ width: '180px' }} disabled={isPending}>{isPending ? "Loading..." : "Save Client Details"}</Button>
             </div>
               : client.deleted
                 ? <Restore id={client?.id} refetch={refetch} />

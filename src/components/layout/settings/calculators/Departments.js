@@ -18,6 +18,7 @@ import style from './calculators.module.scss';
 import DeleteConfirmationModal from './delete-confirmation-modal';
 import { createCalculator, createDepartment, createSubDepartment, getCalculationByReferenceId, getDepartments, reorderDepartments, updateCalculator, updateDepartment, updateSubDepartment } from '../../../../APIs/CalApi';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import Loader from '../../../../shared/ui/loader/loader';
 
 const Departments = () => {
     const [visible, setVisible] = useState(false);
@@ -338,6 +339,7 @@ const Departments = () => {
             </div>
             <CreateDepartment visible={visible} setVisible={setVisible} refetch={departmentQuery.refetch} editDepartment={editDepartment} setEditDepartment={setEditDepartment} orderDepartments={orderDepartments} />
             <CreateSubDepartmentModal visible2={visible2} setVisible2={setVisible2} refetch={departmentQuery.refetch} editSubDepartment={subDepartment} setEditSubDepartment={setSubDepartment} orderDepartments={orderDepartments} />
+            {departmentQuery?.isFetching && <Loader />}
         </>
     );
 };
@@ -1044,7 +1046,7 @@ const CreateDepartment = ({ visible, setVisible, refetch, editDepartment, setEdi
 
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
-            <Button className='outline-button' onClick={handleClose}>Cancel</Button>
+            <Button className='outline-button' onClick={handleClose} disabled={isLoading}>Cancel</Button>
             <Button className='solid-button' style={{ width: 'fit-content' }} onClick={handleCreateDepartment} disabled={department?.length < 1 || isLoading}>Save Details {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}</Button>
         </div>
     );
@@ -1121,7 +1123,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
 
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
-            <Button className='outline-button' onClick={handleClose}>Cancel</Button>
+            <Button className='outline-button' onClick={handleClose} disabled={isLoading}>Cancel</Button>
             <Button className='solid-button' style={{ width: 'fit-content' }} onClick={handleCreateSubDepartment} disabled={subDepartment?.length < 1 || isLoading}>Save Details {isLoading &&  <ProgressSpinner style={{ width: '20px', height: '20px' }} />}</Button>
         </div>
     );

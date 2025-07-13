@@ -36,8 +36,8 @@ export default function UnPaidDialog({ visible, setVisible, details, setRefetch 
 
     const footerContent = (
         <div className="d-flex justify-content-end align-items-center gap-3">
-            <Button label="Cancel" className="outline-button outline-none" onClick={() => setVisible(false)} autoFocus />
-            <Button label={unpaidMutation?.isPending ? "Loading..." : "Mark as Unpaid"} className="danger-button font-Weight-600" style={{ padding: '10px 10px' }} onClick={handleUnPaidExpense} autoFocus />
+            <Button disabled={unpaidMutation?.isPending} label="Cancel" className="outline-button outline-none" onClick={() => setVisible(false)} autoFocus />
+            <Button disabled={unpaidMutation?.isPending} label={unpaidMutation?.isPending ? "Loading..." : "Mark as Unpaid"} className="danger-button font-Weight-600" style={{ padding: '10px 10px' }} onClick={handleUnPaidExpense} autoFocus />
         </div>
     );
     return (

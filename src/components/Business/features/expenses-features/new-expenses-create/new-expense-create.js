@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
 import { useMutation } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import styles from './new-expense-create.module.scss';
@@ -120,8 +121,8 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); handleClose(); }} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }}>{mutation.isPending ? "Loading..." : "Save"}</Button>
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); handleClose(); }} className='outline-button' disabled={mutation.isPending}>Cancel</Button>
+                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending}>Save {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}/>}</Button>
                     </div>
                 </div>
             )}
