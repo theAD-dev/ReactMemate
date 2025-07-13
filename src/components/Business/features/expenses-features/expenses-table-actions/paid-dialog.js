@@ -36,8 +36,8 @@ export default function PaidDialog({ visible, setVisible, details, setRefetch })
 
     const footerContent = (
         <div className="d-flex justify-content-end align-items-center gap-3">
-            <Button label="Cancel" className="outline-button outline-none" onClick={() => setVisible(false)} autoFocus />
-            <Button label={paidMutation?.isPending ? "Loading..." : "Mark as paid"} className="success-button outline-none" onClick={handlePaidExpense} autoFocus />
+            <Button disabled={paidMutation?.isPending} label="Cancel" className="outline-button outline-none" onClick={() => setVisible(false)} autoFocus />
+            <Button disabled={paidMutation?.isPending} label={paidMutation?.isPending ? "Loading..." : "Mark as paid"} className="success-button outline-none" onClick={handlePaidExpense} autoFocus />
         </div>
     );
     return (

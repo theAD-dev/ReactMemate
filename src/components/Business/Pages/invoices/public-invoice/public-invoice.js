@@ -668,7 +668,7 @@ const PublicInvoice = () => {
                             :
                             <Col sm={8}>
                                 <h6>Payment Method</h6>
-                                <StripeContainer ref={paymentRef} setIsPaymentProcess={setIsPaymentProcess} amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} />
+                                <StripeContainer ref={paymentRef} setIsPaymentProcess={setIsPaymentProcess} amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} fetchData={fetchData}/>
                             </Col>
                     }
 
