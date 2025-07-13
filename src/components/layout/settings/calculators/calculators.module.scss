@@ -19,10 +19,8 @@
   justify-content: center;
   background: #f2f4f7;
   border-radius: 22px;
-  margin-right: 18px;
-  position: relative;
-  top: 2px;
-  left: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .innerCollapseIcon {
@@ -33,10 +31,8 @@
   justify-content: center;
   background: #bae8ff;
   border-radius: 22px;
-  margin-right: 18px;
-  position: relative;
-  top: 2px;
-  left: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .accorHeadbox {
@@ -115,9 +111,9 @@
     letter-spacing: -0.18px;
   }
   .innerBoxStyle {
-    border-bottom: 1px solid #eaecf0;
+    border-bottom: 0px solid #eaecf0;
     a {
-      background: var(--Gray-50, #f9fafb);
+      background: transparent !important;
       padding: var(--spacing-xl, 16px);
       border: 0;
       color: var(--Gray-700, #344054);
