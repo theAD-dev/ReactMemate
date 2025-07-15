@@ -138,7 +138,7 @@ const Desktop = ({ visible, setVisible }) => {
                         <div className="listwrapper">
                             <div className="topHeadStyle pb-4">
                                 <div className={style.userHead}>
-                                    <h2>Desktop Users</h2>
+                                    <h2>Management - Desktop Access</h2>
                                     <p className='d-flex align-items-center gap-2'>
                                         {activeUserCount?.length || 0} / {desktopUsersQuery?.data?.limits?.total || 0}
                                         {

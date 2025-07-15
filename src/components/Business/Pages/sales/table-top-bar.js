@@ -383,7 +383,7 @@ const TableTopBar = ({
                           className="tabActive"
                           to="/sales/newquote/selectyourclient"
                         >
-                          New
+                          Quote New Project +
                         </NavLink>
                       ) : (
                         <BankDetailsModel />

@@ -492,28 +492,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         }
     }, [defaultValues?.file]);
 
-    useEffect(() => {
-        if (defaultValues) {
-            setValue('supplier', defaultValues?.supplier);
-            setValue('invoice_reference', defaultValues?.invoice_reference);
-            setValue('date', defaultValues?.date);
-            setValue('due_date', defaultValues?.due_date);
-            setValue('amount', defaultValues?.amount);
-            setValue('nogst', defaultValues?.nogst);
-            setValue('gst', defaultValues?.gst);
-            setValue('order', defaultValues?.order);
-            setValue('type', defaultValues?.type);
-            setValue('account_code', defaultValues?.account_code);
-            setValue('department', defaultValues?.department);
-            setValue('note', defaultValues?.note);
-            setValue('option', defaultValues?.option);
-            setValue('gst-calculation', defaultValues?.gst ? 'ex' : defaultValues?.nogst ? 'no' : 'in');
-            setValue('subtotal', defaultValues?.subtotal);
-            setValue('tax', defaultValues?.tax);
-            setValue('totalAmount', defaultValues?.totalAmount);
-        }
-    }, [defaultValues, setValue]);
-
     return (
         <div>
             <form ref={ref} onSubmit={handleSubmit(handleFormSubmit)} >

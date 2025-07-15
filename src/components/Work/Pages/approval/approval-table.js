@@ -118,7 +118,7 @@ const ApprovalTable = React.memo(() => {
         return (
             <div className='d-flex justify-content-center gap-2'>
                 <Button onClick={() => handleApprove(rowData.id)} className={`gap-1 status ${style.finishedAction} cursor-pointer`}>
-                    Approve
+                    Review & Action
                     <CheckCircle color='#079455' size={16} />
                 </Button>
             </div>

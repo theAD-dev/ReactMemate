@@ -612,7 +612,7 @@ const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, s
                 <Button type='button' onClick={() => setVisible(true)} className='info-button' style={{ minWidth: '75px' }}>Approve</Button>
                 <Button type='button' disabled={nextJobId === null || createApprovalMutation?.isPending} onClick={() => { setIsNextJob(true); setVisible(true); }} className='solid-button' style={{ minWidth: '75px' }}>Approve & See Next</Button>
             </div>
-            <Dialog header="Rate the job" visible={visible} style={{ width: '512px' }} headerClassName='border-bottom' headerStyle={{ fontSize: '22px' }} onHide={() => setVisible(false)}>
+            <Dialog header="Approve & Rate" visible={visible} style={{ width: '512px' }} headerClassName='border-bottom' headerStyle={{ fontSize: '22px' }} onHide={() => setVisible(false)}>
                 <div className='p-4'>
                     <div className="mb-4 text-center">
                         <h5 className={style.feedbackLabel}>Quality</h5>
@@ -682,7 +682,7 @@ const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, s
                 <div className="d-flex justify-content-end gap-2 border-top pt-4">
                     <Button className="outline-button" disabled={createApprovalMutation?.isPending} onClick={() => setVisible(false)}>Cancel</Button>
                     <Button className="solid-button" disabled={createApprovalMutation?.isPending} onClick={handleRate} autoFocus>
-                        Rate
+                        Approve Job
                         {createApprovalMutation?.isPending && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}

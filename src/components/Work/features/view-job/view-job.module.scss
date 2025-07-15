@@ -11,7 +11,7 @@
   align-items: center;
   border-radius: 16px;
   border: 1px solid var(--Primary-100, #bae8ff);
-  background: var(--Primary-50, #ebf8ff); 
+  background: var(--Primary-50, #ebf8ff);
 }
 
 .border {
@@ -27,7 +27,7 @@
 }
 
 .customLabel {
-  color: #667085;
+  color: var(--Gray-400, #98a2b3);
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -37,20 +37,56 @@
   margin-bottom: 8px;
 }
 
+.lightText {
+  color: var(--Gray-400, #98a2b3);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.customText {
+  color: var(--Gray-800, #1d2939);
+
+  /* Body large */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.08px;
+}
+
 .text {
-  color: var(--Gray-600, #475467);
+  color: var(--Gray-800, #1d2939);
 
   /* Body large bold */
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 24px; /* 150% */
   letter-spacing: 0.08px;
 }
 
+.assignedUser {
+  color: var(--Gray-900, #101828);
+
+/* Text md/Medium */
+font-family: Inter;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px; /* 150% */
+margin-bottom: 10px;
+}
+
 .toggleButton {
-  color: #158ECC; /* blue-600 */
+  color: #158ecc; /* blue-600 */
   background: none;
   border: none;
   padding: 0px 0;

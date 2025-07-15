@@ -112,7 +112,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                                     </div>
                                                 </Col>
                                                 <Col sm={5} className='pe-0 ps-0'>
-                                                    <label className={clsx(style.customLabel, 'text-nowrap')}>{job?.worker?.full_name || "-"}</label>
+                                                    <label className={clsx(style.assignedUser, 'text-nowrap')}>{job?.worker?.full_name || "-"}</label>
                                                     <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center' }}>Employee</div>
                                                 </Col>
                                                 <Col sm={5} className=''>
