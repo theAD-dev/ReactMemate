@@ -102,7 +102,7 @@ const RegionLanguage = () => {
               <div className="topHeadStyle">
                 <div className="">
                   <h2>Region & Language</h2>
-                  {isEditing && <p>Select your Country, Timezone, and Currency to ensure accurate localization and a seamless experience.</p>}
+                  <p className="font-14" style={{ color: '#475467' }}>Choose the country and time zone; this will determine the language and correct time for communications and automatic notifications.</p>
                 </div>
                 {!isEditing && (
                   <Link to="#" onClick={() => setIsEditing(true)}>

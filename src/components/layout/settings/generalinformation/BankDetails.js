@@ -32,6 +32,13 @@ const BankDetails = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const editingHeight = isEditing ? 80 : 160;
+
+  const label = {
+    "bank_name": "Bank Name",
+    "bsb": "BSB",
+    "account_number": "Account",
+  };
 
   const {
     register,
@@ -101,7 +108,7 @@ const BankDetails = () => {
               <div className="topHeadStyle">
                 <div>
                   <h2>Bank Details</h2>
-                  {isEditing && <p>Provide accurate bank account details to ensure smooth transactions and payments.</p>}
+                  {isEditing ? <p className="font-14" style={{ color: '#475467' }}>Provide your company's bank details. This information will be displayed on your quotes and invoices to facilitate EFT transactions.</p> : <p className="font-14" style={{ color: '#475467' }}>This will show on your invoices </p>}
                 </div>
                 {!isEditing && (
                   <Link to="#" onClick={() => setIsEditing(true)}>
@@ -110,10 +117,10 @@ const BankDetails = () => {
                 )}
               </div>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <ul>
+                <ul style={{ overflow: 'auto', height: `calc(100vh - 200px - ${trialHeight}px - ${editingHeight}px)` }}>
                   {["bank_name", "bsb", "account_number"].map((field, index) => (
                     <li key={index}>
-                      <span>{field.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())}</span>
+                      <span>{label[field]}</span>
                       {loading ? (
                         <Skeleton width="100%" height="2rem" />
                       ) : !isEditing ? (

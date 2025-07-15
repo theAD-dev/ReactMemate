@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { FileEarmarkPdf, Trash } from 'react-bootstrap-icons';
+import { Trash } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
@@ -40,8 +40,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     const { trialHeight } = useTrialHeight();
     const [expenses, setExpenses] = useState([]);
     const [page, setPage] = useState(1);
-    const [sort, setSort] = useState({ sortField: 'number', sortOrder: -1 });
-    const [tempSort, setTempSort] = useState({ sortField: 'number', sortOrder: -1 });
+    const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
+    const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const limit = 25;
@@ -56,7 +56,6 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
     useEffect(() => {
         const expenseId = params.get('expenseId');
-        console.log('expenseId: ', expenseId);
         if (expenseId && expenseId !== 'undefined') {
             const supplierName = params.get('supplierName');
             setEditData({ id: expenseId, name: supplierName });
@@ -246,8 +245,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 rowClassName={rowClassName}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-                <Column field="number" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
-                <Column field="supplier.name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
+                <Column field="id" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
+                <Column field="supplier__name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
                 <Column field="invoice_reference" header="Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.invoice_reference} style={{ maxWidth: '250px' }}>{rowData.invoice_reference}</div>} style={{ minWidth: '94px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
@@ -262,7 +261,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                     <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
                 }
             </DataTable>
-            <ExpensesEdit id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
+            <ExpensesEdit key={editData?.id} id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />
             <TotalExpenseDialog showDialog={showDialog} setShowDialog={setShowDialog} setRefetch={setRefetch} />
         </>
     );

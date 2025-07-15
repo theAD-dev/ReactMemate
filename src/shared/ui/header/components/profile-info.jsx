@@ -2,6 +2,7 @@ import React from "react";
 import { Placeholder } from "react-bootstrap";
 import { QuestionCircle, Search, PlusLg, Bell } from "react-bootstrap-icons";
 import { Link, NavLink } from "react-router-dom";
+import clsx from "clsx";
 import chatIcon from '../../../../assets/images/icon/message-text.svg';
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
 import Support from "../../support/support";
@@ -25,26 +26,26 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                         >
 
                             Chat
-                            <div style={{ width: '25px', height: '25px', overflow: 'hidden', marginLeft: '0px', paddingTop: '2px' }}>
-                                <img src={chatIcon} alt="chat" width={'24px'} height={'24px'} style={{ width: '24px', height: '24px' }} />
+                            <div style={{ width: '20px', height: '20px', overflow: 'hidden', marginLeft: '0px', paddingTop: '0px', position: 'relative', top: '-2px' }}>
+                                <img src={chatIcon} alt="chat" width={'20px'} height={'20px'} style={{ width: '20px', height: '20px' }} />
                             </div>
                         </NavLink>
                     </li>
                     <li className={style.navbarActionIcon}>
-                        <Bell color="#667085" size={20} />
+                        <Bell color="#475467" size={20} />
                     </li>
-                    <li className={style.navbarActionIcon}>
+                    {/* <li className={style.navbarActionIcon}>
                         <PlusLg color="#667085" size={20} />
-                    </li>
+                    </li> */}
                     <li className={style.navbarActionIcon}>
-                        <Search color="#667085" size={20} />
+                        <Search color="#475467" size={20} />
                     </li>
                     <li className={style.navbarActionIcon} onClick={openSupportModal}>
-                        <QuestionCircle color="#667085" size={20} />
+                        <QuestionCircle color="#475467" size={20} />
                     </li>
                 </ul>
                 <div className="mr">
-                    <Link className="avatar-info d-flex align-items-center gap-3" to="/settings/generalinformation">
+                    <Link className={clsx("avatar-info d-flex align-items-center gap-3 px-2", style.profileLink)} to="/settings/generalinformation">
                         <div style={{ whiteSpace: 'nowrap' }}>
                             {username ? username : (
                                 <Placeholder as="p" animation="wave" style={{ marginBottom: '10px', marginTop: '5px' }}>

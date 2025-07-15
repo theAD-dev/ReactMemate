@@ -177,7 +177,7 @@ const MobileApp = React.memo(() => {
                                     hasWorkSubscription ? <>
                                         <div className="topHeadStyle pb-4">
                                             <div className={style.userHead}>
-                                                <h2>Mobile App Users</h2>
+                                                <h2>Workforce - Mobile App Only Users </h2>
                                                 <p className='d-flex align-items-center gap-2'>
                                                     {mobileUsersQuery?.data?.limits?.number || 0} / {mobileUsersQuery?.data?.limits?.total || 0}
                                                     {
