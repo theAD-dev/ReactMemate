@@ -265,7 +265,7 @@ const Location = () => {
                                 </thead>
                                 <tbody>
                                     {
-                                        locationReadQuery?.data?.users?.map((user) =>
+                                        locationReadQuery?.data?.users?.filter((user) => user.is_active)?.filter((user) => user.is_active)?.map((user) =>
                                             <tr key={user.id}>
                                                 <td>
                                                     <div className='d-flex gap-2 align-items-center'>

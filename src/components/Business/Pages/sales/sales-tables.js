@@ -40,7 +40,7 @@ const CustomAvatarGroup = ({ params }) => {
           <Avatar key={`${data.email}-${index}`}
             shape="circle"
             image={data.has_photo && data.photo ? data.photo : null}
-            icon={!data.has_photo || !data.photo ? <Person color="#667085" size={20} /> : null}
+            label={!data.has_photo || !data.photo ? <small>{data.alias_name}</small> : null}
             style={{ background: '#fff', border: '1px solid #dedede' }}
           />
         ))}

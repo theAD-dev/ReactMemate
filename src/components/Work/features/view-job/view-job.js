@@ -323,7 +323,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
 
                         <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
                             <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                            <Button type='button' onClick={handleEditClick} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
+                            <Button type='button' disabled={job?.status === "3" || job?.status === "a"} onClick={handleEditClick} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
                             />}</Button>
                         </div>
