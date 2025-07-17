@@ -20,6 +20,9 @@ const ApprovalTable = React.memo(() => {
     const { trialHeight } = useTrialHeight();
     const [selectedApprovals, setSelectedApprovals] = useState(null);
     const [nextJobId, setNextJobId] = useState(null);
+    const url = React.useMemo(() => window.location.href, []);
+    const urlObj = React.useMemo(() => new URL(url), [url]);
+    const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
 
     const [isApproveJobVisible, setIsApproveJobVisible] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState(null);
@@ -143,6 +146,13 @@ const ApprovalTable = React.memo(() => {
         }, 300);
     }, [approveData]);
 
+    useEffect(() => {
+        if (params.get('approval_id')) {
+            handleApprove(params.get('approval_id'));
+            urlObj.searchParams.delete('approval_id');
+            window.history.replaceState({}, '', urlObj);
+        }
+    }, [params, handleApprove, urlObj]);
 
     const formatDate = React.useCallback((dateString) => {
         if (!dateString) return 'N/A';

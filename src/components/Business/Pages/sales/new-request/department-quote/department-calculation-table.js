@@ -327,7 +327,8 @@ const DepartmentCalculationTable = ({ setTotals, setPayload, defaultDiscount, xe
     const { data: departments } = useQuery({
         queryKey: ['departments'],
         queryFn: getDepartments,
-        enabled: true,
+        staleTime: 0,
+        refetchOnWindowFocus: true
     });
     const { isLoading: isLoadingSubItem, data } = useQuery({
         queryKey: ['calcReferenceId', subItem],
