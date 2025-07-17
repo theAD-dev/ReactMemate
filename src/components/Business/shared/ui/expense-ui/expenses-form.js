@@ -80,11 +80,12 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const observerRef = useRef(null);
     const accessToken = localStorage.getItem("access_token");
 
-    const [supplierValue, setSupplierValue] = useState(defaultSupplier || "");
+    const [supplierValue, setSupplierValue] = useState(defaultSupplier?.id || "");
+    const [selectedSupplier, setSelectedSupplier] = useState(defaultSupplier || null);
     const [suppliers, setSuppliers] = useState([]);
     const [files, setFiles] = useState([]);
     const [page, setPage] = useState(1);
-    const [searchValue, setSearchValue] = useState(defaultSupplier?.name || "");
+    const [searchValue, setSearchValue] = useState("");
     const [hasMoreData, setHasMoreData] = useState(true);
     const [showDocumentSideBar, setShowDocumentSidebar] = useState(false);
     const [links, setLinks] = useState([]);
@@ -318,7 +319,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     };
 
     const search = debounce((event) => {
-        const query = event?.query?.toLowerCase() || '';
+        const query = event?.filter?.toLowerCase() || '';
         setSearchValue(query);
     }, 300);
 
@@ -329,36 +330,60 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     useEffect(() => {
         const loadData = async () => {
             const data = await getListOfSuppliers(page, limit, searchValue, 'name');
-            if (page === 1) setSuppliers(data.results);
+            if (page === 1) {
+                if (supplierValue) {
+                    const filteredSuppliers = data.results.filter(supplier => supplier.id !== supplierValue);
+                    return setSuppliers([selectedSupplier, ...filteredSuppliers]);
+                }
+
+                setSuppliers(data.results);
+            }
 
             else {
-                if (data?.results?.length > 0)
+                if (data?.results?.length > 0) {
+                    let results = data.results;
+                    if (supplierValue) {
+                        results = [selectedSupplier, ...data.results];
+                    }
                     setSuppliers(prev => {
-                        const existingSupplierIds = new Set(prev.map(supplier => supplier.id));
-                        const newSuppliers = data.results.filter(supplier => !existingSupplierIds.has(supplier.id));
+                        let previous = prev;
+                        if (supplierValue) {
+                            previous = [...prev, selectedSupplier];
+                        }
+                        const existingSupplierIds = new Set(previous.map(supplier => supplier.id));
+                        const newSuppliers = results.filter(supplier => !existingSupplierIds.has(supplier.id));
                         return [...prev, ...newSuppliers];
                     });
+                }
             }
             setHasMoreData(data.count !== suppliers.length);
         };
 
         loadData();
-    }, [page, searchValue]);
+    }, [page, searchValue, supplierValue, selectedSupplier]);
 
     useEffect(() => {
         if (suppliers.length > 0 && hasMoreData) {
-            observerRef.current = new IntersectionObserver(entries => {
-                if (entries[0].isIntersecting) setPage(prevPage => prevPage + 1);
-                console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
-            });
+            const timeout = setTimeout(() => {
+                const lastRow = document.querySelector('.supplier-dropdown .p-dropdown-items li.p-dropdown-item:last-child');
+                console.log('lastRow: ', lastRow);
 
-            const lastRow = document.querySelector('.p-autocomplete-items li.p-autocomplete-item:last-child');
-            if (lastRow) observerRef.current.observe(lastRow);
+                if (lastRow) {
+                    observerRef.current = new IntersectionObserver(entries => {
+                        if (entries[0].isIntersecting) {
+                            setPage(prevPage => prevPage + 1);
+                            console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
+                        }
+                    });
+                    observerRef.current.observe(lastRow);
+                }
+            }, 1000); // Wait for DOM paint
+
+            return () => {
+                clearTimeout(timeout);
+                if (observerRef.current) observerRef.current.disconnect();
+            };
         }
-
-        return () => {
-            if (observerRef.current) observerRef.current.disconnect();
-        };
     }, [suppliers, hasMoreData]);
 
     const calculateAmounts = (amount, gstType) => {
@@ -500,7 +525,48 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                         <div className="d-flex flex-column gap-1 mb-3">
                             <label className={clsx(styles.lable)}>Supplier<span className='required'>*</span></label>
                             <input type="hidden" {...register("supplier")} />
-                            <AutoComplete
+                            <Dropdown
+                                value={supplierValue}
+                                options={suppliers}
+                                optionLabel="name"
+                                optionValue="id"
+                                onChange={(e) => {
+                                    setSupplierValue(e.value);
+                                    let findSupplier = suppliers.find(supplier => supplier.id === e.value);
+                                    setSelectedSupplier(findSupplier || {});
+                                }}
+                                itemTemplate={(option) => {
+                                    return (
+                                        <div className='d-flex gap-2 align-items-center w-100'>
+                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
+                                            </div>
+                                            <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
+                                        </div>
+                                    );
+                                }}
+                                valueTemplate={(option) => {
+                                    return (
+                                        supplierValue ? (
+                                            <div className='d-flex gap-2 align-items-center w-100'>
+                                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                    <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
+                                                </div>
+                                                <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
+                                            </div>
+                                        ) : null
+                                    );
+                                }}
+                                className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.supplier })}
+                                panelClassName={"supplier-dropdown"}
+                                style={{ height: '46px' }}
+                                scrollHeight="350px"
+                                placeholder="Search for supplier"
+                                filter
+                                onFilter={search}
+                                filterInputAutoFocus={true}
+                            />
+                            {/* <AutoComplete
                                 ref={autoCompleteRef}
                                 value={supplierValue || ""}
                                 completeMethod={search}
@@ -533,7 +599,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                 scrollHeight='450px'
                                 className={clsx(styles.autoComplete, "w-100", { [styles.error]: errors.supplier })}
                                 placeholder="Search for supplier"
-                            />
+                            /> */}
                             {errors.supplier && <p className="error-message">{errors.supplier.message}</p>}
                         </div>
                     </Col>

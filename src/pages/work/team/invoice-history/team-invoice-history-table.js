@@ -79,12 +79,26 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
   };
 
   const calculateWeekNumberByStartAndEndDate = (rowData) => {
+    const getISOWeekNumber = (date) => {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const day = d.getUTCDay() || 7; // Make Sunday = 7
+      d.setUTCDate(d.getUTCDate() + 4 - day); // Nearest Thursday
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      const weekNumber = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return weekNumber;
+    };
+
     const startDate = new Date(rowData.date_from * 1000);
     const endDate = new Date(rowData.date_to * 1000);
-    const diffInMs = Math.abs(endDate - startDate);
-    const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
-    const weekNumber = Math.ceil(diffInDays / 7);
-    return `Week ${weekNumber}`;
+
+    const startWeek = getISOWeekNumber(startDate);
+    const endWeek = getISOWeekNumber(endDate);
+
+    if (startWeek === endWeek) {
+      return `Week ${startWeek}`;
+    } else {
+      return `Week ${startWeek} - Week ${endWeek}`;
+    }
   };
 
   const statusBodyTemplate = (rowData) => {
@@ -98,10 +112,10 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
 
   const InvoiceIDBody = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between gap-2`}>
-        <span>{rowData.number}</span>
-        {
-          rowData?.pdf_path && <Link to={`${process.env.REACT_APP_URL}${rowData.pdf_path}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
-        }
+      <span>{rowData.number}</span>
+      {
+        rowData?.pdf_path && <Link to={`${process.env.REACT_APP_URL}${rowData.pdf_path}`} target='_blank'><FilePdf color='#FF0000' size={16} /></Link>
+      }
     </div>;
   };
 
