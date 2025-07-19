@@ -61,6 +61,12 @@ const EmailIntegrations = ({ visible, setVisible, email, refetch }) => {
             refetch();
             handleClose();
             toast.success(`Outgoing email has been updated successfully.`);
+            toast.info(
+                'You will receive an email from AWS shortly. Please click the confirmation link in that email to verify your address.',
+                {
+                    duration: Infinity,
+                }
+            );
         },
         onError: (error) => {
             toast.error(`Failed to update Outgoing email. Please try again.`);
@@ -77,7 +83,7 @@ const EmailIntegrations = ({ visible, setVisible, email, refetch }) => {
                 <div style={{ background: '#DCFAE6', border: '8px solid #ECFDF3' }} className="d-flex justify-content-center align-items-center rounded-circle p-2">
                     <Envelope color="#17B26A" size={24} />
                 </div>
-                <span>Add Outgoing Email</span> 
+                <span>Add Outgoing Email</span>
             </div>
         </div>
     );

@@ -239,7 +239,7 @@ export const ExistingClientsSearch = () => {
 
   return (
     <div className="existingClients py-0">
-      <div style={{ height: `calc(100vh - 385px - ${trialHeight}px)` }}>
+      <div style={{ height: `calc(100vh - 350px - ${trialHeight}px)` }}>
         <div className="newQuoteContent" style={{ height: '100%' }}>
           <div className="h-100 mt-0">
             <div className="search-header">
@@ -268,7 +268,7 @@ export const ExistingClientsSearch = () => {
                 ))}
 
                 <div className='rowBorderHide targetObserver'>
-                  <div className="targetObserver px-3" ref={elements}>
+                  <div className="targetObserver px-3 py-2" ref={elements}>
                     {isFetching && (
                       <>
                         <Row>

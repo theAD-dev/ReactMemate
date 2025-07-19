@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BoxArrowLeft, ChevronLeft, Download } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -8,7 +8,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import TeamInvoiceHistoryTable from './team-invoice-history-table';
 import style from './team-invoice-history.module.scss';
-import { getTeamInvoiceHistory } from '../../../../APIs/team-api';
+import { getTeamMobileUser } from '../../../../APIs/team-api';
 import MobileUserView from '../../../../features/work/team/mobile-user-view/mobile-user-view';
 
 
@@ -20,10 +20,11 @@ const TeamInvoiceHistory = () => {
     const { id } = useParams();
     const [visible, setVisible] = useState(true);
     const [selected, setSelected] = useState(null);
+    const [mobileUser, setMobileUser] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
-    // const peopleDetails = useQuery({ queryKey: ['people-read', id], queryFn: () => getTeamInvoiceHistory(id), enabled: !!id, retry: 1, cacheTime: 0 });
-
+    const peopleDetails = useQuery({ queryKey: ['mobile-user-read'], queryFn: () => getTeamMobileUser(), retry: 1, cacheTime: 0 });
+    
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
             dt.current.exportCSV({ selectionOnly });
@@ -32,10 +33,18 @@ const TeamInvoiceHistory = () => {
         }
     };
 
-    // if (peopleDetails?.error?.message === "Not found") {
-    //     toast.error('Mobile user not found');
-    //     navigate('/work/people');
-    // }
+    useEffect(() => {
+        if (!peopleDetails?.data?.users?.length || !id) return;
+
+        const mobileUser = peopleDetails?.data?.users.find(user => user.id == id);
+        if (mobileUser) {
+            setMobileUser(mobileUser);
+        } else {
+            toast.error('Mobile user not found');
+            navigate('/work/people');
+        }
+    }, [peopleDetails?.data?.users, id, navigate]);
+
     return (
         <div className='client-order-history-page'>
             <div className='client-order-history' style={{ width: visible ? 'calc(100% - 559px)' : '100%' }}>
@@ -82,7 +91,7 @@ const TeamInvoiceHistory = () => {
             </div>
             <Sidebar visible={visible} position="right" onHide={() => setVisible(false)} modal={false} dismissable={false} style={{ width: '559px' }}
                 content={({ closeIconRef, hide }) => (
-                    <MobileUserView closeIconRef={closeIconRef} hide={hide} setVisible={setVisible} />
+                    <MobileUserView closeIconRef={closeIconRef} hide={hide} setVisible={setVisible} user={mobileUser} refetch={peopleDetails?.refetch}/>
                 )}
             ></Sidebar>
         </div>

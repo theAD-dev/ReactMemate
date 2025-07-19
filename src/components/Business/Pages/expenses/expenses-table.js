@@ -37,6 +37,7 @@ const formatDate = (timestamp) => {
 const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
     const { role } = useAuth();
     const observerRef = useRef(null);
+    const timeoutRef = useRef(null);
     const { trialHeight } = useTrialHeight();
     const [expenses, setExpenses] = useState([]);
     const [page, setPage] = useState(1);
@@ -49,7 +50,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     const [editData, setEditData] = useState("");
     const [visible, setVisible] = useState(false);
     const [showDialog, setShowDialog] = useState({ data: null, show: false });
-    
+
     const url = React.useMemo(() => window.location.href, []);
     const urlObj = React.useMemo(() => new URL(url), [url]);
     const params = React.useMemo(() => new URLSearchParams(urlObj.search), [urlObj]);
@@ -178,7 +179,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
     const FileBody = (rowData) => {
         if (!rowData.file) return "";
-        
+
         const extension = rowData.file ? rowData.file.split(".")?.[rowData.file.split(".")?.length - 1] : "";
         if (rowData.file) return <Link to={rowData.file} target='_blank'>
             {getFileIcon(extension, 28)}
@@ -211,12 +212,37 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     });
 
     const ActionBody = (rowData) => {
+        const deleteExpense = () => {
+            const filteredExpense = expenses.filter(expense => expense.id !== rowData.id);
+            const positionOfExpense = expenses.findIndex(expense => expense.id === rowData.id);
+            setExpenses(filteredExpense);
+            setTotal((prev) => prev - 1);
+            setTotalMoney((prev) => prev - rowData.total);
+
+            timeoutRef.current = setTimeout(() => {
+               deleteMutation.mutate(rowData.id);
+            }, 5000);
+
+            toast.info('Expense has been deleted', {
+                action: {
+                    label: 'Undo',
+                    onClick: () => {
+                        clearTimeout(timeoutRef.current);
+                        toast.success('Expense has been restored');
+                        setExpenses(prev => [...prev.slice(0, positionOfExpense), rowData, ...prev.slice(positionOfExpense + 1)]);
+                        setTotal((prev) => prev + 1);
+                        setTotalMoney((prev) => prev + rowData.total);
+                    },
+                },
+            });
+        };
+
         return (
             <div className='d-flex justify-content-center align-items-center w-100 h-100'>
                 {deleteMutation?.variables &&
                     (deleteMutation?.variables === rowData.id)
                     ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner>
-                    : <Trash color='#667085' size={20} className='cursor-pointer' onClick={async () => { await deleteMutation.mutateAsync(rowData.id); }} />}
+                    : <Trash color='#667085' size={20} className='cursor-pointer' onClick={deleteExpense} />}
             </div>
         );
     };
