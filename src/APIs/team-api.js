@@ -35,3 +35,13 @@ export const getTeamInvoiceHistory = async (id, page, limit, search = "", order 
 
     return fetchAPI(url.toString(), options);
 };
+
+export const updateMobileUser = async (id, data) => {
+    const endpoint = `/team/mobile-users/${id}/`;
+    const options = {
+        method: 'PUT',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

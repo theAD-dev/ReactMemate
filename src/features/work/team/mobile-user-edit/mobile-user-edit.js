@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { QuestionCircle } from 'react-bootstrap-icons';
 import clsx from 'clsx';
@@ -11,14 +11,8 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Rating } from 'primereact/rating';
 import style from './mobile-user-edit.module.scss';
 import { dateFormat } from '../../../../components/Business/shared/utils/helper';
-import { formatAUD } from '../../../../shared/lib/format-aud';
 
-const MobileUserEdit = ({ user }) => {
-    const [message, setMessage] = useState("");
-    const [paymentCycle, setPaymentCycle] = useState("");
-    const [gst, setGst] = useState(false);
-    const [hourlyRate, setHourlyRate] = useState(null);
-
+const MobileUserEdit = ({ user, message, setMessage, paymentCycle, setPaymentCycle, gst, setGst, hourlyRate, setHourlyRate }) => {
     return (
         <>
             {/* User Details */}
@@ -26,23 +20,23 @@ const MobileUserEdit = ({ user }) => {
                 <Row>
                     <Col sm={12} className='mb-3'>
                         <label className={clsx(style.label)}>Rating</label>
-                        <Rating value={3} className='yellow-rating' style={{ position: 'static' }} readOnly cancel={false} />
+                        <Rating value={user?.rating || 0} className='yellow-rating' style={{ position: 'static' }} readOnly cancel={false} />
                     </Col>
                     <Col sm={6} className='mb-3'>
                         <label className={clsx(style.label)}>First Name</label>
-                        <p className={clsx(style.text)}>{user?.firstName || 'John'}</p>
+                        <p className={clsx(style.text)}>{user?.first_name}</p>
                     </Col>
                     <Col sm={6} className='mb-3'>
                         <label className={clsx(style.label)}>Last Name</label>
-                        <p className={clsx(style.text)}>{user?.lastName || 'Doe'}</p>
+                        <p className={clsx(style.text)}>{user?.last_name}</p>
                     </Col>
                     <Col sm={6} className='mb-0'>
-                        <label className={clsx(style.label)}>Date of Birthday</label>
-                        <p className={clsx(style.text)}>{dateFormat(user?.dob || '1995-12-17')}</p>
+                        <label className={clsx(style.label)}>Days in Company</label>
+                        <p className={clsx(style.text)}>{user?.days_in_company || 0}</p>
                     </Col>
                     <Col sm={6} className='mb-0'>
                         <label className={clsx(style.label)}>ABN/TFN</label>
-                        <p className={clsx(style.text)}>{user?.abn || '32 635 443 221'}</p>
+                        <p className={clsx(style.text)}>{user?.abn || '-'}</p>
                     </Col>
                 </Row>
             </div>
@@ -53,11 +47,11 @@ const MobileUserEdit = ({ user }) => {
                 <Row>
                     <Col sm={6} className='mb-0'>
                         <label className={clsx(style.label)}>Email</label>
-                        <p className={clsx(style.text)}>{user?.email || 'client@email.com'}</p>
+                        <p className={clsx(style.text)}>{user?.email || '-'}</p>
                     </Col>
                     <Col sm={6} className='mb-0'>
                         <label className={clsx(style.label)}>Phone</label>
-                        <p className={clsx(style.text)}>{user?.phone || '07 3803 4998'}</p>
+                        <p className={clsx(style.text)}>{user?.phone || '-'}</p>
                     </Col>
                 </Row>
             </div>
@@ -68,24 +62,24 @@ const MobileUserEdit = ({ user }) => {
                 <Row>
                     <Col sm={6} className='mb-3'>
                         <label className={clsx(style.label)}>Country</label>
-                        <p className={clsx(style.text)}>{user?.country || 'Australia'}</p>
+                        <p className={clsx(style.text)}>{user?.country || '-'}</p>
                     </Col>
                     <Col sm={6}></Col>
                     <Col sm={6} className='mb-3'>
                         <label className={clsx(style.label)}>State</label>
-                        <p className={clsx(style.text)}>{user?.state || 'New South Wales'}</p>
+                        <p className={clsx(style.text)}>{user?.state || '-'}</p>
                     </Col>
                     <Col sm={6} className='mb-3'>
                         <label className={clsx(style.label)}>City/Suburb</label>
-                        <p className={clsx(style.text)}>{user?.city || 'Winburndale'}</p>
+                        <p className={clsx(style.text)}>{user?.city || '-'}</p>
                     </Col>
                     <Col sm={6}>
                         <label className={clsx(style.label)}>Street Address</label>
-                        <p className={clsx(style.text)}>{user?.street || 'Sydney Street of 914'}</p>
+                        <p className={clsx(style.text)}>{user?.street || '-'}</p>
                     </Col>
                     <Col sm={6}>
                         <label className={clsx(style.label)}>Postcode</label>
-                        <p className={clsx(style.text)}>{user?.postcode || '2795'}</p>
+                        <p className={clsx(style.text)}>{user?.postcode || '-'}</p>
                     </Col>
                 </Row>
             </div>
@@ -98,7 +92,7 @@ const MobileUserEdit = ({ user }) => {
                         <label className={clsx(style.label)}>P/H</label>
                         <IconField className='w-100 border rounded' iconPosition="right">
                             <InputIcon><span style={{ position: 'relative', top: '-4px', left: '10px' }}>$</span></InputIcon>
-                            <InputText value={hourlyRate} keyfilter={"num"} onBlur={(e) => setHourlyRate(e?.target?.value || 0)} style={{ paddingLeft: '28px', paddingRight: '40px', height: '46px' }} className={clsx(style.inputText, "outline-none", 'w-100')} placeholder='20' />
+                            <InputText value={hourlyRate} keyfilter={"num"} onChange={(e) => setHourlyRate(e?.target?.value || 0)} style={{ paddingLeft: '28px', paddingRight: '40px', height: '46px' }} className={clsx(style.inputText, "outline-none", 'w-100')} placeholder='20' />
                             <InputIcon>
                                 <QuestionCircle style={{ position: 'relative', top: '-4px', right: '5px' }} color='#98A2B3' size={16} />
                             </InputIcon>
@@ -134,11 +128,11 @@ const MobileUserEdit = ({ user }) => {
                 <Row>
                     <Col sm={6}>
                         <label className={clsx(style.label)}>Full Name</label>
-                        <p className={clsx(style.text)}>{user?.emergencyContactName || 'Paul Stein'}</p>
+                        <p className={clsx(style.text)}>{user?.emergency_contact_name || '-'}</p>
                     </Col>
                     <Col sm={6}>
                         <label className={clsx(style.label)}>Phone</label>
-                        <p className={clsx(style.text)}>{user?.emergencyPhone || '1300882582'}</p>
+                        <p className={clsx(style.text)}>{user?.emergency_contact_phone || '-'}</p>
                     </Col>
                 </Row>
             </div>

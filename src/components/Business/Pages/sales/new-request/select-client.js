@@ -4,6 +4,9 @@ import {
   PersonAdd,
   HouseDoor,
   ChevronLeft,
+  Person,
+  InfoSquare,
+  CardList,
 } from "react-bootstrap-icons";
 import { NavLink } from "react-router-dom";
 import { ExistingClientsSearch } from "./existing-clients";
@@ -26,24 +29,17 @@ const SelectClientType = () => {
           </NavLink></button>
         </div>
         <div className="newQuoteContent mb-0">
-          <h3>Select Client Type</h3>
-
-          <div className="formgroupWrap1">
-            <ul className="mt-3" style={{ opacity: '.6', cursor: 'not-allowed' }}>
-              <li>
-                <NavLink className="ActiveClient" to="#" style={{ cursor: 'not-allowed' }}>
-                  <span>
-                    <HouseDoor color="#667085" size={24} />
-                  </span>{" "}
-                  Internal Project
-                </NavLink>
-              </li>
+          <div className='navStepClient'>
+            <ul>
+              <li className='activeClientTab'><span><Person color="#D0D5DD" size={15} /></span> <p>Choose Client</p></li>
+              <li className='deactiveColorBox'><span><InfoSquare color="#D0D5DD" size={15} /></span> <p>Client Information</p> </li>
+              <li className='deactiveColorBox'><span><CardList color="#D0D5DD" size={15} /></span> <p>Scope of Work</p> </li>
             </ul>
           </div>
 
           <div className="formgroupWrap">
             <ul className="mt-2">
-              <li className="w-100">
+              <li className="w-50 me-1">
                 <NavLink
                   className="ActiveClient"
                   to="/sales/newquote/selectyourclient/new-clients"
@@ -52,6 +48,14 @@ const SelectClientType = () => {
                     <PersonAdd color="#1AB2FF" size={24} />
                   </span>{" "}
                   New Client{" "}
+                </NavLink>
+              </li>
+              <li className="w-50 ms-1" style={{ opacity: '.6', cursor: 'not-allowed' }}>
+                <NavLink className="ActiveClient" to="#" style={{ cursor: 'not-allowed' }}>
+                  <span>
+                    <HouseDoor color="#667085" size={24} />
+                  </span>{" "}
+                  Internal Project
                 </NavLink>
               </li>
             </ul>

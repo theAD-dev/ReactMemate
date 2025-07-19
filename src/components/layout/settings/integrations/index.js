@@ -179,7 +179,7 @@ const Integrations = () => {
                   </div>
                   <div className={style.bottom}>
                     <button className={style.infoButton} onClick={() => { setEmailVisible(true); }}>
-                      {!emailIntegrationsQuery?.data?.outgoing_email ? 'Connect' : 'Update'}
+                      {!emailIntegrationsQuery?.data?.outgoing_email || emailIntegrationsQuery?.data?.outgoing_email === 'no-reply@memate.com.au' ? 'Connect' : 'Update'}
                     </button>
                   </div>
                 </div>
