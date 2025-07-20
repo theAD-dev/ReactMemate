@@ -18,17 +18,19 @@ const StripPayment = forwardRef(({ setIsPaymentProcess, fetchData = () => {} }, 
         if (!stripe || !elements) return;
 
         setIsPaymentProcess(true);
-
+        
         const resp = await stripe.confirmPayment({
             elements,
-            confirmParams: {
-                return_url: window.location.href,
-            },
+            redirect: "if_required",
         });
 
-        if (resp.error) toast.error("Some Error Occurred !!");
-        setIsPaymentProcess(false);
-        fetchData();
+        if (resp.error) {
+            toast.error("Some Error Occurred !!");
+            setIsPaymentProcess(false);
+        } else {
+            setIsPaymentProcess(false);
+            window.location.reload();
+        }
     };
 
     return (
