@@ -1,9 +1,13 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
-import { CheckCircle, Envelope, FilePdf, XCircle } from 'react-bootstrap-icons';
+import { CheckCircle, FilePdf, XCircle } from 'react-bootstrap-icons';
 import { Link, useParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
 import style from './team-invoice-history.module.scss';
+import { markInvoiceAsPaid, markInvoiceAsUnpaid } from '../../../../APIs/invoice-api';
 import { getTeamInvoiceHistory } from '../../../../APIs/team-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatDate } from '../../../../shared/lib/date-format';
@@ -11,9 +15,9 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
-
 const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue }, ref) => {
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [userInvoices, setUserInvoices] = useState([]);
@@ -22,11 +26,70 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
   const [tempSort, setTempSort] = useState({ sortField: '', sortOrder: -1 });
   const [hasMoreData, setHasMoreData] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [loadingRows, setLoadingRows] = useState(new Set());
   const limit = 25;
+
+  const { mutate: markPaid } = useMutation({
+    mutationFn: (invoiceId) => {
+      setLoadingRows(prev => new Set(prev).add(invoiceId));
+      return markInvoiceAsPaid(invoiceId);
+    },
+    onSuccess: (_, invoiceId) => {
+      setUserInvoices((prev) =>
+        prev.map((invoice) =>
+          invoice.id === invoiceId ? { ...invoice, status: "1" } : invoice
+        )
+      );
+      queryClient.invalidateQueries(['teamInvoices', id]);
+      toast.success('Invoice marked as paid successfully');
+      setLoadingRows(prev => {
+        const next = new Set(prev);
+        next.delete(invoiceId);
+        return next;
+      });
+    },
+    onError: (error, invoiceId) => {
+      toast.error(error.message || 'Failed to mark invoice as paid');
+      setLoadingRows(prev => {
+        const next = new Set(prev);
+        next.delete(invoiceId);
+        return next;
+      });
+    }
+  });
+
+  const { mutate: markUnpaid } = useMutation({
+    mutationFn: (invoiceId) => {
+      setLoadingRows(prev => new Set(prev).add(invoiceId));
+      return markInvoiceAsUnpaid(invoiceId);
+    },
+    onSuccess: (_, invoiceId) => {
+      setUserInvoices((prev) =>
+        prev.map((invoice) =>
+          invoice.id === invoiceId ? { ...invoice, status: "0" } : invoice
+        )
+      );
+      queryClient.invalidateQueries(['teamInvoices', id]);
+      toast.success('Invoice marked as unpaid successfully');
+      setLoadingRows(prev => {
+        const next = new Set(prev);
+        next.delete(invoiceId);
+        return next;
+      });
+    },
+    onError: (error, invoiceId) => {
+      toast.error(error.message || 'Failed to mark invoice as unpaid');
+      setLoadingRows(prev => {
+        const next = new Set(prev);
+        next.delete(invoiceId);
+        return next;
+      });
+    }
+  });
 
   useEffect(() => {
     setHasMoreData(true);
-    setPage(1);  // Reset to page 1 whenever searchValue changes
+    setPage(1);
   }, [searchValue]);
 
   useEffect(() => {
@@ -101,13 +164,33 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
     }
   };
 
-  const statusBodyTemplate = (rowData) => {
-    return rowData.status === "1" ?
-      <div className={`${style.clickButton} ${style.paid}`}>
-        Paid <CheckCircle color='#079455' size={16} />
-      </div> : <div className={`${style.clickButton} ${style.unpaid}`}>
-        Not Paid <XCircle color='#F04438' size={16} />
-      </div>;
+  const StatusBodyTemplate = (rowData) => {
+    const handleStatusToggle = () => {
+      if (loadingRows.has(rowData.id)) return; // Prevent double-clicks
+      if (rowData.status === "1") {
+        markUnpaid(rowData.id);
+      } else {
+        markPaid(rowData.id);
+      }
+    };
+    
+    const isLoading = loadingRows.has(rowData.id);
+    
+    return (
+      <div 
+        className={`${style.clickButton} ${rowData.status === "1" ? style.paid : style.unpaid}`}
+        onClick={handleStatusToggle}
+        style={{ cursor: isLoading ? 'wait' : 'pointer' }}
+      >
+        {isLoading ? (
+          <ProgressSpinner style={{ width: '18px', height: '18px' }} />
+        ) : rowData.status === "1" ? (
+          <>Paid <CheckCircle color='#079455' size={16} /></>
+        ) : (
+          <>Not Paid <XCircle color='#F04438' size={16} /></>
+        )}
+      </div>
+    );
   };
 
   const InvoiceIDBody = (rowData) => {
@@ -137,7 +220,7 @@ const TeamInvoiceHistoryTable = forwardRef(({ selected, setSelected, searchValue
       <Column field="date_to" header="Date" body={(rowData) => `${formatDate(rowData.date_from)} - ${formatDate(rowData.date_to)}`} sortable style={{ minWidth: '113px' }}></Column>
       <Column field='total_hours' header="Total Hours" body={(rowData) => `${rowData.total_hours}h`} bodyClassName={'text-end'} style={{ minWidth: '114px' }}></Column>
       <Column field='total_amount' header="Total Amount" body={(rowData) => `$${formatAUD(rowData.total_amount)}`} style={{ minWidth: '114px' }}></Column>
-      <Column field='status' header="Status" body={statusBodyTemplate} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }}></Column>
+      <Column field='status' header="Status" body={StatusBodyTemplate} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }}></Column>
     </DataTable>
   );
 });

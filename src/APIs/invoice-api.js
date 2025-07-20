@@ -84,3 +84,21 @@ export const sendInvoiceToXeroApi = async (data) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
 };
+
+export const markInvoiceAsPaid = async (id) => {
+  const endpoint = `/team/mobile-users/invoices/${id}/pay/`;
+  const options = {
+    method: 'POST'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const markInvoiceAsUnpaid = async (id) => {
+  const endpoint = `/team/mobile-users/invoices/${id}/unpay/`;
+  const options = {
+    method: 'POST'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
