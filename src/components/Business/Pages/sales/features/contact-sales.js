@@ -8,14 +8,16 @@ import phonecallgra from "../../../../../assets/images/icon/phonecallgra.svg";
 import styles from '../sales.module.scss';
 
 // Format Date
-const formatDate = (timestamp) => {
+const formatDate = (timestamp, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone) => {
   const date = new Date(timestamp * 1000);
-  const day = date.getDate();
-  const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-  }).format(date);
-  const year = date.getFullYear();
-  return `${day} ${monthAbbreviation} ${year}`;
+  const options = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone,
+  };
+  // Format as 'D Mon YYYY' (e.g., 20 Jul 2025)
+  return date.toLocaleDateString('en-AU', options);
 };
 
 const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
