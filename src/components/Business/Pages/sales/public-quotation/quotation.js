@@ -40,7 +40,56 @@ const Quotation = () => {
         try {
             setIsLoading(true);
             const data = await getQuoteation(id);
-            setQuote(data);
+            console.log('data: ', data);
+
+            const { merges = [], calculations = [] } = data;
+
+            const calcMap = new Map(calculations.map(calc => [calc.id, calc]));
+
+            const mergedItems = merges.map(merge => {
+                const mergedCalcs = merge.calculators
+                    .map(c => calcMap.get(c.calculator))
+                    .filter(Boolean);
+
+                const quantity = mergedCalcs.reduce((sum, c) => sum + Number(c.quantity || 0), 0);
+                const priceBeforeDiscount = mergedCalcs.reduce((sum, c) => sum + Number(c.quantity) * Number(c.unit_price), 0);
+                const totalDiscount = mergedCalcs.reduce((sum, c) => sum + Number(c.discount || 0), 0);
+                const totalAfterDiscount = mergedCalcs.reduce((sum, c) => sum + Number(c.total || 0), 0);
+
+                const discountPercent = totalAfterDiscount > 0
+                    ? ((priceBeforeDiscount - totalAfterDiscount) / priceBeforeDiscount * 100).toFixed(2)
+                    : "0.00";
+
+                const unitPrice = quantity > 0
+                    ? (priceBeforeDiscount / quantity).toFixed(2)
+                    : "0.00";
+
+                return {
+                    id: merge.id,
+                    index: "Merged Item",
+                    subindex: merge.title,
+                    description: merge.description || '',
+                    quantity: quantity.toFixed(2),
+                    discount: discountPercent,
+                    discount_percent: totalDiscount.toFixed(2),
+                    unit_price: unitPrice,
+                    total: totalAfterDiscount.toFixed(2),
+                    isMerged: true,
+                    mergeAlias: merge.alias
+                };
+            });
+
+            console.log(mergedItems);
+
+            const mergedCalcIds = new Set(merges.flatMap(m => m.calculators.map(c => c.calculator)));
+            const remainingCalcs = calculations.filter(c => !mergedCalcIds.has(c.id));
+
+            const finalQuote = {
+                ...data,
+                calculations: [...mergedItems, ...remainingCalcs]
+            };
+
+            setQuote(finalQuote);
         } catch (error) {
             console.error('Error fetching data: ', error);
             toast.error("Failed to get the Quotation. Please try again.");
@@ -48,6 +97,7 @@ const Quotation = () => {
             setIsLoading(false);
         }
     };
+
 
     useEffect(() => {
         fetchData();
