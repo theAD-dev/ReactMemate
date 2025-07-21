@@ -487,15 +487,15 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     }, []);
 
     useEffect(() => {
-        setValue('supplier', +supplierValue?.id);
-        if (supplierValue?.id) trigger(['supplier']);
-        if (supplierValue?.service?.code && xeroCodesList?.data?.length) {
-            let findCode = xeroCodesList?.data?.find(code => code.code === supplierValue?.service?.code);
-            setValue('account_code', findCode?.id);
-        } else {
+        if (supplierValue) setValue('supplier', +supplierValue);
+        if (supplierValue) trigger(['supplier']);
+        if (selectedSupplier?.service?.code && xeroCodesList?.data?.length) {
+            let findCode = xeroCodesList?.data?.find(code => code.code === selectedSupplier?.service?.code);
+            if (findCode?.id) setValue('account_code', findCode?.id);
+        } else if (defaultValues.account_code) {
             setValue('account_code', defaultValues.account_code || '');
         }
-    }, [supplierValue, xeroCodesList?.data, setValue, trigger, defaultValues.account_code]);
+    }, [supplierValue, xeroCodesList?.data, setValue, trigger, defaultValues.account_code, selectedSupplier?.service?.code]);
 
     const documentSidebarHeader = (
         <div className="d-flex align-items-center justify-content-between flex-shrink-0 w-100" style={{ borderBottom: '1px solid #EAECF0', padding: '4px 10px 24px 0px' }}>
@@ -531,7 +531,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                 optionLabel="name"
                                 optionValue="id"
                                 onChange={(e) => {
-                                    setSupplierValue(e.value);
+                                    setSupplierValue(+e.value);
                                     let findSupplier = suppliers.find(supplier => supplier.id === e.value);
                                     setSelectedSupplier(findSupplier || {});
                                 }}
