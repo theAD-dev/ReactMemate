@@ -212,40 +212,49 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     });
 
     const ActionBody = (rowData) => {
-        const deleteExpense = () => {
-            const filteredExpense = expenses.filter(expense => expense.id !== rowData.id);
-            const positionOfExpense = expenses.findIndex(expense => expense.id === rowData.id);
-            setExpenses(filteredExpense);
-            setTotal((prev) => prev - 1);
-            setTotalMoney((prev) => prev - rowData.total);
+    const deleteExpense = () => {
+        setExpenses(prev => prev.filter(exp => exp.id !== rowData.id));
+        setTotal(prev => prev - 1);
+        setTotalMoney(prev => prev - rowData.total);
 
-            timeoutRef.current = setTimeout(() => {
-               deleteMutation.mutate(rowData.id);
-            }, 5000);
+        timeoutRef.current = setTimeout(() => {
+            deleteMutation.mutate(rowData.id);
+        }, 5000);
 
-            toast.info('Expense has been deleted', {
-                action: {
-                    label: 'Undo',
-                    onClick: () => {
-                        clearTimeout(timeoutRef.current);
-                        toast.success('Expense has been restored');
-                        setExpenses(prev => [...prev.slice(0, positionOfExpense), rowData, ...prev.slice(positionOfExpense + 1)]);
-                        setTotal((prev) => prev + 1);
-                        setTotalMoney((prev) => prev + rowData.total);
-                    },
+        toast.info('Expense has been deleted', {
+            action: {
+                label: 'Undo',
+                onClick: () => {
+                    clearTimeout(timeoutRef.current);
+                    deleteMutation.reset?.();
+
+                    toast.success('Expense has been restored');
+
+                    setExpenses(prev => {
+                        const index = expenses.findIndex(exp => exp.id === rowData.id); // get original index
+                        return [
+                            ...prev.slice(0, index),
+                            rowData,
+                            ...prev.slice(index)
+                        ];
+                    });
+
+                    setTotal(prev => prev + 1);
+                    setTotalMoney(prev => prev + rowData.total);
                 },
-            });
-        };
-
-        return (
-            <div className='d-flex justify-content-center align-items-center w-100 h-100'>
-                {deleteMutation?.variables &&
-                    (deleteMutation?.variables === rowData.id)
-                    ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner>
-                    : <Trash color='#667085' size={20} className='cursor-pointer' onClick={deleteExpense} />}
-            </div>
-        );
+            },
+        });
     };
+
+    return (
+        <div className='d-flex justify-content-center align-items-center w-100 h-100'>
+            {deleteMutation?.variables === rowData.id
+                ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+                : <Trash color='#667085' size={20} className='cursor-pointer' onClick={deleteExpense} />}
+        </div>
+    );
+};
+
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
 

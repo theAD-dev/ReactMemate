@@ -86,7 +86,7 @@ const Discovermemate = () => {
                   <div className="step"></div>
                   <div className="step active"></div>
                 </div>
-                <div className="formBoxDiscover">
+                <div className="formBoxDiscover mb-2">
                   <div className="formgroup mb-3">
                     <label>Name on card<span style={{ color: "#f04438" }}>*</span></label>
                     <div className={`inputInfo ${error ? "error-border" : name ? "successBorder" : ""}`}>
@@ -111,7 +111,9 @@ const Discovermemate = () => {
                   {error && <p className="error-message">{error}</p>}
                 </div>
 
-                <div className="d-flex gap-2 mt-2">
+                <div style={{ borderRadius: '8px', border: '1px solid #BAE8FF', background: '#F2FAFF', color: '#0A4766', padding: '16px', fontSize: '14px' }}>You’re signing up for a free trial — no charge today.</div>
+
+                <div className="d-flex gap-2 mt-1">
                   <label className="customCheckBox">
                     <input
                       type="checkbox"
@@ -123,7 +125,7 @@ const Discovermemate = () => {
                     </span>
                   </label>
                   <p className="mt-3 mb-0 termconditionP">
-                    By selecting "Start Free Trial", I authorise meMate to charge my payment method on [May 9, 2025] and monthly after that at the then-current price plus tax. I can cancel / change  anytime by going to the Subscription page in Account Settings. I agree to the <span style={{ color: '#158ECC', fontWeight: '600' }}>terms</span> and have read and acknowledged <span style={{ color: '#158ECC', fontWeight: '600' }}>privacy statement</span>
+                    By selecting "Start Free Trial", I authorise meMate to charge my payment method on {new Date(Date.now() + 10 * 864e5).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} and monthly after that at the then-current price plus tax. I can cancel / change  anytime by going to the Subscription page in Account Settings. I agree to the <span style={{ color: '#158ECC', fontWeight: '600' }}>terms</span> and have read and acknowledged <span style={{ color: '#158ECC', fontWeight: '600' }}>privacy statement</span>
                   </p>
                 </div>
                 <button

@@ -69,8 +69,8 @@ const Quotation = () => {
                     index: "Merged Item",
                     subindex: merge.title,
                     description: merge.description || '',
-                    quantity: quantity.toFixed(2),
-                    discount: discountPercent,
+                    quantity: '1',
+                    discount: '',
                     discount_percent: totalDiscount.toFixed(2),
                     unit_price: unitPrice,
                     total: totalAfterDiscount.toFixed(2),
@@ -168,7 +168,7 @@ const Quotation = () => {
     );
 
     const discountBody = (rowData) => (
-        <>{rowData?.discount}%</>
+        <>{rowData?.discount ? `${rowData?.discount}%` : '-'}</>
     );
 
     const TotalBody = (rowData) => (
