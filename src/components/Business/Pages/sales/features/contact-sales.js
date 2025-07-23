@@ -7,18 +7,18 @@ import mailgradi from "../../../../../assets/images/icon/mailgradi.svg";
 import phonecallgra from "../../../../../assets/images/icon/phonecallgra.svg";
 import styles from '../sales.module.scss';
 
-// Format Date
-const formatDate = (timestamp, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone) => {
-  const date = new Date(timestamp * 1000);
-  const options = {
+const formatDate = (timestampInSeconds, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone) => {
+  console.log('timeZone: ', timeZone, timestampInSeconds);
+  const date = new Date(timestampInSeconds * 1000); // Create full UTC date
+
+  return new Intl.DateTimeFormat('en-AU', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone,
-  };
-  // Format as 'D Mon YYYY' (e.g., 20 Jul 2025)
-  return date.toLocaleDateString('en-AU', options);
+    timeZone: 'Australia/Sydney',
+  }).format(date);
 };
+
 
 const ContactSales = ({ saleUniqueId, type, refreshData, created }) => {
   const [popoverVisible, setPopoverVisible] = React.useState(null);
