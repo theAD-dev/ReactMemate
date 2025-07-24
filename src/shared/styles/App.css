@@ -8720,6 +8720,14 @@ ul.activeListPassword li.active {
   line-height: 20px;
 }
 
+.copywrite-n {
+  color: var(--colorG3);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
 .boxLogin .fillbtn,
 .boxLogin .fillbtn:hover {
   border-radius: 40px !important;

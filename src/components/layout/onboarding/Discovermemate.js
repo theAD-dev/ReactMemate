@@ -70,15 +70,15 @@ const Discovermemate = () => {
       <div className="logohead">
         <img src={LoinLogo} alt="Logo" />
       </div>
-      <div className="copywrite">© Memate {new Date().getFullYear()}</div>
       <div className="OnboardingStep1">
         <form onSubmit={handleSubmit}>
           <div className="loginPage">
-            <div className="boxinfo">
+            <div className="boxinfo d-flex flex-column py-4" style={{ overflow: 'auto' }}>
               <div className="boxLogin">
-                <h2>
+                <h2 className="mb-3">
                   10-Day <span>Free Trial</span> Discover <span>Memate</span>
                 </h2>
+                <p style={{ color: '#475467', fontSize: '16px' }}>Your card won’t be charged unless you choose to continue after the trial period. You can cancel anytime before the trial ends — no questions asked. </p>
                 <div className="step-progress">
                   <div className="step"></div>
                   <div className="step"></div>
@@ -86,6 +86,7 @@ const Discovermemate = () => {
                   <div className="step"></div>
                   <div className="step active"></div>
                 </div>
+                <label style={{ fontWeight: '600', color: '#1D2939', fontSize: '16px' }}>Payment Details</label>
                 <div className="formBoxDiscover mb-2">
                   <div className="formgroup mb-3">
                     <label>Name on card<span style={{ color: "#f04438" }}>*</span></label>
@@ -137,6 +138,8 @@ const Discovermemate = () => {
                   {!loading && <img src={arrowRight} alt="Arrow Right" />}
                 </button>
               </div>
+
+              <div className="copywrite-n text-left w-100 mt-3 ps-4">© Memate {new Date().getFullYear()}</div>
             </div>
             <div
               className="sliderRight BusinessPlanwrap"
