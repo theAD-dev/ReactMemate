@@ -220,7 +220,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                             }
                                         </div>
                                         <div className=''>
-                                            <label className={clsx(style.customLabel)}>Payment</label>
+                                            <label className={clsx(style.customLabel)}>Starts</label>
                                             <div className={style.paymentBox}>
                                                 <div className={style.dollarBox}>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

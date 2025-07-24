@@ -86,7 +86,7 @@ const Quotation = () => {
 
             const finalQuote = {
                 ...data,
-                calculations: [...mergedItems, ...remainingCalcs]
+                calculations: [...remainingCalcs, ...mergedItems]
             };
 
             setQuote(finalQuote);

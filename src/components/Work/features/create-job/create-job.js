@@ -143,13 +143,20 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     });
 
 
+    // @type and @time_type
+    // type: 2 - fix, 3 - hours, 4 - time tracker
+    // time_type: 1 - shift, T - time frame 
     const [type, setType] = useState('2');
+    const [time_type, set_time_type] = useState('1');
+    console.log('type: ', type);
+    console.log('time_type: ', time_type);
+
     const [cost, setCost] = useState(0.00);
-    const [time_type, set_time_type] = useState('');
     const today = new Date();
     const [start, setStart] = useState(today);
     const [end, setEnd] = useState("");
     const [duration, setDuration] = useState("");
+    const [dayShiftHours, setDayShiftHours] = useState("");
 
     const [errors, setErrors] = useState({});
 
@@ -234,10 +241,11 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         setFiles([]);
         setType('2');
         setCost(0.00);
-        set_time_type('');
+        set_time_type('1');
         setStart("");
         setEnd("");
         setDuration("");
+        setDayShiftHours("");
         setErrors({});
     };
 
@@ -497,9 +505,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (type === '2' && !cost) tempErrors.cost = true;
         else payload.cost = cost;
 
-        if (type !== '2' && !duration) tempErrors.duration = true;
+        if (!duration || duration == '0.0') tempErrors.duration = true;
         else if (duration) payload.duration = +duration;
-
+       
         if (!time_type) tempErrors.time_type = true;
         else payload.time_type = time_type;
 
@@ -508,6 +516,12 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
         if (time_type !== '1' && !end) tempErrors.end = true;
         else if (end) payload.end_date = new Date(end).toISOString();
+
+        if ((time_type === '1' && type === '3') && !dayShiftHours) tempErrors.dayShiftHours = true;
+        else if ((time_type === '1' && type === '3') && dayShiftHours) {
+            const day = Math.ceil(duration / dayShiftHours);
+            payload.end_date = new Date(new Date(start).getTime() + (day * 24 * 60 * 60 * 1000)).toISOString();
+        }
 
         if (projectId) {
             const project = projectQuery?.data?.find(project => project.id === projectId);
@@ -600,6 +614,14 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 setEnd(endDate);
             }
 
+            // set day shift hours
+            if (jobData.time_type === '1' && jobData.type === '3') {
+                const startDate = new Date(+jobData.start_date * 1000);
+                const endDate = new Date(+jobData.end_date * 1000);
+                const dayHours = Math.ceil((endDate - startDate) / (24 * 60 * 60 * 1000));
+                setDayShiftHours(parseFloat(dayHours).toFixed(2));
+            }
+
             // Set project photos
             setProjectPhotoDeliver(jobData.project_photos || "3");
 
@@ -617,7 +639,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     }, [isEditMode, jobData, workerDetailsSet, projectQuery?.data]);
 
     useEffect(() => {
-        if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === '1' && type === '3') || (time_type === 'T' && type === '4'))) {
+        if (mobileUserQuery?.data && userId && ((time_type === '1' && type === '2') || (time_type === 'T' && type === '4'))) {
             const findUser = mobileUserQuery?.data?.users.find((user) => user.id === userId);
             if (findUser) {
                 let duration = cost / findUser?.hourly_rate;
@@ -627,7 +649,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     }, [cost, mobileUserQuery?.data, userId, time_type, type]);
 
     return (
-        <Sidebar visible={visible} position="right" onHide={() => {setVisible(false); reset();}} modal={false} dismissable={false} style={{ width: '702px' }}
+        <Sidebar visible={visible} position="right" onHide={() => { setVisible(false); reset(); }} modal={false} dismissable={false} style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
                 <div className='create-sidebar d-flex flex-column'>
                     <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
@@ -891,14 +913,23 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                             )}
                                         </>
                                             : <div style={{ width: 'fit-content' }}>
-                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>{type === '3' ? "Hours" : "Time Estimation"}</label>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>{type === '3' ? "Hours" : "Time Estimation"}<span className="required">*</span></label>
                                                 <IconField iconPosition="left">
                                                     <InputIcon><span style={{ position: 'relative', top: '-4px' }}>H</span></InputIcon>
-                                                    <InputText value={duration} onChange={(e) => {
-                                                        setDuration(e.target.value);
-                                                        if (e.target.value)
-                                                            setErrors((others) => ({ ...others, duration: false }));
-                                                    }} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ paddingLeft: '28px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
+                                                    <InputText value={duration}
+                                                        onChange={(e) => {
+                                                            setDuration(e.target.value);
+                                                            setDayShiftHours(e.target.value);
+                                                            if (e.target.value)
+                                                                setErrors((others) => ({ ...others, duration: false }));
+                                                        }}
+                                                        keyfilter={"num"}
+                                                        onBlur={(e) => {
+                                                            setDuration(parseFloat(e?.target?.value || 0).toFixed(2));
+                                                            setDayShiftHours(parseFloat(e.target.value || 0).toFixed(2));
+                                                        }}
+                                                        style={{ paddingLeft: '28px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0'
+                                                    />
                                                 </IconField>
                                                 {errors?.duration && (
                                                     <p className="error-message mb-0">{type === '3' ? "Hours is required" : "Time Estimation is required"}</p>
@@ -1007,13 +1038,28 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                         </div>
                                     }
                                     {
-                                        (time_type === '1' || (time_type !== '1' && type === '4')) && <div style={{ width: 'fit-content' }}>
-                                            <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Hours</label>
-                                            <IconField iconPosition="right">
-                                                <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
-                                                <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(1))} style={{ paddingLeft: '12px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
-                                            </IconField>
-                                        </div>
+                                        (type === '2' && time_type !== 'T') ? (
+                                            <div style={{ width: 'fit-content' }}>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Hours<span className="required">*</span></label>
+                                                <IconField iconPosition="right">
+                                                    <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
+                                                    <InputText value={duration} onChange={(e) => setDuration(e.target.value)} keyfilter={"num"} onBlur={(e) => setDuration(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '12px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
+                                                </IconField>
+                                                {errors?.duration && (
+                                                    <p className="error-message mb-0">{"Hours is required"}</p>
+                                                )}
+                                            </div>
+                                        ) : (time_type === '1' || (time_type !== '1' && type === '4')) ?
+                                            <div style={{ width: 'fit-content' }}>
+                                                <label className={clsx(style.lable, 'mt-4 mb-2 d-block')}>Hours<span className="required">*</span></label>
+                                                <IconField iconPosition="right">
+                                                    <InputIcon><ClockHistory color='#667085' size={20} style={{ position: 'relative', top: '-5px' }} /></InputIcon>
+                                                    <InputText value={dayShiftHours} onChange={(e) => setDayShiftHours(e.target.value)} keyfilter={"num"} onBlur={(e) => setDayShiftHours(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '12px', width: '150px' }} className={clsx(style.inputBox, "outline-none")} placeholder='1.0' />
+                                                </IconField>
+                                                {errors?.dayShiftHours && (
+                                                    <p className="error-message mb-0">{"Hours is required"}</p>
+                                                )}
+                                            </div> : ""
                                     }
                                 </div>
 
