@@ -44,7 +44,7 @@ const formatDate = (timestamp) => {
     }
 };
 
-const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
+const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch, isFilterEnabled }, ref) => {
     const { role } = useAuth();
     const observerRef = useRef(null);
     const navigate = useNavigate();
@@ -355,7 +355,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         <>
             <DataTable ref={ref} value={invoices} scrollable selectionMode={'checkbox'}
                 columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-                scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
+                scrollHeight={`calc(100vh - 175px - ${trialHeight}px - ${isFilterEnabled ? 56 : 0}px)`} className="border" selection={selected}
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={Loader}

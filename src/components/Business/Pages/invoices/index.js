@@ -1,13 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Download, Filter, Printer, Send } from 'react-bootstrap-icons';
+import { Download, Printer, Send } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { TieredMenu } from 'primereact/tieredmenu';
 import { toast } from 'sonner';
 import style from './invoice.module.scss';
 import InvoiceTable from './invoices-table';
@@ -15,14 +13,17 @@ import { paidExpense } from '../../../../APIs/expenses-api';
 import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
+import InvoiceDropdown from '../../features/invoice-features/invoice-filters/invoice-dropdown';
+import InvoicesFilters from '../../features/invoice-features/invoice-filters/invoices-filters';
 
 const InvoicePage = () => {
     const dt = useRef(null);
-    const menu = useRef(null);
     const [searchParams] = useSearchParams();
     const isShowUnpaid = searchParams.get('isShowUnpaid');
     const [total, setTotal] = useState(0);
     const [totalMoney, setTotalMoney] = useState(0);
+    const [filter, setFilters] = useState({});
+    console.log('filter: ', filter);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(isShowUnpaid ? true : false);
@@ -75,7 +76,6 @@ const InvoicePage = () => {
         }
     };
 
-
     return (
         <div className='peoples-page'>
             <Helmet>
@@ -104,8 +104,7 @@ const InvoicePage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter /></button>
-                                        <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
+                                        <InvoiceDropdown setFilters={setFilters} filter={filter} />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -134,11 +133,17 @@ const InvoicePage = () => {
                     }
                 </div>
             </div>
+            {
+                Object.keys(filter).length > 0 && (
+                    <InvoicesFilters filter={filter} setFilters={setFilters} />
+                )
+            }
             <InvoiceTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}
                 selected={selected} setSelected={setSelected}
                 isShowDeleted={isShowDeleted}
                 refetch={refetch}
                 setRefetch={setRefetch}
+                isFilterEnabled={Object.keys(filter).length > 0}
             />
             <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
         </div>

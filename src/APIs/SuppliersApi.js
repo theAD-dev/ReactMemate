@@ -10,7 +10,7 @@ export const getListOfSuppliers = async (page, limit, name = "", order = "", isS
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   url.searchParams.append("limit", limit);
   url.searchParams.append("offset", offset);
-  if (name) url.searchParams.append("name", name);
+  if (name) url.searchParams.append("search", name);
   if (order) url.searchParams.append("ordering", order);
   if (isShowDeleted) url.searchParams.append('deleted', 1);
 

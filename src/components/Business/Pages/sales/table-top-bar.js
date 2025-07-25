@@ -73,6 +73,8 @@ const TableTopBar = ({
   selectedRowCount,
 }) => {
   const [totalAmount, setTotalAmount] = useState(0);
+  const [avgProgress, setAvgProgress] = useState(0);
+  const [progressWiseAmountAvg, setProgressWiseAmountAvg] = useState(0);
   const [key, setKey] = useState("DateRange");
   const [filter, setFilters] = useState({});
   const [filterState, setFilterState] = useState({});
@@ -304,6 +306,12 @@ const TableTopBar = ({
         (total, sale) => total + sale.amountData,
         0
       );
+
+      const avgProgress = rows.reduce((total, sale) => Number(total) + Number(sale?.progressPercentage || 0), 0) / rows.length;
+      const progressWiseAmountAvg = rows.reduce((total, sale) => Number(total) + (Number(sale?.progressPercentage || 0) / 100) * Number(sale?.amountData || 0), 0);
+
+      setProgressWiseAmountAvg(progressWiseAmountAvg);
+      setAvgProgress(parseInt(avgProgress));
       setTotalAmount(calculatedFilterAmount);
     }
   }, [rows]);
@@ -414,6 +422,11 @@ const TableTopBar = ({
                         <>{formattedAmount}</>
                       )}
                     </strong>
+                     <div style={{ width: '60px', height: '12px', background: '#EAECF0', borderRadius: '20px', marginLeft: '8px' }}>
+                        <div style={{ width: `${avgProgress || 0}%`, height: '100%', background: '#1AB2FF', borderRadius: '20px' }}></div>
+                     </div>
+                    <span className="font-14" style={{ fontWeight: 500, margin: '0px 8px 0px 12px', color: '#344054' }}>{avgProgress || 0}%</span>
+                    <strong className="styleT1">${formatAUD(progressWiseAmountAvg || 0)}</strong>
                   </p>
                 ) : (
                   <p className="flexEndStyle styleT3">
