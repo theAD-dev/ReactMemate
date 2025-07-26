@@ -230,7 +230,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                     state={isOpen ? 'open' : 'closed'}
                     anchorRef={ref}
                     onClose={() => setOpen(false)}
-                    menuStyle={{ padding: '24px 24px 20px 24px', width: '555px', marginTop: '45px', maxHeight: '100%' }}
+                    menuStyle={{ padding: '24px 24px 20px 24px', width: '605px', marginTop: '45px', maxHeight: '100%' }}
                 >
                     <div className='d-flex justify-content-between mb-4'>
                         <div className='BoxNo'>
@@ -243,7 +243,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                     <div style={{ width: '100%', maxHeight: '500px', overflow: 'auto' }}>
                         {
                             rowData?.billing_history.map((history, index) =>
-                                <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-start py-1 px-2 rounded mb-2' style={{ width: 'fit-content' }}>
+                                <div key={rowData.unique_id + index} className='d-flex gap-4 border justify-content-start py-1 px-2 rounded mb-2 w-100' style={{ width: 'fit-content' }}>
                                     <div className='d-flex align-items-center'>
                                         {
                                             history?.type === 0 ? (
