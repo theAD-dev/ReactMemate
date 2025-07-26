@@ -18,8 +18,6 @@ import style from './invoice-partial-payment.module.scss';
 import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 
-
-
 const headerElement = (
     <div className={`${style.modalHeader}`}>
         <div className="d-flex align-items-center gap-2">

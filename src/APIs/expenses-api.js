@@ -1,7 +1,7 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-export const getListOfExpense = async (page, limit, search="", order="", isShowUnpaid) => {
+export const getListOfExpense = async (page, limit, search = "", order = "", isShowUnpaid) => {
   const offset = (page - 1) * limit;
   const endpoint = `/expenses/`;
   const options = {
@@ -87,8 +87,8 @@ export const unpaidExpense = async (data) => {
 export const sendExpenseToXeroApi = async (data) => {
   const endpoint = `/expenses/to-xero/`;
   const options = {
-      method: 'PUT',
-      body: data
+    method: 'PUT',
+    body: data
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
@@ -98,6 +98,26 @@ export const deleteExpense = async (uniqueId) => {
   const endpoint = `/expenses/delete/${uniqueId}/`;
   const options = {
     method: 'DELETE'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const downloadStatement = async (data) => {
+  const endpoint = '/clients/statement/pdf/';
+  const options = {
+    method: 'POST',
+    body: data
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
+export const sendStatementEmail = async (data) => {
+  const endpoint = '/clients/statement/';
+  const options = {
+    method: 'POST',
+    body: data
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);
