@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Download, Printer, Send } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import { paidExpense } from '../../../../APIs/expenses-api';
 import { sendInvoiceToXeroApi } from '../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
+import CreateStatement from '../../features/invoice-features/create-statement/create-statement';
 import InvoiceDropdown from '../../features/invoice-features/invoice-filters/invoice-dropdown';
 import InvoicesFilters from '../../features/invoice-features/invoice-filters/invoices-filters';
 
@@ -23,7 +24,7 @@ const InvoicePage = () => {
     const [total, setTotal] = useState(0);
     const [totalMoney, setTotalMoney] = useState(0);
     const [filter, setFilters] = useState({});
-    console.log('filter: ', filter);
+    const [isStatementCreationPossible, setIsStatementCreationPossible] = useState(false);
     const [visible, setVisible] = useState(false);
     const [refetch, setRefetch] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(isShowUnpaid ? true : false);
@@ -76,6 +77,15 @@ const InvoicePage = () => {
         }
     };
 
+    useEffect(() => {
+        if (selected?.length) {
+            const findSameSupplier = selected.every(item => item?.client?.id === selected[0].client?.id);
+            setIsStatementCreationPossible(findSameSupplier);
+        }else {
+            setIsStatementCreationPossible(false);
+        }
+    }, [selected]);
+
     return (
         <div className='peoples-page'>
             <Helmet>
@@ -124,6 +134,7 @@ const InvoicePage = () => {
                     <h1 className="title p-0">Invoices</h1>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
+                    {isStatementCreationPossible && <CreateStatement invoices={selected} />}
                     <Button className={isShowDeleted ? style.unpaidInvoice : style.allInvoice} onClick={handleUnpaid}>Unpaid</Button>
                     {isShowDeleted && <>
                         <h1 className={`${style.total} mb-0`}>Total</h1>

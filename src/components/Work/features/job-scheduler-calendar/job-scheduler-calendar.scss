@@ -132,45 +132,45 @@
   }
 
   .status.OPEN {
-    color: #065b76;
-    border: 1px solid #a9d6ef;
-    background: #ecf7fd;
+    color: #a43fa9;
+    border: 1px solid #fdddff;
+    background: #fdddff;
   }
 
   .status.ASSIGNED {
-    color: #520676;
-    border: 1px solid #dda9ef;
-    background: #f6ecfd;
+    color: #624ca7;
+    border: 1px solid #cabaff;
+    background: #e7e0ff;
   }
 
   .status.CONFIRMED {
-    color: #067647;
-    border: 1px solid #a9efc5;
-    background: #ecfdf3;
+    color: #097e6b;
+    border: 1px solid #bdf6ea;
+    background: #effffc;
   }
 
   .status.DECLINED {
     color: #b42318;
-    border: 1px solid #fecdca;
-    background: #fef3f2;
+    border: 1px solid #fda29b;
+    background: #fee4e2;
   }
 
   .status.SUBMITTED {
-    color: #344054;
-    border: 1px solid #eaecf0;
-    background: #f9fafb;
+    color: #026aa2;
+    border: 1px solid #b9e6fe;
+    background: #f0f9ff;
   }
 
   .status.FINISHED {
-    color: #29b27c;
-    border: 1px solid #bbffe4;
-    background: #f4fffb;
+    color: #2b7a0b;
+    border: 1px solid #caedba;
+    background: #e2fbd7;
   }
 
   .status.IN_PROGRESS {
-    color: #3d5afe;
-    border: 1px solid #c3ccff;
-    background: #eef1ff;
+    color: #b96f39;
+    border: 1px solid #ffcda9;
+    background: #fff2e9;
   }
 }
 
