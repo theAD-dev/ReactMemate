@@ -1790,3 +1790,9 @@ input:focus::-webkit-input-placeholder {
   box-shadow: none !important;
   outline: none !important;
 }
+
+.StripeElement {
+  padding: 20px 10px 20px 10px;
+  border: 1px solid #D0D5DD !important;
+  border-radius: 4px !important;
+}
