@@ -564,16 +564,18 @@ const ViewSectionComponent = ({ calculator, index, refetch, tempCalculator, setT
                                         <div className='d-flex gap-2 align-items-center'>
                                             <InputNumber className={clsx(style.inputNumber2)}
                                                 inputId="withoutgrouping"
-                                                value={parseInt(tempCalculator?.quantity || 0)}
+                                                maxFractionDigits={2}
+                                                minFractionDigits={2}
+                                                value={parseFloat(tempCalculator?.quantity || 0)}
                                                 onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
                                             />
-                                            <select value={tempCalculator?.type}
+                                            {/* <select value={tempCalculator?.type}
                                                 style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
                                                 onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
                                             >
                                                 <option value="Cost">1/Q</option>
                                                 <option value="Hourly">1/H</option>
-                                            </select>
+                                            </select> */}
                                         </div>
                                     </div>
                                     <div className='d-flex justify-content-center align-items-center rounded-circle pt-3' style={{ width: '20px', height: '20px' }}>
@@ -824,16 +826,18 @@ const NewCalculator = ({ tempCalculator, setTempCalculator, index, name, refetch
                                 <InputNumber className={clsx(style.inputNumber2)}
                                     inputId="withoutgrouping"
                                     placeholder='0'
-                                    value={tempCalculator?.quantity && parseInt(tempCalculator?.quantity || 0)}
+                                    maxFractionDigits={2}
+                                    minFractionDigits={2}
+                                    value={tempCalculator?.quantity && parseFloat(tempCalculator?.quantity || 0)}
                                     onValueChange={(e) => setTempCalculator((others) => ({ ...others, quantity: e.value }))}
                                 />
-                                <select value={tempCalculator?.type}
+                                {/* <select value={tempCalculator?.type}
                                     style={{ border: '0px solid #fff', background: 'transparent', fontSize: '14px' }}
                                     onChange={(e) => setTempCalculator((others) => ({ ...others, type: e.target.value }))}
                                 >
                                     <option value="Cost">1/Q</option>
                                     <option value="Hourly">1/H</option>
-                                </select>
+                                </select> */}
                             </div>
                         </div>
                         <div className='d-flex justify-content-center align-items-center rounded-circle' style={{ width: '20px', height: '20px', marginTop: '20px' }}>
@@ -1124,7 +1128,7 @@ const CreateSubDepartmentModal = ({ visible2, setVisible2, refetch, editSubDepar
     const footerContent = (
         <div className='d-flex justify-content-end gap-2'>
             <Button className='outline-button' onClick={handleClose} disabled={isLoading}>Cancel</Button>
-            <Button className='solid-button' style={{ width: 'fit-content' }} onClick={handleCreateSubDepartment} disabled={subDepartment?.length < 1 || isLoading}>Save Details {isLoading &&  <ProgressSpinner style={{ width: '20px', height: '20px' }} />}</Button>
+            <Button className='solid-button' style={{ width: 'fit-content' }} onClick={handleCreateSubDepartment} disabled={subDepartment?.length < 1 || isLoading}>Save Details {isLoading && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}</Button>
         </div>
     );
 
