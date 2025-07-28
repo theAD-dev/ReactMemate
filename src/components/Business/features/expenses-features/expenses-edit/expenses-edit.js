@@ -24,6 +24,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
       setEditData({});
       setDefaultValues({});
       setRefetch((refetch) => !refetch);
+      expense.refetch();
     },
     onError: (error) => {
       console.error('Error updating expense:', error);

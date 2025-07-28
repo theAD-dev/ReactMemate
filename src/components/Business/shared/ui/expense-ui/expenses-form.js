@@ -509,6 +509,12 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         </div>
     );
 
+    const removeFile = () => {
+        setValue('file', '');
+        setLinks([]);
+        setShowDocumentSidebar(false);
+    };
+
     useEffect(() => {
         if (defaultValues?.file) {
             setLinks([defaultValues?.file]);
@@ -1005,23 +1011,23 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </Col>
                 </Row>
 
-                {defaultValues?.file &&
+                {links?.length ?
                     <Row className={clsx(styles.bgGreay)}>
                         <Col sm={12}>
                             <div className="d-flex flex-column gap-1">
                                 <div className='d-flex flex-column'>
                                     <label className={clsx(styles.lable, 'mb-2')}>Photo/Document Of The Expense</label>
                                     {
-                                        defaultValues?.file && (
+                                        links[0] && (
                                             <div className={styles.fileBox}>
-                                                {getFileIcon(defaultValues?.file?.split(".")?.[defaultValues?.file?.split(".").length - 1] || "")}
+                                                {getFileIcon(links[0]?.split(".")?.[links[0]?.split(".").length - 1] || "")}
                                                 <div className={styles.fileNameBox}>
-                                                    <Link className='linkText' to={defaultValues?.file} target='_blank'><p className='mb-0'>{defaultValues?.file?.split("/")?.[defaultValues?.file?.split("/").length - 1] || ""}</p></Link>
+                                                    <Link className='linkText' to={links[0]} target='_blank'><p className='mb-0'>{links[0]?.split("/")?.[links[0]?.split("/").length - 1] || ""}</p></Link>
                                                     <p className='mb-0'></p>
                                                 </div>
                                                 <div className='ms-auto'>
                                                     <div className='d-flex align-items-center justify-content-center' style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
-                                                        <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} onClick={() => { }} />
+                                                        <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} onClick={removeFile} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1031,6 +1037,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             </div>
                         </Col>
                     </Row>
+                    : ""
                 }
 
                 {/* <div className="flex align-items-center">

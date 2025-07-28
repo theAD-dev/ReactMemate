@@ -148,15 +148,13 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     // time_type: 1 - shift, T - time frame 
     const [type, setType] = useState('2');
     const [time_type, set_time_type] = useState('1');
-    console.log('type: ', type);
-    console.log('time_type: ', time_type);
 
     const [cost, setCost] = useState(0.00);
     const today = new Date();
     const [start, setStart] = useState(today);
     const [end, setEnd] = useState("");
-    const [duration, setDuration] = useState("");
-    const [dayShiftHours, setDayShiftHours] = useState("");
+    const [duration, setDuration] = useState("1.00");
+    const [dayShiftHours, setDayShiftHours] = useState("1.00");
 
     const [errors, setErrors] = useState({});
 
@@ -244,8 +242,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         set_time_type('1');
         setStart("");
         setEnd("");
-        setDuration("");
-        setDayShiftHours("");
+        setDuration("1.00");
+        setDayShiftHours("1.00");
         setErrors({});
     };
 

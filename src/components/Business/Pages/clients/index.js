@@ -72,7 +72,7 @@ const ClientPage = () => {
 
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Clients</h1>
-                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
+                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>Add New Client</Button>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <h1 className={`${style.total} mb-0`}>Total</h1>

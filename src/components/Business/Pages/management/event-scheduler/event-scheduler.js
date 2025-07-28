@@ -410,7 +410,7 @@ function EventScheduler() {
       </div>
 
       <div className="featureName" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-        <h1 className="title mx-0">Management</h1>
+        <h1 className="title mx-0">Project Management</h1>
       </div>
       <div className="right-side d-flex align-items-center">
 
