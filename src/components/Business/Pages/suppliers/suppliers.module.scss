@@ -23,7 +23,7 @@
 .newButton:focus,
 .newButton:active {
   gap: 8px;
-  width: 59px;
+  width: fit-content;
   height: 28px;
   display: flex;
   font-size: 14px;
