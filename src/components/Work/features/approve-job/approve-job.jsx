@@ -157,7 +157,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
 
     return (
         <>
-            <Sidebar visible={visible} position="right" onHide={resetAndClose} modal={false} dismissable={false} style={{ width: '702px' }}
+            <Sidebar visible={visible} position="right" onHide={resetAndClose} modal={false} dismissable={true} style={{ width: '702px' }}
                 content={({ closeIconRef, hide }) => (
                     <div className='create-sidebar d-flex flex-column'>
                         <div className="d-flex align-items-center justify-content-between flex-shrink-0" style={{ borderBottom: '1px solid #EAECF0', padding: '12px' }}>
