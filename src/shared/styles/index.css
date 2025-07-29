@@ -938,9 +938,105 @@ ul.listStyle li:last-child {
 .goodHeading {
   /* position: sticky; */
   /* top: 0; */
-  background: #f7f9fc;
-  padding: 13px 0 13px;
+  padding: 24px 0 13px;
   z-index: 9;
+}
+
+.myTasksCard {
+  padding: 24px 32px 0px 32px;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-color: white;
+  border: 1px solid #dedede;
+  /* background-image: linear-gradient(white, white),
+    linear-gradient(90deg, rgb(26, 178, 255) 0%, rgb(255, 178, 88) 10%); */
+}
+
+.gradientBorder {
+  position: relative;
+  border-radius: 16px;
+  padding: 2px; /* border thickness */
+  background: linear-gradient(
+    90deg,
+    rgba(26, 178, 255, 0.5),
+    rgba(255, 178, 88, 0.5)
+  );
+}
+
+.gradientContentText {
+  border-radius: 16px;
+  background: white; /* or whatever your content background is */
+  padding: 1px 8px;
+}
+
+.dashboardTask {
+  background: #f9fafb;
+  border: 1px solid #f2f4f7;
+}
+
+.dashboardTask:hover {
+  background: #f5faff;
+  border: 1px solid #bae8ff;
+}
+
+.outline-complete-button,
+.outline-complete-button:hover,
+.outline-complete-button:focus {
+  color: var(--Gray-800, #1d2939);
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+}
+
+.dashboard-text-button-link,
+.dashboard-text-button-link:hover,
+.dashboard-text-button-link:focus {
+  color: var(--Primary-600, #158ecc);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  background: transparent;
+  border: none;
+  padding: 0px;
+}
+
+.dashboard-text-button {
+  color: #475467;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
+  background: transparent;
+  border: none;
+  padding: 0px;
+}
+
+.dashboardTask:hover .hoverButtonHide .hover-hide {
+  display: none;
+}
+
+.hoverButtonHide .hover-show {
+  display: none !important;
+}
+
+.dashboardTask:hover .hoverButtonHide .hover-show {
+  display: block !important;
 }
 
 .imageBoxHome:hover {
@@ -949,10 +1045,13 @@ ul.listStyle li:last-child {
 }
 
 .HomePageWrap {
-  background: var(--BG, #f7f9fc);
   overflow-y: auto;
-  height: calc(100vh - 149px);
   padding-bottom: 16px;
+  /* background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("../../assets/images/BG.svg");
+  background-position: center center;
+  border: 1px solid red; */
 }
 
 .homeBottom {
@@ -993,10 +1092,6 @@ ul.listStyle li:last-child {
   line-height: 34px;
   letter-spacing: -1.4px;
   padding: var(--spacing-3xl, 24px) var(--spacing-4xl, 32px);
-}
-
-.HomePageWrap {
-  background: var(--BG, #f7f9fc);
 }
 
 .imageBoxHome {
@@ -1649,11 +1744,10 @@ p.flexEndStyle strong {
 
 .my-component {
   transition: all 0.5s ease;
-  overflow: hidden;
   position: fixed;
   left: 0;
   right: 0;
-  bottom: -225px;
+  bottom: -245px;
   box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 4px 0px inset;
 }
 
@@ -1662,12 +1756,18 @@ p.flexEndStyle strong {
 }
 
 .my-component.hide {
-  bottom: -225px;
+  bottom: -245px;
 }
 
 .my-component .downArrowIcon {
-  border: 0;
-  background: transparent;
+  gap: 8px;
+  display: flex;
+  padding: 8px 14px;
+  background: #fff;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--Gray-300, #d0d5dd);
 }
 
 .my-component .downArrowIcon svg {
@@ -1759,7 +1859,7 @@ input:focus::-webkit-input-placeholder {
   padding: 0px 4px;
   align-items: center;
   border-radius: 24px;
-  background: #F79009;
+  background: #f79009;
   color: #fff;
   top: -5px;
   right: -5px;
@@ -1793,6 +1893,6 @@ input:focus::-webkit-input-placeholder {
 
 .StripeElement {
   padding: 20px 10px 20px 10px;
-  border: 1px solid #D0D5DD !important;
+  border: 1px solid #d0d5dd !important;
   border-radius: 4px !important;
 }

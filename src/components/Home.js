@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle } from "react-bootstrap-icons";
+import { ProgressBar } from 'react-bootstrap';
+import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle, Check } from "react-bootstrap-icons";
 import CountUp from 'react-countup';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import classNames from 'classnames';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -18,8 +18,24 @@ import AccountingContact from './layout/modals/accounting-contact';
 import BookkeepingContact from './layout/modals/book-keeping-contact';
 import InsuranceContact from './layout/modals/insurance-contact';
 import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
+import { useTrialHeight } from '../app/providers/trial-height-provider';
+
+const updateTaskStatus = async ({ id, status }) => {
+    // Simulate backend call
+    return new Promise((resolve) => setTimeout(() => resolve({ id, status }), 500));
+};
+
+const initialTasks = [
+    { id: 1, title: 'Link Your Email', desc: 'Connect your email to manage communications.', status: 'complete', type: 'Starter' },
+    { id: 2, title: 'Enter Bank Details', desc: 'Provide your bank details to secure transactions.', status: 'pending', type: 'Starter' },
+    { id: 3, title: 'Check Your Calculators', desc: 'Make sure your pricing calculators are correctly set up and ready to use in quotes.', status: 'pending', type: 'Starter' },
+    { id: 4, title: 'Your First Project', desc: 'Start your first project and begin tracking progress.', status: 'pending', type: 'Starter' },
+    { id: 5, title: 'Set Up Your Company Profile', desc: 'Set up your company profile and begin tracking progress.', status: 'pending', type: 'Starter' },
+    { id: 6, title: 'Set Up Your Invoicing Process', desc: 'Set up your invoicing process and begin tracking progress.', status: 'pending', type: 'Starter' },
+];
 
 const Home = () => {
+    const { trialHeight } = useTrialHeight();
     const [isVisible, setIsVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
     const [hasBankDetails, setHasBankDetails] = useState(true);
@@ -32,6 +48,7 @@ const Home = () => {
         waiting_for_approval: {},
         projects: {}
     });
+    const [tasks, setTasks] = useState(initialTasks);
 
     const outgoingEmailTemplateQuery = useQuery({
         queryKey: ["getOutgoingEmail"],
@@ -64,6 +81,20 @@ const Home = () => {
         fetchData();
     }, []);
 
+    const taskMutation = useMutation({
+        mutationFn: updateTaskStatus,
+        onSuccess: ({ id, status }) => {
+            setTasks((prev) => prev.map((t) => t.id === id ? { ...t, status } : t));
+        },
+    });
+
+    const handleTaskAction = (id, status) => {
+        taskMutation.mutate({ id, status });
+    };
+
+    const completedCount = tasks.filter(t => t.status === 'complete').length;
+    const progress = Math.round((completedCount / tasks.length) * 100);
+
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
     };
@@ -88,126 +119,69 @@ const Home = () => {
     };
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div className='homeDashboardPage' style={{ position: 'relative' }}>
             <Helmet>
                 <title>MeMate - Dashboard</title>
             </Helmet>
-            <div className='HomePageWrap'>
+            <div className='HomePageWrap' style={{ height: `calc(100vh - 149px - ${trialHeight}px)` }}>
                 <div className="goodHeading" >
                     <h1 style={{ fontSize: '26px' }}>{getGreeting()}, {profileData?.first_name ? profileData.first_name : 'Guest'} 👋</h1>
                 </div>
-                <div className='d-flex justify-content-center px-5'>
-                    <Row className='d-flex flex-nowrap'>
-                        {
-                            !isConnectedEmail &&
-                            <Col style={{ minWidth: '306px' }}>
-                                <div className={classNames('grid-item', { 'active': selectedOption === 'option1' })}>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            value="option1"
-                                            checked={selectedOption === 'option1'}
-                                            onChange={handleOptionChange}
-                                        />
-                                        <div className='boxCheckNo'>
-                                            <div className='ckeckIcon'><CheckCircle size={16} color="#1AB2FF" /></div>
-                                            <span>1</span>
+                {/* My Tasks Card */}
+                <div className="myTasksCard" style={{ width: '942px', margin: '0px auto', display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: '8px', maxHeight: 400, overflowY: 'auto' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        <div style={{ fontWeight: 600, fontSize: 16, color: '#1D2939', marginBottom: '0px' }}>Let's get you started</div>
+                        <Button variant="link" size="sm" style={{ fontWeight: 600, fontSize: 14, color: '#158ECC', textDecoration: 'none', padding: 0, marginRight: 2 }}>New Task <PlusLg size={14} color={"#158ECC"} /></Button>
+                    </div>
+                    <div style={{ color: '#475467', fontSize: 14, textAlign: 'left', width: '100%', marginBottom: 14 }}>A Few Essential Tasks to Set Up Your Account and Start Using MeMate</div>
+                    <div style={{ width: '100%', margin: '0 auto 2px auto', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ height: 12, background: '#EAECF0', borderRadius: 17, overflow: 'hidden', position: 'relative' }}>
+                            <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${progress}%`, background: 'radial-gradient(2061.16% 127.06% at -1.24% 2.75%, #1AB2FF 0%, #FFB258 100%)', borderRadius: 4, transition: 'width 0.3s' }}></div>
+                        </div>
+                        <div style={{ color: '#344054', fontSize: 14, fontWeight: 500, minWidth: 90, textAlign: 'right', margin: '8px 0px 0px 0px' }}>{progress}% Completed</div>
+                    </div>
+                    <div style={{ fontWeight: 600, fontSize: 16, textAlign: 'left', width: '100%', marginBottom: 10 }}>My Tasks</div>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, width: '100%' }}>
+                        {tasks.map((task) => (
+                            <li className="dashboardTask" key={task.id} style={{ borderRadius: 8, marginBottom: 8, padding: '6px 24px 6px 16px', display: 'flex', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                                    <div className='gap-2' style={{ display: 'flex', alignItems: 'center', fontWeight: 700, color: '#101828', fontSize: 17 }}>
+                                        {task.status === 'complete' ?
+                                            <div style={{ border: '3px solid #F2F4F7', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#BAE8FF' }}>
+                                                <Check size={16} color="#158ECC" />
+                                            </div>
+                                            : <div style={{ border: '3px solid #F2F4F7', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%' }}>
+                                                <Check size={16} />
+                                            </div>
+                                        }
+                                        <div className='d-flex flex-column align-items-start'>
+                                            <div className='d-flex gap-2'>
+                                                <span className='font-14' style={{ color: '#101828', fontWeight: '500' }}>{task.title}</span>
+                                                <div className='d-flex align-items-center gap-1 gradientBorder'>
+                                                    <span className='gradientContentText' style={{ color: '#344054', fontWeight: '500', fontSize: 12 }}>Starter</span>
+                                                </div>
+                                            </div>
+                                            <span className='font-14' style={{ color: '#475467', fontWeight: '400' }}>{task.desc}</span>
                                         </div>
-                                        <div className='boxItem'>
-                                            <h2>Link Your Email</h2>
-                                            <p>Connect your email to manage communications.</p>
-                                        </div>
-
-                                    </label>
-                                    <div className='boxItemBut'>
-                                        <Link to={"/settings/integrations?openEmail=true"}><Button variant="link">Connect</Button></Link>
                                     </div>
                                 </div>
-                            </Col>
-                        }
-
-                        {
-                            !hasBankDetails &&
-                            <Col style={{ minWidth: '306px' }}>
-                                <div className={classNames('grid-item', { 'active': selectedOption === 'option2' })}>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            value="option2"
-                                            checked={selectedOption === 'option2'}
-                                            onChange={handleOptionChange}
-                                        />
-                                        <div className='boxCheckNo'>
-                                            <div className='ckeckIcon'><CheckCircle size={16} color="#1AB2FF" /></div>
-                                            <span>{isConnectedEmail ? 1 : 2}</span>
-                                        </div>
-                                        <div className='boxItem'>
-                                            <h2>Enter Bank Details</h2>
-                                            <p>Provide your bank details to secure transactions.</p>
-                                        </div>
-
-                                    </label>
-                                    <div className='boxItemBut'>
-                                        <Link to="/settings/generalinformation/bank-details"><Button variant="link">Add Details</Button></Link>
-                                    </div>
+                                <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginLeft: 'auto' }}>
+                                    {task.status === 'complete' ? (
+                                        <Button className='outline-complete-button' onClick={() => handleTaskAction(task.id, 'incomplete')}>
+                                            Complete <CheckCircle size={16} color="#079455" />
+                                        </Button>
+                                    ) : (<div className='d-flex gap-3 hoverButtonHide'>
+                                        <Button className='dashboard-text-button-link hover-hide'>Start</Button>
+                                        <Button className='dashboard-text-button-link hover-show'>Let's Do it </Button>
+                                        <Button className='dashboard-text-button'>Skip</Button>
+                                    </div>)}
                                 </div>
-                            </Col>
-                        }
-
-                        {/* <Col style={{ minWidth: '306px' }}>
-                            <div className={classNames('grid-item', { 'active': selectedOption === 'option3' })}>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="option3"
-                                        checked={selectedOption === 'option3'}
-                                        onChange={handleOptionChange}
-                                    />
-                                    <div className='boxCheckNo'>
-                                        <div className='ckeckIcon'><CheckCircle size={16} color="#1AB2FF" /></div>
-                                        <span>3</span>
-                                    </div>
-                                    <div className='boxItem'>
-                                        <h2>Add Team Details</h2>
-                                        <p>Add team members and define roles for efficiency.</p>
-                                    </div>
-
-                                </label>
-                                <div className='boxItemBut'>
-                                    <Link to={"/settings/users/desktop"}><Button variant="link">Add Members</Button></Link>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col style={{ minWidth: '306px' }}>
-                            <div className={classNames('grid-item', { 'active': selectedOption === 'option4' })}>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="option4"
-                                        checked={selectedOption === 'option4'}
-                                        onChange={handleOptionChange}
-                                    />
-                                    <div className='boxCheckNo'>
-                                        <div className='ckeckIcon'>
-                                            <CheckCircle size={16} color="#1AB2FF" />
-
-                                        </div>
-                                        <span>4</span>
-                                    </div>
-                                    <div className='boxItem'>
-                                        <h2>Your First Project</h2>
-                                        <p>Start your first project and begin tracking progress.</p>
-                                    </div>
-                                </label>
-                                <div className='boxItemBut'>
-                                    <Link to="/sales/newquote/selectyourclient"><Button variant="link">Create New Request</Button></Link>
-                                </div>
-                            </div>
-                        </Col> */}
-                    </Row>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-                <Container>
 
+                <Container>
                     <Row className='d-flex flex-nowrap'>
                         <Col className='mt-4'>
                             <Link to="/expenses?isShowUnpaid=true">
@@ -361,7 +335,7 @@ const Home = () => {
             </div>
 
             <div className={`my-component homeBottom ${isVisible ? 'show' : 'hide'}`}>
-                <button className='downArrowIcon' style={{ position: 'relative', top: '5px' }} onClick={toggleVisibility}>
+                <button className='downArrowIcon' style={{ position: 'relative', top: '-35px', margin: 'auto' }} onClick={toggleVisibility}>
 
                     Additional Services {isVisible ? (
                         <ChevronDoubleUp size={20} color="#6941C6" />
@@ -370,7 +344,7 @@ const Home = () => {
                     )}
                 </button>
                 <div className='w-100 mx-auto'>
-                    <ul className='pt-4'>
+                    <ul className='pt-0'>
                         <li>
                             <ModalSalesContactFinance />
                         </li>
