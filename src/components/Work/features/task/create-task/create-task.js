@@ -16,8 +16,6 @@ import newTaskImg from '../../../../../assets/images/new-task.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 import SelectDate from '../../../../Business/Pages/management/task/select-date';
 
-
-
 const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return null;
 
@@ -168,7 +166,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                             <QuestionCircle />
                         </InputGroup.Text>
                     </InputGroup>
-                    {errors.taskTitle && <Form.Text className="text-danger">Task title is required</Form.Text>}
+                    {errors.taskTitle && <Form.Text className="error-message">Task title is required</Form.Text>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Description</Form.Label>
@@ -180,7 +178,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                         onChange={(e) => setDescription(e.target.value)}
                         required
                     />
-                    {errors.description && <Form.Text className="text-danger">Description is required</Form.Text>}
+                    {errors.description && <Form.Text className="error-message">Description is required</Form.Text>}
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                     <Form.Label>Project Task</Form.Label>
@@ -201,11 +199,11 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                         filter
                         filterInputAutoFocus={true}
                     />
-                    {errors.project && <Form.Text className="text-danger">Project task is required</Form.Text>}
+                    {errors.project && <Form.Text className="error-message">Project task is required</Form.Text>}
                 </Form.Group>
             </Modal.Body>
-            <div className='d-flex align-items-center border-top px-3 py-2'>
-                <div className='d-flex align-items-center gap-4'>
+            <div className='d-flex align-items-center border-top px-3 py-2 gap-2'>
+                <div className='d-flex align-items-center gap-4' style={{ minWidth: '200px' }}>
                     {!user && <Person
                         color={dropdownRef.current?.panel?.element?.offsetParent ? "#1AB2FF" : "#475467"}
                         size={22} style={{ position: 'relative', left: '10px', zIndex: 1 }}
@@ -283,9 +281,11 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                 <SelectDate dateRange={date} setDateRange={setDate} />
             </div>
             {
-                (errors.user || errors.date) && <div className='d-flex align-items-center' style={{ gap: '16px', padding: "0 30px 8px 30px" }}>
-                    {errors.user && <Form.Text className="text-danger">User is required</Form.Text>}
-                    {errors.date && <Form.Text className="text-danger">Date is required</Form.Text>}
+                (errors.user || errors.date) && <div className='d-flex align-items-center gap-2' style={{ gap: '16px', padding: "5px 15px" }}>
+                    <div style={{ minWidth: '200px' }}>
+                        {errors.user && <Form.Text className="error-message">User is required</Form.Text>}
+                    </div>
+                    {errors.date && <Form.Text className="error-message">Date is required</Form.Text>}
                 </div>
             }
             <Modal.Footer className='d-flex justify-content-between'>

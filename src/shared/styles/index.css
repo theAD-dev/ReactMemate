@@ -970,13 +970,29 @@ ul.listStyle li:last-child {
 }
 
 .dashboardTask {
-  background: #f9fafb;
+  background: #fff;
   border: 1px solid #f2f4f7;
 }
 
 .dashboardTask:hover {
   background: #f5faff;
   border: 1px solid #bae8ff;
+}
+
+.close-button,
+.close-button:hover,
+.close-button:focus {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  border-radius: 40px;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .outline-complete-button,
