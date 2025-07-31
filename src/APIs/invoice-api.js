@@ -1,7 +1,7 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-export const getListOfInvoice = async (page, limit, search = "", order = "", isShowUnpaid) => {
+export const getListOfInvoice = async (page, limit, search = "", order = "", isShowUnpaid, clientsFilter) => {
   const offset = (page - 1) * limit;
   const endpoint = `/invoices/`;
   const options = {
@@ -13,6 +13,7 @@ export const getListOfInvoice = async (page, limit, search = "", order = "", isS
   if (search) url.searchParams.append("search", search);
   if (order) url.searchParams.append("ordering", order);
   if (isShowUnpaid) url.searchParams.append('status', 'not_paid');
+  if (clientsFilter) url.searchParams.append('clients', clientsFilter);
 
   return fetchAPI(url.toString(), options);
 };

@@ -104,7 +104,7 @@ export const clientEditApi = async (id) => {
   return fetchAPI(url.toString(), options);
 };
 
-export const getListOfClients = async (page, limit, name = "", order = "", isShowDeleted) => {
+export const getListOfClients = async (page, limit, search = "", order = "", isShowDeleted) => {
   const offset = (page - 1) * limit;
   const endpoint = `/clients/`;
   const options = {
@@ -113,7 +113,7 @@ export const getListOfClients = async (page, limit, name = "", order = "", isSho
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   url.searchParams.append("limit", limit);
   url.searchParams.append("offset", offset);
-  if (name) url.searchParams.append("search", name);
+  if (search) url.searchParams.append("search", search);
   if (order) url.searchParams.append("ordering", order);
   if (isShowDeleted) url.searchParams.append('deleted', 1);
 

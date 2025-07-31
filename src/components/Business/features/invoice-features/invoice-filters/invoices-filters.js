@@ -32,12 +32,12 @@ const InvoicesFilters = ({ filter, setFilters }) => {
                                     <ul className={style.tagItemsWrap}>
                                         {items.map((item, index) => (
                                             <li className={style.tagItemWrap} key={index}>
-                                                {item}
+                                                {item?.name}
                                                 {items?.length > 1 && (
                                                     <Button
                                                         variant="link"
                                                         size="sm"
-                                                        style={{ marginLeft: "5px" }}
+                                                        style={{ marginLeft: "5px", padding: 0 }}
                                                         onClick={() => handleRemoveTag(group, item)}
                                                     >
                                                         <X color="#F96969" size={15} />
@@ -48,7 +48,7 @@ const InvoicesFilters = ({ filter, setFilters }) => {
                                         <Button
                                             variant="link"
                                             size="sm"
-                                            style={{ marginLeft: "0px" }}
+                                            style={{ marginLeft: "0px", padding: 0 }}
                                             onClick={() => handleRemoveGroup(group)}
                                         >
                                             <X color="#F96969" size={20} />

@@ -6,17 +6,17 @@ import { useDebounce } from 'primereact/hooks';
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import style from './invoice-dropdown.module.scss';
-import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
+import { getListOfClients } from '../../../../../APIs/ClientsApi';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
 const InvoiceDropdown = ({ setFilters, filter }) => {
     const observerRef = useRef(null);
     const [showFilter, setShowFilter] = useState(false);
-    const [key, setKey] = useState('suppliers');
-    const [supplierValue, setSupplierValue] = useState('');
-    const [suppliers, setSuppliers] = useState([]);
+    const [key, setKey] = useState('clients');
+    const [clientValue, setClientValue] = useState('');
+    const [clients, setClients] = useState([]);
     const [page, setPage] = useState(1);
-    const [selectedSupplier, setSelectedSupplier] = useState(null);
+    const [selectedClient, setSelectedClient] = useState(null);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const limit = 25;
@@ -27,41 +27,41 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
 
     useEffect(() => {
         const loadData = async () => {
-            const data = await getListOfSuppliers(page, limit, debouncedValue, 'name');
+            const data = await getListOfClients(page, limit, debouncedValue, 'name');
             if (page === 1) {
-                if (supplierValue) {
-                    const filteredSuppliers = data.results.filter(supplier => supplier.id !== supplierValue);
-                    return setSuppliers([selectedSupplier, ...filteredSuppliers]);
+                if (clientValue) {
+                    const filteredClients = data.results.filter(client => client.id !== clientValue);
+                    return setClients([...selectedClient, ...filteredClients]);
                 }
 
-                setSuppliers(data.results);
+                setClients(data.results);
             }
 
             else {
                 if (data?.results?.length > 0) {
                     let results = data.results;
-                    if (supplierValue) {
-                        results = [selectedSupplier, ...data.results];
+                    if (clientValue) {
+                        results = [...selectedClient, ...data.results];
                     }
-                    setSuppliers(prev => {
+                    setClients(prev => {
                         let previous = prev;
-                        if (supplierValue) {
-                            previous = [...prev, selectedSupplier];
+                        if (clientValue) {
+                            previous = [...prev, ...selectedClient];
                         }
-                        const existingSupplierIds = new Set(previous.map(supplier => supplier.id));
-                        const newSuppliers = results.filter(supplier => !existingSupplierIds.has(supplier.id));
-                        return [...prev, ...newSuppliers];
+                        const existingClientIds = new Set(previous.map(client => client.id));
+                        const newClients = results.filter(client => !existingClientIds.has(client.id));
+                        return [...prev, ...newClients];
                     });
                 }
             }
-            setHasMoreData(data.count !== suppliers.length);
+            setHasMoreData(data.count !== clients.length);
         };
 
         loadData();
-    }, [page, debouncedValue, supplierValue, selectedSupplier]);
+    }, [page, debouncedValue, clientValue, selectedClient]);
 
     useEffect(() => {
-        if (suppliers.length > 0 && hasMoreData) {
+        if (clients.length > 0 && hasMoreData) {
             const timeout = setTimeout(() => {
                 const lastRow = document.querySelector('.supplier-dropdown .supplier-dropdown-item:last-child');
 
@@ -80,32 +80,32 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                 if (observerRef.current) observerRef.current.disconnect();
             };
         }
-    }, [suppliers, hasMoreData, showFilter]);
+    }, [clients, hasMoreData, showFilter]);
 
     const handleCancel = () => {
         setShowFilter(false);
-        setKey('suppliers');
-        setSupplierValue('');
-        setSelectedSupplier(null);
+        setKey('clients');
+        setClientValue('');
+        setSelectedClient(null);
         setInputValue('');
         setPage(1);
         setHasMoreData(true);
-        setSuppliers([]);
+        setClients([]);
         setFilters((prev) => {
-            const { supplier, ...rest } = prev;
+            const { client, ...rest } = prev;
             return rest;
         });
     };
 
     const handleApply = () => {
         setShowFilter(false);
-        if (!selectedSupplier) return;
-        setFilters((prev) => ({ ...prev, supplier: [selectedSupplier?.name] }));
+        if (!selectedClient?.length) return;
+        setFilters((prev) => ({ ...prev, client: [...selectedClient] }));
     };
 
     useEffect(()=> {
-        if (!filter['supplier']) {
-            setSelectedSupplier(null);
+        if (!filter['client']) {
+            setSelectedClient(null);
         }
     }, [filter]);
 
@@ -123,10 +123,10 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                     style={{ marginLeft: '5px', marginTop: '5px' }}
                 >
                     <Tab
-                        eventKey="suppliers"
+                        eventKey="clients"
                         title={
                             <>
-                                <People color="#667085" size={16} />Suppliers
+                                <People color="#667085" size={16} />Clients
                             </>
                         }
                     >
@@ -140,8 +140,15 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                         </div>
                         <div className='supplier-dropdown' style={{ height: '350px', overflow: 'auto', marginLeft: '0px' }}>
                             {
-                                suppliers?.map(option =>
-                                    <div key={option.id} className={clsx(style.supplierDropdownItem, 'supplier-dropdown-item')} onClick={() => setSelectedSupplier(option)}>
+                                clients?.map(option =>
+                                    <div key={option.id} className={clsx(style.supplierDropdownItem, 'supplier-dropdown-item')} onClick={() => setSelectedClient(prev => {
+                                        if (prev?.some(client => client.id === option.id)) {
+                                            return prev.filter(client => client.id !== option.id);
+                                        }
+                                        if (!prev) return [option];
+                                        
+                                        return [...prev, option];
+                                    })}>
                                         <div className='d-flex gap-2 align-items-center w-100'>
                                             <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
                                                 <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
@@ -149,7 +156,7 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                                             <div className='ellipsis-width' style={{ maxWidth: '200px' }}>{option?.name}</div>
                                         </div>
                                         {
-                                            selectedSupplier?.id === option.id ? (
+                                            selectedClient?.some(client => client.id === option.id) ? (
                                                 <Check color="#1AB2FF" size={20} />
                                             ) : null
                                         }

@@ -515,7 +515,7 @@ const SendInvoiceEmailForm = ({ show, setShow, contactPersons, setPayload, isLoa
                     {
                         !isCreated && (
                             <Button disabled={isLoading} className="outline-button" onClick={create}>
-                                Create{" "}
+                                Create and Save{" "}
                                 {isLoading && (
                                     <ProgressSpinner
                                         style={{ width: "20px", height: "20px", color: "#fff" }}

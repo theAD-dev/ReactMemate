@@ -33,6 +33,7 @@ const Header = () => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const isSuspended = session?.is_suspended ? true : false;
     const hasSubscriptionPaymentFailed = !!session?.suspension_date;
+    const isHomePage = location.pathname === "/";
 
     useEffect(() => {
         if (session) {
@@ -98,7 +99,7 @@ const Header = () => {
             <div className="headerNav1">
                 {menuSwitch ?
                     <>
-                        <div className="headerTop business" style={{ whiteSpace: 'nowrap' }}>
+                        <div className="headerTop business" style={ isHomePage ? { whiteSpace: 'nowrap', borderBottom: '1px solid #eaecf0' } : { whiteSpace: 'nowrap' }}>
                             <Container fluid>
                                 <Row className="d-flex flex-nowrap">
                                     <Col className="d-flex align-items-center">
@@ -136,8 +137,8 @@ const Header = () => {
                                                 <ul>
                                                     <li>
                                                         <NavLink
-                                                            to="/"
-                                                            className={`managementMain menuActive`}
+                                                            to="/management"
+                                                            className={`managementMain ${!isHomePage ? 'menuActive' : ''}`}
                                                         >
                                                             Business
                                                         </NavLink>
@@ -174,37 +175,38 @@ const Header = () => {
                                 </Row>
                             </Container>
                         </div>
-                        <Container fluid className="headerNav" style={{ width: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
-                            <Row className="flex-nowrap">
-                                <Col>
-                                    <ul className="left d-flex flex-nowrap">
-                                        <li>
-                                            <NavLink
-                                                to="/clients"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " clients"
-                                                }
-                                            >
-                                                <img src={ClientsIcon} alt="ClientsIcon" />
-                                                Clients
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink
-                                                to="/suppliers"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " suppliers"
-                                                }
-                                            >
-                                                <img src={SuppliersIcon} alt="SuppliersIcon" />
-                                                Suppliers
-                                            </NavLink>
-                                        </li>
-                                    </ul>
-                                </Col>
-                                <Col>
-                                    <ul className="middle">
-                                        {/* <li>
+                        {!isHomePage && (
+                            <Container fluid className="headerNav" style={{ width: '100%', overflow: 'auto', whiteSpace: 'nowrap', }}>
+                                <Row className="flex-nowrap">
+                                    <Col>
+                                        <ul className="left d-flex flex-nowrap">
+                                            <li>
+                                                <NavLink
+                                                    to="/clients"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " clients"
+                                                    }
+                                                >
+                                                    <img src={ClientsIcon} alt="ClientsIcon" />
+                                                    Clients
+                                                </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink
+                                                    to="/suppliers"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " suppliers"
+                                                    }
+                                                >
+                                                    <img src={SuppliersIcon} alt="SuppliersIcon" />
+                                                    Suppliers
+                                                </NavLink>
+                                            </li>
+                                        </ul>
+                                    </Col>
+                                    <Col>
+                                        <ul className="middle">
+                                            {/* <li>
                                             <NavLink
                                                 to="/enquiries"
                                                 className={({ isActive }) =>
@@ -215,71 +217,71 @@ const Header = () => {
                                                 Enquiries
                                             </NavLink>
                                         </li> */}
-                                        <li>
-                                            <NavLink
-                                                to="/sales"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " sales"
-                                                }
-                                            >
-                                                <img src={SalesIcon} alt="SalesIcon" />
-                                                Sales
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink
-                                                to="/management"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " management"
-                                                }
-                                            >
-                                                <img src={ManagementIcon} alt="ManagementIcon" />
-                                                Management
-                                            </NavLink>
-                                        </li>
-                                    </ul>
-                                </Col>
-                                <Col style={{ textAlign: "right" }}>
-                                    <ul className="right d-flex flex-nowrap justify-content-end">
-                                        <li>
-                                            <NavLink
-                                                to="/tasks"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " tasks"
-                                                }
+                                            <li>
+                                                <NavLink
+                                                    to="/sales"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " sales"
+                                                    }
+                                                >
+                                                    <img src={SalesIcon} alt="SalesIcon" />
+                                                    Sales
+                                                </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink
+                                                    to="/management"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " management"
+                                                    }
+                                                >
+                                                    <img src={ManagementIcon} alt="ManagementIcon" />
+                                                    Management
+                                                </NavLink>
+                                            </li>
+                                        </ul>
+                                    </Col>
+                                    <Col style={{ textAlign: "right" }}>
+                                        <ul className="right d-flex flex-nowrap justify-content-end">
+                                            <li>
+                                                <NavLink
+                                                    to="/tasks"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " tasks"
+                                                    }
 
-                                            >
-                                                <img src={calendarTick} alt="calendarTick" />
-                                                Tasks
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink
-                                                to="/expenses"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " expense"
-                                                }
-                                            >
-                                                <img src={ExpenseIcon} alt="Expense" />
-                                                Expense
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink
-                                                to="/invoices"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " invoices"
-                                                }
-                                            >
-                                                <img src={InvoicesIcon} alt="Invoices" />
-                                                Invoices
-                                            </NavLink>
-                                        </li>
-                                    </ul>
-                                </Col>
-                            </Row>
-
-                        </Container>
+                                                >
+                                                    <img src={calendarTick} alt="calendarTick" />
+                                                    Tasks
+                                                </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink
+                                                    to="/expenses"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " expense"
+                                                    }
+                                                >
+                                                    <img src={ExpenseIcon} alt="Expense" />
+                                                    Expense
+                                                </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink
+                                                    to="/invoices"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " invoices"
+                                                    }
+                                                >
+                                                    <img src={InvoicesIcon} alt="Invoices" />
+                                                    Invoices
+                                                </NavLink>
+                                            </li>
+                                        </ul>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        )}
                     </>
                     :
                     <>
@@ -321,7 +323,7 @@ const Header = () => {
                                                 <ul>
                                                     <li>
                                                         <NavLink
-                                                            to="/"
+                                                            to="/management"
                                                             className={`managementMain`}
                                                         >
                                                             Business
