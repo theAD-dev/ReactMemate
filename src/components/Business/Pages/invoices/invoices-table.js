@@ -44,7 +44,7 @@ const formatDate = (timestamp) => {
     }
 };
 
-const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch, isFilterEnabled }, ref) => {
+const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch, isFilterEnabled, filters }, ref) => {
     const { role } = useAuth();
     const observerRef = useRef(null);
     const navigate = useNavigate();
@@ -61,7 +61,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch, isShowDeleted]);
+    }, [searchValue, refetch, isShowDeleted, filters]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -70,8 +70,13 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
             let order = "";
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
+            
+            let clientsFilter = '';
+            if (filters?.client) {
+                clientsFilter = filters?.client?.map(client => client.id).join(',');
+            }
 
-            const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted);
+            const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted, clientsFilter);
             setTotal(() => (data?.count || 0));
             setTotalMoney(data?.total_amount || 0);
             if (page === 1) setInvoices(data.results);
@@ -90,7 +95,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch, isShowDeleted]);
+    }, [page, searchValue, tempSort, refetch, isShowDeleted, JSON.stringify(filters)]);
 
     useEffect(() => {
         if (invoices.length > 0 && hasMoreData) {

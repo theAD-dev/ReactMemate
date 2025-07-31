@@ -78,7 +78,7 @@ const TaskLoadingView = () => {
 
 const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitialize }) => {
   const [showEditModal, setShowEditModal] = useState(false);
-  const { isFetching: isLoading, data } = useQuery({
+  const { isFetching: isLoading, data, refetch } = useQuery({
     queryKey: ['taskId', taskId],
     queryFn: () => getTask(taskId),
     enabled: !!taskId,
@@ -91,6 +91,7 @@ const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitialize }) => {
       handleClose();
       setTaskId(null);
       reInitialize();
+      refetch();
     },
     onError: (error) => {
       console.error('Error updating task:', error);

@@ -16,7 +16,7 @@ import newTaskImg from '../../../../../assets/images/new-task.svg';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 import SelectDate from '../../../../Business/Pages/management/task/select-date';
 
-const dateFormat = (dateInMiliSec) => {
+export const dateFormat = (dateInMiliSec) => {
     if (!dateInMiliSec) return null;
 
     const options = { year: 'numeric', month: 'short', day: 'numeric' };

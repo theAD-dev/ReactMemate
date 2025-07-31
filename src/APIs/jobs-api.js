@@ -1,7 +1,7 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-export const getListOfJobs = async (page, limit, name = "", order = "", isShowDeleted) => {
+export const getListOfJobs = async (page, limit, search = "", order = "", isShowDeleted) => {
     const offset = (page - 1) * limit;
     const endpoint = `/jobs/`;
     const options = {
@@ -10,10 +10,10 @@ export const getListOfJobs = async (page, limit, name = "", order = "", isShowDe
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     url.searchParams.append("limit", limit);
     url.searchParams.append("offset", offset);
-    if (name) url.searchParams.append("name", name);
+    if (search) url.searchParams.append("search", search);
     if (order) url.searchParams.append("ordering", order);
     if (isShowDeleted) url.searchParams.append('deleted', 1);
-    url.searchParams.append('status', '3,2,1,6,4,a');
+    url.searchParams.append('status', '3,2,1,6,a');
 
     return fetchAPI(url.toString(), options);
 };
