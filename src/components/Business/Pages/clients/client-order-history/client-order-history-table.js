@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import style from './client-order-history.module.scss';
 import { bringBack, clientOrderHistory } from '../../../../../APIs/ClientsApi';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import { formatDate } from '../../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import Loader from '../../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
@@ -78,6 +79,13 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
     };
   }, [clientOrders, hasMoreData]);
 
+
+  const projectIDBodyTemplate = (rowData) => {
+    return <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+      <span>{rowData.number}</span>
+      <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
+    </div>;
+  };
 
   const statusBodyTemplate = (rowData) => {
     const status = rowData.status;
@@ -348,7 +356,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
       onSort={onSort}
     >
       <Column selectionMode="multiple" headerClassName='ps-4' bodyClassName={'show-on-hover ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-      <Column field="number" header="Project ID" frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
+      <Column field="number" header="Project ID" body={projectIDBodyTemplate} frozen sortable style={{ minWidth: '100px' }} headerClassName='shadowRight' bodyClassName='shadowRight'></Column>
       <Column field="reference" header="Reference" style={{ minWidth: '154px' }}></Column>
       <Column field="status" header="Status" body={statusBodyTemplate} sortable style={{ minWidth: '113px' }}></Column>
       <Column header="Invoice" body={InvoiceBodyTemplate} style={{ minWidth: '114px' }}></Column>
