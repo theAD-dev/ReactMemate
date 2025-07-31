@@ -26,6 +26,7 @@ import InsuranceContact from './layout/modals/insurance-contact';
 import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
 import { useAuth } from '../app/providers/auth-provider';
 import { useTrialHeight } from '../app/providers/trial-height-provider';
+import RequestHelp from '../features/dashboard/request-help/request-help';
 import CreateTask from './Work/features/task/create-task/create-task';
 import ViewTaskModal from './Work/features/task/view-task/view-task';
 
@@ -42,6 +43,7 @@ const Home = () => {
     const [isMinimize, setMinimize] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [hasBankDetails, setHasBankDetails] = useState(true);
+    const [showRequestDemo, setShowRequestDemo] = useState(false);
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [homeData, setHomeData] = useState({
         expense: {},
@@ -576,7 +578,7 @@ const Home = () => {
 
                 </Container>
 
-                <div className='p-3 d-flex align-items-center gap-2'>
+                <div className='p-3 d-flex align-items-center gap-2 cursor-pointer' onClick={() => setShowRequestDemo(true)}>
                     <div className='outline-button ms-5' style={{ width: '36px', height: '36px' }}></div>
                     <div className='d-flex flex-column justify-content-center flex-1'>
                         <span className='font-14 text-left'>Need help with this?</span>
@@ -677,6 +679,7 @@ const Home = () => {
             </Dialog>
             <CreateTask show={showCreateTask} setShow={setShowCreateTask} refetch={refetchTasks} />
             <ViewTaskModal view={viewTask} setView={setViewTask} taskId={taskId} setTaskId={setTaskId} reInitialize={refetchTasks} />
+            <RequestHelp visible={showRequestDemo} setVisible={setShowRequestDemo} />
         </div>
     );
 };
