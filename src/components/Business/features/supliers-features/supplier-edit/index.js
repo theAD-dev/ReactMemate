@@ -32,7 +32,7 @@ const SupplierEdit = forwardRef(({ data, refetch, setIsPending, setIsEdit }, ref
         const formData = new FormData();
 
         formData.append("name", data.name);
-        formData.append("email", data.email);
+        if (data.email) formData.append("email", data.email);
         if (data.website) formData.append("website", data.website);
         if (data.abn) formData.append("abn", data.abn);
         const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);

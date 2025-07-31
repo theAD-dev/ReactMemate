@@ -21,7 +21,7 @@ import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+  email: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address").notRequired(),
   // abn: yup.string().required('ABN is required'),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   // industry: yup.number().required('Industry is required'),
@@ -136,7 +136,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
 
         <Col sm={6}>
           <div className="d-flex flex-column mb-4 gap-1">
-            <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Email</label>
             <IconField>
               <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />
