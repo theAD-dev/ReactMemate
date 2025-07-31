@@ -617,7 +617,7 @@ const Home = () => {
             <Dialog headerClassName='p-1 border-0' contentClassName='pb-0' visible={visible} position={'bottom-right'} style={{ width: `${isMinimize ? '706px' : '706px'}`, height: `${isMinimize ? '68px' : 'auto'}`, boxShadow: '0 20px 24px -4px rgba(16, 24, 40, 0.08), 0 8px 8px -4px rgba(16, 24, 40, 0.03)', border: '1px solid #1AB2FF' }} closable={false} onHide={() => { if (!visible) return; setVisible(false); }} draggable={false} resizable={false} modal={false}>
                 {isMinimize ? (
                     <div className='pt-1 d-flex justify-content-between align-items-center w-100'>
-                        <div className='d-flex justify-content-center align-items-center gap-5 pb-1 h-100'>
+                        <div className='d-flex justify-content-center align-items-center gap-4 pb-1 h-100'>
                             <div style={{ fontWeight: 600, fontSize: 16, color: '#1D2939', marginBottom: '0px', whiteSpace: 'nowrap' }}>Let's get you started</div>
                             <div style={{ width: '289px', height: 12, background: '#EAECF0', borderRadius: 17, overflow: 'hidden', position: 'relative' }}>
                                 <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${progress}%`, background: 'linear-gradient(to right, #4db8ff, #ffaa40)', borderRadius: 4, transition: 'width 0.3s' }}></div>

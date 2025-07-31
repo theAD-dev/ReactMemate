@@ -22,7 +22,7 @@ import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
 const schema = yup.object({
   name: yup.string().required('Company name is required'),
-  industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
+  // industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
   abn: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^\d{11}$/, "ABN must be an 11-digit number").notRequired(),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
   email: yup.string().email('Invalid email').required('Email is required'),
@@ -139,7 +139,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Industry<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Industry</label>
             <Controller
               name="industry"
               control={control}
