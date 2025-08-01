@@ -268,7 +268,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       <div className={`d-flex justify-content-center align-items-center ${style.clientImg} ${rowData?.client?.is_business ? style.square : 'rounded-circle'}`}>
         <FallbackImage photo={rowData?.client?.photo} is_business={rowData?.client?.is_business || false} has_photo={rowData?.client?.has_photo || false} />
       </div>
-      <div className='d-flex flex-column'>
+      <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
         <span>{rowData?.project?.reference}</span>
         <span className='font-12' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.project?.unique_id}&reference=${rowData?.project?.reference}&number=${rowData?.project?.number}`}>{rowData?.project?.number}</Link> | {rowData?.client?.name}</span>
       </div>
