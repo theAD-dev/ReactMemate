@@ -85,8 +85,8 @@ const DepartmentTurnoverPlan = () => {
                 <div className='contentMenuTab'>
                     <ul>
                         <li className='menuActive'><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
-                        <li><Link to="/settings/accounting/industry-service">Industry Service</Link></li>
-                        <li><Link to="/settings/accounting/account-code">Account Code</Link></li>
+                        <li><Link to="/settings/accounting/industry-service">Supplier Categories</Link></li>
+                        <li><Link to="/settings/accounting/account-code">Account Codes</Link></li>
                     </ul>
                 </div>
             </div>
