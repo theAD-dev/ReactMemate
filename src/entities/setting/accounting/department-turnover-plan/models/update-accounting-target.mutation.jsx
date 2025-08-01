@@ -19,11 +19,11 @@ export const useIndustryServiceUpdateMutations = () => {
     return useMutation({
         mutationFn: ({ id, data }) => updateIndustryServiceCode(id, data),
         onSuccess: () => {
-            toast.success(`Industry service code updated successfully`);
+            toast.success(`The supplier category code have been updated successfully.`);
         },
         onError: (error) => {
-            console.error('Error updating industry service code:', error);
-            toast.error('Failed to update industry service code. Please try again.');
+            console.error('Error updating supplier category code:', error);
+            toast.error('Failed to update supplier category code. Please try again.');
         }
     });
 };

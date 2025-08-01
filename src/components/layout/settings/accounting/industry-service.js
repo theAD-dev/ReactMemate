@@ -100,8 +100,8 @@ function IndustryService() {
         <div className='contentMenuTab'>
           <ul>
             <li><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
-            <li className='menuActive'><Link to="/settings/accounting/industry-service">Industry Service</Link></li>
-            <li><Link to="/settings/accounting/account-code">Account Code</Link></li>
+            <li className='menuActive'><Link to="/settings/accounting/industry-service">Supplier Categories</Link></li>
+            <li><Link to="/settings/accounting/account-code">Account Codes</Link></li>
           </ul>
         </div>
       </div>
@@ -109,7 +109,7 @@ function IndustryService() {
         <div className='content_wrapper w-100'>
           <div className="listwrapper">
             <div className="topHeadStyle pb-3">
-              <h2>Industry Service</h2>
+              <h2>Supplier Categories</h2>
             </div>
 
             <DataTable className='w-100' showGridlines rowGroupMode="rowspan" groupRowsBy="industryName" value={industryService || []} tableStyle={{ minWidth: '100%', border: '1px solid #f2f2f2' }}>

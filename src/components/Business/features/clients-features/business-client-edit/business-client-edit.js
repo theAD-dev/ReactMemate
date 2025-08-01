@@ -51,7 +51,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     if (data.website) formData.append("website", data.website);
     formData.append("payment_terms", data.payment_terms);
     if (data.category != "0") formData.append("category", data.category);
-    formData.append("industry", data.industry);
+    if (data.industry) formData.append("industry", data.industry);
     if (data.description) formData.append("description", data.description);
 
     data.addresses.forEach((address, index) => {

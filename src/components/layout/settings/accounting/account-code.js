@@ -33,8 +33,8 @@ const AccountCode = () => {
                 <div className='contentMenuTab'>
                     <ul>
                         <li><Link to="/settings/accounting/department-turnover-plan">Department Turnover Plan</Link></li>
-                        <li><Link to="/settings/accounting/industry-service">Industry Service</Link></li>
-                        <li className='menuActive'><Link to="/settings/accounting/account-code">Account Code</Link></li>
+                        <li><Link to="/settings/accounting/industry-service">Supplier Categories</Link></li>
+                        <li className='menuActive'><Link to="/settings/accounting/account-code">Account Codes</Link></li>
                     </ul>
                 </div>
             </div>
@@ -42,7 +42,7 @@ const AccountCode = () => {
                 <div className='content_wrapper w-100'>
                     <div className="listwrapper">
                         <div className="topHeadStyle pb-3">
-                            <h2>Account Code</h2>
+                            <h2>Account Codes</h2>
                         </div>
 
                         <DataTable className='w-100' showGridlines rowGroupMode="rowspan" groupRowsBy="category" value={accountCodes || []} tableStyle={{ minWidth: '100%', border: '1px solid #f2f2f2' }}>

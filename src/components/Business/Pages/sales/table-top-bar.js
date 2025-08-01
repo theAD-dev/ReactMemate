@@ -10,6 +10,7 @@ import {
   Download,
   CheckCircle,
   Person,
+  PlusLg,
 } from "react-bootstrap-icons";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -384,14 +385,12 @@ const TableTopBar = ({
                       <NavLink to="#">Sales</NavLink>
                     </li>
                     <li>
-                      {profileData &&
-                        profileData.bank_detail &&
-                        profileData.bank_detail.account_number ? (
+                      {profileData?.bank_detail?.account_number ? (
                         <NavLink
                           className="tabActive"
                           to="/sales/newquote/selectyourclient"
                         >
-                          Quote New Project +
+                          <span style={{ fontWeight: 400 }}>Quote New Project</span> <PlusLg color="#fff" size={16} />
                         </NavLink>
                       ) : (
                         <BankDetailsModel />
@@ -422,9 +421,9 @@ const TableTopBar = ({
                         <>{formattedAmount}</>
                       )}
                     </strong>
-                     <div style={{ width: '60px', height: '12px', background: '#EAECF0', borderRadius: '20px', marginLeft: '8px' }}>
-                        <div style={{ width: `${avgProgress || 0}%`, height: '100%', background: '#1AB2FF', borderRadius: '20px' }}></div>
-                     </div>
+                    <div style={{ width: '60px', height: '12px', background: '#EAECF0', borderRadius: '20px', marginLeft: '8px' }}>
+                      <div style={{ width: `${avgProgress || 0}%`, height: '100%', background: '#1AB2FF', borderRadius: '20px' }}></div>
+                    </div>
                     <span className="font-14" style={{ fontWeight: 500, margin: '0px 8px 0px 12px', color: '#344054' }}>{avgProgress || 0}%</span>
                     <strong className="styleT1">${formatAUD(progressWiseAmountAvg || 0)}</strong>
                   </p>

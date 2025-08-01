@@ -16,16 +16,15 @@ const BankDetailsModel = () => {
   const navigate = useNavigate();
 
   const handleAdd = () => {
-    
-    navigate("/settings/generalinformation/bank-details" );
+    navigate("/settings/generalinformation/bank-details");
     handleClose();
   };
 
   return (
     <>
-      <Button onClick={handleOpen} className="addNewBilling">
+      <Button onClick={handleOpen} className="addNewBilling p-0">
         <div className={`styleGrey01 tabActive`}>
-          New  <PlusLg color="#fff" size={16} />
+          <span style={{ fontWeight: 400, textTransform: 'capitalize' }}>Quote New Project</span> <PlusLg color="#fff" size={16} />
         </div>
       </Button>
       <Modal
@@ -38,9 +37,9 @@ const BankDetailsModel = () => {
             <>
               <div className='modelHeader modelHeaderBillig d-flex justify-content-between align-items-start'>
                 <span className='modelHeadFlex'>
-                      <div className='iconinnerStyle1'>
-                        <ExclamationOctagon color="#F04438" size={24} />
-                      </div>
+                  <div className='iconinnerStyle1'>
+                    <ExclamationOctagon color="#F04438" size={24} />
+                  </div>
                   <h2>Complete Your Profile to Proceed</h2>
                 </span>
                 <IconButton
@@ -52,11 +51,11 @@ const BankDetailsModel = () => {
                 </IconButton>
               </div>
               <div className='stepBoxStyle '>
-              <img src={NewQuoteImg} alt="NewQuoteImg" />
-              <div className='newQuotewrap'>
-                <h3>Bank Details Required</h3>
-                <p>Before creating a new request, please ensure you have filled in your bank details. This is necessary to process your transactions smoothly. You can add your bank information by navigating to your profile settings. </p>
-              </div>
+                <img src={NewQuoteImg} alt="NewQuoteImg" />
+                <div className='newQuotewrap'>
+                  <h3>Bank Details Required</h3>
+                  <p>Before creating a new request, please ensure you have filled in your bank details. This is necessary to process your transactions smoothly. You can add your bank information by navigating to your profile settings. </p>
+                </div>
               </div>
               <div className='footerButton'>
                 <button className='Cancel' onClick={handleClose}>Cancel and Return</button>

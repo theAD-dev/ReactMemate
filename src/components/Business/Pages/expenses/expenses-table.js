@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { Trash } from 'react-bootstrap-icons';
+import { ExclamationCircle, Trash, X } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
@@ -212,48 +212,69 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     });
 
     const ActionBody = (rowData) => {
-    const deleteExpense = () => {
-        setExpenses(prev => prev.filter(exp => exp.id !== rowData.id));
-        setTotal(prev => prev - 1);
-        setTotalMoney(prev => prev - rowData.total);
+        const deleteExpense = () => {
+            setExpenses(prev => prev.filter(exp => exp.id !== rowData.id));
+            setTotal(prev => prev - 1);
+            setTotalMoney(prev => prev - rowData.total);
 
-        timeoutRef.current = setTimeout(() => {
-            deleteMutation.mutate(rowData.id);
-        }, 5000);
+            timeoutRef.current = setTimeout(() => {
+                deleteMutation.mutate(rowData.id);
+            }, 5000);
 
-        toast.info('Expense has been deleted', {
-            action: {
-                label: 'Undo',
-                onClick: () => {
-                    clearTimeout(timeoutRef.current);
-                    deleteMutation.reset?.();
+            toast.custom((t) => (
+                <div className={style.customToast}>
+                    <div className='d-flex align-items-center justify-content-between w-100 mb-3'>
+                        <div className={style.outerToastIcon}>
+                            <div className={style.toastIcon}>
+                                <ExclamationCircle color="#DC6803" size={20} />
+                            </div>
+                        </div>
+                        <Button className='close-button border-0' onClick={() => toast.dismiss(t)}>
+                            <X size={20} color="#344054" />
+                        </Button>
+                    </div>
+                    <div className='ps-2'>
+                        <p className={style.toastTitle}>Expense has been deleted</p>
+                        <p className={style.toastMessage}>You can undo this action within a few seconds.</p>
+                        <Button className='text-button ps-0'
+                            onClick={() => {
+                                clearTimeout(timeoutRef.current);
+                                deleteMutation.reset?.();
 
-                    toast.success('Expense has been restored');
+                                toast.success('Expense has been restored');
+                                toast.dismiss(t);
 
-                    setExpenses(prev => {
-                        const index = expenses.findIndex(exp => exp.id === rowData.id); // get original index
-                        return [
-                            ...prev.slice(0, index),
-                            rowData,
-                            ...prev.slice(index)
-                        ];
-                    });
+                                setExpenses(prev => {
+                                    const index = expenses.findIndex(exp => exp.id === rowData.id); // get original index
+                                    return [
+                                        ...prev.slice(0, index),
+                                        rowData,
+                                        ...prev.slice(index)
+                                    ];
+                                });
 
-                    setTotal(prev => prev + 1);
-                    setTotalMoney(prev => prev + rowData.total);
-                },
-            },
-        });
+                                setTotal(prev => prev + 1);
+                                setTotalMoney(prev => prev + rowData.total);
+                            }}
+                        >
+                            Undo action
+                        </Button>
+                    </div>
+
+                </div>
+            ), {
+                position: 'bottom-right',
+            });
+        };
+
+        return (
+            <div className='d-flex justify-content-center align-items-center w-100 h-100'>
+                {deleteMutation?.variables === rowData.id
+                    ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+                    : <Trash color='#667085' size={20} className='cursor-pointer' onClick={deleteExpense} />}
+            </div>
+        );
     };
-
-    return (
-        <div className='d-flex justify-content-center align-items-center w-100 h-100'>
-            {deleteMutation?.variables === rowData.id
-                ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
-                : <Trash color='#667085' size={20} className='cursor-pointer' onClick={deleteExpense} />}
-        </div>
-    );
-};
 
 
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);

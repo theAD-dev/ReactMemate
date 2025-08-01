@@ -23,8 +23,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
   };
 
   const getUnreadCount = (group) => {
-    if (!group.messages || !userId) return 0;
-    return group.messages.filter(msg => !msg.seen_by || !msg.seen_by.includes(userId)).length;
+    return group?.unread_count || 0;
   };
 
   const getChatGroupName = (group) => {
@@ -70,7 +69,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
                   : ''}
               </span>
               {unreadCount > 0 && (
-                <span className={styles.unreadCount}>{unreadCount}</span>
+                <span className={styles.unreadCount}>{unreadCount > 9 ? '9+' : unreadCount }</span>
               )}
             </div>
           </Link>

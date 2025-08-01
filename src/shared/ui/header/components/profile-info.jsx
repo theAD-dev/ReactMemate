@@ -1,6 +1,6 @@
 import React from "react";
 import { Placeholder } from "react-bootstrap";
-import { QuestionCircle, Search, PlusLg, Bell } from "react-bootstrap-icons";
+import { QuestionCircle, Search, Bell } from "react-bootstrap-icons";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 import chatIcon from '../../../../assets/images/icon/message-text.svg';
@@ -32,13 +32,13 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                         </NavLink>
                     </li>
                     <li className={style.navbarActionIcon}>
-                        <Bell color="#475467" size={20} />
+                        <Bell color="#ccc" size={20} />
                     </li>
                     {/* <li className={style.navbarActionIcon}>
                         <PlusLg color="#667085" size={20} />
                     </li> */}
                     <li className={style.navbarActionIcon}>
-                        <Search color="#475467" size={20} />
+                        <Search color="#ccc" size={20} />
                     </li>
                     <li className={style.navbarActionIcon} onClick={openSupportModal}>
                         <QuestionCircle color="#475467" size={20} />

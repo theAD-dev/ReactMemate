@@ -112,3 +112,17 @@
   flex-shrink: 0;
   align-self: flex-start;
 }
+
+.unreadCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-500, #1ab2ff);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
