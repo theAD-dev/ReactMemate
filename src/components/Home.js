@@ -3,7 +3,7 @@ import { Placeholder } from 'react-bootstrap';
 import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle, Check, Link as LinkIcon, X, ArrowBarLeft, ArrowRight, ArrowUpShort, Dash, BoxArrowUpLeft, ArrowsAngleExpand } from "react-bootstrap-icons";
 import CountUp from 'react-countup';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -26,7 +26,9 @@ import InsuranceContact from './layout/modals/insurance-contact';
 import ModalSalesContactFinance from './layout/modals/modal-sales-contact-finance';
 import { useAuth } from '../app/providers/auth-provider';
 import { useTrialHeight } from '../app/providers/trial-height-provider';
+import joshImage from '../assets/images/Avatar.png';
 import RequestHelp from '../features/dashboard/request-help/request-help';
+import SkipSetup from '../features/dashboard/skip-setup/skip-setup';
 import CreateTask from './Work/features/task/create-task/create-task';
 import ViewTaskModal from './Work/features/task/view-task/view-task';
 
@@ -34,14 +36,16 @@ const Home = () => {
     const { session } = useAuth();
     const observerRef = useRef(null);
     const { trialHeight } = useTrialHeight();
+    const navigate = useNavigate();
     const [tasksLoading, setTasksLoading] = useState(true);
     const [showCreateTask, setShowCreateTask] = useState(false);
     const [viewTask, setViewTask] = useState(false);
     const [taskId, setTaskId] = useState(null);
     const [completingTask, setCompletingTask] = useState({ id: null, isCompleting: false });
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(false);
     const [isMinimize, setMinimize] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
+    const [showSkipSetup, setShowSkipSetup] = useState(false);
     const [hasBankDetails, setHasBankDetails] = useState(true);
     const [showRequestDemo, setShowRequestDemo] = useState(false);
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
@@ -243,13 +247,25 @@ const Home = () => {
     };
 
     const initialTasks = [
-        { id: 1, title: 'Link Your Email', desc: 'Connect your email to manage communications.', status: isConnectedEmail ? 'complete' : 'pending', type: 'Starter' },
-        { id: 2, title: 'Enter Bank Details', desc: 'Provide your bank details to secure transactions.', status: hasBankDetails ? 'complete' : 'pending', type: 'Starter' },
-        { id: 3, title: 'Check Your Calculators', desc: 'Make sure your pricing calculators are correctly set up and ready to use in quotes.', status: 'pending', type: 'Starter' },
+        { id: 1, title: 'Link Your Email', desc: 'Connect your email to manage communications.', status: isConnectedEmail ? 'complete' : 'pending', type: 'Starter', link: '/settings/integrations?openEmail=true' },
+        { id: 2, title: 'Enter Bank Details', desc: 'Provide your bank details to secure transactions.', status: hasBankDetails ? 'complete' : 'pending', type: 'Starter', link: '/settings/generalinformation/bank-details' },
     ];
 
     const completedCount = initialTasks.filter(t => t.status === 'complete').length;
     const progress = Math.round((completedCount / initialTasks.length) * 100) || 0;
+
+    useEffect(() => {
+        if (progress < 100) {
+            if (localStorage.getItem('skipSetup') == "false" || !localStorage.getItem('skipSetup')) {
+                setVisible(true);
+            }
+        }
+    }, [progress]);
+
+    const handleCloseInitialSetup = () => {
+        setVisible(false);
+        setShowSkipSetup(true);
+    };
 
     return (
         <div className='homeDashboardPage' style={{ position: 'relative' }}>
@@ -579,8 +595,10 @@ const Home = () => {
                 </Container>
 
                 <div className='p-3 d-flex align-items-center gap-2 cursor-pointer' onClick={() => setShowRequestDemo(true)}>
-                    <div className='outline-button ms-5' style={{ width: '36px', height: '36px' }}></div>
-                    <div className='d-flex flex-column justify-content-center flex-1'>
+                    <div className='outline-button ms-5 p-0' style={{ width: '46px', height: '46px', overflow: 'hidden' }}>
+                        <img src={joshImage} alt='Josh' className='w-100 h-100'/>
+                    </div>
+                    <div className='d-flex flex-column justify-content-center mt-1'>
                         <span className='font-14 text-left'>Need help with this?</span>
                         <Link to={"#"} style={{ color: '#158ECC' }}>Book a call with Josh <ArrowRight size={16} color="#158ECC" /></Link>
                     </div>
@@ -614,7 +632,7 @@ const Home = () => {
                 </div>
             </div>
 
-            <Dialog headerClassName='p-1 border-0' contentClassName='pb-0' visible={visible} position={'bottom-right'} style={{ width: `${isMinimize ? '706px' : '706px'}`, height: `${isMinimize ? '68px' : 'auto'}`, boxShadow: '0 20px 24px -4px rgba(16, 24, 40, 0.08), 0 8px 8px -4px rgba(16, 24, 40, 0.03)', border: '1px solid #1AB2FF' }} closable={false} onHide={() => { if (!visible) return; setVisible(false); }} draggable={false} resizable={false} modal={false}>
+            <Dialog headerClassName='p-1 border-0' contentClassName='pb-0' visible={visible} position={'bottom-right'} style={{ width: `${isMinimize ? '706px' : '706px'}`, height: `${isMinimize ? '68px' : 'auto'}`, boxShadow: '0 20px 24px -4px rgba(16, 24, 40, 0.08), 0 8px 8px -4px rgba(16, 24, 40, 0.03)', border: '1px solid #1AB2FF' }} closable={false} onHide={handleCloseInitialSetup} draggable={false} resizable={false} modal={false}>
                 {isMinimize ? (
                     <div className='pt-1 d-flex justify-content-between align-items-center w-100'>
                         <div className='d-flex justify-content-center align-items-center gap-4 pb-1 h-100'>
@@ -627,7 +645,7 @@ const Home = () => {
                             <Button className='close-button' onClick={() => setMinimize(false)}>
                                 <ArrowsAngleExpand size={12} color="#344054" />
                             </Button>
-                            <Button className='close-button' onClick={() => setVisible(false)}>
+                            <Button className='close-button' onClick={handleCloseInitialSetup}>
                                 <X size={20} color="#344054" />
                             </Button>
                         </div>
@@ -639,7 +657,7 @@ const Home = () => {
                                 <Button className='close-button' onClick={() => setMinimize(true)}>
                                     <Dash size={20} color="#344054" />
                                 </Button>
-                                <Button className='close-button' onClick={() => setVisible(false)}>
+                                <Button className='close-button' onClick={handleCloseInitialSetup}>
                                     <X size={20} color="#344054" />
                                 </Button>
                             </div>
@@ -653,7 +671,7 @@ const Home = () => {
                         </div>
                         <ul style={{ listStyle: 'none', padding: 0, margin: 0, width: '100%', maxHeight: 270, overflowY: 'auto' }}>
                             {initialTasks.map((task) => (
-                                <li className="dashboardTask border" key={task.id} style={{ borderRadius: 8, marginBottom: 8, padding: '6px 24px 6px 16px', display: 'flex', alignItems: 'center' }}>
+                                <li className="dashboardTask border cursor-pointer" onClick={() => navigate(task.link)} key={task.id} style={{ borderRadius: 8, marginBottom: 8, padding: '6px 24px 6px 16px', display: 'flex', alignItems: 'center' }}>
                                     <div className='gap-2' style={{ display: 'flex', alignItems: 'center', fontWeight: 700, color: '#101828', fontSize: 17 }}>
                                         {task.status === 'complete' ?
                                             <div style={{ border: '1px solid #F2F4F7', width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', background: '#BAE8FF' }}>
@@ -680,6 +698,7 @@ const Home = () => {
             <CreateTask show={showCreateTask} setShow={setShowCreateTask} refetch={refetchTasks} />
             <ViewTaskModal view={viewTask} setView={setViewTask} taskId={taskId} setTaskId={setTaskId} reInitialize={refetchTasks} />
             <RequestHelp visible={showRequestDemo} setVisible={setShowRequestDemo} />
+            <SkipSetup visible={showSkipSetup} setVisible={setShowSkipSetup} progress={progress} />
         </div>
     );
 };
