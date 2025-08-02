@@ -481,7 +481,8 @@ const Home = () => {
                                 <h3>Active Quotes</h3>
                                 <div className='countNoBox activeQouteH'>
                                     <Link to="/sales">
-                                        <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div></Link>
+                                        <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div>
+                                    </Link>
                                     <span> <CountUp start={0} end={homeData?.active_quotes?.cnt} duration={5} /></span></div>
                                 <h4>{formatCurrency(homeData?.active_quotes?.sum)}</h4>
                             </div>
@@ -507,9 +508,14 @@ const Home = () => {
                                     <h3 className='mb-0'>Quotes Won</h3>
                                     <div style={{ border: '1px solid #D0D5DD', borderRadius: '24px', padding: '2px 12px', fontSize: '10px' }}>{new Date().toLocaleString('default', { month: 'long' })}</div>
                                 </div>
-                                <div className='countNoBox activeQouteH'> <span>
-                                    <CountUp start={0} end={0} duration={4} />
-                                </span></div>
+                                <div className='countNoBox activeQouteH'>
+                                    <Link to="/sales">
+                                        <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div>
+                                    </Link>
+                                    <span>
+                                        <CountUp start={0} end={0} duration={4} />
+                                    </span>
+                                </div>
                                 <h4>{formatCurrency(0)}</h4>
                             </div>
                         </Col>
@@ -531,9 +537,12 @@ const Home = () => {
                                     ))}
                                 </div>
                                 <h3>Active Projects</h3>
-                                <div className='countNoBox ActiveProjectH'> <span>
-                                    <CountUp start={0} end={homeData?.projects?.cnt} duration={4} />
-                                </span></div>
+                                <div className='countNoBox ActiveProjectH'>
+                                    <Link to="/sales">
+                                        <div className='pluslgIcon'> <PlusLg size={20} color="#106B99" /></div>
+                                    </Link>
+                                    <span><CountUp start={0} end={homeData?.projects?.cnt} duration={4} /></span>
+                                </div>
                                 <h4>{formatCurrency(homeData?.projects?.sum)}</h4>
                             </div>
                         </Col>
@@ -560,8 +569,10 @@ const Home = () => {
                                         <h3 className='mb-0'>Total Jobs </h3>
                                         <div style={{ border: '1px solid #D0D5DD', borderRadius: '24px', padding: '2px 12px', fontSize: '10px' }}>{new Date().toLocaleString('default', { month: 'long' })}</div>
                                     </div>
-                                    <div className='countNoBox jobScheduledH'>
-                                        <div className='pluslgIcon'><PlusLg size={20} color="#106B99" /></div>
+                                    <div className='countNoBox ActiveProjectH'>
+                                        <Link to="/work/jobs">
+                                            <div className='pluslgIcon'><PlusLg size={20} color="#106B99" /></div>
+                                        </Link>
                                         <span><CountUp start={0} end={homeData?.quote_this_week?.cnt} duration={2} /></span></div>
                                     <h4>{formatCurrency(homeData?.quote_this_week?.sum)}</h4>
                                 </div>
@@ -585,7 +596,12 @@ const Home = () => {
                                         ))}
                                     </div>
                                     <h3>Job waiting for approval</h3>
-                                    <div className='countNoBox jobWaitingH'> <span> <CountUp start={0} end={homeData?.waiting_for_approval?.count} duration={8} /></span></div>
+                                    <div className='countNoBox jobWaitingH'>
+                                        <Link to="/work/approval">
+                                            <div className='pluslgIcon'><PlusLg size={20} color="#106B99" /></div>
+                                        </Link>
+                                        <span> <CountUp start={0} end={homeData?.waiting_for_approval?.count} duration={8} /></span>
+                                    </div>
                                     <h4>{formatCurrency(homeData?.waiting_for_approval?.sum)}</h4>
                                 </div>
                             </Col>
@@ -596,7 +612,7 @@ const Home = () => {
 
                 <div className='p-3 d-flex align-items-center gap-2 cursor-pointer' onClick={() => setShowRequestDemo(true)}>
                     <div className='outline-button ms-5 p-0' style={{ width: '46px', height: '46px', overflow: 'hidden' }}>
-                        <img src={joshImage} alt='Josh' className='w-100 h-100'/>
+                        <img src={joshImage} alt='Josh' className='w-100 h-100' />
                     </div>
                     <div className='d-flex flex-column justify-content-center mt-1'>
                         <span className='font-14 text-left'>Need help with this?</span>
