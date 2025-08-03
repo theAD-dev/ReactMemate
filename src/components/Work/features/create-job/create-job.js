@@ -500,7 +500,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (!type) tempErrors.type = true;
         else payload.type = type;
 
-        if (type === '2' && !cost) tempErrors.cost = true;
+        if (type === '2' && (!cost || cost == '0.00')) tempErrors.cost = true;
         else payload.cost = cost;
 
         if (!duration || duration == '0.0') tempErrors.duration = true;
@@ -907,7 +907,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 }} keyfilter={"num"} onBlur={(e) => setCost(parseFloat(e?.target?.value || 0).toFixed(2))} style={{ paddingLeft: '28px', width: '230px' }} className={clsx(style.inputBox, "outline-none")} placeholder='20' />
                                             </IconField>
                                             {errors?.cost && (
-                                                <p className="error-message mb-0">{"Payment is required"}</p>
+                                                <p className="error-message mb-0">{"Payment is required and must be greater than zero."}</p>
                                             )}
                                         </>
                                             : <div style={{ width: 'fit-content' }}>
