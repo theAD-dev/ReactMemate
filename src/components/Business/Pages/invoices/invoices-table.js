@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { CloseButton } from 'react-bootstrap';
-import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash, CreditCard } from 'react-bootstrap-icons';
+import { FilePdf, Link45deg, InfoCircle, ThreeDotsVertical, Files, FileEarmarkSpreadsheet, Trash, PlusLg, Coin, Calendar3Event, Bank, Stripe, Cash, CreditCard, CurrencyDollar } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
@@ -172,18 +172,19 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
     const ToBePaidBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={`text-dark`}>
-                ${formatAUD(rowData?.to_be_paid)}
+                <span style={{ color: rowData.payment_status === 'paid' ? '#98A2B3' : rowData.payment_status === 'not_paid' ? '#D92D20' : '#F79009' }}>${formatAUD(rowData?.to_be_paid)}</span>
             </div>
         </div>;
     };
 
     const depositBody = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`} style={{ position: 'static' }}>
-            <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
-                ${formatAUD(rowData.deposit)}
-                <span onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
-            </div>
-        </div>;
+        // return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`} style={{ position: 'static' }}>
+        //     <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
+        //         ${formatAUD(rowData.deposit)}
+        //         <span onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
+        //     </div>
+        // </div>;
+        return <Button onClick={() => { setVisible(true); setInvoiceData(rowData); }} disabled={rowData.payment_status === 'paid'} className={clsx(style.payInvoiceButton, { [style.paid]: rowData.payment_status === 'paid', [style.unpaid]: rowData.payment_status === 'not_paid', [style.partialPaid]: rowData.payment_status !== 'not_paid' && rowData.payment_status !== 'paid' })}>Pay Invoice <CurrencyDollar color={rowData.payment_status === 'paid' ? '#17B26A' : rowData.payment_status === 'not_paid' ? '#D92D20' : '#F79009'} size={16} /></Button>;
     };
 
     const xeroBody = (rowData) => {
@@ -347,7 +348,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         </React.Fragment>;
     };
 
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : data?.payment_status === 'partial_payment' ? style.partialPaidRow : style.unpaidRow);
+    const rowClassName = (data) => (data?.deleted ? style.deletedRow : "");
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
@@ -376,7 +377,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 <Column field="client.name" header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '295px', maxWidth: '295px', width: '295px' }} frozen sortable></Column>
                 <Column field="reference" header="Invoice Reference"  style={{ minWidth: '250px' }}></Column>
                 <Column field="due_date" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
-                <Column field='amount' header="Amount + GST" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
+                <Column field='amount' header="Total invoice" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
                 <Column field='deposit' header="Deposit/Payment" body={depositBody} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Info" body={InfoBodyTemplate} style={{ minWidth: '89px', maxWidth: '89px', width: '89px', textAlign: 'center' }} sortable></Column>
