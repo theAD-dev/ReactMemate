@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { CloseButton } from 'react-bootstrap';
-import { ArrowLeftCircle, CardChecklist, Check2Circle, FileEarmark, FilePdf, Files, FileText, InfoCircle, Link45deg, ListCheck, ListUl, PhoneVibrate, PlusSlashMinus } from 'react-bootstrap-icons';
+import { ArrowLeftCircle, CardChecklist, Check2Circle, Envelope, FileEarmark, FilePdf, Files, FileText, InfoCircle, Link45deg, ListCheck, ListUl, PhoneVibrate, PlusSlashMinus } from 'react-bootstrap-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import clsx from 'clsx';
@@ -203,6 +203,8 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
           return <FileEarmark size={16} color="#1AB2FF" />;
         case 'invoice':
           return <FileText size={16} color="#1AB2FF" />;
+        case 'expense':
+          return <FileEarmark size={16} color="#1AB2FF" />;
         case 'task':
           return <Check2Circle size={16} color="#1AB2FF" />;
         case 'order':
@@ -211,6 +213,10 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
           return <CardChecklist size={16} color="#1AB2FF" />;
         case 'tag':
           return <ListCheck size={16} color="#1AB2FF" />;
+        case 'email':
+          return <Envelope size={16} color="#1AB2FF" />;
+        case 'sms':
+          return <PhoneVibrate size={16} color="#1AB2FF" />;
         default:
           return '-';
       }
@@ -240,35 +246,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
                 <div key={`${rowData.unique_id}-${index}`} className='d-flex flex-column mb-4 text-start'>
                   <div className='d-flex align-items-center gap-1'>
                     {getIconByType(history.type)}
-                    <p className={clsx(style.historyTitle, 'mb-0')}>{history?.title || "-"}</p>
-                  </div>
-                  {history?.text && <p className={clsx(style.historyText, 'mb-1')} dangerouslySetInnerHTML={{ __html: history?.text }} />}
-                  <p className={clsx(style.historyDescription, 'mb-0')}>
-                    {historyDescription(history)}
-                  </p>
-                </div>
-              ))
-            }
-            {
-              rowData?.history?.map((history, index) => (
-                <div key={`${rowData.unique_id}-${index}`} className='d-flex flex-column mb-4 text-start'>
-                  <div className='d-flex align-items-center gap-1'>
-                    {getIconByType(history.type)}
-                    <p className={clsx(style.historyTitle, 'mb-0')}>{history?.title || "-"}</p>
-                  </div>
-                  {history?.text && <p className={clsx(style.historyText, 'mb-1')} dangerouslySetInnerHTML={{ __html: history?.text }} />}
-                  <p className={clsx(style.historyDescription, 'mb-0')}>
-                    {historyDescription(history)}
-                  </p>
-                </div>
-              ))
-            }
-            {
-              rowData?.history?.map((history, index) => (
-                <div key={`${rowData.unique_id}-${index}`} className='d-flex flex-column mb-4 text-start'>
-                  <div className='d-flex align-items-center gap-1'>
-                    {getIconByType(history.type)}
-                    <p className={clsx(style.historyTitle, 'mb-0')}>{history?.title || "-"}</p>
+                    <p className={clsx(style.historyTitle, 'mb-0')}>{history.type === 'note' ? "Note" : history?.title || "-"}</p>
                   </div>
                   {history?.text && <p className={clsx(style.historyText, 'mb-1')} dangerouslySetInnerHTML={{ __html: history?.text }} />}
                   <p className={clsx(style.historyDescription, 'mb-0')}>

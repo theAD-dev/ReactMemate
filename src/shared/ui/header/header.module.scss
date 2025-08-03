@@ -557,3 +557,24 @@ $colorG3: var(--colorG3);
     }
   }
 }
+
+.managementNotification {
+  color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 45px; /* 500% */
+  position: absolute;
+  left: 35px;
+  top: -4px;
+  display: flex;
+  width: 18px;
+  height: 18px;
+  padding: 3px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 36px;
+  background: var(--Warning-400, #fdb022);
+}

@@ -1,14 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CardList, CheckCircle, Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
 import ApprovedTable from './approved-table';
+import { getToApprovedJobsInvoice } from '../../../../APIs/approval-api';
 
 const ApprovalPage = () => {
     const [tab, setTab] = useState('review-approve');
     const handleSearch = () => { };
+    const [currentWeek, setCurrentWeek] = useState(null);
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+    const toInvoiceQuery = useQuery({
+        queryKey: ['toInvoice', currentYear, currentWeek],
+        queryFn: () => getToApprovedJobsInvoice(currentYear, currentWeek),
+        enabled: !!currentWeek && !!currentYear,
+        retry: 1,
+    });
+    console.log('toInvoiceQuery: ', toInvoiceQuery?.data);
+
+    const getWeekNumber = (date) => {
+        const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+        const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+        return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+    };
+
+    useEffect(() => {
+        const today = new Date();
+        const weekNum = getWeekNumber(today);
+        setCurrentWeek(weekNum);
+    }, []);
 
     return (
         <div className='approval-page'>
@@ -33,7 +58,7 @@ const ApprovalPage = () => {
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <div className={clsx(style.approvalTab, 'd-flex align-items-center gap-2')}>
                         <button className={clsx(style.tabButton, tab === 'review-approve' && style.activeReviewApprove)} onClick={() => setTab('review-approve')}><CardList size={20} color={'#17B26A'} /> Review & Approve</button>
-                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Jobs (Not Invoiced) </button>
+                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Current Week: <span style={{ color: '#106B99', fontWeight: 600 }}>${toInvoiceQuery?.data?.total_amount}</span> {toInvoiceQuery?.isFetching && <ProgressSpinner style={{ width: '18px', height: '18px' }} />} </button>
                     </div>
                 </div>
 

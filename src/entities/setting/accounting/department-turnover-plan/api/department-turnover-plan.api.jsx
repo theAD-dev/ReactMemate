@@ -49,3 +49,11 @@ export const getAccountCodeList = async () => {
     };
     return fetchInstance(path, options);
 };
+
+export const syncCode = async () => {
+    const path = `/account_codes/sync/`;
+    const options = {
+        method: 'PUT',
+    };
+    return fetchInstance(path, options);
+};
