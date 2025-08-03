@@ -240,7 +240,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         setType('2');
         setCost(0.00);
         set_time_type('1');
-        setStart("");
+        setStart(today);
         setEnd("");
         setDuration("1.00");
         setDayShiftHours("1.00");
