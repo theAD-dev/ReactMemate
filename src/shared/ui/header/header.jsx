@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Col, Container, Placeholder, Row } from "react-bootstrap";
 import { XCircle } from "react-bootstrap-icons";
 import { Navigate, NavLink, useLocation } from "react-router-dom";
+import clsx from "clsx";
 import SelectLocation from "./components/location-selection";
 import ProfileInfo from "./components/profile-info";
 import style from './header.module.scss';
@@ -99,7 +100,7 @@ const Header = () => {
             <div className="headerNav1">
                 {menuSwitch ?
                     <>
-                        <div className="headerTop business" style={ isHomePage ? { whiteSpace: 'nowrap', borderBottom: '1px solid #eaecf0' } : { whiteSpace: 'nowrap' }}>
+                        <div className="headerTop business" style={isHomePage ? { whiteSpace: 'nowrap', borderBottom: '1px solid #eaecf0' } : { whiteSpace: 'nowrap' }}>
                             <Container fluid>
                                 <Row className="d-flex flex-nowrap">
                                     <Col className="d-flex align-items-center">
@@ -228,7 +229,10 @@ const Header = () => {
                                                     Sales
                                                 </NavLink>
                                             </li>
-                                            <li>
+                                            <li style={{ position: 'relative' }}>
+                                                <div className={clsx("management-notification")} style={{ display: 'none' }}>
+                                                    <div className={clsx(style.managementNotification, "management-notification-count")}>0</div>
+                                                </div>
                                                 <NavLink
                                                     to="/management"
                                                     className={({ isActive }) =>

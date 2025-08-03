@@ -94,6 +94,9 @@ const TableTopBar = ({
           setSelectedRows([]);
           removeRowMulti();
           setConfetti(true);
+          document.querySelector('.management-notification').style.display = 'block';
+          let count = parseInt(document.querySelector('.management-notification-count').innerText || 0);
+          document.querySelector('.management-notification-count').innerHTML = count + selectedUniqueIds.length;
           toast.success("Successfully moved to Management!");
         } else {
           toast.error("Failed to move to Management. Please try again.");
