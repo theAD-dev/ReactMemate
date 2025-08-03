@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { updateAccountingTarget, updateIndustryServiceCode } from "../api/department-turnover-plan.api";
+import { syncCode, updateAccountingTarget, updateIndustryServiceCode } from "../api/department-turnover-plan.api";
 
 export const useAccountingTargetUpdateMutations = () => {
     return useMutation({
@@ -24,6 +24,19 @@ export const useIndustryServiceUpdateMutations = () => {
         onError: (error) => {
             console.error('Error updating supplier category code:', error);
             toast.error('Failed to update supplier category code. Please try again.');
+        }
+    });
+};
+
+export const useAccountCodeSyncMutations = () => {
+    return useMutation({
+        mutationFn: () => syncCode(),
+        onSuccess: () => {
+            toast.success(`Account codes synced successfully`);
+        },
+        onError: (error) => {
+            console.error('Error syncing account codes:', error);
+            toast.error('Failed to sync account codes. Please try again.');
         }
     });
 };
