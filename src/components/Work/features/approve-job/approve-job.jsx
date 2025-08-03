@@ -115,6 +115,11 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         setIsBonus(true);
         setReason("");
         setVisible(false);
+        setIsOpenVariationSection(false);
+        setIsOpenHistorySection(false);
+        setIsOpenProjectPhotoSection(false);
+        setIsOpenDocumentsSection(false);
+        setIsOpenJobTrackingSection(false);
     };
 
     const jobTypeBody = (rowData) => {
