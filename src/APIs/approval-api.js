@@ -18,3 +18,12 @@ export const getApproveNotInvoice = async (year, week) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const getToApprovedJobsInvoice = async (year, week) => {
+    const endpoint = `/jobs/to-invoice/total/${year}/${week}/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
