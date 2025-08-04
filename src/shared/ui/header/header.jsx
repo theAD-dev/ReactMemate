@@ -49,7 +49,7 @@ const Header = () => {
             SetMenuSwitch(true);
         }
 
-        if (location.pathname.startsWith("/management")) {
+        if (location.pathname.startsWith("/management") && document.querySelector('.management-notification-count') && document.querySelector('.management-notification')) {
             document.querySelector('.management-notification').style.display = 'none';
             document.querySelector('.management-notification-count').innerHTML = 0;
         }
