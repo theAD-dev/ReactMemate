@@ -48,6 +48,11 @@ const Header = () => {
         } else {
             SetMenuSwitch(true);
         }
+
+        if (location.pathname.startsWith("/management")) {
+            document.querySelector('.management-notification').style.display = 'none';
+            document.querySelector('.management-notification-count').innerHTML = 0;
+        }
     }, [location.pathname]);
 
     useEffect(() => {
