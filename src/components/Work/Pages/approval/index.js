@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CardList, CheckCircle, Filter } from 'react-bootstrap-icons';
+import CountUp from 'react-countup';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -58,7 +59,7 @@ const ApprovalPage = () => {
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <div className={clsx(style.approvalTab, 'd-flex align-items-center gap-2')}>
                         <button className={clsx(style.tabButton, tab === 'review-approve' && style.activeReviewApprove)} onClick={() => setTab('review-approve')}><CardList size={20} color={'#17B26A'} /> Review & Approve</button>
-                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Current Week: <span style={{ color: '#106B99', fontWeight: 600 }}>${toInvoiceQuery?.data?.total_amount}</span> {toInvoiceQuery?.isFetching && <ProgressSpinner style={{ width: '18px', height: '18px' }} />} </button>
+                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Current Week: <span style={{ color: '#106B99', fontWeight: 600 }}>$<CountUp start={0} end={parseFloat(toInvoiceQuery?.data?.total_amount || 0.00).toFixed(2)} duration={5} separator="," decimals={2} decimal="." /></span> {toInvoiceQuery?.isFetching && <ProgressSpinner style={{ width: '18px', height: '18px' }} />} </button>
                     </div>
                 </div>
 
