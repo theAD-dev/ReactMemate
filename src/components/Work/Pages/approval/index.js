@@ -9,12 +9,24 @@ import ApprovalTable from './approval-table';
 import style from './approval.module.scss';
 import ApprovedTable from './approved-table';
 import { getToApprovedJobsInvoice } from '../../../../APIs/approval-api';
+import { formatAUD } from '../../../../shared/lib/format-aud';
 
 const ApprovalPage = () => {
     const [tab, setTab] = useState('review-approve');
     const handleSearch = () => { };
     const [currentWeek, setCurrentWeek] = useState(null);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [weekInfo, setWeekInfo] = useState({ start: '', end: '' });
+    let countDown = "";
+    if (weekInfo?.end) {
+        const now = new Date();
+        const end = new Date(weekInfo.end);
+        const diff = end - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        countDown = `${days}d ${hours}h ${minutes}m`;
+    }
 
     const toInvoiceQuery = useQuery({
         queryKey: ['toInvoice', currentYear, currentWeek],
@@ -23,6 +35,28 @@ const ApprovalPage = () => {
         retry: 1,
     });
     console.log('toInvoiceQuery: ', toInvoiceQuery?.data);
+
+
+    const getWeekDates = (weekNumber, year) => {
+        const firstDayOfYear = new Date(year, 0, 1);
+        const daysOffset = (weekNumber - 1) * 7 - (firstDayOfYear.getDay() - 1);
+
+        const firstDayOfWeek = new Date(year, 0, 1 + daysOffset);
+        const lastDayOfWeek = new Date(year, 0, 1 + daysOffset + 6);
+
+        return {
+            start: firstDayOfWeek,
+            end: lastDayOfWeek
+        };
+    };
+
+    const updateWeekDates = (week, year) => {
+        const { start, end } = getWeekDates(week, year);
+        setWeekInfo({
+            start: start,
+            end: end
+        });
+    };
 
     const getWeekNumber = (date) => {
         const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
@@ -34,6 +68,8 @@ const ApprovalPage = () => {
         const today = new Date();
         const weekNum = getWeekNumber(today);
         setCurrentWeek(weekNum);
+
+        updateWeekDates(weekNum, currentYear);
     }, []);
 
     return (
@@ -59,13 +95,18 @@ const ApprovalPage = () => {
                 <div className="featureName d-flex align-items-center" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
                     <div className={clsx(style.approvalTab, 'd-flex align-items-center gap-2')}>
                         <button className={clsx(style.tabButton, tab === 'review-approve' && style.activeReviewApprove)} onClick={() => setTab('review-approve')}><CardList size={20} color={'#17B26A'} /> Review & Approve</button>
-                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Current Week: <span style={{ color: '#106B99', fontWeight: 600 }}>$<CountUp start={0} end={parseFloat(toInvoiceQuery?.data?.total_amount || 0.00).toFixed(2)} duration={5} separator="," decimals={2} decimal="." /></span> {toInvoiceQuery?.isFetching && <ProgressSpinner style={{ width: '18px', height: '18px' }} />} </button>
+                        <button className={clsx(style.tabButton, tab === 'approved' && style.activeApproved)} onClick={() => setTab('approved')}><CheckCircle size={20} color={'#1AB2FF'} /> Approved Current Week:
+                            <div style={{ minWidth: '50px', textAlign: 'left' }}>{toInvoiceQuery?.isFetching ? <ProgressSpinner style={{ width: '18px', height: '18px' }} /> : <span style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(toInvoiceQuery?.data?.total_amount || 0.00)}</span>}</div>
+                        </button>
+
                     </div>
                 </div>
 
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <h1 className={`${style.total} mb-0`}>Total</h1>
-                    <div className={`${style.totalCount}`}>30 Jobs</div>
+                    <div className='d-flex gap-1'>
+                        <span className='font-12'>This Week’s Approval Period Closes In: </span>
+                        <span className='font-12' style={{ fontWeight: 600 }}>{countDown}</span>
+                    </div>
                 </div>
             </div>
             {tab === 'review-approve' && <ApprovalTable />}

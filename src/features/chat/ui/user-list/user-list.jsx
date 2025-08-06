@@ -9,6 +9,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
 
   // Filter users based on search query
   const filteredUsers = Object.entries(chatData)
+    .filter(([, group]) => !group.project_id && !group.job_number)
     .filter(([, group]) => {
       const participant = group.participants.find((participant) => participant.id !== +userId);
       const groupName = participant?.name || group?.name || "Unknown User";
@@ -69,7 +70,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
                   : ''}
               </span>
               {unreadCount > 0 && (
-                <span className={styles.unreadCount}>{unreadCount > 9 ? '9+' : unreadCount }</span>
+                <span className={styles.unreadCount}>{unreadCount > 9 ? '9+' : unreadCount}</span>
               )}
             </div>
           </Link>

@@ -21,7 +21,7 @@ const RequestHelp = ({ visible, setVisible }) => {
     return (
         <Dialog header={headerElement} visible={visible} onHide={() => setVisible(false)} className={`${style.modal} custom-modal`}>
             <InlineWidget
-                url="https://calendly.com/memate/memate-demo"
+                url="https://calendly.com/memate-support/30min"
                 styles={{
                     width: '100%',
                     border: '1px solid #f2f2f2',

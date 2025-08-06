@@ -22,8 +22,8 @@ const ChatSidebar = ({
     setSearchQuery(e.target.value);
   };
 
-  const totalUserGroup = Object.entries(chatData).filter(([, group]) => !group.project_id && !group.task_id);
-  const projectGroup = Object.entries(chatData).filter(([, group]) => group.project_id || group.task_id);
+  const totalUserGroup = Object.entries(chatData).filter(([, group]) => !group.project_id && !group.job_number);
+  const projectGroup = Object.entries(chatData).filter(([, group]) => group.project_id || group.job_number);
 
   return (
     <div className={styles.chatSidebar}>

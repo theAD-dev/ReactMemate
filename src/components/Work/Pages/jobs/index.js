@@ -1,12 +1,14 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Download, Filter } from 'react-bootstrap-icons';
+import { Download } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { useDebounce } from 'primereact/hooks';
 import JobsTable from './jobs-table';
 import style from './jobs.module.scss';
 import CreateJob from '../../features/create-job/create-job';
 import JobChat from '../../features/job-chat';
+import JobFilterDropdown from '../../features/job-filters/job-filter-dropdown';
+import JobFilters from '../../features/job-filters/job-filters';
 
 const JobsPage = () => {
     const dt = useRef(null);
@@ -15,6 +17,7 @@ const JobsPage = () => {
     const [refetch, setRefetch] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const [selected, setSelected] = useState([]);
+    const [filter, setFilters] = useState({});
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -41,7 +44,7 @@ const JobsPage = () => {
                         ) : (
                             <>
                                 <div className='filtered-box'>
-                                    <button className={`${style.filterBox}`} onClick={(e) => { }}><Filter size={20} /></button>
+                                    <JobFilterDropdown setFilters={setFilters} filter={filter} />
                                 </div>
                                 <div className="searchBox" style={{ position: 'relative' }}>
                                     <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
@@ -65,8 +68,11 @@ const JobsPage = () => {
                     <div className={`${style.totalCount}`}>{total} Jobs</div>
                 </div>
             </div>
+            {Object.keys(filter).length > 0 && (
+                <JobFilters setFilters={setFilters} filter={filter} />
+            )}
             <JobsTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch}
-                setRefetch={setRefetch} createJobVisible={setVisible} isCreateJobVisible={visible} />
+                setRefetch={setRefetch} createJobVisible={setVisible} isCreateJobVisible={visible} isFilterEnabled={Object.keys(filter).length > 0} filters={filter} />
             <JobChat />
             <CreateJob visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
         </div>
