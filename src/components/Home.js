@@ -15,7 +15,7 @@ import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'sonner';
 import { getOutgoingEmail } from '../APIs/email-template';
-import { fetchHomePage } from "../APIs/HomeApi";
+import { fetchHomePage, getActivity } from "../APIs/HomeApi";
 import { fetchProfile } from '../APIs/ProfileApi';
 import { getListOfTasks } from '../APIs/task-api';
 import { TaskCompleteJob } from '../APIs/TasksApi';
@@ -141,6 +141,13 @@ const Home = () => {
     // Week navigation
     const [currentWeek, setCurrentWeek] = useState(null);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+    const getActivityQuery = useQuery({
+        queryKey: ['getActivity', currentYear, currentWeek],
+        queryFn: () => getActivity(currentYear, currentWeek),
+        enabled: !!currentYear && !!currentWeek
+    });
+
     const goToPreviousWeek = () => {
         if (currentWeek > 1) {
             setCurrentWeek(currentWeek - 1);
@@ -349,7 +356,7 @@ const Home = () => {
                     </ul>
                 </div>
 
-                <div className='d-none'>
+                <div>
                     <div className='d-flex gap-3' style={{ width: '942px', margin: '16px auto' }}>
                         <div className='d-flex flex-column gap-2 justify-content-center'>
                             <span style={{ fontSize: '14px', color: '#344054', fontWeight: 600, whiteSpace: 'nowrap' }}>Your Weekly Activity</span>
@@ -390,7 +397,15 @@ const Home = () => {
                         <div className='d-flex flex-column justify-content-center align-items-start' style={{ width: '256px', border: '1px solid #EAECF0', borderRadius: 6, padding: '8px 32px' }}>
                             <span style={{ fontSize: '14px', color: '#344054', fontWeight: 600 }}>Email Sent</span>
                             <div className='d-flex gap-1 align-items-center'>
-                                <span style={{ fontSize: '30px', color: '#98A2B3', fontWeight: 600 }}>256</span>
+                                <span style={{ fontSize: '30px', color: '#98A2B3', fontWeight: 600 }}>
+                                    {
+                                        getActivityQuery?.isFetching ?
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                <Placeholder bg="secondary" style={{ height: '15px', width: '100px', borderRadius: '4px' }} size="lg" />
+                                            </Placeholder>
+                                            : getActivityQuery?.data?.email_sent || 0
+                                    }
+                                </span>
                                 <ArrowUpShort size={16} color="#067647" />
                                 <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>20%</span>
                             </div>
@@ -398,7 +413,15 @@ const Home = () => {
                         <div className='d-flex flex-column justify-content-center align-items-start' style={{ width: '256px', border: '1px solid #EAECF0', borderRadius: 6, padding: '8px 32px' }}>
                             <span style={{ fontSize: '14px', color: '#344054', fontWeight: 600 }}>Quotes Won</span>
                             <div className='d-flex gap-1 align-items-center'>
-                                <span style={{ fontSize: '30px', color: '#98A2B3', fontWeight: 600 }}>32</span>
+                                <span style={{ fontSize: '30px', color: '#98A2B3', fontWeight: 600 }}>
+                                    {
+                                        getActivityQuery?.isFetching ?
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                <Placeholder bg="secondary" style={{ height: '15px', width: '100px', borderRadius: '4px' }} size="lg" />
+                                            </Placeholder>
+                                            : getActivityQuery?.data?.quotes_won || 0
+                                    }
+                                </span>
                                 <ArrowUpShort size={16} color="#067647" />
                                 <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>20%</span>
                             </div>
@@ -406,7 +429,15 @@ const Home = () => {
                         <div className='d-flex flex-column justify-content-center align-items-start' style={{ width: '256px', border: '1px solid #EAECF0', borderRadius: 6, padding: '8px 32px' }}>
                             <span style={{ fontSize: '14px', color: '#344054', fontWeight: 600 }}>New Customers</span>
                             <div className='d-flex gap-1 align-items-center'>
-                                <span style={{ fontSize: '30px', color: '#98A2B3', fontWeight: 600 }}>15</span>
+                                <span style={{ fontSize: '30px', color: '#98A2B3', fontWeight: 600 }}>
+                                    {
+                                        getActivityQuery?.isFetching ?
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                <Placeholder bg="secondary" style={{ height: '15px', width: '100px', borderRadius: '4px' }} size="lg" />
+                                            </Placeholder>
+                                            : getActivityQuery?.data?.new_clients || 0
+                                    }
+                                </span>
                                 <ArrowUpShort size={16} color="#067647" />
                                 <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>20%</span>
                             </div>
