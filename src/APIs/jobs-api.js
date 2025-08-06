@@ -12,7 +12,7 @@ export const getListOfJobs = async (page, limit, search = "", order = "", filter
     url.searchParams.append("offset", offset);
     if (search) url.searchParams.append("search", search);
     if (order) url.searchParams.append("ordering", order);
-    
+
     if (filters?.status?.length) {
         let statusArray = [];
 
@@ -21,8 +21,9 @@ export const getListOfJobs = async (page, limit, search = "", order = "", filter
             else url.searchParams.append('published', true);
 
             if (status.value === 'in_progress') url.searchParams.append('action_status', '1,2');
+            else url.searchParams.append('action_status', '0');
 
-            if (status.value !== 'draft' && status.value !== 'in_progress')  {
+            if (status.value !== 'draft' && status.value !== 'in_progress') {
                 statusArray.push(status.value);
             }
         });
@@ -91,6 +92,15 @@ export const createApproval = async (id, data) => {
     const options = {
         method: 'POST',
         body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const declineJob = async (id) => {
+    const endpoint = `/jobs/${id}/rework/`;
+    const options = {
+        method: 'POST'
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);

@@ -14,7 +14,7 @@ import { Rating } from 'primereact/rating';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import style from './approve-job.module.scss';
-import { createApproval, getApprovedJob } from '../../../../APIs/jobs-api';
+import { createApproval, getApprovedJob, declineJob } from '../../../../APIs/jobs-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import { formatDate } from '../../Pages/jobs/jobs-table';
@@ -49,7 +49,6 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         retry: 1,
     });
     const job = jobQuery?.data;
-    console.log('job: ', job);
 
     const formatTime = (timestamp) => {
         const date = new Date(parseInt(timestamp) * 1000);
@@ -158,6 +157,24 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
             </div>;
         }
         return "";
+    };
+
+    const jobDeclineMutation = useMutation({
+        mutationFn: (jobId) => declineJob(jobId),
+        onSuccess: () => {
+            resetAndClose();
+            refetch();
+            toast.success(`Job declined successfully`);
+        },
+        onError: (error) => {
+            console.error('Error declining job:', error);
+            toast.error(`Failed to decline job. Please try again.`);
+        }
+    });
+
+    const handleDeclineJob = () => {
+        if (!jobId) return toast.error("No job id found.");
+        jobDeclineMutation.mutate(jobId);
     };
 
     return (
@@ -554,7 +571,14 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                         </div>
 
                         <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                            <Button type='button' onClick={(e) => { e.stopPropagation(); resetAndClose(); }} className='danger-outline-button'>Decline</Button>
+                            <Button type='button' onClick={handleDeclineJob} className='danger-outline-button' disabled={jobDeclineMutation?.isPending}>
+                                Decline
+                                {jobDeclineMutation?.isPending &&
+                                    <ProgressSpinner
+                                        style={{ width: "20px", height: "20px", color: "#fff" }}
+                                    />
+                                }
+                            </Button>
                             <Feedback jobId={jobId} variation={variation} reason={reason} isBonus={isBonus} value={selectedColumn === "planned" ? plannedTotal : actualTotal} planned={plannedSubtotal} actual={actualSubtotal} selectedColumn={selectedColumn} refetch={refetch} resetAndClose={resetAndClose} nextJobId={nextJobId} handleNextJob={handleNextJob} />
                         </div>
                     </div>
