@@ -407,7 +407,7 @@ const Home = () => {
                                     }
                                 </span>
                                 <ArrowUpShort size={16} color="#067647" />
-                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>20%</span>
+                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>0%</span>
                             </div>
                         </div>
                         <div className='d-flex flex-column justify-content-center align-items-start' style={{ width: '256px', border: '1px solid #EAECF0', borderRadius: 6, padding: '8px 32px' }}>
@@ -423,7 +423,7 @@ const Home = () => {
                                     }
                                 </span>
                                 <ArrowUpShort size={16} color="#067647" />
-                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>20%</span>
+                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>0%</span>
                             </div>
                         </div>
                         <div className='d-flex flex-column justify-content-center align-items-start' style={{ width: '256px', border: '1px solid #EAECF0', borderRadius: 6, padding: '8px 32px' }}>
@@ -439,7 +439,7 @@ const Home = () => {
                                     }
                                 </span>
                                 <ArrowUpShort size={16} color="#067647" />
-                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>20%</span>
+                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>0%</span>
                             </div>
                         </div>
                     </div>
