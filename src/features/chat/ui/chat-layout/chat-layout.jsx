@@ -68,10 +68,13 @@ const ChatLayout = () => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [user_id]);
 
   useEffect(() => {
     if (chatId && chatData[chatId]) {
+      const isProject = chatData[chatId].project_id || chatData[chatId].job_number;
+      if (isProject) setActiveTab('projects');
+      else setActiveTab('users');
       setCurrentChat(chatData[chatId]);
     } else {
       setCurrentChat(null);

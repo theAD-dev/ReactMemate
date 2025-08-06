@@ -1514,7 +1514,8 @@ ul.listStyle li:last-child {
   box-shadow: rgba(0, 0, 0, 0.1) 1.95px 1.95px 10px;
 }
 
-.supplier-filters .tab-content .tab-pane {
+.supplier-filters .tab-content .tab-pane,
+.job-filters .tab-content .tab-pane {
   left: 238px !important;
   margin-top: 5px !important;
 }

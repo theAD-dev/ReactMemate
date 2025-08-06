@@ -31,7 +31,7 @@ export const formatDate = (timestamp) => {
   }
 };
 
-const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, createJobVisible, isCreateJobVisible }, ref) => {
+const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, createJobVisible, isCreateJobVisible, isFilterEnabled, filters }, ref) => {
   const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -54,7 +54,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
   useEffect(() => {
     setPage(1);  // Reset to page 1 whenever searchValue changes
-  }, [searchValue, refetch]);
+  }, [searchValue, refetch, filters]);
 
   useEffect(() => {
     if (params.get('jobId')) {
@@ -72,7 +72,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
       if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
       else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-      const data = await getListOfJobs(page, limit, searchValue, order);
+      const data = await getListOfJobs(page, limit, searchValue, order, filters);
       setTotal(() => (data?.count || 0));
       if (page === 1) setJobs(data.results);
       else {
@@ -90,7 +90,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
     loadData();
 
-  }, [page, searchValue, tempSort, refetch]);
+  }, [page, searchValue, tempSort, refetch, filters]);
 
   useEffect(() => {
     if (jobs.length > 0 && hasMoreData) {
@@ -288,7 +288,7 @@ const JobsTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     <>
       <DataTable ref={ref} value={jobs} scrollable selectionMode={'checkbox'}
         columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-        scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
+        scrollHeight={`calc(100vh - 175px - ${trialHeight}px - ${isFilterEnabled ? 56 : 0}px)`} className="border" selection={selected}
         onSelectionChange={(e) => setSelected(e.value)}
         loading={loading}
         loadingIcon={Loader}

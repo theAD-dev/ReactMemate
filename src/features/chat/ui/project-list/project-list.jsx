@@ -2,62 +2,100 @@ import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import styles from './project-list.module.scss';
 
-const ProjectList = ({ chatData, searchQuery, showArchived }) => {
+const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const chatId = params.get("id");
 
   // Filter and transform data to project-based view
-  const projectData = Object.entries(chatData)
-    .filter(([_, user]) => user.project_id && user.task_id) // Only include entries with project info
-    .map(([id, user]) => ({
-      id,
-      projectRef: user.projectRef,
-      projectName: user.projectName,
-      lastMessage: user.messages && user.messages.length > 0
-        ? user.messages[user.messages.length - 1].text
-        : "No messages yet",
-      lastMessageTime: user.messages && user.messages.length > 0
-        ? user.messages[user.messages.length - 1].time
-        : "",
-      avatar: user.avatar,
-      name: user.name,
-      archived: user.archived || false
-    }))
-    .filter(project => {
-      const matchesSearch = project.projectName.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesArchived = showArchived ? true : !project.archived;
+  const projectData = Object.entries(chatData).filter(([, group]) => group.project_id || group.job_number)
+    .filter(([, group]) => {
+      const participant = group.participants.find((participant) => participant.id !== +userId);
+      const groupName = participant?.name || group?.name || "Unknown User";
+      const matchesSearch = groupName.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesArchived = showArchived || !(group.archived_by?.length > 0);
       return matchesSearch && matchesArchived;
     });
 
+  // Helper to get last message and unread count
+  const getLastMessage = (group) => {
+    return group?.last_message?.message || null;
+  };
+
+  const getUnreadCount = (group) => {
+    return group?.unread_count || 0;
+  };
+
+  const getSenderName = (group) => {
+    const lastMessageDetails = group?.last_message;
+    if (!lastMessageDetails) return '';
+    const sender = group.participants.find((participant) => participant.id === lastMessageDetails.sender);
+    if (sender.id === userId) return 'You: ';
+    return `${sender?.name}: ` || "Unknown Sender: `";
+  };
+
+  const timeAgo = (unixTimestamp) => {
+    if (!unixTimestamp) return '';
+    const now = Date.now(); // Current time in milliseconds
+    const then = unixTimestamp * 1000; // Convert seconds to milliseconds
+    const diff = now - then;
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+    const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+    const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+
+    if (seconds < 60) return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    if (days < 7) return `${days} day${days !== 1 ? 's' : ''} ago`;
+    if (weeks < 4) return `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+    if (months < 12) return `${months} month${months !== 1 ? 's' : ''} ago`;
+    return `${years} year${years !== 1 ? 's' : ''} ago`;
+  };
+
   return (
     <div className={styles.projectList}>
-      {projectData.map((project) => (
-        <Link to={`?id=${project.id}`} key={project.id} className={clsx(styles.projectItem, { [styles.active]: chatId == project.id })}>
-          <div className={styles.projectHeader}>
-            <div className={styles.projectInfo}>
-              <div className={styles.projectTitleRow}>
-                <span className={styles.projectName}>{project.projectName}</span>
+      {projectData.map(([id, group]) => {
+        const lastMessage = getLastMessage(group);
+        const lastMessageTimeAgo = timeAgo(group?.last_message?.sent_at);
+        const unreadCount = getUnreadCount(group);
+        const sender = getSenderName(group);
+        const reference = group?.name;
+        const number = group?.job_number || group?.project_id;
+        return (
+          <Link to={`?id=${id}`} key={id} className={clsx(styles.projectItem, { [styles.active]: chatId == id })}>
+            <div className={styles.projectHeader}>
+              <div className={styles.projectInfo}>
+                <div className={styles.projectTitleRow}>
+                  <span className={styles.projectName}>{reference}</span>
+                </div>
+                <span className={styles.projectRef}>{number}</span>
               </div>
-              <span className={styles.projectRef}>{project.projectRef}</span>
+              <div className='d-flex flex-column gap-1'>
+                <span className={styles.lastMessageTime}>{lastMessageTimeAgo}</span>
+                {group.archived_by?.length ? <span className={styles.archivedBadge}>Archived</span> : null}
+              </div>
             </div>
-            <div className='d-flex flex-column gap-1'>
-              <span className={styles.lastMessageTime}>{project.lastMessageTime}</span>
-              {project.archived && <span className={styles.archivedBadge}>Archived</span>}
-            </div>
-          </div>
 
-          <div className={styles.messagePreviewContainer}>
-            <div className={styles.userInfo}>
-              <span className={styles.userName}>{project.name.split(' ').map(n => n[0]).join('')}</span>
-              <span className={styles.userFullName}>{project.name}</span>
+            <div className={styles.messagePreviewContainer}>
+              <div className={styles.userInfo}>
+                {/* <span className={styles.userName}>{project.name.split(' ').map(n => n[0]).join('')}</span> */}
+                {/* <span className={styles.userFullName}>{project.name}</span> */}
+              </div>
+              <p className={clsx(styles.lastMessage, 'text-start')}>
+                {lastMessage
+                  ? `${sender} ${lastMessage ? lastMessage.substring(0, 30) : ''}`
+                  : 'No messages yet'}
+              </p>
             </div>
-            <p className={styles.lastMessage}>
-              You: {project.lastMessage}
-            </p>
-          </div>
-        </Link>
-      ))}
+          </Link>
+        );
+      }
+      )}
     </div>
   );
 };

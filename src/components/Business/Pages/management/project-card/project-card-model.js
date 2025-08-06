@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { OverlayTrigger, Placeholder, Table, Tooltip } from 'react-bootstrap';
 import {
-  X, CurrencyDollar, PencilSquare, Github, FileEarmark, FilePdf, FileText, Link45deg, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
+  X, CurrencyDollar, PencilSquare, FileEarmark, FilePdf, FileText, Link45deg, XCircle, Files, Reply, Check2Circle, CardChecklist, ListCheck, PhoneVibrate,
   Envelope,
   Tag,
   Postcard,
@@ -28,6 +28,7 @@ import ScheduleUpdate from './schedule-update';
 import SelectStatus from './select-status';
 import SendSMS from './send-sms/send-sms';
 import SendToCalendar from './send-to-calendar';
+import StartChat from './start-chat/start-chat';
 import CurrentJobAndExpenseLoading from './ui/current-job-and-expense-loading';
 import JobStatus from './ui/job-status/job-status';
 import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
@@ -668,6 +669,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 {/* <FilesModel /> */}
                 <SendToCalendar projectId={projectId} project={cardData} projectCardData={projectCardData} />
+                <StartChat projectId={projectId} project={cardData} />
               </Col>
             </Row>
             <Row className='projectCardCalculation'>
