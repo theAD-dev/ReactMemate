@@ -49,7 +49,7 @@ function loadData(responses, hasWorkSubscription) {
       resource: data.unique_id,
       backColor: background,
       borderColor: color,
-      tag: { number: data.number, reference: data.reference, value: data.id, type: 'job' },
+      tag: { number: data.number, reference: data.reference, value: data.id, type: 'project' },
       text: `<ul class="eventStyleCal">
         <li>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_6815_57879)"><rect width="24" height="24" rx="4" fill="url(#paint0_linear_6815_57879)"/><g opacity="0.08"><rect x="0.375" y="0.375" width="23.25" height="23.25" rx="3.625" stroke="#101828" stroke-width="0.75"/></g><g clip-path="url(#clip1_6815_57879)">
@@ -178,11 +178,12 @@ function loadData(responses, hasWorkSubscription) {
           start: parseTimestamp(1000 * +job.start_date),
           end: parseTimestamp(1000 * +job.end_date),
           id: `job_${job.id}_${index}`,
-          cssClass: "childEvent task-item",
+          cssClass: "childEvent job-item",
           resource: job.id,
           backColor: job.finished ? "#DCFAE6" : "#F2F4F7",
           borderColor: job.finished ? "#DCFAE6" : "#F2F4F7",
           text: job.short_description,
+          tag: { type: "job", job: job },
         });
 
         const statusIMG = job.status === '5'
@@ -200,7 +201,7 @@ function loadData(responses, hasWorkSubscription) {
 
         childResource.push({
           id: job.id,
-          name: `<div class="d-flex flex-column">
+          name: `<div class="d-flex flex-column job-resource-child" job-id="${job.id}">
             <div class="task-list rowResourceEvent" style="--main-color: ${color}">
               <div class="flex">
                 <div class="job-icon">
@@ -224,7 +225,7 @@ function loadData(responses, hasWorkSubscription) {
       childResource.push({
         id: data.number,
         name: `<div class="create-task-div rowResourceEvent" style="--main-color: ${color}; height: ${data.tasks?.length ? '45px' : '40px'}">
-              <button class="createJobButton" project-id="${data.unique_id}" style="margin-bottom: ${data.tasks?.length ? '16px' : '6px'}">
+              <button class="createJobButton" project-id="${data.id}" style="margin-bottom: ${data.tasks?.length ? '16px' : '6px'}">
                 Create Job
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                   <path d="M10 5C10.3452 5 10.625 5.27982 10.625 5.625V9.375H14.375C14.7202 9.375 15 9.65482 15 10C15 10.3452 14.7202 10.625 14.375 10.625H10.625V14.375C10.625 14.7202 10.3452 15 10 15C9.65482 15 9.375 14.7202 9.375 14.375V10.625H5.625C5.27982 10.625 5 10.3452 5 10C5 9.65482 5.27982 9.375 5.625 9.375H9.375V5.625C9.375 5.27982 9.65482 5 10 5Z" fill="#106B99"/>
@@ -360,6 +361,9 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
     } else if (args.div.className.includes("project-item") && taskId) {
       const projectDetails = args.e.tag();
       viewTaskDetails(taskId, true, projectDetails);
+    } else if (args.div.className.includes("job-item") && taskId) {
+      const jobDetails = args.e.tag();
+      viewTaskDetails(taskId, true, jobDetails);
     }
   };
 
