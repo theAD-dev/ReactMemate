@@ -27,6 +27,7 @@ import ModalSalesContactFinance from './layout/modals/modal-sales-contact-financ
 import { useAuth } from '../app/providers/auth-provider';
 import { useTrialHeight } from '../app/providers/trial-height-provider';
 import joshImage from '../assets/images/Avatar.png';
+import NOTaskSVG from '../assets/svg/no-task';
 import RequestHelp from '../features/dashboard/request-help/request-help';
 import SkipSetup from '../features/dashboard/skip-setup/skip-setup';
 import CreateTask from './Work/features/task/create-task/create-task';
@@ -340,6 +341,11 @@ const Home = () => {
                                 <Placeholder xs={12} bg="secondary" style={{ height: '56px', width: '100%', }} size='lg' />
                             </Placeholder>
                         </>}
+                        {!tasksLoading && tasks.length === 0 && (
+                            <div style={{ position: 'relative', top: '-30px' }}>
+                                <NOTaskSVG />
+                            </div>
+                        )}
                     </ul>
                 </div>
 
