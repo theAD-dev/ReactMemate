@@ -569,7 +569,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
     useEffect(() => {
         if (jobProjectId) {
-            setProjectId(jobProjectId);
+            setProjectId(+jobProjectId);
         }
     }, [jobProjectId]);
 

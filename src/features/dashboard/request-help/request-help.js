@@ -23,9 +23,11 @@ const RequestHelp = ({ visible, setVisible }) => {
             <InlineWidget
                 url="https://calendly.com/memate-support/30min"
                 styles={{
-                    width: '100%',
+                    width: '80%',
                     border: '1px solid #f2f2f2',
-                    height: '500px'
+                    height: '850px',
+                    margin: '0 auto',
+                    minHeight: 'unset',
                 }}
                 prefill={{
                     name: `${session?.full_name}`,

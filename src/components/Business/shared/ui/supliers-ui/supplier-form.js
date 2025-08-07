@@ -228,6 +228,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   placeholder="Select Industry"
                   filter
                   filterInputAutoFocus={true}
+                  disabled={defaultValues?.name && defaultValues?.type !== 'supplier'}
                 />
               )}
             />
@@ -259,6 +260,7 @@ const SupplierForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues }, r
                   emptyMessage={!watch('industry') ? "Select an industry first" : "No services found"}
                   filter
                   filterInputAutoFocus={true}
+                  disabled={defaultValues?.name && defaultValues?.type !== 'supplier'}
                 />
               )}
             />

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
+import { Button, Card, Col, Placeholder, Row } from 'react-bootstrap';
 import { Calendar3, Link, X } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
@@ -33,6 +33,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
     });
 
     const job = jobQuery?.data;
+    const loading = jobQuery?.isFetching;
 
     const handleEditClick = () => {
         setVisible(false);
@@ -72,14 +73,24 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                 <Card.Header className={clsx(style.background, 'border-0')}>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Job Reference</label>
-                                        <p className={clsx(style.text)}>{job?.short_description || "-"}</p>
+                                        {loading ? (
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                <Placeholder bg="secondary" style={{ height: '20px', width: '50%', borderRadius: '4px' }} size="lg" />
+                                            </Placeholder>
+                                        ) : (
+                                            <p className={clsx(style.text)}>{job?.short_description || "-"}</p>
+                                        )}
                                     </div>
                                     <div className='form-group mb-3'>
                                         <label className={clsx(style.customLabel)}>Job Description</label>
-                                        <p className={clsx(style.text, !expanded && style.description, "mb-0")}>
-                                            {job?.long_description || "-"}
-                                        </p>
-                                        {job?.long_description?.length > 200 && (
+                                        {loading ? (
+                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                <Placeholder bg="secondary" style={{ height: '40px', width: '100%', borderRadius: '4px' }} size="lg" />
+                                            </Placeholder>
+                                        ) : (
+                                            <p className={clsx(style.text, !expanded && style.description, "mb-0")}>{job?.long_description || "-"}</p>
+                                        )}
+                                        {!loading && job?.long_description?.length > 200 && (
                                             <button onClick={() => setExpanded(!expanded)} className={style.toggleButton}>
                                                 {expanded ? "Show Less" : "Show More"}
                                             </button>
@@ -105,20 +116,41 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                             </div>
                                             : <Row className={clsx(style.chooseUserBox, 'flex-nowrap', 'w-75')}>
                                                 <Col sm={2} className='p-0'>
-                                                    <div className='d-flex justify-content-center align-items-center border' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
-                                                        {job?.worker?.has_photo ? <img src={job?.worker?.photo} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />
-                                                            : <span className='font-16'>{job?.worker?.alias}</span>
-                                                        }
-                                                    </div>
+                                                    {
+                                                        loading ? <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                            <Placeholder bg="secondary" style={{ height: '62px', width: '62px', borderRadius: '50%' }} size="lg" />
+                                                        </Placeholder> : (
+                                                            <div className='d-flex justify-content-center align-items-center border' style={{ width: '62px', height: '62px', borderRadius: '50%', overflow: 'hidden' }}>
+                                                                {job?.worker?.has_photo ? <img src={job?.worker?.photo} style={{ width: '62px', height: '62px', borderRadius: '50%' }} />
+                                                                    : <span className='font-16'>{job?.worker?.alias}</span>
+                                                                }
+                                                            </div>
+                                                        )
+                                                    }
+
                                                 </Col>
                                                 <Col sm={5} className='pe-0 ps-0'>
-                                                    <label className={clsx(style.assignedUser, 'text-nowrap')}>{job?.worker?.full_name || "-"}</label>
+                                                    <label className={clsx(style.assignedUser, 'text-nowrap')}>
+                                                        {loading ? (
+                                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                                <Placeholder bg="secondary" style={{ height: '20px', width: '150px', borderRadius: '4px' }} size="lg" />
+                                                            </Placeholder>
+                                                        ) : (
+                                                            <>{job?.worker?.full_name || "-"}</>
+                                                        )}
+                                                    </label>
                                                     <div style={{ background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center' }}>Employee</div>
                                                 </Col>
                                                 <Col sm={5} className=''>
                                                     <div className='d-flex align-items-center gap-2 mb-3'>
                                                         <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>$</div>
-                                                        <span>{job?.worker?.hourly_rate || "-"} AUD</span>
+                                                        {loading ? (
+                                                            <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
+                                                                <Placeholder bg="secondary" style={{ height: '20px', width: '100px', borderRadius: '4px' }} size="lg" />
+                                                            </Placeholder>
+                                                        ) : (
+                                                            <span>{job?.worker?.hourly_rate || "-"} AUD</span>
+                                                        )}
                                                     </div>
                                                     <div className='d-flex align-items-center gap-2'>
                                                         <div style={{ width: '16px', height: '16px', background: '#EBF8FF', border: '1px solid #A3E0FF', borderRadius: '23px', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Calendar3 color="#158ECC" size={16} /></div>
@@ -186,10 +218,10 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                                 </div>
                                                 {
                                                     job?.type === '3' && job?.time_type === '1' ?
-                                                    parseFloat(+job?.worker?.hourly_rate * job?.duration).toFixed(2)
-                                                    : (job?.cost || 0.00)
+                                                        parseFloat(+job?.worker?.hourly_rate * job?.duration).toFixed(2)
+                                                        : (job?.cost || 0.00)
                                                 }
-                                                 {" "}AUD
+                                                {" "}AUD
                                             </div>
                                         </div>
                                     </div>

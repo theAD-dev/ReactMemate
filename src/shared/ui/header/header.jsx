@@ -112,7 +112,7 @@ const Header = () => {
                                         <div className="company_logo colMinWidth">
                                             {session && session?.organization?.logo ? (
                                                 <div className="d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', overflow: 'hidden', borderRadius: '4px', border: '0.5px solid #F2F4F7', padding: '2px' }}>
-                                                    <FallbackImage photo={session.organization.logo} is_business={true} has_photo={true} isObjectFit={true} />
+                                                    <FallbackImage photo={session.organization.logo} is_business={true} has_photo={session.organization.has_logo} isObjectFit={true} />
                                                 </div>
                                             ) : (
                                                 <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>

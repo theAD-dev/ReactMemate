@@ -235,7 +235,7 @@
   }
   .CalItemActive {
     span {
-      color: #106B99;
+      color: #106b99;
       font-family: Inter;
       font-size: 16px;
       font-style: normal;
@@ -244,7 +244,7 @@
       letter-spacing: 0.08px;
     }
     strong {
-      color: #106B99;
+      color: #106b99;
       font-family: Inter;
       font-size: 26px;
       font-style: normal;
@@ -444,4 +444,74 @@
 .aiErrorText {
   font-size: 12px;
   font-weight: 500;
+}
+
+.selectButton div[aria-label="Assign to project"][aria-pressed="true"],
+.selectButton div[aria-label="Assign to project"]:hover {
+  background-color: #fef3f2 !important;
+}
+
+.selectButton div[aria-label="Assign to project"][aria-pressed="true"] span {
+  color: #f04438 !important;
+}
+
+.selectButton div[aria-label="Assign to timeframe"][aria-pressed="true"],
+.selectButton div[aria-label="Assign to timeframe"]:hover {
+  background-color: #ebf8ff !important;
+}
+
+.selectButton div[aria-label="Assign to timeframe"][aria-pressed="true"] span {
+  color: #106b99 !important;
+}
+
+.reviewButton,
+.reviewButton:hover,
+.reviewButton:focus {
+  color: var(--Primary-700, #106b99);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px; /* 142.857% */
+  display: flex;
+  padding: 8px 14px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 40px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.modal {
+  width: 807px;
+  border-radius: var(--radius-xs, 4px);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+.modalHeader {
+  gap: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--Gray-700, #344054);
+}
+
+.iconStyle {
+  display: flex;
+  width: 46.996px;
+  height: 47.542px;
+  padding: 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: 6px;
+  border: 2px solid #1ab2ff;
+  box-shadow: 0 0 0 4px rgba(228, 244, 249, 0.32);
 }

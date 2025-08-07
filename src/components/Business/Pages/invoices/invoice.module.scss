@@ -327,6 +327,7 @@
   justify-content: center;
   align-items: center;
   gap: 6px;
+  min-width: 130px;
 }
 
 .payInvoiceButton.paid {
@@ -336,13 +337,19 @@
   background: var(--white, #fff);
 }
 
+.payInvoiceButton.paid:hover {
+  opacity: 1;
+  background: #ECFDF3;
+}
+
 .payInvoiceButton.unpaid {
   border-radius: 4px;
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--white, #fff);
 }
 
-tr[aria-selected="true"] .payInvoiceButton.unpaid {
+tr[aria-selected="true"] .payInvoiceButton.unpaid,
+.payInvoiceButton.unpaid:hover {
   color: var(--Error-800, #912018) !important;
   border: 1px solid var(--Error-200, #fecdca) !important;
   background: var(--Error-50, #fef3f2) !important;
@@ -354,7 +361,8 @@ tr[aria-selected="true"] .payInvoiceButton.unpaid {
   background: var(--white, #fff);
 }
 
-tr[aria-selected="true"] .payInvoiceButton.partialPaid {
+tr[aria-selected="true"] .payInvoiceButton.partialPaid,
+.payInvoiceButton.partialPaid:hover {
   color: var(--Warning-800, #7A2E0E) !important;
   border: 1px solid var(--Warning-200, #FEDF89) !important;
   background: var(--Warning-50, #FFFAEB) !important;

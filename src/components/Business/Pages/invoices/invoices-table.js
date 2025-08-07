@@ -70,7 +70,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
             let order = "";
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
-            
+
             let clientsFilter = '';
             if (filters?.client) {
                 clientsFilter = filters?.client?.map(client => client.id).join(',');
@@ -177,14 +177,25 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         </div>;
     };
 
-    const depositBody = (rowData) => {
-        // return <div className={`d-flex align-items-center justify-content-end ${style.fontStanderdSize}`} style={{ position: 'static' }}>
-        //     <div className={`${rowData.payment_status === 'paid' ? style['paid'] : rowData.payment_status !== 'not_paid' ? style['unpaid'] : style['partialPaid']}`}>
-        //         ${formatAUD(rowData.deposit)}
-        //         <span onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.plusIcon, 'cursor-pointer')} style={{ position: 'relative', marginLeft: '10px', paddingLeft: '5px' }}><PlusLg size={12} color="#079455" /></span>
-        //     </div>
-        // </div>;
-        return <Button onClick={() => { setVisible(true); setInvoiceData(rowData); }} disabled={rowData.payment_status === 'paid'} className={clsx(style.payInvoiceButton, { [style.paid]: rowData.payment_status === 'paid', [style.unpaid]: rowData.payment_status === 'not_paid', [style.partialPaid]: rowData.payment_status !== 'not_paid' && rowData.payment_status !== 'paid' })}>Pay Invoice <CurrencyDollar color={rowData.payment_status === 'paid' ? '#17B26A' : rowData.payment_status === 'not_paid' ? '#D92D20' : '#F79009'} size={16} /></Button>;
+    const DepositBody = (rowData) => {
+        const [hovered, setHovered] = useState(false);
+        const isPaid = rowData.payment_status === 'paid';
+        const isUnpaid = rowData.payment_status === 'not_paid';
+        const isPartial = !isPaid && !isUnpaid;
+        const handleMouseEnter = () => {
+            if (isPaid) setHovered(true);
+        };
+
+        const handleMouseLeave = () => {
+            setHovered(false);
+        };
+
+        return <Button
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave} onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.payInvoiceButton, { [style.paid]: rowData.payment_status === 'paid', [style.unpaid]: rowData.payment_status === 'not_paid', [style.partialPaid]: rowData.payment_status !== 'not_paid' && rowData.payment_status !== 'paid' })}>
+                {isPaid && hovered ? 'Edit Payment' : 'Pay Invoice'}
+                <CurrencyDollar color={rowData.payment_status === 'paid' ? '#17B26A' : rowData.payment_status === 'not_paid' ? '#D92D20' : '#F79009'} size={16} />
+            </Button>;
     };
 
     const xeroBody = (rowData) => {
@@ -375,11 +386,11 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '160px', maxWidth: '160px', width: '160px' }} frozen sortable></Column>
                 <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }} frozen></Column>
                 <Column field="client.name" header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '295px', maxWidth: '295px', width: '295px' }} frozen sortable></Column>
-                <Column field="reference" header="Invoice Reference"  style={{ minWidth: '250px' }}></Column>
+                <Column field="reference" header="Invoice Reference" style={{ minWidth: '250px' }}></Column>
                 <Column field="due_date" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
                 <Column field='amount' header="Total invoice" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
-                <Column field='deposit' header="Deposit/Payment" body={depositBody} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
+                <Column field='deposit' header="Deposit/Payment" body={DepositBody} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Info" body={InfoBodyTemplate} style={{ minWidth: '89px', maxWidth: '89px', width: '89px', textAlign: 'center' }} sortable></Column>
                 <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px', textAlign: 'center' }} sortable></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { CardList, CheckCircle, Filter } from 'react-bootstrap-icons';
-import CountUp from 'react-countup';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -17,11 +16,11 @@ const ApprovalPage = () => {
     const [currentWeek, setCurrentWeek] = useState(null);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [weekInfo, setWeekInfo] = useState({ start: '', end: '' });
-    let countDown = "";
+    let countDown = '';
     if (weekInfo?.end) {
-        const now = new Date();
-        const end = new Date(weekInfo.end);
-        const diff = end - now;
+        const now = new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' });
+        const end = new Date(weekInfo.end.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+        const diff = end - new Date(now);
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -38,15 +37,17 @@ const ApprovalPage = () => {
 
 
     const getWeekDates = (weekNumber, year) => {
-        const firstDayOfYear = new Date(year, 0, 1);
+        const firstDayOfYear = new Date(Date.UTC(year, 0, 1));
         const daysOffset = (weekNumber - 1) * 7 - (firstDayOfYear.getDay() - 1);
+        const firstDayOfWeek = new Date(Date.UTC(year, 0, 1 + daysOffset));
+        const lastDayOfWeek = new Date(Date.UTC(year, 0, 1 + daysOffset + 6));
+        lastDayOfWeek.setHours(23, 59, 59, 999); // Set to end of day
 
-        const firstDayOfWeek = new Date(year, 0, 1 + daysOffset);
-        const lastDayOfWeek = new Date(year, 0, 1 + daysOffset + 6);
-
+        // Convert to AEST
+        const options = { timeZone: 'Australia/Sydney' };
         return {
-            start: firstDayOfWeek,
-            end: lastDayOfWeek
+            start: new Date(firstDayOfWeek.toLocaleString('en-US', options)),
+            end: new Date(lastDayOfWeek.toLocaleString('en-US', options)),
         };
     };
 

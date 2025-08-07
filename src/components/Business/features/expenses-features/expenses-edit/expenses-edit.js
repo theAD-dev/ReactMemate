@@ -105,7 +105,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
         order: expense?.data?.order,
         type: +expense?.data?.type,
         account_code: expense?.data?.account_code,
-        department: expense?.data?.department,
+        // department: expense?.data?.department,
         notification: expense?.data?.notification,
         "gst-calculation": gstType,
         subtotal,

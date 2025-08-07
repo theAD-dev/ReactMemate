@@ -9,6 +9,7 @@ import { ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
 import { useAuth } from "../../../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../../../app/providers/trial-height-provider";
 import CreateJob from "../../../../Work/features/create-job/create-job";
+import ViewJob from "../../../../Work/features/view-job/view-job";
 import ProjectCardModel from "../project-card/project-card-model";
 import { colorMapping } from "../project-card/select-status";
 import CreateTask from "../task/create-task";
@@ -36,6 +37,8 @@ function EventScheduler() {
   const [statusBy, seStatusBy] = useState("");
   const [visible, setVisible] = useState(false);
   const [jobProjectId, setJobProjectId] = useState(null);
+  const [viewJob, setViewJob] = useState({ visible: false, jobId: null });
+  const [editMode, setEditMode] = useState(false);
 
   // show project model from invoice
   const url = window.location.href;
@@ -55,9 +58,14 @@ function EventScheduler() {
 
   function viewTaskDetails(id, isJob = false, projectDetails) {
     if (isJob) {
-      setProjectId(id);
-      setProjectDetails(projectDetails);
-      setViewProjectModel(true);
+      const type = projectDetails.type;
+      if (type === 'job') {
+        setViewJob({ visible: true, jobId: projectDetails.job.id });
+      } else {
+        setProjectId(id);
+        setProjectDetails(projectDetails);
+        setViewProjectModel(true);
+      }
     } else {
       setTaskId(id);
       setView(true);
@@ -85,6 +93,11 @@ function EventScheduler() {
           const projectId = e.target.getAttribute('project-id');
           setJobProjectId(projectId);
           setVisible(true);
+        }
+
+        if (e.target.closest('.job-resource-child')) {
+          const jobId = e.target.closest('.job-resource-child').getAttribute('job-id');
+          setViewJob({ visible: true, jobId: jobId });
         }
 
         if (e.target.closest('.create-task-button')) {
@@ -432,6 +445,7 @@ function EventScheduler() {
 
     <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} statusOptions={statusOptions} reInitialize={reInitialize} />
     <CreateJob visible={visible} setVisible={setVisible} setRefetch={reInitialize} jobProjectId={jobProjectId} />
+    <ViewJob visible={viewJob?.visible} jobId={viewJob?.jobId} setVisible={(bool) => setViewJob((others) => ({ ...others, visible: bool }))} setRefetch={reInitialize} editMode={editMode} setEditMode={setEditMode} />
 
     {
       isReinitialize && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">
