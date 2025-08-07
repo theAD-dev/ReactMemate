@@ -685,7 +685,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               <Col className='proLabour projectColBg'>
                 <div style={{ position: 'relative', left: '20px' }}>
                   <h5>Labour</h5>
-                  <p>${formatAUD(cardData?.labor_expenses)}</p>
+                  <p>${formatAUD(cardData?.labor_expense)}</p>
                 </div>
                 <div className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', borderRadius: '40px', border: '1px solid #D0D5DD', background: '#fff', boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)', position: 'relative', left: '42px' }}>
                   <PlusCircle size={20} color='#344054' />
