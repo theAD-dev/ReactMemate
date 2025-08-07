@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, Upload, PlusCircle, CheckCircleFill, Trash, InfoCircle } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import clsx from 'clsx';
 import { Calendar } from 'primereact/calendar';
+import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -22,7 +23,6 @@ import { Tooltip } from 'primereact/tooltip';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 import styles from './expenses-form.module.scss';
-import { getDepartments } from '../../../../../APIs/CalApi';
 import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-api';
 import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
 import aiScanImg from '../../../../../assets/ai-scan.png';
@@ -79,6 +79,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const observerRef = useRef(null);
     const accessToken = localStorage.getItem("access_token");
 
+    const [showReviewModal, setShowReviewModal] = useState(false);
     const [supplierValue, setSupplierValue] = useState(defaultSupplier?.id || "");
     const [selectedSupplier, setSelectedSupplier] = useState(defaultSupplier || null);
     const [suppliers, setSuppliers] = useState([]);
@@ -422,7 +423,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     };
 
     const xeroCodesList = useQuery({ queryKey: ['getXeroCodesList'], queryFn: getXeroCodesList });
-    const departmentsList = useQuery({ queryKey: ['getDepartments'], queryFn: getDepartments });
+    // const departmentsList = useQuery({ queryKey: ['getDepartments'], queryFn: getDepartments });
     const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
 
     const options = ['Assign to project', 'Assign to timeframe'];
@@ -521,6 +522,10 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
             setShowDocumentSidebar(true);
         }
     }, [defaultValues?.file]);
+
+    const handleReviewClick = () => {
+        setShowReviewModal(true);
+    };
 
     return (
         <div>
@@ -862,7 +867,16 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 </Row>
 
                 <Row className={clsx(styles.bgGreay, 'customSelectButton')}>
-                    <SelectButton value={option} onChange={(e) => setOptionValue(e.value)} options={options} />
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <SelectButton value={option} className={styles.selectButton} onChange={(e) => setOptionValue(e.value)} options={options} />
+                        {/* <Button className={styles.reviewButton} onClick={handleReviewClick}>Review
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M9.57154 7.80883C9.7088 7.39705 10.2912 7.39706 10.4285 7.80884L11.2353 10.2294C11.595 11.3083 12.4416 12.155 13.5206 12.5146L15.9412 13.3215C16.3529 13.4588 16.3529 14.0412 15.9412 14.1785L13.5206 14.9853C12.4417 15.345 11.595 16.1916 11.2353 17.2706L10.4285 19.6911C10.2912 20.1029 9.7088 20.1029 9.57154 19.6911L8.76466 17.2706C8.40501 16.1916 7.55836 15.345 6.47941 14.9853L4.05884 14.1785C3.64705 14.0412 3.64705 13.4588 4.05884 13.3215L6.47941 12.5146C7.55836 12.155 8.40501 11.3083 8.76467 10.2294L9.57154 7.80883Z" fill="#106B99" />
+                                <path d="M4.74293 1.4353C4.82529 1.18823 5.17476 1.18823 5.25711 1.4353L5.74122 2.88763C5.957 3.535 6.465 4.043 7.11237 4.25879L8.56471 4.7429C8.81178 4.82526 8.81178 5.17473 8.56471 5.25709L7.11238 5.7412C6.465 5.95699 5.957 6.46499 5.74122 7.11236L5.25711 8.5647C5.17476 8.81177 4.82528 8.81177 4.74293 8.5647L4.2588 7.11235C4.04301 6.46498 3.53502 5.95699 2.88765 5.7412L1.4353 5.25709C1.18823 5.17473 1.18823 4.82526 1.4353 4.7429L2.88765 4.25879C3.53502 4.043 4.04301 3.53501 4.2588 2.88764L4.74293 1.4353Z" fill="#106B99" />
+                                <path d="M13.5786 0.123533C13.6335 -0.0411787 13.8665 -0.0411773 13.9214 0.123535L14.2441 1.09175C14.388 1.52333 14.7267 1.862 15.1583 2.00586L16.1265 2.3286C16.2912 2.38351 16.2912 2.61649 16.1265 2.67139L15.1583 2.99413C14.7267 3.13799 14.388 3.47666 14.2441 3.90824L13.9214 4.87647C13.8665 5.04118 13.6335 5.04118 13.5786 4.87647L13.2559 3.90823C13.112 3.47665 12.7734 3.13799 12.3418 2.99413L11.3735 2.67139C11.2088 2.61649 11.2088 2.38351 11.3735 2.3286L12.3418 2.00586C12.7734 1.862 13.112 1.52334 13.2559 1.09176L13.5786 0.123533Z" fill="#106B99" />
+                            </svg>
+                        </Button> */}
+                    </div>
                     {
                         option === 'Assign to project'
                             ? (
@@ -945,7 +959,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                 </Row>
 
                 <Row className={clsx(styles.bgGreay)}>
-                    <Col sm={6}>
+                    <Col sm={12}>
                         <div className="d-flex flex-column gap-1 mt-4 mb-4">
                             <label className={clsx(styles.lable)}>Account Code</label>
                             <Controller
@@ -977,7 +991,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             {errors?.account_code && <p className="error-message">{errors.account_code?.message}</p>}
                         </div>
                     </Col>
-                    <Col sm={6}>
+                    {/* <Col sm={6}>
                         <div className="d-flex flex-column gap-1 mt-4 mb-4">
                             <label className={clsx(styles.lable)}>Department</label>
                             <Controller
@@ -1008,7 +1022,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             />
                             {errors?.department && <p className="error-message">{errors.department?.message}</p>}
                         </div>
-                    </Col>
+                    </Col> */}
                 </Row>
 
                 {links?.length ?
@@ -1064,6 +1078,12 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     <FilePreview files={links} />
                 </Sidebar>
             }
+            {showReviewModal && (
+                <ReviewExpense
+                    visible={showReviewModal}
+                    onHide={() => setShowReviewModal(false)}
+                />
+            )}
         </div>
     );
 });
@@ -1177,5 +1197,165 @@ const FilePreview = ({ files }) => {
         </div>
     );
 };
+
+const ReviewExpense = React.memo(({ visible, onHide, defaultValues = {} }) => {
+    const observerRef = useRef(null);
+    const [supplierValue, setSupplierValue] = useState(defaultValues.supplier?.id || "");
+    const [selectedSupplier, setSelectedSupplier] = useState(defaultValues.supplier || null);
+    const [suppliers, setSuppliers] = useState([]);
+    const [page, setPage] = useState(1);
+    const [searchValue, setSearchValue] = useState("");
+    const [hasMoreData, setHasMoreData] = useState(true);
+    const [links, setLinks] = useState([]);
+    const limit = 25;
+
+    const search = debounce((event) => {
+        const query = event?.filter?.toLowerCase() || '';
+        setSearchValue(query);
+    }, 300);
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchValue]);
+
+    useEffect(() => {
+        const loadData = async () => {
+            const data = await getListOfSuppliers(page, limit, searchValue, 'name');
+            if (page === 1) {
+                if (supplierValue) {
+                    const filteredSuppliers = data.results.filter(supplier => supplier.id !== supplierValue);
+                    return setSuppliers([selectedSupplier, ...filteredSuppliers]);
+                }
+
+                setSuppliers(data.results);
+            }
+
+            else {
+                if (data?.results?.length > 0) {
+                    let results = data.results;
+                    if (supplierValue) {
+                        results = [selectedSupplier, ...data.results];
+                    }
+                    setSuppliers(prev => {
+                        let previous = prev;
+                        if (supplierValue) {
+                            previous = [...prev, selectedSupplier];
+                        }
+                        const existingSupplierIds = new Set(previous.map(supplier => supplier.id));
+                        const newSuppliers = results.filter(supplier => !existingSupplierIds.has(supplier.id));
+                        return [...prev, ...newSuppliers];
+                    });
+                }
+            }
+            setHasMoreData(data.count !== suppliers.length);
+        };
+
+        loadData();
+    }, [page, searchValue, supplierValue, selectedSupplier]);
+
+    useEffect(() => {
+        if (suppliers.length > 0 && hasMoreData) {
+            const timeout = setTimeout(() => {
+                const lastRow = document.querySelector('.supplier-dropdown .p-dropdown-items li.p-dropdown-item:last-child');
+                console.log('lastRow: ', lastRow);
+
+                if (lastRow) {
+                    observerRef.current = new IntersectionObserver(entries => {
+                        if (entries[0].isIntersecting) {
+                            setPage(prevPage => prevPage + 1);
+                            console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
+                        }
+                    });
+                    observerRef.current.observe(lastRow);
+                }
+            }, 1000); // Wait for DOM paint
+
+            return () => {
+                clearTimeout(timeout);
+                if (observerRef.current) observerRef.current.disconnect();
+            };
+        }
+    }, [suppliers, hasMoreData]);
+
+    const headerElement = (
+        <div className={`${styles.modalHeader}`}>
+            <div className={styles.iconStyle}>
+                <img src={aiScanImg} alt="Review Icon" />
+            </div>
+            <span className={`white-space-nowrap ${styles.headerTitle}`}>Review</span>
+        </div>
+    );
+
+    const footerContent = (
+        <div className="d-flex justify-content-end align-items-center gap-3">
+            {/* <Button disabled={paidMutation?.isPending} label="Cancel" className="outline-button outline-none" onClick={() => setVisible(false)} autoFocus /> */}
+            {/* <Button disabled={paidMutation?.isPending} label={paidMutation?.isPending ? "Loading..." : "Mark as paid"} className="success-button outline-none" onClick={handlePaidExpense} autoFocus /> */}
+        </div>
+    );
+    return (
+        <Dialog visible={visible} modal onHide={onHide} header={headerElement} footer={footerContent} className={`${styles.modal} custom-modal`} >
+            <Row className='mb-2'>
+                <Col sm={8}>
+                    <div className="d-flex flex-column gap-1">
+                        <label className={clsx(styles.lable)}>Supplier<span className='required'>*</span></label>
+                        <Dropdown
+                            value={supplierValue}
+                            options={suppliers}
+                            optionLabel="name"
+                            optionValue="id"
+                            onChange={(e) => {
+                                setSupplierValue(+e.value);
+                                let findSupplier = suppliers.find(supplier => supplier.id === e.value);
+                                setSelectedSupplier(findSupplier || {});
+                            }}
+                            itemTemplate={(option) => {
+                                return (
+                                    <div className='d-flex gap-2 align-items-center w-100'>
+                                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                            <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
+                                        </div>
+                                        <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
+                                    </div>
+                                );
+                            }}
+                            valueTemplate={(option) => {
+                                return (
+                                    supplierValue ? (
+                                        <div className='d-flex gap-2 align-items-center w-100'>
+                                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '4px', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                                <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={true} size={17} />
+                                            </div>
+                                            <div className='ellipsis-width' style={{ maxWidth: '350px' }}>{option?.name}</div>
+                                        </div>
+                                    ) : null
+                                );
+                            }}
+                            className={clsx(styles.dropdownSelect, 'dropdown-height-fixed')}
+                            panelClassName={"supplier-dropdown"}
+                            style={{ height: '46px' }}
+                            scrollHeight="350px"
+                            placeholder="Search for supplier"
+                            filter
+                            onFilter={search}
+                            filterInputAutoFocus={true}
+                        />
+                    </div>
+                </Col>
+
+                <Col sm={4}>
+                    <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3">
+                        <Link to={"/suppliers?addNewSupplier=true"} target='_blank'>
+                            <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
+                        </Link>
+                    </div>
+                </Col>
+            </Row>
+            <hr/>
+            <Row>
+                
+            </Row>
+        </Dialog>
+    );
+});
 
 export default ExpensesForm;
