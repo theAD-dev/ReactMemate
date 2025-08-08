@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Trash } from 'react-bootstrap-icons';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import styles from './chat-area.module.scss';
-import ChatAttachmentPopover from './chat-attachment-popover';
+import ChatAttachmentPopover, { formatFileSize } from './chat-attachment-popover';
 import ChatEmojiPicker from './chat-emoji-picker';
 import EmptyChatArea from './empty-chat-area';
+import { getFileIcon } from '../../../../components/Work/features/create-job/create-job';
 import ChatHeader from '../chat-header/chat-header';
 import MessageList from '../message-list/message-list';
 
@@ -137,7 +139,6 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers }) => {
     const file = e.target.files[0];
     if (file) {
       setAttachmentFile(file);
-      // TODO: handle file upload/send logic here
     }
   };
 
@@ -184,6 +185,18 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers }) => {
               </div>
             )}
             <MessageList messages={messages} isTyping={isTyping} loading={loading} currentUserId={userId} participants={participants} />
+            {attachmentFile && (
+              <div style={{ display: 'flex', alignItems: 'center', background: '#F9FAFB', borderRadius: 8, padding: 12, marginBottom: 8, gap: 12, border: '1px solid #EAECF0', width: '508px', marginLeft: 'auto', }}>
+                {getFileIcon(attachmentFile.name.split(".").pop())}
+                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <div style={{ fontWeight: 600, color: '#101828', fontSize: 16, marginBottom: 2 }}>{attachmentFile.name}</div>
+                  <div style={{ color: '#667085', fontSize: 14 }}>{formatFileSize(attachmentFile.size)}</div>
+                </div>
+                <div className='d-flex align-items-center justify-content-center' style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
+                  <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} onClick={() => setAttachmentFile(null)} />
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
