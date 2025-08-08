@@ -14,7 +14,8 @@ const ChatSidebar = ({
   archivedVisible, 
   setArchivedVisible,
   chatData,
-  userId
+  userId,
+  onlineUsers
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -88,6 +89,7 @@ const ChatSidebar = ({
             searchQuery={searchQuery}
             showArchived={archivedVisible}
             userId={userId}
+            onlineUsers={onlineUsers}
           />
         ) : (
           <ProjectList 

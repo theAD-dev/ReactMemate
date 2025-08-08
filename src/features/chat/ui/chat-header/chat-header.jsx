@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import styles from './chat-header.module.scss';
 
-const ChatHeader = ({ chat, userId, setParticipants }) => {
+const ChatHeader = ({ chat, userId, setParticipants, onlineUsers }) => {
   const [menuRef, setMenuRef] = useState(null);
   const [menuVisible, setMenuVisible] = useState(false);
 
-  const status = 'offline';
   const idWithName = React.useMemo(() => {
     const participants = chat?.participants || [];
     return participants?.reduce((acc, curr) => {
@@ -22,7 +21,15 @@ const ChatHeader = ({ chat, userId, setParticipants }) => {
   const isProject = chat.project_id || chat.job_number;
   const getChatGroupName = (group) => {
     const participant = group.participants.find((participant) => participant.id !== +userId);
-    return participant?.name || group?.name || "Unknown User";
+    if (!participant) return { name: "Unknown User", avatar: '', id: null, status: 'offline' };
+    return {
+      name: participant?.name || "Unknown User",
+      avatar: participant?.avatar && participant?.avatar !== 'no_photo.png' ? participant.avatar.startsWith('http')
+        ? participant.avatar
+        : `${process.env.REACT_APP_URL}/media/${participant.avatar}` : "",
+      id: participant.id,
+      status: onlineUsers.includes(participant.id) ? 'online' : 'offline'
+    };
   };
   return (
     <div className={styles.chatHeader}>
@@ -36,18 +43,17 @@ const ChatHeader = ({ chat, userId, setParticipants }) => {
           <div className={styles.userContainer}>
             <div
               className={styles.userAvatar}
-              style={chat.avatar ? { backgroundImage: `url(${chat.avatar})` } : {}}
             >
-              {getChatGroupName(chat).split(' ').map(n => n[0]).join('')}
+              {getChatGroupName(chat)?.avatar ? <img src={getChatGroupName(chat)?.avatar} alt={'avatar'} /> : getChatGroupName(chat)?.name?.split(' ').map(n => n[0]).join('')}
             </div>
             <div className={styles.userInfo}>
-              <h2 className={styles.userName}>{getChatGroupName(chat)}</h2>
+              <h2 className={styles.userName}>{getChatGroupName(chat)?.name}</h2>
               <div className={styles.statusContainer}>
                 <span
                   className={styles.statusIndicator}
-                  data-status={status}
+                  data-status={getChatGroupName(chat).status}
                 ></span>
-                <span className={styles.statusText}>{status}</span>
+                <span className={styles.statusText}>{getChatGroupName(chat).status}</span>
               </div>
             </div>
           </div>

@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 import styles from './chat-layout.module.scss';
-import { getTeamDesktopUser } from '../../../../APIs/team-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Loader from '../../../../shared/ui/loader/loader';
@@ -22,8 +21,8 @@ const ChatLayout = () => {
   const [activeTab, setActiveTab] = useState('users');
   const [archivedVisible, setArchivedVisible] = useState(false);
   const [chatData, setChatData] = useState({});
-  console.log('chatData: ', chatData);
   const [currentChat, setCurrentChat] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState({});
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -36,7 +35,6 @@ const ChatLayout = () => {
 
     if (!user_id) return toast.error('User ID is not available');
     if (!organization_id) return toast.error('Organization ID is not available');
-
 
     socket.emit('register_user', { user_id, org_id: organization_id }, (res) => {
       if (res.status === 'success') {
@@ -60,47 +58,23 @@ const ChatLayout = () => {
 
     // Fetch private chat groups
     socket.emit('get_organization_users', { user_id, organization_id: organization_id }, (res) => {
-      console.log('get_organization_users: ', res);
       if (res.status === 'success' && res?.users?.length) {
         const chatGroups = {};
         res.users.forEach(group => {
           let modifiedGroup = {
             id: group?.group_id,
             archived_by: [],
+            unread_count: group?.unread_count || 0,
             participants: [
               {
                 id: group.id,
                 name: `${group.full_name}`,
+                avatar: group.avatar || '',
               },
               {
                 id: user_id,
                 name: session?.full_name || 'You',
-              }
-            ],
-            last_message: group?.last_message
-          };
-          chatGroups[modifiedGroup.id] = modifiedGroup;
-        });
-        setChatData((prevChatData) => ({ ...prevChatData, ...chatGroups }));
-      }
-    });
-
-    socket.emit('get_organization_users_mobile', { user_id, organization_id: organization_id }, (res) => {
-      console.log('get_organization_users_mobile: ', res);
-      if (res.status === 'success' && res?.users?.length) {
-        const chatGroups = {};
-        res.users.forEach(group => {
-          let modifiedGroup = {
-            id: group?.group_id,
-            archived_by: [],
-            participants: [
-              {
-                id: group.id,
-                name: `${group.full_name}`,
-              },
-              {
-                id: user_id,
-                name: session?.full_name || 'You',
+                avatar: session?.has_photo ? session?.photo : ''
               }
             ],
             last_message: group?.last_message
@@ -118,20 +92,29 @@ const ChatLayout = () => {
   }, [user_id, organization_id, session?.full_name]);
 
   useEffect(() => {
-    const getDesktopUser = async () => {
-      try {
-        const users = await getTeamDesktopUser();
-        let activeUsers = users?.users?.filter((user) => user.is_active);
-        let chatGroupsFormatted = {};
-        activeUsers.forEach(user => { });
+    if (!socketRef.current) return;
+    const socket = socketRef.current;
+    socket.on('presence_list', (res) => {
+      if (res.online) setOnlineUsers(res.online);
+    });
 
-
-      } catch (err) {
-        console.log(err);
+    socket.on('presence_update', (res) => {
+      if (res.user_id && res.status === 'offline') {
+        setOnlineUsers((prev) => {
+          return prev.filter(user => user !== res.user_id);
+        });
+      } else if (res.user_id && res.status === 'online') {
+        setOnlineUsers((prev) => {
+          return [...new Set([...prev, res.user_id])];
+        });
       }
+    });
+
+    return () => {
+      socket.off('presence_list');
+      socket.off('presence_update');
     };
-    getDesktopUser();
-  }, []);
+  }, [socketRef]);
 
   useEffect(() => {
     if (chatId && chatData[chatId]) {
@@ -154,6 +137,7 @@ const ChatLayout = () => {
           setArchivedVisible={setArchivedVisible}
           chatData={chatData}
           userId={user_id}
+          onlineUsers={onlineUsers}
         />
         <ChatArea
           currentChat={currentChat}
@@ -161,6 +145,7 @@ const ChatLayout = () => {
           socket={socketRef.current}
           userId={user_id}
           chatId={chatId}
+          onlineUsers={onlineUsers}
         />
       </div>
       {isLoading && <Loader />}

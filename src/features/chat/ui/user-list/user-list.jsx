@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import styles from './user-list.module.scss';
 
-const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
+const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const chatId = params.get("id");
@@ -40,6 +40,21 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
     return sender?.name ? `${sender?.name}: ` : "";
   };
 
+  const getSenderAvatar = (group) => {
+    const participant = group.participants.find((participant) => participant.id !== +userId);
+    return participant?.avatar && participant?.avatar !== 'no_photo.png'
+      ? participant.avatar.startsWith('http')
+        ? participant.avatar
+        : `${process.env.REACT_APP_URL}/media/${participant.avatar}`
+      : '';
+  };
+
+  const getSenderStatus = (group) => {
+    const participant = group.participants.find((participant) => participant.id !== +userId);
+    if (!participant) return 'offline';
+    return onlineUsers.includes(participant.id) ? 'online' : 'offline';
+  };
+
   const timeAgo = (unixTimestamp) => {
     if (!unixTimestamp) return '';
     const now = Date.now(); // Current time in milliseconds
@@ -67,17 +82,27 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
     <div className={styles.userList}>
       {filteredUsers.map(([id, group]) => {
         const lastMessage = getLastMessage(group);
-         const lastMessageTimeAgo = timeAgo(group?.last_message?.sent_at);
+        const lastMessageTimeAgo = timeAgo(group?.last_message?.sent_at);
         const unreadCount = getUnreadCount(group);
         const sender = getSenderName(group);
+        const senderAvatar = getSenderAvatar(group);
         const groupName = getChatGroupName(group);
+        const senderStatus = getSenderStatus(group);
         return (
           <Link to={`?id=${id}`} key={id} className={clsx(styles.userItem, { [styles.active]: chatId == id })}>
             <div className={styles.userItemContent}>
               <div className={styles.userAvatarWrapper}>
-                {/* Optionally show online indicator if available */}
+                {
+                  senderStatus === 'online' && <div className={styles.onlineIndicator}></div>
+                }
                 <div className={styles.userAvatar}>
-                  {groupName?.split(' ').map(n => n[0]).join('')}
+                  {senderAvatar ? (
+                    <img src={senderAvatar} alt={groupName} />
+                  ) : (
+                    <span className={styles.avatarPlaceholder}>
+                      {groupName?.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className={styles.userInfo}>

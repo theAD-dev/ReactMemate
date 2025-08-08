@@ -10,7 +10,7 @@ import EmptyChatArea from './empty-chat-area';
 import ChatHeader from '../chat-header/chat-header';
 import MessageList from '../message-list/message-list';
 
-const ChatArea = ({ currentChat, socket, userId, chatId }) => {
+const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers }) => {
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -173,6 +173,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
             chat={currentChat}
             userId={userId}
             setParticipants={setParticipants}
+            onlineUsers={onlineUsers}
           />
 
           <div
