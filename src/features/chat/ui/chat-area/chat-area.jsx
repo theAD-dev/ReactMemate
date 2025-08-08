@@ -75,8 +75,6 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers }) => {
     }
   };
 
-
-
   useEffect(() => {
     if (!socket || !chatId) return;
 
