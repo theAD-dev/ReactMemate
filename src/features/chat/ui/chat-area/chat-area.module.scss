@@ -1,5 +1,5 @@
 .chatArea {
-  flex: 1 0 0;
+  flex: 1;
   height: 100%;
   display: flex;
   align-items: center;
@@ -9,6 +9,30 @@
   background-size: 100%;
   background-position: center;
   background-image: url("../../../../assets/chat-bg.png");
+}
+
+.chatSidebar {
+  width: 400px;
+  background-color: #fff;
+  border-left: 1px solid var(--gray-200, #eaecf0);
+  padding: 16px;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+  animation-duration: 0s;
+  animation-fill-mode: forwards;
+  animation-name: slideIn;
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  transition: transform 0.3s ease-in-out;
 }
 
 .chatContent {

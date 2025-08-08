@@ -10,6 +10,11 @@ const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) 
   // Filter users based on search query
   const filteredUsers = Object.entries(chatData)
     .filter(([, group]) => !group.project_id && !group.job_number)
+    .sort((a, b) => {
+      const lastMessageA = a[1].last_message?.sent_at || 0;
+      const lastMessageB = b[1].last_message?.sent_at || 0;
+      return lastMessageB - lastMessageA; // Sort by last message time, most recent
+    })
     .filter(([, group]) => {
       const participant = group.participants.find((participant) => participant.id !== +userId);
       const groupName = participant?.name || group?.name || "Unknown User";
@@ -100,7 +105,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) 
                     <img src={senderAvatar} alt={groupName} />
                   ) : (
                     <span className={styles.avatarPlaceholder}>
-                      {groupName?.split(' ').map(n => n[0]).join('')}
+                      {groupName?.split(' ').map(n => n[0]).join('').slice(0, 2)}
                     </span>
                   )}
                 </div>
@@ -113,14 +118,17 @@ const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) 
                     : 'No messages yet'}
                 </p>
               </div>
-              <span className={styles.lastMessageTime}>
-                {lastMessageTimeAgo
-                  ? lastMessageTimeAgo
-                  : ''}
-              </span>
-              {unreadCount > 0 && (
-                <span className={styles.unreadCount}>{unreadCount > 9 ? '9+' : unreadCount}</span>
-              )}
+              <div className='d-flex flex-column align-items-end gap-1'>
+                <span className={styles.lastMessageTime}>
+                  {lastMessageTimeAgo
+                    ? lastMessageTimeAgo
+                    : ''}
+                </span>
+                {unreadCount > 0 && (
+                  <span className={styles.unreadCount}>{unreadCount > 9 ? '9+' : unreadCount}</span>
+                )}
+              </div>
+
             </div>
           </Link>
         );

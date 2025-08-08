@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import styles from './chat-header.module.scss';
-import ChatActions from '../chat-actions/chat-actions';
 
-const ChatHeader = ({ chat, userId, setParticipants, onlineUsers }) => {
-  const [menuRef, setMenuRef] = useState(null);
-  const [menuVisible, setMenuVisible] = useState(false);
-
+const ChatHeader = ({ chat, userId, setParticipants, onlineUsers, setShowSidebar }) => {
   const idWithName = React.useMemo(() => {
     const participants = chat?.participants || [];
     return participants?.reduce((acc, curr) => {
@@ -41,7 +37,12 @@ const ChatHeader = ({ chat, userId, setParticipants, onlineUsers }) => {
             <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span>
           </div>
           <div className={styles.headerActions}>
-            <ChatActions privateChat={!!isProject} />
+            <button
+              className={styles.menuButton}
+              onClick={() => setShowSidebar(prev => !prev)}
+            >
+              <ThreeDotsVertical size={20} color="#667085" />
+            </button>
           </div>
         </div>
       ) : (
@@ -50,7 +51,7 @@ const ChatHeader = ({ chat, userId, setParticipants, onlineUsers }) => {
             <div
               className={styles.userAvatar}
             >
-              {getChatGroupName(chat)?.avatar ? <img src={getChatGroupName(chat)?.avatar} alt={'avatar'} /> : getChatGroupName(chat)?.name?.split(' ').map(n => n[0]).join('')}
+              {getChatGroupName(chat)?.avatar ? <img src={getChatGroupName(chat)?.avatar} alt={'avatar'} /> : getChatGroupName(chat)?.name?.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </div>
             <div className={styles.userInfo}>
               <h2 className={styles.userName}>{getChatGroupName(chat)?.name}</h2>
@@ -66,8 +67,7 @@ const ChatHeader = ({ chat, userId, setParticipants, onlineUsers }) => {
           <div className={styles.headerActions}>
             <button
               className={styles.menuButton}
-              onClick={() => setMenuVisible(!menuVisible)}
-              ref={menuRef}
+              onClick={() => setShowSidebar(prev => !prev)}
             >
               <ThreeDotsVertical size={20} color="#667085" />
             </button>

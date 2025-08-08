@@ -9,6 +9,11 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
 
   // Filter and transform data to project-based view
   const projectData = Object.entries(chatData).filter(([, group]) => group.project_id || group.job_number)
+    .sort((a, b) => {
+      const lastMessageA = a[1].last_message?.sent_at || 0;
+      const lastMessageB = b[1].last_message?.sent_at || 0;
+      return lastMessageB - lastMessageA; // Sort by last message time, most recent
+    })
     .filter(([, group]) => {
       const participant = group.participants.find((participant) => participant.id !== +userId);
       const groupName = participant?.name || group?.name || "Unknown User";
@@ -83,7 +88,7 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
 
             <div className={styles.messagePreviewContainer}>
               <div className={styles.userInfo}>
-                {/* <span className={styles.userName}>{project.name.split(' ').map(n => n[0]).join('')}</span> */}
+                {/* <span className={styles.userName}>{project.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</span> */}
                 {/* <span className={styles.userFullName}>{project.name}</span> */}
               </div>
               <p className={clsx(styles.lastMessage, 'text-start')}>

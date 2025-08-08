@@ -51,7 +51,7 @@ const ChatLayout = () => {
         res.chat_groups.forEach(group => {
           chatGroups[group.id] = group;
         });
-        setChatData(chatGroups);
+        setChatData(prevChatData => ({ ...prevChatData, ...chatGroups }));
         setIsLoading(false);
       }
     });
@@ -84,12 +84,12 @@ const ChatLayout = () => {
         setChatData((prevChatData) => ({ ...prevChatData, ...chatGroups }));
       }
     });
-
+    
     // Clean up on unmount
     return () => {
       socket.disconnect();
     };
-  }, [user_id, organization_id, session?.full_name]);
+  }, [user_id, organization_id, session]);
 
   useEffect(() => {
     if (!socketRef.current) return;
@@ -146,6 +146,7 @@ const ChatLayout = () => {
           userId={user_id}
           chatId={chatId}
           onlineUsers={onlineUsers}
+          setChatData={setChatData}
         />
       </div>
       {isLoading && <Loader />}

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FileText } from 'react-bootstrap-icons';
+import { FileText, Image } from 'react-bootstrap-icons';
 
 export function formatFileSize(size) {
   if (size >= 1024 * 1024) return (size / (1024 * 1024)).toFixed(1) + ' MB';
@@ -12,7 +12,6 @@ const ChatAttachmentPopover = ({ onFileChange, styles }) => {
   const buttonRef = useRef();
   const popoverRef = useRef();
 
-  // close the popover when clicking outside
   const handleClickOutside = (event) => {
     const btn = buttonRef.current;
     const pop = popoverRef.current;
@@ -68,7 +67,7 @@ const ChatAttachmentPopover = ({ onFileChange, styles }) => {
               }}
               accept='image/*'
             />
-            <FileText size={16} color="#667085" />
+            <Image size={16} color="#667085" />
             <span className="font-16">Photo </span>
           </label>
         </div>

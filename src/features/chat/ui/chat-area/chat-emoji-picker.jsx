@@ -1,13 +1,30 @@
 import React from 'react';
+import clsx from 'clsx';
 import EmojiPicker from 'emoji-picker-react';
 import styles from './chat-area.module.scss';
 
 const ChatEmojiPicker = ({ show, setShow, setMessage }) => {
+  const handleClickOutside = (event) => {
+    const emojiPicker = document.querySelector(`.emoji-picker`);
+    const emojiButton = document.querySelector(`.chat-emoji-button`);
+
+    if (emojiPicker && !emojiPicker.contains(event.target) && !emojiButton.contains(event.target)) {
+      setShow(false);
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+  
   return (
-    <>
+    <div className='chat-emoji-picker'>
       <button
         type="button"
-        className={styles.emojiButton}
+        className={clsx(styles.emojiButton, 'chat-emoji-button')}
         onClick={() => setShow((v) => !v)}
         tabIndex={-1}
       >
@@ -19,7 +36,7 @@ const ChatEmojiPicker = ({ show, setShow, setMessage }) => {
         </svg>
       </button>
       {show && (
-        <div style={{ position: 'absolute', bottom: '40px', right: 0, zIndex: 10 }}>
+        <div className={"emoji-picker"} style={{ position: 'absolute', bottom: '40px', right: 0, zIndex: 10 }}>
           <EmojiPicker
             onEmojiClick={(emojiData) => {
               setMessage((prev) => prev + (emojiData.emoji || ''));
@@ -29,7 +46,7 @@ const ChatEmojiPicker = ({ show, setShow, setMessage }) => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };
 
