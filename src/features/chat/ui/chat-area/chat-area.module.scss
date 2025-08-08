@@ -5,7 +5,10 @@
   align-items: center;
   align-self: stretch;
   flex-direction: column;
-  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  background-image: url("../../../../assets/chat-bg.png");
 }
 
 .chatContent {

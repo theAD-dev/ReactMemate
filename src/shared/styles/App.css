@@ -11839,3 +11839,10 @@ tr:hover .linkText,
   border-radius: 4px;
   border: 1px solid #eaecf0 !important;
 }
+
+.homeDashboardPage {
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  background-image: url('../../assets/bg-elements.png');
+}

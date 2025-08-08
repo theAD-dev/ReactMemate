@@ -95,7 +95,7 @@ const TeamInvoiceHistory = LazyLoader(lazy(() => import('../pages/work/team/invo
 const TaskPage = LazyLoader(lazy(() => import('../components/Work/Pages/tasks')));
 const AccountOverdue = LazyLoader(lazy(() => import('../pages/account-overdue/account-overdue')));
 const Logout = LazyLoader(lazy(() => import('../pages/setting/logout/logout')));
-const Chat = LazyLoader(lazy(() => import('../pages/work/chat')));
+const Chat = LazyLoader(lazy(() => import('../pages/chat')));
 const Dashboard = LazyLoader(lazy(() => import('../pages/business/dashboard/dashboard')));
 const LockedError = LazyLoader(lazy(() => import('../pages/error/locked/locked')));
 const NotFoundError = LazyLoader(lazy(() => import('../pages/error/not-found/not-found')));

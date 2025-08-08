@@ -25,7 +25,7 @@ import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-a
 
 export function getFileIcon(fileType, size = 32) {
     if (fileType) fileType = fileType?.toLowerCase();
-    
+
     const fileTypes = {
         'application/pdf': { name: 'PDF', color: '#D92D20' },
         'application/vnd.ms-excel': { name: 'Excel', color: '#22A746' },
@@ -107,7 +107,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const [jobReference, setJobReference] = useState("");
     const [description, setDescription] = useState("");
 
-    const [userId, setUserId] = useState("");
+    const [userId, setUserId] = useState("0");
     const [selectedUserInfo, setSelectedUserInfo] = useState({});
     const [hourlyRate, setHourlyRate] = useState("0.00");
     const [paymentCycle, setPaymentCycle] = useState("");
@@ -154,6 +154,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const [start, setStart] = useState(today);
     const [end, setEnd] = useState("");
     const [duration, setDuration] = useState("1.00");
+    console.log('hourlyRate: ', hourlyRate, duration, cost);
     const [dayShiftHours, setDayShiftHours] = useState("1.00");
 
     const [errors, setErrors] = useState({});
@@ -223,7 +224,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         setIsOpenProjectPhotoSection(false);
         setJobReference("");
         setDescription("");
-        setUserId("");
+        setUserId("0");
         setSelectedUserInfo({});
         setHourlyRate("0.00");
         setPaymentCycle("");
@@ -500,12 +501,9 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (!type) tempErrors.type = true;
         else payload.type = type;
 
-        if (type === '2' && (!cost || cost == '0.00')) tempErrors.cost = true;
-        else payload.cost = cost;
-
         if (!duration || duration == '0.0') tempErrors.duration = true;
         else if (duration) payload.duration = +duration;
-       
+
         if (!time_type) tempErrors.time_type = true;
         else payload.time_type = time_type;
 
@@ -517,13 +515,20 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
         if ((time_type === '1' && type === '3') && !dayShiftHours) tempErrors.dayShiftHours = true;
         else if ((time_type === '1' && type === '3') && dayShiftHours) {
-            const day = Math.ceil(duration / dayShiftHours);
-            payload.end_date = new Date(new Date(start).getTime() + (day * 24 * 60 * 60 * 1000)).toISOString();
+            const workDays = duration / dayShiftHours; // accurate number of working days
+            const hoursToAdd = workDays * 24; // convert working days to calendar time in hours
+            payload.end_date = new Date(new Date(start).getTime() + (hoursToAdd * 60 * 60 * 1000)).toISOString();
         }
 
         if (projectId) {
             const project = projectQuery?.data?.find(project => project.id === projectId);
             if (project) payload.project = project.unique_id;
+        }
+
+        if (type === '2' && (!cost || cost == '0.00')) tempErrors.cost = true;
+        else if (type === '2') payload.cost = cost;
+        else if (payload.duration && hourlyRate) {
+            payload.cost = parseFloat(+payload.duration * +hourlyRate).toFixed(2);
         }
 
         if (projectPhotoDeliver)
@@ -535,6 +540,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         // Batch update errors at the end
         setErrors(tempErrors);
 
+        console.log('payload: ', payload);
         // Check if there are no errors and proceed
         if (!Object.values(tempErrors).includes(true)) {
             mutation.mutate(payload);
@@ -550,6 +556,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             "1": "MONTH"
         };
         if (user) {
+            setHourlyRate(parseFloat(user?.hourly_rate || 0).toFixed(2));
             setSelectedUserInfo({
                 hourlyRate: parseFloat(user?.hourly_rate || 0).toFixed(2),
                 paymentCycle: paymentCycleObj[user?.payment_cycle] || "",
@@ -557,6 +564,8 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 has_photo: user?.has_photo,
                 name: `${user.first_name} ${user.last_name}`,
             });
+        } else {
+            setHourlyRate(0);
         }
     }, [mobileUserQuery?.data?.users]);
 
@@ -586,6 +595,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 workerDetailsSet(jobData.worker.id);
             } else {
                 setUserId("0");
+                setHourlyRate(parseFloat(jobData.cost / jobData.duration).toFixed(2));
             }
 
             // Set project
@@ -613,12 +623,15 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             }
 
             // set day shift hours
-            if (jobData.time_type === '1' && jobData.type === '3') {
-                const startDate = new Date(+jobData.start_date * 1000);
-                const endDate = new Date(+jobData.end_date * 1000);
-                const dayHours = Math.ceil((endDate - startDate) / (24 * 60 * 60 * 1000));
-                setDayShiftHours(parseFloat(dayHours).toFixed(2));
-            }
+            // if (jobData.time_type === '1' && jobData.type === '3') {
+            const startDate = new Date(+jobData.start_date * 1000);
+            const endDate = new Date(+jobData.end_date * 1000);
+            const diffInMs = endDate - startDate;
+            const dayCount = diffInMs / (24 * 60 * 60 * 1000);
+            const durationInHours = jobData.duration;
+            const dayShiftHours = durationInHours / dayCount;
+            setDayShiftHours(dayShiftHours.toFixed(2));
+            // }
 
             // Set project photos
             setProjectPhotoDeliver(jobData.project_photos || "3");
@@ -644,7 +657,16 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                 setDuration(parseFloat(duration).toFixed(2));
             }
         }
-    }, [cost, mobileUserQuery?.data, userId, time_type, type]);
+
+        if (userId === '0' && +hourlyRate && ((time_type === '1' && type === '2') || (time_type === 'T' && type === '4'))) {
+            let duration = cost / hourlyRate;
+            setDuration(parseFloat(duration).toFixed(2));
+        }
+    }, [cost, mobileUserQuery?.data, userId, time_type, type, hourlyRate]);
+
+    useEffect(() => {
+        if (type === '4') set_time_type('T');
+    }, [type]);
 
     return (
         <Sidebar visible={visible} position="right" onHide={() => { setVisible(false); reset(); }} modal={false} dismissable={false} style={{ width: '702px' }}
