@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
 import styles from './chat-area.module.scss';
 import ChatAttachmentPopover from './chat-attachment-popover';
 import ChatEmojiPicker from './chat-emoji-picker';
@@ -59,10 +60,28 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
     );
   }, [chatId, userId, socket, page, pageSize, updateMessages]);
 
+  const handleSendMessageResponse = (msg) => {
+    if (msg?.sent_message?.chat_group == chatId) {
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === msg.message_id)) return prev;
+        return [msg.sent_message, ...prev];
+      });
+      setIsSending(false);
+      setMessage('');
+      scrollHeightRef.current = 0;
+      setTimeout(() => {
+        if (inputRef.current) inputRef.current.focus();
+      }, 500);
+    }
+  };
+
+
+
   useEffect(() => {
     if (!socket || !chatId) return;
 
     const handleNewMessage = (msg) => {
+      console.log('msg: ', msg);
       if (msg.chat_group == chatId) {
         setMessages((prev) => {
           if (prev.some((m) => m.id == msg.id)) return prev;
@@ -71,29 +90,12 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
       }
     };
 
-    const handleSendMessageResponse = (msg) => {
-      if (msg?.sent_message?.chat_group == chatId) {
-        setMessages((prev) => {
-          if (prev.some((m) => m.id === msg.message_id)) return prev;
-          return [msg.sent_message, ...prev];
-        });
-        setIsSending(false);
-        setMessage('');
-        scrollHeightRef.current = 0;
-        setTimeout(() => {
-          if (inputRef.current) inputRef.current.focus();
-        }, 500);
-      }
-    };
-
     socket.on('new_message', handleNewMessage);
-    socket.on('send_message_response', handleSendMessageResponse);
 
     return () => {
       socket.off('new_message', handleNewMessage);
-      socket.off('send_message_response', handleSendMessageResponse);
     };
-  }, [socket, chatId, messages]);
+  }, [socket, chatId]);
 
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -116,7 +118,14 @@ const ChatArea = ({ currentChat, socket, userId, chatId }) => {
         message: message.trim(),
       };
       setIsSending(true);
-      socket.emit('send_message', msgPayload);
+      socket.emit('send_message', msgPayload, (res) => {
+        if (res.status === 'success') {
+          handleSendMessageResponse(res);
+        } else {
+          setIsSending(false);
+          toast.error('Failed to send message:');
+        }
+      });
     }
   };
 

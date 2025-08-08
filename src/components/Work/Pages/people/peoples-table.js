@@ -31,9 +31,16 @@ const PeoplesTable = () => {
             transports: ['websocket'],
             autoConnect: true,
         });
+        
         // Register user once
         if (currentUserId) {
-            socketRef.current.emit('register_user', { user_id: currentUserId });
+            socketRef.current.emit('register_user', { user_id: currentUserId, org_id: organizationId }, (res) => {
+                if (res.status === 'success') {
+                    console.log('User registered successfully');
+                } else {
+                    toast.error('Failed to register user with socket server');
+                }
+            });
         }
     }
 

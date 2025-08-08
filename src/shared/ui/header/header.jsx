@@ -35,6 +35,7 @@ const Header = () => {
     const isSuspended = session?.is_suspended ? true : false;
     const hasSubscriptionPaymentFailed = !!session?.suspension_date;
     const isHomePage = location.pathname === "/";
+    const isIndividualPage = location.pathname === "/chat" || location.pathname === "/statistics";
 
     useEffect(() => {
         if (session) {
@@ -144,7 +145,7 @@ const Header = () => {
                                                     <li>
                                                         <NavLink
                                                             to="/management"
-                                                            className={`managementMain ${!isHomePage ? 'menuActive' : ''}`}
+                                                            className={`managementMain ${!isHomePage && !isIndividualPage ? 'menuActive' : ''}`}
                                                         >
                                                             Business
                                                         </NavLink>

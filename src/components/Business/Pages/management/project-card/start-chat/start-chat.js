@@ -25,7 +25,7 @@ const StartChat = ({ projectId, project }) => {
 
         if (!user_id) return;
 
-        socket.emit('register_user', { user_id }, (res) => {
+        socket.emit('register_user', { user_id, org_id: session?.organization?.id }, (res) => {
             if (res.status === 'success') {
                 console.log('User registered successfully');
             } else {
