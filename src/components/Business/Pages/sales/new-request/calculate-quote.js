@@ -46,17 +46,41 @@ const CalculateQuote = () => {
                 managers: [{ manager: profileData?.desktop_user_id }],
                 client: storedSessionData?.id || "",
                 reference: storedSessionData?.reference || "",
-                description: storedSessionData?.requirements || ""
+                description: storedSessionData?.requirements || "",
+                recurring: {
+                    frequency: "M",
+                    start_date: new Date(),
+                    end_by: 0
+                }
             }));
         } else if (newRequestQuery?.data) {
             let quoteType = newRequestQuery?.data?.recurring?.frequency ? 'Recurring' : 'Standard';
             setQuoteType(quoteType);
             const newData = { ...newRequestQuery?.data };
             if (quoteType === 'Recurring') {
-                newData.recurring.start_date = new Date(+newData.recurring.start_date * 1000);
+                const sydneyFormatter = new Intl.DateTimeFormat('en-AU', {
+                    timeZone: 'Australia/Sydney',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                });
+
+                // Check if timestamp is in seconds, then multiply by 1000
+                const startTimestamp = +newData.recurring.start_date;
+                newData.recurring.start_date = new Date(startTimestamp < 1e12 ? startTimestamp * 1000 : startTimestamp);
+                console.log("Start Date (Sydney):", sydneyFormatter.format(newData.recurring.start_date));
+
                 newData.recurring.end_by = +newData.recurring.end_by;
-                if (newData.recurring.end_by === 1)
-                    newData.recurring.end_date = new Date(+newData.recurring.end_date * 1000);
+
+                if (newData.recurring.end_by === 1) {
+                    const endTimestamp = +newData.recurring.end_date;
+                    newData.recurring.end_date = new Date(endTimestamp < 1e12 ? endTimestamp * 1000 : endTimestamp);
+                    console.log("End Date (Sydney):", sydneyFormatter.format(newData.recurring.end_date));
+                }
             }
             setPayload((others) => ({ ...others, ...newData }));
         }
@@ -99,6 +123,14 @@ const CalculateQuote = () => {
         }
     });
 
+    function formatDateToYMD(date) {
+        if (!date) return '';
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     const createNewRequest = async (action) => {
         payload.action = action;
         if (action !== "send") {
@@ -138,12 +170,14 @@ const CalculateQuote = () => {
         if (quoteType === 'Recurring' && payload?.recurring?.end_by === 2 && !payload?.recurring?.occurrences) return toast.error('Recurring projects is required');
         if (quoteType === 'Recurring') {
             if (payload.recurring.start_date)
-                payload.recurring.start_date = payload.recurring.start_date.toISOString().split('T')[0];
+                payload.recurring.start_date = formatDateToYMD(payload.recurring.start_date);
             if (payload.recurring.end_date && payload.recurring.end_by === 1)
-                payload.recurring.end_date = payload.recurring.end_date.toISOString().split('T')[0];
+                payload.recurring.end_date = formatDateToYMD(payload.recurring.end_date);
             else {
                 delete payload.recurring.end_date;
             }
+        } else {
+            payload.recurring = null;
         }
 
         let result;
@@ -220,6 +254,8 @@ const CalculateQuote = () => {
                 toast.success(`Calculations created successfully.`);
             }
         }
+
+        newRequestQuery?.refetch();
 
         if (action === "quote-pdf-open") {
             if (result?.quote_url) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Placeholder } from 'react-bootstrap';
-import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle, Check, Link as LinkIcon, X, ArrowBarLeft, ArrowRight, ArrowUpShort, Dash, BoxArrowUpLeft, ArrowsAngleExpand } from "react-bootstrap-icons";
+import { CheckCircle, PlusLg, ChevronDoubleUp, ChevronDoubleDown, InfoCircle, Check, Link as LinkIcon, X, ArrowRight, ArrowUpShort, Dash, ArrowsAngleExpand, ArrowDownShort } from "react-bootstrap-icons";
 import CountUp from 'react-countup';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
@@ -403,11 +403,13 @@ const Home = () => {
                                             <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
                                                 <Placeholder bg="secondary" style={{ height: '15px', width: '100px', borderRadius: '4px' }} size="lg" />
                                             </Placeholder>
-                                            : getActivityQuery?.data?.email_sent || 0
+                                            : getActivityQuery?.data?.email_sent?.value || 0
                                     }
                                 </span>
-                                <ArrowUpShort size={16} color="#067647" />
-                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>0%</span>
+                                {getActivityQuery?.data?.email_sent?.delta > 0
+                                    ? <><ArrowUpShort size={16} color="#067647" /> <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>{Math.abs(getActivityQuery?.data?.email_sent?.delta || 0)}%</span></>
+                                    : <><ArrowDownShort size={16} color="#EA5455" /> <span className='font-14' style={{ color: '#EA5455', fontWeight: 500 }}>{Math.abs(getActivityQuery?.data?.email_sent?.delta || 0)}%</span></>
+                                }
                             </div>
                         </div>
                         <div className='d-flex flex-column justify-content-center align-items-start' style={{ width: '256px', border: '1px solid #EAECF0', borderRadius: 6, padding: '8px 32px' }}>
@@ -419,11 +421,13 @@ const Home = () => {
                                             <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
                                                 <Placeholder bg="secondary" style={{ height: '15px', width: '100px', borderRadius: '4px' }} size="lg" />
                                             </Placeholder>
-                                            : getActivityQuery?.data?.quotes_won || 0
+                                            : getActivityQuery?.data?.quotes_won?.value || 0
                                     }
                                 </span>
-                                <ArrowUpShort size={16} color="#067647" />
-                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>0%</span>
+                                {getActivityQuery?.data?.quotes_won?.delta > 0
+                                    ? <><ArrowUpShort size={16} color="#067647" /> <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>{Math.abs(getActivityQuery?.data?.quotes_won?.delta || 0)}%</span></>
+                                    : <><ArrowDownShort size={16} color="#EA5455" /> <span className='font-14' style={{ color: '#EA5455', fontWeight: 500 }}>{Math.abs(getActivityQuery?.data?.quotes_won?.delta || 0)}%</span></>
+                                }
                             </div>
                         </div>
                         <div className='d-flex flex-column justify-content-center align-items-start' style={{ width: '256px', border: '1px solid #EAECF0', borderRadius: 6, padding: '8px 32px' }}>
@@ -435,11 +439,19 @@ const Home = () => {
                                             <Placeholder as="p" animation="wave" style={{ marginBottom: '0px' }}>
                                                 <Placeholder bg="secondary" style={{ height: '15px', width: '100px', borderRadius: '4px' }} size="lg" />
                                             </Placeholder>
-                                            : getActivityQuery?.data?.new_clients || 0
+                                            : getActivityQuery?.data?.new_clients?.value || 0
                                     }
                                 </span>
-                                <ArrowUpShort size={16} color="#067647" />
-                                <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>0%</span>
+                                {getActivityQuery?.data?.new_clients?.delta > 0
+                                    ? <>
+                                        <ArrowUpShort size={16} color="#067647" />
+                                        <span className='font-14' style={{ color: '#067647', fontWeight: 500 }}>{Math.abs(getActivityQuery?.data?.new_clients?.delta || 0)}%</span>
+                                    </>
+                                    : <>
+                                        <ArrowDownShort size={16} color="#EA5455" />
+                                        <span className='font-14' style={{ color: '#EA5455', fontWeight: 500 }}>{Math.abs(getActivityQuery?.data?.new_clients?.delta || 0)}%</span>
+                                    </>
+                                }
                             </div>
                         </div>
                     </div>
