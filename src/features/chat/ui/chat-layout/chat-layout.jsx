@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 import styles from './chat-layout.module.scss';
+import { getTeamDesktopUser } from '../../../../APIs/team-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Loader from '../../../../shared/ui/loader/loader';
@@ -33,7 +34,9 @@ const ChatLayout = () => {
     });
     socketRef.current = socket;
 
-    if (!user_id) return;
+    if (!user_id) return toast.error('User ID is not available');
+    if (!organization_id) return toast.error('Organization ID is not available');
+
 
     socket.emit('register_user', { user_id, org_id: organization_id }, (res) => {
       if (res.status === 'success') {
@@ -55,14 +58,56 @@ const ChatLayout = () => {
       }
     });
 
-    // Listen for chat group updates
-    socket.on('get_user_chat_groups_response', (payload) => {
-      if (payload.status === 'success' && payload.chat_groups) {
+    // Fetch private chat groups
+    socket.emit('get_organization_users', { user_id, organization_id: organization_id }, (res) => {
+      console.log('get_organization_users: ', res);
+      if (res.status === 'success' && res?.users?.length) {
         const chatGroups = {};
-        payload.chat_groups.forEach(group => {
-          chatGroups[group.id] = group;
+        res.users.forEach(group => {
+          let modifiedGroup = {
+            id: group?.group_id,
+            archived_by: [],
+            participants: [
+              {
+                id: group.id,
+                name: `${group.full_name}`,
+              },
+              {
+                id: user_id,
+                name: session?.full_name || 'You',
+              }
+            ],
+            last_message: group?.last_message
+          };
+          chatGroups[modifiedGroup.id] = modifiedGroup;
         });
-        setChatData(chatGroups);
+        setChatData((prevChatData) => ({ ...prevChatData, ...chatGroups }));
+      }
+    });
+
+    socket.emit('get_organization_users_mobile', { user_id, organization_id: organization_id }, (res) => {
+      console.log('get_organization_users_mobile: ', res);
+      if (res.status === 'success' && res?.users?.length) {
+        const chatGroups = {};
+        res.users.forEach(group => {
+          let modifiedGroup = {
+            id: group?.group_id,
+            archived_by: [],
+            participants: [
+              {
+                id: group.id,
+                name: `${group.full_name}`,
+              },
+              {
+                id: user_id,
+                name: session?.full_name || 'You',
+              }
+            ],
+            last_message: group?.last_message
+          };
+          chatGroups[modifiedGroup.id] = modifiedGroup;
+        });
+        setChatData((prevChatData) => ({ ...prevChatData, ...chatGroups }));
       }
     });
 
@@ -70,10 +115,22 @@ const ChatLayout = () => {
     return () => {
       socket.disconnect();
     };
-  }, [user_id, organization_id]);
+  }, [user_id, organization_id, session?.full_name]);
 
   useEffect(() => {
-    
+    const getDesktopUser = async () => {
+      try {
+        const users = await getTeamDesktopUser();
+        let activeUsers = users?.users?.filter((user) => user.is_active);
+        let chatGroupsFormatted = {};
+        activeUsers.forEach(user => { });
+
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getDesktopUser();
   }, []);
 
   useEffect(() => {

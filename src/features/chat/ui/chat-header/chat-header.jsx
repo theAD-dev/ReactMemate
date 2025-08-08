@@ -19,7 +19,7 @@ const ChatHeader = ({ chat, userId, setParticipants }) => {
     setParticipants(idWithName);
   }, [idWithName, setParticipants]);
 
-  const isProject = chat.project_id || chat.task_id;
+  const isProject = chat.project_id || chat.job_number;
   const getChatGroupName = (group) => {
     const participant = group.participants.find((participant) => participant.id !== +userId);
     return participant?.name || group?.name || "Unknown User";
@@ -28,8 +28,8 @@ const ChatHeader = ({ chat, userId, setParticipants }) => {
     <div className={styles.chatHeader}>
       {isProject ? (
         <div className={styles.projectHeader}>
-          <span className={styles.projectReference}>{chat.projectRef}</span>
-          <span className={styles.projectNumber}>{chat.project_id}</span>
+          <span className={styles.projectReference}>{chat?.name || "Unknown"}</span>
+          <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span>
         </div>
       ) : (
         <>

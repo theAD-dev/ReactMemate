@@ -20,7 +20,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
 
   // Helper to get last message and unread count
   const getLastMessage = (group) => {
-    return group?.last_message?.message || null;
+    return group?.last_message || null;
   };
 
   const getUnreadCount = (group) => {
@@ -36,14 +36,38 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
     const lastMessageDetails = group?.last_message;
     if (!lastMessageDetails) return '';
     const sender = group.participants.find((participant) => participant.id === lastMessageDetails.sender);
-    if (sender.id === userId) return 'You: ';
-    return `${sender?.name}: ` || "Unknown Sender: `";
+    if (sender?.id === userId) return 'You: ';
+    return sender?.name ? `${sender?.name}: ` : "";
+  };
+
+  const timeAgo = (unixTimestamp) => {
+    if (!unixTimestamp) return '';
+    const now = Date.now(); // Current time in milliseconds
+    const then = unixTimestamp * 1000; // Convert seconds to milliseconds
+    const diff = now - then;
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+    const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+    const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+
+    if (seconds < 60) return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    if (days < 7) return `${days} day${days !== 1 ? 's' : ''} ago`;
+    if (weeks < 4) return `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+    if (months < 12) return `${months} month${months !== 1 ? 's' : ''} ago`;
+    return `${years} year${years !== 1 ? 's' : ''} ago`;
   };
 
   return (
     <div className={styles.userList}>
       {filteredUsers.map(([id, group]) => {
         const lastMessage = getLastMessage(group);
+         const lastMessageTimeAgo = timeAgo(group?.last_message?.sent_at);
         const unreadCount = getUnreadCount(group);
         const sender = getSenderName(group);
         const groupName = getChatGroupName(group);
@@ -59,14 +83,14 @@ const UserList = ({ chatData, searchQuery, showArchived, userId }) => {
               <div className={styles.userInfo}>
                 <span className={styles.userName}>{groupName}</span>
                 <p className={styles.lastMessage}>
-                  {lastMessage
-                    ? `${sender} ${lastMessage ? lastMessage.substring(0, 30) : ''}`
+                  {lastMessage?.message
+                    ? `${sender} ${lastMessage?.message ? lastMessage?.message?.substring(0, 30) : ''}`
                     : 'No messages yet'}
                 </p>
               </div>
               <span className={styles.lastMessageTime}>
-                {lastMessage && lastMessage.sent_at
-                  ? new Date(Number(lastMessage.sent_at) * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                {lastMessageTimeAgo
+                  ? lastMessageTimeAgo
                   : ''}
               </span>
               {unreadCount > 0 && (
