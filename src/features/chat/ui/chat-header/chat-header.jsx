@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import styles from './chat-header.module.scss';
+import ChatActions from '../chat-actions/chat-actions';
 
 const ChatHeader = ({ chat, userId, setParticipants, onlineUsers }) => {
   const [menuRef, setMenuRef] = useState(null);
@@ -34,9 +35,14 @@ const ChatHeader = ({ chat, userId, setParticipants, onlineUsers }) => {
   return (
     <div className={styles.chatHeader}>
       {isProject ? (
-        <div className={styles.projectHeader}>
-          <span className={styles.projectReference}>{chat?.name || "Unknown"}</span>
-          <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span>
+        <div className='d-flex w-100 justify-content-between align-items-center'>
+          <div className={styles.projectHeader}>
+            <span className={styles.projectReference}>{chat?.name || "Unknown"}</span>
+            <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span>
+          </div>
+          <div className={styles.headerActions}>
+            <ChatActions privateChat={!!isProject} />
+          </div>
         </div>
       ) : (
         <>
