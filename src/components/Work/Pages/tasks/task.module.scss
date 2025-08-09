@@ -32,8 +32,9 @@
   border-radius: 40px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--Orange-600, #d59346) !important;
-  background: var(--Orange-600, #d59346) !important;
+  border-radius: 40px;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
+  background: var(--Primary-600, #158ecc) !important;
 }
 
 .total {

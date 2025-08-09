@@ -115,14 +115,14 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
             <Card className={clsx(style.border, 'mb-3')}>
                 <Card.Body>
                     <div className='d-flex justify-content-between gap-3 align-items-center'>
-                        <div className='d-flex flex-column'>
+                        <div className='d-flex flex-column flex-fill'>
                             <label className="mb-2">Enter Amount</label>
-                            <IconField iconPosition="left">
+                            <IconField className='w-100' iconPosition="left">
                                 <InputIcon><span style={{ position: 'relative', top: '-4px' }}>$</span></InputIcon>
                                 <InputNumber
                                     value={deposit}
                                     onValueChange={(e) => setDeposit(e.target.value || 0)}
-                                    style={{ width: '380px', paddingLeft: '30px', padding: '0px 16px' }}
+                                    style={{ width: '100%', minWidth: '420px', padding: '0px 16px' }}
                                     className={clsx(style.inputText, { [style.error]: errors?.deposit })}
                                     maxFractionDigits={2}
                                     minFractionDigits={2}
@@ -134,11 +134,11 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                                 <p className="error-message mb-0">{"Payment type is required"}</p>
                             )}
                         </div>
-                        <div className={clsx(style.box, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.amount || 0).toFixed(2))}>
+                        <div className={clsx(style.box, 'd-flex flex-column flex-fill')} onClick={() => setDeposit(parseFloat(invoice?.amount || 0).toFixed(2))}>
                             <label>Total invoice</label>
                             <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.amount || 0)}</h1>
                         </div>
-                        <div className={clsx(style.box, 'd-flex flex-column')} onClick={() => setDeposit(parseFloat(invoice?.to_be_paid || 0).toFixed(2))}>
+                        <div className={clsx(style.box, 'd-flex flex-column flex-fill')} onClick={() => setDeposit(parseFloat(invoice?.to_be_paid || 0).toFixed(2))}>
                             <label>To Be Paid</label>
                             <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.to_be_paid || 0)}</h1>
                         </div>
@@ -148,24 +148,32 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
 
             <Card className={clsx(style.border, 'mb-3')}>
                 <Card.Body>
-                    <div className='d-flex justify-content-between gap-2 align-items-center'>
-                        <div className={clsx(style.box3, 'd-flex flex-column text-end')}>
-                            <label>Budget</label>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div className={clsx(style.box3, 'd-flex flex-column text-start justify-content-center')}>
+                            <label style={{ fontWeight: 400 }}>Budget</label>
                             <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.budget || 0)}</h1>
                         </div>
-                        <div className={clsx(style.box4, 'd-flex flex-column text-end')}>
-                            <label>Real Cost</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.real_cost || 0)}</h1>
+                        <div className='d-flex flex-column' style={{ flex: 1 }}>
+                            <div className={clsx(style.box4, 'd-flex flex-column align-items-center text-left w-100 h-100')}>
+                                <label style={{ fontWeight: 400 }}>Real Cost</label>
+                                <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.real_cost || 0)}</h1>
+                            </div>
+                            <div className='d-flex align-items-center'>
+                                <div className={clsx(style.box5, 'd-flex flex-column text-end flex-fill')}>
+                                    <label style={{ fontWeight: 400 }}>Cost Of Sale</label>
+                                    <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.cost_of_sale || 0)}</h1>
+                                </div>
+                                <div className={clsx(style.box6, 'd-flex flex-column text-end flex-fill')}>
+                                    <label>Labour</label>
+                                    <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.labor_expenses || 0)}</h1>
+                                </div>
+                                <div className={clsx(style.box8, 'd-flex flex-column text-end flex-fill')}>
+                                    <label>Operating Expense</label>
+                                    <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.labor_expenses || 0)}</h1>
+                                </div>
+                            </div>
                         </div>
-                        <div className={clsx(style.box5, 'd-flex flex-column text-end')}>
-                            <label>Cost Of Sale</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.cost_of_sale || 0)}</h1>
-                        </div>
-                        <div className={clsx(style.box6, 'd-flex flex-column text-end')}>
-                            <label>Labour</label>
-                            <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.labor_expenses || 0)}</h1>
-                        </div>
-                        <div className={clsx(style.box7, 'd-flex flex-column text-end')}>
+                        <div className={clsx(style.box7, 'd-flex flex-column text-end justify-content-center')}>
                             <label>Operational Profit</label>
                             <h1 className={clsx(style.text, 'mt-2')}>${formatAUD(invoice?.profit || 0)}</h1>
                         </div>
@@ -176,7 +184,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
             <Card className={clsx(style.border, 'mb-3')}>
                 <Card.Body className='d-flex justify-content-end gap-2'>
                     <Button className='outline-button' onClick={() => setShow(false)}>Cancel</Button>
-                    <Button className='success-button' disabled={mutation?.isPending} onClick={onsubmit}>Submit Payment
+                    <Button className='success-button' disabled={mutation?.isPending} onClick={onsubmit}>Process Payment
                         {mutation?.isPending && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
