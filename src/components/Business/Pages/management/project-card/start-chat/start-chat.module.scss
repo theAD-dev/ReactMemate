@@ -1,5 +1,5 @@
 .chatButton {
-  color: var(--Gray-700, #344054);
+  color: var(--Gray-700, #344054) !important;
 
   /* Text md/Semibold */
   font-family: Inter;
@@ -13,13 +13,13 @@
   align-items: center;
   gap: 8px;
   border-radius: 40px;
-  border: 1px solid var(--Gray-300, #d0d5dd);
-  background: var(--Base-White, #fff);
+  border: 1px solid var(--Gray-300, #d0d5dd) !important;
+  background: var(--Base-White, #fff) !important;
 }
 
 .chatButton:hover,
 .chatButton:focus {
-  color: var(--Gray-700, #344054);
+  color: var(--Gray-700, #344054) !important;
 
   /* Text md/Semibold */
   font-family: Inter;
@@ -33,6 +33,6 @@
   align-items: center;
   gap: 8px;
   border-radius: 40px;
-  border: 1px solid #89f7fe;
-  background: var(--Base-White, #fff);
+  border: 1px solid #89f7fe !important;
+  background: var(--Base-White, #fff) !important;
 }

@@ -38,7 +38,7 @@ const DesktopPeoplesTable = () => {
                 if (res.status === 'success') {
                     console.log('User registered successfully');
                 } else {
-                    toast.error('Failed to register user with socket server');
+                    toast.error('Failed to connect to chat server');
                 }
             });
         }

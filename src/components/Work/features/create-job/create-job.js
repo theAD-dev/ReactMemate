@@ -154,7 +154,6 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const [start, setStart] = useState(today);
     const [end, setEnd] = useState("");
     const [duration, setDuration] = useState("1.00");
-    console.log('hourlyRate: ', hourlyRate, duration, cost);
     const [dayShiftHours, setDayShiftHours] = useState("1.00");
 
     const [errors, setErrors] = useState({});

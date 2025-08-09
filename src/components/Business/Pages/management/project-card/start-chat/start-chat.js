@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
@@ -9,11 +10,10 @@ import { useAuth } from '../../../../../../app/providers/auth-provider';
 const StartChat = ({ projectId, project }) => {
     const socketRef = useRef(null);
     const { session } = useAuth();
+    const navigate = useNavigate();
     const user_id = session?.desktop_user_id;
+    const [isConnected, setIsConnected] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    console.log('project: ', project);
-    console.log('projectId: ', projectId);
 
     useEffect(() => {
         // Connect to socket.io server
@@ -27,12 +27,13 @@ const StartChat = ({ projectId, project }) => {
 
         socket.emit('register_user', { user_id, org_id: session?.organization?.id }, (res) => {
             if (res.status === 'success') {
+                setIsConnected(true);
                 console.log('User registered successfully');
             } else {
-                console.error('Failed to register user:', res.error);
+                toast.error('Failed to connect to chat server');
             }
         });
-    }, [user_id]);
+    }, [user_id, session]);
 
     const handleStartChat = () => {
         if (!user_id) return;
@@ -43,14 +44,14 @@ const StartChat = ({ projectId, project }) => {
             socketRef.current.emit('create_chat_group', {
                 user_id: user_id,
                 name: project?.reference,
-                participants: [],
-                project_id: Number(project?.number?.split('-')[0]),
-                job_id: null
+                participants: [user_id],
+                project_id: projectId,
             },
                 (res) => {
+                    console.log('res: ', res);
                     if (res.status === 'success' && res.chat_group_id) {
                         setLoading(false);
-                        window.location.href = `/chat?id=${res.chat_group_id}`;
+                        navigate(`/chat?id=${res.chat_group_id}`);
                     } else {
                         setLoading(false);
                         console.log("Error during creation chat group: ", res);
@@ -62,7 +63,7 @@ const StartChat = ({ projectId, project }) => {
     };
 
     return (
-        <Button className={style.chatButton} disabled={loading || !socketRef.current} onClick={handleStartChat}>
+        <Button className={style.chatButton} disabled={loading || !socketRef.current || !isConnected} onClick={handleStartChat}>
             {loading && <ProgressSpinner style={{ width: '20px', height: '20px', marginRight: '8px' }} />}
             Start Chat
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
