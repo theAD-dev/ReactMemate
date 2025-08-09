@@ -1,6 +1,5 @@
 import React from 'react';
 import { Plus, X } from 'react-bootstrap-icons';
-import { is } from 'immutable';
 import styles from './chat-info-sidebar.module.scss';
 
 const ChatInfoSidebar = ({ userId, chatInfo, participants, closeSidebar }) => {
