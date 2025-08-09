@@ -6,6 +6,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from "sonner";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
 import AddRemoveMobileUser from "./features/add-remove-mobile-user";
+import CancelSubscription from "./features/cancel-subscription";
 import styles from "./subscription.module.scss";
 import { activeWorkSubscription, cancelSubscription, cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
@@ -54,17 +55,7 @@ const Subscription = () => {
     },
   });
 
-  const cancelSubscriptionMutation = useMutation({
-    mutationFn: cancelSubscription,
-    onSuccess: () => {
-      toast.success("Subscription canceled successfully!");
-      window.location.reload();
-    },
-    onError: (error) => {
-      console.error("Error canceling subscription:", error);
-      toast.error("Failed to cancel subscription. Please try again.");
-    },
-  });
+
 
   return (
     <>
@@ -292,10 +283,7 @@ const Subscription = () => {
                   </li>
                   {
                     hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.CANCEL_BUSINESS_SUBSCRIPTION) && (
-                      <button className="closeSubscription" disabled={cancelSubscriptionMutation.isPending} onClick={() => cancelSubscriptionMutation.mutate()}>
-                        Cancel Subscription
-                        {cancelSubscriptionMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>}
-                      </button>
+                      <CancelSubscription />
                     )
                   }
                 </ul>
@@ -340,7 +328,7 @@ const Subscription = () => {
                     Management Desktop system.
                   </p>
 
-                  
+
                   <p style={{ marginTop: '60px' }}>
                     <strong>Locations:</strong> Additional features for
                     Companies with multiple branches/Locations. It allows you
