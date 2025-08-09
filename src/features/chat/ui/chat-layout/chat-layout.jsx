@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 import styles from './chat-layout.module.scss';
+import { getTeamDesktopUser, getTeamMobileUser } from '../../../../APIs/team-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import Loader from '../../../../shared/ui/loader/loader';
@@ -23,6 +24,7 @@ const ChatLayout = () => {
   const [chatData, setChatData] = useState({});
   const [currentChat, setCurrentChat] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState({});
+  const [users, setUsers] = useState({});
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -51,6 +53,7 @@ const ChatLayout = () => {
         res.chat_groups.forEach(group => {
           chatGroups[group.id] = group;
         });
+        console.log('groups chat groups : ', chatGroups);
         setChatData(prevChatData => ({ ...prevChatData, ...chatGroups }));
         setIsLoading(false);
       }
@@ -81,10 +84,11 @@ const ChatLayout = () => {
           };
           chatGroups[modifiedGroup.id] = modifiedGroup;
         });
+        console.log('private chatGroups: ', chatGroups);
         setChatData((prevChatData) => ({ ...prevChatData, ...chatGroups }));
       }
     });
-    
+
     // Clean up on unmount
     return () => {
       socket.disconnect();
@@ -127,6 +131,39 @@ const ChatLayout = () => {
     }
   }, [chatId, chatData]);
 
+  useEffect(() => {
+    const getDesktopUser = async () => {
+      try {
+        const desktop_users = await getTeamDesktopUser();
+        let activeUsers = desktop_users?.users?.filter((user) => user.is_active);
+        const userMap = {};
+        activeUsers.forEach(user => {
+          userMap[user.id] = user;
+        });
+        setUsers(prevUsers => ({ ...prevUsers, ...userMap }));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const getMobileUser = async () => {
+      try {
+        const mobile_users = await getTeamMobileUser();
+        const activeUsers = mobile_users?.users.filter((user) => user.status !== 'disconnected');
+        const userMap = {};
+        activeUsers.forEach(user => {
+          userMap[user.id] = user;
+        });
+        setUsers(prevUsers => ({ ...prevUsers, ...userMap }));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getDesktopUser();
+    getMobileUser();
+  }, []);
+
   return (
     <div className="container-fluid px-0">
       <div className={styles.chatContainer} style={{ height: `calc(100vh - 130px - ${trialHeight}px)` }}>
@@ -147,6 +184,7 @@ const ChatLayout = () => {
           chatId={chatId}
           onlineUsers={onlineUsers}
           setChatData={setChatData}
+          users={users}
         />
       </div>
       {isLoading && <Loader />}

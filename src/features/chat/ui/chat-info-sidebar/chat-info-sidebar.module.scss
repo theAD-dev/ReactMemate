@@ -61,7 +61,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 6px 0px;
+  padding: 8px 10px;
 }
 
 .participantAvatar {
@@ -100,16 +100,66 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 6px 0px;
+  padding: 8px 10px;
   background-color: transparent;
   border: none;
   cursor: pointer;
   border-radius: 6px;
   width: 100%;
-  margin-bottom: 10px;
 }
 
 .addParticipantButton:hover,
 .addParticipantButton:focus {
   background-color: var(--Gray-50, #f9fafb);
+}
+
+.circledesignstyle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .out {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 6px solid var(--Success-50, #ecfdf3);
+    background: var(--Success-100, #dcfae6);
+    padding: 6px;
+  }
+}
+
+.modal {
+  width: 550px;
+  border-radius: var(--radius-xs, 4px);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+.userContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0px 0px 0px;
+  height: 300px;
+  overflow-y: auto;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: #eaf8ff;
+  }
 }

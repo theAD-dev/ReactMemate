@@ -13,7 +13,7 @@ import ChatHeader from '../chat-header/chat-header';
 import ChatInfoSidebar from '../chat-info-sidebar/chat-info-sidebar';
 import MessageList from '../message-list/message-list';
 
-const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatData }) => {
+const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatData, users }) => {
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -268,6 +268,8 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatDat
           chatInfo={currentChat}
           closeSidebar={() => setShowSidebar(false)}
           participants={participants}
+          users={users}
+          socket={socket}
         />
       </div>
     </div>
