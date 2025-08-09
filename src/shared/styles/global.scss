@@ -115,6 +115,27 @@ input {
   line-height: 24px;
 }
 
+.danger-text-button,
+.danger-text-button:hover,
+.danger-text-button:focus {
+  gap: 8px;
+  display: flex;
+  padding: 10px 18px;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: 0px solid #fda29b !important;
+  color: #b42318 !important;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
 .success-outline-button,
 .success-outline-button:hover,
 .success-outline-button:focus {

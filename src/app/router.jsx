@@ -101,6 +101,7 @@ const LockedError = LazyLoader(lazy(() => import('../pages/error/locked/locked')
 const NotFoundError = LazyLoader(lazy(() => import('../pages/error/not-found/not-found')));
 const UnauthorizedError = LazyLoader(lazy(() => import('../pages/error/unauthorized/unauthorized')));
 const StripeContainer = LazyLoader(lazy(() => import('../ui/strip-payment/strip-payment')));
+const Help = LazyLoader(lazy(() => import('../pages/help')));
 
 const routes = [
     {
@@ -252,6 +253,11 @@ const routes = [
                 path: "",
                 element: <Dashboard />,
                 errorElement: <UnknownError />,
+            },
+            {
+                path: "/help",
+                element: <Help />,
+                errorElement: <UnknownError />
             },
             {
                 path: "clients",

@@ -40,9 +40,16 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                     <li className={style.navbarActionIcon}>
                         <Search color="#ccc" size={20} />
                     </li>
-                    <li className={style.navbarActionIcon} onClick={openSupportModal}>
-                        <QuestionCircle color="#475467" size={20} />
-                    </li>
+                    <NavLink
+                        to={"/help"}
+                        className={({ isActive }) =>
+                            (isActive ?  style.navbarActionIconActive : "")
+                        }
+                    >
+                        <li className={clsx(style.navbarActionIcon )}>
+                            <QuestionCircle color="#475467" size={20} />
+                        </li>
+                    </NavLink>
                 </ul>
                 <div className="mr">
                     <Link className={clsx("avatar-info d-flex align-items-center gap-3 px-2", style.profileLink)} to="/settings/generalinformation">

@@ -34,8 +34,8 @@ const Header = () => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const isSuspended = session?.is_suspended ? true : false;
     const hasSubscriptionPaymentFailed = !!session?.suspension_date;
-    const isHomePage = location.pathname === "/";
-    const isIndividualPage = location.pathname === "/chat" || location.pathname === "/statistics";
+    const isHomePage = location.pathname === "/" || location.pathname === '/help';
+    const isIndividualPage = location.pathname === "/chat" || location.pathname === "/statistics" || location.pathname === '/help';
 
     useEffect(() => {
         if (session) {
