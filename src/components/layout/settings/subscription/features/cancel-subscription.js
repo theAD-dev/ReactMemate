@@ -11,7 +11,7 @@ import illustrationImage2 from '../../../../../assets/Illustration-2.svg';
 import illustrationImage1 from '../../../../../assets/Illustration.svg';
 
 const CancelSubscription = () => {
-    const [showInitialConfirmation, setShowInitialConfirmation] = React.useState(true);
+    const [showInitialConfirmation, setShowInitialConfirmation] = React.useState(false);
     const [showFeedbackForm, setShowFeedbackForm] = React.useState(false);
     const [showSuccess, setShowSuccess] = React.useState(false);
     const [selectedReason, setSelectedReason] = React.useState('');
