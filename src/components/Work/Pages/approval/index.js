@@ -20,6 +20,7 @@ const ApprovalPage = () => {
     if (weekInfo?.end) {
         const now = new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' });
         const end = new Date(weekInfo.end.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+        end.setHours(end.getHours() + 12);
         const diff = end - new Date(now);
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
