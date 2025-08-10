@@ -63,7 +63,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
+const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save, defaultTemplate = 'Quote'}) => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
@@ -110,7 +110,7 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
         }
 
         if (emailTemplateQuery?.data) {
-            const activeTemplateId = emailTemplateQuery?.data?.find((template) => template.type === 'Quote');
+            const activeTemplateId = emailTemplateQuery?.data?.find((template) => template.type === defaultTemplate);
             if (activeTemplateId?.id) setEmailTemplatedId(activeTemplateId?.id);
         }
 

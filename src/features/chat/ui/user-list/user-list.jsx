@@ -57,7 +57,7 @@ const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) 
   const getSenderStatus = (group) => {
     const participant = group.participants.find((participant) => participant.id !== +userId);
     if (!participant) return 'offline';
-    return onlineUsers.includes(participant.id) ? 'online' : 'offline';
+    return onlineUsers?.includes(participant.id) ? 'online' : 'offline';
   };
 
   const timeAgo = (unixTimestamp) => {

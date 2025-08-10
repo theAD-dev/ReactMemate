@@ -46,6 +46,7 @@ const StartChat = ({ projectId, project }) => {
                 name: project?.reference,
                 participants: [user_id],
                 project_id: projectId,
+                job_id: null
             },
                 (res) => {
                     console.log('res: ', res);

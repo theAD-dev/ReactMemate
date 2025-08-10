@@ -1,5 +1,6 @@
 .modal {
-  width: 800px;
+  width: 600px;
+  height: 100vh;
   border-radius: var(--radius-xs, 4px);
   background: var(--Base-White, #fff);
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
@@ -10,6 +11,13 @@
   gap: 16px;
   display: flex;
   align-items: center;
+}
+
+.modalFooter {
+  gap: 16px;
+  display: flex;
+  padding: 0px 0px 0px 0px;
+  justify-content: flex-end;
 }
 
 .border {

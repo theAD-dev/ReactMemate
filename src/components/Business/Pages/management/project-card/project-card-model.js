@@ -20,6 +20,7 @@ import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import AddNote from './add-note';
 import ComposeEmail from './compose-email/compose-email';
+import FilesModel from './files-management/files-model';
 import GoogleReviewEmail from './google-review/google-review';
 import InvoiceCreate from './invoice-create/invoice-create';
 import NewTask from './new-task';
@@ -667,7 +668,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                   </Link>
                 }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
-                {/* <FilesModel /> */}
+                <FilesModel projectId={projectId} />
                 <SendToCalendar projectId={projectId} project={cardData} projectCardData={projectCardData} />
                 <StartChat projectId={projectId} project={cardData} />
               </Col>

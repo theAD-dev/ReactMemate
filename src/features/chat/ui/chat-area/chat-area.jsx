@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Trash } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -13,7 +14,8 @@ import ChatHeader from '../chat-header/chat-header';
 import ChatInfoSidebar from '../chat-info-sidebar/chat-info-sidebar';
 import MessageList from '../message-list/message-list';
 
-const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatData, users }) => {
+const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setChatData, users }) => {
+  const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -41,7 +43,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatDat
   }, []);
 
   useEffect(() => {
-    if (!chatId || !userId || !socket) return;
+    if (!chatId || !userId || !socket || chatId == "null" || chatId == "undefined") return;
     setLoading(true);
 
     if (messagesContainerRef.current && page > 1) {
@@ -63,6 +65,26 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatDat
       }
     );
   }, [chatId, userId, socket, page, pageSize, updateMessages]);
+
+  useEffect(() => {
+    if (!socket || loading || !currentChat || !userId || Number(chatId)) return;
+    
+    if (currentChat?.participants?.length && (chatId == 'null' || chatId == 'undefined')) {
+      const participants = currentChat.participants.map((p) => p.id);
+      const group_name = `Private Chat`;
+
+      socket.emit('create_chat_group', { name: group_name, user_id: userId, participants, project_id: null, job_id: null }, (res) => {
+        if (res.status === 'success' && res.chat_group_id) {
+          setLoading(true);
+          navigate(`/chat?id=${res.chat_group_id}`);
+        } else {
+          setLoading(false);
+          console.log("Error during creation chat group: ", res);
+          toast.error("Could not start chat. Please try again.");
+        }
+      });
+    }
+  }, [chatId, userId, socket, currentChat, navigate, loading]);
 
   const handleSendMessageResponse = (msg) => {
     if (msg?.sent_message?.chat_group == chatId) {
@@ -199,7 +221,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatDat
                   <ProgressSpinner style={{ width: '16px', height: '16px' }} />
                 </div>
               )}
-              <MessageList messages={messages} isTyping={isTyping} loading={loading} currentUserId={userId} participants={participants} />
+              <MessageList messages={messages} isTyping={isTyping} loading={loading} currentUserId={userId} chatId={chatId} participants={participants} />
               {attachmentFile?.file && attachmentFile?.chatId === chatId && (
                 <div style={{ display: 'flex', alignItems: 'center', background: '#F9FAFB', borderRadius: 8, padding: 12, marginBottom: 8, gap: 12, border: '1px solid #EAECF0', width: '508px', marginLeft: 'auto', }}>
                   {getFileIcon(attachmentFile.file.name.split(".").pop())}
@@ -225,7 +247,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers, setChatDat
                   }}
                   autoFocus
                   ref={inputRef}
-                  disabled={isSending}
+                  disabled={isSending || chatId == "null" || chatId == "undefined"}
                   onKeyUp={handleKeyPress}
                   className={styles.messageInput}
                 />

@@ -208,7 +208,7 @@ const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitialize }) => {
             </Modal.Footer>
         }
       </Modal>
-      <CreateTask show={showEditModal} setShow={setShowEditModal} taskId={taskId} setTaskId={setTaskId} defaultValue={data} refetch={reInitialize}/>
+      {showEditModal && <CreateTask show={showEditModal} setShow={setShowEditModal} taskId={taskId} setTaskId={setTaskId} defaultValue={data} refetch={reInitialize}/>}
     </>
   );
 };

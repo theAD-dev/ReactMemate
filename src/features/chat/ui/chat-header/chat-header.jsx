@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ThreeDotsVertical } from 'react-bootstrap-icons';
 import styles from './chat-header.module.scss';
 
-const ChatHeader = ({ chat, userId, setParticipants, onlineUsers, setShowSidebar }) => {
+const ChatHeader = ({ chat, userId, setParticipants, onlineUsers = [], setShowSidebar }) => {
   const idWithName = React.useMemo(() => {
     const participants = chat?.participants || [];
     return participants?.reduce((acc, curr) => {
@@ -25,7 +25,7 @@ const ChatHeader = ({ chat, userId, setParticipants, onlineUsers, setShowSidebar
         ? participant.avatar
         : `${process.env.REACT_APP_URL}/media/${participant.avatar}` : "",
       id: participant.id,
-      status: onlineUsers.includes(participant.id) ? 'online' : 'offline'
+      status: onlineUsers?.includes(participant.id) ? 'online' : 'offline'
     };
   };
   return (

@@ -123,7 +123,7 @@ const DesktopPeoplesTable = () => {
                     participants: [currentUserId, id],
                     organization_id: organizationId,
                     project_id: null,
-                    task_id: null
+                    job_id: null
                 },
                 (res) => {
                     if (res.status === 'ok' && res.chat_group_id) {

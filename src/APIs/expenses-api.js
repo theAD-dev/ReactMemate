@@ -114,7 +114,7 @@ export const downloadStatement = async (data) => {
 };
 
 export const sendStatementEmail = async (data) => {
-  const endpoint = '/clients/statement/';
+  const endpoint = '/clients/statement/send/';
   const options = {
     method: 'POST',
     body: data

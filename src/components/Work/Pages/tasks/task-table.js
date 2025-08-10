@@ -12,9 +12,6 @@ import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ViewTaskModal from '../../features/task/view-task/view-task';
 
-
-
-
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
     const day = date.getDate();

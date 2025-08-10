@@ -23,7 +23,7 @@ const ChatLayout = () => {
   const [archivedVisible, setArchivedVisible] = useState(false);
   const [chatData, setChatData] = useState({});
   const [currentChat, setCurrentChat] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState({});
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [users, setUsers] = useState({});
   const socketRef = useRef(null);
 
