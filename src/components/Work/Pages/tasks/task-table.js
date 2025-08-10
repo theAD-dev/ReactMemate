@@ -1,11 +1,14 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { FileText } from 'react-bootstrap-icons';
+import { CheckCircle, FileText } from 'react-bootstrap-icons';
+import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { toast } from 'sonner';
 import style from './task.module.scss';
 import { getListOfTasks } from '../../../../APIs/task-api';
+import { TaskCompleteJob } from '../../../../APIs/TasksApi';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import Loader from '../../../../shared/ui/loader/loader';
@@ -84,8 +87,14 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     }, [tasks, hasMoreData]);
 
     const idBody = (rowData) => {
+        let isDue = new Date(+rowData.to_date * 1000).getTime() < Date.now();
+
         return <div className={`d-flex align-items-center justify-content-center show-on-hover`}>
-            <div>{rowData.number}</div>
+            <div className='d-flex flex-column'>
+                {rowData.number}
+
+                <span className='font-12' style={{ color: isDue ? '#F97066' : '#98A2B3' }}>{formatDate(rowData.to_date)}</span>
+            </div>
             <Button label="Open" onClick={() => { setTaskId(rowData?.id); setVisible(true); }} className='primary-text-button ms-3 show-on-hover-element' text />
         </div>;
     };
@@ -96,7 +105,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         return <div className='d-flex align-items-center'>
             <div className={`d-flex justify-content-center align-items-center ${style.clientName}`} style={{ width: '30px', height: '30px', borderRadius: '50%', overflow: 'hidden' }}>
                 {rowData?.user?.has_photo
-                    ? <FallbackImage has_photo={rowData?.user?.has_photo} photo={rowData?.user?.photo} is_business={false}/>
+                    ? <FallbackImage has_photo={rowData?.user?.has_photo} photo={rowData?.user?.photo} is_business={false} />
                     : initials
                 }
             </div>
@@ -130,6 +139,35 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         return formatDate(rowData.to_date);
     };
 
+    const mutation = useMutation({
+        mutationFn: (updateData) => TaskCompleteJob(updateData.id, updateData.finished),
+        onSuccess: () => {
+            setRefetch((refetch) => !refetch);
+        },
+        onError: (error) => {
+            console.error('Error updating task:', error);
+        }
+    });
+
+    const handleInComplete = async (id) => {
+        await mutation.mutateAsync({ id, finished: false });
+        toast.success('Task marked as incomplete');
+    };
+
+    const handleComplete = async (id) => {
+        await mutation.mutateAsync({ id, finished: true });
+        toast.success('Task marked as complete');
+    };
+
+    const actionBody = (rowData) => {
+        let isComplete = rowData.finished;
+        if (isComplete) {
+            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-in-complete-button' onClick={() => handleInComplete(rowData.id)}>In Complete <CheckCircle size={16} color='#f04438' /></Button>;
+        } else {
+            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-complete-button' onClick={() => handleComplete(rowData.id)}>Complete <CheckCircle size={16} color='#079455' /></Button>;
+        }
+    };
+
     const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
 
     const onSort = (event) => {
@@ -160,7 +198,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 <Column field="finished" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
                 <Column field="project.reference" header="Project" body={projectBody} style={{ minWidth: '460px' }}></Column>
                 <Column field="from_date" header="Start Date" body={startBody} style={{ minWidth: '100px' }} sortable></Column>
-                <Column field="to_date" header="Due Date" body={endBody} style={{ minWidth: '100px' }} sortable></Column>
+                <Column field='id' header="Actions" body={actionBody} style={{ minWidth: '100px' }}></Column>
             </DataTable>
             <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitialize={() => setRefetch((refetch) => !refetch)} />
         </>

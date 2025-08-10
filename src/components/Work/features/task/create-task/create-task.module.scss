@@ -76,6 +76,8 @@
 }
 
 .projectDropdown {
+  left: -10px;
+  position: relative;
   border: none;
   &:focus {
     border: 1px solid var(--Gray-300, #d0d5dd) !important;

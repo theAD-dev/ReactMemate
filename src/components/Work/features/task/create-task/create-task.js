@@ -256,7 +256,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                                         height: !user ? '0px' : '46px',
                                         zIndex: !user ? '0' : '1',
                                         position: 'relative',
-                                        left: !user ? '-60px' : '0px',
+                                        left: !user ? '-60px' : '-4px',
                                         top: !user ? '-15px' : '0px',
                                     }}
                                     value={user}
@@ -339,9 +339,19 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                         {errors.description && <Form.Text className="error-message">Description is required</Form.Text>}
 
                     </div>
-                    <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '80px' }}>
-                        <Button type='button' onClick={handleClose} className='outline-button'>Cancel</Button>
-                        <Button type='button' onClick={handleSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending}>{ taskId ? "Update Task" : "Create Task" } {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
+                    <div className='modal-footer d-flex align-items-center justify-content-between gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '80px' }}>
+                        <div>
+                            {taskId && (
+                                <Button className='danger-text-button gap-2' onClick={handleDelete}>
+                                    Delete
+                                    {deleteMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}
+                                </Button>
+                            )}
+                        </div>
+                        <div className='d-flex align-items-center gap-3'>
+                            <Button type='button' onClick={handleClose} className='outline-button'>Cancel</Button>
+                            <Button type='button' onClick={handleSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending}>{taskId ? "Update Task" : "Create Task"} {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
+                        </div>
                     </div>
                 </div>
             )}
