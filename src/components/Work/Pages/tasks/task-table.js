@@ -93,7 +93,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             <div className='d-flex flex-column'>
                 {rowData.number}
 
-                <span className='font-12' style={{ color: isDue ? '#F97066' : '#98A2B3' }}>{formatDate(rowData.to_date)}</span>
+                <span className='font-12' style={{ color: isDue && !rowData.finished ? '#F97066' : '#98A2B3' }}>{formatDate(rowData.to_date)}</span>
             </div>
             <Button label="Open" onClick={() => { setTaskId(rowData?.id); setVisible(true); }} className='primary-text-button ms-3 show-on-hover-element' text />
         </div>;
