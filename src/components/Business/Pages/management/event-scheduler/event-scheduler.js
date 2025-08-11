@@ -298,7 +298,7 @@ function EventScheduler() {
           <Dropdown>
             <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px", position: "relative" }}>
               <span className="font-14 d-flex align-items-center">
-                <SortDown size={16} color="#667085" className="me-2" />
+                <SortDown size={16} color="#667085" className="me-1" />
                 <div className="ellipsis-width" style={{ maxWidth: '55px', color: '#424242', fontWeight: 400 }} title={sortBy}>{sortBy || <span style={{ color: '#667085' }}>Sort By</span>}</div>
               </span>
               {sortBy && (
@@ -348,7 +348,7 @@ function EventScheduler() {
           <Dropdown>
             <Dropdown.Toggle as={Button} className={clsx("outline-button mx-auto")} style={{ padding: "6px 16px", position: "relative" }}>
               <span className="font-14 d-flex align-items-center">
-                <CalendarWeek size={16} color="#667085" className="me-2" />
+                <CalendarWeek size={16} color="#667085" className="me-1" />
                 <div className="ellipsis-width" style={{ maxWidth: '55px', color: '#424242', fontWeight: 400 }} title={filterBy}>{filterBy || <span style={{ color: '#667085' }}>Filter By</span>}</div>
               </span>
               {filterBy && (

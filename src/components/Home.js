@@ -134,13 +134,12 @@ const Home = () => {
     };
 
 
-
-
-
-
     // Week navigation
     const [currentWeek, setCurrentWeek] = useState(null);
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [currentYear, setCurrentYear] = useState(() => {
+        const nowSydney = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+        return nowSydney.getFullYear();
+    });
 
     const getActivityQuery = useQuery({
         queryKey: ['getActivity', currentYear, currentWeek],
@@ -164,7 +163,7 @@ const Home = () => {
 
     const isNextButtonDisabled = () => {
         // Check if next week button should be disabled
-        const currentDate = new Date();
+        const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
         const currentYearNum = currentDate.getFullYear();
 
         // Disable if we're in a future year

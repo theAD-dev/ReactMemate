@@ -1,20 +1,24 @@
 import React, { useEffect } from 'react';
-import { Plus, PlusCircle, Search, X } from 'react-bootstrap-icons';
+import { Plus, PlusCircle, Search, Trash, X } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import styles from './chat-info-sidebar.module.scss';
 import ImageAvatar from '../../../../shared/ui/image-with-fallback/image-avatar';
 
-const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar, users, socket }) => {
+const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar, users, socket, refetchGroupChats }) => {
+    const navigate = useNavigate();
     const [showAddMember, setShowAddMember] = React.useState(false);
     const [searchText, setSearchText] = React.useState('');
     const [filteredParticipants, setFilteredParticipants] = React.useState([]);
     const [contacts, setContacts] = React.useState([]);
     const [selectedParticipants, setSelectedParticipants] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
+    const [deleting, setDeleting] = React.useState(false);
 
     const isGroup = chatInfo?.project_id || chatInfo?.job_number;
     const members = chatInfo?.participants?.map(participant => ({
@@ -51,6 +55,7 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
         }, (res) => {
             if (res.status === 'success') {
                 handleCancelMember();
+                refetchGroupChats();
                 toast.success('Member added successfully');
             } else {
                 toast.error('Failed to add member');
@@ -58,6 +63,21 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
             setLoading(false);
         });
 
+    };
+
+    const archiveGroup = () => {
+        setDeleting(true);
+        socket.emit('archive_chat_group', { group_id: chatId, user_id: userId }, (res) => {
+            if (res.status === 'success') {
+                closeSidebar();
+                refetchGroupChats();
+                navigate('/chat');
+                toast.success('Group archived successfully');
+            } else {
+                toast.error('Failed to archive group');
+            }
+            setDeleting(false);
+        });
     };
 
     const HeaderElement = () => (
@@ -128,7 +148,7 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                     </div>
                     <div className={styles.participantsList}>
                         <h3 className='font-14 ms-2 mb-2' style={{ color: 'var(--Gray-600, #344952)' }}>{Object.keys(participants).length} members</h3>
-                        <ul className='w-100'>
+                        <ul className='w-100 mb-3'>
                             {isGroup && (
                                 <button className={styles.addParticipantButton} onClick={() => setShowAddMember(true)}>
                                     <div className={styles.addParticipantAvatar}>
@@ -150,6 +170,13 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                                 </li>
                             ))}
                         </ul>
+
+                        <div className={styles.participantsFooter}>
+                            <button className={"danger-text-button"} disabled={deleting} onClick={archiveGroup}>
+                               <Trash color='#b42318' size={16} className='me-1'/> Delete Group
+                               { deleting &&<ProgressSpinner style={{ width: '16px', height: '16px' }} className='ms-2'/>}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -149,7 +149,7 @@ const PeoplesTable = () => {
                 {
                     user_id: currentUserId,
                     name: groupName,
-                    participants: [currentUserId, id],
+                    participants: [id],
                     organization_id: organizationId,
                     project_id: null,
                     task_id: null

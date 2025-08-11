@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { ExclamationCircle, Trash, X } from 'react-bootstrap-icons';
+import { CashCoin, CheckCircle, ExclamationCircle, ThreeDotsVertical, Trash, X } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
+import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -21,7 +22,6 @@ import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-t
 import { getFileIcon } from '../../../Work/features/create-job/create-job';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
-
 
 
 const formatDate = (timestamp) => {
@@ -124,7 +124,10 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
     const ExpensesIDBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-            <span>{rowData.number?.split('-')[1]}</span>
+            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+                <span>{rowData.number?.split('-')[1]}</span>
+                <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
+            </div>
             <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, name: rowData?.supplier?.name }); }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>;
     };
@@ -150,14 +153,14 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         return <div className={`d-flex align-items-center justify-content-end show-on-hover ${style.fontStanderdSize}`}>
             <div className={` ${rowData.paid ? style['paid-true'] : style['paid-false']}`}>
                 ${formatAUD(rowData.total)}
-                {/* <span className={style.plusIcon}><Plus size={12} color="#7a271a" /></span> */}
             </div>
         </div>;
     };
 
     const accountCode = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}>
-            {rowData.account_code?.code} : {rowData.account_code?.name}
+            {rowData.account_code?.code && <span>{rowData.account_code?.code}: </span>}
+            {rowData.account_code?.name}
         </div>;
     };
 
@@ -188,12 +191,12 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
     const StatusBody = (rowData) => {
         if (rowData.paid)
-            return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='success-outline-button font-14 mx-auto' style={{ width: '86px', height: '36px' }}>Paid</Button>;
-        return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className='danger-outline-button font-14 mx-auto' style={{ width: '86px', height: '36px' }}>Not Paid</Button>;
+            return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className={style.paidButton} style={{ height: '36px', width: '97px' }}>Paid <CheckCircle color='#17B26A' size={16} /></Button>;
+        return <Button onClick={() => setShowDialog({ data: rowData, show: true })} className={style.notPaidButton} style={{ height: '36px', width: '97px' }}>Not Paid <CashCoin color='#F04438' size={16} /> </Button>;
     };
 
     const intervalProjectBody = (rowData) => {
-        if (!rowData.order) return rowData.type;
+        if (!rowData.order) return <span className='text-capitalize'>{rowData.type}</span>;
         return rowData?.order.number || "-";
     };
 
@@ -212,7 +215,12 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     });
 
     const ActionBody = (rowData) => {
+        const ref = useRef(null);
+        const [isOpen, setOpen] = useState(false);
+        const anchorProps = useClick(isOpen, setOpen);
+
         const deleteExpense = () => {
+            setOpen(false);
             setExpenses(prev => prev.filter(exp => exp.id !== rowData.id));
             setTotal(prev => prev - 1);
             setTotalMoney(prev => prev - rowData.total);
@@ -268,16 +276,25 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         };
 
         return (
-            <div className='d-flex justify-content-center align-items-center w-100 h-100'>
-                {deleteMutation?.variables === rowData.id
-                    ? <ProgressSpinner style={{ width: '20px', height: '20px' }} />
-                    : <Trash color='#667085' size={20} className='cursor-pointer' onClick={deleteExpense} />}
-            </div>
+            <React.Fragment>
+                <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
+                <ControlledMenu
+                    state={isOpen ? 'open' : 'closed'}
+                    anchorRef={ref}
+                    onClose={() => setOpen(false)}
+                    className={"threeDots"}
+                    menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
+                >
+                    <div className='d-flex align-items-center cursor-pointer gap-2 hover-greay px-2 py-2' onClick={deleteExpense}>
+                        <Trash color='#B42318' size={20} />
+                        <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete expense</span>
+                        {deleteMutation?.variables === rowData.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                    </div>
+                </ControlledMenu>
+            </React.Fragment>
         );
     };
 
-
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : data?.paid ? style.paidRow : style.unpaidRow);
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
@@ -298,7 +315,6 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}
-                rowClassName={rowClassName}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
                 <Column field="id" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
@@ -306,15 +322,15 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field="invoice_reference" header="Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.invoice_reference} style={{ maxWidth: '250px' }}>{rowData.invoice_reference}</div>} style={{ minWidth: '94px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
-                <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'right' }}></Column>
+                <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'left' }}></Column>
                 <Column field='account_code.code' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
-                <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column>
-                <Column field="file" header="File" body={FileBody} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column>
-                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }} bodyStyle={{ color: '#667085' }} bodyClassName='shadowLeft text-center' headerClassName="shadowLeft text-center" frozen alignFrozen='right'></Column>
+                {/* <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column> */}
+                {/* <Column field="file" header="File" body={FileBody} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column> */}
+                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }} bodyStyle={{ color: '#667085' }} bodyClassName='text-center' headerClassName="text-center"></Column>
                 {
                     hasPermission(role, PERMISSIONS.EXPENSE.DELETE) &&
-                    <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }} frozen alignFrozen='right'></Column>
+                    <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>
                 }
             </DataTable>
             <ExpensesEdit key={editData?.id} id={editData?.id} name={editData?.name} visible={visible} setVisible={setVisible} setEditData={setEditData} setRefetch={setRefetch} />

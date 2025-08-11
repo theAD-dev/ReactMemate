@@ -14,14 +14,23 @@ const ApprovalPage = () => {
     const [tab, setTab] = useState('review-approve');
     const handleSearch = () => { };
     const [currentWeek, setCurrentWeek] = useState(null);
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [currentYear, setCurrentYear] = useState(() => {
+        const nowSydney = new Date(
+            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+        return nowSydney.getFullYear();
+    });
     const [weekInfo, setWeekInfo] = useState({ start: '', end: '' });
     let countDown = '';
     if (weekInfo?.end) {
-        const now = new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' });
-        const end = new Date(weekInfo.end.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
-        end.setHours(end.getHours() + 12);
-        const diff = end - new Date(now);
+        // Get current Sydney time as a Date object
+        const nowSydney = new Date(
+            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+
+        // Use the existing Sydney date object from weekInfo without re-parsing
+        const diff = weekInfo.end.getTime() - nowSydney.getTime();
+
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -36,20 +45,25 @@ const ApprovalPage = () => {
     });
     console.log('toInvoiceQuery: ', toInvoiceQuery?.data);
 
-
     const getWeekDates = (weekNumber, year) => {
         const firstDayOfYear = new Date(Date.UTC(year, 0, 1));
-        const daysOffset = (weekNumber - 1) * 7 - (firstDayOfYear.getDay() - 1);
-        const firstDayOfWeek = new Date(Date.UTC(year, 0, 1 + daysOffset));
-        const lastDayOfWeek = new Date(Date.UTC(year, 0, 1 + daysOffset + 6));
-        lastDayOfWeek.setHours(23, 59, 59, 999); // Set to end of day
+        const dayOfWeek = firstDayOfYear.getUTCDay(); // Sunday = 0
+        const daysOffset = (weekNumber - 1) * 7 - ((dayOfWeek + 6) % 7);
+        const mondayUTC = new Date(Date.UTC(year, 0, 1 + daysOffset));
 
-        // Convert to AEST
+        // Convert to Sydney time
         const options = { timeZone: 'Australia/Sydney' };
-        return {
-            start: new Date(firstDayOfWeek.toLocaleString('en-US', options)),
-            end: new Date(lastDayOfWeek.toLocaleString('en-US', options)),
-        };
+        const mondaySydney = new Date(mondayUTC.toLocaleString('en-US', options));
+
+        // Week start: Monday 12:01 PM Sydney time
+        mondaySydney.setHours(12, 1, 0, 0);
+
+        // Week end: Next Monday 12:00 AM Sydney time
+        const nextMondaySydney = new Date(mondaySydney);
+        nextMondaySydney.setDate(nextMondaySydney.getDate() + 7);
+        nextMondaySydney.setHours(0, 0, 0, 0);
+
+        return { start: mondaySydney, end: nextMondaySydney };
     };
 
     const updateWeekDates = (week, year) => {
@@ -67,8 +81,10 @@ const ApprovalPage = () => {
     };
 
     useEffect(() => {
-        const today = new Date();
-        const weekNum = getWeekNumber(today);
+        const todaySydney = new Date(
+            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+        const weekNum = getWeekNumber(todaySydney);
         setCurrentWeek(weekNum);
 
         updateWeekDates(weekNum, currentYear);

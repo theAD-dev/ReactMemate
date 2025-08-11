@@ -107,7 +107,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
     const [jobReference, setJobReference] = useState("");
     const [description, setDescription] = useState("");
 
-    const [userId, setUserId] = useState("0");
+    const [userId, setUserId] = useState("");
     const [selectedUserInfo, setSelectedUserInfo] = useState({});
     const [hourlyRate, setHourlyRate] = useState("0.00");
     const [paymentCycle, setPaymentCycle] = useState("");
@@ -223,7 +223,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         setIsOpenProjectPhotoSection(false);
         setJobReference("");
         setDescription("");
-        setUserId("0");
+        setUserId("");
         setSelectedUserInfo({});
         setHourlyRate("0.00");
         setPaymentCycle("");
@@ -592,9 +592,6 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             if (jobData.worker) {
                 setUserId(jobData.worker.id);
                 workerDetailsSet(jobData.worker.id);
-            } else {
-                setUserId("0");
-                setHourlyRate(parseFloat(jobData.cost / jobData.duration).toFixed(2));
             }
 
             // Set project

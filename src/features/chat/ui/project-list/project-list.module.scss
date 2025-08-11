@@ -161,3 +161,17 @@
   font-size: 12px;
   font-weight: 500;
 }
+
+.unreadCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fdb022;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}

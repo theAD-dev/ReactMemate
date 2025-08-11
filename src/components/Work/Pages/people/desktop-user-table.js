@@ -120,8 +120,7 @@ const DesktopPeoplesTable = () => {
                 {
                     user_id: currentUserId,
                     name: groupName,
-                    participants: [currentUserId, id],
-                    organization_id: organizationId,
+                    participants: [id],
                     project_id: null,
                     job_id: null
                 },

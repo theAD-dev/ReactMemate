@@ -6,7 +6,10 @@ import style from './approval.module.scss';
 
 const WeekNavigator = ({ onWeekChange }) => {
   const [currentWeek, setCurrentWeek] = useState(null);
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentYear, setCurrentYear] = useState(() => {
+    const nowSydney = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+    return nowSydney.getFullYear();
+  });
   const [weekInfo, setWeekInfo] = useState({ start: '', end: '' });
 
   const currentYearNum = new Date().getFullYear();
@@ -19,16 +22,24 @@ const WeekNavigator = ({ onWeekChange }) => {
   };
 
   const getWeekDates = (weekNumber, year) => {
-    const firstDayOfYear = new Date(year, 0, 1);
-    const daysOffset = (weekNumber - 1) * 7 - (firstDayOfYear.getDay() - 1);
+    const firstDayOfYear = new Date(Date.UTC(year, 0, 1));
+    const dayOfWeek = firstDayOfYear.getUTCDay(); // Sunday = 0
+    const daysOffset = (weekNumber - 1) * 7 - ((dayOfWeek + 6) % 7);
+    const mondayUTC = new Date(Date.UTC(year, 0, 1 + daysOffset));
 
-    const firstDayOfWeek = new Date(year, 0, 1 + daysOffset);
-    const lastDayOfWeek = new Date(year, 0, 1 + daysOffset + 6);
+    // Convert to Sydney time
+    const options = { timeZone: 'Australia/Sydney' };
+    const mondaySydney = new Date(mondayUTC.toLocaleString('en-US', options));
 
-    return {
-      start: firstDayOfWeek,
-      end: lastDayOfWeek
-    };
+    // Week start: Monday 12:01 PM Sydney time
+    mondaySydney.setHours(12, 1, 0, 0);
+
+    // Week end: Next Monday 12:00 AM Sydney time
+    const nextMondaySydney = new Date(mondaySydney);
+    nextMondaySydney.setDate(nextMondaySydney.getDate() + 7);
+    nextMondaySydney.setHours(0, 0, 0, 0);
+
+    return { start: mondaySydney, end: nextMondaySydney };
   };
 
   const formatDate = (date) => {
@@ -39,8 +50,10 @@ const WeekNavigator = ({ onWeekChange }) => {
   };
 
   useEffect(() => {
-    const today = new Date();
-    const weekNum = getWeekNumber(today);
+    const todaySydney = new Date(
+      new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+    );
+    const weekNum = getWeekNumber(todaySydney);
     setCurrentWeek(weekNum);
 
     updateWeekDates(weekNum, currentYear);
@@ -81,7 +94,7 @@ const WeekNavigator = ({ onWeekChange }) => {
 
   // Check if next week button should be disabled
   const isNextButtonDisabled = () => {
-    const currentDate = new Date();
+    const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
     const currentYearNum = currentDate.getFullYear();
 
     // Disable if we're in a future year
@@ -117,7 +130,7 @@ const WeekNavigator = ({ onWeekChange }) => {
 
   const handleYearSelect = (year) => {
     const selectedYear = parseInt(year);
-    const currentDate = new Date();
+    const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
     const currentYearNum = currentDate.getFullYear();
 
     // Prevent selecting future years

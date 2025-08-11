@@ -14,7 +14,7 @@ import ChatHeader from '../chat-header/chat-header';
 import ChatInfoSidebar from '../chat-info-sidebar/chat-info-sidebar';
 import MessageList from '../message-list/message-list';
 
-const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setChatData, users }) => {
+const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setChatData, users, refetchPrivateGroupChat, refetchGroupChats }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -43,7 +43,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
   }, []);
 
   useEffect(() => {
-    if (!chatId || !userId || !socket || chatId == "null" || chatId == "undefined") return;
+    if (!chatId || !userId || !socket || chatId?.startsWith("private_group")) return;
     setLoading(true);
 
     if (messagesContainerRef.current && page > 1) {
@@ -68,14 +68,15 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
 
   useEffect(() => {
     if (!socket || loading || !currentChat || !userId || Number(chatId)) return;
-    
-    if (currentChat?.participants?.length && (chatId == 'null' || chatId == 'undefined')) {
-      const participants = currentChat.participants.map((p) => p.id);
+
+    if (currentChat?.participants?.length && chatId?.startsWith("private_group")) {
+      const participants = currentChat.participants.map((p) => p.id).filter((id) => id !== userId);
       const group_name = `Private Chat`;
 
       socket.emit('create_chat_group', { name: group_name, user_id: userId, participants, project_id: null, job_id: null }, (res) => {
         if (res.status === 'success' && res.chat_group_id) {
           setLoading(true);
+          refetchPrivateGroupChat(chatId);
           navigate(`/chat?id=${res.chat_group_id}`);
         } else {
           setLoading(false);
@@ -107,7 +108,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
   };
 
   useEffect(() => {
-    if (!socket || !chatId) return;
+    if (!socket || !chatId || chatId?.startsWith("private_group")) return;
 
     const handleNewMessage = (msg) => {
       if (msg.chat_group == chatId) {
@@ -247,7 +248,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
                   }}
                   autoFocus
                   ref={inputRef}
-                  disabled={isSending || chatId == "null" || chatId == "undefined"}
+                  disabled={isSending || chatId?.startsWith("private_group")}
                   onKeyUp={handleKeyPress}
                   className={styles.messageInput}
                 />
@@ -292,6 +293,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
           participants={participants}
           users={users}
           socket={socket}
+          refetchGroupChats={refetchGroupChats}
         />
       </div>
     </div>

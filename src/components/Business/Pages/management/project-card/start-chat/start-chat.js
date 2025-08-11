@@ -44,7 +44,7 @@ const StartChat = ({ projectId, project }) => {
             socketRef.current.emit('create_chat_group', {
                 user_id: user_id,
                 name: project?.reference,
-                participants: [user_id],
+                participants: [],
                 project_id: projectId,
                 job_id: null
             },

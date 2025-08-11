@@ -80,9 +80,12 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
                 </div>
                 <span className={styles.projectRef}>{number}</span>
               </div>
-              <div className='d-flex flex-column gap-1'>
+              <div className='d-flex flex-column gap-2'>
                 <span className={styles.lastMessageTime}>{lastMessageTimeAgo}</span>
-                {group.archived_by?.length ? <span className={styles.archivedBadge}>Archived</span> : null}
+                <div className='d-flex align-items-center justify-content-end gap-2'>
+                  {group.archived_by?.length ? <span className={styles.archivedBadge}>Archived</span> : null}
+                  {unreadCount > 0 && <span className={styles.unreadCount}>{unreadCount}</span>}
+                </div>
               </div>
             </div>
 

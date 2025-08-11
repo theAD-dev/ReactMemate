@@ -27,6 +27,71 @@ const ChatLayout = () => {
   const [users, setUsers] = useState({});
   const socketRef = useRef(null);
 
+  const formatPrivateGroup = (users) => {
+    const chatGroups = {};
+    let counter = 1;
+    users.forEach(group => {
+      let modifiedGroup = {
+        id: group?.group_id,
+        archived_by: [],
+        unread_count: group?.unread_count || 0,
+        participants: [
+          {
+            id: group.id,
+            name: `${group.full_name}`,
+            avatar: group.avatar || '',
+          },
+          {
+            id: user_id,
+            name: session?.full_name || 'You',
+            avatar: session?.has_photo ? session?.photo : ''
+          }
+        ],
+        last_message: group?.last_message
+      };
+      if (modifiedGroup.id) chatGroups[modifiedGroup.id] = modifiedGroup;
+      else {
+        chatGroups[`private_group_${counter++}`] = modifiedGroup;
+      }
+    });
+    return chatGroups;
+  };
+
+  const refetchPrivateGroupChat = (excludeChatId) => {
+    if (!socketRef.current) return;
+
+    const socket = socketRef.current;
+    socket.emit('get_organization_users', { user_id, organization_id: organization_id }, (res) => {
+      if (res.status === 'success' && res?.users?.length) {
+        const chatGroups = formatPrivateGroup(res.users);
+        console.log('private chatGroups: ', chatGroups);
+        setChatData((prevChatData) => {
+          const updatedChatData = { ...prevChatData };
+          if (excludeChatId) {
+            delete updatedChatData[excludeChatId];
+          }
+          return { ...updatedChatData, ...chatGroups };
+        });
+      }
+    });
+  };
+
+  const refetchGroupChats = () => {
+    if (!socketRef.current) return;
+
+    const socket = socketRef.current;
+    socket.emit('get_user_chat_groups', { user_id }, (res) => {
+      if (res.status === 'success' && res.chat_groups) {
+        const chatGroups = {};
+        res.chat_groups.forEach(group => {
+          chatGroups[group.id] = group;
+        });
+        console.log('groups chat groups : ', chatGroups);
+        setChatData(prevChatData => ({ ...prevChatData, ...chatGroups }));
+      }
+    });
+  };
+
   useEffect(() => {
     // Connect to socket.io server
     const socket = io(process.env.REACT_APP_CHAT_API_URL, {
@@ -62,28 +127,7 @@ const ChatLayout = () => {
     // Fetch private chat groups
     socket.emit('get_organization_users', { user_id, organization_id: organization_id }, (res) => {
       if (res.status === 'success' && res?.users?.length) {
-        const chatGroups = {};
-        res.users.forEach(group => {
-          let modifiedGroup = {
-            id: group?.group_id,
-            archived_by: [],
-            unread_count: group?.unread_count || 0,
-            participants: [
-              {
-                id: group.id,
-                name: `${group.full_name}`,
-                avatar: group.avatar || '',
-              },
-              {
-                id: user_id,
-                name: session?.full_name || 'You',
-                avatar: session?.has_photo ? session?.photo : ''
-              }
-            ],
-            last_message: group?.last_message
-          };
-          chatGroups[modifiedGroup.id] = modifiedGroup;
-        });
+        const chatGroups = formatPrivateGroup(res.users);
         console.log('private chatGroups: ', chatGroups);
         setChatData((prevChatData) => ({ ...prevChatData, ...chatGroups }));
       }
@@ -185,6 +229,8 @@ const ChatLayout = () => {
           onlineUsers={onlineUsers}
           setChatData={setChatData}
           users={users}
+          refetchPrivateGroupChat={refetchPrivateGroupChat}
+          refetchGroupChats={refetchGroupChats}
         />
       </div>
       {isLoading && <Loader />}
