@@ -337,7 +337,19 @@
   background: var(--white, #fff);
 }
 
-.payInvoiceButton.paid:hover {
+.onHover {
+  display: none;
+}
+
+tr:hover .onHover {
+  display: block;
+}
+
+tr:hover .normal {
+  display: none;
+}
+
+tr:hover .payInvoiceButton.paid {
   opacity: 1;
   background: #ECFDF3;
 }

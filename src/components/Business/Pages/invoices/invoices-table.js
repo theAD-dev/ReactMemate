@@ -178,22 +178,10 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
     };
 
     const DepositBody = (rowData) => {
-        const [hovered, setHovered] = useState(false);
         const isPaid = rowData.payment_status === 'paid';
-        const isUnpaid = rowData.payment_status === 'not_paid';
-        const isPartial = !isPaid && !isUnpaid;
-        const handleMouseEnter = () => {
-            if (isPaid) setHovered(true);
-        };
 
-        const handleMouseLeave = () => {
-            setHovered(false);
-        };
-
-        return <Button
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave} onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.payInvoiceButton, { [style.paid]: rowData.payment_status === 'paid', [style.unpaid]: rowData.payment_status === 'not_paid', [style.partialPaid]: rowData.payment_status !== 'not_paid' && rowData.payment_status !== 'paid' })}>
-            {isPaid && hovered ? 'Edit Payment' : 'Pay Invoice'}
+        return <Button onClick={() => { setVisible(true); setInvoiceData(rowData); }} className={clsx(style.payInvoiceButton, { [style.paid]: rowData.payment_status === 'paid', [style.unpaid]: rowData.payment_status === 'not_paid', [style.partialPaid]: rowData.payment_status !== 'not_paid' && rowData.payment_status !== 'paid' })}>
+            {isPaid ? <><span className={style.normal}>Pay Invoice</span><span className={style.onHover}>Edit Payment</span></> : 'Pay Invoice'}
             <CurrencyDollar color={rowData.payment_status === 'paid' ? '#17B26A' : rowData.payment_status === 'not_paid' ? '#D92D20' : '#F79009'} size={16} />
         </Button>;
     };
@@ -368,11 +356,6 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         setPage(1);  // Reset to page 1 whenever searchValue changes
     };
 
-    const onRowMouseEnter = (row) => {
-        const { data } = row;
-        // Handle row mouse enter event
-    };
-
     return (
         <>
             <DataTable ref={ref} value={invoices} scrollable selectionMode={'checkbox'}
@@ -386,7 +369,6 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}
                 rowClassName={rowClassName}
-                onRowMouseEnter={onRowMouseEnter}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
                 <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '160px', maxWidth: '160px', width: '160px' }} frozen sortable></Column>
