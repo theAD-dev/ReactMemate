@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { Button, Card, Col, Placeholder, Row } from 'react-bootstrap';
 import { Calendar3, Link, X } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
-import { Chip } from 'primereact/chip';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
+import { toast } from 'sonner';
 import ViewAttachements from './view-attachements';
 import style from './view-job.module.scss';
-import { getJob } from '../../../../APIs/jobs-api';
+import { deleteJob, getJob } from '../../../../APIs/jobs-api';
 import { formatDate } from '../../Pages/jobs/jobs-table';
 import CreateJob from '../create-job/create-job';
 
@@ -39,6 +39,19 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
         setVisible(false);
         setEditMode(true);
     };
+
+    const deleteMutation = useMutation({
+        mutationFn: () => deleteJob(jobId),
+        onSuccess: () => {
+            setVisible(false);
+            setRefetch((prev) => !prev);
+            toast.success("Job deleted successfully");
+        },
+        onError: (error) => {
+            console.error("Error deleting job:", error);
+            toast.error("Failed to delete job");
+        }
+    });
 
     return (
         <>
@@ -353,11 +366,18 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                             </Card>
                         </div>
 
-                        <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                            <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
-                            <Button type='button' disabled={job?.status === "3" || job?.status === "a"} onClick={handleEditClick} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
-                                style={{ width: "20px", height: "20px", color: "#fff" }}
-                            />}</Button>
+                        <div className='modal-footer d-flex align-items-center justify-content-between gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
+                            <div>
+                                <Button className='danger-text-button' disabled={deleteMutation.isPending} onClick={() => deleteMutation.mutate()}>Delete
+                                    {deleteMutation.isPending && <ProgressSpinner style={{ width: "20px", height: "20px" }} />}
+                                </Button>
+                            </div>
+                            <div className='d-flex align-items-center gap-2'>
+                                <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); }} className='outline-button'>Cancel</Button>
+                                <Button type='button' disabled={job?.status === "3" || job?.status === "a"} onClick={handleEditClick} className='solid-button' style={{ minWidth: '75px' }}>Edit {false && <ProgressSpinner
+                                    style={{ width: "20px", height: "20px", color: "#fff" }}
+                                />}</Button>
+                            </div>
                         </div>
                     </div>
                 )}

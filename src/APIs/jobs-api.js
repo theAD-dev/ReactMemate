@@ -105,3 +105,12 @@ export const declineJob = async (id) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const deleteJob = async (id) => {
+    const endpoint = `/jobs/delete/${id}/`;
+    const options = {
+        method: 'DELETE'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
