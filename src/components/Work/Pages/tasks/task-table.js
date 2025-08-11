@@ -162,9 +162,9 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
     const actionBody = (rowData) => {
         let isComplete = rowData.finished;
         if (isComplete) {
-            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-in-complete-button' onClick={() => handleInComplete(rowData.id)}>In Complete <CheckCircle size={16} color='#f04438' /></Button>;
+            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-in-complete-button' style={{ minWidth: '136px' }} onClick={() => handleInComplete(rowData.id)}>Completed <CheckCircle size={16} color='#079455' /></Button>;
         } else {
-            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-complete-button' onClick={() => handleComplete(rowData.id)}>Complete <CheckCircle size={16} color='#079455' /></Button>;
+            return <Button loading={mutation.isPending && rowData.id === mutation.variables?.id} className='outline-complete-button' style={{ minWidth: '136px' }} onClick={() => handleComplete(rowData.id)}>Mark Complete <CheckCircle size={16} color='#079455' /></Button>;
         }
     };
 
