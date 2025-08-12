@@ -26,7 +26,7 @@ export const dateFormat = (dateInMiliSec) => {
     return date;
 };
 
-const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue }) => {
+const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, projectId }) => {
     const dropdownRef = useRef(null);
     const textareaRef = useRef(null);
     const { session } = useAuth();
@@ -158,6 +158,12 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
             }
         }, 200);
     }, [description, taskId]);
+
+    useEffect(() => {
+        if (projectId) {
+            setProject(+projectId);
+        }
+    }, [projectId]);
 
     return (
         <Sidebar visible={show} position="right" onHide={() => { setShow(false); }} modal={false} dismissable={false} style={{ width: '591px', height: '97vh', borderRadius: '10px', marginRight: '10px' }}
@@ -297,7 +303,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue })
                                         setProject(e.value);
                                     }}
                                     className={clsx('outline-none', styles.projectDropdown)}
-                                    style={{ height: '46px', width: 'fit-content' }}
+                                    style={{ height: '46px', maxWidth: '100%', width: 'fit-content' }}
                                     value={project}
                                     loading={projectsList?.isFetching}
                                     placeholder="Select project"

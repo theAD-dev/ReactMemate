@@ -12,7 +12,7 @@ import CreateJob from "../../../../Work/features/create-job/create-job";
 import ViewJob from "../../../../Work/features/view-job/view-job";
 import ProjectCardModel from "../project-card/project-card-model";
 import { colorMapping } from "../project-card/select-status";
-import CreateTask from "../task/create-task";
+import CreateTaskFeature from "../task/create-task";
 import ViewTask from "../task/view-task";
 
 
@@ -441,7 +441,7 @@ function EventScheduler() {
     </div>
 
     <ViewTask view={view} setView={setView} taskId={taskId} setTaskId={setTaskId} reInitialize={reInitialize} />
-    <CreateTask show={show} setShow={setShow} project={projectDetails} reInitialize={reInitialize} />
+    <CreateTaskFeature show={show} setShow={setShow} project={projectDetails} reInitialize={reInitialize} />
 
     <ProjectCardModel key={projectId} viewShow={viewProjectModel} setViewShow={setViewProjectModel} projectId={projectId} project={projectDetails} statusOptions={statusOptions} reInitialize={reInitialize} />
     <CreateJob visible={visible} setVisible={setVisible} setRefetch={reInitialize} jobProjectId={jobProjectId} />
