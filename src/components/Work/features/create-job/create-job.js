@@ -500,7 +500,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (!type) tempErrors.type = true;
         else payload.type = type;
 
-        if (!duration || duration == '0.0') tempErrors.duration = true;
+        if (!duration || Number(duration) <= 0) tempErrors.duration = true;
         else if (duration) payload.duration = +duration;
 
         if (!time_type) tempErrors.time_type = true;
@@ -514,7 +514,12 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
 
         if ((time_type === '1' && type === '3') && !dayShiftHours) tempErrors.dayShiftHours = true;
         else if ((time_type === '1' && type === '3') && dayShiftHours) {
-            const workDays = duration / dayShiftHours; // accurate number of working days
+            const safeDuration = duration || 0;
+            const safeDayShiftHours = dayShiftHours || 0;
+            const workDays =
+                safeDayShiftHours > 0
+                    ? safeDuration / safeDayShiftHours
+                    : 0;
             const hoursToAdd = workDays * 24; // convert working days to calendar time in hours
             payload.end_date = new Date(new Date(start).getTime() + (hoursToAdd * 60 * 60 * 1000)).toISOString();
         }
@@ -624,8 +629,11 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
             const endDate = new Date(+jobData.end_date * 1000);
             const diffInMs = endDate - startDate;
             const dayCount = diffInMs / (24 * 60 * 60 * 1000);
-            const durationInHours = jobData.duration;
-            const dayShiftHours = durationInHours / dayCount;
+            const durationInHours = Number(jobData.duration) || 0;
+            const dayShiftHours =
+                dayCount > 0
+                    ? Math.round((durationInHours / dayCount) * 100) / 100
+                    : 0;
             setDayShiftHours(dayShiftHours.toFixed(2));
             // }
 
