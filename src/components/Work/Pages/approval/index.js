@@ -127,7 +127,7 @@ const ApprovalPage = () => {
                     </div>
                 </div>
             </div>
-            {tab === 'review-approve' && <ApprovalTable />}
+            {tab === 'review-approve' && <ApprovalTable refetchApprovedTotal={() => toInvoiceQuery.refetch()} />}
             {tab === 'approved' && <ApprovedTable />}
         </div>
     );

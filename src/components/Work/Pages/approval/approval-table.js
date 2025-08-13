@@ -16,7 +16,7 @@ import Loader from '../../../../shared/ui/loader/loader';
 import { FallbackImage } from '../../../../ui/image-with-fallback/image-avatar';
 import ApproveJob from '../../features/approve-job/approve-job';
 
-const ApprovalTable = React.memo(() => {
+const ApprovalTable = React.memo(({ refetchApprovedTotal }) => {
     const { trialHeight } = useTrialHeight();
     const [selectedApprovals, setSelectedApprovals] = useState(null);
     const [nextJobId, setNextJobId] = useState(null);
@@ -245,7 +245,7 @@ const ApprovalTable = React.memo(() => {
                 <Column field="real_total" header={realTimeHead} headerClassName={style.verticalTop} body={realTotalBody} style={{ minWidth: '105px' }} sortable></Column>
                 <Column field="id" header={actionHeader} body={actionBody} style={{ minWidth: '120px' }} bodyClassName={`${style.shadowLeft}`} headerClassName={clsx(`${style.shadowLeft}`, 'd-flex justify-content-center')} frozen alignFrozen="right"></Column>
             </DataTable>
-            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} handleNextJob={handleNextJob} refetch={refetchApproveData} nextJobId={nextJobId} />
+            <ApproveJob visible={isApproveJobVisible} setVisible={setIsApproveJobVisible} jobId={selectedJobId} handleNextJob={handleNextJob} refetch={refetchApproveData} nextJobId={nextJobId} refetchApprovedTotal={refetchApprovedTotal} />
         </>
     );
 });

@@ -29,7 +29,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = false, setVisible, refetch }) => {
+const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = false, setVisible, refetch, refetchApprovedTotal }) => {
     const [isOpenPlannedVsActualSection, setIsOpenPlannedVsActualSection] = useState(true);
     const [isOpenVariationSection, setIsOpenVariationSection] = useState(false);
     const [isOpenHistorySection, setIsOpenHistorySection] = useState(false);
@@ -579,7 +579,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                     />
                                 }
                             </Button>
-                            <Feedback jobId={jobId} variation={variation} reason={reason} isBonus={isBonus} value={selectedColumn === "planned" ? plannedTotal : actualTotal} planned={plannedSubtotal} actual={actualSubtotal} selectedColumn={selectedColumn} refetch={refetch} resetAndClose={resetAndClose} nextJobId={nextJobId} handleNextJob={handleNextJob} />
+                            <Feedback jobId={jobId} variation={variation} reason={reason} isBonus={isBonus} value={selectedColumn === "planned" ? plannedTotal : actualTotal} planned={plannedSubtotal} actual={actualSubtotal} selectedColumn={selectedColumn} refetch={refetch} resetAndClose={resetAndClose} nextJobId={nextJobId} handleNextJob={handleNextJob} refetchApprovedTotal={refetchApprovedTotal} />
                         </div>
                     </div>
                 )}
@@ -589,7 +589,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
     );
 };
 
-const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, selectedColumn, refetch, resetAndClose, nextJobId, handleNextJob }) => {
+const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, selectedColumn, refetch, resetAndClose, nextJobId, handleNextJob, refetchApprovedTotal }) => {
     const [visible, setVisible] = useState(false);
     const [quality, setQuality] = useState(null);
     const [speed, setSpeed] = useState(null);
@@ -601,6 +601,7 @@ const Feedback = ({ jobId, variation, reason, isBonus, value, planned, actual, s
         onSuccess: () => {
             toast.success(`Job approved successfully.`);
             refetch();
+            refetchApprovedTotal();
             resetAndClose();
             setVisible(false);
             setQuality(null);
