@@ -6,11 +6,14 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { RadioButton } from 'primereact/radiobutton';
 import { toast } from 'sonner';
 import style from './cancel-subscription.module.scss';
+import { submitHubspotForm } from '../../../../../APIs/hubspot-api';
 import { cancelSubscription } from '../../../../../APIs/settings-subscription-api';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import illustrationImage2 from '../../../../../assets/Illustration-2.svg';
 import illustrationImage1 from '../../../../../assets/Illustration.svg';
 
 const CancelSubscription = () => {
+    const { session } = useAuth();
     const [showInitialConfirmation, setShowInitialConfirmation] = React.useState(false);
     const [showFeedbackForm, setShowFeedbackForm] = React.useState(false);
     const [showSuccess, setShowSuccess] = React.useState(false);
@@ -29,9 +32,24 @@ const CancelSubscription = () => {
         },
     });
 
-    const handleSubmitFeedback = () => {
-        // You can send the feedback data (selectedReason, otherReason) to your API here
-        cancelSubscriptionMutation.mutate();
+    const handleSubmitFeedback = async () => {
+        if (!selectedReason) {
+            toast.error("Please select a reason for cancellation.");
+            return;
+        }
+
+        const response = await submitHubspotForm({
+            firstname: session.first_name,
+            lastname: session.last_name,
+            email: session.email,
+            company: session?.organization?.legal_name,
+            whay_leaving: otherReason ? `Other reason: ${otherReason}` : selectedReason
+        });
+
+        if (response) {
+            console.log("✅ HubSpot form submitted:", response);
+            cancelSubscriptionMutation.mutate();
+        }
     };
 
     const handleConfirmCancellation = () => {
@@ -40,10 +58,10 @@ const CancelSubscription = () => {
     };
 
     const reasons = [
-        { id: 'not-meet-expectations', label: "The software didn't meet my expectations" },
-        { id: 'too-expensive', label: 'Too expensive' },
-        { id: 'found-alternative', label: 'Found an alternative' },
-        { id: 'temporary', label: "Temporary, I'll be back later" },
+        { id: 'The software didn\'t meet my expectations', label: "The software didn't meet my expectations" },
+        { id: 'Too expensive', label: 'Too expensive' },
+        { id: 'Found an alternative', label: 'Found an alternative' },
+        { id: 'Temporary, I\'ll be back later', label: "Temporary, I'll be back later" },
         { id: 'other', label: 'Other (please specify):' }
     ];
 
@@ -84,7 +102,7 @@ const CancelSubscription = () => {
             <Button
                 className='danger-button'
                 onClick={handleSubmitFeedback}
-                disabled={cancelSubscriptionMutation.isPending}
+                disabled={cancelSubscriptionMutation.isPending || !selectedReason}
             >
                 Submit Feedback & Complete Cancellation
                 {cancelSubscriptionMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px', marginLeft: '8px' }}></ProgressSpinner>}
@@ -156,7 +174,7 @@ const CancelSubscription = () => {
                                             inputId={reason.id}
                                             name="cancellationReason"
                                             value={reason.id}
-                                            onChange={(e) => setSelectedReason(e.value)}
+                                            onChange={(e) => { setSelectedReason(e.value); setOtherReason(''); }}
                                             checked={selectedReason === reason.id}
                                         />
                                         <label htmlFor={reason.id}>
