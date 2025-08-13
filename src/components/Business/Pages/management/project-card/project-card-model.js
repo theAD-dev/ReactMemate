@@ -56,7 +56,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   //Real Cost Calculation
   const cs = parseFloat(cardData?.cost_of_sale) || 0;
-  const le = parseFloat(cardData?.labor_expenses) || 0;
+  const le = parseFloat(cardData?.labor_expense) || 0;
   const oe = parseFloat(cardData?.operating_expense) || 0;
   const RealCost = cs + le + oe;
   const formattedRealCost = parseFloat(RealCost).toFixed(2);
