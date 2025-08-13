@@ -360,7 +360,7 @@ tr:hover .payInvoiceButton.paid {
   background: var(--white, #fff);
 }
 
-tr[aria-selected="true"] .payInvoiceButton.unpaid,
+tr:hover .payInvoiceButton.unpaid,
 .payInvoiceButton.unpaid:hover {
   color: var(--Error-800, #912018) !important;
   border: 1px solid var(--Error-200, #fecdca) !important;
@@ -373,7 +373,7 @@ tr[aria-selected="true"] .payInvoiceButton.unpaid,
   background: var(--white, #fff);
 }
 
-tr[aria-selected="true"] .payInvoiceButton.partialPaid,
+tr:hover .payInvoiceButton.partialPaid,
 .payInvoiceButton.partialPaid:hover {
   color: var(--Warning-800, #7A2E0E) !important;
   border: 1px solid var(--Warning-200, #FEDF89) !important;

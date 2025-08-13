@@ -152,7 +152,7 @@ const Header = () => {
                                                     </li>
                                                     <li>
                                                         <NavLink to="/">
-                                                            <img src={Logo} alt="Logo" />
+                                                            <img src={Logo} alt="Logo" className={style.animatedLogo} />
                                                         </NavLink>
                                                     </li>
                                                     {
@@ -341,7 +341,7 @@ const Header = () => {
                                                     </li>
                                                     <li>
                                                         <NavLink to="/">
-                                                            <img src={Logo} alt="Logo" />
+                                                            <img src={Logo} alt="Logo" className={style.animatedLogo} />
                                                         </NavLink>
                                                     </li>
                                                     {

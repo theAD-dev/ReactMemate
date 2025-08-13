@@ -6,6 +6,7 @@ import styles from './help.module.scss';
 import joshImage from '../../assets/images/Avatar.png';
 import RequestHelp from '../../features/dashboard/request-help/request-help';
 import Support from '../../features/help/support/support';
+import clsx from 'clsx';
 
 const Help = () => {
     const [showRequestCall, setShowRequestCall] = React.useState(false);
@@ -34,9 +35,9 @@ const Help = () => {
                     </div>
 
                     <div className='d-flex flex-column gap-3'>
-                        <div className={styles.helpItem}>
+                        <div className={clsx(styles.helpItem, 'cursor-pointer')} onClick={() => setShowSupport(true)}>
                             <span className={styles.helpItemText}>Support </span>
-                            <Button className='text-button' onClick={() => setShowSupport(true)}><ArrowRight color='#1AB2FF' size={16} /></Button>
+                            <Button className='text-button'><ArrowRight color='#1AB2FF' size={16} /></Button>
                         </div>
                         <div className={styles.helpItem}>
                             <span className={styles.helpItemText}>Knowledge Base</span>

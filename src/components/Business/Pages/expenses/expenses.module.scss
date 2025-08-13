@@ -346,7 +346,8 @@
 }
 
 .paidButton:focus,
-.paidButton:hover {
+.paidButton:hover,
+tr:hover .paidButton {
   color: var(--Success-700, #067647);
   border: 1px solid var(--Success-200, #abefc6);
   background: var(--Success-50, #ecfdf3);
@@ -374,7 +375,8 @@
 }
 
 .notPaidButton:hover,
-.notPaidButton:focus {
+.notPaidButton:focus,
+tr:hover .notPaidButton {
   color: var(--Error-900, #7a271a);
   font-family: Inter;
   font-size: 12px;

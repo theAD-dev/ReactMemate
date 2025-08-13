@@ -79,9 +79,13 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     setIsFetching(true);
     try {
       const data = await ProjectCardApi(uniqueId);
+      if (data?.detail === 'Not found.') throw new Error('Project card not found');
       setCardData(data);
     } catch (error) {
       console.error('Error fetching project card data:', error);
+      toast.error(`Failed to fetch project card data. Please try again.`);
+      setViewShow(false);
+      setCardData(null);
     } finally {
       setIsFetching(false);
     }
@@ -224,8 +228,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   useEffect(() => {
     if (cardData) {
-      let expensesWithType = cardData?.expenses.map(item => ({ ...item, type: 'expense' }));
-      let jobsWithType = cardData?.jobs.map(item => ({ ...item, type: 'job' }));
+      let expensesWithType = cardData?.expenses?.map(item => ({ ...item, type: 'expense' }));
+      let jobsWithType = cardData?.jobs?.map(item => ({ ...item, type: 'job' }));
       let mix = [...expensesWithType, ...jobsWithType];
       let sortedMix = mix.sort((a, b) => parseInt(b.created) - parseInt(a.created));
       setExpenseJobsMapping(sortedMix);
@@ -235,6 +239,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   useEffect(() => {
     if (projectId && viewShow) projectCardData(projectId);
+    window.history.pushState({}, '', '/management');
   }, [projectId, viewShow]);
 
   const parseEmailData = (text) => {
@@ -427,7 +432,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     ) : (
                       <ul>
                         {cardData?.calculator_descriptions?.length ? (
-                          cardData.calculator_descriptions.map(({ description }, index) => (
+                          cardData?.calculator_descriptions?.map(({ description }, index) => (
                             <li key={index}>- {description}</li>
                           ))
                         ) : (
@@ -459,7 +464,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                             <CurrentJobAndExpenseLoading />
                           </>
                         ) : expenseJobsMapping?.length ? (
-                          expenseJobsMapping.map((data, index) => (
+                          expenseJobsMapping?.map((data, index) => (
                             <tr key={data.number || `je-${index}`}>
                               <td className='border-right'>
                                 {
@@ -564,7 +569,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       ) : (
                         <div className='projectHistoryScroll'>
                           {filteredHistory?.length ? (
-                            filteredHistory.map(({ id, type, text, title, created, manager, links }, index) => (
+                            filteredHistory?.map(({ id, type, text, title, created, manager, links }, index) => (
                               <div className='projectHistorygroup' key={`history-${id || index}`}>
                                 <ul>
                                   <li>

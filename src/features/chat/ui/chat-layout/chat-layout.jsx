@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 import styles from './chat-layout.module.scss';
@@ -16,6 +16,7 @@ const ChatLayout = () => {
   const organization_id = session?.organization?.id;
   const { trialHeight } = useTrialHeight();
   const location = useLocation();
+  const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const chatId = params.get("id");
   const [isLoading, setIsLoading] = useState(true);
@@ -57,23 +58,16 @@ const ChatLayout = () => {
     return chatGroups;
   };
 
-  const refetchPrivateGroupChat = (excludeChatId) => {
-    if (!socketRef.current) return;
-
-    const socket = socketRef.current;
-    socket.emit('get_organization_users', { user_id, organization_id: organization_id }, (res) => {
-      if (res.status === 'success' && res?.users?.length) {
-        const chatGroups = formatPrivateGroup(res.users);
-        console.log('private chatGroups: ', chatGroups);
-        setChatData((prevChatData) => {
-          const updatedChatData = { ...prevChatData };
-          if (excludeChatId) {
-            delete updatedChatData[excludeChatId];
-          }
-          return { ...updatedChatData, ...chatGroups };
-        });
+  const updatePrivateGroupChatId = (oldKey, newKey) => {
+    setChatData((prevChatData) => {
+      const updatedChatData = { ...prevChatData };
+      if (oldKey && newKey && updatedChatData[oldKey]) {
+        updatedChatData[newKey] = updatedChatData[oldKey]; // copy value to new key
+        delete updatedChatData[oldKey]; // remove old key
       }
+      return updatedChatData;
     });
+    navigate(`/chat?id=${newKey}`, { replace: true });
   };
 
   const refetchGroupChats = () => {
@@ -229,7 +223,7 @@ const ChatLayout = () => {
           onlineUsers={onlineUsers}
           setChatData={setChatData}
           users={users}
-          refetchPrivateGroupChat={refetchPrivateGroupChat}
+          updatePrivateGroupChatId={updatePrivateGroupChatId}
           refetchGroupChats={refetchGroupChats}
         />
       </div>

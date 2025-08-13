@@ -658,8 +658,8 @@ const Home = () => {
 
                 </Container>
 
-                <div className='p-3 d-flex align-items-center gap-2 cursor-pointer' onClick={() => setShowRequestDemo(true)}>
-                    <div className='outline-button ms-5 p-0' style={{ width: '46px', height: '46px', overflow: 'hidden' }}>
+                <div className='p-3 d-flex align-items-center gap-2 cursor-pointer' onClick={() => setShowRequestDemo(true)} style={{ position: 'fixed', bottom: '50px', left: '40px', backgroundColor: '#F9FAFB', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                    <div className='outline-button p-0' style={{ width: '46px', height: '46px', overflow: 'hidden' }}>
                         <img src={joshImage} alt='Josh' className='w-100 h-100' />
                     </div>
                     <div className='d-flex flex-column justify-content-center mt-1'>

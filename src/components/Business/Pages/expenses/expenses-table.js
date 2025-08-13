@@ -144,7 +144,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     };
 
     const dueDate = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3" }}>
+        return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3", fontSize: '12px' }}>
             {formatDate(rowData.created)}
         </div>;
     };
@@ -327,7 +327,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
                 {/* <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column> */}
                 {/* <Column field="file" header="File" body={FileBody} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column> */}
-                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '140px', maxWidth: '140px', width: '140px' }} bodyStyle={{ color: '#667085' }} bodyClassName='text-center' headerClassName="text-center"></Column>
+                <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '130px', maxWidth: '130px', width: '130px' }} bodyStyle={{ color: '#667085' }} bodyClassName='text-center' headerClassName="text-center"></Column>
                 {
                     hasPermission(role, PERMISSIONS.EXPENSE.DELETE) &&
                     <Column header="Actions" body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>

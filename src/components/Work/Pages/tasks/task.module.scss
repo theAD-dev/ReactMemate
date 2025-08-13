@@ -144,3 +144,33 @@
   letter-spacing: 0.12px;
   color: var(--Gray-400, #98a2b3);
 }
+
+.linkToProjectCard {
+  color: var(--Gray-400, #98a2b3);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+tr:hover .linkToProjectCard {
+  color: var(--Primary-600, #158ecc);
+
+  /* Body default */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+}

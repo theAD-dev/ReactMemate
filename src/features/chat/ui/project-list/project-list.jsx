@@ -15,8 +15,7 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
       return lastMessageB - lastMessageA; // Sort by last message time, most recent
     })
     .filter(([, group]) => {
-      const participant = group.participants.find((participant) => participant.id !== +userId);
-      const groupName = participant?.name || group?.name || "Unknown User";
+      const groupName = group?.name || "Unknown Group";
       const matchesSearch = groupName.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesArchived = showArchived || !(group.archived_by?.length > 0);
       return matchesSearch && matchesArchived;

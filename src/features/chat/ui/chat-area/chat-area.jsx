@@ -14,7 +14,7 @@ import ChatHeader from '../chat-header/chat-header';
 import ChatInfoSidebar from '../chat-info-sidebar/chat-info-sidebar';
 import MessageList from '../message-list/message-list';
 
-const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setChatData, users, refetchPrivateGroupChat, refetchGroupChats }) => {
+const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setChatData, users, updatePrivateGroupChatId, refetchGroupChats }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -76,8 +76,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
       socket.emit('create_chat_group', { name: group_name, user_id: userId, participants, project_id: null, job_id: null }, (res) => {
         if (res.status === 'success' && res.chat_group_id) {
           setLoading(true);
-          refetchPrivateGroupChat(chatId);
-          navigate(`/chat?id=${res.chat_group_id}`);
+          updatePrivateGroupChatId(chatId, res.chat_group_id);
         } else {
           setLoading(false);
           console.log("Error during creation chat group: ", res);

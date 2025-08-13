@@ -14,6 +14,7 @@ import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-a
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ViewTaskModal from '../../features/task/view-task/view-task';
+import { Link } from 'react-router-dom';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -126,7 +127,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             </div>
             <div style={{ lineHeight: '1.385' }}>
                 <h1 className={clsx(style.projectText, 'mb-0')}>{rowData?.project?.reference}</h1>
-                <h6 className={clsx(style.projectNumber, 'mb-0')}>{rowData?.project?.number}</h6>
+                <span className='font-12' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.project?.unique_id}`}>{rowData?.project?.number}</Link></span>
             </div>
         </div>;
     };
@@ -195,10 +196,10 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
                 <Column field="number" header="Task ID" body={idBody} style={{ minWidth: '100px' }} frozen sortable></Column>
                 <Column field="title" header="Task Title" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px' }}>{rowData.title}</div>} style={{ minWidth: '150px' }} bodyClassName={`${style.shadowRight}`} headerClassName={`${style.shadowRight}`} frozen></Column>
                 <Column field="user.full_name" header="Assigne" body={nameBody} style={{ minWidth: '208px' }}></Column>
-                <Column field="finished" header="Status" body={statusBody} style={{ minWidth: '120px' }}></Column>
+                <Column field="finished" header="Status" body={statusBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px' }}></Column>
                 <Column field="project.reference" header="Project" body={projectBody} style={{ minWidth: '460px' }}></Column>
-                <Column field="from_date" header="Start Date" body={startBody} style={{ minWidth: '100px' }} sortable></Column>
-                <Column field='id' header="Actions" body={actionBody} style={{ minWidth: '100px' }}></Column>
+                <Column field="from_date" header="Start Date" body={startBody} style={{ minWidth: '115px', maxWidth: '115px', width: '115px' }} sortable></Column>
+                <Column field='id' header="Actions" body={actionBody} style={{ minWidth: '170px', maxWidth: '170px', width: '170px' }}></Column>
             </DataTable>
             <ViewTaskModal view={visible} setView={setVisible} taskId={taskId} setTaskId={setTaskId} reInitialize={() => setRefetch((refetch) => !refetch)} />
         </>
