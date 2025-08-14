@@ -1,9 +1,9 @@
 export async function submitHubspotForm(fields) {
-    const portalId = process.env.REACT_APP_HUBSPOT_PORTAL_ID;
-    const formId = process.env.REACT_APP_HUBSPOT_FORM_ID;
+    const portalId = '241966069';
+    const formId = '39ad4b7b-9757-48e2-97d1-ac46aa95862c';
 
     if (!portalId || !formId) {
-        console.error("❌ HubSpot portalId or formId is missing in .env");
+        console.error("❌ HubSpot portalId or formId is missing");
         return;
     }
 
