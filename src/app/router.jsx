@@ -102,6 +102,7 @@ const NotFoundError = LazyLoader(lazy(() => import('../pages/error/not-found/not
 const UnauthorizedError = LazyLoader(lazy(() => import('../pages/error/unauthorized/unauthorized')));
 const StripeContainer = LazyLoader(lazy(() => import('../ui/strip-payment/strip-payment')));
 const Help = LazyLoader(lazy(() => import('../pages/help')));
+const AccountStatement = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/statement')));
 
 const routes = [
     {
@@ -217,6 +218,11 @@ const routes = [
     {
         path: "/invoice/:id",
         element: <PublicInvoice />,
+        errorElement: <UnknownError />
+    },
+    {
+        path: "/invoice/account-statement",
+        element: <AccountStatement />,
         errorElement: <UnknownError />
     },
     {

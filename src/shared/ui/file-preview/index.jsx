@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Document, Page } from 'react-pdf';
 
-export const FilePreview = ({ files }) => {
+export const FilePreview = ({ files, width = 400 }) => {
     const [pageStates, setPageStates] = useState({});
 
     const isImage = (url) => /\.(jpeg|jpg|png|webp|gif|svg)$/i.test(url);
@@ -55,9 +55,11 @@ export const FilePreview = ({ files }) => {
                         <div
                             key={index}
                             style={{
-                                border: '1px solid #ccc',
+                                border: '1px solid #f2f2f2',
                                 padding: '1rem',
-                                maxWidth: '420px',
+                                maxWidth: `${width + 20}px`,
+                                borderRadius: '4px',
+                                height: 'fit-content'
                             }}
                         >
                             <Document
@@ -67,7 +69,7 @@ export const FilePreview = ({ files }) => {
                                     console.error('PDF load error:', err)
                                 }
                             >
-                                <Page pageNumber={currentPage} width={400} />
+                                <Page pageNumber={currentPage} width={width} />
                             </Document>
 
                             {numPages && (
