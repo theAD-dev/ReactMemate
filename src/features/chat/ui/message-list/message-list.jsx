@@ -40,11 +40,15 @@ const MessageList = ({ messages = [], isTyping = {}, loading = true, currentUser
       .map((msg, index) => {
         const timestamp = Number(msg.sent_at);
         const date = new Date(timestamp * 1000);
+        const photo = msg.sender_photo && msg.sender_photo !== '/media/no_photo.png' ? msg.sender_photo.startsWith('http')
+          ? msg.sender_photo
+          : `${process.env.REACT_APP_URL}${msg.sender_photo}` : "";
 
         return {
           id: msg.id || `msg-${index}`,
           text: msg.message || '',
           sender: msg.sender || 'Unknown',
+          photo,
           timestamp,
           sendingTime: formatTime(timestamp),
           isOwn: currentUserId === msg.sender,
@@ -110,11 +114,7 @@ const MessageList = ({ messages = [], isTyping = {}, loading = true, currentUser
                 ) : (
                   <div className="d-flex gap-2">
                     <div className={styles.userAvatar}>
-                      {participants?.[msg.sender]
-                        ?.split(' ')
-                        .map((n) => n[0])
-                        .join('')
-                        .toUpperCase()}
+                      <FallbackImageWithInitials has_photo={msg.photo} photo={msg.photo} name={participants?.[msg.sender] || 'Unknown'} />
                     </div>
                     <span className={styles.messageSenderName}>
                       {participants?.[msg.sender] || 'Unknown'}

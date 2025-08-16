@@ -32,7 +32,7 @@ export const FallbackImage = ({ has_photo, photo, is_business, size }) => {
 
 export const FallbackImageWithInitials = ({ has_photo, photo, name }) => {
     const [imgError, setImgError] = useState(false);
-    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+    const initials = name && name?.split(' ')?.map(n => n[0])?.join('')?.toUpperCase() || "";
 
     return <>
         {has_photo && photo && !imgError ? (
