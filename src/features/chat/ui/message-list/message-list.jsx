@@ -32,8 +32,9 @@ const MessageList = ({ messages = [], isTyping = {}, loading = true, currentUser
       console.warn('Messages is not an array:', messages);
       return [];
     }
-
-    setAttachmentFile(null);
+    if (attachmentFile?.file) {
+      setAttachmentFile(null);
+    }
 
     return messages
       .filter(msg => msg?.sent_at)

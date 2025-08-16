@@ -363,7 +363,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
                     />
                     <Button
                       className={styles.sendButton}
-                      onClick={handleSendMessage}
+                      onClick={() => handleSendMessage()}
                       disabled={!message.trim() || isSending}
                     >
                       Send
