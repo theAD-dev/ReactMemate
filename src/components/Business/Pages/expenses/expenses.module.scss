@@ -154,7 +154,7 @@
     font-family: Inter;
     font-size: 12px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 18px;
     svg {
       fill: #d92d20;
@@ -393,4 +393,14 @@ tr:hover .notPaidButton {
   border-radius: 4px;
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
+}
+
+.accountCode {
+  color: var(--Gray-500, #667085);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
 }

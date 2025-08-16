@@ -25,9 +25,30 @@ export const FallbackImage = ({ has_photo, photo, is_business, size }) => {
         {has_photo && photo && !imgError ? (
             <img src={photo} alt="client avatar" className="w-100" onError={() => setImgError(true)} />
         ) : (
-            <Icon color="#667085" size={size}/>
+            <Icon color="#667085" size={size} />
         )}
     </>;
+};
+
+export const FallbackImageWithInitials = ({ has_photo, photo, name }) => {
+    const [imgError, setImgError] = useState(false);
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+
+    return <>
+        {has_photo && photo && !imgError ? (
+            <img src={photo} alt="client avatar" className="w-100" onError={() => setImgError(true)} />
+        ) : initials}
+    </>;
+};
+
+export const InitialsAvatar = ({ name, size = 14 }) => {
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+
+    return (
+        <span style={{ fontSize: `${size}px` }}>
+            {initials}
+        </span>
+    );
 };
 
 export default ImageAvatar;

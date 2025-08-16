@@ -66,7 +66,7 @@ const Home = () => {
 
     const loadData = async (pageToLoad = page, reset = false) => {
         setTasksLoading(true);
-        const data = await getListOfTasks(pageToLoad, limit, '', '', false, true);
+        const data = await getListOfTasks(pageToLoad, limit, '', '', false, true, session?.desktop_user_id);
         if (reset) {
             setTasks(data.results);
         } else {

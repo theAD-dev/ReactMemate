@@ -144,7 +144,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     };
 
     const dueDate = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#98A2B3", fontSize: '12px' }}>
+        return <div className={`d-flex align-items-center justify-content-between show-on-hover`} style={{ color: "#667085", fontSize: '12px' }}>
             {formatDate(rowData.created)}
         </div>;
     };
@@ -158,7 +158,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     };
 
     const accountCode = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.fontStanderdSize}`}>
+        return <div className={`d-flex align-items-center justify-content-start show-on-hover ${style.accountCode}`}>
             {rowData.account_code?.code && <span>{rowData.account_code?.code}: </span>}
             {rowData.account_code?.name}
         </div>;
@@ -174,8 +174,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         return <div className={`d-flex align-items-center justify-content-center`}>
             {
                 rowData?.xero_status === "in_progress"
-                    ? <span style={{ color: '#158ECC' }} className={style.shakeText}>xero</span>
-                    : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC' }}>xero</span> : <span></span>
+                    ? <span style={{ color: '#158ECC', fontSize: '12px' }} className={style.shakeText}>xero</span>
+                    : rowData?.xero_status === "completed" ? <span style={{ color: '#158ECC', fontSize: '12px' }}>xero</span> : <span></span>
             }
         </div>;
     };
@@ -196,8 +196,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     };
 
     const intervalProjectBody = (rowData) => {
-        if (!rowData.order) return <span className='text-capitalize'>{rowData.type}</span>;
-        return rowData?.order.number || "-";
+        if (!rowData.order) return <span className='text-capitalize' style={{ color: '#344054', fontSize: '14px' }}>{rowData.type}</span>;
+        return <span style={{ color: '#344054', fontSize: '14px' }}>{rowData?.order.number || "-"}</span>;
     };
 
     const deleteMutation = useMutation({
@@ -319,7 +319,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
                 <Column field="id" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
                 <Column field="supplier__name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
-                <Column field="invoice_reference" header="Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.invoice_reference} style={{ maxWidth: '250px' }}>{rowData.invoice_reference}</div>} style={{ minWidth: '94px' }}></Column>
+                <Column field="invoice_reference" header="Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.invoice_reference} style={{ maxWidth: '250px', color: '#344054' }}>{rowData.invoice_reference}</div>} style={{ minWidth: '94px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'left' }}></Column>

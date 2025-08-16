@@ -1,24 +1,25 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Trash } from 'react-bootstrap-icons';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import throttle from "lodash.throttle";
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import styles from './chat-area.module.scss';
 import ChatAttachmentPopover, { formatFileSize } from './chat-attachment-popover';
 import ChatEmojiPicker from './chat-emoji-picker';
 import EmptyChatArea from './empty-chat-area';
-import { getFileIcon } from '../../../../components/Work/features/create-job/create-job';
 import ChatHeader from '../chat-header/chat-header';
 import ChatInfoSidebar from '../chat-info-sidebar/chat-info-sidebar';
 import MessageList from '../message-list/message-list';
 
 const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setChatData, users, updatePrivateGroupChatId, refetchGroupChats }) => {
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem("access_token");
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState({});
   const [messages, setMessages] = useState([]);
   const [participants, setParticipants] = useState({});
   const [page, setPage] = useState(1);
@@ -50,20 +51,11 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
       scrollHeightRef.current = messagesContainerRef.current.scrollHeight;
     }
 
-    socket.emit(
-      'get_group_messages',
-      {
-        user_id: userId,
-        group_id: chatId,
-        page,
-        page_size: pageSize,
-      },
-      (res) => {
-        if (res && res.status === 'success' && res.messages) {
-          updateMessages(res.messages, res.total_pages, page);
-        }
+    socket.emit('get_group_messages', { user_id: userId, group_id: chatId, page, page_size: pageSize }, (res) => {
+      if (res && res.status === 'success' && res.messages) {
+        updateMessages(res.messages, res.total_pages, page);
       }
-    );
+    });
   }, [chatId, userId, socket, page, pageSize, updateMessages]);
 
   useEffect(() => {
@@ -123,9 +115,35 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     };
 
     socket.on('new_message', handleNewMessage);
+    socket.on('typing', (data) => {
+      if (data?.group_id === chatId) {
+        setIsTyping({ isTyping: true, user: users[data.user_id] });
+      }
+    });
+    socket.on('stop_typing', (data) => {
+      if (data?.group_id === chatId) {
+        setIsTyping({});
+      }
+    });
 
     return () => {
       socket.off('new_message', handleNewMessage);
+    };
+  }, [socket, chatId]);
+
+  useEffect(() => {
+    if (!socket || !chatId || chatId?.startsWith("private_group")) return;
+
+    socket.emit('join_group', { group_id: chatId }, (res) => {
+      if (res.status === 'success') {
+        console.log('Joined group successfully');
+      } else {
+        console.log('Failed to join group: ', res);
+      }
+    });
+
+    return () => {
+      socket.emit("leave_group", { group_id: chatId });
     };
   }, [socket, chatId]);
 
@@ -142,12 +160,14 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     }
   }, [messages, page]);
 
-  const handleSendMessage = () => {
-    if (message.trim() && currentChat && socket && userId && !isSending) {
+  const handleSendMessage = (file_url, file_type) => {
+    if ((message.trim() || file_url) && currentChat && socket && userId && !isSending) {
       const msgPayload = {
         user_id: userId,
         chat_group_id: chatId,
         message: message.trim(),
+        file_url,
+        file_type
       };
       setIsSending(true);
       socket.emit('send_message', msgPayload, (res) => {
@@ -162,8 +182,84 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter" && !e.shiftKey) {
       handleSendMessage();
+    }
+  };
+
+  const typingDelay = 2000; // 2s of inactivity = stop_typing
+  let stopTypingTimeout;
+  const emitTyping = useMemo(() =>
+    throttle((chatId, userId) => {
+      if (socket && chatId && userId) {
+        socket.emit("typing", { group_id: chatId, user_id: userId });
+      }
+    }, 2000), [socket]);
+
+  const handleChange = (e) => {
+    setMessage(e.target.value);
+    emitTyping(chatId, userId);
+
+    // reset stop_typing timer
+    clearTimeout(stopTypingTimeout);
+    stopTypingTimeout = setTimeout(() => {
+      if (socket && chatId && userId) {
+        socket.emit("stop_typing", { group_id: chatId, user_id: userId });
+      }
+    }, typingDelay);
+  };
+
+  const uploadToS3 = async (file, url, extension, size) => {
+    return axios.put(url, file, {
+      headers: {
+        "Content-Type": "",
+      },
+      onUploadProgress: (progressEvent) => {
+        const progress = Math.round(
+          (progressEvent.loaded / progressEvent.total) * 100
+        );
+        setAttachmentFile((prev) => ({ ...prev, progress }));
+      }
+    }).then(() => {
+      setAttachmentFile((prev) => ({ ...prev, progress: 100, success: true }));
+      const fileURL = url.split("?")[0] || "";
+      const type = `${extension}-${size}`;
+      handleSendMessage(fileURL, type);
+    }).catch((err) => {
+      console.log('Error uploading to S3: ', err);
+      setAttachmentFile((prev) => ({ ...prev, progress: 0, error: true }));
+    });
+  };
+
+  const fileUploadBySignedURL = async (file) => {
+    if (!file || !chatId) return;
+
+    try {
+      const name = file?.name?.split(".")[0];
+      const fileExtension = file?.name?.split(".")?.pop();
+      const fileName = `${name}-${Date.now()}.${fileExtension}`;
+      const size = formatFileSize(file.size);
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_API_URL}/chat/upload/${chatId}/`,
+        { filename: fileName },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const { url } = response.data;
+      if (!url) {
+        setAttachmentFile((prev) => ({ ...prev, progress: 0, error: true }));
+        toast.error("Failed to get upload URL. Please try again.");
+        return;
+      }
+      await uploadToS3(file, url, fileExtension, size);
+    } catch (error) {
+      setAttachmentFile((prev) => ({ ...prev, progress: 0, error: true }));
+      console.error("Error uploading file:", error);
+      toast.error("Failed to upload file. Please try again.");
     }
   };
 
@@ -172,8 +268,11 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     if (file) {
       setAttachmentFile({
         file,
-        chatId
+        chatId,
+        error: false,
+        progress: 0,
       });
+      fileUploadBySignedURL(file);
     }
   };
 
@@ -211,71 +310,67 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
               onlineUsers={onlineUsers}
               setShowSidebar={setShowSidebar}
             />
-
-            <div
-              className={styles.messagesContainer}
-              ref={messagesContainerRef}
-            >
-              {loading && (
-                <div className={styles.loadingContainer}>
-                  <ProgressSpinner style={{ width: '16px', height: '16px' }} />
-                </div>
-              )}
-              <MessageList messages={messages} isTyping={isTyping} loading={loading} currentUserId={userId} chatId={chatId} participants={participants} />
-              {attachmentFile?.file && attachmentFile?.chatId === chatId && (
-                <div style={{ display: 'flex', alignItems: 'center', background: '#F9FAFB', borderRadius: 8, padding: 12, marginBottom: 8, gap: 12, border: '1px solid #EAECF0', width: '508px', marginLeft: 'auto', }}>
-                  {getFileIcon(attachmentFile.file.name.split(".").pop())}
-                  <div style={{ flex: 1, textAlign: 'left' }}>
-                    <div style={{ fontWeight: 600, color: '#101828', fontSize: 16, marginBottom: 2 }}>{attachmentFile.file.name}</div>
-                    <div style={{ color: '#667085', fontSize: 14 }}>{formatFileSize(attachmentFile.file.size)}</div>
+            <div className={styles.chatBodyArea}>
+              <div
+                className={styles.messagesContainer}
+                ref={messagesContainerRef}
+              >
+                {loading && (
+                  <div className={styles.loadingContainer}>
+                    <ProgressSpinner style={{ width: '16px', height: '16px' }} />
                   </div>
-                  <div className='d-flex align-items-center justify-content-center' style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
-                    <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} onClick={() => setAttachmentFile(null)} />
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            <div className={styles.messageInputContainer}>
-              <div className="position-relative w-100">
-                <InputText
-                  placeholder="Send a message..."
-                  value={message}
-                  onChange={(e) => {
-                    setMessage(e.target.value);
-                  }}
-                  autoFocus
-                  ref={inputRef}
-                  disabled={isSending || chatId?.startsWith("private_group")}
-                  onKeyUp={handleKeyPress}
-                  className={styles.messageInput}
+                )}
+                <MessageList
+                  messages={messages}
+                  isTyping={isTyping}
+                  loading={loading}
+                  currentUserId={userId}
+                  chatId={chatId}
+                  participants={participants}
+                  attachmentFile={attachmentFile}
+                  setAttachmentFile={setAttachmentFile}
                 />
-                <div className={styles.messageInputIcons}>
-                  {isSending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
-                  <div className={styles.attachWrapper} style={{ position: 'relative', display: 'inline-block' }}>
-                    <ChatAttachmentPopover
-                      onFileChange={handleFileChange}
-                      styles={styles}
-                      file={attachmentFile}
-                      onRemoveFile={() => setAttachmentFile(null)}
-                    />
-                  </div>
-                  {/* Emoji Picker Button and Picker moved to ChatEmojiPicker */}
-                  <ChatEmojiPicker
-                    show={showEmojiPicker}
-                    setShow={setShowEmojiPicker}
-                    setMessage={setMessage}
+                <div ref={messagesEndRef} />
+              </div>
+
+              <div className={styles.messageInputContainer}>
+                <div className="position-relative w-100">
+                  <InputTextarea
+                    placeholder="Send a message..."
+                    value={message}
+                    onChange={handleChange}
+                    autoFocus
+                    ref={inputRef}
+                    disabled={isSending || chatId?.startsWith("private_group")}
+                    onKeyUp={handleKeyPress}
+                    className={styles.messageInput}
                   />
+                  <div className={styles.messageInputIcons}>
+                    {isSending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+                    <div className={styles.attachWrapper} style={{ position: 'relative', display: 'inline-block' }}>
+                      <ChatAttachmentPopover
+                        onFileChange={handleFileChange}
+                        styles={styles}
+                        file={attachmentFile}
+                        onRemoveFile={() => setAttachmentFile(null)}
+                      />
+                    </div>
+                    {/* Emoji Picker Button and Picker moved to ChatEmojiPicker */}
+                    <ChatEmojiPicker
+                      show={showEmojiPicker}
+                      setShow={setShowEmojiPicker}
+                      setMessage={setMessage}
+                    />
+                    <Button
+                      className={styles.sendButton}
+                      onClick={handleSendMessage}
+                      disabled={!message.trim() || isSending}
+                    >
+                      Send
+                    </Button>
+                  </div>
                 </div>
               </div>
-              <Button
-                className={styles.sendButton}
-                onClick={handleSendMessage}
-                disabled={!message.trim() || isSending}
-              >
-                Send
-              </Button>
             </div>
           </div>
         ) : (

@@ -638,3 +638,7 @@ tr.p-datatable-emptymessage td {
 .p-autocomplete-dropdown svg {
   color: #475467 !important;
 }
+
+.dividerContainer .p-divider .p-divider-content {
+  background: transparent !important;
+}

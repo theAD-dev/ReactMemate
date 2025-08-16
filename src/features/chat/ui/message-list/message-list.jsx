@@ -1,7 +1,12 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
+import { CheckCircleFill, ExclamationCircleFill, Trash, X } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { Divider } from 'primereact/divider';
 import styles from './message-list.module.scss';
+import { getFileIcon } from '../../../../components/Work/features/create-job/create-job';
+import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
+import { FallbackImageWithInitials, InitialsAvatar } from '../../../../ui/image-with-fallback/image-avatar';
+import { formatFileSize } from '../chat-area/chat-attachment-popover';
 import FileAttachment from '../file-attachment/file-attachment';
 
 const formatTime = (timestamp) => {
@@ -19,7 +24,7 @@ const isSameDate = (date1, date2) =>
   date1.getMonth() === date2.getMonth() &&
   date1.getDate() === date2.getDate();
 
-const MessageList = ({ messages = [], isTyping = false, loading = true, currentUserId, participants }) => {
+const MessageList = ({ messages = [], isTyping = {}, loading = true, currentUserId, participants, chatId, attachmentFile, setAttachmentFile }) => {
   const messagesEndRef = useRef(null);
 
   const normalizedMessages = useMemo(() => {
@@ -27,6 +32,8 @@ const MessageList = ({ messages = [], isTyping = false, loading = true, currentU
       console.warn('Messages is not an array:', messages);
       return [];
     }
+
+    setAttachmentFile(null);
 
     return messages
       .filter(msg => msg?.sent_at)
@@ -82,14 +89,14 @@ const MessageList = ({ messages = [], isTyping = false, loading = true, currentU
 
   useEffect(() => {
     scrollToBottom();
-  }, [normalizedMessages]);
+  }, [normalizedMessages, attachmentFile]);
 
   return (
     <>
       {sortedGroupKeys.map((date) => (
         <div key={date} className={styles.messageGroup}>
-          <div className={styles.dateHeader}>
-            <Divider align="center"><span>{date}</span></Divider>
+          <div className={clsx(styles.dateHeader, 'dividerContainer')}>
+            <Divider><span>{date}</span></Divider>
           </div>
 
           {groupedMessages[date].map((msg) => (
@@ -97,9 +104,7 @@ const MessageList = ({ messages = [], isTyping = false, loading = true, currentU
               key={msg.id}
               className={clsx(styles.message, msg.isOwn ? styles.sent : styles.received)}
             >
-              <div className={clsx('w-100 d-flex align-items-center gap-2', {
-                'justify-content-between': msg.isOwn
-              })}>
+              <div className={clsx('w-100 d-flex align-items-center gap-2 justify-content-between')}>
                 {msg.isOwn ? (
                   <span className={styles.messageSenderName}>You</span>
                 ) : (
@@ -123,15 +128,13 @@ const MessageList = ({ messages = [], isTyping = false, loading = true, currentU
                 </span>
               </div>
 
-              <div className={clsx(styles.messageContent, {
-                [styles.messageContentSent]: !msg.isOwn
-              })}>
-                <p className={styles.messageText}>{msg.text}</p>
-              </div>
-
-              {msg.attachment && (
-                <div className={styles.messageAttachment}>
+              {msg.attachment ? (
+                <div className={clsx(styles.messageAttachment, { [styles.messageContentSent]: !msg.isOwn })}>
                   <FileAttachment file={msg.attachment} />
+                </div>
+              ) : (
+                <div className={clsx(styles.messageContent, { [styles.messageContentSent]: !msg.isOwn })}>
+                  <p className={styles.messageText}>{msg.text}</p>
                 </div>
               )}
             </div>
@@ -145,11 +148,46 @@ const MessageList = ({ messages = [], isTyping = false, loading = true, currentU
         </div>
       )}
 
-      {isTyping && (
-        <div className={styles.typingIndicator}>
-          <div className={styles.typingDot}></div>
-          <div className={styles.typingDot}></div>
-          <div className={styles.typingDot}></div>
+      {attachmentFile?.file && attachmentFile?.chatId === chatId && (
+        <div style={{ display: 'flex', alignItems: 'center', background: '#F9FAFB', borderRadius: 8, padding: 12, marginBottom: 0, gap: 12, border: '1px solid #EAECF0', width: '508px', marginLeft: 'auto', position: 'relative' }}>
+          {getFileIcon(attachmentFile.file.name.split(".").pop())}
+          <div style={{ flex: 1, textAlign: 'left' }}>
+            <div style={{ fontWeight: 600, color: '#101828', fontSize: 16, marginBottom: 2 }}>{attachmentFile.file.name}</div>
+            <div style={{ color: '#667085', fontSize: 14 }}>{formatFileSize(attachmentFile.file.size)}</div>
+          </div>
+          {
+            attachmentFile?.error ? (
+              <ExclamationCircleFill color='#F04438' size={20} />
+            ) : attachmentFile?.progress == 100 ? (
+              <CheckCircleFill color='#12B76A' size={20} />
+            ) : (
+              <CircularProgressBar percentage={parseInt(attachmentFile?.progress) || 0} size={30} color="#158ECC" />
+            )
+          }
+          <div className='d-flex justify-content-center align-items-center' style={{ position: 'absolute', right: '-6px', top: '-8px', background: '#d4d5d7ff', borderRadius: '50%', padding: '2px', cursor: 'pointer' }} onClick={() => setAttachmentFile({})}>
+            <X size={18} color='#667085' />
+          </div>
+        </div>
+      )}
+
+      {isTyping.isTyping && (
+        <div className={clsx(styles.message, styles.received)}>
+          <div className={clsx('w-100 d-flex align-items-center gap-2 justify-content-between')}>
+            <div className="d-flex gap-2">
+              <div className={styles.userAvatar}>
+                {isTyping?.user?.has_photo ? <FallbackImageWithInitials has_photo={isTyping?.user?.has_photo} photo={isTyping?.user?.photo} name={`${isTyping?.user?.first_name} ${isTyping?.user?.last_name}`} />
+                  : <InitialsAvatar name={`${isTyping?.user?.first_name} ${isTyping?.user?.last_name}`} />}
+              </div>
+              <span className={styles.messageSenderName}>
+                {isTyping?.user?.first_name} {isTyping?.user?.last_name}
+              </span>
+            </div>
+          </div>
+          <div className={styles.typingIndicator}>
+            <div className={styles.typingDot}></div>
+            <div className={styles.typingDot}></div>
+            <div className={styles.typingDot}></div>
+          </div>
         </div>
       )}
 

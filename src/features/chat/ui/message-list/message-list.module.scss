@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: center;
   margin: 16px 0 8px;
+  background-color: transparent;
 
   span {
     padding: 4px 12px;
@@ -23,7 +24,7 @@
 .message {
   display: flex;
   flex-direction: column;
-  max-width: 70%;
+  max-width: 90%;
   margin-bottom: 8px;
 
   &.sent {
@@ -31,9 +32,12 @@
     align-items: end;
 
     .messageContent {
-      border-radius: 6px 6px 0 6px;
-      border: 1px solid var(--primary-100, #BAE8FF);
-      background-color: var(--primary-50, #E6F5FD);
+      border-radius: 12px;
+      background: radial-gradient(
+        2061.16% 127.06% at -1.24% 2.75%,
+        rgba(26, 178, 255, 0.15) 0%,
+        rgba(255, 178, 88, 0.15) 100%
+      );
     }
 
     .messageTime {
@@ -44,13 +48,6 @@
 
   &.received {
     align-self: flex-start;
-
-    .messageContent {
-      border-radius: 6px 6px 0 6px;
-      border: 1px solid var(--gray-200, #eaecf0);
-      background-color: var(--gray-100, #f2f4f7);
-    }
-
     .messageTime {
       text-align: right;
       margin-bottom: 6px;
@@ -67,11 +64,14 @@
   text-align: left;
 }
 
-.messageAttachment {
-  margin-top: 4px;
-  border-radius: 6px;
+.messageAttachment:not(.messageContentSent) {
+  border-radius: 12px;
   overflow: hidden;
-  background-color: #fff;
+  background: radial-gradient(
+    2061.16% 127.06% at -1.24% 2.75%,
+    rgba(26, 178, 255, 0.15) 0%,
+    rgba(255, 178, 88, 0.15) 100%
+  );
   border: 1px solid var(--gray-200, #eaecf0);
 }
 
@@ -112,13 +112,16 @@
   background-color: var(--gray-100, #f2f4f7);
   border-radius: 16px 16px 16px 0;
   width: fit-content;
+  position: relative;
+  left: 35px;
+  top: -10px;
 }
 
 .typingDot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--gray-400, #98A2B3);
+  background-color: var(--gray-400, #98a2b3);
   animation: typingAnimation 1.4s infinite ease-in-out;
 
   &:nth-child(1) {
@@ -135,7 +138,9 @@
 }
 
 @keyframes typingAnimation {
-  0%, 60%, 100% {
+  0%,
+  60%,
+  100% {
     transform: translateY(0);
     opacity: 0.6;
   }
@@ -164,7 +169,7 @@
 .messageContentSent {
   position: relative;
   left: 45px;
-  top: -12px;
+  top: -20px;
 }
 
 .messageSenderName {

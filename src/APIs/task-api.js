@@ -1,7 +1,7 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
-export const getListOfTasks = async (page, limit, search = "", order = "", isShowDeleted = false, showNotCompleted = false) => {
+export const getListOfTasks = async (page, limit, search = "", order = "", isShowDeleted = false, showNotCompleted = false, userId) => {
     const offset = (page - 1) * limit;
     const endpoint = `/tasks/`;
     const options = {
@@ -14,6 +14,7 @@ export const getListOfTasks = async (page, limit, search = "", order = "", isSho
     if (order) url.searchParams.append("ordering", order);
     if (isShowDeleted) url.searchParams.append('deleted', 1);
     if (showNotCompleted) url.searchParams.append('finished', false);
+    if (userId) url.searchParams.append('users', userId);
 
     return fetchAPI(url.toString(), options);
 };
