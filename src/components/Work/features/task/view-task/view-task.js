@@ -75,7 +75,8 @@ const ViewTaskModal = ({ view, setView, taskId, setTaskId, reInitialize }) => {
     queryFn: () => getTask(taskId),
     enabled: !!taskId && !!view,
     retry: 1,
-    cacheTime: 0
+    cacheTime: 0,
+    staleTime: 0,
   });
 
   return (
