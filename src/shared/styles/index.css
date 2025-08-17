@@ -1961,3 +1961,7 @@ input:focus::-webkit-input-placeholder {
   border: 1px solid #d0d5dd !important;
   border-radius: 4px !important;
 }
+
+.react-pdf__Page__annotations {
+  display: none;
+}
