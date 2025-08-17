@@ -253,7 +253,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                 {
                                     isOpenPlannedVsActualSection &&
                                     <Card.Header className={clsx(style.background, 'border-0 d-flex justify-content-between px-0 py-0', style.borderBottom)}>
-                                        <table className={clsx('w-100', style.plannedTable)}>
+                                        <table className={clsx('w-100', style.plannedTable, { [style.plannedActive]: selectedColumn === "planned" })}>
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -263,15 +263,15 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </th>
                                                     <th className={selectedColumn === "planned" ? style.active1 : style.nonActive} onClick={handlePlannedRowClick}>
                                                         <div className='d-flex align-items-center gap-2'>
-                                                            <Checkbox checked={selectedColumn === "planned"} onChange={() => setSelectedColumn(selectedColumn === "planned" ? null : "planned")} />
-                                                            <label className={clsx(style.customLabel)}>Planned</label>
+                                                            <Checkbox style={{ display: 'none' }} checked={selectedColumn === "planned"} onChange={() => setSelectedColumn(selectedColumn === "planned" ? null : "planned")} />
+                                                            <label className={clsx(style.customLabel)} style={{ color: '#0A4766', fontWeight: 600 }}>Planned</label>
                                                         </div>
                                                     </th>
                                                     <th className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
                                                         <div className='d-flex justify-content-between'>
                                                             <div className='d-flex align-items-center gap-2'>
-                                                                <Checkbox checked={selectedColumn === "actual"} onChange={() => setSelectedColumn(selectedColumn === "actual" ? null : "actual")} />
-                                                                <label className={clsx(style.customLabel)}>Actual</label>
+                                                                <Checkbox style={{ display: 'none' }} checked={selectedColumn === "actual"} onChange={() => setSelectedColumn(selectedColumn === "actual" ? null : "actual")} />
+                                                                <label className={clsx(style.customLabel)} style={{ color: '#0A4766', fontWeight: 600 }}>Actual</label>
                                                             </div>
                                                             <div className={style.clockIcon}>
                                                                 <ClockHistory color='#475467' size={16} />
@@ -329,7 +329,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
                                                         <span className='font-14'>${formatAUD(plannedSubtotal)}</span>
                                                     </td>
-                                                    <td className={selectedColumn === "actual" ? style.active1 : ''} onClick={handleActualRowClick}>
+                                                    <td className={clsx(selectedColumn === "actual" ? style.active1 : '', selectedColumn === "actual" ? style.active2 : '')} onClick={handleActualRowClick}>
                                                         <span className='font-14'>${formatAUD(actualSubtotal)}</span>
                                                     </td>
                                                 </tr>
