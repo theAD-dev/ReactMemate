@@ -174,7 +174,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         queryFn: getTeamMobileUser,
     });
 
-    const projectQuery = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
+    const projectQuery = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList, staleTime: 0 });
 
     const itemTemplate = (option) => {
         return (
