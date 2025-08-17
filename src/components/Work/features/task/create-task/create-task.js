@@ -117,7 +117,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
         };
         setErrors(newErrors);
 
-        if (!newErrors.taskTitle && !newErrors.description && !newErrors.user && !newErrors.date) {
+        if (!newErrors.taskTitle && !newErrors.description && !newErrors.user && !newErrors.date && !newErrors.project) {
             mutation.mutate({
                 title: taskTitle,
                 description: description,
