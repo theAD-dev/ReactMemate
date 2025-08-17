@@ -49,7 +49,8 @@ const AccountStatement = () => {
             from_email: payload.from_email,
             to_email: payload.to,
             subject: payload.subject,
-            body: payload.email_body
+            body: payload.email_body,
+            signature: payload.signature
         };
         await sendStatementEmailMutation.mutateAsync(newPayload);
     };
