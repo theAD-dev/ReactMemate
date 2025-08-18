@@ -26,7 +26,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
     const [individualDefaultValues,] = useState({
         payment_terms: 1,
         category: '',
-        address: { country: 1 },
+        address: { title: "Main Location", country: 1 },
     });
     const indivisualFormSubmit = async (data) => {
         console.log('indivisualFormSubmit: ', data);
@@ -61,7 +61,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         if (data.abn) formData.append("abn", data.abn);
         const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
         if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
-        formData.append("email", data.email);
+        if (data.email) formData.append("email", data.email);
         if (data.website) formData.append("website", data.website);
         formData.append("payment_terms", data.payment_terms);
         if (data.category != "0") formData.append("category", data.category);

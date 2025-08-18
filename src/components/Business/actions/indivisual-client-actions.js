@@ -8,8 +8,7 @@ export const createFormData = (data, photo) => {
     // Append user data
     formData.append("firstname", data.firstname);
     formData.append("lastname", data.lastname);
-    formData.append("email", data.email);
-    
+    if (data.email) formData.append("email", data.email);
     const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
     if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
 

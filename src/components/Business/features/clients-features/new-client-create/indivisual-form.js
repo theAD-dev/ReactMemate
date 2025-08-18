@@ -21,7 +21,7 @@ const schema = yup
     .object({
         firstname: yup.string().required("First name is required"),
         lastname: yup.string().required("Last name is required"),
-        email: yup.string().email("Invalid email address").required("Email is required"),
+        email: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address").notRequired(),
         // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
 
         payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
@@ -97,7 +97,7 @@ const IndivisualForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues },
 
                 <Col sm={6}>
                     <div className="d-flex flex-column gap-1">
-                        <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
+                        <label className={clsx(styles.lable)}>Email</label>
                         <IconField>
                             <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
                             <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />

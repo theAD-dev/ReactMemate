@@ -25,7 +25,7 @@ const schema = yup.object({
   // industry: yup.number().typeError("Enter a valid industry").required('Industry is required'),
   abn: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^\d{11}$/, "ABN must be an 11-digit number").notRequired(),
   // phone: yup.string().required("Phone number is required").matches(/^\+\d{1,3}\d{4,14}$/, 'Invalid phone number format'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+  email: yup.string().nullable().transform((value) => (value === "" ? null : value)).matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email address").notRequired(),
   payment_terms: yup.number().typeError("Enter a valid payment terms").required('Payment terms are required'),
   category: yup.number().typeError("Enter a valid category").required('Category is required'),
 
@@ -216,7 +216,7 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1">
-            <label className={clsx(styles.lable)}>Email<span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Email</label>
             <IconField>
               <InputIcon>{errors.email && <img src={exclamationCircle} className='mb-3' alt='error-icon' />}</InputIcon>
               <InputText {...register("email")} className={clsx(styles.inputText, { [styles.error]: errors.email })} placeholder='example@email.com' />

@@ -47,7 +47,7 @@ const BusinessClientEdit = forwardRef(({ client, refetch, setIsPending, handleEx
     if (data.abn) formData.append("abn", data.abn);
     const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
     if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
-    formData.append("email", data.email);
+    if (data.email) formData.append("email", data.email);
     if (data.website) formData.append("website", data.website);
     formData.append("payment_terms", data.payment_terms);
     if (data.category != "0") formData.append("category", data.category);

@@ -22,24 +22,57 @@ const WeekNavigator = ({ onWeekChange }) => {
   };
 
   const getWeekDates = (weekNumber, year) => {
+    // Compute the Monday UTC for the given week/year (same approach you already used)
     const firstDayOfYear = new Date(Date.UTC(year, 0, 1));
     const dayOfWeek = firstDayOfYear.getUTCDay(); // Sunday = 0
     const daysOffset = (weekNumber - 1) * 7 - ((dayOfWeek + 6) % 7);
     const mondayUTC = new Date(Date.UTC(year, 0, 1 + daysOffset));
 
-    // Convert to Sydney time
+    // Convert that Monday to Sydney local time
     const options = { timeZone: 'Australia/Sydney' };
     const mondaySydney = new Date(mondayUTC.toLocaleString('en-US', options));
 
-    // Week start: Monday 12:01 PM Sydney time
-    mondaySydney.setHours(12, 1, 0, 0);
+    // Normalize monday to midnight then set noon
+    const mondayNoon = new Date(mondaySydney);
+    mondayNoon.setHours(12, 0, 0, 0);
 
-    // Week end: Next Monday 12:00 AM Sydney time
-    const nextMondaySydney = new Date(mondaySydney);
-    nextMondaySydney.setDate(nextMondaySydney.getDate() + 7);
-    nextMondaySydney.setHours(0, 0, 0, 0);
+    // Next Monday noon
+    const nextMondayNoon = new Date(mondayNoon);
+    nextMondayNoon.setDate(nextMondayNoon.getDate() + 7);
+    nextMondayNoon.setHours(12, 0, 0, 0);
 
-    return { start: mondaySydney, end: nextMondaySydney };
+    // Current Sydney time and current week/year
+    const nowSydney = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+    const currentWeekNum = getWeekNumber(nowSydney);
+    const currentYearNumLocal = nowSydney.getFullYear();
+
+    let start = new Date(mondayNoon);
+    let end = new Date(nextMondayNoon);
+
+    // Only apply the "before Monday noon -> end is today noon" rule for the current week (and year)
+    if (weekNumber === currentWeekNum && year === currentYearNumLocal) {
+      if (nowSydney.getDay() === 1) { // today is Monday
+        if (nowSydney < mondayNoon) {
+          // Before Monday 12:00 PM: countdown until today 12:00 PM
+          start = new Date(nowSydney); // start from now
+          end = new Date(mondayNoon);  // today 12:00 PM
+        } else {
+          // After Monday 12:00 PM: this week's window is Mon 12:00 PM -> next Mon 12:00 PM
+          start = new Date(mondayNoon);
+          end = new Date(nextMondayNoon);
+        }
+      } else {
+        // Current week but not Monday: full week window Mon 12:00 PM -> next Mon 12:00 PM
+        start = new Date(mondayNoon);
+        end = new Date(nextMondayNoon);
+      }
+    } else {
+      // For non-current weeks: full week window Mon 12:00 PM -> next Mon 12:00 PM
+      start = new Date(mondayNoon);
+      end = new Date(nextMondayNoon);
+    }
+
+    return { start, end };
   };
 
   const formatDate = (date) => {
@@ -95,15 +128,15 @@ const WeekNavigator = ({ onWeekChange }) => {
   // Check if next week button should be disabled
   const isNextButtonDisabled = () => {
     const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
-    const currentYearNum = currentDate.getFullYear();
+    const currentYearNumLocal = currentDate.getFullYear();
 
     // Disable if we're in a future year
-    if (currentYear > currentYearNum) {
+    if (currentYear > currentYearNumLocal) {
       return true;
     }
 
     // Disable if we're in the current year and at or beyond the current week
-    if (currentYear === currentYearNum) {
+    if (currentYear === currentYearNumLocal) {
       const currentWeekNum = getWeekNumber(currentDate);
       if (currentWeek >= currentWeekNum) {
         return true;
@@ -131,15 +164,15 @@ const WeekNavigator = ({ onWeekChange }) => {
   const handleYearSelect = (year) => {
     const selectedYear = parseInt(year);
     const currentDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
-    const currentYearNum = currentDate.getFullYear();
+    const currentYearNumLocal = currentDate.getFullYear();
 
     // Prevent selecting future years
-    if (selectedYear > currentYearNum) {
+    if (selectedYear > currentYearNumLocal) {
       return;
     }
 
     // If selecting current year, make sure week is not in the future
-    if (selectedYear === currentYearNum) {
+    if (selectedYear === currentYearNumLocal) {
       const currentWeekNum = getWeekNumber(currentDate);
       if (currentWeek > currentWeekNum) {
         setCurrentWeek(currentWeekNum);

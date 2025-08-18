@@ -55,15 +55,33 @@ const ApprovalPage = () => {
         const options = { timeZone: 'Australia/Sydney' };
         const mondaySydney = new Date(mondayUTC.toLocaleString('en-US', options));
 
-        // Week start: Monday 12:01 PM Sydney time
+        // Week start (if you need it)
         mondaySydney.setHours(12, 1, 0, 0);
 
-        // Week end: Next Monday 12:00 AM Sydney time
-        const nextMondaySydney = new Date(mondaySydney);
-        nextMondaySydney.setDate(nextMondaySydney.getDate() + 7);
-        nextMondaySydney.setHours(0, 0, 0, 0);
+        // Default deadline = next Monday 12:00 PM
+        let endSydney = new Date(mondaySydney);
+        endSydney.setDate(endSydney.getDate() + 7);
+        endSydney.setHours(12, 0, 0, 0);
 
-        return { start: mondaySydney, end: nextMondaySydney };
+        // 👇 Adjust if today is Monday
+        const todaySydney = new Date(
+            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+
+        if (todaySydney.getDay() === 1) { // Monday
+            if (todaySydney.getHours() < 12) {
+                // Before noon → deadline = today 12:00 PM
+                endSydney = new Date(todaySydney);
+                endSydney.setHours(12, 0, 0, 0);
+            } else {
+                // After noon → deadline = next Monday 12:00 PM
+                endSydney = new Date(todaySydney);
+                endSydney.setDate(endSydney.getDate() + 7);
+                endSydney.setHours(12, 0, 0, 0);
+            }
+        }
+
+        return { start: mondaySydney, end: endSydney };
     };
 
     const updateWeekDates = (week, year) => {
