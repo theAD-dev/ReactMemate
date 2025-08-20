@@ -139,7 +139,8 @@
 }
 
 .plannedTable.plannedActive:has(td:nth-child(3):hover) th:nth-child(3),
-.plannedTable.plannedActive:has(th:nth-child(3):hover) th:nth-child(3) {
+.plannedTable.plannedActive:has(th:nth-child(3):hover) th:nth-child(3),
+.plannedTable:has(.rightColumn:hover) th:nth-child(3) {
   border-top: 1px solid var(--Primary-300, #76d1ff) !important;
 }
 
@@ -154,8 +155,20 @@
 }
 
 .plannedTable.plannedActive:has(td:nth-child(3):hover) tr:last-child td:nth-child(3),
-.plannedTable.plannedActive:has(th:nth-child(3):hover) tr:last-child td:nth-child(3) {
+.plannedTable.plannedActive:has(th:nth-child(3):hover) tr:last-child td:nth-child(3),
+.plannedTable:has(.rightColumn:hover) tr:last-child td:nth-child(3) {
   border-bottom: 1px solid var(--Primary-300, #76d1ff) !important;
+}
+
+.plannedTable:not(.plannedActive):has(.rightColumn:hover) td:nth-child(2),
+.plannedTable:not(.plannedActive):has(.rightColumn:hover) th:nth-child(2) {
+  border-left: 1px solid #eaecf0 !important;
+}
+
+.plannedTable:not(.plannedActive):has(.rightColumn:hover) th:nth-child(2),
+.plannedTable:not(.plannedActive):has(.rightColumn:hover) tr:last-child td:nth-child(2) {
+  border-bottom: 0px solid #eaecf0 !important;
+  border-top: 0px solid #eaecf0 !important;
 }
 
 .plannedTable:has(td:nth-child(2):hover) td:nth-child(2),
@@ -184,6 +197,16 @@
   svg path {
     fill: #2576A2;
   }
+}
+
+.plannedTable:has(.rightColumn:hover) td:nth-child(3),
+.plannedTable:has(.rightColumn:hover) th:nth-child(3) {
+  border-right: 1px solid var(--Primary-300, #76d1ff) !important;
+}
+
+.plannedTable:has(.leftColumn:hover) td:nth-child(3),
+.plannedTable:has(.leftColumn:hover) td:nth-child(2).borderRightNone {
+  border-right: 1px solid #eaecf0 !important;
 }
 
 .lastRow td {

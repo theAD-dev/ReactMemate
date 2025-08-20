@@ -318,9 +318,14 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     <td>
                                                         <span className='font-16 text-nowrap' style={{ color: '#344054' }}>Rate per hour</span>
                                                     </td>
-                                                    <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', style.borderRightNone)}>
-                                                        <div className={clsx(style.moneyBox)}>${formatAUD(plannedRate)}</div>
+                                                    <td style={{ position: 'relative' }} colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
+                                                        <div style={{ zIndex: 5 }} className={clsx(style.moneyBox)}>${formatAUD(plannedRate)}</div>
+                                                        <div className={clsx(style.leftColumn)} style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '266px', zIndex: 3 }} onClick={handlePlannedRowClick}></div>
+                                                        <div className={clsx(style.rightColumn)} style={{ position: 'absolute', top: 0, right: 0, height: '100%', width: '266px', zIndex: 3 }} onClick={handleActualRowClick}></div>
                                                     </td>
+                                                    {/* <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', style.borderRightNone)}>
+
+                                                    </td> */}
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -337,8 +342,10 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     <td>
                                                         <span className='font-16' style={{ color: '#344054' }}>Variation</span>
                                                     </td>
-                                                    <td colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
-                                                        <div className={clsx(style.moneyBox, variation === parseFloat(0) ? "" : isBonus ? style.bonusBox : style.deductionBox)}>{isBonus ? "+" : "-"} ${formatAUD(parseFloat(variation || 0).toFixed(2))}</div>
+                                                    <td style={{ position: 'relative' }} colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
+                                                        <div style={{ zIndex: 5}} className={clsx(style.moneyBox, variation === parseFloat(0) ? "" : isBonus ? style.bonusBox : style.deductionBox)}>{isBonus ? "+" : "-"} ${formatAUD(parseFloat(variation || 0).toFixed(2))}</div>
+                                                        <div className={clsx(style.leftColumn)} style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '266px', zIndex: 3 }} onClick={handlePlannedRowClick}></div>
+                                                        <div className={clsx(style.rightColumn)} style={{ position: 'absolute', top: 0, right: 0, height: '100%', width: '266px', zIndex: 3 }} onClick={handleActualRowClick}></div>
                                                     </td>
                                                 </tr>
                                                 <tr className={clsx(style.lastRow)}>
