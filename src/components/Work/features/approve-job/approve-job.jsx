@@ -545,29 +545,30 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                 }
                             </Card>
 
-
-                            <Card className={clsx(style.border, 'mb-4')}>
-                                <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenJobTrackingSection(!isOpenJobTrackingSection)}>
-                                    <div className='d-flex justify-content-between align-items-center'>
-                                        <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 600, fontSize: '18px' }}>Job Tracking</h1>
-                                        <button className='text-button p-0'>
-                                            {
-                                                isOpenJobTrackingSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
-                                                    <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
-                                                </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                                    <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
-                                                </svg>
-                                            }
-                                        </button>
-                                    </div>
-                                </Card.Body>
-                                {
-                                    isOpenJobTrackingSection &&
-                                    <Card.Header className={clsx(style.background, 'border-0 p-0', style.borderBottom)}>
-                                        <JobLocationsMap locations={job?.locations || []} />
-                                    </Card.Header>
-                                }
-                            </Card>
+                            {job?.locations?.length &&
+                                <Card className={clsx(style.border, 'mb-4')}>
+                                    <Card.Body className={clsx(style.borderBottom, style.cardBody, 'cursor-pointer')} onClick={() => setIsOpenJobTrackingSection(!isOpenJobTrackingSection)}>
+                                        <div className='d-flex justify-content-between align-items-center'>
+                                            <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 600, fontSize: '18px' }}>Job Tracking</h1>
+                                            <button className='text-button p-0'>
+                                                {
+                                                    isOpenJobTrackingSection ? <svg xmlns="http://www.w3.org/2000/svg" width="14" height="8" viewBox="0 0 14 8" fill="none">
+                                                        <path fillRule="evenodd" clipRule="evenodd" d="M13.3536 7.35355C13.1583 7.54882 12.8417 7.54882 12.6464 7.35355L7 1.70711L1.35355 7.35355C1.15829 7.54881 0.841709 7.54881 0.646446 7.35355C0.451184 7.15829 0.451184 6.84171 0.646446 6.64645L6.64645 0.646446C6.84171 0.451184 7.15829 0.451184 7.35355 0.646446L13.3536 6.64645C13.5488 6.84171 13.5488 7.15829 13.3536 7.35355Z" fill="#344054" />
+                                                    </svg> : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                        <path fillRule="evenodd" clipRule="evenodd" d="M1.64645 4.64645C1.84171 4.45118 2.15829 4.45118 2.35355 4.64645L8 10.2929L13.6464 4.64645C13.8417 4.45118 14.1583 4.45118 14.3536 4.64645C14.5488 4.84171 14.5488 5.15829 14.3536 5.35355L8.35355 11.3536C8.15829 11.5488 7.84171 11.5488 7.64645 11.3536L1.64645 5.35355C1.45118 5.15829 1.45118 4.84171 1.64645 4.64645Z" fill="#344054" />
+                                                    </svg>
+                                                }
+                                            </button>
+                                        </div>
+                                    </Card.Body>
+                                    {
+                                        isOpenJobTrackingSection &&
+                                        <Card.Header className={clsx(style.background, 'border-0 p-0', style.borderBottom)}>
+                                            <JobLocationsMap locations={job?.locations || []} />
+                                        </Card.Header>
+                                    }
+                                </Card>
+                            }
                         </div>
 
                         <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>

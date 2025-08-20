@@ -52,7 +52,7 @@ const renderHeader = () => (
 );
 const header = renderHeader();
 
-const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayload, defaultTemplateId }) => {
+const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayload, defaultTemplateId, isAddingContact = false }) => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
@@ -165,7 +165,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
 
     const search = (event) => {
         const query = event?.query?.toLowerCase() || '';
-        let emails = contactPersons.map((data) => (data.email));
+        let emails = contactPersons.map((data) => (data.email))?.filter(email => email);
         emails = emails.filter((email) => !to.includes(email));
         emails = emails.filter((email) => !cc.includes(email));
         emails = emails.filter((email) => !bcc.includes(email));
@@ -221,7 +221,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
 
     useEffect(() => {
         if (contactPersons?.length) {
-            let emails = contactPersons.map((data) => (data.email));
+            let emails = contactPersons.map((data) => (data.email))?.filter(email => email);
             setFilteredEmails(emails);
         }
     }, [contactPersons]);
@@ -516,7 +516,7 @@ const SendDynamicEmailForm = ({ show, setShow, mutation, contactPersons, setPayl
                     </Button>
                     <Button disabled={mutation?.isPending} className="solid-button" onClick={onSubmit}>
                         Send{" "}
-                        {mutation?.isPending && (
+                        {(mutation?.isPending || isAddingContact) && (
                             <ProgressSpinner
                                 style={{ width: "20px", height: "20px", color: "#fff" }}
                             />

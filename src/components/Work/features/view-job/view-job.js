@@ -40,6 +40,20 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
         setEditMode(true);
     };
 
+    const calculateShiftHours = (job) => {
+        const startDate = new Date(+job.start_date * 1000);
+        const endDate = new Date(+job.end_date * 1000);
+        const diffInMs = endDate - startDate;
+        const dayCount = diffInMs / (24 * 60 * 60 * 1000);
+        const durationInHours = Number(job.duration) || 0;
+        const dayShiftHours =
+            dayCount > 0
+                ? Math.round((durationInHours / dayCount) * 100) / 100
+                : 0;
+
+        return dayShiftHours.toFixed(2);
+    };
+
     const deleteMutation = useMutation({
         mutationFn: () => deleteJob(jobId),
         onSuccess: () => {
@@ -222,15 +236,17 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                             }
                                         </div>
                                         <div className='d-flex align-items-center gap-3'>
-                                            <div>
-                                                <label className={clsx(style.customLabel)}>Hours</label>
-                                                <div className={style.paymentBox}>
-                                                    <div className={style.dollarBox}>
-                                                        <span style={{ fontSize: '14px', color: '#158ECC' }}>H</span>
+                                            {
+                                                job?.type !== "2" && <div>
+                                                    <label className={clsx(style.customLabel)}>Hours</label>
+                                                    <div className={style.paymentBox}>
+                                                        <div className={style.dollarBox}>
+                                                            <span style={{ fontSize: '14px', color: '#158ECC' }}>H</span>
+                                                        </div>
+                                                        {job?.duration}
                                                     </div>
-                                                    {job?.duration}
                                                 </div>
-                                            </div>
+                                            }
                                             <div>
                                                 <label className={clsx(style.customLabel)}>Payment</label>
                                                 <div className={style.paymentBox}>
@@ -289,6 +305,28 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                                                 {job?.time_type === "T" && <>{formatDate(job?.start_date)} - {formatDate(job?.end_date)} </>}
                                             </div>
                                         </div>
+                                        {(job?.type === '2' && job?.time_type !== 'T') ? (
+                                            <div>
+                                                <label className={clsx(style.customLabel)}>Hours</label>
+                                                <div className={style.paymentBox}>
+                                                    <div className={style.dollarBox}>
+                                                        <span style={{ fontSize: '14px', color: '#158ECC' }}>H</span>
+                                                    </div>
+                                                    {job?.duration}
+                                                </div>
+                                            </div>
+                                        ) :
+                                            (job?.time_type === "1" || (job?.time_type !== '1' && job?.type === '4')) ? (
+                                                <div className=''>
+                                                    <label className={clsx(style.customLabel)}>Hours</label>
+                                                    <div className={style.paymentBox}>
+                                                        <div className={style.dollarBox}>
+                                                            <span style={{ fontSize: '14px', color: '#158ECC' }}>H</span>
+                                                        </div>
+                                                        {calculateShiftHours(job)}
+                                                    </div>
+                                                </div>
+                                            ) : null}
                                     </div>
 
                                 </Card.Header>

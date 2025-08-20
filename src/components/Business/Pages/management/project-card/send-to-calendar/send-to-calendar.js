@@ -268,7 +268,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
     const query = event?.query?.toLowerCase() || '';
 
     const contactPersons = clientQuery.data?.contact_persons || [];
-    let emails = contactPersons.map((data) => (data.email));
+    let emails = contactPersons.map((data) => (data.email)).filter(email => email);
     emails = emails.filter((email) => !guests.includes(email));
 
     emails = emails.filter((email) =>

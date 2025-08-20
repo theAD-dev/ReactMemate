@@ -165,7 +165,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
 
     const search = (event) => {
         const query = event?.query?.toLowerCase() || '';
-        let emails = contactPersons.map((data) => (data.email));
+        let emails = contactPersons.map((data) => (data.email))?.filter(email => email);
         emails = emails.filter((email) => !to.includes(email));
         emails = emails.filter((email) => !cc.includes(email));
         emails = emails.filter((email) => !bcc.includes(email));
@@ -221,7 +221,7 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
 
     useEffect(() => {
         if (contactPersons?.length) {
-            let emails = contactPersons.map((data) => (data.email));
+            let emails = contactPersons.map((data) => (data.email))?.filter(email => email);
             setFilteredEmails(emails);
         }
     }, [contactPersons]);

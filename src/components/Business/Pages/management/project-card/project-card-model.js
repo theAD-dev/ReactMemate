@@ -330,6 +330,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         className="projectCardModel"
         onHide={handleClose}
         animation={false}
+        enforceFocus={false}
       >
         <Modal.Header className="mb-0 pb-0 justify-content-between ">
           <div className="modelHeader" style={{ flex: '1', maxWidth: "calc(100% - 350px)" }}>
@@ -366,7 +367,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     value={editedReference}
                     onChange={handleReferenceChange}
                     onBlur={handleSaveReference}
-                    autoFocus
+                    
                     className='border rounded w-100'
                     style={{ maxWidth: "calc(100% - 120px)" }}
                   />

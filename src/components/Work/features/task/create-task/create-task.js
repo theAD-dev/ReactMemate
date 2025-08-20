@@ -187,6 +187,8 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                     <div className='modal-body' style={{ padding: '24px 24px', height: 'calc(97vh - 98px - 80px)', overflow: 'auto' }}>
                         <Form.Control
                             type="text"
+                            name='taskTitle'
+                            id='taskTitle'
                             placeholder="Enter task title"
                             value={taskTitle}
                             onChange={(e) => setTaskTitle(e.target.value)}
@@ -320,6 +322,8 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                             </Col>
                             <Col sm={12}>
                                 <Form.Control
+                                    name='taskDescription'
+                                    id='taskDescription'
                                     as="textarea"
                                     placeholder='Enter a description...'
                                     value={description}
