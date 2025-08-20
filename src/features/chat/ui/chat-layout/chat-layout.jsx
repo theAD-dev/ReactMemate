@@ -204,7 +204,7 @@ const ChatLayout = () => {
 
   return (
     <div className="container-fluid px-0">
-      <div className={styles.chatContainer} style={{ height: `calc(100vh - 73px - 54px - ${trialHeight}px)` }}>
+      <div className={styles.chatContainer} style={{ height: `calc(100vh - 73px - ${trialHeight}px)` }}>
         <ChatSidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
