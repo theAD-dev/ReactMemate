@@ -32,6 +32,7 @@ const CalculateQuote = () => {
         enabled: !!unique_id,
         retry: 1,
         cacheTime: 0,
+        staleTime: 0,
         refetchOnWindowFocus: false,
     });
 
@@ -144,6 +145,7 @@ const CalculateQuote = () => {
         }
 
         if (action === "saveAndsend") {
+            if ((!payload?.calculations || !payload.calculations.length) && action !== "draft") return toast.error('At least one calculation is required');
             setShowQuoteModal(true);
             return;
         }
@@ -254,8 +256,6 @@ const CalculateQuote = () => {
                 toast.success(`Calculations created successfully.`);
             }
         }
-
-        newRequestQuery?.refetch();
 
         if (action === "quote-pdf-open") {
             if (result?.quote_url) {
