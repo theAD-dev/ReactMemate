@@ -118,8 +118,27 @@ const ChatLayout = () => {
       }
     });
 
+    socket.on('get_user_chat_groups', (res) => {
+      if (res.status === 'success' && res.chat_groups) {
+        const chatGroups = {};
+        res.chat_groups.forEach(group => {
+          chatGroups[group.id] = group;
+        });
+        console.log('groups chat groups : ', chatGroups);
+        setChatData(prevChatData => ({ ...prevChatData, ...chatGroups }));
+      }
+    });
+
     // Fetch private chat groups
     socket.emit('get_organization_users', { user_id, organization_id: organization_id }, (res) => {
+      if (res.status === 'success' && res?.users?.length) {
+        const chatGroups = formatPrivateGroup(res.users);
+        console.log('private chatGroups: ', chatGroups);
+        setChatData((prevChatData) => ({ ...prevChatData, ...chatGroups }));
+      }
+    });
+
+    socket.on('get_organization_users', (res) => {
       if (res.status === 'success' && res?.users?.length) {
         const chatGroups = formatPrivateGroup(res.users);
         console.log('private chatGroups: ', chatGroups);
