@@ -28,6 +28,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
   const [hasMore, setHasMore] = useState(true);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [attachmentFile, setAttachmentFile] = useState(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const scrollHeightRef = useRef(0);
@@ -276,6 +277,45 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only hide drag overlay if we're leaving the input area completely
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsDragOver(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+    
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      setAttachmentFile({
+        file,
+        chatId,
+        error: false,
+        progress: 0,
+      });
+      fileUploadBySignedURL(file);
+    }
+  };
+
   const handleScroll = useCallback(() => {
     if (messagesContainerRef.current.scrollTop === 0 && hasMore && !loading) {
       setPage((prev) => prev + 1);
@@ -333,7 +373,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
                 <div ref={messagesEndRef} />
               </div>
 
-              <div className={styles.messageInputContainer}>
+              <div className={`${styles.messageInputContainer} ${isDragOver ? styles.dragOver : ''}`}>
                 <div className="position-relative w-100">
                   <InputTextarea
                     placeholder="Send a message..."
@@ -344,6 +384,10 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
                     disabled={isSending || chatId?.startsWith("private_group")}
                     onKeyUp={handleKeyPress}
                     className={styles.messageInput}
+                    onDragOver={handleDragOver}
+                    onDragEnter={handleDragEnter}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
                   />
                   <div className={styles.messageInputIcons}>
                     {isSending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
