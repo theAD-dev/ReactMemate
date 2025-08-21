@@ -1,19 +1,25 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { X, FileEarmarkPersonFill, ThreeDotsVertical, CloudUpload } from "react-bootstrap-icons";
+import { X, CloudUpload, Trash } from "react-bootstrap-icons";
 import { useDropzone } from 'react-dropzone';
-import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Skeleton } from 'primereact/skeleton';
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'sonner';
-import { getProjectFilesById } from '../../../../../../APIs/management-api';
+import { deleteFileByKey, getProjectFilesById } from '../../../../../../APIs/management-api';
 import FolderFileIcon from "../../../../../../assets/images/icon/folderFileIcon.svg";
+import { formatFileSize } from '../../../../../../features/chat/ui/chat-area/chat-attachment-popover';
+import { getFileIcon } from '../../../../../Work/features/create-job/create-job';
 
 const FilesModel = ({ projectId }) => {
   const [files, setFiles] = useState([]);
   const [showUploadSection, setShowUploadSection] = useState(false);
   const [viewShow, setViewShow] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [uploadingFile, setUploadingFile] = useState(false);
   const accessToken = localStorage.getItem("access_token");
   const handleClose = () => {
     setViewShow(false);
@@ -24,6 +30,8 @@ const FilesModel = ({ projectId }) => {
     queryFn: () => getProjectFilesById(projectId),
     enabled: !!projectId && !!viewShow,
     retry: 1,
+    staleTime: 0,
+    cacheTime: 0,
   });
 
   const handleShow = () => {
@@ -64,10 +72,17 @@ const FilesModel = ({ projectId }) => {
     if (!accessToken) return toast.error('Access token is missing. Please log in again.');
 
     for (const file of files) {
+      const uniqueNumber = Date.now();
+      const fileNameParts = file.name.split('.');
+      const ext = fileNameParts.pop(); // extension
+      const baseName = fileNameParts.join('.');
+      const newName = `${baseName}-${uniqueNumber}.${ext}`;
+
       try {
+        setUploadingFile(true);
         const response = await axios.post(
           `${process.env.REACT_APP_BACKEND_API_URL}/projects/file/${projectId}/`,
-          { file_name: file.name },
+          { file_name: newName },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -83,10 +98,13 @@ const FilesModel = ({ projectId }) => {
         }
 
         await uploadToS3(file, url);
+        filesQuery?.refetch();
         toast.success(`Successfully uploaded ${file.name}`);
       } catch (error) {
         console.error("Error uploading file:", file.name, error);
         toast.error(`Failed to upload ${file.name}. Please try again.`);
+      } finally {
+        setUploadingFile(false);
       }
     }
   };
@@ -111,7 +129,21 @@ const FilesModel = ({ projectId }) => {
     }
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (fileKey) => deleteFileByKey(projectId, fileKey),
+    onSuccess: () => {
+      toast.success('File deleted successfully');
+      filesQuery?.refetch();
+      deleteMutation.reset();
+    },
+    onError: () => {
+      toast.error('Failed to delete file');
+    },
+  });
 
+  const removeFile = async (fileKey) => {
+    deleteMutation.mutate(fileKey);
+  };
 
   return (
     <>
@@ -143,8 +175,8 @@ const FilesModel = ({ projectId }) => {
           <div className='d-flex justify-content-between align-items-center mb-3'>
             <h2 style={{ fontSize: '22px' }}>All Files</h2>
             <div className='d-flex justify-content-end align-items-center'>
-              <Button className="solid-button py-1 me-3 font-14" onClick={() => setShowUploadSection(true)}>
-                Add File
+              <Button className="solid-button py-1 me-3 font-14" onClick={() => setShowUploadSection(!showUploadSection)}>
+                Add
               </Button>
 
               <div className="searchBox" style={{ position: 'relative' }}>
@@ -162,27 +194,34 @@ const FilesModel = ({ projectId }) => {
             <div {...getRootProps({ className: 'dropzone d-flex justify-content-center align-items-center flex-column cursor-pointer mb-4' })} style={{ width: '100%', height: '126px', background: '#fff', borderRadius: '4px', border: '1px solid #EAECF0', marginTop: '16px' }}>
               <input {...getInputProps()} />
               <button type='button' className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '8px', marginBottom: '16px' }}>
-                <CloudUpload />
+                {uploadingFile ? <ProgressSpinner style={{ width: '18px', height: '18px' }} /> : <CloudUpload />}
               </button>
               <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
-              <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
             </div>
           }
-
-          <div className='d-flex gap-2' style={{ minHeight: '300px' }}>
-
-            <div style={{ background: '#F2F4F7', padding: '12px', borderRadius: '6px', height: 'fit-content' }} className='d-flex align-items-center justify-content-between gap-4'>
-              <span className='d-flex align-items-center gap-2'>
-                <FileEarmarkPersonFill size={16} color='#667085' />
-                <div className='font-14' style={{ width: '200px', color: '#344054' }}>
-                  soap_maryland.nlu
-                </div>
-              </span>
-              <ThreeDotsVertical size={16} color='#344054' />
+          <div style={{ height: '300px', overflow: 'auto' }}>
+            <div className='d-flex gap-2 flex-wrap'>
+              {!filesQuery?.isLoading && filesQuery?.data?.map((file) => {
+                return (<div key={file?.key} style={{ background: '#F2F4F7', padding: '12px', borderRadius: '6px', height: 'fit-content', marginBottom: '8px' }} className='d-flex align-items-center justify-content-between gap-4'>
+                  <Link to={`${file.url}`} target='_blank' className='d-flex align-items-center gap-2'>
+                    {getFileIcon(file?.key?.split('.').pop(), 28)}
+                    <div className='font-14 d-flex flex-column' style={{ width: '200px', color: '#344054' }}>
+                      <div title={file?.key} className='ellipsis-width'>{file?.key}</div>
+                      <small>{formatFileSize(file?.size)}</small>
+                    </div>
+                  </Link>
+                  <div className='d-flex align-items-center justify-content-center' onClick={() => removeFile(file?.key)} style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
+                    {deleteMutation?.isPending && deleteMutation?.variables === file?.key ? <ProgressSpinner style={{ width: '16px', height: '16px' }} /> : <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} />}
+                  </div>
+                </div>);
+              })}
+              {filesQuery?.isLoading && <>
+                <Skeleton width='300px' height={57} />
+                <Skeleton width='300px' height={57} />
+                <Skeleton width='300px' height={57} />
+              </>}
             </div>
-
           </div>
-
         </Modal.Body>
         <div className='CustonCloseModalBottom'>
           <button className='but' onClick={handleClose}>

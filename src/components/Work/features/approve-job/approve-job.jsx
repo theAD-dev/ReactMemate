@@ -328,7 +328,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td> */}
                                                 </tr>
                                                 <tr>
-                                                    <td>
+                                                    <td style={{ background: '#F9FAFB' }}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Subtotal</span>
                                                     </td>
                                                     <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>
@@ -349,7 +349,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                     </td>
                                                 </tr>
                                                 <tr className={clsx(style.lastRow)}>
-                                                    <td>
+                                                    <td style={{ background: '#F9FAFB' }}>
                                                         <span className='font-16' style={{ color: '#344054' }}>Total</span>
                                                     </td>
                                                     <td className={clsx(selectedColumn === "planned" ? style.active1 : style.nonActive, selectedColumn === "planned" ? style.active2 : '')} onClick={handlePlannedRowClick}>

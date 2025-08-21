@@ -136,9 +136,19 @@ export const createAndSendInvoiceById = async (id, data) => {
 };
 
 export const getProjectFilesById = async (id) => {
-    const endpoint = `/projects/file/${id}/`;
+    const endpoint = `/projects/file-list/${id}/`;
     const options = {
         method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const deleteFileByKey = async (id, fileKey) => {
+    const endpoint = `/projects/file-delete/${id}/`;
+    const options = {
+        method: 'POST',
+        body: { file_name: fileKey }
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
