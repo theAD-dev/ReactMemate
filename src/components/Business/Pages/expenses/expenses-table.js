@@ -182,10 +182,11 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
     const FileBody = (rowData) => {
         if (!rowData.file) return "";
+        const isPaid = rowData.paid;
 
         const extension = rowData.file ? rowData.file.split(".")?.[rowData.file.split(".")?.length - 1] : "";
-        if (rowData.file) return <Link to={rowData.file} target='_blank'>
-            {getFileIcon(extension, 28)}
+        if (rowData.file) return <Link to={rowData.file} target='_blank' style={isPaid ? { opacity: 1 } : { opacity: 0.5 }}>
+            {getFileIcon(extension, 28, isPaid ? '' : 'black')}
         </Link>;
     };
 
@@ -320,13 +321,13 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field="id" header="Expense ID" body={ExpensesIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '100px' }} frozen sortable></Column>
                 <Column field="supplier__name" header="Supplier A→Z" body={nameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '224px' }} frozen sortable></Column>
                 <Column field="invoice_reference" header="Reference" body={(rowData) => <div className='ellipsis-width' title={rowData.invoice_reference} style={{ maxWidth: '250px', color: '#344054' }}>{rowData.invoice_reference}</div>} style={{ minWidth: '94px' }}></Column>
+                <Column field="file" header="File" body={FileBody} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
                 <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'left' }}></Column>
                 <Column field='account_code.code' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
                 {/* <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column> */}
-                {/* <Column field="file" header="File" body={FileBody} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column> */}
                 <Column field='paid' header="Status" body={StatusBody} style={{ minWidth: '130px', maxWidth: '130px', width: '130px' }} bodyStyle={{ color: '#667085' }} bodyClassName='text-center' headerClassName="text-center"></Column>
                 {
                     hasPermission(role, PERMISSIONS.EXPENSE.DELETE) &&
