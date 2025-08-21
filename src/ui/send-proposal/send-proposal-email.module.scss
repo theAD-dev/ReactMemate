@@ -35,6 +35,17 @@
   z-index: 1;
 }
 
+.templateInfo {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  top: 15px;
+  right: 40px;
+  z-index: 1;
+}
+
 .bag {
   background-color: #fff;
   z-index: 1;

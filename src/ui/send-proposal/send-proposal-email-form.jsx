@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Row } from "react-bootstrap";
+import { InfoCircle } from 'react-bootstrap-icons';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { AutoComplete } from "primereact/autocomplete";
@@ -9,6 +10,7 @@ import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from "primereact/inputtext";
+import { OverlayPanel } from 'primereact/overlaypanel';
 import { ProgressSpinner } from "primereact/progressspinner";
 import style from "./send-proposal-email.module.scss";
 import { getEmail, getEmailTemplates, getOutgoingEmail, getSignatureTemplates } from '../../APIs/email-template';
@@ -64,6 +66,7 @@ const renderHeader = () => (
 const header = renderHeader();
 
 const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save }) => {
+    const op = useRef(null);
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const [from, setFrom] = useState('');
     const [to, setTo] = useState([]);
@@ -317,6 +320,13 @@ const SendProposalEmailForm = ({ show, setShow, contactPersons, setPayload, save
                             loading={emailTemplateQuery?.isFetching}
                             filterInputAutoFocus={true}
                         />
+                        <div className={style.templateInfo} onClick={(e) => op.current.toggle(e)}>
+                            <InfoCircle size={16} color='#737374ff' />
+                        </div>
+                        <OverlayPanel ref={op}>
+                            <p className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>Choose from your existing templates here.</p>
+                            <div className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>To edit or add new templates, go to<br /> Profile Settings &gt; Templates &gt; Proposal<br /> Templates.</div>
+                        </OverlayPanel>
                     </div>
                 </Col>
             </Row>

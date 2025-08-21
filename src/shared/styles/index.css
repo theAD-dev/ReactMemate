@@ -1965,3 +1965,8 @@ input:focus::-webkit-input-placeholder {
 .react-pdf__Page__annotations {
   display: none;
 }
+
+.p-overlaypanel {
+  left: 10px;
+  z-index: 100000 !important;
+}

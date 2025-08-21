@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Row } from "react-bootstrap";
-import { Check2Circle, CloudUpload, PlusLg, Trash } from 'react-bootstrap-icons';
+import { Check2Circle, CloudUpload, InfoCircle, PlusLg, Trash } from 'react-bootstrap-icons';
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
@@ -12,6 +12,7 @@ import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from "primereact/inputtext";
+import { OverlayPanel } from 'primereact/overlaypanel';
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from 'sonner';
 import style from './create-proposal.module.scss';
@@ -74,6 +75,7 @@ const header = renderHeader();
 
 const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => {
     const { unique_id } = useParams();
+    const op = React.useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [errors, setErrors] = useState({});
@@ -96,7 +98,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
         enabled: !!unique_id && isExist,
         retry: 0,
     });
-    
+
     useEffect(() => {
         if (readProposalQuery?.data) {
             setTemplatedId(readProposalQuery?.data?.template);
@@ -340,6 +342,13 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                 filter
                                 filterInputAutoFocus={true}
                             />
+                            <div className={style.templateInfo} onClick={(e) => op.current.toggle(e)}>
+                                <InfoCircle size={16} color='#737374ff' />
+                            </div>
+                            <OverlayPanel ref={op}>
+                                <p className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>Choose from your existing templates here.</p>
+                                <div className='font-12' style={{ color: '#344054', lineHeight: '18px' }}>To edit or add new templates, go to<br /> Profile Settings &gt; Templates &gt; Proposal<br /> Templates.</div>
+                            </OverlayPanel>
                         </div>
                     </Col>
                 </Row>
