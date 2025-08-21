@@ -302,7 +302,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     e.preventDefault();
     e.stopPropagation();
     setIsDragOver(false);
-    
+
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
       const file = files[0];
@@ -350,9 +350,15 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
               onlineUsers={onlineUsers}
               setShowSidebar={setShowSidebar}
             />
-            <div className={styles.chatBodyArea}>
+            <div
+              className={`${styles.chatBodyArea}  ${isDragOver ? styles.dragOver : ''}`}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
               <div
-                className={styles.messagesContainer}
+                className={`${styles.messagesContainer}`}
                 ref={messagesContainerRef}
               >
                 {loading && (
@@ -373,7 +379,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
                 <div ref={messagesEndRef} />
               </div>
 
-              <div className={`${styles.messageInputContainer} ${isDragOver ? styles.dragOver : ''}`}>
+              <div className={`${styles.messageInputContainer}`}>
                 <div className="position-relative w-100">
                   <InputTextarea
                     placeholder="Send a message..."
@@ -384,10 +390,6 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
                     disabled={isSending || chatId?.startsWith("private_group")}
                     onKeyUp={handleKeyPress}
                     className={styles.messageInput}
-                    onDragOver={handleDragOver}
-                    onDragEnter={handleDragEnter}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
                   />
                   <div className={styles.messageInputIcons}>
                     {isSending && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
