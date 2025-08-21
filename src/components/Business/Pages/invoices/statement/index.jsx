@@ -12,6 +12,7 @@ const AccountStatement = () => {
     const [showEmail, setShowEmail] = useState(false);
     const [payload, setPayload] = useState({});
     const pdfUrl = new URLSearchParams(window.location.search).get('pdf');
+    const clientName = new URLSearchParams(window.location.search).get('client');
 
     const downloadFormLink = async () => {
         const fileLink = pdfUrl;
@@ -52,6 +53,12 @@ const AccountStatement = () => {
             body: payload.email_body,
             signature: payload.signature
         };
+
+        // replace word in the payload
+        newPayload.subject = newPayload.subject.replace('_CLIENT_NAME_', clientName);
+        newPayload.body = newPayload.body.replace('_CLIENT_NAME_', clientName);
+        newPayload.body = newPayload.body.replace('_LINK_', pdfUrl);
+
         await sendStatementEmailMutation.mutateAsync(newPayload);
     };
 

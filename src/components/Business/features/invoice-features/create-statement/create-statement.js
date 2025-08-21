@@ -5,12 +5,14 @@ import { toast } from 'sonner';
 import { downloadStatement } from '../../../../../APIs/expenses-api';
 
 const CreateStatement = ({ invoices }) => {
+    const clientName = invoices.length > 0 ? (invoices[0]?.client?.name || "") : '';
+
     const downloadStatementMutation = useMutation({
         mutationFn: (data) => downloadStatement(data),
         onSuccess: (data) => {
             const url = data?.pdf_url || data;
             if (!url) return;
-            window.open(`/invoice/account-statement?pdf=${url}`, '_blank');
+            window.open(`/invoice/account-statement?pdf=${url}&client=${clientName}`, '_blank');
         },
         onError: (error) => {
             console.log('error: ', error);
