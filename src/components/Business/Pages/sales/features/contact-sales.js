@@ -8,7 +8,6 @@ import phonecallgra from "../../../../../assets/images/icon/phonecallgra.svg";
 import styles from '../sales.module.scss';
 
 const formatDate = (timestampInSeconds, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone) => {
-  console.log('timeZone: ', timeZone, timestampInSeconds);
   const date = new Date(timestampInSeconds * 1000); // Create full UTC date
 
   return new Intl.DateTimeFormat('en-AU', {

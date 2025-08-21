@@ -14,7 +14,6 @@ import saleContact from "../../../../../assets/images/icon/sale-01.svg";
 const ContactAdd = ({ saleUniqueIdold, contactRefresh, step, created, type }) => {
   const [radioValue, setRadioValue] = useState('E'); // Default to Email
   const [value, setValue] = useState(null);
-  console.log('value: ', value, new Date(value)?.toISOString()?.split("T")[0]);
   const [note, setNote] = useState('');
   const [show, setShow] = useState(false);
   const [errors, setErrors] = useState({});
