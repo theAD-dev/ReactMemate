@@ -23,7 +23,7 @@ import { getTeamMobileUser } from '../../../../APIs/team-api';
 import { CircularProgressBar } from '../../../../shared/ui/circular-progressbar';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
-export function getFileIcon(fileType, size = 32) {
+export function getFileIcon(fileType, size = 32, noColor) {
     if (fileType) fileType = fileType?.toLowerCase();
 
     const fileTypes = {
@@ -72,8 +72,12 @@ export function getFileIcon(fileType, size = 32) {
         'pptx': { name: 'PPT', color: '#FF9800' },
     };
 
+    if (noColor === 'black') {
+        fileTypes[fileType] = { name: fileTypes[fileType]?.name || 'Unknown', color: '#000000' };
+    }
+    
     const fileData = fileTypes[fileType] || { name: 'Unknown', color: '#000000' };
-
+    
     return (
         <div className={style.imgBox}>
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 32 41" fill="none">
