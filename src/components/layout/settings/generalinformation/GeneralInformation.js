@@ -578,7 +578,7 @@ function FileUpload({ photo, setPhoto, data }) {
         <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShow(true)}>Click to upload</span></p>
         <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
       </div>
-      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} />
+      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} aspect={3 / 1} />
     </section>
   );
 }

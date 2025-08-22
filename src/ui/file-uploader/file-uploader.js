@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import styles from './file-uploader.module.scss';
 import { base64ToBlob } from './utils';
 
-const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" }) => {
+const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect", aspect = 1 }) => {
     const [files, setFiles] = useState([]);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -128,7 +128,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect" 
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
                                 onCropComplete={onCropComplete}
-                                aspect={1} // or remove this if you want a flexible aspect ratio
+                                aspect={aspect} // or remove this if you want a flexible aspect ratio
                                 restrictPosition={false} // Allow full movement within the bounds
                                 style={{
                                     containerStyle: {
