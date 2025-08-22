@@ -7,8 +7,9 @@ import { toast } from "sonner";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
 import AddRemoveMobileUser from "./features/add-remove-mobile-user";
 import CancelSubscription from "./features/cancel-subscription";
+import { ActivateWorkSubscription } from "./features/work-subscription/activate-work-subscription";
 import styles from "./subscription.module.scss";
-import { activeWorkSubscription, cancelSubscription, cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
+import { cancelWorkSubscription, getSubscriptions } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
 import { useAuth } from "../../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
@@ -30,18 +31,6 @@ const Subscription = () => {
   const activeMobileUser = mobileUsersQuery?.data?.users?.filter((user) => user.status !== 'disconnected') || [];
 
   const hasWorkSubscription = subscriptionQuery?.data?.work !== null ? true : false;
-
-  const activeWorkMutation = useMutation({
-    mutationFn: activeWorkSubscription,
-    onSuccess: () => {
-      toast.success("Work subscription activated successfully!");
-      window.location.reload();
-    },
-    onError: (error) => {
-      console.error("Error activating work subscription:", error);
-      toast.error("Failed to active work subscription. Please try again.");
-    },
-  });
 
   const cancelWorkMutation = useMutation({
     mutationFn: cancelWorkSubscription,
@@ -186,12 +175,7 @@ const Subscription = () => {
                                   </button>
                                 ) :
                                 hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.ACTIVE_WORK_SUBSCRIPTION) && (
-                                  <button className="paynow d-flex gap-1 align-items-center" disabled={activeWorkMutation.isPending} onClick={() => activeWorkMutation.mutate()}>
-                                    Active Work Subscription
-                                    {
-                                      activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}></ProgressSpinner>
-                                    }
-                                  </button>
+                                  <ActivateWorkSubscription />
                                 )
                             }
                           </div>
