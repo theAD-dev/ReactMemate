@@ -154,6 +154,16 @@ export const deleteFileByKey = async (id, fileKey) => {
     return fetchAPI(url.toString(), options);
 };
 
+export const updateCostBreakDownDescription = async (id, data) => {
+    const endpoint = `/project-card/calc-description/${id}/`;
+    const options = {
+        method: 'PUT',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
 export const sendComposeEmail = async (id, action, data) => {
     let endpoint;
     if (action) endpoint = `/custom/email/${id}/${action}/`;

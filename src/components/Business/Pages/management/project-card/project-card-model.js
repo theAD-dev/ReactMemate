@@ -32,7 +32,7 @@ import SendToCalendar from './send-to-calendar';
 import StartChat from './start-chat/start-chat';
 import CurrentJobAndExpenseLoading from './ui/current-job-and-expense-loading';
 import JobStatus from './ui/job-status/job-status';
-import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateProjectReferenceById } from "../../../../../APIs/management-api";
+import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecline, projectsToSalesUpdate, updateCostBreakDownDescription, updateProjectReferenceById } from "../../../../../APIs/management-api";
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
@@ -320,6 +320,49 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     );
   };
 
+  const updateCostBreakDownMutation = useMutation({
+    mutationFn: (data) => updateCostBreakDownDescription(projectId, data),
+    onSuccess: () => {
+      toast.success('Cost breakdown updated successfully');
+    },
+    onError: (error) => {
+      console.error('Error creating task:', error);
+      toast.error('Failed to update cost breakdown');
+      projectCardData(projectId);
+    }
+  });
+
+  const handleCostBreakdown = (id, description) => {
+    updateCostBreakDownMutation.mutate({ id, description });
+  };
+
+  const ConstBreakDownTextArea = (rowData) => {
+    const [description, setDescription] = useState(rowData.description);
+
+    return (<div className='d-flex'>
+      <textarea rows={1} className="auto-expand" style={{ background: 'transparent', border: '0px solid #fff', fontSize: '14px', minHeight: '50px' }} value={description}
+        onChange={(e) => { setDescription(e.target.value); }}
+        onInput={(e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = `${e.target.scrollHeight}px`;
+        }}
+        onFocus={(e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = `${e.target.scrollHeight}px`;
+        }}
+        onBlur={(e) => {
+          e.target.style.height = '50px';
+          handleCostBreakdown(rowData.id, description);
+        }}
+        onClick={(e) => {
+          e.target.style.height = 'auto';
+          e.target.style.height = `${e.target.scrollHeight}px`;
+        }}
+      ></textarea>
+      {updateCostBreakDownMutation?.isPending && updateCostBreakDownMutation?.variables?.id === rowData.id && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -773,8 +816,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                       <Column field="id" header="Order" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
                       <Column field="subindex" header="Department" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.subindex} style={{ maxWidth: '192px' }}>{rowData.subindex}</div>}></Column>
                       <Column field="description" header="Description"
-                        body={(rowData) =>
-                          <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '350px' }}>{rowData.description}</div>}
+                        body={ConstBreakDownTextArea}
                         style={{ width: '100%' }}
                       ></Column>
                       <Column field="cost" header="Cost" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.cost)}`}></Column>
