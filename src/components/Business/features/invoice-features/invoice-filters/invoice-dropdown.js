@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { Check, Filter, People } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import style from './invoice-dropdown.module.scss';
@@ -19,6 +20,7 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
     const [selectedClient, setSelectedClient] = useState(null);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+    const [loading, setLoading] = useState(false);
     const limit = 25;
 
     useEffect(() => {
@@ -27,6 +29,7 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
 
     useEffect(() => {
         const loadData = async () => {
+            setLoading(true);
             const data = await getListOfClients(page, limit, debouncedValue, 'name');
             if (page === 1) {
                 if (clientValue) {
@@ -55,6 +58,7 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                 }
             }
             setHasMoreData(data.count !== clients.length);
+            setLoading(false);
         };
 
         loadData();
@@ -163,6 +167,7 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                                     </div>
                                 )
                             }
+                            { loading && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#1AB2FF" }} /> }
                         </div>
                         <div className='d-flex justify-content-end gap-2 p-3 border-top'>
                             <Button className='outline-button' style={{ width: '115px', padding: '8px 14px' }} onClick={handleCancel}>Cancel</Button>
