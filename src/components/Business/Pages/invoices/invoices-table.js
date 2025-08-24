@@ -71,12 +71,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            let clientsFilter = '';
-            if (filters?.client) {
-                clientsFilter = filters?.client?.map(client => client.id).join(',');
-            }
-
-            const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted, clientsFilter);
+            const data = await getListOfInvoice(page, limit, searchValue, order, isShowDeleted, filters);
             setTotal(() => (data?.count || 0));
             setTotalMoney(data?.total_amount || 0);
             if (page === 1) setInvoices(data.results);

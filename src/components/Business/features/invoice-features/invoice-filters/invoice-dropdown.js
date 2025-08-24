@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Check, Filter, People } from 'react-bootstrap-icons';
+import { CalendarWeek, Check, CurrencyDollar, Filter, People } from 'react-bootstrap-icons';
+import Flatpickr from "react-flatpickr";
 import clsx from 'clsx';
+import { Checkbox } from 'primereact/checkbox';
 import { useDebounce } from 'primereact/hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Tab from "react-bootstrap/Tab";
@@ -9,12 +11,15 @@ import Tabs from "react-bootstrap/Tabs";
 import style from './invoice-dropdown.module.scss';
 import { getListOfClients } from '../../../../../APIs/ClientsApi';
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
+import "flatpickr/dist/themes/material_green.css";
 
 const InvoiceDropdown = ({ setFilters, filter }) => {
     const observerRef = useRef(null);
     const [showFilter, setShowFilter] = useState(false);
     const [key, setKey] = useState('clients');
+    const [statusValue, setStatusValue] = useState([]);
     const [clientValue, setClientValue] = useState('');
+    const [dateRange, setDateRange] = useState([null, null]);
     const [clients, setClients] = useState([]);
     const [page, setPage] = useState(1);
     const [selectedClient, setSelectedClient] = useState(null);
@@ -86,30 +91,67 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
         }
     }, [clients, hasMoreData, showFilter]);
 
+    function formatDateToYMD(date) {
+        if (!date) return '';
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${day}-${month}-${year}`;
+    }
+
+    const handleStatusChange = (status) => {
+        setStatusValue((prev) => {
+            if (prev.includes(status)) {
+                return prev.filter((s) => s !== status);
+            }
+            return [...prev, status];
+        });
+    };
+
     const handleCancel = () => {
         setShowFilter(false);
         setKey('clients');
-        setClientValue('');
-        setSelectedClient(null);
-        setInputValue('');
-        setPage(1);
-        setHasMoreData(true);
-        setClients([]);
-        setFilters((prev) => {
-            const { client, ...rest } = prev;
-            return rest;
-        });
     };
 
     const handleApply = () => {
         setShowFilter(false);
-        if (!selectedClient?.length) return;
-        setFilters((prev) => ({ ...prev, client: [...selectedClient] }));
+
+        if (selectedClient?.length) {
+            setFilters((prev) => ({ ...prev, client: [...selectedClient] }));
+        }
+
+        // apply for status
+        const formattedStatus = statusValue.map((status) => {
+            return { name: status, value: status };
+        });
+        if (formattedStatus.length) {
+            setFilters((prev) => ({ ...prev, status: [...formattedStatus] }));
+        }
+
+        // apply date range
+        if (dateRange) {
+            let dateName = `${formatDateToYMD(dateRange[0])} - ${formatDateToYMD(dateRange[1])}`;
+            setFilters((prev) => ({ ...prev, date: [{ name: dateName, value: dateRange }] }));
+        }
     };
 
-    useEffect(()=> {
+    useEffect(() => {
         if (!filter['client']) {
             setSelectedClient(null);
+        } else if (filter['client']) {
+            setSelectedClient(filter['client']);
+        }
+
+        if (!filter['status']) {
+            setStatusValue([]);
+        } else if (filter['status']) {
+            setStatusValue(filter['status'].map((status) => status.value));
+        }
+
+        if (!filter['date']) {
+            setDateRange(null);
+        } else if (filter['date']) {
+            setDateRange(filter['date'][0].value);
         }
     }, [filter]);
 
@@ -150,7 +192,7 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                                             return prev.filter(client => client.id !== option.id);
                                         }
                                         if (!prev) return [option];
-                                        
+
                                         return [...prev, option];
                                     })}>
                                         <div className='d-flex gap-2 align-items-center w-100'>
@@ -167,7 +209,49 @@ const InvoiceDropdown = ({ setFilters, filter }) => {
                                     </div>
                                 )
                             }
-                            { loading && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#1AB2FF" }} /> }
+                            {loading && <ProgressSpinner style={{ width: "20px", height: "20px", color: "#1AB2FF" }} />}
+                        </div>
+                        <div className='d-flex justify-content-end gap-2 p-3 border-top'>
+                            <Button className='outline-button' style={{ width: '115px', padding: '8px 14px' }} onClick={handleCancel}>Cancel</Button>
+                            <Button className='solid-button' style={{ width: '115px', padding: '8px 14px' }} onClick={handleApply}>Apply</Button>
+                        </div>
+                    </Tab>
+                    <Tab
+                        eventKey="status"
+                        title={
+                            <>
+                                <CurrencyDollar color="#667085" size={16} /> Payment
+                            </>
+                        }
+                    >
+                        <div className='d-flex align-items-center gap-3 p-2 mb-2'>
+                            <Checkbox inputId="paid" checked={statusValue?.includes("Paid")} onChange={() => handleStatusChange("Paid")} />
+                            <label htmlFor="paid" className='mb-0'>Paid</label>
+                        </div>
+                        <div className='d-flex align-items-center gap-3 p-2 mb-2'>
+                            <Checkbox inputId="not_paid" checked={statusValue?.includes("Not Paid")} onChange={() => handleStatusChange("Not Paid")} />
+                            <label htmlFor="not_paid" className='mb-0'>Not Paid</label>
+                        </div>
+
+                        <div className='d-flex justify-content-end gap-2 p-3 border-top'>
+                            <Button className='outline-button' style={{ width: '115px', padding: '8px 14px' }} onClick={handleCancel}>Cancel</Button>
+                            <Button className='solid-button' style={{ width: '115px', padding: '8px 14px' }} onClick={handleApply}>Apply</Button>
+                        </div>
+                    </Tab>
+                    <Tab
+                        eventKey={'date'}
+                        title={<><CalendarWeek color="#667085" size={16} /> Date</>}
+                    >
+                        <div className='px-3 pt-2'>
+                            <Flatpickr
+                                value={dateRange}
+                                onChange={setDateRange}
+                                options={{
+                                    dateFormat: "Y-m-d",
+                                    mode: "range",
+                                    inline: true,
+                                }}
+                            />
                         </div>
                         <div className='d-flex justify-content-end gap-2 p-3 border-top'>
                             <Button className='outline-button' style={{ width: '115px', padding: '8px 14px' }} onClick={handleCancel}>Cancel</Button>
