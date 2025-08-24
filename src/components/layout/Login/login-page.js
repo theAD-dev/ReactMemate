@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { authenticateUser } from "../../../APIs/LoginApi";
@@ -13,6 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const [isLoading, setIsLoading] = useState(false);
   const [emailError, setEmailError] = useState(null);
@@ -110,22 +112,20 @@ const Login = () => {
                 >
                   <img src={unlockIcon} alt="Unlock Icon" />
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isLoading}
                   />
-                  <img
-                    className="ExclamationCircle"
-                    src={exclamationCircle}
-                    alt="Exclamation Circle"
-                  />
+                  {passwordError ?
+                    <img className="ExclamationCircle" src={exclamationCircle} alt="Exclamation Circle" />
+                    : showPassword ? <Eye size={16} color="#344054" className="cursor-pointer" onClick={() => setShowPassword(false)} /> : <EyeSlash size={16} color="#344054" className="cursor-pointer" onClick={() => setShowPassword(true)} />}
                 </div>
                 {passwordError && <p className="error-message">{passwordError}</p>}
                 {authError && <p className="error-message">{authError}</p>}
               </div>
-              <Link to="/forgot-password" className="textbtn">
+              <Link to="/forgot-password" className="textbtn mt-4 mb-0" style={{ width: "fit-content", margin: "0 auto" }}>
                 Forgot password
               </Link>
               <button
