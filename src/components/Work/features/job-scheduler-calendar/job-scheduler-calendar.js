@@ -112,8 +112,8 @@ function loadData(data) {
       if (job.start_date && job.end_date) {
         const event = {
           id: job.id,
-          start: job?.time_type === 'T' ? parseTimestamp(1000 * job.start_date).toISOString() : parseTimestamp(1000 * job.end_date).toISOString(),
-          end: job?.time_type === 'T' ? parseTimestamp(1000 * job.end_date).toISOString() : parseTimestamp(1000 * job.start_date).toISOString(),
+          start: parseTimestamp(1000 * job.start_date).toISOString(),
+          end: parseTimestamp(1000 * job.end_date).toISOString(),
           resource: job.id,
           text: job?.reference || 'No Reference',
           tag: { jobId: job.id },
@@ -178,8 +178,8 @@ function initDayPilot(elementId, data, setShow) {
           if (job.start_date && job.end_date) {
             const event = {
               id: job.id,
-              start: job?.time_type === 'T' ? parseTimestamp(1000 * job.start_date).toISOString() : parseTimestamp(1000 * job.end_date).toISOString(),
-              end: job?.time_type === 'T' ? parseTimestamp(1000 * job.end_date).toISOString() : parseTimestamp(1000 * job.start_date).toISOString(),
+              start: parseTimestamp(1000 * job.start_date).toISOString(),
+              end: parseTimestamp(1000 * job.end_date).toISOString(),
               resource: job.id,
               text: job?.reference || 'No Reference',
               tag: { jobId: job.id },
