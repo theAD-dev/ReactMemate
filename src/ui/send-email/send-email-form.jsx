@@ -19,7 +19,7 @@ const headerElement = (
     <div className={`${style.modalHeader}`}>
         <div className="w-100 d-flex align-items-center gap-2">
             <span className={`white-space-nowrap mt-2 mb-2 ${style.headerTitle}`}>
-                Send a Quote
+                Send email
             </span>
         </div>
     </div>
