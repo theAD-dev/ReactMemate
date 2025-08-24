@@ -155,10 +155,20 @@ const Home = () => {
             setCurrentWeek(52);
         }
     };
+
+    const getSydneyDate = (date = new Date()) => {
+        return new Date(date.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+    };
+
     const getWeekNumber = (date) => {
-        const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-        const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-        return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        const sydneyDate = getSydneyDate(date);
+        // Copy date so we don't mutate
+        const tmp = new Date(Date.UTC(sydneyDate.getFullYear(), sydneyDate.getMonth(), sydneyDate.getDate()));
+        // Thursday in current week decides the year
+        tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7));
+        const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+        const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+        return weekNo;
     };
 
     const isNextButtonDisabled = () => {
@@ -198,8 +208,8 @@ const Home = () => {
     };
 
     useEffect(() => {
-        const today = new Date();
-        const weekNum = getWeekNumber(today);
+        const todaySydney = getSydneyDate();
+        const weekNum = getWeekNumber(todaySydney);
         setCurrentWeek(weekNum);
     }, []);
 

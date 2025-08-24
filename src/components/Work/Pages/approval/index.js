@@ -21,21 +21,43 @@ const ApprovalPage = () => {
         return nowSydney.getFullYear();
     });
     const [weekInfo, setWeekInfo] = useState({ start: '', end: '' });
-    let countDown = '';
-    if (weekInfo?.end) {
-        // Get current Sydney time as a Date object
+    const [countDown, setCountDown] = useState('');
+
+    useEffect(() => {
+        if (!weekInfo?.end) return;
+
+        const interval = setInterval(() => {
+            const nowSydney = new Date(
+                new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+            );
+
+            const diff = weekInfo.end.getTime() - nowSydney.getTime();
+
+            if (diff <= 0) {
+                setCountDown('0d 0h 0m');
+                clearInterval(interval);
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            setCountDown(`${days}d ${hours}h ${minutes}m`);
+        }, 60 * 1000); // update every minute
+
+        // Run once immediately
         const nowSydney = new Date(
             new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
         );
-
-        // Use the existing Sydney date object from weekInfo without re-parsing
         const diff = weekInfo.end.getTime() - nowSydney.getTime();
-
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        countDown = `${days}d ${hours}h ${minutes}m`;
-    }
+        setCountDown(`${days}d ${hours}h ${minutes}m`);
+
+        return () => clearInterval(interval);
+    }, [weekInfo]);
 
     const toInvoiceQuery = useQuery({
         queryKey: ['toInvoice', currentYear, currentWeek],
@@ -46,39 +68,28 @@ const ApprovalPage = () => {
     console.log('toInvoiceQuery: ', toInvoiceQuery?.data);
 
     const getWeekDates = (weekNumber, year) => {
-        const firstDayOfYear = new Date(Date.UTC(year, 0, 1));
-        const dayOfWeek = firstDayOfYear.getUTCDay(); // Sunday = 0
-        const daysOffset = (weekNumber - 1) * 7 - ((dayOfWeek + 6) % 7);
-        const mondayUTC = new Date(Date.UTC(year, 0, 1 + daysOffset));
-
-        // Convert to Sydney time
-        const options = { timeZone: 'Australia/Sydney' };
-        const mondaySydney = new Date(mondayUTC.toLocaleString('en-US', options));
-
-        // Week start (if you need it)
+        // Calculate Monday start for the given week
+        const firstDayOfYearSydney = new Date(
+            new Date(Date.UTC(year, 0, 1)).toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        );
+        const dayOfWeek = firstDayOfYearSydney.getDay() || 7;
+        const daysOffset = (weekNumber - 1) * 7 - (dayOfWeek - 1);
+        const mondaySydney = new Date(firstDayOfYearSydney);
+        mondaySydney.setDate(firstDayOfYearSydney.getDate() + daysOffset);
         mondaySydney.setHours(12, 1, 0, 0);
 
-        // Default deadline = next Monday 12:00 PM
-        let endSydney = new Date(mondaySydney);
-        endSydney.setDate(endSydney.getDate() + 7);
-        endSydney.setHours(12, 0, 0, 0);
-
-        // 👇 Adjust if today is Monday
-        const todaySydney = new Date(
+        // Get current Sydney time
+        const nowSydney = new Date(
             new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
         );
 
-        if (todaySydney.getDay() === 1) { // Monday
-            if (todaySydney.getHours() < 12) {
-                // Before noon → deadline = today 12:00 PM
-                endSydney = new Date(todaySydney);
-                endSydney.setHours(12, 0, 0, 0);
-            } else {
-                // After noon → deadline = next Monday 12:00 PM
-                endSydney = new Date(todaySydney);
-                endSydney.setDate(endSydney.getDate() + 7);
-                endSydney.setHours(12, 0, 0, 0);
-            }
+        // Default deadline = this Monday 12:00 pm
+        let endSydney = new Date(mondaySydney);
+        endSydney.setHours(12, 0, 0, 0);
+
+        // If it's already past this Monday noon → set to next Monday noon
+        if (nowSydney > endSydney) {
+            endSydney.setDate(endSydney.getDate() + 7);
         }
 
         return { start: mondaySydney, end: endSydney };
