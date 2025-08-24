@@ -6,7 +6,8 @@ import {
   Tag,
   Postcard,
   PlusCircle,
-  PauseCircle
+  PauseCircle,
+  Copy
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -384,6 +385,14 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     );
   };
 
+  const handleCopy = () => {
+    if (cardData?.calculator_descriptions?.length) {
+      let allDescriptions = cardData?.calculator_descriptions?.map(item => `- ${item.description}`).join('\n');
+      navigator.clipboard.writeText(allDescriptions);
+      toast.success('Copied to clipboard');
+    }
+  };
+
   return (
     <>
       <Modal
@@ -476,7 +485,10 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           <div className="ContactModel">
             <Row className="text-left mt-0 projectCardMain">
               <Col sm={6} className='orderDiscription'>
+              <div className='d-flex justify-content-between align-items-center w-100'>
                 <strong>Order Description</strong>
+                <Copy size={16} color='#106B99' onClick={handleCopy} style={{ cursor: 'pointer' }} />
+              </div>
                 <div className='customScrollBar'>
                   {
                     isFetching ? (<>
