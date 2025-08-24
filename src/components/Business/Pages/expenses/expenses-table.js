@@ -15,11 +15,11 @@ import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { PERMISSIONS } from '../../../../shared/lib/access-control/permission';
 import { hasPermission } from '../../../../shared/lib/access-control/role-permission';
+import { BootstrapFileIcons } from '../../../../shared/lib/bootstrap-file-icons';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
-import { getFileIcon } from '../../../Work/features/create-job/create-job';
 import ExpensesEdit from '../../features/expenses-features/expenses-edit/expenses-edit';
 import TotalExpenseDialog from '../../features/expenses-features/expenses-table-actions';
 
@@ -184,9 +184,9 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         if (!rowData.file) return "";
         const isPaid = rowData.paid;
 
-        const extension = rowData.file ? rowData.file.split(".")?.[rowData.file.split(".")?.length - 1] : "";
+        const extension = rowData.file ? rowData.file.split(".")?.[rowData.file.split(".")?.length - 1]?.toLowerCase() : "";
         if (rowData.file) return <Link to={rowData.file} target='_blank' style={isPaid ? { opacity: 1 } : { opacity: 0.5 }}>
-            {getFileIcon(extension, 28, isPaid ? '' : 'black')}
+            {<BootstrapFileIcons extension={extension} color={isPaid ? '' : '#98A2B3'} size={16} />}
         </Link>;
     };
 
