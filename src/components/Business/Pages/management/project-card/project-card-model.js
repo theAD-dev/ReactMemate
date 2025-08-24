@@ -338,10 +338,20 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
   const ConstBreakDownTextArea = (rowData) => {
     const [description, setDescription] = useState(rowData.description);
+    const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+      if (isEditing) {
+        document.getElementById(`cost-breakdown-${rowData.id}`)?.focus();
+      }
+    }, [isEditing, rowData.id]);
 
     return (<div className='d-flex'>
-      <textarea rows={1} className="auto-expand" style={{ background: 'transparent', border: '0px solid #fff', fontSize: '14px', minHeight: '50px' }} value={description}
+      <textarea rows={1} className="auto-expand" style={{ background: 'transparent', border: '0px solid #fff', fontSize: '14px', minHeight: '50px' }}
+        value={description}
+        id={`cost-breakdown-${rowData.id}`}
         onChange={(e) => { setDescription(e.target.value); }}
+        disabled={!isEditing}
         onInput={(e) => {
           e.target.style.height = 'auto';
           e.target.style.height = `${e.target.scrollHeight}px`;
@@ -349,18 +359,28 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         onFocus={(e) => {
           e.target.style.height = 'auto';
           e.target.style.height = `${e.target.scrollHeight}px`;
+          e.target.style.border = '1px solid #dedede';
+          e.target.style.background = '#fff';
         }}
         onBlur={(e) => {
           e.target.style.height = '50px';
+          e.target.style.border = '0px solid #fff';
+          e.target.style.background = 'transparent';
           handleCostBreakdown(rowData.id, description);
+          setIsEditing(false);
         }}
         onClick={(e) => {
           e.target.style.height = 'auto';
           e.target.style.height = `${e.target.scrollHeight}px`;
         }}
       ></textarea>
-      {updateCostBreakDownMutation?.isPending && updateCostBreakDownMutation?.variables?.id === rowData.id && <ProgressSpinner style={{ width: '20px', height: '20px' }} />}
-      </div>
+      {updateCostBreakDownMutation?.isPending && updateCostBreakDownMutation?.variables?.id === rowData.id ?
+        <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+        : <PencilSquare size={16} color='#106B99'
+          onClick={() => setIsEditing(true)}
+          style={{ cursor: 'pointer', marginLeft: '8px' }} />
+      }
+    </div>
     );
   };
 
@@ -410,7 +430,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
                     value={editedReference}
                     onChange={handleReferenceChange}
                     onBlur={handleSaveReference}
-                    
+
                     className='border rounded w-100'
                     style={{ maxWidth: "calc(100% - 120px)" }}
                   />
