@@ -162,12 +162,26 @@ const Home = () => {
 
     const getWeekNumber = (date) => {
         const sydneyDate = getSydneyDate(date);
-        // Copy date so we don't mutate
+
+        // Determine "effective date" based on your week start time
+        const weekStartCutoff = new Date(sydneyDate);
+        weekStartCutoff.setHours(12, 1, 0, 0); // Monday 12:01 PM Sydney time
+        weekStartCutoff.setDate(
+            weekStartCutoff.getDate() - ((weekStartCutoff.getDay() + 6) % 7) // Go back to Monday
+        );
+
+        // If the date is before Monday 12:01 PM, consider it part of previous week
+        if (sydneyDate < weekStartCutoff) {
+            sydneyDate.setDate(sydneyDate.getDate() - 1);
+        }
+
+        // Copy date so we don't mutate original
         const tmp = new Date(Date.UTC(sydneyDate.getFullYear(), sydneyDate.getMonth(), sydneyDate.getDate()));
-        // Thursday in current week decides the year
-        tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7));
+        tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7)); // Thursday of current week
+
         const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
         const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+
         return weekNo;
     };
 
