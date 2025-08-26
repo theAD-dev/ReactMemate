@@ -1970,3 +1970,7 @@ input:focus::-webkit-input-placeholder {
   left: 10px;
   z-index: 100000 !important;
 }
+
+.svc-creator__banner {
+  display: none !important;
+}

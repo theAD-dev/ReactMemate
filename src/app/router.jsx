@@ -103,6 +103,9 @@ const UnauthorizedError = LazyLoader(lazy(() => import('../pages/error/unauthori
 const StripeContainer = LazyLoader(lazy(() => import('../ui/strip-payment/strip-payment')));
 const Help = LazyLoader(lazy(() => import('../pages/help')));
 const AccountStatement = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/statement')));
+const Enquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/enquiries')));
+const FormBuilder = LazyLoader(lazy(() => import('../pages/business/enquiries/form-builder')));
+const FormView = LazyLoader(lazy(() => import('../pages/business/enquiries/form-view/form-view')));
 
 const routes = [
     {
@@ -287,7 +290,17 @@ const routes = [
             },
             {
                 path: "enquiries",
-                element: <>Enquires</>,
+                element: <Enquiries />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "enquiries/form",
+                element: <FormBuilder />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "enquiries/form/:id",
+                element: <FormView />,
                 errorElement: <UnknownError />,
             },
             {
