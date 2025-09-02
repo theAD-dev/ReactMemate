@@ -11,7 +11,7 @@ const IndivisualClientEdit = forwardRef(({ client, refetch, setIsPending, handle
     firstname: client?.name?.split(" ")?.[0] || "",
     lastname: client?.name?.split(" ")?.[1] || "",
     email: client?.email,
-    phone: client?.phone,
+    phone: client?.phone || "",
     category: client?.category?.id || 1,
     payment_terms: client?.payment_terms,
     description: client?.description,
