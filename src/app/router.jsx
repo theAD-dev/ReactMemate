@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Login from '../components/layout/Login/login-page';
+import TempFormBuilder from "../pages/business/enquiries/temp/temp-form-builder";
 import UnknownError from "../pages/error/unknown/unknown";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import SettingsLayout from "../shared/ui/layout/settings-layout";
@@ -301,6 +302,11 @@ const routes = [
             {
                 path: "enquiries/form/:id",
                 element: <FormView />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: 'enquiries/form-builder',
+                element: <TempFormBuilder />,
                 errorElement: <UnknownError />,
             },
             {
