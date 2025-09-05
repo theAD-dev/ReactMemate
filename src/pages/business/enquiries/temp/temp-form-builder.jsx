@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react';
 import { defaultFormStyle } from './builder/defaultStyle';
 import { initBuilder } from './builder/initBuilder';
 import './temp-form-builder.css';
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 // Inline SVG Icon component for field types
@@ -42,10 +43,12 @@ const Icon = ({ type }) => {
 };
 
 export default function TempFormBuilder() {
+  const { session } = useAuth();
   const { trialHeight } = useTrialHeight();
+  
   useLayoutEffect(() => {
-    initBuilder({ defaultOrgId: 5, getDefaultCss: () => defaultFormStyle });
-  }, []);
+    initBuilder({ defaultOrgId: session?.organization?.id, getDefaultCss: () => defaultFormStyle });
+  }, [session]);
 
   return (
     <div className="mf-builder" style={{ overflow: 'auto', height: `calc(100vh - 127px - ${trialHeight}px)` }}>

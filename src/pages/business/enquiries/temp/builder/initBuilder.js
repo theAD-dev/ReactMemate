@@ -346,12 +346,19 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       alert('Google reCAPTCHA site key is required');
       return;
     }
+    // Enforce Google reCAPTCHA secret key required
+    const secretKeyEl = root.querySelector('#form-recaptcha-secret');
+    if (!secretKeyEl || !secretKeyEl.value.trim()) {
+      alert('Google reCAPTCHA secret key is required');
+      return;
+    }
+
     const payload = buildApiPayload();
     try {
       const json = await saveFormToApi(payload);
 
       // Build embed code and show modal
-      const embedCode = `<script src="http://localhost:8000/static/inquiries/embed.js" data-form-id="${json?.id}"></` + `script>`;
+      const embedCode = `<script src="${process.env.REACT_APP_URL}/astatic/inquiries/embed.js" data-form-id="${json?.id}"></` + `script>`;
       const embedModal = root.querySelector('#embed-modal');
       const snippetEl = root.querySelector('#embed-snippet');
       const copyBtn = root.querySelector('#copy-embed-btn');
@@ -417,6 +424,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       submit_button_label: get('form-submit-label') || 'Submit',
       custom_css: cssTextarea?.value ?? '',
       recaptcha_site_key: get('form-recaptcha-key'),
+      recaptcha_secret_key: get('form-recaptcha-secret'),
       fields
     };
 
