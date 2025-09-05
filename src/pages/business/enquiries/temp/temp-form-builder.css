@@ -15,7 +15,7 @@
 
 /* Page */
 .mf-builder{background:var(--bg);}
-.mf-builder .container{max-width:1600px;margin:28px auto;padding:0 20px;font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif;color:var(--text);}
+.mf-builder .mf-container{margin:28px auto;padding:0 20px;font-family:system-ui, -apple-system, Segoe UI, Roboto, sans-serif;color:var(--text);}
 .mf-builder header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .mf-builder header h1{font-size:22px;font-weight:700;margin:0}
 
@@ -23,8 +23,8 @@
 .mf-builder .editor-container{display:grid;grid-template-columns:280px minmax(640px,1fr) 340px 340px;gap:18px;align-items:start}
 .mf-builder .fields-panel,.mf-builder .editor-panel,.mf-builder .field-properties,.mf-builder .form-details{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
 .mf-builder .fields-panel{position:sticky;top:16px}
-.mf-builder .field-properties{position:sticky;top:16px;max-height:calc(100vh - 64px);overflow:auto}
-.mf-builder .form-details{position:sticky;top:16px;max-height:calc(100vh - 64px);overflow:auto}
+.mf-builder .field-properties{position:sticky;top:16px;}
+.mf-builder .form-details{position:sticky;top:16px;}
 .mf-builder .editor-panel{min-height:520px}
 
 /* Field palette */
