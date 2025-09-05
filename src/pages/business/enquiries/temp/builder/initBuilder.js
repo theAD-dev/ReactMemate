@@ -1,7 +1,7 @@
 // src/builder/initBuilder.js
 import { saveFormToApi } from '../api';
 
-export function initBuilder({ defaultOrgId = 5, getDefaultCss }) {
+export function initBuilder({ defaultOrgId }) {
     // Guard against double binding in React StrictMode (dev) or accidental re-calls
   if (typeof window !== 'undefined') {
     if (window.__INQ_BUILDER_INITED__) {

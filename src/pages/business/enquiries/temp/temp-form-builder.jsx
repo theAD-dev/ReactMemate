@@ -121,6 +121,7 @@ export default function TempFormBuilder() {
             <div className="form-field"><label>Submit Button Label</label><input id="form-submit-label" defaultValue="Submit" /></div>
             <div className="form-field"><label>Redirect URL</label><input id="form-redirect-url" placeholder="enter redirect url" /></div>
             <div className="form-field"><label>Google reCAPTCHA Site Key</label><input id="form-recaptcha-key" placeholder="enter your reCAPTCHA site key" /></div>
+            <div className="form-field"><label>Google reCAPTCHA Secret Key</label><input id="form-recaptcha-secret" placeholder="enter your reCAPTCHA secret key" /></div>
           </div>
         </div>
 
