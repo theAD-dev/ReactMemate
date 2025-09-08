@@ -54,6 +54,8 @@ const CreateProposalTemplate = () => {
         queryFn: () => getProposalsTemplate(id),
         enabled: !!id,
         retry: 0,
+        staleTime: 0,
+        cacheTime: 0,
     });
 
     const deleteMutation = useMutation({
