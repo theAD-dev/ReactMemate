@@ -486,7 +486,7 @@ function GeneralInformation() {
                 <div className={styles.editinfo}>
                   <span>Company Logo for Documentation</span>
                   {!isEditingGroup ? (
-                    <div className='d-flex justify-content-center align-items-center' style={{ border: '1px solid #dedede', width: '50px', height: '50px', borderRadius: '6px', overflow: 'hidden' }}>
+                    <div className='d-flex justify-content-center align-items-center' style={{ border: '1px solid #dedede', width: '64px', height: '32px', borderRadius: '4px', overflow: 'hidden' }}>
                       <FallbackImage photo={data.company_logo} has_photo={data.has_photo} is_business={true} size={28} />
                     </div>
                   ) : (
@@ -546,17 +546,17 @@ function FileUpload({ photo, setPhoto, data }) {
               <img
                 alt='uploaded-file'
                 src={photo?.croppedImageBase64}
-                style={{ width: '64px', height: '64px', marginBottom: '12px' }}
+                style={{ width: '64px', height: '32px', marginBottom: '12px', borderRadius: '4px' }}
               />
             </div>
           ) : (
-            <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '40px', height: '40px', padding: '2px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
+            <button type='button' onClick={() => setShow(true)} className='d-flex justify-content-center align-items-center' style={{ width: '64px', height: '32px', padding: '0px', border: '1px solid #EAECF0', background: '#fff', borderRadius: '4px', marginBottom: '16px' }}>
               {data?.company_logo && data.has_photo ? (
                 <div
                   style={{
                     width: '64px',
-                    height: '64px',
-                    borderRadius: '50%',
+                    height: '32px',
+                    borderRadius: '4px',
                     overflow: 'hidden',
                     display: 'flex',
                     justifyContent: 'center',
@@ -578,7 +578,7 @@ function FileUpload({ photo, setPhoto, data }) {
         <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#1AB2FF', fontWeight: '600', cursor: 'pointer' }} onClick={() => setShow(true)}>Click to upload</span></p>
         <span style={{ color: '#475467', fontSize: '12px' }}>SVG, PNG, JPG or GIF (max. 800x400px)</span>
       </div>
-      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} aspect={3 / 1} />
+      <FileUploader show={show} setShow={setShow} setPhoto={setPhoto} aspect={4 / 2} />
     </section>
   );
 }

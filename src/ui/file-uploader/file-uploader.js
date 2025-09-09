@@ -118,7 +118,7 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect",
                 {additionalDesign}
                 <div className={`${styles.previewSection}`}>
                     <div className={`${styles.previewBox}`}>
-                        <div className={clsx(styles.previewBoxImg1, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg1, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             <Cropper
                                 image={files.length > 0 ? files[0].preview : null}
                                 crop={crop}
@@ -148,22 +148,22 @@ const FileUploader = ({ show, setShow, setPhoto, additionalDesign, shape="rect",
                                 }}
                             />
                         </div>
-                        <div className={clsx(styles.previewBoxImg2, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg2, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img2 && (
                                 <img src={croppedImages.img2} alt="Preview 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
                         </div>
-                        <div className={clsx(styles.previewBoxImg3, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg3, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img3 && (
                                 <img src={croppedImages.img3} alt="Preview 3" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
                         </div>
-                        <div className={clsx(styles.previewBoxImg4, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg4, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img4 && (
                                 <img src={croppedImages.img4} alt="Preview 4" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
                         </div>
-                        <div className={clsx(styles.previewBoxImg5, shape === 'round' ? 'rounded-circle' : '')}>
+                        <div className={clsx(styles.previewBoxImg5, shape === 'round' ? 'rounded-circle' : '', aspect === 1 ? styles.square : styles.rectangle)}>
                             {croppedImages.img5 && (
                                 <img src={croppedImages.img5} alt="Preview 5" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             )}
