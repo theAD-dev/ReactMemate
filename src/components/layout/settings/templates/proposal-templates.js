@@ -18,6 +18,8 @@ const ProposalTemplates = () => {
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplates"],
         queryFn: getProposalsTemplates,
+        staleTime: 0,
+        cacheTime: 0,
     });
 
     return (
