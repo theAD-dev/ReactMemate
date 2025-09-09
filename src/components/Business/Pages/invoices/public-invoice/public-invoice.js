@@ -229,7 +229,7 @@ const PublicInvoice = () => {
                                     <div className='logo-section'>
                                         {
                                             invoice?.organization?.logo &&
-                                            <img src={`${process.env.REACT_APP_URL}${invoice?.organization?.logo}`} alt='Logo' style={{ maxWidth: '150px', maxHeight: '100px' }} />
+                                            <img src={`${process.env.REACT_APP_URL}${invoice?.organization?.logo}`} alt='Logo' style={{ maxWidth: '150px', maxHeight: '75px', borderRadius: '2px' }} />
                                         }
                                     </div>
                                     <div className='title-sections'>
