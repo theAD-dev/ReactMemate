@@ -105,6 +105,7 @@ const StripeContainer = LazyLoader(lazy(() => import('../ui/strip-payment/strip-
 const Help = LazyLoader(lazy(() => import('../pages/help')));
 const AccountStatement = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/statement')));
 const Enquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/enquiries')));
+const FormsList = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/FormsList')));
 const FormBuilder = LazyLoader(lazy(() => import('../pages/business/enquiries/form-builder')));
 const FormView = LazyLoader(lazy(() => import('../pages/business/enquiries/form-view/form-view')));
 
@@ -306,7 +307,12 @@ const routes = [
             },
             {
                 path: 'enquiries/form-builder',
-                element: <TempFormBuilder />,
+                element: <FormsList />,   // default page = list of forms
+                errorElement: <UnknownError />,
+            },
+            {
+                path: 'enquiries/form-builder/new',
+                element: <TempFormBuilder />, // builder lives at /enquiries/form-builder/new
                 errorElement: <UnknownError />,
             },
             {

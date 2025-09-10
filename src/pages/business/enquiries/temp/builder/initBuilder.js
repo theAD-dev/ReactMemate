@@ -1,7 +1,7 @@
 // src/builder/initBuilder.js
-import { saveFormToApi } from '../api';
+import { saveFormToApi, updateFormToApi } from '../api';
 
-export function initBuilder({ defaultOrgId }) {
+export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null }) {
     // Guard against double binding in React StrictMode (dev) or accidental re-calls
   if (typeof window !== 'undefined') {
     if (window.__INQ_BUILDER_INITED__) {
@@ -21,10 +21,27 @@ const saveBtn = root.querySelector('#save-btn');
 const previewModal = root.querySelector('#preview-modal');
 const previewFormContainer = root.querySelector('#preview-form-container');
 
-  // Internal state
+  // Fill default CSS only when empty
+  if (cssTextarea && !cssTextarea.value && typeof getDefaultCss === 'function') {
+    const css = getDefaultCss();
+    if (css) cssTextarea.value = css;
+  }
+
+  // Internal state (must exist before any hydration uses it)
   let fieldCounter = 1;
   let fieldsData = {};
   let currentField = null;
+  // If we're editing an existing form, keep its id so subsequent saves PATCH instead of POST
+  let currentFormId = initialForm?.id || null;
+
+  // If an existing form was passed in, hydrate all UI
+  if (initialForm) {
+    try {
+      hydrateInitialForm(initialForm);
+    } catch (err) {
+      console.error('Hydration failed:', err);
+    }
+  }
 
   // Field palette (delegated to support dragging from child elements reliably)
   const palette = root.querySelector('.field-types');
@@ -355,7 +372,14 @@ const previewFormContainer = root.querySelector('#preview-form-container');
 
     const payload = buildApiPayload();
     try {
-      const json = await saveFormToApi(payload);
+      const json = currentFormId
+      ? await updateFormToApi(currentFormId, payload)
+      : await saveFormToApi(payload);
+      
+      // If we just created, remember the id so next saves will update
+      if (!currentFormId && json && json.id) {
+        currentFormId = json.id;
+      }
 
       // Build embed code and show modal
       const embedCode = `<script src="${process.env.REACT_APP_URL}/astatic/inquiries/embed.js" data-form-id="${json?.id}"></` + `script>`;
@@ -394,6 +418,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
 
   function buildApiPayload() {
     const fields = Object.values(fieldsData).map((f, idx) => ({
+      id: f._id || undefined,    // include id when editing
       name: f.name || `${f.type}_field`,
       label: f.label || capitalize(f.type),
       placeholder: f.placeholder || '',
@@ -438,4 +463,146 @@ const previewFormContainer = root.querySelector('#preview-form-container');
   function capitalize(s){ return (s||'').charAt(0).toUpperCase() + (s||'').slice(1); }
   function escapeHtml(s=''){ return s.replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
   function escapeAttr(s=''){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+  // ----- Hydration helpers -----
+  function setVal(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.value = v ?? '';
+  }
+
+  function hydrateInitialForm(form) {
+    // right-column details
+    setVal('form-title', form.title);
+    setVal('form-domain', form.domain);
+    setVal('form-submit-to', form.submit_to);
+    setVal('form-submit-from', form.submit_from);
+    setVal('form-cc-email', form.cc_email);
+    setVal('form-bcc-email', form.bcc_email);
+    setVal('form-thank-you', form.thank_you_message);
+    setVal('form-error-message', form.error_message);
+    setVal('form-submit-label', form.submit_button_label || 'Submit');
+    setVal('form-redirect-url', form.redirect_url);
+    setVal('form-recaptcha-key', form.recaptcha_site_key);
+    setVal('form-recaptcha-secret', form.recaptcha_secret_key);
+
+    // custom css
+    if (cssTextarea && form.custom_css) {
+      cssTextarea.value = form.custom_css;
+    }
+
+    // fields canvas
+    const fields = (form.fields || []).slice().sort((a,b)=>(a.order ?? 0)-(b.order ?? 0));
+    preview.innerHTML = '';
+    fieldsData = {};
+    fieldCounter = 1;
+
+    fields.forEach(addFieldFromData);
+    updateMoveButtons();
+  }
+
+  function addFieldFromData(f) {
+    const type = f.field_type || f.type || 'text';
+    const id = `field-${fieldCounter++}`;
+    const el = document.createElement('div');
+    el.className = 'preview-field';
+    el.id = id;
+    el.dataset.type = type;
+    el.innerHTML = getTemplate(type) + actionBar();
+    preview.appendChild(el);
+
+    const data = {
+      type,
+      field_type: type,
+      _id: f.id,
+      label: f.label ?? `${capitalize(type)} Field`,
+      name: f.name ?? `${type}_field`,
+      required: !!f.required,
+      placeholder: f.placeholder ?? '',
+      maxlength: f.max_length ?? f.maxlength ?? '',
+      regex: f.regex ?? '',
+      error_message: f.error_message ?? '',
+      options: Array.isArray(f.options) ? [...f.options] : [],
+      html: f.html ?? undefined,
+      button_text: f.button_text ?? undefined,
+      custom_style: f.custom_style ?? undefined,
+    };
+
+    fieldsData[id] = data;
+    wireField(el, id, type);
+
+    const labelEl = el.querySelector('.form-field > label, .checkbox-field label');
+    if (labelEl && data.label) labelEl.textContent = data.label;
+
+    if (['text','email','number','phone','url','date','time'].includes(type)) {
+      const input = el.querySelector('input');
+      if (input) {
+        if (type === 'phone') input.type = 'tel';
+        if (data.placeholder) input.placeholder = data.placeholder;
+        if (data.maxlength)  input.maxLength  = parseInt(data.maxlength, 10);
+        if (data.required)   input.required   = true;
+      }
+    } else if (type === 'textarea') {
+      const ta = el.querySelector('textarea');
+      if (ta) {
+        if (data.placeholder) ta.placeholder = data.placeholder;
+        if (data.maxlength)   ta.maxLength   = parseInt(data.maxlength, 10);
+        if (data.required)    ta.required    = true;
+      }
+    } else if (type === 'select') {
+      const sel = el.querySelector('select');
+      if (sel) {
+        sel.innerHTML =
+          `<option value="">${data.placeholder || 'Select an option'}</option>` +
+          (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
+        if (data.required) sel.required = true;
+      }
+    } else if (type === 'multiselect') {
+      const sel = el.querySelector('select');
+      if (sel) {
+        sel.multiple = true;
+        sel.innerHTML = (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
+        if (data.required) sel.required = true;
+      }
+    } else if (type === 'radio') {
+      const wrap = el.querySelector('.form-field');
+      if (wrap) {
+        wrap.querySelectorAll('.radio-field').forEach(n => n.remove());
+        (data.options || []).forEach((o,i) => {
+          const div = document.createElement('div');
+          div.className = 'radio-field';
+          const rid = `${data.name}-${i}`;
+          div.innerHTML = `<input id="${rid}" type="radio" name="${escapeHtml(data.name)}">
+                           <label for="${rid}">${escapeHtml(o)}</label>`;
+          wrap.appendChild(div);
+        });
+      }
+    } else if (type === 'multicheckbox') {
+      const wrap = el.querySelector('.form-field');
+      if (wrap) {
+        wrap.querySelectorAll('.checkbox-field').forEach(n => n.remove());
+        (data.options || []).forEach((o,i) => {
+          const div = document.createElement('div');
+          div.className = 'checkbox-field';
+          const cid = `${data.name}-${i}`;
+          div.innerHTML = `<input id="${cid}" type="checkbox" name="${escapeHtml(data.name)}[]">
+                           <label for="${cid}">${escapeHtml(o)}</label>`;
+          wrap.appendChild(div);
+        });
+      }
+    } else if (type === 'checkbox' || type === 'consent') {
+      const lab = el.querySelector('.checkbox-field label');
+      if (lab && data.label) lab.textContent = data.label;
+    } else if (type === 'html') {
+      const block = el.querySelector('.html-content');
+      if (block) block.innerHTML = data.html || '<p></p>';
+    } else if (type === 'submit_button') {
+      const btn = el.querySelector('button');
+      if (btn) {
+        btn.textContent = data.button_text || 'Submit';
+        if (data.custom_style) btn.setAttribute('style', data.custom_style);
+      }
+    }
+
+    selectField(id, type);
+  }
 }

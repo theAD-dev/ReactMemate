@@ -1,9 +1,12 @@
-import { useLayoutEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { defaultFormStyle } from './builder/defaultStyle';
 import { initBuilder } from './builder/initBuilder';
 import './temp-form-builder.css';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { getFormById } from './api';
+
+const editId = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('id') : null;
 
 // Inline SVG Icon component for field types
 const Icon = ({ type }) => {
@@ -45,10 +48,38 @@ const Icon = ({ type }) => {
 export default function TempFormBuilder() {
   const { session } = useAuth();
   const { trialHeight } = useTrialHeight();
-  
-  useLayoutEffect(() => {
-    initBuilder({ defaultOrgId: session?.organization?.id, getDefaultCss: () => defaultFormStyle });
-  }, [session]);
+  const bootstrappedRef = useRef(false);
+
+  useEffect(() => {
+    const orgId = session?.organization?.id;
+    if (!orgId) return;               // wait until session is ready
+    if (bootstrappedRef.current) return; // run only once
+    bootstrappedRef.current = true;
+
+    (async () => {
+      try {
+        if (editId) {
+          const formJson = await getFormById(editId);
+          initBuilder({
+            defaultOrgId: orgId,
+            getDefaultCss: () => defaultFormStyle,
+            initialForm: formJson,
+          });
+        } else {
+          initBuilder({
+            defaultOrgId: orgId,
+            getDefaultCss: () => defaultFormStyle,
+          });
+        }
+      } catch (e) {
+        console.error('Failed to load form for editing:', e);
+        initBuilder({
+          defaultOrgId: orgId,
+          getDefaultCss: () => defaultFormStyle,
+        });
+      }
+    })();
+  }, [session?.organization?.id]);
 
   return (
     <div className="mf-builder" style={{ overflow: 'auto', height: `calc(100vh - 127px - ${trialHeight}px)` }}>
@@ -110,14 +141,14 @@ export default function TempFormBuilder() {
           {/* Form Details */}
           <div className="form-details" id="form-details-container">
             <h2>Form Details</h2>
-            <div className="form-field"><label>title</label><input id="form-title" placeholder="enter your title" /></div>
-            <div className="form-field"><label>domain</label><input id="form-domain" placeholder="enter your domain" defaultValue="https://memate.com.au/" /></div>
-            <div className="form-field"><label>submit to</label><input id="form-submit-to" placeholder="enter your submit to" /></div>
-            <div className="form-field"><label>submit from</label><input id="form-submit-from" placeholder="enter your submit from" /></div>
-            <div className="form-field"><label>cc email</label><input id="form-cc-email" placeholder="enter your cc email" /></div>
-            <div className="form-field"><label>bcc email</label><input id="form-bcc-email" placeholder="enter your bcc email" /></div>
-            <div className="form-field"><label>thank you message</label><input id="form-thank-you" placeholder="enter your thank you message" /></div>
-            <div className="form-field"><label>error message</label><input id="form-error-message" placeholder="enter your error message" /></div>
+            <div className="form-field"><label>Title</label><input id="form-title" placeholder="enter your title" /></div>
+            <div className="form-field"><label>Domain</label><input id="form-domain" placeholder="enter your domain" defaultValue="https://memate.com.au/" /></div>
+            <div className="form-field"><label>To Email</label><input id="form-submit-to" placeholder="enter submit to" /></div>
+            <div className="form-field"><label>From Email</label><input id="form-submit-from" placeholder="enter submit from" /></div>
+            <div className="form-field"><label>CC Email</label><input id="form-cc-email" placeholder="enter cc email" /></div>
+            <div className="form-field"><label>BCC Email</label><input id="form-bcc-email" placeholder="enter bcc email" /></div>
+            <div className="form-field"><label>Thank you message</label><input id="form-thank-you" placeholder="enter your thank you message" /></div>
+            <div className="form-field"><label>Error message</label><input id="form-error-message" placeholder="enter your error message" /></div>
             <div className="form-field"><label>Submit Button Label</label><input id="form-submit-label" defaultValue="Submit" /></div>
             <div className="form-field"><label>Redirect URL</label><input id="form-redirect-url" placeholder="enter redirect url" /></div>
             <div className="form-field"><label>Google reCAPTCHA Site Key</label><input id="form-recaptcha-key" placeholder="enter your reCAPTCHA site key" /></div>
