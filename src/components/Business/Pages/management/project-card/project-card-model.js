@@ -891,7 +891,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
         </Modal.Body>
       </Modal>
       <CreateJob visible={visible} setVisible={setVisible} setRefetch={() => projectCardData(projectId)} jobProjectId={project?.value} />
-      <NewExpensesCreate visible={createExpenseVisible} setVisible={setCreateExpenseVisible} setRefetch={() => projectCardData(projectId)} />
+      <NewExpensesCreate visible={createExpenseVisible} setVisible={setCreateExpenseVisible} setRefetch={() => projectCardData(projectId)} expenseProjectId={project?.value} />
     </>
   );
 };

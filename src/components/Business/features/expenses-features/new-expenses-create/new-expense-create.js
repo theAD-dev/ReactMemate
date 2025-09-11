@@ -11,7 +11,7 @@ import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 
 
 
-const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
+const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId }) => {
     const url = window.location.href;
     const urlObj = new URL(url);
     const params = new URLSearchParams(urlObj.search);
@@ -39,8 +39,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch }) => {
             window.history.replaceState({}, '', urlObj);
         }
  
-        if (projectParamId) {
-            setVisible(true);
+        if (projectParamId || expenseProjectId) {
             setProjectId(projectParamId);
             setDefaultValues((prev) => ({ ...prev, option: 'Assign to project' }));
             urlObj.searchParams.delete('projectId');
