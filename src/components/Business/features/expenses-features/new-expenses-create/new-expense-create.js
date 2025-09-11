@@ -31,7 +31,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId }
     });
 
     useEffect(() => {
-        const projectParamId = params.get('projectId');
+        const projectParamId = params.get('projectId') || expenseProjectId;
         const reference = params.get('reference');
         if (reference) {
             setDefaultValues((prev) => ({ ...prev, invoice_reference: reference }));
@@ -39,7 +39,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId }
             window.history.replaceState({}, '', urlObj);
         }
  
-        if (projectParamId || expenseProjectId) {
+        if (projectParamId) {
             setProjectId(projectParamId);
             setDefaultValues((prev) => ({ ...prev, option: 'Assign to project' }));
             urlObj.searchParams.delete('projectId');
