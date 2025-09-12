@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { listFormsByOrganization } from '../temp/api';
+import { listFormsByOrganization, deleteForm } from '../temp/api';
 import '../temp/temp-form-builder.css';
 
 const DEFAULT_ORG_ID = 5;
@@ -52,6 +52,17 @@ export default function FormsList({ organizationId = DEFAULT_ORG_ID }) {
     }
   };
 
+  const handleDelete = async (formId) => {
+    if (!window.confirm('Are you sure you want to delete this form?')) return;
+    try {
+      await deleteForm(formId);
+      alert('Form deleted successfully');
+      fetchData(orgId); // refresh list
+    } catch (e) {
+      alert(e.message || 'Failed to delete form');
+    }
+  };
+
   return (
     <div className="mf-builder">{/* reuse base styles */}
       <div className="container">
@@ -101,6 +112,8 @@ export default function FormsList({ organizationId = DEFAULT_ORG_ID }) {
                     <td style={{padding:'8px 10px',display:'flex',gap:8}}>
                       <button className="btn btn-secondary" onClick={() => copyEmbed(f.id)}>Copy Embed</button>
                       <a className="btn btn-secondary" href={`/enquiries/form-builder/new?id=${f.id}`}>Edit</a>
+                      <a className="btn btn-secondary" href={`/enquiries/form-builder/inquiries?id=${f.id}`}>Inquiries</a>
+                      <button className="btn" style={{ backgroundColor: '#f87171', color: 'white' }} onClick={() => handleDelete(f.id)}>Delete</button>
                     </td>
                   </tr>
                 ))}

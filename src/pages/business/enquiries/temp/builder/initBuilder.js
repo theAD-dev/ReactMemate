@@ -317,6 +317,11 @@ const previewFormContainer = root.querySelector('#preview-form-container');
   // Initial move button state (in case of zero nodes, this is a no-op)
   updateMoveButtons();
 
+  // Seed default first four fields for brand-new forms
+  if (!initialForm && preview.querySelectorAll('.preview-field').length === 0) {
+    seedDefaultFields();
+  }
+
   function renderPreview(fields) {
     let out = `<form>`;
     fields.forEach(f => {
@@ -463,6 +468,16 @@ const previewFormContainer = root.querySelector('#preview-form-container');
   function capitalize(s){ return (s||'').charAt(0).toUpperCase() + (s||'').slice(1); }
   function escapeHtml(s=''){ return s.replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
   function escapeAttr(s=''){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+  function seedDefaultFields() {
+    const defaults = [
+      { field_type: 'text',     name: 'name',    label: 'Name',    placeholder: 'Enter your name',    order: 0 },
+      { field_type: 'email',    name: 'email',   label: 'Email',   placeholder: 'Enter your email',   order: 1 },
+      { field_type: 'phone',    name: 'phone',   label: 'Phone',   placeholder: 'Enter your phone',   order: 2 },
+      { field_type: 'textarea', name: 'message', label: 'Message', placeholder: 'Type your message',  order: 3 },
+    ];
+    defaults.forEach(addFieldFromData);
+  }
 
   // ----- Hydration helpers -----
   function setVal(id, v) {

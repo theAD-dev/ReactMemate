@@ -1,4 +1,4 @@
- .mf-builder{
+.mf-builder{
   --bg:#f6f8fb;
   --panel:#ffffff;
   --border:#e6e8ee;
@@ -115,7 +115,7 @@
 .mf-builder .btn:active{transform:translateY(1px)}
 .mf-builder .btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
 .mf-builder .btn-primary:hover{background:var(--brand-600)}
-.mf-builder .btn-secondary{background:#f3f6ff}
+.mf-builder .btn-secondary{background:#f3f6ff; color:#000;}
 
 /* Modal */
 .mf-builder .modal{position:fixed;inset:0;background:rgba(0,10,30,.45);display:none}
