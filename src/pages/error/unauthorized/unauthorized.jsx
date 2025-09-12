@@ -60,7 +60,7 @@ const UnauthorizedError = () => {
             <p className={clsx(style.subTitle)}>
                 You lack the necessary permissions to access this feature.
             </p>
-            <Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button>
+            <Link to={"/"}><Button className='outline-button' style={{ marginBottom: '32px' }}> <ChevronLeft /> Go back</Button></Link>
             <Link to={"#"}><span className={clsx(style.supportext)}>Support</span></Link>
         </div>
     );
