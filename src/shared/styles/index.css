@@ -1974,3 +1974,16 @@ input:focus::-webkit-input-placeholder {
 .svc-creator__banner {
   display: none !important;
 }
+
+.sun-editor .se-wrapper {
+  z-index: 0 !important;
+}
+
+.sun-editor .se-toolbar {
+  z-index: 1 !important;
+}
+
+
+.sun-editor .se-wrapper .se-wrapper-inner {
+  min-height: 299px !important;
+}
