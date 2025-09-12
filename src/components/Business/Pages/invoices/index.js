@@ -145,7 +145,7 @@ const InvoicePage = () => {
                 </div>
             </div>
             {
-                Object.keys(filter).length > 0 && (
+                Object.keys(filter)?.length > 0 && (
                     <InvoicesFilters filter={filter} setFilters={setFilters} />
                 )
             }
@@ -154,7 +154,7 @@ const InvoicePage = () => {
                 isShowDeleted={isShowDeleted}
                 refetch={refetch}
                 setRefetch={setRefetch}
-                isFilterEnabled={Object.keys(filter).length > 0}
+                isFilterEnabled={Object.keys(filter)?.length > 0}
                 filters={filter}
             />
             <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />

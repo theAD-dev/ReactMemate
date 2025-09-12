@@ -48,7 +48,7 @@ export const ActivateWorkSubscription = () => {
             >
                 Cancel
             </Button>
-            <Button disabled={activeWorkMutation.isPending} className='solid-button' onClick={() => activeWorkMutation.mutate()}>Confirm & Activate $19/month
+            <Button disabled={activeWorkMutation.isPending} className='solid-button' onClick={() => activeWorkMutation.mutate()}>Confirm & Activate $62.32/month
                 {activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px', marginLeft: '8px' }}></ProgressSpinner>}
             </Button>
         </div>
@@ -70,7 +70,7 @@ export const ActivateWorkSubscription = () => {
                         </Col>
                         <Col sm={6} className={style.col}>
                             <label className={style.colLabel}>New cost</label>
-                            <p className={style.colValue}>$19</p>
+                            <p className={style.colValue}>$62.32</p>
                             <p className={style.month}>/month</p>
                         </Col>
                     </Row>

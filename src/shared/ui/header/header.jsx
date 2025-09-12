@@ -11,6 +11,7 @@ import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import Briefcase from "../../../assets/images/icon/briefcase.svg";
 import calendarTick from "../../../assets/images/icon/calendar-tick.svg";
 import clipboardTick from "../../../assets/images/icon/clipboard-tick.svg";
+import EnquiriesIcon from "../../../assets/images/icon/enquiries.png";
 import ExpenseIcon from "../../../assets/images/icon/ExpenseIcon.svg";
 import InvoicesIcon from "../../../assets/images/icon/InvoicesIcon.svg";
 import ManagementIcon from "../../../assets/images/icon/ManagementIcon.svg";
@@ -213,17 +214,17 @@ const Header = () => {
                                     </Col>
                                     <Col>
                                         <ul className="middle">
-                                            {/* <li>
-                                            <NavLink
-                                                to="/enquiries"
-                                                className={({ isActive }) =>
-                                                    (isActive ? "menuActive" : "link") + " enquiries"
-                                                }
-                                            >
-                                                <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
-                                                Enquiries
-                                            </NavLink>
-                                        </li> */}
+                                            <li>
+                                                <NavLink
+                                                    to="/enquiries"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " enquiries"
+                                                    }
+                                                >
+                                                    <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
+                                                    Enquiries
+                                                </NavLink>
+                                            </li>
                                             <li>
                                                 <NavLink
                                                     to="/sales"
