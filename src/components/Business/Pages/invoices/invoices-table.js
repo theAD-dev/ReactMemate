@@ -371,11 +371,11 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 <Column field="client__name" header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '295px', maxWidth: '295px', width: '295px' }} frozen sortable></Column>
                 <Column field="reference" header="Invoice Reference" style={{ minWidth: '250px' }}></Column>
                 <Column field="due_date" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
-                <Column field='amount' header="Total invoice" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
+                <Column field='amount' header="Total invoice" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }} sortable></Column>
                 <Column field='to_be_paid' header="To be paid" body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
-                <Column field='deposit' header="Deposit/Payment" body={DepositBody} style={{ minWidth: '114px', maxWidth: '164px', width: '164px', textAlign: 'left' }} sortable></Column>
-                <Column field='total_requests' header="Info" body={InfoBodyTemplate} style={{ minWidth: '89px', maxWidth: '89px', width: '89px', textAlign: 'center' }} sortable></Column>
-                <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px', textAlign: 'center' }} sortable></Column>
+                <Column field='deposit' header="Deposit/Payment" body={DepositBody} style={{ minWidth: '114px', maxWidth: '164px', width: '164px', textAlign: 'left' }}></Column>
+                <Column field='total_requests' header="Info" body={InfoBodyTemplate} style={{ minWidth: '89px', maxWidth: '89px', width: '89px', textAlign: 'center' }}></Column>
+                <Column field='xero' header="Xero/Myob" body={xeroBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px', textAlign: 'center' }}></Column>
                 <Column field='paid' header="Actions" body={StatusBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
             <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData} />

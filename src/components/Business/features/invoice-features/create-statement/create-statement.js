@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { downloadStatement } from '../../../../../APIs/expenses-api';
 
 const CreateStatement = ({ invoices }) => {
-    const clientName = invoices.length > 0 ? (invoices[0]?.client?.name || "") : '';
+    const clientName = invoices?.length > 0 ? (invoices[0]?.client?.name || "") : '';
 
     const downloadStatementMutation = useMutation({
         mutationFn: (data) => downloadStatement(data),

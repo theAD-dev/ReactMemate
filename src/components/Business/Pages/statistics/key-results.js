@@ -258,8 +258,9 @@ const KeyResultsPage = () => {
                     <div className={style.rightBox}>
                         <div className={style.firstBox}>
                             <div className='text-center' style={{ width: '240px' }}>
-                                <p className={clsx(style.boxlable, 'mb-2')}>Up to date</p>
+                                <p className={clsx(style.boxlable, 'mb-2')}>Up to date *</p>
                                 <h1 className={clsx(style.uptoDate)}>${formatAUD(uptoDate)}</h1>
+                                <small style={{ fontSize: '11px', color: '#667085', display: 'block', marginTop: '-5px', fontStyle: 'italic', position: 'relative', top: '18px', left: '-25px' }}>* Prices shown are exclusive of GST</small>
                             </div>
                             <div className={clsx(style.circularProgressDiv)}>
                                 {parseFloat(outerProgress).toFixed(2)}%

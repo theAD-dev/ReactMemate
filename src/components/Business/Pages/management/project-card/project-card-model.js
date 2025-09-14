@@ -39,6 +39,8 @@ import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avatar';
+import CreateJob from '../../../../Work/features/create-job/create-job';
+import NewExpensesCreate from '../../../features/expenses-features/new-expenses-create/new-expense-create';
 
 
 
@@ -54,6 +56,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [filteredHistoryOptions, setFilteredHistoryOptions] = useState([]);
   const [showCostBreakdown, setShowCostBreakdown] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
 
   //Real Cost Calculation
   const cs = parseFloat(cardData?.cost_of_sale) || 0;
@@ -740,13 +744,12 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <Row className='projectCardButWrap'>
               <Col>
                 <ScheduleUpdate key={projectId} projectId={projectId} projectCardData={projectCardData} isFetching={isFetching} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
-                <Link to={`/expenses?projectId=${project?.value}&reference=${project?.reference}`}><Button className='expense expActive'>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button></Link>
+                <Button className='expense expActive' onClick={() => setCreateExpenseVisible(true)}>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
-                  profileData?.has_work_subscription &&
-                  <Link to={`/work/jobs?projectId=${project?.value}&reference=${project?.reference}`}>
-                    <Button className='createJob jobActive'>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
-                  </Link>
+                  profileData?.has_work_subscription &&<>
+                    <Button className='createJob jobActive' onClick={() => setVisible(true)}>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
+                  </>
                 }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />
                 <FilesModel projectId={projectId} />
@@ -887,6 +890,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
           </div>
         </Modal.Body>
       </Modal>
+      <CreateJob visible={visible} setVisible={setVisible} setRefetch={() => projectCardData(projectId)} jobProjectId={project?.value} />
+      <NewExpensesCreate visible={createExpenseVisible} setVisible={setCreateExpenseVisible} setRefetch={() => projectCardData(projectId)} expenseProjectId={project?.value} />
     </>
   );
 };

@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Editor } from 'primereact/editor';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
@@ -14,26 +13,7 @@ import { toast } from 'sonner';
 import style from './job-template.module.scss';
 import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-
-const renderHeader = () => (
-    <span className="ql-formats">
-        <button className="ql-bold" aria-label="Bold"></button>
-        <button className="ql-italic" aria-label="Italic"></button>
-        <button className="ql-underline" aria-label="Underline"></button>
-        <button className="ql-strike" aria-label="Strikethrough"></button>
-        <button className="ql-blockquote" aria-label="Blockquote"></button>
-        <button className="ql-list" value="ordered" aria-label="Ordered List"></button>
-        <button className="ql-list" value="bullet" aria-label="Bullet List"></button>
-        <button className="ql-align" value="" aria-label="Align Left"></button>
-        <button className="ql-align" value="center" aria-label="Align Center"></button>
-        <button className="ql-align" value="right" aria-label="Align Right"></button>
-        <button className="ql-align" value="justify" aria-label="Justify"></button>
-        <button className="ql-link" aria-label="Insert Link"></button>
-        <button className="ql-image" aria-label="Insert Image"></button>
-        <button className="ql-code-block" aria-label="Code Block"></button>
-    </span>
-);
-const header = renderHeader();
+import { SunEditorComponent } from '../../../../shared/ui/editor';
 
 const CreateProposalTemplate = () => {
     const { trialHeight } = useTrialHeight();
@@ -263,18 +243,23 @@ const CreateProposalTemplate = () => {
                                     <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                         {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                     </InputIcon>
-                                    <Editor
-                                        style={{ minHeight: "299px" }}
-                                        headerTemplate={header}
-                                        value={section.description}
-                                        placeholder='Enter a description...'
-                                        onTextChange={(e) => {
+                                    <SunEditorComponent
+                                        value={section.description || ''}
+                                        onChange={(content) => {
                                             setSections(prevSections => {
                                                 const newSections = [...prevSections];
-                                                newSections[index] = { ...newSections[index], description: e.htmlValue };
+                                                newSections[index] = { ...newSections[index], description: content };
                                                 return newSections;
                                             });
                                         }}
+                                        placeholder="Enter a description..."
+                                        height={299}
+                                        showTable={true}
+                                        showImage={true}
+                                        showLink={true}
+                                        showCodeView={true}
+                                        enableS3Upload={true}
+                                        uploadId={0}
                                     />
                                 </div>
                                 {errors?.sections?.[index]?.description && (
