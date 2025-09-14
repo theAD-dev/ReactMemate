@@ -1,7 +1,6 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Login from '../components/layout/Login/login-page';
-import TempFormBuilder from "../pages/business/enquiries/form-builder/form-builder";
 import UnknownError from "../pages/error/unknown/unknown";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import SettingsLayout from "../shared/ui/layout/settings-layout";
@@ -105,6 +104,8 @@ const StripeContainer = LazyLoader(lazy(() => import('../ui/strip-payment/strip-
 const Help = LazyLoader(lazy(() => import('../pages/help')));
 const AccountStatement = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/statement')));
 const Enquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/enquiries')));
+const Forms = LazyLoader(lazy(() => import('../pages/business/enquiries/forms')));
+const FormBuilder = LazyLoader(lazy(() => import('../pages/business/enquiries/form-builder/form-builder')));
 const FormsList = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/forms-list')));
 const FormInquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/inquiries-list')));
 
@@ -295,6 +296,19 @@ const routes = [
                 errorElement: <UnknownError />,
             },
             {
+                path: "enquiries/forms",
+                element: <Forms />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: 'enquiries/form-builder/:id',
+                element: <FormBuilder />,
+                errorElement: <UnknownError />,
+            },
+
+
+
+            {
                 path: 'enquiries/form-builder',
                 element: <FormsList />,
                 errorElement: <UnknownError />,
@@ -302,11 +316,6 @@ const routes = [
             {
                 path: 'enquiries/form-builder/inquiries',
                 element: <FormInquiries />,
-                errorElement: <UnknownError />,
-            },
-            {
-                path: 'enquiries/form-builder/new',
-                element: <TempFormBuilder />, // builder lives at /enquiries/form-builder/new
                 errorElement: <UnknownError />,
             },
             {

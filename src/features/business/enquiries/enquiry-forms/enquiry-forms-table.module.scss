@@ -1,0 +1,19 @@
+.ellipsis {
+  color: #101828;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.deletedRow {
+  background-color: #FEF3F2 !important;
+}
+
+.location {
+  padding: 4px;
+  border-radius: 4px;
+  &:hover {
+    background-color: #F2FAFF;
+  }
+}

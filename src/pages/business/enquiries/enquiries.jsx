@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Collection, Download, Eye, EyeSlash, Filter, Gear, InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
+import { useState } from 'react';
+import { Collection, Gear, InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
-import { TieredMenu } from 'primereact/tieredmenu';
 import style from './enquiries.module.scss';
 
 const Enquiries = () => {
@@ -37,7 +36,7 @@ const Enquiries = () => {
             <span className={style.topBarText}>Web</span>
           </Link>
 
-          <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
+          <Link to={"/enquiries/forms"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
             <InputCursorText color='#F79009' size={16} className='me-2' />
             <span className={style.topBarText}>Form</span>
           </Link>
@@ -48,7 +47,7 @@ const Enquiries = () => {
           </Link>
         </div>
         <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-          <Link to={"/enquiries/form-builder"}><Button className='solid-button py-1 font-14'>New</Button></Link>
+          <Link to={"/enquiries/form-builder/new"}><Button className='solid-button py-1 font-14'>New</Button></Link>
           <Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button>
         </div>
       </div>
