@@ -78,7 +78,7 @@ const ActionsMenu = ({ rowData }) => {
                     <div
                         className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'
                         onClick={() => {
-                            navigate(`/enquiry-forms/${rowData.id}/inquiries`);
+                            navigate(`/enquiries/form-builder/inquiries?id=${rowData.id}`);
                             setOpen(false);
                         }}
                     >
