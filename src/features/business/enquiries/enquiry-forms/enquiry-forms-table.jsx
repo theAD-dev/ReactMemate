@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -70,7 +70,7 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, r
   const titleBody = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
       <span>{rowData.title}</span>
-      <Button label="Open" onClick={() => navigate(`/clients/${rowData.id}/order-history`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+      <Button label="Open" onClick={() => navigate(`/enquiries/form-builder/${rowData.id}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
     </div>;
   };
 
@@ -105,51 +105,13 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, r
       onSort={onSort}
       rowClassName={rowClassName}
     >
-      <Column
-        field="id"
-        header="ID"
-        style={{ width: '70px' }}
-        sortable
-      />
-      <Column
-        field="title"
-        header="Name"
-        body={titleBody}
-        style={{ minWidth: '150px' }}
-        sortable
-      />
-      <Column
-        field="domain"
-        header="Domain"
-        body={domainBody}
-        style={{ minWidth: '200px' }}
-        sortable
-      />
-      <Column
-        field="created"
-        header="Created At"
-        body={createdBody}
-        style={{ minWidth: '120px', maxWidth: '200px', width: '120px' }}
-        sortable
-      />
-      <Column
-        field="submit_to"
-        header="Submit To"
-        body={(rowData) => <span style={{ color: '#667085' }}>{rowData.submit_to}</span>}
-        style={{ minWidth: '250px' }}
-      />
-      <Column
-        field="fields"
-        header="Total Fields"
-        body={(rowData) => <span>{rowData.fields?.length || 0}</span>}
-        style={{ width: '100px', textAlign: 'right' }}
-        sortable
-      />
-      <Column
-        header="Actions"
-        body={actionsBody}
-        style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }}
-      />
+      <Column field="id" header="ID" style={{ width: '70px' }} sortable />
+      <Column field="title" header="Name" body={titleBody} style={{ minWidth: '150px' }} sortable />
+      <Column field="fields" header="Total Fields" body={(rowData) => <span>{rowData.fields?.length || 0}</span>} style={{ width: '100px', textAlign: 'right' }} sortable />
+      <Column field="domain" header="Domain" body={domainBody} style={{ minWidth: '200px' }} sortable />
+      <Column field="created" header="Created At" body={createdBody} style={{ minWidth: '120px', maxWidth: '200px', width: '120px' }} sortable />
+      <Column field="submit_to" header="Submit To" body={(rowData) => <span style={{ color: '#667085' }}>{rowData.submit_to}</span>} style={{ minWidth: '250px' }} />
+      <Column header="Actions" body={actionsBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} />
     </DataTable>
   );
 });

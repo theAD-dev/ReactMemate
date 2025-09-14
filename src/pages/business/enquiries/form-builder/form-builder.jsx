@@ -1,12 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import { getFormById } from './api';
 import { defaultFormStyle } from './builder/default-style';
 import { initBuilder } from './builder/init-builder';
 import './form-builder.css';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-
-const editId = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('id') : null;
 
 // Inline SVG Icon component for field types
 const Icon = ({ type }) => {
@@ -49,6 +48,8 @@ export default function TempFormBuilder() {
   const { session } = useAuth();
   const { trialHeight } = useTrialHeight();
   const bootstrappedRef = useRef(false);
+  const { id } = useParams();
+  const editId = id !== 'new' ? id : null;
 
   useEffect(() => {
     const orgId = session?.organization?.id;
