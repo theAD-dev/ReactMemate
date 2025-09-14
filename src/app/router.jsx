@@ -106,8 +106,6 @@ const Help = LazyLoader(lazy(() => import('../pages/help')));
 const AccountStatement = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/statement')));
 const Enquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/enquiries')));
 const FormsList = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/FormsList')));
-const FormBuilder = LazyLoader(lazy(() => import('../pages/business/enquiries/form-builder')));
-const FormView = LazyLoader(lazy(() => import('../pages/business/enquiries/form-view/form-view')));
 const FormInquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/InquiriesList')));
 
 const routes = [
@@ -294,16 +292,6 @@ const routes = [
             {
                 path: "enquiries",
                 element: <Enquiries />,
-                errorElement: <UnknownError />,
-            },
-            {
-                path: "enquiries/form",
-                element: <FormBuilder />,
-                errorElement: <UnknownError />,
-            },
-            {
-                path: "enquiries/form/:id",
-                element: <FormView />,
                 errorElement: <UnknownError />,
             },
             {
