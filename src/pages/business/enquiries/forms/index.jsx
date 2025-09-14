@@ -37,7 +37,7 @@ const FormsPage = () => {
                         <span className={style.topBarText}>Web</span>
                     </Link>
 
-                    <Link to={"/enquiries/forms"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, style.activeForm)}>
+                    <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
                         <InputCursorText color='#F79009' size={16} className='me-2' />
                         <span className={style.topBarText}>Form</span>
                     </Link>
@@ -49,7 +49,7 @@ const FormsPage = () => {
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
                     <Link to={"/enquiries/form-builder/new"}><Button className='solid-button py-1 font-14'>New</Button></Link>
-                    <Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button>
+                    <Link to={"/enquiries/forms"}><Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button></Link>
                 </div>
             </div>
             <EnquiryFormsTable />
