@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Login from '../components/layout/Login/login-page';
-import TempFormBuilder from "../pages/business/enquiries/temp/temp-form-builder";
+import TempFormBuilder from "../pages/business/enquiries/form-builder/form-builder";
 import UnknownError from "../pages/error/unknown/unknown";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import SettingsLayout from "../shared/ui/layout/settings-layout";
@@ -105,8 +105,8 @@ const StripeContainer = LazyLoader(lazy(() => import('../ui/strip-payment/strip-
 const Help = LazyLoader(lazy(() => import('../pages/help')));
 const AccountStatement = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/statement')));
 const Enquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/enquiries')));
-const FormsList = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/FormsList')));
-const FormInquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/InquiriesList')));
+const FormsList = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/forms-list')));
+const FormInquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/forms/inquiries-list')));
 
 const routes = [
     {
@@ -296,12 +296,12 @@ const routes = [
             },
             {
                 path: 'enquiries/form-builder',
-                element: <FormsList />,   // default page = list of forms
+                element: <FormsList />,
                 errorElement: <UnknownError />,
             },
             {
                 path: 'enquiries/form-builder/inquiries',
-                element: <FormInquiries />,   // default page = list of forms
+                element: <FormInquiries />,
                 errorElement: <UnknownError />,
             },
             {

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { listFormSubmissions } from '../temp/api';
+import { listFormSubmissions } from '../form-builder/api';
 
 /**
  * InquiriesList

@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { defaultFormStyle } from './builder/defaultStyle';
-import { initBuilder } from './builder/initBuilder';
-import './temp-form-builder.css';
+import { getFormById } from './api';
+import { defaultFormStyle } from './builder/default-style';
+import { initBuilder } from './builder/init-builder';
+import './form-builder.css';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
-import { getFormById } from './api';
 
 const editId = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('id') : null;
 
