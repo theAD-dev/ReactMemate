@@ -376,7 +376,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 <Column field='deposit' header="Deposit/Payment" exportable={false} body={DepositBody} style={{ minWidth: '114px', maxWidth: '164px', width: '164px', textAlign: 'left' }}></Column>
                 <Column field='total_requests' header="Info" exportable={false} body={InfoBodyTemplate} style={{ minWidth: '89px', maxWidth: '89px', width: '89px', textAlign: 'center' }}></Column>
                 <Column field='xero' header="Xero/Myob" exportable={false} body={xeroBody} style={{ minWidth: '120px', maxWidth: '120px', width: '120px', textAlign: 'center' }}></Column>
-                <Column field='paid' header="Actions" exportable={false} body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>
+                <Column field='paid' header="Actions" exportField={(rowData) => formatDate(rowData.created)} exportHeader='Created at' body={ActionBody} style={{ minWidth: '75px', maxWidth: '75px', width: '75px', textAlign: 'center' }} bodyStyle={{ color: '#667085' }}></Column>
             </DataTable>
             <InvoicePartialPayment show={visible} setShow={() => setVisible(false)} setRefetch={setRefetch} invoice={invoiceData} />
         </>
