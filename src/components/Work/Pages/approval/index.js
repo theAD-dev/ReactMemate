@@ -64,8 +64,9 @@ const ApprovalPage = () => {
         queryFn: () => getToApprovedJobsInvoice(currentYear, currentWeek),
         enabled: !!currentWeek && !!currentYear,
         retry: 1,
+        cacheTime: 0,
+        staleTime: 0
     });
-    console.log('toInvoiceQuery: ', toInvoiceQuery?.data);
 
     const getWeekDates = (weekNumber, year) => {
         // Calculate Monday start for the given week
