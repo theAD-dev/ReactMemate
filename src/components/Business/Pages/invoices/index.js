@@ -32,11 +32,194 @@ const InvoicePage = () => {
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
 
     const exportCSV = (selectionOnly) => {
-        if (dt.current) {
-            dt.current.exportCSV({ selectionOnly });
-        } else {
-            console.error('DataTable ref is null');
+        if (!selected || selected.length === 0) {
+            toast.error('Please select invoices to export');
+            return;
         }
+
+        // Format date function similar to the table
+        const formatDate = (timestamp) => {
+            try {
+                const date = new Date(timestamp * 1000);
+                const day = date.getDate();
+                const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                }).format(date);
+                const year = date.getFullYear();
+                return `${day} ${monthAbbreviation} ${year}`;
+            } catch (error) {
+                console.log('error: ', error);
+                return '';
+            }
+        };
+
+        // Transform data to match your CSV format exactly like print function
+        const csvData = selected.map(invoice => ({
+            'Invoice ID': invoice.number || '',
+            'Created at': invoice.created ? formatDate(invoice.created) : '',
+            'Customer A→Z': invoice.client?.name || '',
+            'Invoice Reference': invoice.reference || '',
+            'Due Date': invoice.due_date ? formatDate(invoice.due_date) : '',
+            'Total invoice': invoice.amount ? `$${formatAUD(invoice.amount)}` : '$0.00',
+            'To be paid': invoice.to_be_paid ? `$${formatAUD(invoice.to_be_paid)}` : '$0.00',
+        }));
+
+        // Convert to CSV and download
+        exportToCSV(csvData, `invoices_${new Date().toISOString().split('T')[0]}.csv`);
+    };
+
+    // Helper function to convert data to CSV
+    const exportToCSV = (data, filename) => {
+        if (data.length === 0) {
+            toast.error('No data to export');
+            return;
+        }
+
+        const headers = Object.keys(data[0]);
+        const csvHeaders = headers.map(header => `"${header}"`).join(',');
+        const csvRows = data.map(row => 
+            headers.map(header => `"${(row[header] || '').toString().replace(/"/g, '""')}"`).join(',')
+        );
+
+        const csvContent = [csvHeaders, ...csvRows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    };
+
+    const printInvoices = () => {
+        if (!selected || selected.length === 0) {
+            toast.error('Please select invoices to print');
+            return;
+        }
+
+        // Format date function similar to the table
+        const formatDate = (timestamp) => {
+            try {
+                const date = new Date(timestamp * 1000);
+                const day = date.getDate();
+                const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                }).format(date);
+                const year = date.getFullYear();
+                return `${day} ${monthAbbreviation} ${year}`;
+            } catch (error) {
+                console.log('error: ', error);
+                return '';
+            }
+        };
+
+        const printWindow = window.open('', '_blank');
+        const totalAmount = selected.reduce((sum, inv) => sum + (inv.amount || 0), 0);
+        const totalOutstanding = selected.reduce((sum, inv) => sum + (inv.to_be_paid || 0), 0);
+
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Invoices Report - MeMate</title>
+                    <style>
+                        body { 
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                            margin: 20px; 
+                            line-height: 1.4;
+                        }
+                        .header { 
+                            text-align: center; 
+                            margin-bottom: 30px; 
+                            border-bottom: 2px solid #333;
+                            padding-bottom: 20px;
+                        }
+                        .meta-info { 
+                            text-align: right; 
+                            margin-bottom: 20px; 
+                            color: #666;
+                            font-size: 14px;
+                        }
+                        table { 
+                            width: 100%; 
+                            border-collapse: collapse; 
+                            margin-top: 20px; 
+                            font-size: 12px;
+                        }
+                        th, td { 
+                            border: 1px solid #ddd; 
+                            padding: 10px; 
+                            text-align: left; 
+                        }
+                        th { 
+                            background-color: #f8f9fa; 
+                            font-weight: bold;
+                            color: #333;
+                        }
+                        tr:nth-child(even) { 
+                            background-color: #f9f9f9; 
+                        }
+                        .total-row {
+                            font-weight: bold;
+                            background-color: #e9ecef !important;
+                        }
+                        @media print {
+                            body { margin: 0; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="meta-info">
+                        Generated on: ${new Date().toLocaleString()}
+                    </div>
+                    <div class="header">
+                        <h1>Invoices Report</h1>
+                        <p>Selected Items: ${selected.length}</p>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Created At</th>
+                                <th>Customer</th>
+                                <th>Invoice Reference</th>
+                                <th>Due Date</th>
+                                <th>Total Invoice</th>
+                                <th>To be Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${selected.map(invoice => `
+                                <tr>
+                                    <td>${invoice.number || ''}</td>
+                                    <td>${invoice.created ? formatDate(invoice.created) : ''}</td>
+                                    <td>${invoice.client?.name || ''}</td>
+                                    <td>${invoice.reference || ''}</td>
+                                    <td>${invoice.due_date ? formatDate(invoice.due_date) : ''}</td>
+                                    <td>$${formatAUD(invoice.amount || 0)}</td>
+                                    <td>$${formatAUD(invoice.to_be_paid || 0)}</td>
+                                </tr>
+                            `).join('')}
+                            <tr class="total-row">
+                                <td colspan="4"><strong>Total</strong></td>
+                                <td><strong>$${formatAUD(totalAmount)}</strong></td>
+                                <td><strong>$${formatAUD(totalOutstanding)}</strong></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        
+        setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+        }, 250);
     };
 
     const paidMutation = useMutation({
@@ -107,6 +290,7 @@ const InvoicePage = () => {
                                         }
                                     </button>
                                     <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
+                                    <button className={`${style.filterBox}`} onClick={printInvoices}><Printer /></button>
                                 </div>
                             </>
                         )
