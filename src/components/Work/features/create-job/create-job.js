@@ -96,7 +96,7 @@ export function getFileIcon(fileType, size = 32, noColor) {
     );
 }
 
-const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, refetch = () => { } }) => {
+const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEditMode = false, jobData = null, jobId = null, jobProjectId, projectReference, refetch = () => { } }) => {
     const accessToken = localStorage.getItem("access_token");
     const publishRef = useRef(null);
     const url = React.useMemo(() => window.location.href, []);
@@ -588,7 +588,11 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
         if (jobProjectId) {
             setProjectId(+jobProjectId);
         }
-    }, [jobProjectId]);
+        
+        if (projectReference) {
+          setJobReference(projectReference);  
+        }
+    }, [jobProjectId, projectReference]);
 
     // Populate form with job data when in edit mode
     useEffect(() => {
