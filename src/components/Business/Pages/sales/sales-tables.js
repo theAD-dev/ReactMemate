@@ -389,7 +389,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
         <Table responsive style={{ marginBottom: `${trialHeight}px` }}>
           <thead style={{ position: "sticky", top: "0px", zIndex: 9 }}>
             <tr>
-              <th>
+              <th style={{ width: 40 }}>
                 <label className="customCheckBox">
                   <input
                     type="checkbox"
@@ -427,7 +427,7 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
               rows.map((row) => (
                 <tr data-saleuniqueid={row.saleUniqueId}
                   key={row.id} className={selectedRows.includes(row.id) ? "selected-row" : ""}>
-                  <td>
+                  <td style={{ width: 40 }}>
                     <label className="customCheckBox">
                       <input
                         type="checkbox"
