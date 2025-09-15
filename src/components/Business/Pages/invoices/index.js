@@ -107,7 +107,6 @@ const InvoicePage = () => {
                                         }
                                     </button>
                                     <button className={`${style.filterBox}`} onClick={() => exportCSV(true)}><Download /></button>
-                                    <button className={`${style.filterBox}`} onClick={() => { }}><Printer /></button>
                                 </div>
                             </>
                         )
