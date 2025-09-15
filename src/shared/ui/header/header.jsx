@@ -214,7 +214,7 @@ const Header = () => {
                                     </Col>
                                     <Col>
                                         <ul className="middle">
-                                            <li>
+                                            {/* <li>
                                                 <NavLink
                                                     to="/enquiries"
                                                     className={({ isActive }) =>
@@ -224,7 +224,7 @@ const Header = () => {
                                                     <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
                                                     Enquiries
                                                 </NavLink>
-                                            </li>
+                                            </li> */}
                                             <li>
                                                 <NavLink
                                                     to="/sales"
