@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { ChevronLeft, FiletypePdf, PlusSlashMinus } from 'react-bootstrap-icons';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
@@ -363,13 +363,13 @@ const CalculateQuote = () => {
                         }
                         {
                             newRequestQuery?.data?.proposal_pdf ? (
-                                <div className='d-flex align-items-center gap-2'>
-                                    <button type="button" className="button-custom text-button pe-0" onClick={() => setShowProposalModal(true)}>
+                                <div className='d-flex align-items-center'>
+                                    <button type="button" className="text-button" onClick={() => setShowProposalModal(true)}>
                                         Edit Proposal
                                     </button>
-                                    <a href={`${newRequestQuery?.data?.proposal_pdf}`} target='_blank' type="button" className="button-custom text-button ps-0" rel="noreferrer">
+                                    <Link to={`${process.env.REACT_APP_URL}${newRequestQuery?.data?.proposal_pdf}`} target='_blank' rel="noreferrer" style={{ position: 'relative', top: '-2px', left: '-8px' }}>
                                         <FiletypePdf color='#106B99' size={20} />
-                                    </a>
+                                    </Link>
                                 </div>
                             ) : (
                                 <button type="button" disabled={!unique_id} className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
