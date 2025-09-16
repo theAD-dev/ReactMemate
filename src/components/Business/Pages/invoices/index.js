@@ -168,6 +168,20 @@ const InvoicePage = () => {
                         @media print {
                             body { margin: 0; }
                             .no-print { display: none; }
+                            @page {
+                                margin: 0.5in;
+                                size: A4;
+                                @bottom-left {
+                                    content: "Generated on ${new Date().toLocaleString()}";
+                                    font-size: 8px;
+                                    color: #666;
+                                }
+                                @bottom-right {
+                                    content: "Page " counter(page) " of " counter(pages);
+                                    font-size: 8px;
+                                    color: #666;
+                                }
+                            }
                         }
                     </style>
                 </head>
