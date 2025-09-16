@@ -8,7 +8,6 @@ import { nanoid } from 'nanoid';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
-import { Editor } from "primereact/editor";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from "primereact/inputtext";
@@ -18,6 +17,7 @@ import { toast } from 'sonner';
 import style from './create-proposal.module.scss';
 import FileUploader from './file-uploader/file-uploader';
 import { getProposalBySalesId, getProposalsTemplate, getProposalsTemplates } from '../../../../../APIs/email-template';
+import { SunEditorComponent } from '../../../../../shared/ui/editor';
 import SendProposal from '../send-proposal/send-proposal';
 
 
@@ -436,18 +436,23 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                     <InputIcon style={{ position: 'absolute', right: '15px', top: '40px', zIndex: 1 }}>
                                         {proposalQuery?.isFetching && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '-5px' }} />}
                                     </InputIcon>
-                                    <Editor
-                                        style={{ minHeight: "299px" }}
-                                        headerTemplate={header}
+                                    <SunEditorComponent
                                         value={section.description}
-                                        placeholder='Enter a description...'
-                                        onTextChange={(e) => {
+                                        onChange={(content) => {
                                             setSections(prevSections => {
                                                 const newSections = [...prevSections];
-                                                newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], description: e.htmlValue };
+                                                newSections[section?.originalIndex] = { ...newSections[section?.originalIndex], description: content };
                                                 return newSections;
                                             });
                                         }}
+                                        placeholder="Enter a description..."
+                                        height={299}
+                                        showTable={true}
+                                        showImage={true}
+                                        showLink={true}
+                                        showCodeView={true}
+                                        enableS3Upload={true}
+                                        uploadId={0}
                                     />
                                     {errors?.sections?.[index]?.description && (
                                         <p className="error-message mb-0">{"Message is required"}</p>

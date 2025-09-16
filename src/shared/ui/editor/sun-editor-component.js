@@ -335,8 +335,8 @@ const SunEditorComponent = ({
         imageUploadUrl: enableS3Upload ? null : undefined,
         // Table configuration
         table: {
-            headerStyle: 'border: 1px solid #dee2e6; background-color: #f8f9fa; font-weight: bold;',
-            cellStyle: 'border: 1px solid #dee2e6; padding: 8px; min-width: 50px;'
+            headerStyle: 'background-color: #f8f9fa; font-weight: bold; padding: 8px; min-width: 50px; border: none;',
+            cellStyle: 'padding: 8px; min-width: 50px; border: none;'
         },
         // Image configuration
         imageUploadHeader: enableS3Upload ? undefined : {
@@ -409,6 +409,24 @@ const SunEditorComponent = ({
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
+                }
+                
+                /* Remove all table borders in SunEditor */
+                .sun-editor-wrapper .se-wrapper-inner table,
+                .sun-editor-wrapper .se-wrapper-inner table td,
+                .sun-editor-wrapper .se-wrapper-inner table th,
+                .sun-editor-wrapper .se-wrapper-inner table tr {
+                    border: none !important;
+                    border-collapse: collapse !important;
+                }
+                
+                /* Also remove borders when content is rendered outside editor */
+                .sun-editor-content table,
+                .sun-editor-content table td,
+                .sun-editor-content table th,
+                .sun-editor-content table tr {
+                    border: none !important;
+                    border-collapse: collapse !important;
                 }
             `}</style>
             <div
