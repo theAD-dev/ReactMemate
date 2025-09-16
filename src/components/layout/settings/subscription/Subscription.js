@@ -97,7 +97,7 @@ const Subscription = () => {
                         <div className="progressSubsIn">
                           <div className="d-flex justify-content-between mb-1">
                             <h4>Business Subscription </h4>
-                            <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.business?.amount || "0.00")}</div>
+                            <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.business?.default || "0.00")}</div>
                           </div>
                           <div className="progressWrapMain">
                             <div className="progressWrapSubs">
@@ -153,7 +153,7 @@ const Subscription = () => {
                         <div className="progressSubsIn">
                           <div className="d-flex justify-content-between mb-1">
                             <h4>Work Subscription</h4>
-                            <div className="subscriptionPrice">${formatAUD(subscriptionQuery?.data?.work?.amount || "0.00")}</div>
+                            <div className="subscriptionPrice">${formatAUD(subscriptionQuery?.data?.work?.default || "0.00")}</div>
                           </div>
 
                           <div className="progressWrapMain">
