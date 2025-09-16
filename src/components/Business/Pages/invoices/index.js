@@ -203,7 +203,6 @@ const InvoicePage = () => {
                                 <td colspan="5"><strong>Total</strong></td>
                                 <td><strong>$${formatAUD(totalAmount)}</strong></td>
                                 <td><strong>$${formatAUD(totalOutstanding)}</strong></td>
-                                <td></td>
                             </tr>
                         </tbody>
                     </table>
