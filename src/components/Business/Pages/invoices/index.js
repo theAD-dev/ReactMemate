@@ -123,7 +123,7 @@ const InvoicePage = () => {
         printWindow.document.write(`
             <html>
                 <head>
-                    <title>Invoices Report - MeMate</title>
+                    <title>&nbsp;</title>
                     <style>
                         body { 
                             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -133,8 +133,8 @@ const InvoicePage = () => {
                         .header { 
                             text-align: center; 
                             margin-bottom: 30px; 
-                            border-bottom: 2px solid #333;
-                            padding-bottom: 20px;
+                            border-bottom: 1px solid #dedede;
+                            padding-bottom: 0px;
                         }
                         .meta-info { 
                             text-align: right; 
@@ -146,7 +146,7 @@ const InvoicePage = () => {
                             width: 100%; 
                             border-collapse: collapse; 
                             margin-top: 20px; 
-                            font-size: 12px;
+                            font-size: 8px;
                         }
                         th, td { 
                             border: 1px solid #ddd; 
@@ -172,21 +172,17 @@ const InvoicePage = () => {
                     </style>
                 </head>
                 <body>
-                    <div class="meta-info">
-                        Generated on: ${new Date().toLocaleString()}
-                    </div>
                     <div class="header">
-                        <h1>Invoices Report</h1>
-                        <p>Selected Items: ${selected.length}</p>
+                        <h4>Invoices Report</h4>
                     </div>
                     <table>
                         <thead>
                             <tr>
                                 <th>Invoice ID</th>
-                                <th>Created At</th>
+                                <th style="white-space: nowrap;">Created At</th>
                                 <th>Customer</th>
                                 <th>Invoice Reference</th>
-                                <th>Due Date</th>
+                                <th style="white-space: nowrap;">Due Date</th>
                                 <th>Total Invoice</th>
                                 <th>To be Paid</th>
                             </tr>
@@ -195,16 +191,16 @@ const InvoicePage = () => {
                             ${selected.map(invoice => `
                                 <tr>
                                     <td>${invoice.number || ''}</td>
-                                    <td>${invoice.created ? formatDate(invoice.created) : ''}</td>
+                                    <td style="white-space: nowrap;">${invoice.created ? formatDate(invoice.created) : ''}</td>
                                     <td>${invoice.client?.name || ''}</td>
                                     <td>${invoice.reference || ''}</td>
-                                    <td>${invoice.due_date ? formatDate(invoice.due_date) : ''}</td>
+                                    <td style="white-space: nowrap;">${invoice.due_date ? formatDate(invoice.due_date) : ''}</td>
                                     <td>$${formatAUD(invoice.amount || 0)}</td>
                                     <td>$${formatAUD(invoice.to_be_paid || 0)}</td>
                                 </tr>
                             `).join('')}
                             <tr class="total-row">
-                                <td colspan="4"><strong>Total</strong></td>
+                                <td colspan="5"><strong>Total</strong></td>
                                 <td><strong>$${formatAUD(totalAmount)}</strong></td>
                                 <td><strong>$${formatAUD(totalOutstanding)}</strong></td>
                                 <td></td>
