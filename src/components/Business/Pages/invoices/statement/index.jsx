@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { FilePdf } from 'react-bootstrap-icons';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import style from './statement.module.scss';
+import { getClientById } from '../../../../../APIs/ClientsApi';
 import { sendStatementEmail } from '../../../../../APIs/expenses-api';
 import { FilePreview } from '../../../../../shared/ui/file-preview';
 import SendEmailForm from '../../../../../ui/send-email/send-email-form';
@@ -13,6 +14,9 @@ const AccountStatement = () => {
     const [payload, setPayload] = useState({});
     const pdfUrl = new URLSearchParams(window.location.search).get('pdf');
     const clientName = new URLSearchParams(window.location.search).get('client');
+    const clientId = new URLSearchParams(window.location.search).get('clientId');
+    const clientDetails = useQuery({ queryKey: ['client-read', clientId], queryFn: () => getClientById(clientId), enabled: !!clientId, retry: 1, cacheTime: 0, staleTime: 0 });
+    const clientContactPersons = clientDetails?.data?.contact_persons || [];
 
     const downloadFormLink = async () => {
         const fileLink = pdfUrl;
@@ -65,7 +69,7 @@ const AccountStatement = () => {
     return (
         <div className={style.accountStatementWrapper}>
             <div className={style.accountStatement}>
-                <FilePreview files={[pdfUrl]} width={600}/>
+                <FilePreview files={[pdfUrl]} width={600} />
             </div>
             <div className={`${style.footer}`}>
                 <div className={style.innerFooter}>
@@ -78,7 +82,7 @@ const AccountStatement = () => {
                 </div>
             </div>
 
-            {showEmail && <SendEmailForm show={showEmail} setShow={setShowEmail} contactPersons={[]} setPayload={setPayload} save={handleSendEmail} defaultTemplate={'Invoice statement'} />}
+            {showEmail && <SendEmailForm show={showEmail} setShow={setShowEmail} contactPersons={clientContactPersons} setPayload={setPayload} save={handleSendEmail} defaultTemplate={'Invoice statement'} />}
         </div>
     );
 };
