@@ -78,8 +78,8 @@ const PasswordCreate = () => {
 
     return (
         <div className='requestDemoWrap veryfymail'>
-            <div className="logohead">
-                <img src={LoinLogo} alt="Loin Logo" />
+            <div className="logohead" style={{ zIndex: 10 }}>
+                <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
             </div>
             <div className="copywrite">© Memate {new Date().getFullYear()}</div>
             <div className='OnboardingStep1 onboardingWrap'>
@@ -144,7 +144,7 @@ const PasswordCreate = () => {
                             </div>
                         </div>
                         <div className="sliderRight SinglBgRight" style={{
-                            backgroundImage: `url(${createPasswordImg})`,
+                            backgroundImage: `url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/createyour-pass-img-min.jpg)`,
                             backgroundSize: 'cover',
                             backgroundRepeat: 'no-repeat',
                         }}>

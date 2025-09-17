@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams, useLocation, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Dropdown } from 'primereact/dropdown';
@@ -86,8 +86,8 @@ const Regionalsettings = () => {
         <title>MeMate - Onboarding - Regional Settings</title>
       </Helmet>
       <div className='requestDemoWrap'>
-        <div className="logohead">
-          <img src={LoinLogo} alt="Loin Logo" />
+        <div className="logohead" style={{ zIndex: 10 }}>
+          <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
         </div>
         <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
@@ -238,7 +238,7 @@ const Regionalsettings = () => {
               <div
                 className="sliderRight SinglBgRight"
                 style={{
-                  backgroundImage: `url(${RegionalSettings})`,
+                  backgroundImage: `url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/regional-settings-img-min.jpg)`,
                   backgroundSize: 'cover',
                   backgroundRepeat: 'no-repeat',
                 }}

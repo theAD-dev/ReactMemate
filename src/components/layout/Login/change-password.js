@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import { ProfileChangePassword } from "../../../APIs/ProfileResetPasswordApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import Featuredlockicon from "../../../assets/images/icon/Featuredlockicon.png";
-import changepassword from "../../../assets/images/img/changepassword.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 
 
@@ -76,7 +75,7 @@ const ChangePassword = () => {
       <div className="loginPage forgotPage">
         <div className="boxinfo">
           <div className="logohead">
-            <img src={LoinLogo} alt="Login Logo" />
+             <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Login Logo" /></Link>
           </div>
           <div className="boxLogin">
             <div className="lockIconStyle">
@@ -208,7 +207,7 @@ const ChangePassword = () => {
         <div
           className="sliderRight SinglBgRight"
           style={{
-            backgroundImage: `url(${changepassword})`,
+            backgroundImage: `url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/createyour-pass-img-min.jpg)`,
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
           }}

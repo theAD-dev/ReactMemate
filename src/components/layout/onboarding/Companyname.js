@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
@@ -25,8 +25,8 @@ const CompanyName = () => {
   return (
     <>
       <div className='requestDemoWrap'>
-        <div className="logohead">
-          <img src={LoinLogo} alt="Loin Logo" />
+        <div className="logohead" style={{ zIndex: 10 }}>
+          <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
         </div>
         <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
@@ -72,7 +72,7 @@ const CompanyName = () => {
                 </div>
               </div>
               <div className="sliderRight SinglBgRight" style={{
-                backgroundImage: `url(${BusinessProfile})`,
+                backgroundImage: `url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/business-porofile-img-min.jpg)`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
               }}>

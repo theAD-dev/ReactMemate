@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Check } from "react-bootstrap-icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { CardElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { OnboardingCreateSubscription } from "../../../APIs/OnboardingApi";
@@ -67,8 +67,8 @@ const Discovermemate = () => {
 
   return (
     <div className="requestDemoWrap">
-      <div className="logohead">
-        <img src={LoinLogo} alt="Logo" />
+      <div className="logohead" style={{ zIndex: 10 }}>
+        <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Logo" /></Link>
       </div>
       <div className="OnboardingStep1">
         <form onSubmit={handleSubmit}>

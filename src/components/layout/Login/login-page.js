@@ -7,7 +7,6 @@ import arrowRight from "../../../assets/images/icon/arrow.svg";
 import envelopeIcon from "../../../assets/images/icon/envelope.svg";
 import exclamationCircle from "../../../assets/images/icon/exclamation-circle.svg";
 import unlockIcon from "../../../assets/images/icon/unlock.svg";
-import loginSlide from "../../../assets/images/img/loginslidebg.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 
 const Login = () => {
@@ -76,7 +75,7 @@ const Login = () => {
         <div className="loginPage">
           <div className="boxinfo">
             <div className="logohead">
-              <img src={LoinLogo} alt="Loin Logo" />
+              <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
             </div>
             <div className="boxLogin">
               <h2>
@@ -145,7 +144,7 @@ const Login = () => {
           <div
             className="sliderRight SinglBgRight"
             style={{
-              backgroundImage: `url(${loginSlide})`,
+              backgroundImage: "url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/login-slide-img-min.jpg)",
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "bottom",

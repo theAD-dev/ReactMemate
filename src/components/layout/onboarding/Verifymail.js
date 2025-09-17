@@ -6,7 +6,6 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { OnboardingCode, onboardingNextStep } from "../../../APIs/OnboardingApi";
 import arrowRight from "../../../assets/images/icon/arrow.svg";
 import mail01 from "../../../assets/images/icon/mail-01.png";
-import login_slider1 from "../../../assets/images/img/emailSlider01.png";
 import LoinLogo from "../../../assets/images/logo.svg";
 
 const Verifymail = () => {
@@ -78,7 +77,7 @@ const Verifymail = () => {
   return (
     <div className='requestDemoWrap veryfymail'>
       <div className="logohead">
-        <img src={LoinLogo} alt="Logo" />
+        <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Logo" /></Link>
       </div>
       <div className="copywrite">© Memate {new Date().getFullYear()}</div>
       <div className='OnboardingStep1 onboardingWrap'>
@@ -129,7 +128,7 @@ const Verifymail = () => {
               </div>
             </div>
             <div className="sliderRight SinglBgRight" style={{
-              backgroundImage: `url(${login_slider1})`,
+              backgroundImage: `url(https://memate-website.s3.ap-southeast-2.amazonaws.com/onboarding/email-slide-img-min.jpg)`,
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
             }}>

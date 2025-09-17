@@ -51,7 +51,7 @@ const ForgotPassword = () => {
       <div className="loginPage forgotPage">
         <div className="boxinfo">
           <div className="logohead">
-            <img src={LoinLogo} alt="Loin Logo" />
+            <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
           </div>
           <div className="boxLogin">
             <h2>Forgot your <span>Password</span></h2>

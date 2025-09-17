@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import CustomVideoPlayer from './VideoPlayer';
 import { onboardingNextStep } from "../../../APIs/OnboardingApi";
@@ -92,8 +92,8 @@ const Create = () => {
 
   return (
     <div className='requestDemoWrap'>
-      <div className="logohead">
-        <img src={LoinLogo} alt="Loin Logo" />
+      <div className="logohead" style={{ zIndex: 10 }}>
+        <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
       </div>
       <div className="copywrite">© Memate {new Date().getFullYear()}</div>
       <div className='OnboardingStep1'>
