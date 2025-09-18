@@ -1,5 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { CheckCircle, FileText } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
@@ -14,7 +15,6 @@ import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-a
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 import ViewTaskModal from '../../features/task/view-task/view-task';
-import { Link } from 'react-router-dom';
 
 const formatDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
@@ -26,7 +26,7 @@ const formatDate = (timestamp) => {
     return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch }, ref) => {
+const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, refetch, setRefetch, filter }, ref) => {
     const { trialHeight } = useTrialHeight();
     const observerRef = useRef(null);
     const [visible, setVisible] = useState(false);
@@ -42,7 +42,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch]);
+    }, [searchValue, refetch, filter]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -52,7 +52,11 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            const data = await getListOfTasks(page, limit, searchValue, order);
+            let showNotCompleted = filter.status === 'not-complete';
+            if (filter.status === 'all') showNotCompleted = null;
+            if (filter.status === 'complete') showNotCompleted = false;
+
+            const data = await getListOfTasks(page, limit, searchValue, order, false, showNotCompleted, null);
             setTotal(() => (data?.count || 0));
             if (page === 1) setTasks(data.results);
             else {
@@ -70,7 +74,7 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch]);
+    }, [page, searchValue, tempSort, refetch, filter]);
 
     useEffect(() => {
         if (tasks.length > 0 && hasMoreData) {

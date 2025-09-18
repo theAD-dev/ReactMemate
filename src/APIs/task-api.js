@@ -13,7 +13,8 @@ export const getListOfTasks = async (page, limit, search = "", order = "", isSho
     if (search) url.searchParams.append("search", search);
     if (order) url.searchParams.append("ordering", order);
     if (isShowDeleted) url.searchParams.append('deleted', 1);
-    if (showNotCompleted) url.searchParams.append('finished', false);
+    if (showNotCompleted === true) url.searchParams.append('finished', false);
+    if (showNotCompleted === false) url.searchParams.append('finished', true);
     if (userId) url.searchParams.append('users', userId);
 
     return fetchAPI(url.toString(), options);

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { Checkbox } from 'primereact/checkbox';
 import { useDebounce } from 'primereact/hooks';
 import TaskTable from './task-table';
 import style from './task.module.scss';
@@ -14,6 +15,8 @@ const TaskPage = () => {
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const [selected, setSelected] = useState([]);
     const [refetch, setRefetch] = useState(false);
+    const [showStatusFilter, setShowStatusFilter] = useState(false);
+    const [filter, setFilter] = useState({ status: 'not-complete' });
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -22,6 +25,20 @@ const TaskPage = () => {
             console.error('DataTable ref is null');
         }
     };
+
+    // close the status filter when clicked outside
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showStatusFilter && !event.target.closest(`.${style.statusFilter}`) && !event.target.closest('.p-button')) {
+                setShowStatusFilter(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showStatusFilter]);
+
     return (
         <div className='jobs-page'>
             <Helmet>
@@ -50,6 +67,34 @@ const TaskPage = () => {
                                     </div>
                                     <input type="text" placeholder="Search" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="border search-resource" style={{ borderRadius: '4px', width: '184px', border: '1px solid #D0D5DD', color: '#424242', paddingLeft: '36px', fontSize: '14px', height: '32px' }} />
                                 </div>
+                                <div style={{ position: 'relative' }}>
+                                    <Button className='outline-button' style={{ padding: '4px 8px', height: '32px', fontSize: '14px', color: '#667085', border: '1px solid #D0D5DD', backgroundColor: '#FFFFFF' }} onClick={() => setShowStatusFilter(!showStatusFilter)}>
+                                        <Filter size={16} style={{ marginRight: '0px' }}/>
+                                        <span style={{ color: '#667085', fontSize: '14px', fontWeight: '400' }}>Status</span>
+                                        {/* {
+                                            filter.status === 'complete' ? <span style={{ fontSize: '12px', color: '#067647' }}>Complete</span> :
+                                            filter.status === 'not-complete' ? <span style={{ fontSize: '12px', color: '#93370d' }}>Not Complete</span> :
+                                            <span style={{ color: '#667085', fontSize: '14px', fontWeight: '400' }}>Status</span>
+                                        } */}
+                                    </Button>
+                                    {
+                                        showStatusFilter &&
+                                        <div className={`${style.statusFilter}`}>
+                                            <div className='d-flex align-items-center p-2 mb-2'>
+                                                <Checkbox checked={filter.status === 'complete'} label="complete" onClick={() => setFilter({ status: 'complete' })} />
+                                                <div onClick={() => setFilter({ status: 'complete' })} className={style.complete} style={{ marginLeft: '16px' }}>Complete</div>
+                                            </div>
+                                            <div className='d-flex align-items-center p-2 mb-2'>
+                                                <Checkbox checked={filter.status === 'not-complete'} label="not-complete" onClick={() => setFilter({ status: 'not-complete' })} />
+                                                <div onClick={() => setFilter({ status: 'not-complete' })} className={`${style.pending} cursor-pointer`} style={{ marginLeft: '16px' }}>Not Complete</div>
+                                            </div>
+                                            <div className='d-flex align-items-center p-2 mb-2'>
+                                                <Checkbox checked={filter.status === 'all'} label="all" onClick={() => setFilter({ status: 'all' })} />
+                                                <div onClick={() => setFilter({ status: 'all' })} className={`${style.pending} cursor-pointer`} style={{ marginLeft: '16px' }}>All</div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                             </>
                         )
                     }
@@ -64,7 +109,7 @@ const TaskPage = () => {
                     <div className={`${style.totalCount}`}>{total} Jobs</div>
                 </div>
             </div>
-            <TaskTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch}/>
+            <TaskTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} filter={filter} />
             <CreateTask show={visible} setShow={setVisible} refetch={() => setRefetch((refetch)=> !refetch)}/>
         </div>
     );
