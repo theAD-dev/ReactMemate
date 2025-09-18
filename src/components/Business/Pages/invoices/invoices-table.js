@@ -370,7 +370,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }} frozen></Column>
                 <Column field="client__name" exportField='client.name'  header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '295px', maxWidth: '295px', width: '295px' }} frozen sortable></Column>
                 <Column field="reference" header="Invoice Reference" style={{ minWidth: '250px' }}></Column>
-                <Column field="due_date" exportField={(rowData) => formatDate(rowData.due_date)} header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
+                <Column field="invoice_due_date" exportField={(rowData) => formatDate(rowData.due_date)} header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
                 <Column field='amount' header="Total invoice" exportField={(rowData) => `$${formatAUD(rowData.amount)}`} body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }} sortable></Column>
                 <Column field='to_be_paid' header="To be paid" exportField={(rowData) => `$${formatAUD(rowData.to_be_paid)}`} body={ToBePaidBody} style={{ minWidth: '123px', textAlign: 'right' }} sortable></Column>
                 <Column field='deposit' header="Deposit/Payment" exportable={false} body={DepositBody} style={{ minWidth: '114px', maxWidth: '164px', width: '164px', textAlign: 'left' }}></Column>
