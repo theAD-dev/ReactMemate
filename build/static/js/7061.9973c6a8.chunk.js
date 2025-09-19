@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmemateapp=self.webpackChunkmemateapp||[]).push([[7061],{17061:(e,s,a)=>{a.r(s),a.d(s,{default:()=>h});a(65043);var t=a(49367),c=a(70579);const h=()=>(0,c.jsxs)("div",{children:[(0,c.jsx)(t.mg,{children:(0,c.jsx)("title",{children:"MeMate - News"})}),"Chat"]})}}]);
+//# sourceMappingURL=7061.9973c6a8.chunk.js.map
