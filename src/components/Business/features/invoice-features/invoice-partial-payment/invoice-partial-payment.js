@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
-import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
+import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, PauseCircle, PlusCircle, Stripe } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -15,7 +15,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { SelectButton } from 'primereact/selectbutton';
 import { toast } from 'sonner';
 import style from './invoice-partial-payment.module.scss';
-import { partialPaymentCreate } from '../../../../../APIs/invoice-api';
+import { getInvoicePartialHistory, partialPaymentCreate } from '../../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 const headerElement = (
@@ -27,7 +27,10 @@ const headerElement = (
 );
 
 const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
+    console.log('invoice: ', invoice);
     const [isShowHistory, setIsShowHistory] = useState(false);
+    const [isShowExpense, setIsShowExpense] = useState(false);
+    const [isShowCostBreakdown, setIsShowCostBreakdown] = useState(false);
     const [deposit, setDeposit] = useState(0.00);
     const [type, setType] = useState(2);
     const [errors, setErrors] = useState({});
@@ -54,6 +57,9 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
             toast.error(`Failed to payment. Please try again.`);
         }
     });
+
+    const historyData = useQuery({ queryKey: ['invoicePartialHistory', invoice?.unique_id], queryFn: () => getInvoicePartialHistory(invoice?.unique_id), enabled: !!invoice?.unique_id });
+    console.log('historyData: ', historyData?.data);
 
     const onsubmit = () => {
         let errorCount = 0;
@@ -192,13 +198,16 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
                         )}
                     </Button>
                 </Card.Body>
-                <div className='mb-2 text-center' style={{ borderTop: '.5px solid #F2F4F7' }}>
-                    <Button className='text-button m-auto' onClick={() => setIsShowHistory(!isShowHistory)}>{isShowHistory ? "Hide" : "Show"} History</Button>
+                <div className='mb-2 d-flex justify-content-center text-center' style={{ borderTop: '.5px solid #F2F4F7', gap: '72px' }}>
+                    <Button className={`${isShowExpense ? style.activeTextButton : style.deactiveTextButton}`} onClick={() => { setIsShowExpense(!isShowExpense); setIsShowHistory(false); setIsShowCostBreakdown(false); }}>{isShowExpense ? "Hide" : "Show"} Expense</Button>
+                    <Button className={`${isShowHistory ? style.activeTextButton : style.deactiveTextButton}`} onClick={() => { setIsShowHistory(!isShowHistory); setIsShowExpense(false); setIsShowCostBreakdown(false); }}>{isShowHistory ? "Hide" : "Show"} History</Button>
+                    <Button className={`${isShowCostBreakdown ? style.activeTextButton : style.deactiveTextButton}`} onClick={() => { setIsShowCostBreakdown(!isShowCostBreakdown); setIsShowExpense(false); setIsShowHistory(false); }} style={{ minWidth: '182px' }}>{isShowCostBreakdown ? "Hide" : ""} Cost Breakdown</Button>
                 </div>
             </Card>
 
+            {isShowExpense && <InvoiceExpense expense={historyData?.data?.expenses || []} />}
             {isShowHistory && <InvoiceHistory history={invoice?.billing_history || []} />}
-
+            {isShowCostBreakdown && <InvoiceCostBreakdown calculations={historyData?.data?.calculations || []} />}
         </Dialog>
     );
 };
@@ -268,6 +277,55 @@ const InvoiceHistory = ({ history }) => {
                 </DataTable>
             </Card.Body>
         </Card>
+    );
+};
+
+const InvoiceCostBreakdown = ({ calculations }) => {
+    const total = calculations.reduce((acc, item) => acc + +(item?.total || 0), 0);
+    console.log('total: ', total);
+
+    return (
+        <>
+            <DataTable value={calculations || []} showGridlines className="border-top">
+                <Column field="id" header="Order" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }} body={(_, options) => options.rowIndex + 1}></Column>
+                <Column field="subindex" header="Department" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.subindex} style={{ maxWidth: '192px' }}>{rowData.subindex}</div>}></Column>
+                <Column field="description" header="Description" style={{ minWidth: '300px' }} bodyClassName={"ellipsis-width"} body={(rowData) => <div className="ellipsis-width" title={rowData.description} style={{ maxWidth: '300px' }}>{rowData.description}</div>}></Column>
+                <Column field="cost" header="Cost" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.cost)}`}></Column>
+                <Column field="profit_type_value" header="Markup/Margin" body={(rowData) => `${rowData.profit_type_value} ${rowData.profit_type === "AMN" ? "AMT $" : rowData.profit_type === "MRG" ? "MRG %" : "MRK %"}`} style={{ width: '100%', whiteSpace: 'nowrap' }}></Column>
+                <Column field="unit_price" header="Unit Price" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.unit_price)}`}></Column>
+                <Column field="quantity" header="Qty/Unit" style={{ width: '100%' }}></Column>
+                <Column field="discount" header="Discount" style={{ width: '100%' }} body={(rowData) => `${rowData.discount}%`}></Column>
+                <Column field="total" header="Amount" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.total)}`}></Column>
+            </DataTable>
+            <div className='w-100 d-flex align-items-center justify-content-end gap-4' style={{ background: '#EBF8FF', padding: '8px 24px 8px 40px' }}>
+                {/* <div className='d-flex flex-column align-items-end'>
+                    <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Sub Total</p>
+                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(cardData?.sub_total)}</p>
+                </div>
+                <div>
+                    <PlusCircle size={20} color='#106B99' />
+                </div>
+                <div className='d-flex flex-column align-items-end'>
+                    <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Tax</p>
+                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(cardData?.gst)}</p>
+                </div>
+                <div>
+                    <div>
+                        <PauseCircle size={20} color='#106B99' style={{ transform: 'rotate(90deg)' }} />
+                    </div>
+                </div> */}
+                <div className='d-flex flex-column align-items-end'>
+                    <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Total Invoice Amount</p>
+                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(total)}</p>
+                </div>
+            </div>
+        </>
+    );
+};
+
+const InvoiceExpense = () => {
+    return (
+        <div>Expense Section Coming Soon...</div>
     );
 };
 

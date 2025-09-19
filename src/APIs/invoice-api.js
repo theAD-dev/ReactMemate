@@ -61,6 +61,16 @@ export const getInvoice = async (uniqueId) => {
   return fetchAPI(url.toString(), options, false);
 };
 
+export const getInvoicePartialHistory = async (uniqueId) => {
+  if (!uniqueId) return null;
+  const endpoint = `/invoices/read/${uniqueId}/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};
+
 export const paymentIntentCreate = async (uniqueId, data) => {
   const endpoint = `/invoices/payment-intent/${uniqueId}/`;
   const options = {
@@ -68,7 +78,7 @@ export const paymentIntentCreate = async (uniqueId, data) => {
     body: data
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options, false);
+  return fetchAPI(url.toString(), options);
 };
 
 export const deleteInvoice = async (uniqueId) => {
