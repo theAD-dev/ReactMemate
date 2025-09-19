@@ -342,7 +342,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     <div className='d-flex w-100 h-100'>
       <div className={styles.chatArea}>
         {currentChat ? (
-          <div className={styles.chatContent}>
+          <div className={styles.chatContent} style={{ position: 'relative' }}>
             <ChatHeader
               chat={currentChat}
               userId={userId}
@@ -423,7 +423,7 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
           <EmptyChatArea />
         )}
       </div>
-      <div style={showSidebar ? { display: 'block' } : { display: 'none' }} className={styles.chatSidebar}>
+      <div style={showSidebar ? { position: 'absolute', right: '16px' } : { display: 'none' }} className={styles.chatSidebar}>
         {/* Sidebar content can be added here, e.g., participants list, chat settings, etc. */}
         <ChatInfoSidebar
           chatId={chatId}

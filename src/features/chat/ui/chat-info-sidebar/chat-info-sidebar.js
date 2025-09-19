@@ -127,10 +127,10 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
         <>
             <div className={styles.chatInfoSidebar}>
                 <div className={styles.chatInfoHeader}>
+                    <p className='font-18 mb-0' style={{ fontWeight: 600, color: '#344054' }}>{isGroup ? 'Group Info' : 'Contact Info'}</p>
                     <button className={styles.closeButton} onClick={closeSidebar}>
                         <X size={32} />
                     </button>
-                    <p className='font-16 mb-0'>{isGroup ? 'Group Info' : 'Contact Info'}</p>
                 </div>
                 <div className={styles.scrollContainer}>
                     <div className={styles.chatInfoContent}>
@@ -170,14 +170,13 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                                 </li>
                             ))}
                         </ul>
-
-                        <div className={styles.participantsFooter}>
-                            <button className={"danger-text-button"} disabled={deleting} onClick={archiveGroup}>
-                               <Trash color='#b42318' size={16} className='me-1'/> Delete Group
-                               { deleting &&<ProgressSpinner style={{ width: '16px', height: '16px' }} className='ms-2'/>}
-                            </button>
-                        </div>
                     </div>
+                </div>
+                <div className={styles.participantsFooter}>
+                    <button className={"danger-text-button"} disabled={deleting} onClick={archiveGroup}>
+                        <Trash color='#b42318' size={16} className='me-1' /> Delete Group
+                        {deleting && <ProgressSpinner style={{ width: '16px', height: '16px' }} className='ms-2' />}
+                    </button>
                 </div>
             </div>
             <Dialog header={HeaderElement} footer={FooterElement} modal className={`${styles.modal} custom-modal`} visible={showAddMember} onHide={handleCancelMember}>

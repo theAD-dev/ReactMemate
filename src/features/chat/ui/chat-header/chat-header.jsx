@@ -30,50 +30,52 @@ const ChatHeader = ({ chat, userId, setParticipants, onlineUsers = [], setShowSi
   };
   return (
     <div className={styles.chatHeader}>
-      {isProject ? (
-        <div className='d-flex w-100 justify-content-between align-items-center'>
-          <div className={styles.projectHeader}>
-            <span className={styles.projectReference}>{chat?.name || "Unknown"}</span>
-            <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span>
-          </div>
-          <div className={styles.headerActions}>
-            <button
-              className={styles.menuButton}
-              onClick={() => setShowSidebar(prev => !prev)}
-            >
-              <ThreeDotsVertical size={20} color="#667085" />
-            </button>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className={styles.userContainer}>
-            <div
-              className={styles.userAvatar}
-            >
-              {getChatGroupName(chat)?.avatar ? <img src={getChatGroupName(chat)?.avatar} alt={'avatar'} /> : getChatGroupName(chat)?.name?.split(' ').map(n => n[0]).join('').slice(0, 2)}
+      <div className={styles.headerContent}>
+        {isProject ? (
+          <div className='d-flex w-100 justify-content-between align-items-center'>
+            <div className={styles.projectHeader}>
+              <span className={styles.projectReference}>{chat?.name || "Unknown"}</span>
+              <span className={styles.projectNumber}>{chat?.project_id || chat.job_number || "Unknown"}</span>
             </div>
-            <div className={styles.userInfo}>
-              <h2 className={styles.userName}>{getChatGroupName(chat)?.name}</h2>
-              <div className={styles.statusContainer}>
-                <span
-                  className={styles.statusIndicator}
-                  data-status={getChatGroupName(chat).status}
-                ></span>
-                <span className={styles.statusText}>{getChatGroupName(chat).status}</span>
+            <div className={styles.headerActions}>
+              <button
+                className={styles.menuButton}
+                onClick={() => setShowSidebar(prev => !prev)}
+              >
+                <ThreeDotsVertical size={20} color="#667085" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className={styles.userContainer}>
+              <div
+                className={styles.userAvatar}
+              >
+                {getChatGroupName(chat)?.avatar ? <img src={getChatGroupName(chat)?.avatar} alt={'avatar'} /> : getChatGroupName(chat)?.name?.split(' ').map(n => n[0]).join('').slice(0, 2)}
+              </div>
+              <div className={styles.userInfo}>
+                <h2 className={styles.userName}>{getChatGroupName(chat)?.name}</h2>
+                <div className={styles.statusContainer}>
+                  <span
+                    className={styles.statusIndicator}
+                    data-status={getChatGroupName(chat).status}
+                  ></span>
+                  <span className={styles.statusText}>{getChatGroupName(chat).status}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className={styles.headerActions}>
-            <button
-              className={styles.menuButton}
-              onClick={() => setShowSidebar(prev => !prev)}
-            >
-              <ThreeDotsVertical size={20} color="#667085" />
-            </button>
-          </div>
-        </>
-      )}
+            <div className={styles.headerActions}>
+              <button
+                className={styles.menuButton}
+                onClick={() => setShowSidebar(prev => !prev)}
+              >
+                <ThreeDotsVertical size={20} color="#667085" />
+              </button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

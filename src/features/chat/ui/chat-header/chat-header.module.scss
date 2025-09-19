@@ -1,9 +1,35 @@
 .chatHeader {
-  padding: 0;
+  z-index: 100;
+  padding: 8px 0;
+  width: 100%;
+  margin: auto;
+  left: 0;
+  position: absolute;
+  background-color: transparent;
+  padding-left: calc((100% - 642px) / 2);
+  padding-right: calc((100% - 642px) / 2);
+}
+
+.headerContent {
   display: flex;
+  padding: 6px 4px;
+  border-radius: 8px;
+  position: relative;
   align-self: stretch;
-  border-bottom: 1px solid var(--gray-200, #eaecf0);
-  background-color: #fff;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(2px);
+}
+
+.headerContent::before {
+  content: "";
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  position: absolute;
+  border-radius: 12px;
+  background: radial-gradient(circle at center, #1ab2ff, #ffb258);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
 }
 
 .projectHeader {
@@ -11,7 +37,6 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--gray-200, #eaecf0);
   background-color: #fff;
 }
 
@@ -32,6 +57,7 @@
 .userContainer {
   gap: 16px;
   display: flex;
+  align-items: center;
   padding: 8px 16px;
   width: 100%;
 }
@@ -57,14 +83,14 @@
 
 .userInfo {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
 }
 
 .userName {
   color: var(--gray-900, #101828);
   font-family: Inter;
-  font-size: 16px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
@@ -78,7 +104,6 @@
   border-radius: 4px;
   width: fit-content;
   align-items: center;
-  border: 1px solid var(--gray-200, #eaecf0);
 }
 
 .statusIndicator {

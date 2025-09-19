@@ -112,11 +112,6 @@ const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) 
               </div>
               <div className={styles.userInfo}>
                 <span className={styles.userName}>{groupName}</span>
-                <p className={styles.lastMessage}>
-                  {lastMessage?.message
-                    ? `${sender} ${lastMessage?.message ? lastMessage?.message?.substring(0, 30) : ''}`
-                    : 'No messages yet'}
-                </p>
               </div>
               <div className='d-flex flex-column align-items-end gap-1'>
                 <span className={styles.lastMessageTime}>
@@ -128,8 +123,12 @@ const UserList = ({ chatData, searchQuery, showArchived, userId, onlineUsers }) 
                   <span className={styles.unreadCount}>{unreadCount > 9 ? '9+' : unreadCount}</span>
                 )}
               </div>
-
             </div>
+            <p className={styles.lastMessage}>
+              {lastMessage?.message
+                ? `${sender} ${lastMessage?.message ? lastMessage?.message?.substring(0, 30) : ''}`
+                : 'No messages yet'}
+            </p>
           </Link>
         );
       })}

@@ -1,7 +1,14 @@
+.chatInfoSidebar {
+  height: 100%;
+}
+
 .chatInfoHeader {
   display: flex;
+  width: 100%;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+  padding: 24px 24px 24px 24px;
+  border-bottom: 1px solid #eaecf0;
 }
 
 .closeButton {
@@ -24,7 +31,7 @@
 }
 
 .chatInfoContent {
-  padding: 16px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,8 +41,8 @@
 }
 
 .groupInfoAvatar {
-  width: 100px;
-  height: 100px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   background-color: var(--Gray-200, #eaecf0);
   display: flex;
@@ -47,11 +54,14 @@
 }
 
 .scrollContainer {
-  max-height: calc(100vh - 215px);
+  border-bottom: 1px solid var(--Gray-200, #eaecf0);
+  background: #fff;
+  height: calc(100% - 170px);
   overflow-y: auto;
 }
 
 .participantsList {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
