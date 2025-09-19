@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
-import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, PauseCircle, PlusCircle, Stripe } from 'react-bootstrap-icons';
+import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -323,9 +323,15 @@ const InvoiceCostBreakdown = ({ calculations }) => {
     );
 };
 
-const InvoiceExpense = () => {
+const InvoiceExpense = ({ expense }) => {
     return (
-        <div>Expense Section Coming Soon...</div>
+        <DataTable value={expense || []} showGridlines className="border-top">
+            <Column field="expense" header="#" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }}></Column>
+            <Column field="invoice_reference" header="Reference" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.invoice_reference} style={{ maxWidth: '192px' }}>{rowData.invoice_reference}</div>}></Column>
+            <Column field="supplier.name" header="Provider" style={{ minWidth: '300px' }} bodyClassName={"ellipsis-width"} body={(rowData) => <div className="ellipsis-width" title={rowData.supplier.name} style={{ maxWidth: '300px' }}>{rowData.supplier.name}</div>}></Column>
+            <Column field="total" header="Estimate/Total" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.total)}`}></Column>
+            <Column field="paid" header="Status" style={{ width: '100%', whiteSpace: 'nowrap' }}></Column>
+        </DataTable>
     );
 };
 
