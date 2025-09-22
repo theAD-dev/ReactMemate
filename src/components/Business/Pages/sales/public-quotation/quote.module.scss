@@ -1,6 +1,6 @@
 .quotationWrapperPage {
+  position: fixed;
   background: var(--BG, #fff);
-
   width: 100%;
 
   .quotationScroll {
@@ -277,8 +277,6 @@
     padding: 0px 17px !important;
     border-bottom: 1px solid #dedede !important;
   }
-
-  
 }
 
 .quotationfooter {
