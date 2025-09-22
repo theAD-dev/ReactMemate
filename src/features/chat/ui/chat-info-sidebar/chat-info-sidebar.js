@@ -149,14 +149,6 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                     <div className={styles.participantsList}>
                         <h3 className='font-14 ms-2 mb-2' style={{ color: 'var(--Gray-600, #344952)' }}>{Object.keys(participants).length} members</h3>
                         <ul className='w-100 mb-3'>
-                            {isGroup && (
-                                <button className={styles.addParticipantButton} onClick={() => setShowAddMember(true)}>
-                                    <div className={styles.addParticipantAvatar}>
-                                        <Plus size={20} color="#ffffff" />
-                                    </div>
-                                    <span className={styles.participantName}>Add member</span>
-                                </button>
-                            )}
                             {members.map(({ id, name, avatar }) => (
                                 <li key={id} className={styles.participantItem}>
                                     <div className={styles.participantAvatar}>
@@ -169,6 +161,14 @@ const ChatInfoSidebar = ({ chatId, userId, chatInfo, participants, closeSidebar,
                                     <span className={styles.participantName}>{name}</span>
                                 </li>
                             ))}
+                            {isGroup && (
+                                <button className={styles.addParticipantButton} onClick={() => setShowAddMember(true)}>
+                                    <div className={styles.addParticipantAvatar}>
+                                        <Plus size={20} color="#1AB2FF" />
+                                    </div>
+                                    <span className={styles.participantName}>Add Member</span>
+                                </button>
+                            )}
                         </ul>
                     </div>
                 </div>

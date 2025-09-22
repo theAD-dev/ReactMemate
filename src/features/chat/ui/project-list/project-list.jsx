@@ -1,8 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
+import { Avatar } from 'primereact/avatar';
+import { AvatarGroup } from 'primereact/avatargroup';
 import styles from './project-list.module.scss';
 
 const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
+  console.log('chatData: ', chatData);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const chatId = params.get("id");
@@ -70,6 +73,14 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
         const sender = getSenderName(group);
         const reference = group?.name;
         const number = group?.job_number || group?.project_id;
+        const members = group?.participants?.map(participant => ({
+          id: participant.id,
+          name: participant.name,
+          avatar: participant.photo && participant.photo !== 'no_photo.png' ? participant.photo.startsWith('http')
+          ? participant.photo
+          : `${process.env.REACT_APP_URL}${participant.photo}` : ""
+        })) || [];
+        console.log('members: ', group?.participants, members);
         return (
           <Link to={`?id=${id}`} key={id} className={clsx(styles.projectItem, { [styles.active]: chatId == id })}>
             <div className={styles.projectHeader}>
@@ -92,6 +103,11 @@ const ProjectList = ({ chatData, searchQuery, showArchived, userId }) => {
               <div className={styles.userInfo}>
                 {/* <span className={styles.userName}>{project.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</span> */}
                 {/* <span className={styles.userFullName}>{project.name}</span> */}
+                <AvatarGroup>
+                  {members.map((member) => (
+                    <Avatar key={member.id} image={member.avatar} size="small" shape="circle" />
+                  ))}
+                </AvatarGroup>
               </div>
               <p className={clsx(styles.lastMessage, 'text-start')}>
                 {lastMessage

@@ -1,7 +1,6 @@
 .quotationWrapperPage {
-  position: relative;
+  position: fixed;
   background: var(--BG, #fff);
-
   width: 100%;
 
   .quotationScroll {
