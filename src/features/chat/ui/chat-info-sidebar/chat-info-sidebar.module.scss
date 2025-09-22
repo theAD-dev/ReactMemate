@@ -7,7 +7,7 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 24px 24px 24px;
+  padding: 10px 24px 10px 24px;
   border-bottom: 1px solid #eaecf0;
 }
 
@@ -56,7 +56,7 @@
 .scrollContainer {
   border-bottom: 1px solid var(--Gray-200, #eaecf0);
   background: #fff;
-  height: calc(100% - 170px);
+  height: calc(100% - 115px);
   overflow-y: auto;
 }
 
@@ -94,16 +94,25 @@
 }
 
 .addParticipantAvatar {
+  color: var(--Gray-600, #475467);
+
+  /* Body large */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+  letter-spacing: -0.08px;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #158ecc;
   margin-right: 12px;
   overflow: hidden;
-  border: 1px solid #158ecc;
+  border: 0.889px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
 }
 
 .addParticipantButton {
@@ -176,6 +185,6 @@
 
 .participantsFooter {
   width: 100%;
-  padding: 20px 0px;
+  padding: 10px 0px;
   border-top: 1px solid var(--Gray-200, #eaecf0);
 }
