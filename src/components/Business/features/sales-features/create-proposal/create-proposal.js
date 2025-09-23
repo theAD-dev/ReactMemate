@@ -86,6 +86,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
     const [templateId, setTemplatedId] = useState(null);
     const [sections, setSections] = useState([]);
     const [image, setImage] = useState(null);
+    const [isTemplateChanged, setIsTemplateChanged] = useState(false);
 
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplate"],
@@ -292,7 +293,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
     );
 
     useEffect(() => {
-        if (templateId && templateId != readProposalQuery?.data?.template && proposalQuery?.data) {
+        if (templateId && isTemplateChanged) {
             setSections([
                 ...readProposalQuery?.data?.sections?.map(section => ({ ...section, delete: true })) || [],
                 ...proposalQuery?.data?.sections?.map(({ id, ...rest }) => ({ ...rest })) || []
@@ -334,6 +335,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                 placeholder="Select template"
                                 onChange={(e) => {
                                     setTemplatedId(e.value);
+                                    setIsTemplateChanged(true);
                                 }}
                                 value={templateId}
                                 loading={proposalTemplateQuery?.isFetching}
