@@ -150,7 +150,7 @@ const CalculateQuote = () => {
             return;
         }
 
-        if (action === "quote-pdf-open") {
+        if (action === "quote-pdf-open" || action === "create-proposal") {
             payload.action = "save";
         }
 
@@ -263,6 +263,10 @@ const CalculateQuote = () => {
             } else {
                 toast.error('Quote PDF not found.');
             }
+        } else if (action === "create-proposal") {
+            let uniqueid = result?.unique_id;
+            if (uniqueid) navigate(`/sales/quote-calculation/${uniqueid}`);
+            setShowProposalModal(true);
         } else {
             navigate(`/sales`);
         }
@@ -372,7 +376,7 @@ const CalculateQuote = () => {
                                     </Link>
                                 </div>
                             ) : (
-                                <button type="button" disabled={!unique_id} className="button-custom text-button px-2" onClick={() => setShowProposalModal(true)}>
+                                <button type="button" className="button-custom text-button px-2" onClick={() => createNewRequest('create-proposal')}>
                                     Create Proposal
                                 </button>
                             )
