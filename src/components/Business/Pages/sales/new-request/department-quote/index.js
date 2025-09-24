@@ -487,10 +487,9 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             <div className="formgroupboxs mb-3 text-start">
               <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Upfront Projects <span className='required'>*</span></label>
               <Dropdown
-                value={payload?.recurring?.initial_projects || null}
+                value={payload?.recurring?.initial_projects || 1}
                 onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, upfront_projects: e.value, initial_projects: e.value } }))}
                 options={[
-                  { label: "0", value: 0, disabled: maxUpfront < 0 },
                   { label: "1", value: 1, disabled: maxUpfront < 1 },
                   { label: "2", value: 2, disabled: maxUpfront < 2 },
                   { label: "3", value: 3, disabled: maxUpfront < 3 },
@@ -515,7 +514,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
                 ]}
                 style={{ height: '46px', minWidth: '260px' }}
                 className="w-100 outline-none"
-                placeholder="Select an end"
+                placeholder="Select upfront projects"
                 filterInputAutoFocus={true}
               />
             </div>
