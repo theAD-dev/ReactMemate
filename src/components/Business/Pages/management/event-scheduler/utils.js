@@ -380,6 +380,7 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
     const taskId = args.e.id();
     const startDate = new Date(args.newStart).toISOString();
     const endDate = new Date(args.newEnd).toISOString();
+    console.log('args.e.tag().type: ', args.e.tag().type);
 
     if (args.e.tag().type === "task") {
       const task = args.e.tag().task;
@@ -398,7 +399,7 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
       }
     }
 
-    if (args.e.tag().type === "job") {
+    if (args.e.tag().type === "project") {
       try {
         await updateProjectScheduleById(taskId, {
           booking_start: startDate,
