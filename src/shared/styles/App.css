@@ -11810,7 +11810,7 @@ tr:hover .linkText,
 }
 
 .p-sidebar-mask-document {
-  z-index: 1000 !important;
+  z-index: 1060 !important;
 }
 
 .departments-droppable .p-accordion-tab:not(.p-accordion-tab-active),

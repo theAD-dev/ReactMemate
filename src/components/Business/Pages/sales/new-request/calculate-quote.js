@@ -51,7 +51,9 @@ const CalculateQuote = () => {
                 recurring: {
                     frequency: "M",
                     start_date: new Date(),
-                    end_by: 0
+                    end_by: 0,
+                    upfront_projects: 1,
+                    initial_projects: 1
                 }
             }));
         } else if (newRequestQuery?.data) {
@@ -86,7 +88,9 @@ const CalculateQuote = () => {
                 newData.recurring = {
                     frequency: "M",
                     start_date: new Date(),
-                    end_by: 0
+                    end_by: 0,
+                    upfront_projects: 1,
+                    initial_projects: 1
                 };
             }
             setPayload((others) => ({ ...others, ...newData }));
