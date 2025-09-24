@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card } from 'react-bootstrap';
+import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import style from './invoice-partial-payment.module.scss';
 import { getInvoicePartialHistory, partialPaymentCreate } from '../../../../../APIs/invoice-api';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
+import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avatar';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -58,7 +59,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
         }
     });
 
-    const historyData = useQuery({ queryKey: ['invoicePartialHistory', invoice?.unique_id], queryFn: () => getInvoicePartialHistory(invoice?.unique_id), enabled: !!invoice?.unique_id });
+    const historyData = useQuery({ queryKey: ['invoicePartialHistory', invoice?.unique_id], queryFn: () => getInvoicePartialHistory(invoice?.unique_id), enabled: !!invoice?.unique_id, staleTime: 0, cacheTime: 0 });
     console.log('historyData: ', historyData?.data);
 
     const onsubmit = () => {
@@ -326,11 +327,36 @@ const InvoiceCostBreakdown = ({ calculations }) => {
 const InvoiceExpense = ({ expense }) => {
     return (
         <DataTable value={expense || []} showGridlines className="border-top">
-            <Column field="expense" header="#" bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px' }}></Column>
+            <Column field="number" header="#" body={(rowData) => (
+                <Link to={`/expenses?expenseId=${rowData?.id}&supplierName=${rowData?.supplier?.name}`} className='linkText' target='_blank'>
+                    {rowData?.number}
+                </Link>
+            )} bodyClassName='text-center' headerClassName='text-center' style={{ width: '60px', whiteSpace: 'nowrap' }}></Column>
             <Column field="invoice_reference" header="Reference" style={{ minWidth: '192px' }} body={(rowData) => <div className="ellipsis-width" title={rowData.invoice_reference} style={{ maxWidth: '192px' }}>{rowData.invoice_reference}</div>}></Column>
-            <Column field="supplier.name" header="Provider" style={{ minWidth: '300px' }} bodyClassName={"ellipsis-width"} body={(rowData) => <div className="ellipsis-width" title={rowData.supplier.name} style={{ maxWidth: '300px' }}>{rowData.supplier.name}</div>}></Column>
-            <Column field="total" header="Estimate/Total" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.total)}`}></Column>
-            <Column field="paid" header="Status" style={{ width: '100%', whiteSpace: 'nowrap' }}></Column>
+            <Column field="supplier.name" header="Provider" body={(rowData) => (
+                <OverlayTrigger
+                    key={'top'}
+                    placement={'top'}
+                    overlay={
+                        <Tooltip className='TooltipOverlay' id={`tooltip-${top}`}>
+                            {rowData?.supplier?.name || ""}
+                        </Tooltip>
+                    }
+                >
+                    <div className='mr-auto d-flex align-items-center justify-content-center ps-2' style={{ width: 'fit-content' }}>
+                        {
+                            <ImageAvatar has_photo={rowData?.supplier?.has_photo} photo={rowData?.supplier?.photo} is_business={true} size={16} />
+                        }
+                        <div className='ellipsis-width'>{rowData?.supplier?.name || "N/A"}</div>
+                    </div>
+                </OverlayTrigger>
+            )} style={{ minWidth: '100px', width: '300px', maxWidth: '300px' }} bodyClassName={"d-flex justify-content-between"}></Column>
+            <Column field="total" header="Estimate/Total" body={(rowData) => `$${formatAUD(rowData.total)}`}></Column>
+            <Column field="paid" header="Status" body={(rowData) => <div className='expenseStatus'>
+                <span className={rowData?.paid ? 'paid' : 'unpaid'}>
+                    {rowData?.paid ? 'Paid' : 'Not Paid'}
+                </span>
+            </div>} style={{ width: '120px', minWidth: '120px', maxWidth: '120px' }}></Column>
         </DataTable>
     );
 };
