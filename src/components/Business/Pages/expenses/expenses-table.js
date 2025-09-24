@@ -185,8 +185,8 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         const isPaid = rowData.paid;
 
         const extension = rowData.file ? rowData.file.split(".")?.[rowData.file.split(".")?.length - 1]?.toLowerCase() : "";
-        if (rowData.file) return <Link to={rowData.file} target='_blank' style={isPaid ? { opacity: 1 } : { opacity: 0.5 }}>
-            {<BootstrapFileIcons extension={extension} color={isPaid ? '' : '#98A2B3'} size={16} />}
+        if (rowData.file) return <Link to={rowData.file} target='_blank'>
+            {<BootstrapFileIcons extension={extension} color={isPaid ? '#98A2B3' : '#FF0000'} size={16} />}
         </Link>;
     };
 

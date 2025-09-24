@@ -1581,7 +1581,8 @@ strong.dollorIcon {
   height: 320px;
 }
 
-.currentJobsTable table tbody td span {
+.currentJobsTable table tbody td span,
+.expenseStatus span {
   text-align: center;
   font-family: Inter;
   font-size: 12px;
@@ -1594,13 +1595,15 @@ strong.dollorIcon {
   white-space: nowrap;
 }
 
-.currentJobsTable td.status span.paid {
+.currentJobsTable td.status span.paid,
+.expenseStatus .paid {
   border: 1px solid var(--Success-200, #a9efc5);
   background: var(--Success-50, #ecfdf3);
   color: #067647;
 }
 
-.currentJobsTable td.status span.unpaid {
+.currentJobsTable td.status span.unpaid,
+.expenseStatus .unpaid {
   border: 1px solid var(--Error-200, #fecdca);
   background: var(--Error-50, #fef3f2);
   color: #b42318;
@@ -11810,7 +11813,7 @@ tr:hover .linkText,
 }
 
 .p-sidebar-mask-document {
-  z-index: 1000 !important;
+  z-index: 1060 !important;
 }
 
 .departments-droppable .p-accordion-tab:not(.p-accordion-tab-active),

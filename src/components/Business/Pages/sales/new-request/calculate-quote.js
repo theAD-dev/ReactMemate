@@ -51,7 +51,9 @@ const CalculateQuote = () => {
                 recurring: {
                     frequency: "M",
                     start_date: new Date(),
-                    end_by: 0
+                    end_by: 0,
+                    upfront_projects: 1,
+                    initial_projects: 1
                 }
             }));
         } else if (newRequestQuery?.data) {
@@ -82,6 +84,14 @@ const CalculateQuote = () => {
                     newData.recurring.end_date = new Date(endTimestamp < 1e12 ? endTimestamp * 1000 : endTimestamp);
                     console.log("End Date (Sydney):", sydneyFormatter.format(newData.recurring.end_date));
                 }
+            } else {
+                newData.recurring = {
+                    frequency: "M",
+                    start_date: new Date(),
+                    end_by: 0,
+                    upfront_projects: 1,
+                    initial_projects: 1
+                };
             }
             setPayload((others) => ({ ...others, ...newData }));
         }
@@ -126,6 +136,7 @@ const CalculateQuote = () => {
 
     function formatDateToYMD(date) {
         if (!date) return '';
+        date = new Date(date);
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
