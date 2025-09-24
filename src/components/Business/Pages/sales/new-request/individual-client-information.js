@@ -32,12 +32,12 @@ const IndividualClientInformation = () => {
         // Append user data
         formData.append("firstname", data.firstname);
         formData.append("lastname", data.lastname);
-        formData.append("email", data.email);
+        if (data.email) formData.append("email", data.email);
         const phoneNumber = data?.phone && parsePhoneNumberFromString(data.phone);
         if (phoneNumber?.nationalNumber) formData.append("phone", data.phone);
 
         if (data.category != "0") formData.append("category", data.category);
-        formData.append("payment_terms", data.payment_terms);
+        if (data.payment_terms) formData.append("payment_terms", data.payment_terms);
 
         if (data.description) formData.append("description", data.description);
 
