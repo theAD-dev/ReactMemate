@@ -8648,11 +8648,7 @@ ul.activeListPassword li.active {
   margin-bottom: 23px;
 }
 
-<<<<<<< HEAD
-.boxLogin h2 {
-=======
 .boxLogin h1,.boxLogin h2 {
->>>>>>> a5573e1e (changeH1tages)
   color: var(--colorG1);
   margin-bottom: 46px;
   margin-top: 0;
@@ -8680,11 +8676,7 @@ ul.activeListPassword li.active {
   letter-spacing: 0.12px;
 }
 
-<<<<<<< HEAD
-.boxLogin h2 span {
-=======
 .boxLogin h2 span,.boxLogin h1 span {
->>>>>>> a5573e1e (changeH1tages)
   color: var(--color1);
   display: inline-block;
   margin: 0;
