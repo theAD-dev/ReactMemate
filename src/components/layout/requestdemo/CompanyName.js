@@ -62,12 +62,11 @@ const CompanyName = () => {
                 <div className="w-100 p-4">
                   <img src={LoinLogo} alt="Loin Logo" />
                 </div>
-
                 <div className="boxLogin">
-                  <h2>
+                  <h1>
                     Yes, I want to <span>sign up</span>
                     <br></br> for a demo
-                  </h2>
+                  </h1>
                   <div className="step-progress">
                     <div className="step "></div>
                     <div className="step"></div>

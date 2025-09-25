@@ -101,10 +101,10 @@ const Create = () => {
           <div className="loginPage requestDemoWrapVideoSection">
             <div className="boxinfo w-50">
               <div className="boxLogin">
-                <h2>
+                <h1>
                   Start Your <span>Journey</span> <br />
                   with <span>MeMate</span>
-                </h2>
+                </h1>
                 <div className="step-progress">
                   <div className="step active"></div>
                   <div className="step"></div>

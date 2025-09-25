@@ -90,9 +90,9 @@ const SelectDate = () => {
                 </div>
 
                 <div className="boxLogin w-100">
-                  <h2>
+                  <h1>
                     Yes, I want to <span>sign up</span><br></br> for a demo
-                  </h2>
+                  </h1>
                   <div className="step-progress">
                     <div className="step"></div>
                     <div className="step"></div>
