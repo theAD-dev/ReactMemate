@@ -78,7 +78,7 @@ export const paymentIntentCreate = async (uniqueId, data) => {
     body: data
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+  return fetchAPI(url.toString(), options, false);
 };
 
 export const deleteInvoice = async (uniqueId) => {
