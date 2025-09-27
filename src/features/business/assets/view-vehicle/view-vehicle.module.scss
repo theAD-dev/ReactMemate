@@ -1,0 +1,58 @@
+.circledesignstyle {
+  .out {
+    border-radius: 28px;
+    border: 6px solid var(--Success-50, #ecfdf3);
+    background: var(--Success-100, #dcfae6);
+    padding: 6px;
+  }
+}
+
+.profileBox {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid #dedede;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.box {
+  background: var(--Gray-50, #f9fafb);
+  padding: 24px 16px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.boxLabel {
+  color: #475467;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.boxLabel2 {
+  color: #475467;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.label {
+  color: #667085;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.text {
+  color: #475467;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
