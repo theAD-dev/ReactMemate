@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { Eye, EyeSlash } from "react-bootstrap-icons";
+
+
+import { Eye, EyeSlash, TypeH1 } from "react-bootstrap-icons";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { authenticateUser } from "../../../APIs/LoginApi";
@@ -12,7 +14,9 @@ import LoinLogo from "../../../assets/images/logo.svg";
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  console.log('email: ', email);
   const [password, setPassword] = useState("");
+  console.log('password: ', password);
   const [showPassword, setShowPassword] = useState(false);
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const [isLoading, setIsLoading] = useState(false);
@@ -78,9 +82,9 @@ const Login = () => {
               <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
             </div>
             <div className="boxLogin">
-              <h2>
+              <h1>
                 Login to <span>MeMate</span>
-              </h2>
+              </h1>
               <div className="formgroup">
                 <label>Email<span style={{ color: "#f04438" }}>*</span></label>
                 <div

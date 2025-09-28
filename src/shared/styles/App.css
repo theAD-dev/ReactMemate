@@ -258,8 +258,8 @@ tr.selected-row td {
   outline: none;
 }
 
-.boxLogin h2,
-.boxLogin h2 span {
+.boxLogin h1,.boxLogin h2,
+.boxLogin h1 span,.boxLogin h2 span {
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
@@ -8648,7 +8648,7 @@ ul.activeListPassword li.active {
   margin-bottom: 23px;
 }
 
-.boxLogin h2 {
+.boxLogin h1,.boxLogin h2 {
   color: var(--colorG1);
   margin-bottom: 46px;
   margin-top: 0;
@@ -8676,7 +8676,7 @@ ul.activeListPassword li.active {
   letter-spacing: 0.12px;
 }
 
-.boxLogin h2 span {
+.boxLogin h2 span,.boxLogin h1 span {
   color: var(--color1);
   display: inline-block;
   margin: 0;

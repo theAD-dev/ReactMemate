@@ -9,6 +9,7 @@ import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
 // pages
 const ClientPage = LazyLoader(lazy(() => import('../components/Business/Pages/clients')));
 const ClientOrderHistory = LazyLoader(lazy(() => import('../components/Business/Pages/clients/client-order-history')));
+const Assets = LazyLoader(lazy(() => import('../pages/business/assets')));
 const ExpensesPage = LazyLoader(lazy(() => import('../components/Business/Pages/expenses')));
 const InvoicePage = LazyLoader(lazy(() => import('../components/Business/Pages/invoices')));
 const PublicInvoice = LazyLoader(lazy(() => import('../components/Business/Pages/invoices/public-invoice/public-invoice')));
@@ -288,6 +289,11 @@ const routes = [
             {
                 path: "suppliers/:id/history",
                 element: <SupplierHistoryPage />,
+                errorElement: <UnknownError />,
+            },
+            {
+                path: "assets",
+                element: <Assets />,
                 errorElement: <UnknownError />,
             },
             {
