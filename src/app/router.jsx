@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Login from '../components/layout/Login/login-page';
 import UnknownError from "../pages/error/unknown/unknown";
+import ValidationError from "../pages/error/validation/validation";
 import ProtectedLayout from "../shared/ui/layout/protected-layout";
 import SettingsLayout from "../shared/ui/layout/settings-layout";
 import { LazyLoader } from "../shared/ui/lazy-loader/lazy-loader";
@@ -252,6 +253,11 @@ const routes = [
         errorElement: <UnknownError />
     },
     {
+        path: "/400",
+        element: <ValidationError />,
+        errorElement: <UnknownError />
+    },
+    {
         path: "/500",
         element: <UnknownError />,
         errorElement: <UnknownError />
@@ -325,7 +331,7 @@ const routes = [
                 errorElement: <UnknownError />,
             },
 
-            
+
             {
                 path: "tasks",
                 element: <TaskPage />,
@@ -793,7 +799,7 @@ const routes = [
     },
     {
         path: "*",
-        element: <Navigate to={"/404"} replace />, 
+        element: <Navigate to={"/404"} replace />,
         errorElement: <UnknownError />
     }
 ];

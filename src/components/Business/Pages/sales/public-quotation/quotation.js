@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import style from './quote.module.scss';
 import { getQuoteation, quotationDecline, quotationAccept, quotationChanges } from "../../../../../APIs/quoteation-api";
 import googleReview from "../../../../../assets/images/icon/checbold.svg";
+import ValidationError from '../../../../../pages/error/validation/validation';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 
 const formatTimeStamp = (timestamp) => {
@@ -35,6 +36,7 @@ const Quotation = () => {
     const [errors, setErrors] = useState({});
     const [actionLoading, setActionLoading] = useState({ decline: false, changes: false, accept: false });
     const [visible, setVisible] = useState(false);
+    const [isError, setIsError] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -92,7 +94,7 @@ const Quotation = () => {
             setQuote(finalQuote);
         } catch (error) {
             console.error('Error fetching data: ', error);
-            toast.error("Quote Not valid.");
+            setIsError(true);
         } finally {
             setIsLoading(false);
         }
@@ -232,6 +234,11 @@ const Quotation = () => {
         'Review': 'Under Review',
         'Completed': 'Project Completed'
     };
+
+    if (isError) {
+        return <ValidationError message="Quote Not valid." />;
+    }
+
     return (
         <>
             <div className={style.quotationWrapperPage}>
