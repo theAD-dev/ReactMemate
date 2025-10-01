@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { QuestionCircle } from 'react-bootstrap-icons';
+import { useMutation } from '@tanstack/react-query';
 import { Dialog } from 'primereact/dialog';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { RadioButton } from 'primereact/radiobutton';
+import { toast } from 'sonner';
 import style from './support.module.scss';
 import helpImage from '../../../assets/images/help-banner.jpg';
+import { reachOutForSupport } from '../../../entities/support/api/support-api';
 
 const headerElement = (
     <div className={`${style.modalHeader}`}>
@@ -24,25 +28,68 @@ const Support = ({ visible, setVisible }) => {
     const [issueType, setIssueType] = useState('');
     const [description, setDescription] = useState('');
     const [urgency, setUrgency] = useState('');
+    const [error, setError] = useState({ issueType: "", description: "", urgency: "" });
 
     const issueTypes = [
-        { value: 'technical', label: '🔧 Technical support', icon: 'pi-wrench' },
-        { value: 'billing', label: '💳 Billing question', icon: 'pi-credit-card' },
-        { value: 'feature', label: '🎯 Feature request', icon: 'pi-bullseye' },
-        { value: 'general', label: '❓ General inquiry', icon: 'pi-question-circle' },
-        { value: 'other', label: '✨ Something else', icon: 'pi-star' }
+        { value: 'Technical support', label: '🔧 Technical support', icon: 'pi-wrench' },
+        { value: 'Billing question', label: '💳 Billing question', icon: 'pi-credit-card' },
+        { value: 'Feature request', label: '🎯 Feature request', icon: 'pi-bullseye' },
+        { value: 'General inquiry', label: '❓ General inquiry', icon: 'pi-question-circle' },
+        { value: 'Something else', label: '✨ Something else', icon: 'pi-star' }
     ];
 
     const urgencyLevels = [
-        { value: 'low', label: 'Relax, take your time' },
-        { value: 'medium', label: 'Pretty urgent, help soon' },
-        { value: 'high', label: 'Mission-critical!' }
+        { value: 'Relax, take your time', label: 'Relax, take your time' },
+        { value: 'Pretty urgent, help soon', label: 'Pretty urgent, help soon' },
+        { value: 'Mission-critical!', label: 'Mission-critical!' }
     ];
+
+    const mutation = useMutation({
+        mutationFn: (data) => reachOutForSupport(data),
+        onSuccess: () => {
+            setVisible(false);
+            setDescription('');
+            toast.success(`Your message has been sent successfully.`);
+        },
+        onError: (error) => {
+            console.error('Error sending message:', error);
+            toast.error(`Failed to sent your message. Please try again.`);
+        }
+    });
+
+    const handleSubmit = () => {
+      let hasError = false;
+      const newError = { issueType: "", description: "", urgency: "" };
+      
+      if (issueType.trim() === "") {
+          newError.issueType = "Issue type is required.";
+          hasError = true;
+      }
+
+      if (description.trim() === "") {
+          newError.description = "Description is required.";
+          hasError = true;
+      }
+
+      if (urgency.trim() === "") {
+          newError.urgency = "Urgency level is required.";
+          hasError = true;
+      }
+
+      setError(newError);
+
+      if (hasError) return;
+
+      mutation.mutate({ issue: issueType, description, urgent: urgency });
+    };
 
     const footerElement = (
         <div className={`d-flex justify-content-between`}>
             <Button className='danger-text-button' onClick={() => setVisible(false)}>Cancel</Button>
-            <Button className='solid-button' onClick={() => setVisible(false)}>Send</Button>
+            <Button className='solid-button' onClick={handleSubmit}>
+                Send
+                {mutation?.isPending && <ProgressSpinner style={{ width: '16px', height: '16px', marginLeft: '8px' }} /> }
+            </Button>
         </div>
     );
 
@@ -74,6 +121,7 @@ const Support = ({ visible, setVisible }) => {
                                 </div>
                             ))}
                         </div>
+                        {error.issueType && <div className="error-message">{error.issueType}</div>}
                     </div>
 
                     <div className={style.formSection}>
@@ -85,6 +133,7 @@ const Support = ({ visible, setVisible }) => {
                             placeholder="What can we help you with today?"
                             className={style.textArea}
                         />
+                        {error.description && <div className="error-message">{error.description}</div>}
                     </div>
 
                     <div className={style.formSection}>
@@ -105,6 +154,7 @@ const Support = ({ visible, setVisible }) => {
                                 </div>
                             ))}
                         </div>
+                        {error.urgency && <div className="error-message">{error.urgency}</div>}
                     </div>
                 </div>
             </div>
