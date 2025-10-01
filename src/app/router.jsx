@@ -324,6 +324,8 @@ const routes = [
                 element: <FormInquiries />,
                 errorElement: <UnknownError />,
             },
+
+            
             {
                 path: "tasks",
                 element: <TaskPage />,

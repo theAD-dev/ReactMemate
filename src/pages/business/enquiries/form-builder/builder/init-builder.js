@@ -2,24 +2,21 @@
 import { saveFormToApi, updateFormToApi } from '../api';
 
 export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null }) {
-    // Guard against double binding in React StrictMode (dev) or accidental re-calls
-  if (typeof window !== 'undefined') {
-    if (window.__INQ_BUILDER_INITED__) {
-      return; // already initialized, skip attaching listeners again
-    }
-    window.__INQ_BUILDER_INITED__ = true;
+  // Guard against double binding in React StrictMode (dev) or accidental re-calls
+  if (typeof window === 'undefined') {
+    return;
   }
   // Scope all DOM lookups to the builder root to avoid collisions with host app
-const root = document.querySelector('.mf-builder') || document;
+  const root = document.querySelector('.mf-builder') || document;
 
   // Core nodes
-const preview = root.querySelector('#preview-container');
-const properties = root.querySelector('#properties-container');
-const cssTextarea = root.querySelector('#form_style');
-const previewBtn = root.querySelector('#preview-btn');
-const saveBtn = root.querySelector('#save-btn');
-const previewModal = root.querySelector('#preview-modal');
-const previewFormContainer = root.querySelector('#preview-form-container');
+  const preview = root.querySelector('#preview-container');
+  const properties = root.querySelector('#properties-container');
+  const cssTextarea = root.querySelector('#form_style');
+  const previewBtn = root.querySelector('#preview-btn');
+  const saveBtn = root.querySelector('#save-btn');
+  const previewModal = root.querySelector('#preview-modal');
+  const previewFormContainer = root.querySelector('#preview-form-container');
 
   // Fill default CSS only when empty
   if (cssTextarea && !cssTextarea.value && typeof getDefaultCss === 'function') {
@@ -56,7 +53,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
           e.dataTransfer.setData('text/plain', item.dataset.type);
           e.dataTransfer.setData('application/x-field-type', item.dataset.type);
         }
-      } catch(_) {}
+      } catch (_) { }
     }, true);
   }
 
@@ -84,7 +81,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
         e.dataTransfer.getData('text/plain') ||
         e.dataTransfer.getData('field-type')
       )) || '';
-    } catch(_) {}
+    } catch (_) { }
     if (!type) return;
     addField(type);
   });
@@ -107,21 +104,21 @@ const previewFormContainer = root.querySelector('#preview-form-container');
   function getTemplate(type) {
     const map = {
       text: `<div class="form-field"><label>Text Field</label><input type="text" placeholder="Enter text"></div>`,
-      email:`<div class="form-field"><label>Email Field</label><input type="email" placeholder="Enter email"></div>`,
-      number:`<div class="form-field"><label>Number Field</label><input type="number" placeholder="Enter number"></div>`,
-      phone:`<div class="form-field"><label>Phone Field</label><input type="tel" placeholder="Enter phone"></div>`,
-      textarea:`<div class="form-field"><label>Text Area</label><textarea placeholder="Enter text"></textarea></div>`,
-      select:`<div class="form-field"><label>Dropdown</label><select><option value="">Select an option</option><option>Option 1</option><option>Option 2</option></select></div>`,
-      multiselect:`<div class="form-field"><label>Multi Select</label><select multiple><option>Option 1</option><option>Option 2</option></select></div>`,
-      radio:`<div class="form-field"><label>Radio Buttons</label><div class="radio-field"><input id="r1" type="radio" name="rg"><label for="r1">Option 1</label></div><div class="radio-field"><input id="r2" type="radio" name="rg"><label for="r2">Option 2</label></div></div>`,
-      checkbox:`<div class="form-field"><div class="checkbox-field"><input id="cb" type="checkbox"><label for="cb">Checkbox</label></div></div>`,
-      multicheckbox:`<div class="form-field"><label>Multi Checkbox</label><div class="checkbox-field"><input id="m1" type="checkbox"><label for="m1">Option 1</label></div><div class="checkbox-field"><input id="m2" type="checkbox"><label for="m2">Option 2</label></div></div>`,
-      date:`<div class="form-field"><label>Date</label><input type="date"></div>`,
-      time:`<div class="form-field"><label>Time</label><input type="time"></div>`,
-      url:`<div class="form-field"><label>Website URL</label><input type="url" placeholder="https://example.com"></div>`,
-      html:`<div class="form-field html-content"><p>HTML Content</p></div>`,
-      consent:`<div class="form-field"><div class="checkbox-field"><input id="consent" type="checkbox"><label for="consent">I agree to the terms and conditions</label></div></div>`,
-      submit_button:`<div class="form-field"><button type="submit" class="btn-primary">Submit</button></div>`
+      email: `<div class="form-field"><label>Email Field</label><input type="email" placeholder="Enter email"></div>`,
+      number: `<div class="form-field"><label>Number Field</label><input type="number" placeholder="Enter number"></div>`,
+      phone: `<div class="form-field"><label>Phone Field</label><input type="tel" placeholder="Enter phone"></div>`,
+      textarea: `<div class="form-field"><label>Text Area</label><textarea placeholder="Enter text"></textarea></div>`,
+      select: `<div class="form-field"><label>Dropdown</label><select><option value="">Select an option</option><option>Option 1</option><option>Option 2</option></select></div>`,
+      multiselect: `<div class="form-field"><label>Multi Select</label><select multiple><option>Option 1</option><option>Option 2</option></select></div>`,
+      radio: `<div class="form-field"><label>Radio Buttons</label><div class="radio-field"><input id="r1" type="radio" name="rg"><label for="r1">Option 1</label></div><div class="radio-field"><input id="r2" type="radio" name="rg"><label for="r2">Option 2</label></div></div>`,
+      checkbox: `<div class="form-field"><div class="checkbox-field"><input id="cb" type="checkbox"><label for="cb">Checkbox</label></div></div>`,
+      multicheckbox: `<div class="form-field"><label>Multi Checkbox</label><div class="checkbox-field"><input id="m1" type="checkbox"><label for="m1">Option 1</label></div><div class="checkbox-field"><input id="m2" type="checkbox"><label for="m2">Option 2</label></div></div>`,
+      date: `<div class="form-field"><label>Date</label><input type="date"></div>`,
+      time: `<div class="form-field"><label>Time</label><input type="time"></div>`,
+      url: `<div class="form-field"><label>Website URL</label><input type="url" placeholder="https://example.com"></div>`,
+      html: `<div class="form-field html-content"><p>HTML Content</p></div>`,
+      consent: `<div class="form-field"><div class="checkbox-field"><input id="consent" type="checkbox"><label for="consent">I agree to the terms and conditions</label></div></div>`,
+      submit_button: `<div class="form-field"><button type="submit" class="btn-primary">Submit</button></div>`
     };
     return map[type] || map.text;
   }
@@ -149,8 +146,8 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       error_message: '',
       options: []
     };
-    if (['select','radio','multicheckbox','multiselect'].includes(type)) {
-      base.options = ['Option 1','Option 2'];
+    if (['select', 'radio', 'multicheckbox', 'multiselect'].includes(type)) {
+      base.options = ['Option 1', 'Option 2'];
     }
     if (type === 'submit_button') {
       base.button_text = 'Submit';
@@ -202,7 +199,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
     updateMoveButtons();
   }
 
-  function updateMoveButtons(){
+  function updateMoveButtons() {
     const nodes = Array.from(preview.querySelectorAll('.preview-field'));
     nodes.forEach((node, idx) => {
       const upBtn = node.querySelector('.move-field-up');
@@ -221,24 +218,24 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       <div class="property-group">
         <h3>Basic</h3>
         <label>Label <input id="fp-label" value="${escapeHtml(data.label)}"></label>
-        ${(['text','email','number','phone','url','textarea'].includes(type) ?
-          `<label>Placeholder <input id="fp-ph" value="${escapeHtml(data.placeholder||'')}"></label>` : '')}
-        ${(['text','email','number','phone','url','textarea'].includes(type) ?
-          `<label>Max Length <input id="fp-max" type="number" value="${escapeAttr(data.maxlength||'')}"></label>` : '')}
-        ${(['text','email','number','phone','url','textarea'].includes(type) ? `
+        ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
+        `<label>Placeholder <input id="fp-ph" value="${escapeHtml(data.placeholder || '')}"></label>` : '')}
+        ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
+        `<label>Max Length <input id="fp-max" type="number" value="${escapeAttr(data.maxlength || '')}"></label>` : '')}
+        ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ? `
           <div class="property-subtle">
             <label>Validation Pattern (Regex)
-              <input id="fp-regex" placeholder="e.g. ^[A-Za-z]{3,}$" value="${escapeAttr(data.regex||'')}">
+              <input id="fp-regex" placeholder="e.g. ^[A-Za-z]{3,}$" value="${escapeAttr(data.regex || '')}">
             </label>
             <p class="help-text">Optional. Add a regex pattern for validation.</p>
             <label>Custom Error Message
-              <input id="fp-errmsg" placeholder="e.g. Please enter only letters" value="${escapeAttr(data.error_message||'')}">
+              <input id="fp-errmsg" placeholder="e.g. Please enter only letters" value="${escapeAttr(data.error_message || '')}">
             </label>
             <p class="help-text">Optional. Custom message to show when validation fails.</p>
           </div>` : '')}
-        <label class="inline"><input type="checkbox" id="fp-req" ${data.required ? 'checked':''}> <span>Required</span></label>
+        <label class="inline"><input type="checkbox" id="fp-req" ${data.required ? 'checked' : ''}> <span>Required</span></label>
       </div>
-      ${(['select','radio','multicheckbox','multiselect'].includes(type) ? `
+      ${(['select', 'radio', 'multicheckbox', 'multiselect'].includes(type) ? `
         <div class="property-group">
           <h3>Options</h3>
           <div id="fp-options"></div>
@@ -258,7 +255,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       <div class="property-group"><button id="fp-apply" type="button">Update Field</button></div>
     `;
 
-    if (['select','radio','multicheckbox','multiselect'].includes(type)) {
+    if (['select', 'radio', 'multicheckbox', 'multiselect'].includes(type)) {
       const wrap = root.querySelector('#fp-options');
       wrap.innerHTML = '';
       (data.options || []).forEach((opt, i) => {
@@ -273,7 +270,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       wrap.addEventListener('click', e => {
         if (e.target.classList.contains('rm')) {
           const i = +e.target.dataset.i;
-          data.options.splice(i,1);
+          data.options.splice(i, 1);
           selectField(id, type);
         }
       });
@@ -330,30 +327,30 @@ const previewFormContainer = root.querySelector('#preview-form-container');
         out += `<div class="form-field html-content">${f.html || ''}</div>`;
         return;
       }
-      out += `<div class="form-field ${f.required ? 'required':''}">`;
-      if (!['checkbox','consent'].includes(t)) out += `<label>${escapeHtml(f.label || '')}</label>`;
-      if (['text','email','number','phone','url','date','time'].includes(t)) {
+      out += `<div class="form-field ${f.required ? 'required' : ''}">`;
+      if (!['checkbox', 'consent'].includes(t)) out += `<label>${escapeHtml(f.label || '')}</label>`;
+      if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(t)) {
         const inputType = t === 'phone' ? 'tel' : t;
-        out += `<input type="${inputType}" placeholder="${escapeAttr(f.placeholder || '')}" ${f.maxlength ? `maxlength="${f.maxlength}"` : ''} ${f.required ? 'required':''} />`;
+        out += `<input type="${inputType}" placeholder="${escapeAttr(f.placeholder || '')}" ${f.maxlength ? `maxlength="${f.maxlength}"` : ''} ${f.required ? 'required' : ''} />`;
       } else if (t === 'textarea') {
-        out += `<textarea placeholder="${escapeAttr(f.placeholder || '')}" ${f.required ? 'required':''}></textarea>`;
+        out += `<textarea placeholder="${escapeAttr(f.placeholder || '')}" ${f.required ? 'required' : ''}></textarea>`;
       } else if (t === 'select') {
-        out += `<select ${f.required ? 'required':''}><option value="">${escapeHtml(f.placeholder || 'Select an option')}</option>${(f.options||[]).map(o=>`<option>${escapeHtml(o)}</option>`).join('')}</select>`;
+        out += `<select ${f.required ? 'required' : ''}><option value="">${escapeHtml(f.placeholder || 'Select an option')}</option>${(f.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('')}</select>`;
       } else if (t === 'multiselect') {
-        out += `<select multiple ${f.required ? 'required':''}>${(f.options||[]).map(o=>`<option>${escapeHtml(o)}</option>`).join('')}</select>`;
+        out += `<select multiple ${f.required ? 'required' : ''}>${(f.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('')}</select>`;
       } else if (t === 'radio') {
-        out += (f.options||[]).map((o,i)=>`<div class="radio-field"><input type="radio" id="${f.name}-${i}" name="${f.name}"><label for="${f.name}-${i}">${escapeHtml(o)}</label></div>`).join('');
+        out += (f.options || []).map((o, i) => `<div class="radio-field"><input type="radio" id="${f.name}-${i}" name="${f.name}"><label for="${f.name}-${i}">${escapeHtml(o)}</label></div>`).join('');
       } else if (t === 'multicheckbox') {
-        out += (f.options||[]).map((o,i)=>`<div class="checkbox-field"><input type="checkbox" id="${f.name}-${i}" name="${f.name}[]"><label for="${f.name}-${i}">${escapeHtml(o)}</label></div>`).join('');
+        out += (f.options || []).map((o, i) => `<div class="checkbox-field"><input type="checkbox" id="${f.name}-${i}" name="${f.name}[]"><label for="${f.name}-${i}">${escapeHtml(o)}</label></div>`).join('');
       } else if (t === 'checkbox' || t === 'consent') {
-        out += `<div class="checkbox-field"><input type="checkbox" id="${f.name}" ${f.required?'required':''}><label for="${f.name}">${escapeHtml(f.label || '')}</label></div>`;
+        out += `<div class="checkbox-field"><input type="checkbox" id="${f.name}" ${f.required ? 'required' : ''}><label for="${f.name}">${escapeHtml(f.label || '')}</label></div>`;
       } else if (t === 'submit_button') {
-        out += `<button type="submit" style="${escapeAttr(f.custom_style||'')}">${escapeHtml(f.button_text || 'Submit')}</button>`;
+        out += `<button type="submit" style="${escapeAttr(f.custom_style || '')}">${escapeHtml(f.button_text || 'Submit')}</button>`;
       }
       out += `</div>`;
     });
     // safety submit button in preview
-    if (!fields.some(f => (f.type||f.field_type) === 'submit_button')) {
+    if (!fields.some(f => (f.type || f.field_type) === 'submit_button')) {
       out += `<div class="form-field"><button type="submit">Submit</button></div>`;
     }
     out += `</form>`;
@@ -378,9 +375,9 @@ const previewFormContainer = root.querySelector('#preview-form-container');
     const payload = buildApiPayload();
     try {
       const json = currentFormId
-      ? await updateFormToApi(currentFormId, payload)
-      : await saveFormToApi(payload);
-      
+        ? await updateFormToApi(currentFormId, payload)
+        : await saveFormToApi(payload);
+
       // If we just created, remember the id so next saves will update
       if (!currentFormId && json && json.id) {
         currentFormId = json.id;
@@ -464,17 +461,17 @@ const previewFormContainer = root.querySelector('#preview-form-container');
   }
 
   // helpers
-  function val(sel){ return root.querySelector(sel)?.value || ''; }
-  function capitalize(s){ return (s||'').charAt(0).toUpperCase() + (s||'').slice(1); }
-  function escapeHtml(s=''){ return s.replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
-  function escapeAttr(s=''){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+  function val(sel) { return root.querySelector(sel)?.value || ''; }
+  function capitalize(s) { return (s || '').charAt(0).toUpperCase() + (s || '').slice(1); }
+  function escapeHtml(s = '') { return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+  function escapeAttr(s = '') { return escapeHtml(s).replace(/"/g, '&quot;'); }
 
   function seedDefaultFields() {
     const defaults = [
-      { field_type: 'text',     name: 'name',    label: 'Name',    placeholder: 'Enter your name',    order: 0 },
-      { field_type: 'email',    name: 'email',   label: 'Email',   placeholder: 'Enter your email',   order: 1 },
-      { field_type: 'phone',    name: 'phone',   label: 'Phone',   placeholder: 'Enter your phone',   order: 2 },
-      { field_type: 'textarea', name: 'message', label: 'Message', placeholder: 'Type your message',  order: 3 },
+      { field_type: 'text', name: 'name', label: 'Name', placeholder: 'Enter your name', order: 0 },
+      { field_type: 'email', name: 'email', label: 'Email', placeholder: 'Enter your email', order: 1 },
+      { field_type: 'phone', name: 'phone', label: 'Phone', placeholder: 'Enter your phone', order: 2 },
+      { field_type: 'textarea', name: 'message', label: 'Message', placeholder: 'Type your message', order: 3 },
     ];
     defaults.forEach(addFieldFromData);
   }
@@ -506,7 +503,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
     }
 
     // fields canvas
-    const fields = (form.fields || []).slice().sort((a,b)=>(a.order ?? 0)-(b.order ?? 0));
+    const fields = (form.fields || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
     preview.innerHTML = '';
     fieldsData = {};
     fieldCounter = 1;
@@ -548,20 +545,20 @@ const previewFormContainer = root.querySelector('#preview-form-container');
     const labelEl = el.querySelector('.form-field > label, .checkbox-field label');
     if (labelEl && data.label) labelEl.textContent = data.label;
 
-    if (['text','email','number','phone','url','date','time'].includes(type)) {
+    if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(type)) {
       const input = el.querySelector('input');
       if (input) {
         if (type === 'phone') input.type = 'tel';
         if (data.placeholder) input.placeholder = data.placeholder;
-        if (data.maxlength)  input.maxLength  = parseInt(data.maxlength, 10);
-        if (data.required)   input.required   = true;
+        if (data.maxlength) input.maxLength = parseInt(data.maxlength, 10);
+        if (data.required) input.required = true;
       }
     } else if (type === 'textarea') {
       const ta = el.querySelector('textarea');
       if (ta) {
         if (data.placeholder) ta.placeholder = data.placeholder;
-        if (data.maxlength)   ta.maxLength   = parseInt(data.maxlength, 10);
-        if (data.required)    ta.required    = true;
+        if (data.maxlength) ta.maxLength = parseInt(data.maxlength, 10);
+        if (data.required) ta.required = true;
       }
     } else if (type === 'select') {
       const sel = el.querySelector('select');
@@ -582,7 +579,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       const wrap = el.querySelector('.form-field');
       if (wrap) {
         wrap.querySelectorAll('.radio-field').forEach(n => n.remove());
-        (data.options || []).forEach((o,i) => {
+        (data.options || []).forEach((o, i) => {
           const div = document.createElement('div');
           div.className = 'radio-field';
           const rid = `${data.name}-${i}`;
@@ -595,7 +592,7 @@ const previewFormContainer = root.querySelector('#preview-form-container');
       const wrap = el.querySelector('.form-field');
       if (wrap) {
         wrap.querySelectorAll('.checkbox-field').forEach(n => n.remove());
-        (data.options || []).forEach((o,i) => {
+        (data.options || []).forEach((o, i) => {
           const div = document.createElement('div');
           div.className = 'checkbox-field';
           const cid = `${data.name}-${i}`;
