@@ -123,7 +123,7 @@ const RecurringQuotes = () => {
                     </ul>
                 </div>
             </div>
-            <div className={`content_wrap_main`} style={{ height: `calc(100vh - 150px - ${trialHeight}px)` }}>
+            <div className={`content_wrap_main`} style={{ height: `calc(100vh - 210px - ${trialHeight}px)` }}>
                 <div className='listwrapper'>
                     <div className="topHeadStyle mb-4 align-items-center">
                         <h2 className='mb-0'>Recurring Quotes</h2>
