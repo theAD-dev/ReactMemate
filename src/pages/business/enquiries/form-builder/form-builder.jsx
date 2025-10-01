@@ -61,6 +61,7 @@ export default function TempFormBuilder() {
       try {
         if (editId) {
           const formJson = await getFormById(editId);
+          console.log('formJson: ', formJson);
           initBuilder({
             defaultOrgId: orgId,
             getDefaultCss: () => defaultFormStyle,
