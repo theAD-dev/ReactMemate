@@ -112,7 +112,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
                             <h5>Expense Details</h5>
                         </div>

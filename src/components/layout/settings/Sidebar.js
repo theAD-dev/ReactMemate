@@ -16,12 +16,13 @@ import {
   ListUl,
   Headset,
 } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
 import Support from "../../../shared/ui/support/support";
 import LogoutButton from "../Login/logout-button";
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
+  const navigate = useNavigate();
   const { trialHeight } = useTrialHeight();
   const profileData = JSON.parse(
     window.localStorage.getItem("profileData") || "{}"
@@ -32,7 +33,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   const activeRef = useRef(null);
 
   const openSupportModal = () => {
-    setVisible(true);
+    navigate("/help");
   };
 
   // Scroll into view when the active tab changes

@@ -23,6 +23,7 @@ import style from './public-invoice.module.scss';
 import { getCities, getCountries, getStates } from '../../../../../APIs/ClientsApi';
 import { getInvoice, paymentIntentCreate } from '../../../../../APIs/invoice-api';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
+import ValidationError from '../../../../../pages/error/validation/validation';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import StripeContainer from '../../../../../ui/strip-payment/strip-payment';
 
@@ -47,6 +48,7 @@ const PublicInvoice = () => {
     const [payment, setPayment] = useState({});
 
     const [visible, setVisible] = useState(false);
+    const [isError, setIsError] = useState(false);
     const handleClose = () => setVisible(false);
 
     const { register, control, handleSubmit, formState: { errors }, setValue } = useForm({
@@ -76,7 +78,7 @@ const PublicInvoice = () => {
             setInvoice(data);
         } catch (error) {
             console.error('Error fetching data: ', error);
-            toast.error("Invoice not valid.");
+            setIsError(true);
         } finally {
             setIsLoading(false);
         }
@@ -209,6 +211,10 @@ const PublicInvoice = () => {
 
         </div>
     );
+
+    if (isError) {
+        return <ValidationError message="Invoice not valid." />;
+    }
 
     return (
         <>
@@ -668,7 +674,7 @@ const PublicInvoice = () => {
                             :
                             <Col sm={8}>
                                 <h6>Payment Method</h6>
-                                <StripeContainer ref={paymentRef} setIsPaymentProcess={setIsPaymentProcess} amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} fetchData={fetchData}/>
+                                <StripeContainer ref={paymentRef} setIsPaymentProcess={setIsPaymentProcess} amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} fetchData={fetchData} />
                             </Col>
                     }
 

@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { getLocation } from "./location-api";
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
@@ -289,3 +290,23 @@ export const ProjectStatusesList = async () => {
   }
 };
 
+
+export const getHolidaysList = async () => {
+  try {
+    const location = JSON.parse(localStorage.getItem("profileData")).location;
+    const locationDetails = await getLocation(location);
+    if (!locationDetails || !locationDetails.state) {
+      console.error('Invalid location details:', locationDetails);
+      return [];
+    }
+    const endpoint = `/locations/${locationDetails.state}/holidays/`;
+    const options = {
+      method: 'GET'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+  } catch (err) {
+    console.error('Error fetching holidays:', err);
+    return [];
+  }
+};

@@ -158,7 +158,7 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
                         <div style={{ padding: "24px 18px 0px 18px", background: '#f9fafb' }}>
                             <div className={clsx('tabs d-flex gap-3')}>
                                 <div onClick={() => setTab("1")} className={clsx(styles.tab, { [styles.active]: tab === "1" })}>

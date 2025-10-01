@@ -1,12 +1,12 @@
 import React from 'react';
 import { ArrowRight } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
+import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import styles from './help.module.scss';
 import joshImage from '../../assets/images/Avatar.png';
 import RequestHelp from '../../features/dashboard/request-help/request-help';
 import Support from '../../features/help/support/support';
-import clsx from 'clsx';
 
 const Help = () => {
     const [showRequestCall, setShowRequestCall] = React.useState(false);
@@ -17,7 +17,7 @@ const Help = () => {
                 <h1 className={styles.helpTitle}>How can we help?</h1>
                 <div className={styles.helpContent}>
                     <div className='d-flex flex-column gap-3'>
-                        <div className={styles.helpItem}>
+                        <div className={styles.helpItem} style={{ opacity: 0.5, cursor: 'not-allowed' }}>
                             <span className={styles.helpItemText}>Suggestions</span>
                             <Button className='text-button'><ArrowRight color='#1AB2FF' size={16} /></Button>
                         </div>
@@ -39,7 +39,7 @@ const Help = () => {
                             <span className={styles.helpItemText}>Support </span>
                             <Button className='text-button'><ArrowRight color='#1AB2FF' size={16} /></Button>
                         </div>
-                        <div className={styles.helpItem}>
+                        <div className={styles.helpItem} style={{ opacity: 0.5, cursor: 'not-allowed' }}>
                             <span className={styles.helpItemText}>Knowledge Base</span>
                             <Button className='text-button'><ArrowRight color='#1AB2FF' size={16} /></Button>
                         </div>

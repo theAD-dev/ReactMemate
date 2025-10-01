@@ -57,7 +57,7 @@ export const CreateNewVehicle = ({ visible, setVisible, setRefetch }) => {
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 90px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
                         <VehicleForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} />
                     </div>
 
