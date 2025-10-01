@@ -196,7 +196,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                             </span>
                         </div>
 
-                        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
+                        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 102px)', overflow: 'auto' }}>
                             <h1 className={clsx(style.jobDetailHeading, 'mb-3')}>Job Details</h1>
 
                             <Card className={clsx(style.border, 'mb-4')}>

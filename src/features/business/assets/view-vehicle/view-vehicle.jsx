@@ -47,7 +47,7 @@ const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setR
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 90px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 100px)', overflow: 'auto' }}>
                         {!isEdit && <div className='d-flex align-items-center justify-content-between'>
                             <h5 className={styles.boxLabel}>General Information</h5>
                             <h6 className={styles.boxLabel2}>Vehicle ID: {vehicleData?.registration_number || id}</h6>

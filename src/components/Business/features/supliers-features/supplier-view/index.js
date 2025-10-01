@@ -43,7 +43,7 @@ const SupplierView = ({ data, refetch, closeIconRef, hide }) => {
                     </span>
                 </div>
 
-                <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+                <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
                     <div className='d-flex align-items-center justify-content-between'>
                         <h5 className={clsx(style.boxLabel)}>Supplier Details</h5>
                         <h6 className={clsx(style.boxLabel2)}>Supplier ID: {id}</h6>

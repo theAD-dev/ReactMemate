@@ -642,3 +642,9 @@ tr.p-datatable-emptymessage td {
 .dividerContainer .p-divider .p-divider-content {
   background: transparent !important;
 }
+
+.p-sidebar-right .p-sidebar {
+  margin: 0px 10px;
+  border-radius: 10px;
+  height: calc(100% - 20px) !important;
+}

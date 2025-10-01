@@ -184,7 +184,7 @@ const CreateTask = ({ show, setShow, refetch, taskId, setTaskId, defaultValue, p
                             </Button>
                         </span>
                     </div>
-                    <div className='modal-body' style={{ padding: '24px 24px', height: 'calc(97vh - 98px - 80px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px 24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
                         <Form.Control
                             type="text"
                             name='taskTitle'

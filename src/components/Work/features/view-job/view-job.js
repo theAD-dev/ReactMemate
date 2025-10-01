@@ -89,7 +89,7 @@ const ViewJob = ({ visible, setVisible, jobId, setRefetch, editMode, setEditMode
                         </div>
 
 
-                        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
+                        <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 102px)', overflow: 'auto' }}>
                             <div className={clsx('d-flex justify-content-between align-items-center mb-3')}>
                                 <h1 className={style.heading}>Job Details</h1>
                                 <div className='d-flex align-items-center gap-2'>

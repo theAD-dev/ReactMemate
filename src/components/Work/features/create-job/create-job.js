@@ -725,7 +725,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                         </span>
                     </div>
 
-                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 68px - 80px)', overflow: 'auto' }}>
+                    <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 62px - 102px)', overflow: 'auto' }}>
                         <Card className={clsx(style.border, 'mb-3')}>
                             <Card.Body className={clsx('d-flex justify-content-between align-items-center', style.borderBottom)}>
                                 <h1 className='font-16 mb-0 font-weight-light' style={{ color: '#475467', fontWeight: 400 }}>Job Details</h1>

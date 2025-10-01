@@ -126,7 +126,7 @@ const SupplierCreate = ({ visible, setVisible, refetch }) => {
             </span>
           </div>
 
-          <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 105px)', overflow: 'auto' }}>
+          <div className='modal-body' style={{ padding: '24px', height: 'calc(100vh - 72px - 122px)', overflow: 'auto' }}>
             <SupplierForm photo={photo} setPhoto={setPhoto} ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} />
           </div>
 
