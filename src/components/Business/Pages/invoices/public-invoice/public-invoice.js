@@ -76,7 +76,7 @@ const PublicInvoice = () => {
             setInvoice(data);
         } catch (error) {
             console.error('Error fetching data: ', error);
-            toast.error("Failed to get the Invoice. Please try again.");
+            toast.error("Invoice not valid.");
         } finally {
             setIsLoading(false);
         }
@@ -481,7 +481,7 @@ const PublicInvoice = () => {
                                     <p className='mb-0' style={{ fontSize: '24px', fontWeight: 600, color: '#1A1C21' }}>${formatAUD(invoice?.outstanding_amount)}</p>
                                     <p className='mb-0' style={{ fontSize: '16px', fontWeight: 500, color: '#FFB258' }}>{daysLeft(invoice?.due_date)}</p>
                                 </div>
-                                {invoice?.has_stripe &&
+                                {invoice && invoice?.has_stripe &&
                                     <button
                                         className={style.accept}
                                         onClick={() => { setVisible(true); }}

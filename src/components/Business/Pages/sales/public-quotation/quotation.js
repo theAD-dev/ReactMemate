@@ -92,7 +92,7 @@ const Quotation = () => {
             setQuote(finalQuote);
         } catch (error) {
             console.error('Error fetching data: ', error);
-            toast.error("Failed to get the Quotation. Please try again.");
+            toast.error("Quote Not valid.");
         } finally {
             setIsLoading(false);
         }
