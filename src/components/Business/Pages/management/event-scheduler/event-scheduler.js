@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { MultiSelect } from "primereact/multiselect";
 import { initDaypilot, reInitializeData } from "./utils";
 import { getManagement } from "../../../../../APIs/management-api";
-import { ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
+import { getHolidaysList, ProjectStatusesList } from "../../../../../APIs/SettingsGeneral";
 import { useAuth } from "../../../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../../../app/providers/trial-height-provider";
 import CreateJob from "../../../../Work/features/create-job/create-job";
@@ -39,6 +39,7 @@ function EventScheduler() {
   const [jobProjectId, setJobProjectId] = useState(null);
   const [viewJob, setViewJob] = useState({ visible: false, jobId: null });
   const [editMode, setEditMode] = useState(false);
+  const [holidays, setHolidays] = useState([]);
 
   // show project model from invoice
   const url = window.location.href;
@@ -78,6 +79,17 @@ function EventScheduler() {
       setStatusOptions([...data]);
     } catch (error) {
       console.error("Error fetching project status data:", error);
+    }
+  };
+
+  const getHolidays = async () => {
+    try {
+      const response = await getHolidaysList();
+      setHolidays(response);
+      return response;
+    } catch (error) {
+      console.error("Error fetching holidays:", error);
+      return [];
     }
   };
 
@@ -156,8 +168,10 @@ function EventScheduler() {
     const handleLoad = async () => {
       try {
         const response = await getManagement();
+        const holidays = await getHolidays();
+        console.log('1holidays: ', holidays);
         setManagement(response);
-        initDaypilot(CALENDAR_ID, response, viewTaskDetails, reInitialize, hasWorkSubscription);
+        initDaypilot(CALENDAR_ID, response, viewTaskDetails, reInitialize, hasWorkSubscription, holidays);
       } catch (error) {
         console.error("Error initializing DayPilot:", error);
       }

@@ -4,6 +4,7 @@ import { initJobScheduler, reInitializeJobScheduler } from './job-scheduler-cale
 import './job-scheduler-calendar.scss';
 import style from './job-scheduler-calendar.scss';
 import { getJobDashboardData } from '../../../../APIs/jobs-api';
+import { getHolidaysList } from '../../../../APIs/SettingsGeneral';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import CreateJob from '../create-job/create-job';
 import ViewJob from '../view-job/view-job';
@@ -15,6 +16,16 @@ const JobSchedulerCalendarModule = () => {
     const [workerId, setWorkerId] = useState("");
     const [show, setShow] = useState({ visible: false, jobId: null });
     const [editMode, setEditMode] = useState(false);
+
+    const getHolidays = async () => {
+        try {
+            const response = await getHolidaysList();
+            return response;
+        } catch (error) {
+            console.error("Error fetching holidays:", error);
+            return [];
+        }
+    };
 
     useEffect(() => {
         const daypilotScript = document.createElement("script");
@@ -29,7 +40,8 @@ const JobSchedulerCalendarModule = () => {
         const handleLoad = async () => {
             try {
                 const data = await getJobDashboardData();
-                initJobScheduler(CALENDAR_ID, data, setShow);
+                const holidays = await getHolidays();
+                initJobScheduler(CALENDAR_ID, data, setShow, holidays);
             } catch (error) {
                 console.error("Error initializing DayPilot:", error);
             }

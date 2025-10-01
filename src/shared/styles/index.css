@@ -1987,3 +1987,7 @@ input:focus::-webkit-input-placeholder {
 .sun-editor .se-wrapper .se-wrapper-inner {
   min-height: 299px !important;
 }
+
+.scheduler_default_divider_horizontal  {
+  background-color: #F2F4F7 !important;
+}
