@@ -36,7 +36,7 @@ const RecurringQuotes = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showHistory, setShowHistory] = useState(false);
     const [history, setHistory] = useState([]);
-    const itemsPerPage = 5;
+    const itemsPerPage = 30;
 
     const offset = (currentPage - 1) * itemsPerPage;
 

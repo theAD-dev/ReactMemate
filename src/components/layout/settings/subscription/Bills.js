@@ -16,7 +16,7 @@ function formatDate(timestampMs) {
 const Bills = () => {
   const { trialHeight } = useTrialHeight();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 30;
 
   const offset = (currentPage - 1) * itemsPerPage;
 
