@@ -3,6 +3,7 @@ import { Col, Row } from 'react-bootstrap';
 import { Calendar3 } from 'react-bootstrap-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
@@ -12,8 +13,10 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from "primereact/inputtext";
 import * as yup from 'yup';
 import styles from './vehicle-form.module.scss';
+import { getMobileUserList, getUserList } from '../../../../APIs/task-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 
 const schema = yup.object({
   organization: yup.number().required("Organization is required"),
@@ -61,14 +64,8 @@ const schema = yup.object({
 
 const VehicleForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
   const { session } = useAuth();
-  const driversQuery = {
-    data: [
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Smith' },
-      { id: 3, name: 'Maximilian Jhones' }
-    ],
-    isFetching: false
-  };
+  const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
+  const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
 
   const { control, register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -345,24 +342,82 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
             <label className={clsx(styles.lable)}>Person</label>
             <Controller
               name="driver"
+              placeholder="Select a person"
               control={control}
-              render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  options={driversQuery?.data?.map((driver) => ({
-                    value: driver.id,
-                    label: driver.name
-                  })) || []}
-                  onChange={(e) => field.onChange(e.value)}
-                  className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.driver })}
-                  style={{ height: '46px' }}
-                  value={field.value}
-                  loading={driversQuery?.isFetching}
-                  placeholder="Select a person"
-                  scrollHeight="380px"
-                  filterInputAutoFocus={true}
-                />
-              )}
+              render={({ field }) => {
+                const dropdownProps = {
+                  ...field,
+                  options: [
+                    {
+                      label: 'Desktop User',
+                      items: usersList?.data?.users?.filter((user) => user?.is_active)?.map((user) => ({
+                        value: user?.id,
+                        label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                        photo: user?.photo || "",
+                        has_photo: user?.has_photo
+                      })) || []
+                    },
+                    ...(session?.has_work_subscription
+                      ? [
+                        {
+                          label: 'Mobile User',
+                          items:
+                            mobileUsersList?.data?.users
+                              ?.filter((user) => user?.status !== 'disconnected')
+                              ?.map((user) => ({
+                                value: user?.id,
+                                label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
+                                photo: user?.photo || "",
+                                has_photo: user?.has_photo,
+                              })) || [],
+                        },
+                      ]
+                      : []),
+                  ],
+                  onChange: (e) => {
+                    field.onChange(e.value);
+                  },
+                  itemTemplate: (option) => {
+                    return (
+                      <div className='d-flex gap-2 align-items-center'>
+                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                          <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
+                        </div>
+                        {option?.label}
+                      </div>
+                    );
+                  },
+                  className: clsx(styles.dropdownSelect, 'outline-none', { [styles.error]: errors.driver }),
+                  style: { height: '46px' },
+                  value: field.value,
+                  placeholder: "Select a person",
+                  filter: true,
+                  filterInputAutoFocus: true,
+                  optionGroupLabel: "label",
+                  optionGroupChildren: "items",
+                  scrollHeight: "400px"
+                };
+
+                // Only add valueTemplate if there's a selected value
+                if (field.value) {
+                  const selectedOption = dropdownProps.options
+                    .flatMap(group => group.items)
+                    .find(item => item.value === field.value);
+                  
+                  if (selectedOption) {
+                    dropdownProps.valueTemplate = (option) => {
+                      return <div className='d-flex gap-2 align-items-center ps-2' style={{ position: 'relative', left: '-10px' }}>
+                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                          <FallbackImage photo={option?.photo} has_photo={option?.has_photo} is_business={false} size={17} />
+                        </div>
+                        {option?.label}
+                      </div>;
+                    };
+                  }
+                }
+
+                return <Dropdown {...dropdownProps} />;
+              }}
             />
             {errors.driver && <p className="error-message">{errors.driver.message}</p>}
           </div>

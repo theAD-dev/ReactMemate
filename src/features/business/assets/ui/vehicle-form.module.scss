@@ -60,6 +60,18 @@
   background: var(--Base-White, #fff);
   box-shadow: none !important;
   outline: none !important;
+
+  :global(.p-dropdown-trigger) {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    color: var(--Gray-500, #667085);
+  }
+
+  :global(.p-dropdown-trigger-icon) {
+    display: block !important;
+  }
 }
 
 .inputGroup {

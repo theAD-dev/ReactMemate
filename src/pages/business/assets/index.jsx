@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Download, Filter } from 'react-bootstrap-icons';
+import { BoxSeam, Download, Filter, Truck } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
 import AssetsTable from './assets-table';
 import style from './assets.module.scss';
@@ -57,7 +59,7 @@ const Assets = () => {
                     }
                 </div>
                 <div className="featureName d-flex align-items-center gap-3" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    {/* <Link to={"#"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
+                    <Link to={"#"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, style.activeVehicle)}>
                         <Truck color='#17B26A' size={16} className='me-2' />
                         <span className={style.topBarText}>Vehicles</span>
                     </Link>
@@ -65,12 +67,10 @@ const Assets = () => {
                     <Link to={"#"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
                         <BoxSeam color='#1AB2FF' size={16} className='me-2' />
                         <span className={style.topBarText}>Equipment</span>
-                    </Link> */}
-                    <h1 className={style.topBarText} style={{ marginRight: '0px' }}>Assets</h1>
-                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
+                    </Link>
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-
+                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
                 </div>
             </div>
             <AssetsTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch}/>
