@@ -7,9 +7,10 @@ import { Sidebar } from 'primereact/sidebar';
 import styles from './view-vehicle.module.scss';
 import { getVehicle } from '../../../../APIs/assets-api';
 import { dateFormat, formatMoney } from '../../../../components/Business/shared/utils/helper';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import EditVehicle from '../edit-vehicle/edit-vechicle';
 
-const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setRefetch }) => {
+const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setRefetch, drivers }) => {
     const formRef = useRef(null);
     const [isPending, setIsPending] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
@@ -52,7 +53,7 @@ const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setR
                             <h5 className={styles.boxLabel}>General Information</h5>
                             <h6 className={styles.boxLabel2}>Vehicle ID: {vehicleData?.registration_number || id}</h6>
                         </div>}
-                        {vehicleData && !isEdit ? <ViewSection vehicle={vehicleData} /> : <EditVehicle ref={formRef} vehicle={vehicleData} setVisible={setVisible} setIsEdit={setIsEdit} refetch={getVehicleQuery.refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} setRefetch={setRefetch}/>}
+                        {vehicleData && !isEdit ? <ViewSection vehicle={vehicleData} drivers={drivers} /> : <EditVehicle ref={formRef} vehicle={vehicleData} setVisible={setVisible} setIsEdit={setIsEdit} refetch={getVehicleQuery.refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} setRefetch={setRefetch} />}
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
@@ -71,7 +72,9 @@ const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setR
     );
 };
 
-const ViewSection = ({ vehicle }) => {
+const ViewSection = ({ vehicle, drivers }) => {
+    const driver = drivers[vehicle?.driver];
+
     const fuelTypeLabels = {
         'gasoline': 'Gasoline',
         'diesel': 'Diesel',
@@ -152,14 +155,14 @@ const ViewSection = ({ vehicle }) => {
 
             <h5 className={styles.boxLabel}>Responsible Person</h5>
             <div className={styles.box}>
-                <div className="d-flex align-items-center gap-3">
-                    <div className={styles.profileBox}>
-                        <img src="https://via.placeholder.com/56x56/667085/FFFFFF?text=MF" alt="driver" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                {drivers[vehicle?.driver] ? (
+                    <div className='d-flex gap-2 align-items-center'>
+                        <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                            <FallbackImage photo={driver?.photo} has_photo={driver?.has_photo} is_business={false} size={17} />
+                        </div>
+                        {driver?.first_name} {driver?.last_name}
                     </div>
-                    <h4 className={styles.text} style={{ marginBottom: 0 }}>
-                        {vehicle?.driver_name || "-"}
-                    </h4>
-                </div>
+                ): ("-")}
             </div>
 
             <h5 className={styles.boxLabel}>Insurance and Legal Information</h5>
