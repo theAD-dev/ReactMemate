@@ -184,6 +184,7 @@ function loadData(responses, hasWorkSubscription) {
           borderColor: job.finished ? "#DCFAE6" : "#F2F4F7",
           text: job.short_description,
           tag: { type: "job", job: job },
+          resizeDisabled: true
         });
 
         const statusIMG = job.status === '5'
