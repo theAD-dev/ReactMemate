@@ -80,7 +80,7 @@ const Support = ({ visible, setVisible }) => {
 
       if (hasError) return;
 
-      mutation.mutate({ issue: issueType, description, urgent: urgency });
+      mutation.mutate({ issue: issueType, message: description, urgent: urgency });
     };
 
     const footerElement = (

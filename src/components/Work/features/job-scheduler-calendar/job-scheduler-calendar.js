@@ -148,7 +148,7 @@ function initDayPilot(elementId, data, setShow, holidays) {
     durationBarVisible: false,
     eventArrangement: "Cascade",
     eventMoveHandling: "Disabled",
-    eventResizeHandling: "Update",
+    eventResizeHandling: "Disabled",
     timeRangeSelectedHandling: "Disabled",
     treeImageNoChildren: false,
     rowHeaderWidth: 384,
