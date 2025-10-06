@@ -104,9 +104,6 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
         if (readProposalQuery?.data) {
             setTemplatedId(readProposalQuery?.data?.template);
         }
-        if (!image && readProposalQuery?.data?.image) {
-            setImage({ croppedImageBase64: readProposalQuery?.data?.image });
-        }
     }, [readProposalQuery?.data]);
 
     const proposalQuery = useQuery({
@@ -163,9 +160,9 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
             newErrors.sections = sectionErrors;
         }
 
-        // if (!image) {
-        //     newErrors.image = true;
-        // }
+        if (!image) {
+            newErrors.image = true;
+        }
 
         setErrors(newErrors);
         if (Object.keys(newErrors).length === 0) {
@@ -201,6 +198,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
             setIsLoading(true);
             let method = "POST";
             let URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/new/${unique_id}/`;
+            console.log('readProposalQuery?.data: ', readProposalQuery?.data);
             if (readProposalQuery?.data) {
                 method = "PUT";
                 URL = `${process.env.REACT_APP_BACKEND_API_URL}/proposals/update/${unique_id}/`;
@@ -263,13 +261,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
             );
         }
     };
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setImage(file);
-            setFileName(file.name);
-        }
-    };
+    
     const footerContent = (
         <div className='d-flex justify-content-between'>
             <Button className='text-button text-danger' onClick={handleClose}>Cancel</Button>
@@ -294,11 +286,19 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
 
     useEffect(() => {
         if (templateId && isTemplateChanged) {
+            if (proposalQuery?.data?.image) {
+                setImage({ croppedImageBase64: proposalQuery?.data?.image });
+            }
             setSections([
                 ...readProposalQuery?.data?.sections?.map(section => ({ ...section, delete: true })) || [],
                 ...proposalQuery?.data?.sections?.map(({ id, ...rest }) => ({ ...rest })) || []
             ]);
         } else if (templateId === readProposalQuery?.data?.template) {
+            if (readProposalQuery?.data?.image) {
+                setImage({ croppedImageBase64: readProposalQuery?.data?.image });
+            } else if (proposalQuery?.data?.image) {
+                setImage({ croppedImageBase64: proposalQuery?.data?.image });
+            }
             setSections(readProposalQuery?.data?.sections);
         }
     }, [templateId, proposalQuery?.data, readProposalQuery?.data]);
@@ -335,6 +335,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                 placeholder="Select template"
                                 onChange={(e) => {
                                     setTemplatedId(e.value);
+                                    setImage(null);
                                     setIsTemplateChanged(true);
                                 }}
                                 value={templateId}
@@ -381,7 +382,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                     </div>
                     <FileUploader show={isVisible} setShow={setIsVisible} setPhoto={setImage} />
                     {errors?.image && (
-                        <p className="error-message mb-2">{"Image is required"}</p>
+                        <p className="error-message mb-2 mx-auto">{"Image is required"}</p>
                     )}
 
                     {/* <div className='d-flex gap-3 align-items-center mb-1'>

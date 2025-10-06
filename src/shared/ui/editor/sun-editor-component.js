@@ -39,7 +39,7 @@ const SunEditorComponent = ({
                 const entries = Array.from(cache.entries());
                 const toKeep = entries.slice(-25); // Keep latest 25 entries
                 uploadCacheRef.current = new Map(toKeep);
-                console.log('Cleaned up upload cache, kept', toKeep.length, 'entries');
+                // console.log('Cleaned up upload cache, kept', toKeep.length, 'entries');
             }
         }, 60000); // Check every minute
 
@@ -138,7 +138,7 @@ const SunEditorComponent = ({
         // Check if this image was already uploaded
         if (uploadCacheRef.current.has(base64Hash)) {
             const cachedUrl = uploadCacheRef.current.get(base64Hash);
-            console.log('Using cached S3 URL for image:', cachedUrl);
+            // console.log('Using cached S3 URL for image:', cachedUrl);
             return cachedUrl;
         }
 
@@ -178,7 +178,7 @@ const SunEditorComponent = ({
             
             // Cache the uploaded image
             uploadCacheRef.current.set(base64Hash, s3Url);
-            console.log('Cached new upload:', s3Url);
+            // console.log('Cached new upload:', s3Url);
             
             return s3Url;
 
@@ -206,7 +206,7 @@ const SunEditorComponent = ({
                 setUploadProgress({ progress: 100, success: true, uploading: false });
                 const fileURL = url.split("?")[0] || "";
 
-                console.log('S3 upload successful, inserting image:', fileURL);
+                // console.log('S3 upload successful, inserting image:', fileURL);
                 // here we insert the image into the editor
 
                 toast.success('Image uploaded successfully');
@@ -221,7 +221,6 @@ const SunEditorComponent = ({
 
         }).catch((err) => {
             console.log('Error uploading to S3: ', err);
-            console.log('Error response:', err.response);
             setUploadProgress({ progress: 0, error: true, uploading: false });
             toast.error('Failed to upload image to S3');
             throw err; // Re-throw to be caught by fileUploadBySignedURL
@@ -531,18 +530,17 @@ const SunEditorComponent = ({
     };
 
     const handleChange = async (content) => {
-        console.log('content: ', content);
         
         // Check if S3 upload is enabled and content contains images
         if (enableS3Upload && content && typeof content === 'string') {
             const { base64Images, s3Images } = categorizeImages(content);
             
             // Log image categorization for debugging
-            console.log(`Image analysis: ${base64Images.length} base64, ${s3Images.length} S3, total images: ${base64Images.length + s3Images.length}`);
+           // console.log(`Image analysis: ${base64Images.length} base64, ${s3Images.length} S3, total images: ${base64Images.length + s3Images.length}`);
             
             // Only process base64 images (skip S3 images to prevent re-upload)
             if (base64Images.length > 0) {
-                console.log(`Found ${base64Images.length} new base64 image(s) to upload (skipping ${s3Images.length} existing S3 images)`);
+                // console.log(`Found ${base64Images.length} new base64 image(s) to upload (skipping ${s3Images.length} existing S3 images)`);
                 
                 setProcessingBase64(true);
                 
