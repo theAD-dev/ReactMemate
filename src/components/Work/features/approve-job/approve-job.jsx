@@ -173,7 +173,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         if (socketRef.current) {
             socketRef.current.emit('create_chat_group', {
                 user_id: user_id,
-                name: "Declined Job " + job?.short_description + "(" + job?.number + ") - Review",
+                name: "Declined Job - " + job?.short_description + "(" + job?.number + ") - Review",
                 participants: [job?.worker?.id],
                 project_id: job?.id,
                 job_id: null
