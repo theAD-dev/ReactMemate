@@ -22,7 +22,6 @@ const SunEditorComponent = ({
     uploadId = null,
     ...props
 }) => {
-    console.log('value: ', value);
 
     // State for upload progress and drag states
     const [uploadProgress, setUploadProgress] = useState({});
@@ -145,16 +144,16 @@ const SunEditorComponent = ({
 
         try {
             const timestamp = Date.now();
-            const filename = `editor-images/image-${timestamp}.${format}`;
-            const file = base64ToFile(base64Data, format, `image-${timestamp}.${format}`);
+            const filename = `image-${timestamp}.${format}`;
+            const file = base64ToFile(base64Data, format, filename);
 
             // Get signed URL
             const accessToken = localStorage.getItem('access_token');
-            const endpoint = s3UploadEndpoint || `${process.env.REACT_APP_BACKEND_API_URL}/chat/upload/${uploadId}/`;
+            const endpoint = s3UploadEndpoint || `${process.env.REACT_APP_BACKEND_API_URL}/proposals/file/${uploadId}/`;
 
             const response = await axios.post(
                 endpoint,
-                { filename },
+                { file_name: filename },
                 {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -241,7 +240,7 @@ const SunEditorComponent = ({
             setUploadProgress({ progress: 0, uploading: true });
 
             const accessToken = localStorage.getItem('access_token');
-            const endpoint = s3UploadEndpoint || `${process.env.REACT_APP_BACKEND_API_URL}/chat/upload/${uploadId}/`;
+            const endpoint = s3UploadEndpoint || `${process.env.REACT_APP_BACKEND_API_URL}/proposals/file/${uploadId}/`;
 
             const response = await axios.post(
                 endpoint,
@@ -635,6 +634,7 @@ const SunEditorComponent = ({
                 .sun-editor-wrapper .se-wrapper-inner table th,
                 .sun-editor-wrapper .se-wrapper-inner table tr {
                     border: none !important;
+                    outline: none !important;
                     border-collapse: collapse !important;
                 }
                 
@@ -644,6 +644,7 @@ const SunEditorComponent = ({
                 .sun-editor-content table th,
                 .sun-editor-content table tr {
                     border: none !important;
+                    outline: none !important;
                     border-collapse: collapse !important;
                 }
             `}</style>

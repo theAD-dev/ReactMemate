@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, Stripe } from 'react-bootstrap-icons';
+import { Bank, Cash, CreditCard, FilePdf, Link as LinkIcon, PauseCircle, PlusCircle, Stripe } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -60,7 +60,6 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
     });
 
     const historyData = useQuery({ queryKey: ['invoicePartialHistory', invoice?.unique_id], queryFn: () => getInvoicePartialHistory(invoice?.unique_id), enabled: !!invoice?.unique_id, staleTime: 0, cacheTime: 0 });
-    console.log('historyData: ', historyData?.data);
 
     const onsubmit = () => {
         let errorCount = 0;
@@ -208,7 +207,7 @@ const InvoicePartialPayment = ({ show, setShow, invoice, setRefetch }) => {
 
             {isShowExpense && <InvoiceExpense expense={historyData?.data?.expenses || []} />}
             {isShowHistory && <InvoiceHistory history={invoice?.billing_history || []} />}
-            {isShowCostBreakdown && <InvoiceCostBreakdown calculations={historyData?.data?.calculations || []} />}
+            {isShowCostBreakdown && <InvoiceCostBreakdown calculations={historyData?.data?.calculations || []} invoice={historyData?.data} />}
         </Dialog>
     );
 };
@@ -281,10 +280,8 @@ const InvoiceHistory = ({ history }) => {
     );
 };
 
-const InvoiceCostBreakdown = ({ calculations }) => {
-    const total = calculations.reduce((acc, item) => acc + +(item?.total || 0), 0);
-    console.log('total: ', total);
-
+const InvoiceCostBreakdown = ({ calculations, invoice }) => {
+    console.log('invoice: ', invoice);
     return (
         <>
             <DataTable value={calculations || []} showGridlines className="border-top">
@@ -299,25 +296,25 @@ const InvoiceCostBreakdown = ({ calculations }) => {
                 <Column field="total" header="Amount" style={{ width: '100%' }} body={(rowData) => `$${formatAUD(rowData.total)}`}></Column>
             </DataTable>
             <div className='w-100 d-flex align-items-center justify-content-end gap-4' style={{ background: '#EBF8FF', padding: '8px 24px 8px 40px' }}>
-                {/* <div className='d-flex flex-column align-items-end'>
+                <div className='d-flex flex-column align-items-end'>
                     <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Sub Total</p>
-                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(cardData?.sub_total)}</p>
+                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(invoice?.sub_total)}</p>
                 </div>
                 <div>
                     <PlusCircle size={20} color='#106B99' />
                 </div>
                 <div className='d-flex flex-column align-items-end'>
                     <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Tax</p>
-                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(cardData?.gst)}</p>
+                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(invoice?.gst)}</p>
                 </div>
                 <div>
                     <div>
                         <PauseCircle size={20} color='#106B99' style={{ transform: 'rotate(90deg)' }} />
                     </div>
-                </div> */}
+                </div>
                 <div className='d-flex flex-column align-items-end'>
                     <p className='font-16 mb-0' style={{ color: '#106B99', fontWeight: 400 }}>Total Invoice Amount</p>
-                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(total)}</p>
+                    <p className='font-18 mb-0' style={{ color: '#106B99', fontWeight: 600 }}>${formatAUD(invoice?.total)}</p>
                 </div>
             </div>
         </>

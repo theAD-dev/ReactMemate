@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { ChevronLeft, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
+import { ChevronLeft, CloudUpload, PencilSquare, PlusLg, Trash } from "react-bootstrap-icons";
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -14,16 +14,20 @@ import style from './job-template.module.scss';
 import { deleteProposalTemplates, getProposalsTemplate } from '../../../../APIs/email-template';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { SunEditorComponent } from '../../../../shared/ui/editor';
+import FileUploader from '../../../Business/features/sales-features/create-proposal/file-uploader/file-uploader';
 
 const CreateProposalTemplate = () => {
     const { trialHeight } = useTrialHeight();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
+    const orgId = profileData?.organization?.id;
     const has_work_subscription = !!profileData?.has_work_subscription;
     const has_twilio = !!profileData?.has_twilio;
     const navigate = useNavigate();
     const { id } = useParams();
 
     const [name, setName] = useState("");
+    const [image, setImage] = useState(null);
+    const [isVisible, setIsVisible] = useState(false);
     const [sections, setSections] = useState([{ title: "", description: "", delete: false }]);
     const [errors, setErrors] = useState({});
     const [isEdit, setIsEdit] = useState(false);
@@ -56,12 +60,37 @@ const CreateProposalTemplate = () => {
         }
     };
 
+    // Helper function to convert base64 to file
+    const base64ToFile = (base64String, filename = 'cover-image.jpg') => {
+        if (!base64String) return null;
+
+        try {
+            // Remove data URL prefix if present
+            const base64Data = base64String.replace(/^data:image\/[a-z]+;base64,/, '');
+
+            // Convert base64 to binary
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+
+            // Create file from binary data
+            return new File([byteArray], filename, { type: 'image/jpeg' });
+        } catch (error) {
+            console.error('Error converting base64 to file:', error);
+            return null;
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setErrors({});
 
         const newErrors = {};
         if (!name) newErrors.name = true;
+        if (!image?.croppedImageBase64) newErrors.image = true;
 
         const sectionErrors = sections.map((section) => {
             const sectionError = {};
@@ -80,7 +109,14 @@ const CreateProposalTemplate = () => {
         if (Object.keys(newErrors).length === 0) {
             const formData = new FormData();
             formData.append('name', name);
-            console.log('sections: ', sections);
+
+            // Convert base64 image to file and append
+            if (image?.croppedImageBase64) {
+                const imageFile = base64ToFile(image.croppedImageBase64, 'cover-image.jpg');
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+            }
 
             sections.forEach((section, index) => {
                 formData.append(`sections[${index}]title`, section.title);
@@ -132,6 +168,7 @@ const CreateProposalTemplate = () => {
     useEffect(() => {
         if (id && proposalQuery?.data) {
             setName(proposalQuery?.data?.name);
+            setImage(proposalQuery?.data?.image ? { croppedImageBase64: proposalQuery?.data?.image } : null);
             setSections(proposalQuery?.data?.sections);
         }
     }, [id, proposalQuery?.data]);
@@ -208,6 +245,41 @@ const CreateProposalTemplate = () => {
 
                         <div className={style.divider}></div>
 
+                        <div className="flex flex-column gap-2 w-100" style={{ marginBottom: '16px' }}>
+                            <label className={style.label}>Cover Photo <span className="required">*</span></label>
+                            <div className={style.imageUploadSection}>
+                                <div className={style.imageUploadContainer}>
+                                    <div>
+                                        {image?.croppedImageBase64 ? (
+                                            <div className={clsx(style.imageUploadBox, style.hasImage)}>
+                                                <img src={image.croppedImageBase64} alt="Cover Photo" />
+                                                <button
+                                                    className={style.removeImageButton}
+                                                    onClick={(e) => { e.stopPropagation(); setImage(null); }}
+                                                    type="button"
+                                                >
+                                                    <Trash size={14} />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <label className={style.imageUploadBox} onClick={() => setIsVisible(true)}>
+                                                {proposalQuery?.isFetching ? (
+                                                    <ProgressSpinner style={{ width: '20px', height: '20px' }} />
+                                                ) : (
+                                                    <CloudUpload className={style.uploadIcon} size={24} />
+                                                )}
+                                                <p>Upload Cover Photo</p>
+                                            </label>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <FileUploader show={isVisible} setShow={setIsVisible} setPhoto={setImage} />
+                            {errors?.image && (
+                                <p className="error-message mb-0">{"Cover photo is required"}</p>
+                            )}
+                        </div>
+
                         {sections?.filter(section => !section.delete)?.map((section, index) => (
                             <div key={index} className={style.section}>
                                 <h1 className={clsx(style.sectionName)}>Section {index + 1}</h1>
@@ -259,7 +331,7 @@ const CreateProposalTemplate = () => {
                                         showLink={true}
                                         showCodeView={true}
                                         enableS3Upload={true}
-                                        uploadId={0}
+                                        uploadId={orgId}
                                     />
                                 </div>
                                 {errors?.sections?.[index]?.description && (

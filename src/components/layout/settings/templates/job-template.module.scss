@@ -535,3 +535,176 @@
   color: #333;
   font-size: 14px;
 }
+
+// Image upload styles
+.imageUploadSection {
+  margin-top: 2px;
+  margin-bottom: 8px;
+
+  .imageUploadContainer {
+    display: flex;
+    gap: 16px;
+    margin-top: 0px;
+  }
+
+  .imageUploadBox {
+    width: 180px;
+    height: 120px;
+    border: 2px dashed var(--Gray-300, #D0D5DD);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: var(--Primary-300, #7CD4FD);
+      background-color: var(--Primary-25, #F2FAFF);
+    }
+
+    &.uploading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .uploadIcon {
+      color: var(--Gray-400, #98A2B3);
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 12px;
+      color: var(--Gray-500, #667085);
+      margin: 0;
+      text-align: center;
+    }
+
+    &.hasImage {
+      border: none;
+      border: 1px solid var(--Gray-200, #EAECF0);
+      padding: 0;
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .removeImageButton {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: white;
+        border: 1px solid var(--Gray-200, #EAECF0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--Error-50, #FEF3F2);
+          border-color: var(--Error-300, #FDA29B);
+          color: var(--Error-600, #D92D20);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+// Additional styles for the proposal cover photo upload
+.uploadBox {
+  display: flex;
+  width: 156px;
+  aspect-ratio: 3 / 2;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl, 16px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--Primary-300, #7CD4FD);
+    background-color: var(--Primary-25, #F2FAFF);
+  }
+}
+
+.imageBox {
+  display: flex;
+  width: 156px;
+  aspect-ratio: 3 / 2;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xl, 16px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.uploadButton {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Base-White, #fff);
+}
+
+.uploadText {
+  color: var(--Primary-700, #106b99);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  margin-bottom: 0px;
+}
+
+.trashBox {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl, 16px);
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  z-index: 1;
+  border-radius: 100px;
+  border: 1px solid var(--Error-100, #fee4e2);
+  background: var(--Error-50, #fef3f2);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--Error-100, #fee4e2);
+    border-color: var(--Error-300, #FDA29B);
+  }
+}
