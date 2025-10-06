@@ -454,7 +454,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                                         showLink={true}
                                         showCodeView={true}
                                         enableS3Upload={true}
-                                        uploadId={0}
+                                        uploadId={unique_id}
                                     />
                                     {errors?.sections?.[index]?.description && (
                                         <p className="error-message mb-0">{"Message is required"}</p>
