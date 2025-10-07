@@ -140,7 +140,9 @@
     letter-spacing: 0.14px;
   }
 }
-.expensesCreateNew {
+.expensesCreateNew,
+.expensesCreateNew:hover,
+.expensesCreateNew:focus {
   color: var(--Gray-600, #475467);
   font-family: Inter;
   font-size: 16px;
