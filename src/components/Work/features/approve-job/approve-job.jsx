@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Briefcase, Calendar3, ClockHistory, EmojiFrown, EmojiFrownFill, EmojiNeutral, EmojiNeutralFill, EmojiSmile, EmojiSmileFill, QuestionCircle, X } from 'react-bootstrap-icons';
+import { Briefcase, Calendar3, ClockHistory, EmojiFrown, EmojiFrownFill, EmojiNeutral, EmojiNeutralFill, EmojiSmile, EmojiSmileFill, ExclamationCircle, QuestionCircle, X } from 'react-bootstrap-icons';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import L from 'leaflet';
@@ -12,9 +13,11 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Rating } from 'primereact/rating';
 import { Sidebar } from 'primereact/sidebar';
+import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 import style from './approve-job.module.scss';
 import { createApproval, getApprovedJob, declineJob } from '../../../../APIs/jobs-api';
+import { useAuth } from '../../../../app/providers/auth-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import { formatDate } from '../../Pages/jobs/jobs-table';
@@ -30,6 +33,10 @@ L.Icon.Default.mergeOptions({
 });
 
 const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = false, setVisible, refetch, refetchApprovedTotal }) => {
+    const socketRef = useRef(null);
+    const { session } = useAuth();
+    const navigate = useNavigate();
+    const user_id = session?.desktop_user_id;
     const [isOpenPlannedVsActualSection, setIsOpenPlannedVsActualSection] = useState(true);
     const [isOpenVariationSection, setIsOpenVariationSection] = useState(false);
     const [isOpenHistorySection, setIsOpenHistorySection] = useState(false);
@@ -159,11 +166,63 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         return "";
     };
 
+    const handleStartChat = () => {
+        if (!user_id) return;
+        if (!socketRef.current) return toast.error('Failed to start chat due to no socket connection');
+
+        if (socketRef.current) {
+            socketRef.current.emit('create_chat_group', {
+                user_id: user_id,
+                name: "Declined Job - " + job?.short_description + "(" + job?.number + ") - Review",
+                participants: [job?.worker?.id],
+                project_id: job?.id,
+                job_id: null
+            },
+                (res) => {
+                    if (res.status === 'success' && res.chat_group_id) {
+                        toast.custom((t) => (
+                            <div className={style.customToast}>
+                                <div className='d-flex align-items-center justify-content-between w-100 mb-3'>
+                                    <div className={style.outerToastIcon}>
+                                        <div className={style.toastIcon}>
+                                            <ExclamationCircle color="#DC6803" size={20} />
+                                        </div>
+                                    </div>
+                                    <Button className='close-button border-0' onClick={() => toast.dismiss(t)}>
+                                        <X size={20} color="#344054" />
+                                    </Button>
+                                </div>
+                                <div className='ps-2'>
+                                    <p className={style.toastTitle}>Job has been declined</p>
+                                    <p className={style.toastMessage}>We created a chat group for you to discuss this job.</p>
+                                    <Button className='text-button ps-0'
+                                        onClick={() => {
+                                            navigate(`/chat?id=${res.chat_group_id}`);
+                                        }}
+                                    >
+                                        Go to chat
+                                    </Button>
+                                </div>
+
+                            </div>
+                        ), {
+                            position: 'bottom-right',
+                        });
+                    } else {
+                        console.log("Error during creation chat group: ", res);
+                        toast.error("Failed to create chat group");
+                    }
+                }
+            );
+        }
+    };
+
     const jobDeclineMutation = useMutation({
         mutationFn: (jobId) => declineJob(jobId),
         onSuccess: () => {
             resetAndClose();
             refetch();
+            handleStartChat();
             toast.success(`Job declined successfully`);
         },
         onError: (error) => {
@@ -176,6 +235,25 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
         if (!jobId) return toast.error("No job id found.");
         jobDeclineMutation.mutate(jobId);
     };
+
+    useEffect(() => {
+        // Connect to socket.io server
+        const socket = io(process.env.REACT_APP_CHAT_API_URL, {
+            transports: ['websocket'],
+            autoConnect: true,
+        });
+        socketRef.current = socket;
+
+        if (!user_id) return;
+
+        socket.emit('register_user', { user_id, org_id: session?.organization?.id }, (res) => {
+            if (res.status === 'success') {
+                console.log('User registered successfully');
+            } else {
+                toast.error('Failed to connect to chat server');
+            }
+        });
+    }, [user_id, session]);
 
     return (
         <>
@@ -343,7 +421,7 @@ const ApproveJob = ({ jobId = null, nextJobId = null, handleNextJob, visible = f
                                                         <span className='font-16' style={{ color: '#344054' }}>Variation</span>
                                                     </td>
                                                     <td style={{ position: 'relative' }} colSpan={2} className={clsx(selectedColumn === "planned" ? style.active1 : style.active3, 'text-center', selectedColumn !== "planned" ? "" : style.borderRightNone)}>
-                                                        <div style={{ zIndex: 5}} className={clsx(style.moneyBox, variation === parseFloat(0) ? "" : isBonus ? style.bonusBox : style.deductionBox)}>{isBonus ? "+" : "-"} ${formatAUD(parseFloat(variation || 0).toFixed(2))}</div>
+                                                        <div style={{ zIndex: 5 }} className={clsx(style.moneyBox, variation === parseFloat(0) ? "" : isBonus ? style.bonusBox : style.deductionBox)}>{isBonus ? "+" : "-"} ${formatAUD(parseFloat(variation || 0).toFixed(2))}</div>
                                                         <div className={clsx(style.leftColumn)} style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: '266px', zIndex: 3 }} onClick={handlePlannedRowClick}></div>
                                                         <div className={clsx(style.rightColumn)} style={{ position: 'absolute', top: 0, right: 0, height: '100%', width: '266px', zIndex: 3 }} onClick={handleActualRowClick}></div>
                                                     </td>
