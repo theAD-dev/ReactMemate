@@ -50,11 +50,11 @@
 }
 
 .navbarActionIcon:hover {
-  background: var(--Primary-25, #f2faff);
+  background: var(--Primary-25, #f2faff) !important;
 }
 
-.navbarActionIconActive .navbarActionIcon {
-  background: var(--Primary-25, #f2faff);
+.navbarActionIconActive.navbarActionIcon {
+  background: var(--Primary-25, #f2faff) !important;
   svg {
     fill: #158ecc !important;
   }

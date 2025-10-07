@@ -1,18 +1,14 @@
 import React from "react";
 import { Placeholder } from "react-bootstrap";
-import { QuestionCircle, Search, Bell } from "react-bootstrap-icons";
+import { Bell, QuestionCircle, Search } from "react-bootstrap-icons";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 import chatIcon from '../../../../assets/images/icon/message-text.svg';
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
-import Support from "../../support/support";
 import style from '../header.module.scss';
+import Notification from "./notification";
 
 const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
-    const [visible, setVisible] = React.useState(false);
-    const openSupportModal = () => {
-        setVisible(true);
-    };
     return (
         <>
             <div className="avatar-wrap flexEndbox colMinWidth">
@@ -31,22 +27,20 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                             </div>
                         </NavLink>
                     </li>
+                    {/* <Notification /> */}
                     <li className={style.navbarActionIcon}>
                         <Bell color="#ccc" size={20} />
                     </li>
-                    {/* <li className={style.navbarActionIcon}>
-                        <PlusLg color="#667085" size={20} />
-                    </li> */}
                     <li className={style.navbarActionIcon}>
                         <Search color="#ccc" size={20} />
                     </li>
                     <NavLink
                         to={"/help"}
                         className={({ isActive }) =>
-                            (isActive ?  style.navbarActionIconActive : "")
+                            (isActive ? style.navbarActionIconActive : "")
                         }
                     >
-                        <li className={clsx(style.navbarActionIcon )}>
+                        <li className={clsx(style.navbarActionIcon)}>
                             <QuestionCircle color="#475467" size={20} />
                         </li>
                     </NavLink>
@@ -76,7 +70,6 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                     </Link>
                 </div>
             </div>
-            <Support visible={visible} setVisible={setVisible} />
         </>
     );
 };

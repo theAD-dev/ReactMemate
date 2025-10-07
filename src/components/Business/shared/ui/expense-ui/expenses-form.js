@@ -33,6 +33,7 @@ import { CircularProgressBar } from '../../../../../shared/ui/circular-progressb
 import { FallbackImage } from '../../../../../shared/ui/image-with-fallback/image-avatar';
 import { getFileIcon } from '../../../../Work/features/create-job/create-job';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import SupplierCreate from '../../../features/supliers-features/supplier-create';
 
 function debounce(fn, delay) {
     let timeoutId;
@@ -88,6 +89,8 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     const [searchValue, setSearchValue] = useState("");
     const [hasMoreData, setHasMoreData] = useState(true);
     const [showDocumentSideBar, setShowDocumentSidebar] = useState(false);
+    const [showCreateSupplierModal, setShowCreateSupplierModal] = useState(false);
+    const [supplierRefetchToggle, setSupplierRefetchToggle] = useState(false);
     const [links, setLinks] = useState([]);
     const limit = 25;
 
@@ -325,7 +328,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
     useEffect(() => {
         setPage(1);
-    }, [searchValue]);
+    }, [searchValue, supplierRefetchToggle]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -360,7 +363,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         };
 
         loadData();
-    }, [page, searchValue, supplierValue, selectedSupplier]);
+    }, [page, searchValue, supplierValue, selectedSupplier, supplierRefetchToggle]);
 
     useEffect(() => {
         if (suppliers.length > 0 && hasMoreData) {
@@ -616,9 +619,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
                     <Col sm={4}>
                         <div className="d-flex justify-content-end text-md-end flex-column gap-1 mt-3 pt-3 mb-3">
-                            <Link to={"/suppliers?addNewSupplier=true"} target='_blank'>
-                                <Button className={styles.expensesCreateNew}>Create New Supplier<Plus size={24} color="#475467" /></Button>
-                            </Link>
+                            <Button className={styles.expensesCreateNew} onClick={() => setShowCreateSupplierModal(true)}>Create New Supplier<Plus size={24} color="#475467" /></Button>
                         </div>
                     </Col>
 
@@ -1084,6 +1085,14 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     onHide={() => setShowReviewModal(false)}
                 />
             )}
+
+            {showCreateSupplierModal && (
+                <SupplierCreate
+                    visible={showCreateSupplierModal}
+                    setVisible={setShowCreateSupplierModal}
+                    refetch={() => setSupplierRefetchToggle(prev => !prev)}
+                />
+            )}
         </div>
     );
 });
@@ -1350,9 +1359,9 @@ const ReviewExpense = React.memo(({ visible, onHide, defaultValues = {} }) => {
                     </div>
                 </Col>
             </Row>
-            <hr/>
+            <hr />
             <Row>
-                
+
             </Row>
         </Dialog>
     );
