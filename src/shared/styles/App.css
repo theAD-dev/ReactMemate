@@ -11923,3 +11923,11 @@ tr:hover .linkText,
   z-index: 1;
   position: relative;
 }
+
+.noDropdownIcon::after {
+  display: none !important;
+}
+
+.noDropdownIcon.dropdown-toggle {
+  background: #fff !important;
+}

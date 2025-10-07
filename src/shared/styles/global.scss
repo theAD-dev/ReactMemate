@@ -30,10 +30,10 @@ input {
 .solid-button:focus {
   gap: 8px;
   display: flex;
-  padding: 10px 16px;
   align-items: center;
   font-weight: 600;
-  border-radius: 40px;
+  border-radius: 40px !important;
+  padding: 10px 16px !important;
   font-family: "Inter";
   justify-content: center;
   border: 1px solid var(--Primary-600, #158ecc);
