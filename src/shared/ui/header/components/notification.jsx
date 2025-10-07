@@ -10,6 +10,7 @@ import { useNotifications } from '../../../hooks/use-notifications';
 const Notification = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [hoveredNotification, setHoveredNotification] = useState(null);
+    const [filter, setFilter] = useState('all'); // 'all' or 'unread'
     const observerRef = useRef(null);
 
     const {
@@ -24,6 +25,11 @@ const Notification = () => {
         markAllAsRead,
         refresh,
     } = useNotifications(isOpen);
+
+    // Filter notifications based on selected filter
+    const filteredNotifications = filter === 'unread' 
+        ? notifications.filter(notification => !notification.is_read)
+        : notifications;
 
     // Intersection observer for infinite scroll
     const lastNotificationElementRef = useCallback(node => {
@@ -104,15 +110,31 @@ const Notification = () => {
             <Dropdown.Menu className={notificationStyle.notificationDropdown}>
                 <div className={notificationStyle.header}>
                     <h6 className={notificationStyle.title}>Notifications</h6>
-                    {unreadCount > 0 && (
-                        <button
-                            className={notificationStyle.markAllBtn}
-                            onClick={markAllAsRead}
-                        >
-                            <CheckAll size={16} />
-                            Mark all read
-                        </button>
-                    )}
+                    <div className={notificationStyle.headerActions}>
+                        <div className={notificationStyle.filterButtons}>
+                            <button
+                                className={`${notificationStyle.filterBtn} ${filter === 'all' ? notificationStyle.active : ''}`}
+                                onClick={() => setFilter('all')}
+                            >
+                                All
+                            </button>
+                            <button
+                                className={`${notificationStyle.filterBtn} ${filter === 'unread' ? notificationStyle.active : ''}`}
+                                onClick={() => setFilter('unread')}
+                            >
+                                Unread
+                            </button>
+                        </div>
+                        {unreadCount > 0 && (
+                            <button
+                                className={notificationStyle.markAllBtn}
+                                onClick={markAllAsRead}
+                            >
+                                <CheckAll size={16} />
+                                Mark all read
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 <div className={notificationStyle.notificationList}>
@@ -135,16 +157,18 @@ const Notification = () => {
                                 Try again
                             </Button>
                         </div>
-                    ) : notifications.length === 0 ? (
+                    ) : filteredNotifications.length === 0 ? (
                         <div className={notificationStyle.emptyState}>
                             <Bell size={48} color="#9CA3AF" />
-                            <p>No notifications yet</p>
-                            <span>You're all caught up!</span>
+                            <p>{filter === 'unread' ? 'No unread notifications' : 'No notifications yet'}</p>
+                            <span>{filter === 'unread' ? 'All caught up!' : 'You\'re all caught up!'}</span>
                         </div>
                     ) : (
                         <>
-                            {notifications.map((notification, index) => {
-                                const isLast = index === notifications.length - 1;
+                            {filteredNotifications.map((notification) => {
+                                // Use original notifications array to determine if we should load more
+                                const originalIndex = notifications.findIndex(n => n.id === notification.id);
+                                const isLast = originalIndex === notifications.length - 1;
                                 return (
                                     <div
                                         key={notification.id}
@@ -204,7 +228,7 @@ const Notification = () => {
                     )}
                 </div>
 
-                {notifications.length > 0 && (
+                {filteredNotifications.length > 0 && (
                     <div className={notificationStyle.footer}>
                         <button className={notificationStyle.viewAllBtn}>
                             View all notifications
