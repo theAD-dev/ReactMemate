@@ -288,12 +288,12 @@
   box-shadow: 0px -2px 5px 0px rgba(16, 24, 40, 0.1),
     0px 1px 2px 0px rgba(16, 24, 40, 0.06);
   .containerFooter {
-    width: 1024px;
+    width: min(100%, 1024px);
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 0px;
+    padding: 16px 10px;
     .right {
       display: flex;
     }
@@ -533,7 +533,7 @@
   }
 
   .logoWrapperFooter {
-    width: 1024px !important;
+    width: min(100%, 1024px) !important;
   }
 
   .containerFooter {
