@@ -5571,6 +5571,11 @@ button.btn.btn-saleContacte:hover svg,.salesTableWrap .selected-row .disPlayInli
 
 .salesTableWrap table thead tr th:first-child,
 .salesTableWrap table tbody tr td:first-child {
+  left: 0px;
+  z-index: 8;
+  min-width: 49px;
+  max-width: 49px;
+  position: sticky;
   border-right: 0px !important;
 }
 
