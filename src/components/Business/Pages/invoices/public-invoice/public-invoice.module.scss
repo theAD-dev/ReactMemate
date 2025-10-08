@@ -285,7 +285,7 @@
   // box-shadow: 0px 20.652px 27.536px -6.884px rgba(16, 24, 40, 0.08), 0px 6.884px 10.326px -3.442px rgba(16, 24, 40, 0.03);
 }
 
-.quotationfooter {
+.quotationFooter {
   z-index: 10;
   width: 100%;
   position: fixed;
@@ -293,7 +293,7 @@
   background: #fff;
   box-shadow: 0px -2px 5px 0px rgba(16, 24, 40, 0.1),
     0px 1px 2px 0px rgba(16, 24, 40, 0.06);
-  .contanerfooter {
+  .containerFooter {
     width: 1024px;
     margin: 0 auto;
     display: flex;
@@ -304,8 +304,8 @@
       display: flex;
     }
     button {
-      border-radius: var(--radius-xs, 4px);
-      border-radius: var(--radius-xs, 4px);
+      border-radius: var(--radius-xs, 40px);
+      border-radius: var(--radius-xs, 40px);
       border: 1px solid var(--Gray-300, #d0d5dd);
       background: #fff;
       display: flex;
@@ -711,4 +711,46 @@
   align-self: stretch;
   border-radius: 4px;
   border: 1px solid var(--Gray-200, #eaecf0);
+}
+
+.termsCondition * {
+  color: var(--Gray-700, #344054) !important;
+  font-family: Inter !important;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.14px;
+}
+
+@media (max-width: 768px) {
+  .quotationScroll {
+    padding: 0px 0px 82px 0px !important;
+  }
+
+  .logoWrapperFooter {
+    width: 1024px !important;
+  }
+
+  .containerFooter {
+    padding: 8px 16px !important;
+    width: 100% !important;
+    .right p {
+      font-size: 12px !important;
+    }
+    button {
+      white-space: nowrap;
+      font-size: 12px !important;
+      padding: var(--spacing-md, 8px) var(--spacing-xl, 12px) !important;
+    }
+  }
+
+  .modal {
+    width: 95% !important;
+  }
+
+  .stepper {
+    gap: 116px !important;
+    margin-bottom: 32px !important;
+  }
 }

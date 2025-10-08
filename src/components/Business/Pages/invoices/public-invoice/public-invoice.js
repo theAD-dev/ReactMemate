@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Col, Row as BootstrapRow, Button, Card } from 'react-bootstrap';
 import { CardList, Check2Circle, CheckCircleFill, EyeSlash, FilePdf, Person } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { useForm, Controller } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -165,12 +166,12 @@ const PublicInvoice = () => {
                 </div>
                 Pay Invoice
             </div>
-            <div className={style.stepper}>
+            <div className={clsx(style.stepper, 'd-md-flex d-none')}>
                 <div className={style.personalDetails}>
                     <div className={clsx(style.stepperButton, 'outline-button', "active-outline-button")}>
                         <Person size={16} color={step === 1 ? '#158ECC' : "#76D1FF"} />
                     </div>
-                    <span style={{ color: step === 1 ? "#344054" : "#98A2B3" }}>Personal Details</span>
+                    <span style={{ color: step === 1 ? "#344054" : "#98A2B3",  }}>Personal Details</span>
                 </div>
                 <div className={style.paymentMethod}>
                     <div className={clsx(style.stepperButton, 'outline-button', { "active-outline-button": step === 2 })}>
@@ -218,6 +219,9 @@ const PublicInvoice = () => {
 
     return (
         <>
+            <Helmet>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Helmet>
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
                     <div className={clsx(style.quotationWrapper, style[invoice?.status])}>
@@ -470,8 +474,8 @@ const PublicInvoice = () => {
                 </div>
 
                 {
-                    (invoice?.pay_status !== 'paid') && <div className={style.quotationfooter}>
-                        <div className={style.contanerfooter}>
+                    (invoice?.pay_status !== 'paid') && <div className={style.quotationFooter}>
+                        <div className={style.containerFooter}>
                             <div className={style.left}>
                                 <Link to={`${process.env.REACT_APP_URL}${invoice?.invoice_url}`} target='_blank'>
                                     <button
@@ -514,10 +518,24 @@ const PublicInvoice = () => {
                 <BootstrapRow>
                     {
                         step === 1 ? <Col sm={8}>
+                            <div className={clsx(style.stepper, 'd-md-none d-flex')}>
+                                <div className={style.personalDetails}>
+                                    <div className={clsx(style.stepperButton, 'outline-button', "active-outline-button")}>
+                                        <Person size={16} color={step === 1 ? '#158ECC' : "#76D1FF"} />
+                                    </div>
+                                    <span style={{ color: step === 1 ? "#344054" : "#98A2B3", whiteSpace: 'nowrap' }}>Personal Details</span>
+                                </div>
+                                <div className={style.paymentMethod}>
+                                    <div className={clsx(style.stepperButton, 'outline-button', { "active-outline-button": step === 2 })}>
+                                        <CardList size={16} color={step === 2 ? '#158ECC' : "#D0D5DD"} />
+                                    </div>
+                                    <span style={{ color: step === 2 ? "#344054" : "#858D98", whiteSpace: 'nowrap' }}>Payment Method</span>
+                                </div>
+                            </div>
                             <h6 className='mb-2'>Personal Details</h6>
                             <BootstrapRow>
                                 <Col sm={6} className='pe-1'>
-                                    <div className="d-flex flex-column gap-1 mb-2">
+                                    <div className="d-flex flex-column gap-1 mb-3">
                                         <label className={clsx(style.lable)}>First Name</label>
                                         <IconField>
                                             <InputIcon>{errors.firstname && <img src={exclamationCircle} className='mb-2' alt='exclamationCircle' />}</InputIcon>
@@ -591,7 +609,7 @@ const PublicInvoice = () => {
                                 </Col>
 
                                 <Col sm={5} className='pe-1'>
-                                    <div className="d-flex flex-column gap-1">
+                                    <div className="d-flex flex-column gap-1 mb-3">
                                         <label className={clsx(style.lable)}>State</label>
                                         <Controller
                                             name="state"
@@ -624,7 +642,7 @@ const PublicInvoice = () => {
                                 </Col>
 
                                 <Col sm={4} className='px-2'>
-                                    <div className="d-flex flex-column gap-1">
+                                    <div className="d-flex flex-column gap-1 mb-3">
                                         <label className={clsx(style.lable)}>City/Suburb</label>
                                         <Controller
                                             name="city"
@@ -660,7 +678,7 @@ const PublicInvoice = () => {
                                 </Col>
 
                                 <Col sm={3} className='ps-1'>
-                                    <div className="d-flex flex-column gap-1">
+                                    <div className="d-flex flex-column gap-1 mb-3">
                                         <label className={clsx(style.lable)}>Postcode</label>
                                         <IconField>
                                             <InputIcon>{errors?.postal_code && <img src={exclamationCircle} className='mb-3' alt='exclamationCircle' />}</InputIcon>
@@ -672,7 +690,7 @@ const PublicInvoice = () => {
                             </BootstrapRow>
                         </Col>
                             :
-                            <Col sm={8}>
+                            <Col sm={8} className="mb-3">
                                 <h6>Payment Method</h6>
                                 <StripeContainer ref={paymentRef} setIsPaymentProcess={setIsPaymentProcess} amount={invoice?.outstanding_amount} close={handleClose} clientSecret={payment?.client_secret} publishKey={payment?.public_key} fetchData={fetchData} />
                             </Col>
