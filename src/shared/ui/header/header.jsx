@@ -8,6 +8,7 @@ import ProfileInfo from "./components/profile-info";
 import style from './header.module.scss';
 import { useAuth } from "../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../app/providers/trial-height-provider";
+import assetsIcon from '../../../assets/images/icon/assets.svg';
 import Briefcase from "../../../assets/images/icon/briefcase.svg";
 import calendarTick from "../../../assets/images/icon/calendar-tick.svg";
 import clipboardTick from "../../../assets/images/icon/clipboard-tick.svg";
@@ -208,6 +209,17 @@ const Header = () => {
                                                 >
                                                     <img src={SuppliersIcon} alt="SuppliersIcon" />
                                                     Suppliers
+                                                </NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink
+                                                    to="/assets"
+                                                    className={({ isActive }) =>
+                                                        (isActive ? "menuActive" : "link") + " assets"
+                                                    }
+                                                >
+                                                    <img src={assetsIcon} alt="assets" />
+                                                    Assets
                                                 </NavLink>
                                             </li>
                                         </ul>
