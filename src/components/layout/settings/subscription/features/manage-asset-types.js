@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from 'primereact/button';
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -8,19 +8,43 @@ import { InputSwitch } from "primereact/inputswitch";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from "sonner";
 import style from './add-remove-company-user.module.scss';
-import { disableAssetType, enableAssetType } from "../../../../../APIs/settings-subscription-api";
+import { disableAssetTypeSubscription, enableAssetTypeSubscription, getAssetTypeSubscriptions } from "../../../../../APIs/settings-subscription-api";
 import assetsIcon from '../../../../../assets/images/icon/assets.svg';
 
 const ManageAssetTypes = ({ assetsTypes, visible, setVisible }) => {
   const [loadingStates, setLoadingStates] = useState({});
   const queryClient = useQueryClient();
 
+  // Fetch enabled asset type subscriptions
+  const assetSubscriptionsQuery = useQuery({
+    queryKey: ['asset-type-subscriptions'],
+    queryFn: getAssetTypeSubscriptions,
+    enabled: visible, // Only fetch when modal is open
+  });
+
+  // Merge asset types with subscription status
+  const enrichedAssetsTypes = React.useMemo(() => {
+    if (!assetsTypes || !assetSubscriptionsQuery.data?.results) {
+      return assetsTypes?.map(asset => ({ ...asset, enabled: false })) || [];
+    }
+
+    const enabledAssetIds = new Set(
+      assetSubscriptionsQuery.data.results.map(sub => sub.asset)
+    );
+
+    return assetsTypes.map(asset => ({
+      ...asset,
+      enabled: enabledAssetIds.has(asset.id)
+    }));
+  }, [assetsTypes, assetSubscriptionsQuery.data]);
+
   const enableMutation = useMutation({
-    mutationFn: ({ asset, enabled }) => enableAssetType({ asset, enabled }),
+    mutationFn: ({ asset }) => enableAssetTypeSubscription({ asset }),
     onSuccess: (data, variables) => {
       toast.success(`${variables.assetName} enabled successfully`);
       queryClient.invalidateQueries(['assets-types']);
       queryClient.invalidateQueries(['subscription']);
+      queryClient.invalidateQueries(['asset-type-subscriptions']);
       setLoadingStates(prev => ({ ...prev, [variables.asset]: false }));
     },
     onError: (error, variables) => {
@@ -31,11 +55,12 @@ const ManageAssetTypes = ({ assetsTypes, visible, setVisible }) => {
   });
 
   const disableMutation = useMutation({
-    mutationFn: ({ asset, enabled }) => disableAssetType({ asset, enabled }),
+    mutationFn: ({ asset }) => disableAssetTypeSubscription({ asset }),
     onSuccess: (data, variables) => {
       toast.success(`${variables.assetName} disabled successfully`);
       queryClient.invalidateQueries(['assets-types']);
       queryClient.invalidateQueries(['subscription']);
+      queryClient.invalidateQueries(['asset-type-subscriptions']);
       setLoadingStates(prev => ({ ...prev, [variables.asset]: false }));
     },
     onError: (error, variables) => {
@@ -51,15 +76,16 @@ const ManageAssetTypes = ({ assetsTypes, visible, setVisible }) => {
     
     setLoadingStates(prev => ({ ...prev, [assetId]: true }));
 
-    const payload = {
-      asset: assetId,
-      enabled: enabled
+    const apiPayload = {
+      asset: assetId
     };
 
+    const mutationData = { ...apiPayload, assetName }; // assetName only for success/error messages
+
     if (enabled) {
-      enableMutation.mutate({ ...payload, assetName }); // assetName only for success/error messages
+      enableMutation.mutate(mutationData);
     } else {
-      disableMutation.mutate({ ...payload, assetName }); // assetName only for success/error messages
+      disableMutation.mutate(mutationData);
     }
   };
 
@@ -139,34 +165,43 @@ const ManageAssetTypes = ({ assetsTypes, visible, setVisible }) => {
           </p>
         </div>
 
-        {assetsTypes && assetsTypes.length > 0 ? (
-          <DataTable 
-            value={assetsTypes} 
-            paginator={false}
-            scrollable
-            scrollHeight="400px"
-            className="asset-types-table border"
-            tableStyle={{ minWidth: '100%' }}
-          >
-            <Column 
-              field="name" 
-              header="Asset Type" 
-              body={nameTemplate}
-              style={{ width: '30%' }}
-            />
-            <Column 
-              field="description" 
-              header="Description" 
-              body={descriptionTemplate}
-              style={{ width: '50%' }}
-            />
-            <Column 
-              field="enabled" 
-              header="Status" 
-              body={switchTemplate}
-              style={{ width: '20%' }}
-            />
-          </DataTable>
+        {enrichedAssetsTypes && enrichedAssetsTypes.length > 0 ? (
+          <>
+            {assetSubscriptionsQuery.isLoading ? (
+              <div className="text-center py-4">
+                <ProgressSpinner style={{ width: '30px', height: '30px' }} />
+                <p className="text-muted mt-2">Loading subscription status...</p>
+              </div>
+            ) : (
+              <DataTable 
+                value={enrichedAssetsTypes} 
+                paginator={false}
+                scrollable
+                scrollHeight="400px"
+                className="asset-types-table border"
+                tableStyle={{ minWidth: '100%' }}
+              >
+                <Column 
+                  field="name" 
+                  header="Asset Type" 
+                  body={nameTemplate}
+                  style={{ width: '30%' }}
+                />
+                <Column 
+                  field="description" 
+                  header="Description" 
+                  body={descriptionTemplate}
+                  style={{ width: '50%' }}
+                />
+                <Column 
+                  field="enabled" 
+                  header="Status" 
+                  body={switchTemplate}
+                  style={{ width: '20%' }}
+                />
+              </DataTable>
+            )}
+          </>
         ) : (
           <div className="text-center py-4">
             <p className="text-muted">No asset types available</p>
