@@ -7477,7 +7477,7 @@ button.cancel {
 }
 
 .progressSubsIcon {
-  border-radius: var(--radius-full, 9999px);
+  border-radius: 50%;
   background: linear-gradient(
     135deg,
     rgba(114, 237, 242, 0.15) 0%,
@@ -7489,6 +7489,7 @@ button.cancel {
   margin-right: 13px;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .subscription-page .listwrapper li {
@@ -7580,6 +7581,40 @@ button.cancel {
     linear-gradient(45deg, #4a879a 0%, #c5edf5 100%),
     linear-gradient(135deg, #ffd3a5 0%, #fd6585 100%),
     var(--Primary-400, #b692f6);
+  transition: width 0.6s ease;
+}
+
+.bg-assetsBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 47px;
+  background: linear-gradient(
+    0deg,
+    rgba(152, 144, 227, 0.1) 0%,
+    rgba(177, 244, 207, 1) 100%
+  );
+  transition: width 0.6s ease;
+}
+
+.bg-enquiriesBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 47px;
+  background: linear-gradient(
+    135deg,
+    rgba(241, 202, 116, 1) 0%,
+    rgba(166, 77, 182, 0.1) 100%
+  );
   transition: width 0.6s ease;
 }
 

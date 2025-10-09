@@ -45,3 +45,65 @@ export const cancelSubscription = async () => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const activeInquiriesSubscription = async () => {
+    const endpoint = `/settings/subscriptions/inquiries/activate/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const cancelInquiriesSubscription = async () => {
+    const endpoint = `/settings/subscriptions/inquiries/cancel/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const activeAssetsSubscription = async () => {
+    const endpoint = `/settings/subscriptions/assets/activate/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const cancelAssetsSubscription = async () => {
+    const endpoint = `/settings/subscriptions/assets/cancel/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const enableAssetType = async (data) => {
+    const endpoint = `/assets/types/subscriptions/enable/`;
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const disableAssetType = async (data) => {
+    const endpoint = `/assets/types/subscriptions/disable/`;
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

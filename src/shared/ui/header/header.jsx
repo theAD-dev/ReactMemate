@@ -211,32 +211,36 @@ const Header = () => {
                                                     Suppliers
                                                 </NavLink>
                                             </li>
-                                            <li>
-                                                <NavLink
-                                                    to="/assets"
-                                                    className={({ isActive }) =>
-                                                        (isActive ? "menuActive" : "link") + " assets"
-                                                    }
-                                                >
-                                                    <img src={assetsIcon} alt="assets" />
-                                                    Assets
-                                                </NavLink>
-                                            </li>
+                                            {session?.has_assets_subscription && (
+                                                <li>
+                                                    <NavLink
+                                                        to="/assets"
+                                                        className={({ isActive }) =>
+                                                            (isActive ? "menuActive" : "link") + " assets"
+                                                        }
+                                                    >
+                                                        <img src={assetsIcon} alt="assets" />
+                                                        Assets
+                                                    </NavLink>
+                                                </li>
+                                            )}
                                         </ul>
                                     </Col>
                                     <Col>
                                         <ul className="middle">
-                                            {/* <li>
-                                                <NavLink
-                                                    to="/enquiries"
-                                                    className={({ isActive }) =>
-                                                        (isActive ? "menuActive" : "link") + " enquiries"
-                                                    }
-                                                >
-                                                    <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
-                                                    Enquiries
-                                                </NavLink>
-                                            </li> */}
+                                            {session?.has_inquiries_subscription && (
+                                                <li>
+                                                    <NavLink
+                                                        to="/enquiries"
+                                                        className={({ isActive }) =>
+                                                            (isActive ? "menuActive" : "link") + " enquiries"
+                                                        }
+                                                    >
+                                                        <img src={EnquiriesIcon} style={{ width: '24px', height: '24px' }} alt="EnquiriesIcon" />
+                                                        Enquiries
+                                                    </NavLink>
+                                                </li>
+                                            )}
                                             <li>
                                                 <NavLink
                                                     to="/sales"

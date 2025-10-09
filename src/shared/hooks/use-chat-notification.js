@@ -46,7 +46,7 @@ export const useChatNotification = () => {
       }
     };
 
-    const cleanup = listen('get_total_unread_count', handleUnreadCountUpdate);
+    const cleanup = listen('get_total_unread_count_response', handleUnreadCountUpdate);
 
     return cleanup;
   }, [socket, isConnected, user_id, listen]);
