@@ -1,9 +1,21 @@
 import { fetchAPI } from "./base-api";
 const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL;
 
+export const getListOfAssetCategories = async (page = 1, limit = 20) => {
+    const offset = (page - 1) * limit;
+    const endpoint = `/assets/types/subscriptions/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    url.searchParams.append("limit", limit);
+    url.searchParams.append("offset", offset);
+    return fetchAPI(url.toString(), options);
+};
+
 export const getListOfVehicles = async (page, limit, search = "", order = "", isShowDeleted) => {
     const offset = (page - 1) * limit;
-    const endpoint = `/vehicles/vehicles/`;
+    const endpoint = `/assets/vehicles/`;
     const options = {
         method: 'GET',
     };
@@ -18,17 +30,17 @@ export const getListOfVehicles = async (page, limit, search = "", order = "", is
 };
 
 export const createNewVehicle = async (data) => {
-  const endpoint = '/vehicles/vehicles/create/';
-  const options = {
-    method: 'POST',
-    body: data
-  };
-  const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+    const endpoint = '/assets/vehicles/create/';
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
 };
 
 export const getVehicle = async (id) => {
-    const endpoint = `/vehicles/vehicles/${id}/`;
+    const endpoint = `/assets/vehicles/${id}/`;
     const options = {
         method: 'GET',
     };
@@ -37,7 +49,7 @@ export const getVehicle = async (id) => {
 };
 
 export const updateVehicle = async (id, data) => {
-    const endpoint = `/vehicles/vehicles/${id}/update/`;
+    const endpoint = `/assets/vehicles/${id}/update/`;
     const options = {
         method: 'PUT',
         body: data

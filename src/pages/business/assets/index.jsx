@@ -3,19 +3,28 @@ import { Button } from 'react-bootstrap';
 import { BoxSeam, Download, Filter, Truck } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
 import AssetsTable from './assets-table';
 import style from './assets.module.scss';
+import { getListOfAssetCategories } from '../../../APIs/assets-api';
 import { CreateNewVehicle } from '../../../features/business/assets/create-new-vehicle/create-new-vehicle';
 
 const Assets = () => {
     const dt = useRef(null);
     const menu = useRef(null);
-        const [refetch, setRefetch] = useState(false);
+    const [refetch, setRefetch] = useState(false);
     const [visible, setVisible] = useState(false);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+
+    const listOfAssetCategoriesQuery = useQuery({
+        queryKey: ['assetCategories'],
+        queryFn: getListOfAssetCategories
+    });
+    const assetCategories = listOfAssetCategoriesQuery?.data || [];
+    console.log('assetCategories: ', assetCategories);
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -43,7 +52,7 @@ const Assets = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20} /></button>
+                                        <button className={`${style.filterBox}`} onClick={() => {}}><Filter size={20} /></button>
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -73,8 +82,8 @@ const Assets = () => {
                     <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
                 </div>
             </div>
-            <AssetsTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch}/>
-            <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch}/>
+            <AssetsTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} />
+            <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
         </>
     );
 };

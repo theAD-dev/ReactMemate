@@ -7,13 +7,15 @@ import chatIcon from '../../../../assets/images/icon/message-text.svg';
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
 import style from '../header.module.scss';
 import Notification from "./notification";
+import useChatNotification from "../../../hooks/use-chat-notification";
 
 const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
+    const { chatUnreadCount } = useChatNotification();
     return (
         <>
             <div className="avatar-wrap flexEndbox colMinWidth">
                 <ul className="d-flex flex-nowrap">
-                    <li className="mx-1">
+                    <li className="mx-1" style={{ position: 'relative' }}>
                         <NavLink
                             to="/chat"
                             className={({ isActive }) =>
@@ -26,6 +28,11 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                                 <img src={chatIcon} alt="chat" width={'20px'} height={'20px'} style={{ width: '20px', height: '20px' }} />
                             </div>
                         </NavLink>
+                        {
+                            chatUnreadCount > 0 && <span className={style.badge}>
+                                {chatUnreadCount > 99 ? '99+' : chatUnreadCount}
+                            </span>
+                        }
                     </li>
                     <Notification />
                     <li className={style.navbarActionIcon}>

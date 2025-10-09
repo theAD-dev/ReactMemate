@@ -204,7 +204,7 @@ const AssetsTable = forwardRef(({ searchValue, selected, setSelected, refetch, s
                 onSort={onSort}
                 rowClassName={rowClassName}
             >
-                <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
+                <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} style={{ zIndex: 2 }} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
                 <Column field='make' header='Make' body={VehicleNameBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '150px' }} sortable />
                 <Column field='model' header='Model' body={modelBody} style={{ minWidth: '120px' }} />
                 <Column field='year_manufactured' header='Year' body={yearBody} style={{ minWidth: '80px' }} />
