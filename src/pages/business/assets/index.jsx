@@ -1,30 +1,83 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Button } from 'react-bootstrap';
 import { BoxSeam, Download, Filter, Truck } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
-import AssetsTable from './assets-table';
 import style from './assets.module.scss';
+import VehiclesTable from './vehicles-table';
 import { getListOfAssetCategories } from '../../../APIs/assets-api';
 import { CreateNewVehicle } from '../../../features/business/assets/create-new-vehicle/create-new-vehicle';
 
+const existingAssetsColorCode = {
+    "vehicles": {
+        color: '#17B26A',
+        backgroundColor: '#ecfdf3',
+        icon: <Truck color='#17B26A' size={16} className='me-2' />,
+    },
+    "equipment": {
+        color: '#1AB2FF',
+        backgroundColor: '#f0f9ff',
+        icon: <BoxSeam color='#1AB2FF' size={16} className='me-2' />,
+    }
+};
+
+// Default icon component for unknown asset types
+const DefaultAssetIcon = ({ color = '#000000', size = 16 }) => (
+    <BoxSeam color={color} size={size} className='me-2' />
+);
+
 const Assets = () => {
     const dt = useRef(null);
-    const menu = useRef(null);
     const [refetch, setRefetch] = useState(false);
     const [visible, setVisible] = useState(false);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Get active asset from URL params
+    const activeAssetType = searchParams.get('type');
 
     const listOfAssetCategoriesQuery = useQuery({
         queryKey: ['assetCategories'],
         queryFn: getListOfAssetCategories
     });
-    const assetCategories = listOfAssetCategoriesQuery?.data || [];
-    console.log('assetCategories: ', assetCategories);
+
+    const enrichedAssetCategories = useMemo(() => {
+        const assetCategories = listOfAssetCategoriesQuery?.data || [];
+        return assetCategories?.results?.filter(category => category.enabled)?.map(category => {
+            const existingConfig = existingAssetsColorCode[category.asset_slug];
+            return {
+                ...category,
+                label: category.asset_name,
+                value: category.id,
+                color: existingConfig?.color || '#6B7280',
+                backgroundColor: existingConfig?.backgroundColor || '#F3F4F6',
+                icon: existingConfig?.icon || <DefaultAssetIcon color={existingConfig?.color || '#6B7280'} />
+            };
+        }) || [];
+    }, [listOfAssetCategoriesQuery?.data]);
+
+    // Set default active asset type when data loads
+    useEffect(() => {
+        if (enrichedAssetCategories.length > 0 && !activeAssetType) {
+            const firstCategory = enrichedAssetCategories[0];
+            setSearchParams({ type: firstCategory.asset_slug });
+        }
+    }, [enrichedAssetCategories, activeAssetType, setSearchParams]);
+
+    // Handle asset type change
+    const handleAssetTypeChange = (assetSlug) => {
+        setSearchParams({ type: assetSlug });
+        setSelected(null); // Clear selections when changing asset type
+    };
+
+    // Get current active asset category
+    const currentActiveAsset = enrichedAssetCategories.find(
+        category => category.asset_slug === activeAssetType
+    ) || enrichedAssetCategories[0];
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -36,7 +89,7 @@ const Assets = () => {
     return (
         <>
             <Helmet>
-                <title>MeMate - Assets</title>
+                <title>MeMate - {currentActiveAsset?.label || 'Assets'}</title>
             </Helmet>
             <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
                 <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
@@ -52,7 +105,7 @@ const Assets = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={() => {}}><Filter size={20} /></button>
+                                        <button className={`${style.filterBox}`} onClick={() => { }}><Filter size={20} /></button>
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -68,22 +121,47 @@ const Assets = () => {
                     }
                 </div>
                 <div className="featureName d-flex align-items-center gap-3" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <Link to={"#"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, style.activeVehicle)}>
-                        <Truck color='#17B26A' size={16} className='me-2' />
-                        <span className={style.topBarText}>Vehicles</span>
-                    </Link>
-
-                    <Link to={"#"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
-                        <BoxSeam color='#1AB2FF' size={16} className='me-2' />
-                        <span className={style.topBarText}>Equipment</span>
-                    </Link>
+                    {
+                        enrichedAssetCategories && enrichedAssetCategories.length > 0 && enrichedAssetCategories.map((category) => {
+                            const isActive = activeAssetType === category.asset_slug || (!activeAssetType && category === enrichedAssetCategories[0]);
+                            return (
+                                <button
+                                    key={category.id}
+                                    onClick={() => handleAssetTypeChange(category.asset_slug)}
+                                    className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, {
+                                        [style.activeVehicle]: isActive
+                                    })}
+                                    style={{
+                                        backgroundColor: isActive ? category.backgroundColor : 'transparent',
+                                        color: isActive ? category.color : '#6B7280',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        borderRadius: '4px'
+                                    }}
+                                >
+                                    {React.cloneElement(category.icon, {
+                                        color: isActive ? category.color : '#6B7280'
+                                    })}
+                                    <span className={style.topBarText}>{category.label}</span>
+                                </button>
+                            );
+                        })
+                    }
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>New</Button>
+                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>
+                        New {currentActiveAsset?.label || 'Asset'}
+                    </Button>
                 </div>
             </div>
-            <AssetsTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} />
-            <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
+            {
+                activeAssetType && activeAssetType === 'vehicles' && currentActiveAsset && (
+                    <>
+                        <VehiclesTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} />
+                        <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
+                    </>
+                )
+            }
         </>
     );
 };

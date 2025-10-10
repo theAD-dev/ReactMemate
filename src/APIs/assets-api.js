@@ -11,7 +11,7 @@ export const getAssetsTypes = async () => {
 };
 
 export const getListOfAssetCategories = async (page = 1, limit = 20) => {
-    const offset = 0 * limit;
+    // const offset = 0 * limit;
     const endpoint = `/assets/types/subscriptions/`;
     const options = {
         method: 'GET',

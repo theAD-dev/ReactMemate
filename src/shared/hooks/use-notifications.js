@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useSocket } from './use-socket';
 import {
@@ -16,7 +16,6 @@ export const useNotifications = (isOpen) => {
     const [allNotifications, setAllNotifications] = useState([]);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-    const queryClient = useQueryClient();
     const { socket, isConnected, listen, emit } = useSocket();
     const { session } = useAuth();
     const user_id = session?.desktop_user_id;
@@ -97,7 +96,7 @@ export const useNotifications = (isOpen) => {
         const cleanup = listen('desktop_notifications', handleDesktopNotification);
 
         return cleanup;
-    }, [socket, isConnected, listen, queryClient, isOpen]);
+    }, [socket, isConnected, listen, isOpen]);
 
     // Mark as read mutation
     const markAsReadMutation = useMutation({

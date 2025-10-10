@@ -86,10 +86,7 @@ export const enableAssetTypeSubscription = async (data) => {
     const endpoint = `/assets/types/subscriptions/enable/`;
     const options = {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: data,
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
@@ -99,10 +96,7 @@ export const disableAssetTypeSubscription = async (data) => {
     const endpoint = `/assets/types/subscriptions/disable/`;
     const options = {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: data,
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);

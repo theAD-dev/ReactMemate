@@ -6,6 +6,7 @@ import clsx from "clsx";
 import chatIcon from '../../../../assets/images/icon/message-text.svg';
 import { FallbackImage } from "../../image-with-fallback/image-avatar";
 import style from '../header.module.scss';
+import GlobalSearch from "./global-search";
 import Notification from "./notification";
 import useChatNotification from "../../../hooks/use-chat-notification";
 
@@ -35,9 +36,7 @@ const ProfileInfo = ({ username, userType, aliasName, photo, has_photo }) => {
                         }
                     </li>
                     <Notification />
-                    <li className={style.navbarActionIcon}>
-                        <Search color="#ccc" size={20} />
-                    </li>
+                    <GlobalSearch />
                     <NavLink
                         to={"/help"}
                         className={({ isActive }) =>

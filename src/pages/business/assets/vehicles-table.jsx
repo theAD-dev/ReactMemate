@@ -24,7 +24,7 @@ const formatDate = (timestamp) => {
     return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const AssetsTable = forwardRef(({ searchValue, selected, setSelected, refetch, setRefetch }, ref) => {
+const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch, setRefetch }, ref) => {
     const { trialHeight } = useTrialHeight();
     const observerRef = useRef(null);
     const [drivers, setDrivers] = useState({});
@@ -223,4 +223,4 @@ const AssetsTable = forwardRef(({ searchValue, selected, setSelected, refetch, s
     );
 });
 
-export default AssetsTable;
+export default VehiclesTable;
