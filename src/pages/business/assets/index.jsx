@@ -9,6 +9,7 @@ import { useDebounce } from 'primereact/hooks';
 import style from './assets.module.scss';
 import VehiclesTable from './vehicles-table';
 import { getListOfAssetCategories } from '../../../APIs/assets-api';
+import NodataImg from "../../../assets/images/img/NodataImg.png";
 import { CreateNewVehicle } from '../../../features/business/assets/create-new-vehicle/create-new-vehicle';
 
 const existingAssetsColorCode = {
@@ -42,7 +43,8 @@ const Assets = () => {
 
     const listOfAssetCategoriesQuery = useQuery({
         queryKey: ['assetCategories'],
-        queryFn: getListOfAssetCategories
+        queryFn: getListOfAssetCategories,
+        staleTime: 0
     });
 
     const enrichedAssetCategories = useMemo(() => {
@@ -149,9 +151,9 @@ const Assets = () => {
                     }
                 </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>
+                    {activeAssetType && <Button onClick={() => setVisible(true)} className={`${style.newButton}`}>
                         New {currentActiveAsset?.label || 'Asset'}
-                    </Button>
+                    </Button>}
                 </div>
             </div>
             {
@@ -161,6 +163,15 @@ const Assets = () => {
                         <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
                     </>
                 )
+            }
+            {
+                !activeAssetType && (<div className='d-flex justify-content-center align-items-center' style={{ height: 'calc(100vh - 200px)' }}>
+                    <div className='position-relative d-flex align-items-center flex-column'>
+                        <img src={NodataImg} alt='no-data' style={{ width: '300px', objectFit: 'contain' }} />
+                        <h2 className={clsx(style.title)}>You have not enabled any assets</h2>
+                        <p className={clsx(style.subTitle)}>To use this feature, please enable at least one asset type via Settings &gt; Subscription </p>
+                    </div>
+                </div>)
             }
         </>
     );

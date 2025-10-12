@@ -6,11 +6,7 @@ import { useGlobalSearch } from '../../../hooks/useGlobalSearch';
 import { 
     formatProjectResult, 
     formatClientResult, 
-    formatJobResult,
-    formatTaskResult,
-    formatInvoiceResult,
     formatSupplierResult,
-    formatExpenseResult,
     formatSearchMetadata 
 } from '../../../utils/search-formatters';
 import style from '../header.module.scss';
@@ -107,8 +103,6 @@ const GlobalSearch = () => {
             sessionStorage.setItem('globalSearchTerm', debouncedValue);
         }
         
-        clearSearch();
-        
         // Navigate to appropriate page with specific targeting
         switch(type) {
             case 'project':
@@ -125,30 +119,10 @@ const GlobalSearch = () => {
                 console.log('Navigating to client page:', `/clients/${item.id}/order-history`);
                 navigate(`/clients/${item.id}/order-history`);
                 break;
-            case 'job':
-                console.log('Navigating to jobs page');
-                // Navigate with job ID as state for potential highlighting
-                navigate('/jobs', { state: { highlightJobId: item.id } });
-                break;
-            case 'task':
-                console.log('Navigating to tasks page');
-                // Navigate with task ID as state for potential highlighting
-                navigate('/tasks', { state: { highlightTaskId: item.id } });
-                break;
-            case 'invoice':
-                console.log('Navigating to invoices page');
-                // Navigate with invoice ID as state for potential highlighting
-                navigate('/invoices', { state: { highlightInvoiceId: item.id } });
-                break;
             case 'supplier':
                 console.log('Navigating to supplier history page:', `/suppliers/${item.id}/history`);
                 // Navigate to supplier history page (matches existing supplier table navigation)
                 navigate(`/suppliers/${item.id}/history`);
-                break;
-            case 'expense':
-                console.log('Navigating to expenses page');
-                // Navigate with expense ID as state for potential highlighting
-                navigate('/expenses', { state: { highlightExpenseId: item.id } });
                 break;
             default:
                 console.log('Unknown type:', type);
@@ -157,14 +131,20 @@ const GlobalSearch = () => {
 
     // Handle clear search
     const handleClear = () => {
+        // Clear the input value directly
+        setInputValue('');
+        // Also call the hook's clear function to ensure search results are cleared
         clearSearch();
-        inputRef.current?.focus();
+        // Focus the input after clearing
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 0);
     };
 
     return (
         <div className={searchStyle.globalSearchContainer} ref={searchRef}>
             <li className={style.navbarActionIcon} onClick={handleSearchClick}>
-                <Search color="#ccc" size={20} />
+                <Search color="#475467" size={20} />
             </li>
 
             {isOpen && (
@@ -174,7 +154,7 @@ const GlobalSearch = () => {
                         <input
                             ref={inputRef}
                             type="text"
-                            placeholder="Search projects, clients, expenses..."
+                            placeholder="Search projects, clients, suppliers..."
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             className={searchStyle.searchInput}
@@ -299,141 +279,6 @@ const GlobalSearch = () => {
                                             </div>
                                         )}
 
-                                        {/* Jobs Section */}
-                                        {searchResults.jobs && searchResults.jobs.length > 0 && (
-                                            <div className={searchStyle.resultSection}>
-                                                <h6 className={searchStyle.sectionTitle}>
-                                                    Jobs ({searchResults.jobs.length})
-                                                </h6>
-                                                {searchResults.jobs.map((job) => {
-                                                    const formatted = formatJobResult(job);
-                                                    const metadata = formatSearchMetadata(formatted);
-                                                    
-                                                    return (
-                                                        <div
-                                                            key={`job-${job.id}`}
-                                                            className={searchStyle.resultItem}
-                                                            onClick={() => handleSelectItem(job, 'job')}
-                                                        >
-                                                            <div className={searchStyle.resultIcon}>
-                                                                <div className={searchStyle.jobIcon}>J</div>
-                                                            </div>
-                                                            <div className={searchStyle.resultContent}>
-                                                                <div className={searchStyle.resultTitle}>
-                                                                    {formatted.title}
-                                                                </div>
-                                                                <div className={searchStyle.resultSubtitle}>
-                                                                    {formatted.subtitle}
-                                                                </div>
-                                                                {metadata.length > 0 && (
-                                                                    <div className={searchStyle.resultMeta}>
-                                                                        {metadata.map((meta, index) => (
-                                                                            <span key={index}>{meta}</span>
-                                                                        ))}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            {formatted.status && (
-                                                                <div className={searchStyle.resultBadge}>
-                                                                    {formatted.status}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-
-                                        {/* Tasks Section */}
-                                        {searchResults.tasks && searchResults.tasks.length > 0 && (
-                                            <div className={searchStyle.resultSection}>
-                                                <h6 className={searchStyle.sectionTitle}>
-                                                    Tasks ({searchResults.tasks.length})
-                                                </h6>
-                                                {searchResults.tasks.map((task) => {
-                                                    const formatted = formatTaskResult(task);
-                                                    const metadata = formatSearchMetadata(formatted);
-                                                    
-                                                    return (
-                                                        <div
-                                                            key={`task-${task.id}`}
-                                                            className={searchStyle.resultItem}
-                                                            onClick={() => handleSelectItem(task, 'task')}
-                                                        >
-                                                            <div className={searchStyle.resultIcon}>
-                                                                <div className={searchStyle.taskIcon}>T</div>
-                                                            </div>
-                                                            <div className={searchStyle.resultContent}>
-                                                                <div className={searchStyle.resultTitle}>
-                                                                    {formatted.title}
-                                                                </div>
-                                                                <div className={searchStyle.resultSubtitle}>
-                                                                    {formatted.subtitle}
-                                                                </div>
-                                                                {metadata.length > 0 && (
-                                                                    <div className={searchStyle.resultMeta}>
-                                                                        {metadata.map((meta, index) => (
-                                                                            <span key={index}>{meta}</span>
-                                                                        ))}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            {formatted.status && (
-                                                                <div className={searchStyle.resultBadge}>
-                                                                    {formatted.status}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-
-                                        {/* Invoices Section */}
-                                        {searchResults.invoices && searchResults.invoices.length > 0 && (
-                                            <div className={searchStyle.resultSection}>
-                                                <h6 className={searchStyle.sectionTitle}>
-                                                    Invoices ({searchResults.invoices.length})
-                                                </h6>
-                                                {searchResults.invoices.map((invoice) => {
-                                                    const formatted = formatInvoiceResult(invoice);
-                                                    const metadata = formatSearchMetadata(formatted);
-                                                    
-                                                    return (
-                                                        <div
-                                                            key={`invoice-${invoice.id}`}
-                                                            className={searchStyle.resultItem}
-                                                            onClick={() => handleSelectItem(invoice, 'invoice')}
-                                                        >
-                                                            <div className={searchStyle.resultIcon}>
-                                                                <div className={searchStyle.invoiceIcon}>I</div>
-                                                            </div>
-                                                            <div className={searchStyle.resultContent}>
-                                                                <div className={searchStyle.resultTitle}>
-                                                                    {formatted.title}
-                                                                </div>
-                                                                <div className={searchStyle.resultSubtitle}>
-                                                                    {formatted.subtitle}
-                                                                </div>
-                                                                {metadata.length > 0 && (
-                                                                    <div className={searchStyle.resultMeta}>
-                                                                        {metadata.map((meta, index) => (
-                                                                            <span key={index}>{meta}</span>
-                                                                        ))}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            {formatted.status && (
-                                                                <div className={searchStyle.resultBadge}>
-                                                                    {formatted.status}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-
                                         {/* Suppliers Section */}
                                         {searchResults.suppliers && searchResults.suppliers.length > 0 && (
                                             <div className={searchStyle.resultSection}>
@@ -471,51 +316,6 @@ const GlobalSearch = () => {
                                                             <div className={searchStyle.resultBadge}>
                                                                 {formatted.type}
                                                             </div>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-
-                                        {/* Expenses Section */}
-                                        {searchResults.expenses && searchResults.expenses.length > 0 && (
-                                            <div className={searchStyle.resultSection}>
-                                                <h6 className={searchStyle.sectionTitle}>
-                                                    Expenses ({searchResults.expenses.length})
-                                                </h6>
-                                                {searchResults.expenses.map((expense) => {
-                                                    const formatted = formatExpenseResult(expense);
-                                                    const metadata = formatSearchMetadata(formatted);
-                                                    
-                                                    return (
-                                                        <div
-                                                            key={`expense-${expense.id}`}
-                                                            className={searchStyle.resultItem}
-                                                            onClick={() => handleSelectItem(expense, 'expense')}
-                                                        >
-                                                            <div className={searchStyle.resultIcon}>
-                                                                <div className={searchStyle.expenseIcon}>E</div>
-                                                            </div>
-                                                            <div className={searchStyle.resultContent}>
-                                                                <div className={searchStyle.resultTitle}>
-                                                                    {formatted.title}
-                                                                </div>
-                                                                <div className={searchStyle.resultSubtitle}>
-                                                                    {formatted.subtitle}
-                                                                </div>
-                                                                {metadata.length > 0 && (
-                                                                    <div className={searchStyle.resultMeta}>
-                                                                        {metadata.map((meta, index) => (
-                                                                            <span key={index}>{meta}</span>
-                                                                        ))}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            {formatted.status && (
-                                                                <div className={searchStyle.resultBadge}>
-                                                                    {formatted.status}
-                                                                </div>
-                                                            )}
                                                         </div>
                                                     );
                                                 })}

@@ -174,7 +174,7 @@ const Notification = () => {
                         <div className={notificationStyle.emptyState}>
                             <Bell size={48} color="#9CA3AF" />
                             <p>{showOnlyUnread ? 'No unread notifications' : 'No notifications yet'}</p>
-                            <span>{showOnlyUnread ? 'All caught up!' : 'You\'re all caught up!'}</span>
+                            {/* <span>{showOnlyUnread ? 'All caught up!' : 'You\'re all caught up!'}</span> */}
                         </div>
                     ) : (
                         <>

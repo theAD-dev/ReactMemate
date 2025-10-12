@@ -166,11 +166,7 @@ export const performUnifiedSearch = async (query, limit = 3) => {
     return {
       projects: [],
       clients: [],
-      jobs: [],
-      tasks: [],
-      invoices: [],
       suppliers: [],
-      expenses: [],
       total: 0
     };
   }
@@ -179,19 +175,11 @@ export const performUnifiedSearch = async (query, limit = 3) => {
     const [
       projectsResponse, 
       clientsResponse, 
-      jobsResponse, 
-      tasksResponse, 
-      invoicesResponse, 
-      suppliersResponse,
-      expensesResponse
+      suppliersResponse
     ] = await Promise.all([
       searchProjects(query, limit).catch(() => ({ results: [], count: 0 })),
       searchClients(query, limit).catch(() => ({ results: [], count: 0 })),
-      searchJobs(query, limit).catch(() => ({ results: [], count: 0 })),
-      searchTasks(query, limit).catch(() => ({ results: [], count: 0 })),
-      searchInvoices(query, limit).catch(() => ({ results: [], count: 0 })),
-      searchSuppliers(query, limit).catch(() => ({ results: [], count: 0 })),
-      searchExpenses(query, limit).catch(() => ({ results: [], count: 0 }))
+      searchSuppliers(query, limit).catch(() => ({ results: [], count: 0 }))
     ]);
 
     // Filter projects client-side since API doesn't support search
@@ -201,29 +189,17 @@ export const performUnifiedSearch = async (query, limit = 3) => {
     return {
       projects: filteredProjects,
       clients: clientsResponse.results || [],
-      jobs: jobsResponse.results || [],
-      tasks: tasksResponse.results || [],
-      invoices: invoicesResponse.results || [],
       suppliers: suppliersResponse.results || [],
-      expenses: expensesResponse.results || [],
       total: filteredProjects.length + 
              (clientsResponse.count || clientsResponse.results?.length || 0) +
-             (jobsResponse.count || jobsResponse.results?.length || 0) +
-             (tasksResponse.count || tasksResponse.results?.length || 0) +
-             (invoicesResponse.count || invoicesResponse.results?.length || 0) +
-             (suppliersResponse.count || suppliersResponse.results?.length || 0) +
-             (expensesResponse.count || expensesResponse.results?.length || 0)
+             (suppliersResponse.count || suppliersResponse.results?.length || 0)
     };
   } catch (error) {
     console.error('Global search error:', error);
     return {
       projects: [],
       clients: [],
-      jobs: [],
-      tasks: [],
-      invoices: [],
       suppliers: [],
-      expenses: [],
       total: 0
     };
   }

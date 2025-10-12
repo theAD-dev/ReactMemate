@@ -10,11 +10,7 @@ export const useGlobalSearch = () => {
     const [searchResults, setSearchResults] = useState({
         projects: [],
         clients: [],
-        jobs: [],
-        tasks: [],
-        invoices: [],
         suppliers: [],
-        expenses: [],
         total: 0
     });
     const [loading, setLoading] = useState(false);
@@ -27,11 +23,7 @@ export const useGlobalSearch = () => {
                 setSearchResults({ 
                     projects: [], 
                     clients: [], 
-                    jobs: [], 
-                    tasks: [], 
-                    invoices: [], 
                     suppliers: [], 
-                    expenses: [], 
                     total: 0 
                 });
                 return;
@@ -46,11 +38,7 @@ export const useGlobalSearch = () => {
                 setSearchResults({ 
                     projects: [], 
                     clients: [], 
-                    jobs: [], 
-                    tasks: [], 
-                    invoices: [], 
                     suppliers: [], 
-                    expenses: [], 
                     total: 0 
                 });
             } finally {
@@ -66,11 +54,7 @@ export const useGlobalSearch = () => {
         setSearchResults({ 
             projects: [], 
             clients: [], 
-            jobs: [], 
-            tasks: [], 
-            invoices: [], 
             suppliers: [], 
-            expenses: [], 
             total: 0 
         });
     };

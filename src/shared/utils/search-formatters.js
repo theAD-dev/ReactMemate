@@ -105,7 +105,7 @@ export const formatExpenseResult = (expense) => ({
 export const formatClientResult = (client) => ({
     id: client.id,
     title: client.name || client.business_name || 'Unnamed Client',
-    subtitle: client.contact_person || client.email || client.phone || 'No contact info',
+    subtitle: client.email || client.phone || 'No contact info',
     email: client.email,
     phone: client.phone,
     type: client.is_business ? 'business' : 'individual',
