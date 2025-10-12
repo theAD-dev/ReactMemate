@@ -16,24 +16,26 @@ export const useNotifications = (isOpen) => {
     const [allNotifications, setAllNotifications] = useState([]);
     const [hasMoreData, setHasMoreData] = useState(true);
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-    const { socket, isConnected, listen, emit } = useSocket();
+    const { socket, isConnected, listen } = useSocket();
     const { session } = useAuth();
     const user_id = session?.desktop_user_id;
     const limit = 20;
 
     // Fetch unread notification count from server
-    const fetchUnreadCount = useCallback(() => {
-        if (!isConnected || !user_id) {
+    const fetchUnreadCount = useCallback(async () => {
+        if (!user_id) {
             return;
         }
 
-        emit('desktop_notifications', { user_id }, (ack) => {
-            console.log('....ack: ', ack);
-            if (ack?.status === 'success') {
-                setUnreadNotificationCount(ack?.unread || 0);
+        try {
+            const response = await getUnreadNotifications(1, 0); // Get only 1 item to check count
+            if (response?.count !== undefined) {
+                setUnreadNotificationCount(response.count);
             }
-        });
-    }, [emit, isConnected, user_id]);
+        } catch (error) {
+            console.error('Failed to fetch unread count:', error);
+        }
+    }, [user_id]);
 
     // Get notifications with pagination
     const notificationsQuery = useQuery({
@@ -80,17 +82,15 @@ export const useNotifications = (isOpen) => {
 
     // Fetch unread count when socket connects
     useEffect(() => {
-        if (isConnected && user_id) {
-            fetchUnreadCount();
-        }
-    }, [isConnected, user_id, fetchUnreadCount]);
+        fetchUnreadCount();
+    }, [fetchUnreadCount]);
 
     // Listen for desktop_notifications events
     useEffect(() => {
         if (!isConnected || !socket) return;
 
         const handleDesktopNotification = (data) => {
-            console.log('data: ', data);
+            console.log('handleDesktopNotification data: ', data);
         };
 
         const cleanup = listen('desktop_notifications', handleDesktopNotification);
