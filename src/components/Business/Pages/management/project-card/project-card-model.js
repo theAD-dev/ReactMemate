@@ -37,6 +37,7 @@ import { createInvoiceById, ProjectCardApi, projectsComplete, projectsOrderDecli
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
 import Briefcase from "../../../../../assets/images/icon/briefcase.svg";
 import ExpenseIcon from "../../../../../assets/images/icon/ExpenseIcon.svg";
+import useSocket from '../../../../../shared/hooks/use-socket';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import ImageAvatar from '../../../../../shared/ui/image-with-fallback/image-avatar';
 import CreateJob from '../../../../Work/features/create-job/create-job';
@@ -46,6 +47,7 @@ import NewExpensesCreate from '../../../features/expenses-features/new-expenses-
 
 const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOptions, reInitialize }) => {
   const navigate = useNavigate();
+  const { socket, isConnected, listen } = useSocket();
   const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
   const [isDuplicating, setIsDuplicating] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -208,6 +210,16 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
       toast.error(`Failed to create the invoice. Please try again.`);
     }
   });
+
+  const handleCompleteProject = () => {
+    if (socket && isConnected) {
+      completeMutation.mutate(projectId);
+      socket.emit('archive_chat_by_project', { project_id: projectId });
+    }else {
+      console.error('Socket is not connected');
+      toast.error('Unable to delete chat. Please try again.');
+    }
+  };
 
   const createInvoice = () => {
     createInvoiceMutation.mutate(projectId);
@@ -833,7 +845,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
 
                 {/* <Button className='ProgressAction'>Progress Invoice  <img src={InvoicesIcon} alt="Invoices" /></Button> */}
 
-                <Button onClick={() => completeMutation.mutate(projectId)} disabled={!cardData?.can_be_completed} className='CompleteActionBut'>
+                <Button onClick={handleCompleteProject} disabled={!cardData?.can_be_completed} className='CompleteActionBut'>
                   Complete & Archive
                   {
                     completeMutation?.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
