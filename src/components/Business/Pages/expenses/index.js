@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { CheckCircle, Download, Filter, Send, XCircle } from 'react-bootstrap-icons';
+import { CheckCircle, Download, Send, XCircle } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -13,6 +13,8 @@ import ExpensesTable from './expenses-table';
 import style from './expenses.module.scss';
 import { paidExpense, sendExpenseToXeroApi, unpaidExpense } from '../../../../APIs/expenses-api';
 import { formatAUD } from '../../../../shared/lib/format-aud';
+import ExpenseDropdown from '../../features/expenses-features/expense-filters/expense-dropdown';
+import ExpenseFilters from '../../features/expenses-features/expense-filters/expense-filters';
 import NewExpensesCreate from '../../features/expenses-features/new-expenses-create/new-expense-create';
 
 const ExpensesPage = () => {
@@ -27,6 +29,16 @@ const ExpensesPage = () => {
     const [isShowDeleted, setIsShowDeleted] = useState(isShowUnpaid ? true : false);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+    const [filter, setFilter] = useState({});
+
+    // Wrapper function for setFilters to handle the expected pattern
+    const setFilters = (updaterFunction) => {
+        if (typeof updaterFunction === 'function') {
+            setFilter(prev => updaterFunction(prev || {}));
+        } else {
+            setFilter(updaterFunction || {});
+        }
+    };
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -126,7 +138,7 @@ const ExpensesPage = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
+                                        <ExpenseDropdown filter={filter} setFilters={setFilters} />
                                         <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
@@ -161,11 +173,13 @@ const ExpensesPage = () => {
                     }
                 </div>
             </div>
+            <ExpenseFilters filter={filter} setFilter={setFilter} />
             <ExpensesTable ref={dt} searchValue={debouncedValue} setTotal={setTotal} setTotalMoney={setTotalMoney}
                 selected={selected} setSelected={setSelected}
                 isShowDeleted={isShowDeleted}
                 refetch={refetch}
                 setRefetch={setRefetch}
+                filter={filter}
             />
             <NewExpensesCreate visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
         </div>

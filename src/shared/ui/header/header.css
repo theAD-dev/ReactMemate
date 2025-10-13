@@ -352,6 +352,17 @@
   color: #8149d5;
 }
 
+.menuActive.assets {
+  color: #575798;
+  background: linear-gradient(0deg, rgba(152, 144, 227, 0.10) 0%, rgba(177, 244, 207, 0.10) 100%);
+}
+
+.assets:hover {
+  background: linear-gradient(0deg, rgba(152, 144, 227, 0.10) 0%, rgba(177, 244, 207, 0.10) 100%);
+  color: #575798;
+}
+
+
 .tasks:hover {
   color: #d16cb6;
   background: linear-gradient(

@@ -53,7 +53,7 @@ const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setR
                             <h5 className={styles.boxLabel}>General Information</h5>
                             <h6 className={styles.boxLabel2}>Vehicle ID: {vehicleData?.registration_number || id}</h6>
                         </div>}
-                        {vehicleData && !isEdit ? <ViewSection vehicle={vehicleData} drivers={drivers} /> : <EditVehicle ref={formRef} vehicle={vehicleData} setVisible={setVisible} setIsEdit={setIsEdit} refetch={getVehicleQuery.refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} setRefetch={setRefetch} />}
+                        {vehicleData && !isEdit ? <ViewSection vehicle={vehicleData} drivers={drivers} /> : vehicleData && <EditVehicle ref={formRef} vehicle={vehicleData} setVisible={setVisible} setIsEdit={setIsEdit} refetch={getVehicleQuery.refetch} setIsPending={setIsPending} handleExternalSubmit={handleExternalSubmit} setRefetch={setRefetch} />}
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>

@@ -59,7 +59,7 @@
   height: 28px;
   display: flex;
   font-size: 14px;
-  padding: 2px 14px 4px 14px;
+  padding: 5px 14px 4px 14px;
   border-radius: 40px;
   align-items: center;
   justify-content: center;
@@ -93,4 +93,35 @@
   border-radius: 16px;
   border: 1px solid var(--Primary-200, #a3e0ff);
   background: var(--Primary-50, #ebf8ff);
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
+.title {
+  color: var(--Gray-900, #101828);
+  text-align: center;
+  font-family: Inter;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 34px;
+  letter-spacing: -0.75px;
+  margin-bottom: 6px;
+}
+
+.subTitle {
+  color: var(--Gray-600, #475467);
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+  margin-bottom: 24px;
 }

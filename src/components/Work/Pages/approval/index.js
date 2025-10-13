@@ -61,7 +61,7 @@ const ApprovalPage = () => {
 
     const toInvoiceQuery = useQuery({
         queryKey: ['toInvoice', currentYear, currentWeek],
-        queryFn: () => getToApprovedJobsInvoice(currentYear, currentWeek),
+        queryFn: () => getToApprovedJobsInvoice(currentYear, currentWeek - 1),
         enabled: !!currentWeek && !!currentYear,
         retry: 1,
         cacheTime: 0,

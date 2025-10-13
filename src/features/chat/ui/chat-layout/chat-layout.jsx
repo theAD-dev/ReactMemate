@@ -171,9 +171,19 @@ const ChatLayout = () => {
       }
     });
 
+    socket.on('chat_group_updated', (res) => {
+      if (res.id) {
+        setChatData((prevChatData) => ({
+          ...prevChatData,
+          [res.id]: res,
+        }));
+      }
+    });
+
     return () => {
       socket.off('presence_list');
       socket.off('presence_update');
+      socket.off('chat_group_updated');
     };
   }, [socketRef]);
 

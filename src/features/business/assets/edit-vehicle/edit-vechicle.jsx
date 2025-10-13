@@ -18,7 +18,6 @@ const EditVehicle = forwardRef(({ vehicle, setIsEdit, refetch, setIsPending, han
       setVisible && setVisible(false);
       setRefetch && setRefetch((prev) => !prev);
       refetch && refetch();
-      queryClient.invalidateQueries(['getVehicle', vehicle?.id]);
       setIsPending && setIsPending(false);
     },
     onError: (error) => {

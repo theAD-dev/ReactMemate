@@ -122,7 +122,7 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       } else if (end_by === 2) {
         const occurrences = payload.recurring.occurrences || 0;
         setMaxUpfront(occurrences);
-        if (payload.recurring.initial_projects > occurrences)
+        if (payload.recurring.upfront_projects > occurrences)
         setPayload((data) => ({ ...data, recurring: { ...data?.recurring, initial_projects: occurrences, upfront_projects: occurrences } }));
       } else {
         setMaxUpfront(21);
@@ -487,9 +487,10 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
             <div className="formgroupboxs mb-3 text-start">
               <label style={{ color: '#475467', fontSize: '14px', marginBottom: '6px' }}>Upfront Projects <span className='required'>*</span></label>
               <Dropdown
-                value={payload?.recurring?.initial_projects || 1}
-                onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, upfront_projects: e.value, initial_projects: e.value } }))}
+                value={payload?.recurring?.upfront_projects || 0}
+                onChange={(e) => setPayload((data) => ({ ...data, recurring: { ...data?.recurring, upfront_projects: e.value, initial_projects: 1 } }))}
                 options={[
+                  { label: "0", value: 0, disabled: maxUpfront < 0 },
                   { label: "1", value: 1, disabled: maxUpfront < 1 },
                   { label: "2", value: 2, disabled: maxUpfront < 2 },
                   { label: "3", value: 3, disabled: maxUpfront < 3 },

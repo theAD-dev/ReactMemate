@@ -421,10 +421,10 @@ const ViewSectionComponent = ({ calculator, index, refetch, tempCalculator, setT
             return;
         }
 
-        if (!tempCalculator?.profit_type_value) {
-            toast.error("Markup/Margin is required.");
-            return;
-        }
+        // if (!tempCalculator?.profit_type_value) {
+        //     toast.error("Markup/Margin is required.");
+        //     return;
+        // }
 
         if (!tempCalculator?.quantity) {
             toast.error("Quantity/Hours is required.");
@@ -518,7 +518,7 @@ const ViewSectionComponent = ({ calculator, index, refetch, tempCalculator, setT
                             <Col>
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div className='d-flex flex-column'>
-                                        <label>Markup/Margin <span style={{ color: "#f04438" }}>*</span></label>
+                                        <label>Markup/Margin</label>
                                         <div className='d-flex gap-1 align-items-center'>
                                             <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
                                                 onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: e.value }))}
@@ -703,10 +703,10 @@ const NewCalculator = ({ tempCalculator, setTempCalculator, index, name, refetch
             return;
         }
 
-        if (!tempCalculator.profit_type_value) {
-            toast.error("Markup/Margin is required.");
-            return;
-        }
+        // if (!tempCalculator.profit_type_value) {
+        //     toast.error("Markup/Margin is required.");
+        //     return;
+        // }
 
         if (!tempCalculator.quantity) {
             toast.error("Quantity/Hours is required.");
@@ -777,7 +777,7 @@ const NewCalculator = ({ tempCalculator, setTempCalculator, index, name, refetch
                 <Col>
                     <div className='d-flex justify-content-between align-items-center'>
                         <div className='d-flex flex-column'>
-                            <label className='d-block text-center'>Markup/Margin <span style={{ color: "#f04438" }}>*</span></label>
+                            <label className='d-block text-center'>Markup/Margin</label>
                             <div className='d-flex gap-1 align-items-center'>
                                 <InputNumber className={clsx(style.inputNumber2)} value={parseFloat(tempCalculator?.profit_type_value || 0)}
                                     onValueChange={(e) => setTempCalculator((others) => ({ ...others, profit_type_value: parseFloat(e.value) }))}

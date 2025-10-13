@@ -34,7 +34,7 @@ const formatDate = (timestamp) => {
     return `${day} ${monthAbbreviation} ${year}`;
 };
 
-const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch }, ref) => {
+const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selected, setSelected, isShowDeleted, refetch, setRefetch, filter }, ref) => {
     const { role } = useAuth();
     const observerRef = useRef(null);
     const timeoutRef = useRef(null);
@@ -75,22 +75,30 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     }, [params]);
 
     useEffect(() => {
-        setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch, isShowDeleted]);
+        console.log('Resetting pagination due to filter/search/state change');
+        setPage(1);  // Reset to page 1 whenever searchValue, filter, refetch, or isShowDeleted changes
+        setExpenses([]); // Clear current expenses to show fresh data
+        setHasMoreData(true); // Reset pagination state
+    }, [searchValue, refetch, isShowDeleted, filter]);
 
     useEffect(() => {
         const loadData = async () => {
+            console.log(`Loading expenses data - Page: ${page}, Search: "${searchValue}", Filter:`, filter);
             setLoading(true);
 
             let order = "";
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            const data = await getListOfExpense(page, limit, searchValue, order, isShowDeleted);
+            const data = await getListOfExpense(page, limit, searchValue, order, isShowDeleted, filter);
+            console.log(`Loaded ${data?.results?.length || 0} expenses for page ${page}`);
             setTotal(() => (data?.count || 0));
             setTotalMoney(data?.total_amount || 0);
-            if (page === 1) setExpenses(data.results);
-            else {
+            if (page === 1) {
+                console.log('Setting expenses for page 1 (replacing existing)');
+                setExpenses(data.results);
+            } else {
+                console.log('Appending expenses for page', page);
                 if (data?.results?.length > 0)
                     setExpenses(prev => {
                         const existingClientIds = new Set(prev.map(client => client.id));
@@ -105,7 +113,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch, isShowDeleted]);
+    }, [page, searchValue, tempSort, refetch, isShowDeleted, filter]);
 
     useEffect(() => {
         if (expenses.length > 0 && hasMoreData) {

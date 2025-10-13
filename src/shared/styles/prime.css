@@ -139,6 +139,12 @@ tr.p-datatable-emptymessage td {
   border-bottom: 1px solid var(--Gray-200, #eaecf0);
 }
 
+@media (max-width: 768px) {
+  .phone-responsive-table .p-datatable-tbody tr td {
+    padding: 4px 6px !important;
+  }
+}
+
 .p-confirm-popup button {
   border: none !important;
   outline: none !important;

@@ -45,3 +45,68 @@ export const cancelSubscription = async () => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const activeInquiriesSubscription = async () => {
+    const endpoint = `/settings/subscriptions/inquiries/activate/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const cancelInquiriesSubscription = async () => {
+    const endpoint = `/settings/subscriptions/inquiries/cancel/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const activeAssetsSubscription = async () => {
+    const endpoint = `/settings/subscriptions/assets/activate/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const cancelAssetsSubscription = async () => {
+    const endpoint = `/settings/subscriptions/assets/cancel/`;
+    const options = {
+        method: 'PUT',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const enableAssetTypeSubscription = async (data) => {
+    const endpoint = `/assets/types/subscriptions/enable/`;
+    const options = {
+        method: 'POST',
+        body: data,
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const disableAssetTypeSubscription = async (data) => {
+    const endpoint = `/assets/types/subscriptions/disable/`;
+    const options = {
+        method: 'PUT',
+        body: data,
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const getAssetTypeSubscriptions = async () => {
+    const endpoint = `/assets/types/subscriptions/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

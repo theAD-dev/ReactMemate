@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FilePdf } from 'react-bootstrap-icons';
+import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Column } from 'primereact/column';
@@ -241,6 +242,9 @@ const Quotation = () => {
 
     return (
         <>
+            <Helmet>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+            </Helmet>
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
                     {
@@ -414,7 +418,7 @@ const Quotation = () => {
 
                 {
                     (quote?.status === 'Sent' || quote?.status === 'Saved') && <div className={style.quotationfooter}>
-                        <div className={style.contanerfooter}>
+                        <div className={style.containerFooter}>
                             <div className={style.left}>
                                 <button
                                     className={style.decline}
@@ -425,7 +429,7 @@ const Quotation = () => {
                                 </button>
                             </div>
                             <div className={style.right}>
-                                <Link to={`${process.env.REACT_APP_URL}${quote?.quote_url}`} target='_blank'><button className='me-3'>Save PDF <FilePdf size={20} color='#344054' className='ms-1' /></button></Link>
+                                <Link to={`${process.env.REACT_APP_URL}${quote?.quote_url}`} target='_blank' className='d-md-block d-none'><button className='me-3'>Save PDF <FilePdf size={20} color='#344054' className='ms-1' /></button></Link>
                                 <button
                                     onClick={() => { setVisible(true); }}
                                 >
