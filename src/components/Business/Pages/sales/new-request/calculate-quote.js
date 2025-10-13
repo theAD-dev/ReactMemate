@@ -52,8 +52,8 @@ const CalculateQuote = () => {
                     frequency: "M",
                     start_date: new Date(),
                     end_by: 0,
-                    upfront_projects: 1,
-                    initial_projects: 1
+                    upfront_projects: 0,
+                    initial_projects: 0
                 }
             }));
         } else if (newRequestQuery?.data) {
@@ -78,6 +78,8 @@ const CalculateQuote = () => {
                 console.log("Start Date (Sydney):", sydneyFormatter.format(newData.recurring.start_date));
 
                 newData.recurring.end_by = +newData.recurring.end_by;
+                newData.recurring.upfront_projects = +newData.recurring.upfront_projects;
+                newData.recurring.initial_projects = +newData.recurring.initial_projects;
 
                 if (newData.recurring.end_by === 1) {
                     const endTimestamp = +newData.recurring.end_date;
@@ -89,8 +91,8 @@ const CalculateQuote = () => {
                     frequency: "M",
                     start_date: new Date(),
                     end_by: 0,
-                    upfront_projects: 1,
-                    initial_projects: 1
+                    upfront_projects: 0,
+                    initial_projects: 0
                 };
             }
             setPayload((others) => ({ ...others, ...newData }));
