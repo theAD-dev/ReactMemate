@@ -85,7 +85,7 @@ export const getXeroCodesList = async () => {
 };
 
 export const getProjectsList = async () => {
-  const endpoint = `/references/projects/`;
+  const endpoint = `/references/projects/expenses/`;
   const options = {
     method: 'GET',
   };
