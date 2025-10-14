@@ -105,6 +105,7 @@ export const useNotifications = (isOpen) => {
         mutationFn: markNotificationAsRead,
         onSuccess: () => {
             // Update local state to mark as read
+            setUnreadNotificationCount(prev => Math.max(prev - 1, 0));
             setAllNotifications(prev =>
                 prev.map(notification =>
                     notification.id === markAsReadMutation.variables
