@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
+import { Chat } from 'react-bootstrap-icons';
+import { toast } from 'sonner';
 import { useSocket } from './use-socket';
 import { useAuth } from '../../app/providers/auth-provider';
 
@@ -7,10 +9,11 @@ import { useAuth } from '../../app/providers/auth-provider';
  * Fetches total unread message count from the chat server
  */
 export const useChatNotification = () => {
+  const pathName = window.location.pathname;
   const { socket, isConnected, listen } = useSocket();
   const { session } = useAuth();
   const user_id = session?.desktop_user_id;
-  
+
   const [chatUnreadCount, setChatUnreadCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -26,7 +29,7 @@ export const useChatNotification = () => {
 
     socket.emit('get_total_unread_count', { user_id }, (ack) => {
       setIsLoading(false);
-      
+
       if (ack?.status === 'success') {
         setChatUnreadCount(ack?.unread || 0);
       } else {
@@ -55,8 +58,26 @@ export const useChatNotification = () => {
   useEffect(() => {
     if (isConnected && user_id) {
       fetchUnreadCount();
+
+      const handleNewMessage = (data) => {
+        if (!pathName.startsWith('/chat')) {
+          toast.message('New message received', {
+            description: `${data?.sender_name}: ${data?.message || ''}`,
+            icon: <Chat color='#74a900ff'/>,
+            style: {
+              background: 'linear-gradient(0deg, #f2fae1 0%, #e7f9ee 100%)',
+            },
+          });
+        }
+      };
+
+      socket.on('new_message', handleNewMessage);
+
+      return () => {
+        socket.off('new_message', handleNewMessage);
+      };
     }
-  }, [isConnected, user_id, fetchUnreadCount]);
+  }, [isConnected, user_id, fetchUnreadCount, pathName, socket]);
 
   return {
     chatUnreadCount,

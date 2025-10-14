@@ -1991,3 +1991,7 @@ input:focus::-webkit-input-placeholder {
 .scheduler_default_divider_horizontal  {
   background-color: #F2F4F7 !important;
 }
+
+[data-sonner-toast] [data-close-button] {
+    border-radius: 50%;
+}
