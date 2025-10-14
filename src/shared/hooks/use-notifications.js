@@ -90,7 +90,9 @@ export const useNotifications = (isOpen) => {
         if (!isConnected || !socket) return;
 
         const handleDesktopNotification = (data) => {
-            console.log('handleDesktopNotification data: ', data);
+            if (data && data.id) {
+                setUnreadNotificationCount(prev => prev + 1);
+            }
         };
 
         const cleanup = listen('desktop_notifications', handleDesktopNotification);
