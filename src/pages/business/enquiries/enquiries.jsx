@@ -47,7 +47,7 @@ const Enquiries = () => {
           </Link>
         </div>
         <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-          <Link to={"/enquiries/form-builder/new"}><Button className='solid-button py-1 font-14'>New</Button></Link>
+          <Link to={"/enquiries/form-builder/new"}><Button className={`solid-button font-14 ${style.newButton}`}>New</Button></Link>
           <Link to={"/enquiries/forms"}><Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button></Link>
         </div>
       </div>
