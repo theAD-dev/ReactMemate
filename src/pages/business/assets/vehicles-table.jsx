@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -134,7 +135,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
     const driverBody = (rowData) => {
         const driver = drivers[rowData.driver];
         if (!driver) return <span>-</span>;
-        
+
         return <div className='d-flex gap-2 align-items-center'>
             <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
                 <FallbackImage photo={driver?.photo} has_photo={driver?.has_photo} is_business={false} size={17} />
@@ -151,17 +152,19 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
         return <span>{formatDate(rowData.next_service)}</span>;
     };
 
-    const serviceBody = () => {
-        return <Tag value="Service" style={{
-            height: '22px',
-            minWidth: '60px',
-            borderRadius: '16px',
-            border: '1px solid #1AB2FF',
-            background: '#EBF8FF',
-            color: '#1AB2FF',
-            fontSize: '12px',
-            fontWeight: 500
-        }} />;
+    const serviceBody = (rowData) => {
+        return <Link to={`/assets/vehicles/${rowData.id}/service-history`}>
+            <Tag value="Service" style={{
+                height: '22px',
+                minWidth: '60px',
+                borderRadius: '16px',
+                border: '1px solid #1AB2FF',
+                background: '#EBF8FF',
+                color: '#1AB2FF',
+                fontSize: '12px',
+                fontWeight: 500
+            }} />
+        </Link>;
     };
 
     const currentOdometerBody = (rowData) => {

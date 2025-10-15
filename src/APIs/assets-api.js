@@ -10,15 +10,12 @@ export const getAssetsTypes = async () => {
     return fetchAPI(url.toString(), options);
 };
 
-export const getListOfAssetCategories = async (page = 1, limit = 20) => {
-    // const offset = 0 * limit;
+export const getListOfAssetCategories = async () => {
     const endpoint = `/assets/types/subscriptions/`;
     const options = {
         method: 'GET',
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);
-    // url.searchParams.append("limit", limit);
-    // url.searchParams.append("offset", offset);
     return fetchAPI(url.toString(), options);
 };
 
@@ -61,6 +58,32 @@ export const updateVehicle = async (id, data) => {
     const endpoint = `/assets/vehicles/${id}/update/`;
     const options = {
         method: 'PUT',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+// Services API
+export const getVehicleServices = async (vehicleId, page = 1, limit = 25, search = "", order = "") => {
+    const offset = (page - 1) * limit;
+    const endpoint = `/assets/vehicles/${vehicleId}/services/`;
+    const options = {
+        method: 'GET',
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    url.searchParams.append("limit", limit);
+    url.searchParams.append("offset", offset);
+    if (search) url.searchParams.append("search", search);
+    if (order) url.searchParams.append("ordering", order);
+
+    return fetchAPI(url.toString(), options);
+};
+
+export const createNewService = async (vehicleId, data) => {
+    const endpoint = `/assets/vehicles/${vehicleId}/services/`;
+    const options = {
+        method: 'POST',
         body: data
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);

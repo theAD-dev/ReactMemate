@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Col, Row as BootstrapRow } from 'react-bootstrap';
 import { FilePdf } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
@@ -167,15 +168,15 @@ const Quotation = () => {
     );
 
     const unitPriceBody = (rowData) => (
-        <>${formatAUD(rowData?.unit_price)}</>
+        <span className={style.whitespaceNowrap}>${formatAUD(rowData?.unit_price)}</span>
     );
 
     const discountBody = (rowData) => (
-        <>{rowData?.discount ? `${rowData?.discount}%` : '-'}</>
+        <span className={style.whitespaceNowrap}>{rowData?.discount ? `${rowData?.discount}%` : '-'}</span>
     );
 
     const TotalBody = (rowData) => (
-        <>${formatAUD(rowData?.total)} </>
+        <span className={style.whitespaceNowrap}>${formatAUD(rowData?.total)} </span>
     );
 
     const handleClose = () => {
@@ -260,11 +261,11 @@ const Quotation = () => {
                                     <div className='logo-section'>
                                         {
                                             quote?.organization?.logo &&
-                                            <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ maxWidth: '150px', maxHeight: '75px', borderRadius: '2px' }} />
+                                            <img src={`${process.env.REACT_APP_URL}${quote?.organization?.logo}`} alt='Logo' style={{ maxWidth: '150px', maxHeight: '75px', borderRadius: '2px' }} className={style.logo} />
                                         }
                                     </div>
                                     <div className='title-sections'>
-                                        <h1>Quotation</h1>
+                                        <h1 className={style.title}>Quotation</h1>
                                         <p className={clsx(style.invoiceNumber, 'mb-2 mt-2')}> {isLoading ? <Skeleton width="6rem" height='27px' className="mb-2 rounded"></Skeleton> : <span>{quote?.number}</span>} </p>
                                     </div>
                                 </div>
@@ -287,7 +288,7 @@ const Quotation = () => {
                             </div>
                         </div>
 
-                        <div style={{ border: "1px solid #dedede", width: '100%' }}></div>
+                        <div className='d-md-block d-none' style={{ border: "1px solid #dedede", width: '100%' }}></div>
 
                         <div className={style.quotationAddress}>
                             <div className={style.left}>
@@ -392,27 +393,53 @@ const Quotation = () => {
                             </div>
                         </div>
 
-                        <div className='my-3' style={{ border: "1px solid #dedede", width: '100%' }}></div>
+                        <div className='my-3 d-md-block d-none' style={{ border: "1px solid #dedede", width: '100%' }}></div>
 
                         <div className={style.quotationRefress}>
                             <p>Reference: {isLoading ? <Skeleton width="6rem" height='13px' className='mb-0 rounded'></Skeleton> : <span><strong>{quote?.reference}</strong></span>}</p>
                         </div>
 
-                        <div className={clsx(style.quotationtable, 'quotationtable')}>
-                            <DataTable value={quote?.calculations} footerColumnGroup={footerGroup} className={style.quoteWrapTable}>
-                                <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} />
-                                <Column field="index" body={ServicesBody} header="Services" style={{ width: '456px' }} />
+                        <div className={clsx(style.quotationtable, 'phone-responsive-table')}>
+                            <DataTable value={quote?.calculations} className={style.quoteWrapTable}>
+                                <Column body={CounterBody} header="#" style={{ width: '36px', verticalAlign: 'top', paddingTop: '15px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px', textAlign: 'center' }} />
+                                <Column field="index" body={ServicesBody} header="Services" style={{ width: '456px', minWidth: '172px' }} />
                                 <Column field="quantity" header="Qty/Hours" style={{ width: '174px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
                                 <Column field="unit_price" body={unitPriceBody} header="Price" style={{ width: '130px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
                                 <Column field="discount" body={discountBody} header="Discount" style={{ width: '120px', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px', textAlign: 'right' }} headerClassName='headerRightAligh' />
                                 <Column field="total" body={TotalBody} header="Total" style={{ width: '66px', textAlign: 'right', fontSize: '16px', lineHeight: '36px', color: '#344054', fontWeight: '400', letterSpacing: '0.16px' }} headerClassName='headerRightAligh' />
                             </DataTable>
                         </div>
-
-
+                        <BootstrapRow className={clsx('w-100', style.quoteMainRowFooter)} style={{ paddingBottom: '200px' }}>
+                            <Col sm={8} className='ps-ms-4 ps-3 w-50'>
+                                <div className={clsx(style.qupteMainColFooter, 'd-md-block d-none mt-3')} style={{ marginTop: '0px' }}>
+                                    <b>Note:</b>
+                                    <p className='mt-1' style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
+                                </div>
+                            </Col>
+                            <Col sm={4} className={clsx(style.quoteMainColFooter, 'w-50 pe-md-4 pe-0')}>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', color: '#1D2939' }}>Subtotal</div>
+                                    <div style={{ fontSize: '18px', color: '#1D2939' }}>${formatAUD(quote?.subtotal)}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>
+                                        Tax
+                                    </div>
+                                    <div style={{ fontSize: '18px', }}>${formatAUD(quote?.gst)}</div>
+                                </div>
+                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                                    <div style={{ fontSize: '14px', }}>Total</div>
+                                    <div style={{ fontSize: '18px' }}>${formatAUD(quote?.total)}</div>
+                                </div>
+                            </Col>
+                        </BootstrapRow>
+                        <div className={clsx(style.qupteMainColFooter, 'd-md-none d-block')} style={{ marginTop: '0px' }}>
+                            <h2>Note:</h2>
+                            <p className={clsx('mt-1', style.noteText)} style={{ whiteSpace: 'pre-line' }}>{quote?.note}</p>
+                        </div>
                     </div>
                     <div className={style.logoWrapperFooter}>
-                        <p><span>Powered by</span><img src="/logo.svg" alt='Logo' /></p>
+                        <p><span className={style.poweredByText}>Powered by</span><img src="/logo.svg" alt='Logo' /></p>
                     </div>
                 </div>
 

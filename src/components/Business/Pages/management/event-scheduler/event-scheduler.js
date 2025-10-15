@@ -169,7 +169,6 @@ function EventScheduler() {
       try {
         const response = await getManagement();
         const holidays = await getHolidays();
-        console.log('1holidays: ', holidays);
         setManagement(response);
         initDaypilot(CALENDAR_ID, response, viewTaskDetails, reInitialize, hasWorkSubscription, holidays);
       } catch (error) {

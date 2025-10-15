@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Spinner } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from 'react';
+import { Modal, Spinner } from 'react-bootstrap';
 import { ChevronLeft, FiletypePdf, PlusSlashMinus } from 'react-bootstrap-icons';
-import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import isEqual from 'lodash.isequal';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import DepartmentQuote from './department-quote';
 import CustomRadioButton from './ui/custom-radio-button';
 import { createNewCalculationQuoteRequest, createNewMergeQuote, deleteMergeQuote, getQuoteByUniqueId, updateNewCalculationQuoteRequest } from '../../../../../APIs/CalApi';
 import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
+import useNavigationGuard from '../../../../../shared/hooks/use-navigation-guard';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import CreateProposal from '../../../features/sales-features/create-proposal/create-proposal';
 import SendQuote from '../../../features/sales-features/send-quote/send-quote';
 
 
 const CalculateQuote = () => {
+    const hasSetInitial = useRef(false);
     const navigate = useNavigate();
     const { trialHeight } = useTrialHeight();
+    const [isDirty, setIsDirty] = useState(false);
     const [contactPersons, setContactPersons] = useState([]);
     const [showQuoteModal, setShowQuoteModal] = useState(false);
     const [showProposalModal, setShowProposalModal] = useState(false);
+    const [showUnsavedChangesModal, setShowUnsavedChangesModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [quoteType, setQuoteType] = useState('Standard');
     const [payload, setPayload] = useState({});
+    const [initialPayload, setInitialPayload] = useState(null);
     const [mergeDeletedItems, setMergeDeletedItems] = useState([]);
     const [totals, setTotals] = useState({ budget: 0, operationalProfit: 0, subtotal: 0, tax: 0, total: 0 });
     const { unique_id } = useParams();
+    const { isBlocked, confirmNavigation, cancelNavigation, blockNavigation } = useNavigationGuard(isDirty);
     const newRequestQuery = useQuery({
         queryKey: ['unique_id', unique_id],
         queryFn: () => getQuoteByUniqueId(unique_id),
@@ -40,8 +47,7 @@ const CalculateQuote = () => {
         if (!unique_id) {
             const storedSessionData = JSON.parse(window.sessionStorage.getItem(`new-request`) || "{}");
             const profileData = JSON.parse(window.localStorage.getItem('profileData') || "{}");
-            setPayload((others) => ({
-                ...others,
+            const newPayload = {
                 xero_tax: "ex",
                 display_discount: true,
                 managers: [{ manager: profileData?.desktop_user_id }],
@@ -53,9 +59,12 @@ const CalculateQuote = () => {
                     start_date: new Date(),
                     end_by: 0,
                     upfront_projects: 0,
-                    initial_projects: 0
-                }
-            }));
+                    initial_projects: 0,
+                },
+            };
+
+            setPayload(newPayload);
+            setInitialPayload(newPayload); // store initial value
         } else if (newRequestQuery?.data) {
             let quoteType = newRequestQuery?.data?.recurring?.frequency ? 'Recurring' : 'Standard';
             setQuoteType(quoteType);
@@ -95,7 +104,9 @@ const CalculateQuote = () => {
                     initial_projects: 0
                 };
             }
-            setPayload((others) => ({ ...others, ...newData }));
+
+            setPayload(newData);
+            setInitialPayload(newData); // store initial edit data
         }
     }, [unique_id, newRequestQuery?.data]);
 
@@ -146,6 +157,11 @@ const CalculateQuote = () => {
     }
 
     const createNewRequest = async (action) => {
+        // Reset dirty state for save actions (we're intentionally saving)
+        if (action === "save" || action === "draft" || action === "quote-pdf-open" || action === "create-proposal" || action === "send") {
+            setIsDirty(false);
+        }
+
         payload.action = action;
         if (action !== "send") {
             delete payload.subject;
@@ -288,14 +304,68 @@ const CalculateQuote = () => {
         setShowQuoteModal(false);
     };
 
+    const handleCancel = () => {
+        const wasBlocked = blockNavigation(() => navigate('/sales'));
+        if (!wasBlocked) {
+            navigate('/sales');
+        }
+    };
+
+    const handleDiscardChanges = () => {
+        setIsDirty(false);
+        setShowUnsavedChangesModal(false);
+
+        // If navigation was blocked, proceed with it
+        if (isBlocked) {
+            confirmNavigation();
+        } else {
+            // Direct navigation for cancel action
+            navigate('/sales');
+        }
+    };
+
+    const handleGoBack = () => {
+        const wasBlocked = blockNavigation(() => navigate(-1));
+        if (!wasBlocked) {
+            navigate(-1);
+        }
+    };
+
+    // Track changes using deep equality comparison
+    useEffect(() => {
+        // Wait until payload and initialPayload are both set
+        if (!hasSetInitial.current && initialPayload && Object.keys(payload).length > 0) {
+            hasSetInitial.current = true;
+            return; // skip first comparison
+        }
+
+        if (hasSetInitial.current && initialPayload) {
+            // Use lodash isEqual for proper deep comparison
+            const hasChanges = !isEqual(payload, initialPayload);
+
+            if (hasChanges) {
+                console.log("Payload changed! Marking as dirty.");
+                setIsDirty(true);
+            } else {
+                setIsDirty(false);
+            }
+        }
+    }, [payload, initialPayload]);
+
+    useEffect(() => {
+        if (isBlocked) {
+            setShowUnsavedChangesModal(true);
+        }
+    }, [isBlocked]);
+
     return (
         <div className='newQuotePage'>
             <div className='topbar d-flex justify-content-between' style={{ padding: '16px 32px', height: '72px', position: 'relative', boxShadow: "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px" }}>
-                <NavLink to={""}>
-                    <button className='back-button' style={{ padding: "10px 16px" }} onClick={() => { navigate(-1); }}>
+                <div>
+                    <button className='back-button' style={{ padding: "10px 16px" }} onClick={handleGoBack}>
                         <ChevronLeft color="#000000" size={17} /> &nbsp;Go Back
                     </button>
-                </NavLink>
+                </div>
                 <h2 className='m-0' style={{ fontSize: '22px', fontWeight: '600', position: 'absolute', left: '42.5%' }}>
                     <div className='d-flex flex-column align-items-center gap-1'>
                         <div className='d-flex align-items-center'><PlusSlashMinus color="#1D2939" size={16} />&nbsp; Calculate a Quote</div>
@@ -370,21 +440,21 @@ const CalculateQuote = () => {
                 </div>
                 <div className='d-flex justify-content-between align-items-center'>
                     <div className='d-flex align-items-center' style={{ gap: '0px' }}>
-                        <a href='/sales' type="button" className="button-custom text-button text-danger padding-left-0" style={{ color: '#B42318' }}>
+                        <button type="button" onClick={handleCancel} className="button-custom text-button text-danger px-0 me-3" style={{ color: '#B42318' }}>
                             Cancel
-                        </a>
+                        </button>
                         {
-                            <a href='#' onClick={() => createNewRequest('quote-pdf-open')} type="button" className="button-custom text-button px-0">
+                            <button type="button" onClick={() => createNewRequest('quote-pdf-open')} className="button-custom text-button px-0">
                                 Quote PDF
-                            </a>
+                            </button>
                         }
                         {
                             newRequestQuery?.data?.proposal_pdf ? (
                                 <div className='d-flex align-items-center'>
-                                    <button type="button" className="text-button" onClick={() => setShowProposalModal(true)}>
+                                    <button type="button" className="text-button px-0 ms-3" onClick={() => setShowProposalModal(true)}>
                                         Edit Proposal
                                     </button>
-                                    <Link to={`${process.env.REACT_APP_URL}${newRequestQuery?.data?.proposal_pdf}`} target='_blank' rel="noreferrer" style={{ position: 'relative', top: '-2px', left: '-8px' }}>
+                                    <Link to={`${process.env.REACT_APP_URL}${newRequestQuery?.data?.proposal_pdf}`} target='_blank' rel="noreferrer" style={{ position: 'relative', top: '-2px', left: '6px' }}>
                                         <FiletypePdf color='#106B99' size={20} />
                                     </Link>
                                 </div>
@@ -420,6 +490,144 @@ const CalculateQuote = () => {
 
             <SendQuote show={showQuoteModal} setShow={setShowQuoteModal} contactPersons={contactPersons} setPayload={setPayload} createNewRequest={createNewRequest} />
             <CreateProposal show={showProposalModal} setShow={setShowProposalModal} refetch={newRequestQuery?.refetch} contactPersons={contactPersons} isExist={!!newRequestQuery?.data?.proposal_pdf} />
+
+            {/* Unsaved Changes Modal */}
+            <Modal
+                show={showUnsavedChangesModal}
+                onHide={() => {
+                    setShowUnsavedChangesModal(false);
+                    if (isBlocked) {
+                        cancelNavigation();
+                    }
+                }}
+
+                contentClassName="border rounded-3"
+                dialogClassName='w-100 position-absolute bottom-40 right-10'
+
+            >
+                <Modal.Body style={{ padding: '24px', position: 'relative' }}>
+                    <button
+                        type="button"
+                        className="btn-close"
+                        aria-label="Close"
+                        onClick={() => {
+                            setShowUnsavedChangesModal(false);
+                            if (isBlocked) {
+                                cancelNavigation();
+                            }
+                        }}
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            padding: '0',
+                            width: '14px',
+                            height: '14px',
+                            opacity: '0.4',
+                            backgroundSize: '14px'
+                        }}
+                    ></button>
+
+                    <div className="d-flex align-items-start">
+                        <div
+                            className="d-flex align-items-center justify-content-center flex-shrink-0 me-3"
+                            style={{
+                                width: '48px',
+                                height: '48px',
+                                borderRadius: '50%',
+                                backgroundColor: '#FEE4E2'
+                            }}
+                        >
+                            <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="9" y="9" width="20" height="20" rx="10" fill="white" />
+                                <g opacity="0.3">
+                                    <rect x="6" y="6" width="26" height="26" rx="13" stroke="#D92D20" strokeWidth="2" />
+                                </g>
+                                <g opacity="0.1">
+                                    <rect x="1" y="1" width="36" height="36" rx="18" stroke="#D92D20" strokeWidth="2" />
+                                </g>
+                                <g clipPath="url(#clip0_17777_93388)">
+                                    <path d="M19.0003 15.6665V18.9998M19.0003 22.3332H19.0087M27.3337 18.9998C27.3337 23.6022 23.6027 27.3332 19.0003 27.3332C14.398 27.3332 10.667 23.6022 10.667 18.9998C10.667 14.3975 14.398 10.6665 19.0003 10.6665C23.6027 10.6665 27.3337 14.3975 27.3337 18.9998Z" stroke="#D92D20" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_17777_93388">
+                                        <rect width="20" height="20" fill="white" transform="translate(9 9)" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+
+                        </div>
+                        <div style={{ flex: 1, paddingRight: '8px' }}>
+                            <h5 style={{
+                                fontSize: '16px',
+                                fontWeight: '600',
+                                color: '#344054',
+                                marginBottom: '4px',
+                                lineHeight: '28px',
+                                marginTop: '0'
+                            }}>
+                                Are you sure you want to close it without Saving?
+                            </h5>
+                            <p style={{
+                                color: '#475467',
+                                fontSize: '14px',
+                                margin: '0 0 20px 0',
+                                lineHeight: '20px',
+                                fontWeight: '400'
+                            }}>
+                                You have unsaved changes on the quote. Following fields are changed.
+                            </p>
+
+                            <div className="d-flex justify-content-end" style={{ gap: '12px', marginTop: '24px' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowUnsavedChangesModal(false);
+                                        if (isBlocked) {
+                                            cancelNavigation();
+                                        }
+                                    }}
+                                    style={{
+                                        padding: '0px 5px',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        border: '0px solid #D0D5DD',
+                                        color: '#475467',
+                                        backgroundColor: '#FFFFFF',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        lineHeight: '20px',
+                                        minWidth: 'auto'
+                                    }}
+                                >
+                                    Dismiss
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleDiscardChanges}
+                                    style={{
+                                        padding: '0px 5px',
+                                        fontSize: '14px',
+                                        fontWeight: '600',
+                                        backgroundColor: '#fff',
+                                        border: 'none',
+                                        color: '#B42318',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        lineHeight: '20px',
+                                        whiteSpace: 'nowrap',
+                                        minWidth: 'auto'
+                                    }}
+                                >
+                                    Close Without Saving
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
 
             {
                 (newRequestMutation.isPending || newRequestQuery.isFetching || isLoading) && <div style={{ position: 'absolute', top: '50%', left: '50%', background: 'white', width: '60px', height: '60px', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10 }} className="shadow-lg">

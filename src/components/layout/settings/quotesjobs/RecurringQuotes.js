@@ -139,7 +139,7 @@ const RecurringQuotes = () => {
                         <Column header="Order Reference" field="project.reference" body={(rowData) => <div className='ellipsis-width' style={{ maxWidth: '300px', fontWeight: 600 }}>{rowData?.project?.reference || ''}</div>} style={{ width: 'auto' }}></Column>
                         <Column header="Frequency" field="frequency" body={(rowData) => frequencyMap[rowData.frequency]} style={{ width: 'auto' }}></Column>
                         <Column header="Date started" field="start_date" body={(rowData) => formatDate(rowData.start_date)} style={{ width: 'auto' }}></Column>
-                        <Column header="Processed/Occurrences" field="occurrences" body={(rowData) => `${rowData.processed || 0}/${rowData.occurrences || 0}`} style={{ width: 'auto', textAlign: 'center' }}></Column>
+                        <Column header="Processed/Occurrences" field="occurrences" body={(rowData) => `${rowData.processed || 0}/${rowData?.end_by == 0 ? '∞' : rowData.occurrences || 0}`} style={{ width: 'auto', textAlign: 'center' }}></Column>
                         <Column header="Status" field="active" body={(rowData) => rowData.active ? <CheckCircleFill size={24} color="#17B26A" /> : ''} style={{ width: 'auto' }}></Column>
                         <Column header="Actions" field="" className='text-center' body={(rowData) => (
                             <RecurringJobActions

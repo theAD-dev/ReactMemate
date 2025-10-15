@@ -90,7 +90,9 @@ export const useNotifications = (isOpen) => {
         if (!isConnected || !socket) return;
 
         const handleDesktopNotification = (data) => {
-            console.log('handleDesktopNotification data: ', data);
+            if (data && data.id) {
+                setUnreadNotificationCount(prev => prev + 1);
+            }
         };
 
         const cleanup = listen('desktop_notifications', handleDesktopNotification);
@@ -103,6 +105,7 @@ export const useNotifications = (isOpen) => {
         mutationFn: markNotificationAsRead,
         onSuccess: () => {
             // Update local state to mark as read
+            setUnreadNotificationCount(prev => Math.max(prev - 1, 0));
             setAllNotifications(prev =>
                 prev.map(notification =>
                     notification.id === markAsReadMutation.variables

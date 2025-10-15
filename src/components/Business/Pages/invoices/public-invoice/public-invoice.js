@@ -224,7 +224,7 @@ const PublicInvoice = () => {
             </Helmet>
             <div className={style.quotationWrapperPage}>
                 <div className={style.quotationScroll}>
-                    <div className={clsx(style.quotationWrapper, style[invoice?.status])}>
+                    <div className={clsx(style.quotationWrapper, { [style.paid]: invoice?.pay_status === 'paid' })}>
                         {
                             (invoice?.pay_status === 'paid') && <div className={clsx(style.paidLabel)}>
                                 <div className='d-flex align-items-center gap-2'>
@@ -388,7 +388,7 @@ const PublicInvoice = () => {
                         </div>
 
                         <BootstrapRow className={clsx('w-100 pt-5', style.quoteMainRowFooter)} style={{ paddingBottom: '200px' }}>
-                            <Col sm={8} className='ps-4 w-50'>
+                            <Col sm={8} className='ps-ms-4 ps-3 w-50'>
                                 <div className={clsx(style.backDetails)}>
                                     <p className='mb-1'>Account Name: &nbsp;&nbsp;&nbsp;&nbsp; <b>{invoice?.organization?.name || "-"}</b></p>
                                     <p className='mb-1'>Account number: &nbsp;&nbsp; <b>{invoice?.organization?.account_number || "-"}</b></p>
@@ -399,8 +399,8 @@ const PublicInvoice = () => {
                                     <p className='mt-1' style={{ whiteSpace: 'pre-line' }}>{invoice?.note}</p>
                                 </div>
                             </Col>
-                            <Col sm={4} className={clsx(style.quoteMainColFooter, 'w-50')}>
-                                <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
+                            <Col sm={4} className={clsx(style.quoteMainColFooter, 'w-50 pe-md-4 pe-0')}>
+                                <div className='border-bottom pb-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', color: '#1D2939' }}>Subtotal</div>
                                     <div style={{ fontSize: '18px', color: '#1D2939' }}>${formatAUD(invoice?.subtotal)}</div>
                                 </div>

@@ -352,7 +352,6 @@ function startDaypilot(elementId, responses, viewTaskDetails, reInitialize, hasW
     map[dateStr] = holiday.title;
     return map;
   }, {}) || {};
-  console.log('holidaysList: ', holidaysList, holidayMap);
 
   dp.onBeforeTimeHeaderRender = function (args) {
     args.header.text = "";
