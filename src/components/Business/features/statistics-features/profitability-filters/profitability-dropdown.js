@@ -189,12 +189,16 @@ const ProfitabilityDropdown = ({ setFilters, filter }) => {
                         }
                     >
                         <div className='d-flex align-items-center gap-3 p-2 mb-2'>
-                            <Checkbox inputId="paid" checked={statusValue?.includes("paid")} onChange={() => handleStatusChange("paid")} />
-                            <label htmlFor="paid" className='mb-0'>Paid</label>
+                            <Checkbox inputId="in-progress" checked={statusValue?.includes("in-progress")} onChange={() => handleStatusChange("in-progress")} />
+                            <label htmlFor="in-progress" className='mb-0'>In progress</label>
                         </div>
                         <div className='d-flex align-items-center gap-3 p-2 mb-2'>
-                            <Checkbox inputId="not_paid" checked={statusValue?.includes("not_paid")} onChange={() => handleStatusChange("not_paid")} />
-                            <label htmlFor="not_paid" className='mb-0'>Not Paid</label>
+                            <Checkbox inputId="completed" checked={statusValue?.includes("completed")} onChange={() => handleStatusChange("completed")} />
+                            <label htmlFor="completed" className='mb-0'>Completed</label>
+                        </div>
+                        <div className='d-flex align-items-center gap-3 p-2 mb-2'>
+                            <Checkbox inputId="lost" checked={statusValue?.includes("lost")} onChange={() => handleStatusChange("lost")} />
+                            <label htmlFor="lost" className='mb-0'>Lost</label>
                         </div>
 
                         <div className='d-flex justify-content-end gap-2 p-3 border-top'>
