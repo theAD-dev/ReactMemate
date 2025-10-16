@@ -44,9 +44,8 @@ const Subscription = () => {
   const activeMobileUser = mobileUsersQuery?.data?.users?.filter((user) => user.status !== 'disconnected') || [];
   const hasWorkSubscription = subscriptionQuery?.data?.work !== null ? true : false;
 
-  const assetsTypesQuery = useQuery({ queryKey: ['assets-types'], queryFn: getAssetsTypes });
+  const assetsTypesQuery = useQuery({ queryKey: ['assets-types'], queryFn: getAssetsTypes, staleTime: 0 });
   const assetsTypes = assetsTypesQuery?.data?.results || [];
-  console.log('assetsTypes: ', assetsTypes);
 
   const cancelWorkMutation = useMutation({
     mutationFn: cancelWorkSubscription,
@@ -89,8 +88,8 @@ const Subscription = () => {
   const activeAssetsMutation = useMutation({
     mutationFn: activeAssetsSubscription,
     onSuccess: () => {
+      setAssetTypesVisible(true);
       toast.success("Assets subscription activated successfully!");
-      window.location.reload();
     },
     onError: (error) => {
       console.error("Error activating assets subscription:", error);
