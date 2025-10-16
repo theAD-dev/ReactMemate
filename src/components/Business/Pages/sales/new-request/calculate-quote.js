@@ -559,16 +559,16 @@ const CalculateQuote = () => {
                         </div>
                         <div style={{ flex: 1, paddingRight: '8px' }}>
                             <h5 style={{
-                                fontSize: '16px',
+                                fontSize: '14px',
                                 fontWeight: '600',
                                 color: '#344054',
                                 marginBottom: '4px',
                                 lineHeight: '28px',
-                                marginTop: '0'
+                                marginTop: '10px'
                             }}>
                                 Are you sure you want to close it without Saving?
                             </h5>
-                            <p style={{
+                            {/* <p style={{
                                 color: '#475467',
                                 fontSize: '14px',
                                 margin: '0 0 20px 0',
@@ -576,7 +576,7 @@ const CalculateQuote = () => {
                                 fontWeight: '400'
                             }}>
                                 You have unsaved changes on the quote. Following fields are changed.
-                            </p>
+                            </p> */}
 
                             <div className="d-flex justify-content-end" style={{ gap: '12px', marginTop: '24px' }}>
                                 <button
