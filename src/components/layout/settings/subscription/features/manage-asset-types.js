@@ -138,7 +138,7 @@ const ManageAssetTypes = ({ assetsTypes, visible, setVisible }) => {
                 type='button'
                 className='outline-button'
                 style={{ minWidth: '70px', borderRadius: '28px' }}
-                onClick={() => setVisible(false)}
+                onClick={() => { setVisible(false); window.location.reload(); }}
             >
                 Close
             </Button>
@@ -150,7 +150,7 @@ const ManageAssetTypes = ({ assetsTypes, visible, setVisible }) => {
             header={headerElement}
             visible={visible}
             style={{ width: '607px' }}
-            onHide={() => setVisible(false)}
+            onHide={() => { setVisible(false); window.location.reload(); }}
             footer={footerContent}
             draggable={false}
             resizable={false}

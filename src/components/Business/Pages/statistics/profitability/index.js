@@ -1,20 +1,19 @@
 import React, { useRef, useState } from 'react';
-import { ClipboardData, Download, Filter, Google, Link, PieChart, ShopWindow, Speedometer2, TextParagraph, WindowDesktop } from 'react-bootstrap-icons';
+import { Download } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
-import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
-import { TieredMenu } from 'primereact/tieredmenu';
 import ProjectsTable from './profitability-table';
 import style from './profitability.module.scss';
+import ProfitabilityDropdown from '../../../features/statistics-features/profitability-filters/profitability-dropdown';
+import ProfitabilityFilters from '../../../features/statistics-features/profitability-filters/profitability-filters';
 import StatisticsHeader from '../ui/statistics-header';
 
 const Profitability = () => {
     const dt = useRef(null);
-    const menu = useRef(null);
-
     const [isShowDeleted,] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+    const [filter, setFilter] = useState({});
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -44,8 +43,7 @@ const Profitability = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`}><Filter size={20} /></button>
-                                        <TieredMenu model={[]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
+                                        <ProfitabilityDropdown setFilters={setFilter} filter={filter} />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -65,7 +63,8 @@ const Profitability = () => {
                     <h1 className="title p-0" style={{ marginRight: '16px' }}>Profitability</h1>
                 </div>
             </div>
-            <ProjectsTable ref={dt} searchValue={debouncedValue} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} />
+            <ProfitabilityFilters filter={filter} setFilter={setFilter} />
+            <ProjectsTable ref={dt} searchValue={debouncedValue} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder} isShowDeleted={isShowDeleted} filter={filter} />
         </div>
     );
 };

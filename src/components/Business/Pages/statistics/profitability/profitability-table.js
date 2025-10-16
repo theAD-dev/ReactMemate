@@ -16,7 +16,7 @@ import Loader from '../../../../../shared/ui/loader/loader';
 import ImageAvatar from '../../../../../ui/image-with-fallback/image-avatar';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
 
-const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted }, ref) => {
+const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, isShowDeleted, filter }, ref) => {
   const observerRef = useRef(null);
   const { trialHeight } = useTrialHeight();
   const [visible, setVisible] = useState(false);
@@ -30,8 +30,8 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
   const limit = 25;
 
   useEffect(() => {
-    setPage(1);  // Reset to page 1 whenever searchValue changes
-  }, [searchValue, isShowDeleted]);
+    setPage(1);
+  }, [searchValue, isShowDeleted, filter]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,7 +41,28 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
       if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
       else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-      const data = await getListOfOrder(page, limit, searchValue, order, isShowDeleted);
+      // Build filter parameters
+      const filterParams = {};
+      
+      if (filter?.status?.length > 0) {
+        filterParams.status = filter.status.map(s => s.value).join(',');
+      }
+      
+      if (filter?.clients?.length > 0) {
+        filterParams.clients = filter.clients.map(c => c.id).join(',');
+      }
+      
+      if (filter?.date?.length > 0 && filter.date[0].value) {
+        const [startDate, endDate] = filter.date[0].value;
+        if (startDate) {
+          filterParams.create_date_after = formatDateForAPI(startDate);
+        }
+        if (endDate) {
+          filterParams.create_date_before = formatDateForAPI(endDate);
+        }
+      }
+
+      const data = await getListOfOrder(page, limit, searchValue, order, isShowDeleted, filterParams);
 
       if (page === 1) setOrders(data.results);
       else {
@@ -58,8 +79,17 @@ const OrdersTable = forwardRef(({ searchValue, selectedOrder, setSelectedOrder, 
     };
 
     loadData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, searchValue, tempSort, isShowDeleted, filter]);
 
-  }, [page, searchValue, tempSort, isShowDeleted]);
+  function formatDateForAPI(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
   useEffect(() => {
     if (orders.length > 0 && hasMoreData) {
