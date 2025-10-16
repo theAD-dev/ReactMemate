@@ -18,6 +18,7 @@ import SendQuote from '../../../features/sales-features/send-quote/send-quote';
 
 const CalculateQuote = () => {
     const hasSetInitial = useRef(false);
+    const initialPayloadTimerRef = useRef(null);
     const navigate = useNavigate();
     const { trialHeight } = useTrialHeight();
     const [isDirty, setIsDirty] = useState(false);
@@ -64,7 +65,6 @@ const CalculateQuote = () => {
             };
 
             setPayload(newPayload);
-            setInitialPayload(newPayload); // store initial value
         } else if (newRequestQuery?.data) {
             let quoteType = newRequestQuery?.data?.recurring?.frequency ? 'Recurring' : 'Standard';
             setQuoteType(quoteType);
@@ -106,9 +106,27 @@ const CalculateQuote = () => {
             }
 
             setPayload(newData);
-            setInitialPayload(newData); // store initial edit data
         }
     }, [unique_id, newRequestQuery?.data]);
+
+    useEffect(() => {
+        if (initialPayloadTimerRef.current) {
+            clearTimeout(initialPayloadTimerRef.current);
+        }
+
+        if (Object.keys(payload).length > 0 && !initialPayload) {
+            initialPayloadTimerRef.current = setTimeout(() => {
+                console.log('Setting initial payload after 2 seconds');
+                setInitialPayload(structuredClone(payload));
+            }, 2000);
+        }
+
+        return () => {
+            if (initialPayloadTimerRef.current) {
+                clearTimeout(initialPayloadTimerRef.current);
+            }
+        };
+    }, [payload, initialPayload]);
 
     const newRequestMutation = useMutation({
         mutationFn: (data) => createNewCalculationQuoteRequest(data),
@@ -331,24 +349,15 @@ const CalculateQuote = () => {
         }
     };
 
-    // Track changes using deep equality comparison
     useEffect(() => {
-        // Wait until payload and initialPayload are both set
         if (!hasSetInitial.current && initialPayload && Object.keys(payload).length > 0) {
             hasSetInitial.current = true;
-            return; // skip first comparison
+            return;
         }
 
         if (hasSetInitial.current && initialPayload) {
-            // Use lodash isEqual for proper deep comparison
             const hasChanges = !isEqual(payload, initialPayload);
-
-            if (hasChanges) {
-                console.log("Payload changed! Marking as dirty.");
-                setIsDirty(true);
-            } else {
-                setIsDirty(false);
-            }
+            setIsDirty(hasChanges);
         }
     }, [payload, initialPayload]);
 
