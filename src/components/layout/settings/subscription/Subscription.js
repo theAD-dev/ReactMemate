@@ -337,7 +337,7 @@ const Subscription = () => {
                   <p className="border-bottom py-2 mt-1 font-16"></p>
 
                   {/* Assets Subscription */}
-                  {/* <li>
+                  <li>
                     <div className="progressSubsstart">
                       <div className="progressSubsWrap">
                         <div className="progressSubsIcon">
@@ -387,11 +387,11 @@ const Subscription = () => {
                         </div>
                       </div>
                     </div>
-                  </li> */}
+                  </li>
 
-                  {/* <p className="border-bottom py-2 mt-1 font-16"></p> */}
+                  <p className="border-bottom py-2 mt-1 font-16"></p>
                   {/* Inquiries Subscription */}
-                  {/* <li>
+                  <li>
                     <div className="progressSubsstart mb-4">
                       <div className="progressSubsWrap">
                         <div className="progressSubsIcon">
@@ -433,7 +433,7 @@ const Subscription = () => {
                         </div>
                       </div>
                     </div>
-                  </li> */}
+                  </li>
 
                   {
                     hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.CANCEL_BUSINESS_SUBSCRIPTION) && (
@@ -489,13 +489,13 @@ const Subscription = () => {
                     to operate multiple locations simultaneously{" "}
                   </p>
 
-                  {/* <p style={{ marginTop: '100px' }}>
+                  <p style={{ marginTop: '100px' }}>
                     <strong>Assets:</strong> A comprehensive feature to organize, monitor, and maintain all your company assets in one place.
                   </p>
 
                   <p style={{ marginTop: '120px' }}>
                     <strong>Inquiries:</strong> Streamline the process of handling customer inquiries with tools for tracking, assigning, and responding quickly.
-                  </p> */}
+                  </p>
                 </div>
               </div>
             </div>

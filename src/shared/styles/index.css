@@ -1543,7 +1543,8 @@ ul.listStyle li:last-child {
 }
 
 .supplier-filters .tab-content .tab-pane,
-.job-filters .tab-content .tab-pane {
+.job-filters .tab-content .tab-pane,
+.profitability-filters .tab-content .tab-pane {
   left: 238px !important;
   margin-top: 5px !important;
 }

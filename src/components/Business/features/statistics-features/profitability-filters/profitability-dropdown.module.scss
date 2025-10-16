@@ -1,0 +1,76 @@
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 2px) var(--spacing-md, 2px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+
+.dropdownSelect {
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Border, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.searchBox {
+  margin-top: 10px;
+  position: relative;
+}
+
+.clientDropdownItem {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  padding: 10px 10px 10px 8px;
+  justify-content: space-between;
+}
+
+.mainTagsWrapper {
+  border-top: 1px solid #eaecf0;
+  background: #ebf8ff;
+  padding: 0px 45px;
+  text-align: left;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.tagsInputContainer {
+  margin-right: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.tagItemsWrap {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  padding: 6.5px 14px;
+  display: flex;
+  align-items: center;
+}
+
+.tagItemWrap {
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  margin-right: 8px;
+  align-items: center;
+  color: var(--Gray-700, #344054);
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 14px;
+  padding: 3px 8px;
+  display: flex;
+}
