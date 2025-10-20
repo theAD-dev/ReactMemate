@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X } from "react-bootstrap-icons";
 import { PhoneInput } from 'react-international-phone';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { PhoneNumberUtil } from 'google-libphonenumber';
@@ -131,7 +131,7 @@ const SendSMS = ({ projectId, projectCardData }) => {
         </Modal.Header>
         <Modal.Body>
           <div className="ContactModel">
-            <p className={style.smsUnavailableText}>SMS functionality is currently unavailable. To use this<br /> feature, please ask your admin to set up a Twilio<br /> account and connect it via <span className={style.settingsLink}>Settings &gt; Integrations</span>.</p>
+            <p className={style.smsUnavailableText}>SMS functionality is currently unavailable. To use this<br /> feature, please ask your admin to set up a Twilio<br /> account and connect it via <Link to="/settings/integrations?openTwilio=true" style={{ color: '#158ECC' }}>Settings &gt; Integrations</Link>.</p>
 
             <div className={clsx("d-flex align-items-center justify-content-center flex-column gap-1 m-auto", style.twilioStatus)}>
               <div className={clsx("d-flex align-items-center justify-content-center", style.twilioIcon)}>
