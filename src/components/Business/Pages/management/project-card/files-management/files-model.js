@@ -12,9 +12,70 @@ import { toast } from 'sonner';
 import { deleteFileByKey, getProjectFilesById } from '../../../../../../APIs/management-api';
 import FolderFileIcon from "../../../../../../assets/images/icon/folderFileIcon.svg";
 import { formatFileSize } from '../../../../../../features/chat/ui/chat-area/chat-attachment-popover';
-import { getFileIcon } from '../../../../../Work/features/create-job/create-job';
+import { BootstrapFileIcons } from '../../../../../../shared/lib/bootstrap-file-icons';
+
+// Helper function to check if file is an image
+const isImageFile = (extension) => {
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp', 'webp', 'heic'];
+  return imageExtensions.includes(extension?.toLowerCase());
+};
+
+// File Preview Component
+const FilePreview = ({ file }) => {
+  const extension = file?.key?.split('.').pop()?.toLowerCase();
+  const isImage = isImageFile(extension);
+
+  if (isImage) {
+    return (
+      <div 
+        style={{ 
+          width: '48px', 
+          height: '48px', 
+          borderRadius: '6px', 
+          overflow: 'hidden',
+          flexShrink: 0,
+          background: '#E5E7EB'
+        }}
+      >
+        <img 
+          src={file.url} 
+          alt={file.key} 
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            objectFit: 'cover' 
+          }}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.parentElement.innerHTML = '<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="#9CA3AF"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>';
+          }}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      style={{ 
+        width: '48px', 
+        height: '48px', 
+        borderRadius: '6px', 
+        background: '#F9FAFB',
+        border: '1px solid #E5E7EB',
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        flexShrink: 0
+      }}
+    >
+      <BootstrapFileIcons extension={extension} size={28} />
+    </div>
+  );
+};
 
 const FilesModel = ({ projectId }) => {
+  // Used for upload progress tracking in uploadToS3 function
+  // eslint-disable-next-line no-unused-vars
   const [files, setFiles] = useState([]);
   const [showUploadSection, setShowUploadSection] = useState(false);
   const [viewShow, setViewShow] = useState(false);
@@ -199,26 +260,78 @@ const FilesModel = ({ projectId }) => {
               <p className='mb-0' style={{ color: '#475467', fontSize: '14px' }}><span style={{ color: '#106B99', fontWeight: '600' }}>Click to upload</span> or drag and drop</p>
             </div>
           }
-          <div style={{ height: '300px', overflow: 'auto' }}>
+          <div style={{ height: '400px', overflow: 'auto', paddingRight: '4px' }}>
             <div className='d-flex gap-2 flex-wrap'>
               {!filesQuery?.isLoading && filesQuery?.data?.map((file) => {
-                return (<div key={file?.key} style={{ background: '#F2F4F7', padding: '12px', borderRadius: '6px', height: 'fit-content', marginBottom: '8px' }} className='d-flex align-items-center justify-content-between gap-4'>
-                  <Link to={`${file.url}`} target='_blank' className='d-flex align-items-center gap-2'>
-                    {getFileIcon(file?.key?.split('.').pop(), 28)}
-                    <div className='font-14 d-flex flex-column' style={{ width: '200px', color: '#344054' }}>
-                      <div title={file?.key} className='ellipsis-width'>{file?.key}</div>
-                      <small>{formatFileSize(file?.size)}</small>
+                return (
+                  <div 
+                    key={file?.key} 
+                    style={{ 
+                      background: '#F9FAFB', 
+                      padding: '10px', 
+                      borderRadius: '8px', 
+                      border: '1px solid #EAECF0',
+                      height: 'fit-content',
+                      width: 'calc(33.333% - 5.33px)',
+                      minWidth: '200px'
+                    }} 
+                    className='d-flex align-items-center justify-content-between gap-2'
+                  >
+                    <Link 
+                      to={`${file.url}`} 
+                      target='_blank' 
+                      className='d-flex align-items-center gap-2'
+                      style={{ flex: 1, minWidth: 0, textDecoration: 'none' }}
+                    >
+                      <FilePreview file={file} />
+                      <div className='d-flex flex-column' style={{ flex: 1, minWidth: 0, fontSize: '13px' }}>
+                        <div 
+                          title={file?.key} 
+                          style={{ 
+                            overflow: 'hidden', 
+                            textOverflow: 'ellipsis', 
+                            whiteSpace: 'nowrap',
+                            fontWeight: '500',
+                            color: '#344054',
+                            marginBottom: '2px'
+                          }}
+                        >
+                          {file?.key}
+                        </div>
+                        <small style={{ color: '#667085', fontSize: '12px' }}>{formatFileSize(file?.size)}</small>
+                      </div>
+                    </Link>
+                    <div 
+                      className='d-flex align-items-center justify-content-center' 
+                      onClick={() => removeFile(file?.key)} 
+                      title='Delete file'
+                      style={{ 
+                        background: '#FEE4E2', 
+                        borderRadius: '50%', 
+                        width: '28px', 
+                        height: '28px',
+                        flexShrink: 0,
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#FEF3F2'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = '#FEE4E2'}
+                    >
+                      {deleteMutation?.isPending && deleteMutation?.variables === file?.key 
+                        ? <ProgressSpinner style={{ width: '14px', height: '14px' }} /> 
+                        : <Trash size={14} color="#F04438" />
+                      }
                     </div>
-                  </Link>
-                  <div className='d-flex align-items-center justify-content-center' onClick={() => removeFile(file?.key)} style={{ background: '#FEE4E2', borderRadius: '200px', width: '30px', height: '30px' }}>
-                    {deleteMutation?.isPending && deleteMutation?.variables === file?.key ? <ProgressSpinner style={{ width: '16px', height: '16px' }} /> : <Trash size={16} color="#F04438" style={{ cursor: 'pointer' }} />}
                   </div>
-                </div>);
+                );
               })}
               {filesQuery?.isLoading && <>
-                <Skeleton width='300px' height={57} />
-                <Skeleton width='300px' height={57} />
-                <Skeleton width='300px' height={57} />
+                <Skeleton width='calc(33.333% - 5.33px)' height={68} borderRadius='8px' />
+                <Skeleton width='calc(33.333% - 5.33px)' height={68} borderRadius='8px' />
+                <Skeleton width='calc(33.333% - 5.33px)' height={68} borderRadius='8px' />
+                <Skeleton width='calc(33.333% - 5.33px)' height={68} borderRadius='8px' />
+                <Skeleton width='calc(33.333% - 5.33px)' height={68} borderRadius='8px' />
+                <Skeleton width='calc(33.333% - 5.33px)' height={68} borderRadius='8px' />
               </>}
             </div>
           </div>
