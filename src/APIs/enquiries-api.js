@@ -17,3 +17,19 @@ export const getListOfForms = async (page, limit, search = "", order = "", isSho
 
   return fetchAPI(url.toString(), options);
 };
+
+export const getListOfSubmissions = async (orgId, page, limit, search = "", order = "", isShowDeleted) => {
+  const offset = (page - 1) * limit;
+  const endpoint = `/inquiries/organization/${orgId}/submissions/`;
+  const options = {
+    method: 'GET',
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", offset);
+  if (search) url.searchParams.append("search", search);
+  if (order) url.searchParams.append("ordering", order);
+  if (isShowDeleted) url.searchParams.append('deleted', 1);
+
+  return fetchAPI(url.toString(), options);
+};

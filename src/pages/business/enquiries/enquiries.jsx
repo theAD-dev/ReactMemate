@@ -5,17 +5,20 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
+import EnquiriesTable from './enquires-table';
 import style from './enquiries.module.scss';
 
 const Enquiries = () => {
-  const [selected, setSelected] = useState(null);
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+  const [selectedSubmissions, setSelectedSubmissions] = useState([]);
+  const [isShowDeleted] = useState(false);
+
   return (
     <>
       <Helmet>
         <title>MeMate - Enquiries</title>
       </Helmet>
-      <div className={`topbar ${selected?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
+      <div className={`topbar ${selectedSubmissions?.length ? style.active : ''}`} style={{ padding: '4px 32px 4px 23px', position: 'relative', height: '48px' }}>
         <div className='left-side d-flex align-items-center' style={{ gap: '16px' }}>
           <div className="searchBox" style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', top: '2px', left: '6px' }}>
@@ -51,6 +54,13 @@ const Enquiries = () => {
           <Link to={"/enquiries/forms"}><Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button></Link>
         </div>
       </div>
+      
+      <EnquiriesTable 
+        searchValue={debouncedValue}
+        selectedSubmissions={selectedSubmissions}
+        setSelectedSubmissions={setSelectedSubmissions}
+        isShowDeleted={isShowDeleted}
+      />
     </>
   );
 };
