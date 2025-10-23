@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { CardList, CheckCircle, Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
@@ -69,46 +69,57 @@ const ApprovalPage = () => {
     });
 
     const getWeekDates = (weekNumber, year) => {
-        // Calculate Monday start for the given week
-        const firstDayOfYearSydney = new Date(
-            new Date(Date.UTC(year, 0, 1)).toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
+        // Get Sydney's first Thursday of the year
+        const firstThursday = new Date(
+            new Date(Date.UTC(year, 0, 4)).toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
         );
-        const dayOfWeek = firstDayOfYearSydney.getDay() || 7;
-        const daysOffset = (weekNumber - 1) * 7 - (dayOfWeek - 1);
-        const mondaySydney = new Date(firstDayOfYearSydney);
-        mondaySydney.setDate(firstDayOfYearSydney.getDate() + daysOffset);
-        mondaySydney.setHours(12, 1, 0, 0);
+        const dayOfWeek = firstThursday.getDay() || 7; // Monday=1,...Sunday=7
+        // Go back to Monday
+        firstThursday.setDate(firstThursday.getDate() - (dayOfWeek - 1));
 
-        // Get current Sydney time
-        const nowSydney = new Date(
-            new Date().toLocaleString('en-US', { timeZone: 'Australia/Sydney' })
-        );
+        // Add weeks offset
+        const mondaySydney = new Date(firstThursday);
+        mondaySydney.setDate(mondaySydney.getDate() + (weekNumber - 1) * 7);
+        mondaySydney.setHours(12, 0, 0, 0); // Monday 12:00 Sydney time
 
-        // Default deadline = this Monday 12:00 pm
-        let endSydney = new Date(mondaySydney);
-        endSydney.setHours(12, 0, 0, 0);
+        const nextMondaySydney = new Date(mondaySydney);
+        nextMondaySydney.setDate(nextMondaySydney.getDate() + 7);
 
-        // If it's already past this Monday noon → set to next Monday noon
-        if (nowSydney > endSydney) {
-            endSydney.setDate(endSydney.getDate() + 7);
-        }
-
-        return { start: mondaySydney, end: endSydney };
+        return { start: mondaySydney, end: nextMondaySydney };
     };
 
-    const updateWeekDates = (week, year) => {
+    const updateWeekDates = useCallback((week, year) => {
         const { start, end } = getWeekDates(week, year);
         setWeekInfo({
             start: start,
             end: end
         });
-    };
+    }, []);
 
-    const getWeekNumber = (date) => {
-        const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-        const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-        return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-    };
+    const getWeekNumber = useCallback((date) => {
+        const sydneyDate = new Date(date.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
+
+        // Determine "effective date" based on your week start time
+        const weekStartCutoff = new Date(sydneyDate);
+        weekStartCutoff.setHours(12, 1, 0, 0); // Monday 12:01 PM Sydney time
+        weekStartCutoff.setDate(
+            weekStartCutoff.getDate() - ((weekStartCutoff.getDay() + 6) % 7) // Go back to Monday
+        );
+
+        // If the date is before Monday 12:01 PM, consider it part of previous week
+        if (sydneyDate < weekStartCutoff) {
+            sydneyDate.setDate(sydneyDate.getDate() - 1);
+        }
+
+        // Copy date so we don't mutate original
+        const tmp = new Date(Date.UTC(sydneyDate.getFullYear(), sydneyDate.getMonth(), sydneyDate.getDate()));
+        tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7)); // Thursday of current week
+
+        const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+        const weekNo = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+
+        return weekNo;
+    }, []);
 
     useEffect(() => {
         const todaySydney = new Date(
@@ -118,7 +129,7 @@ const ApprovalPage = () => {
         setCurrentWeek(weekNum);
 
         updateWeekDates(weekNum, currentYear);
-    }, []);
+    }, [currentYear, getWeekNumber, updateWeekDates]);
 
     return (
         <div className='approval-page'>
