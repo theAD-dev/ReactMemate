@@ -18,6 +18,7 @@ const GlobalSearch = () => {
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const searchRef = useRef(null);
     const inputRef = useRef(null);
+    const resultsContainerRef = useRef(null);
     const navigate = useNavigate();
     
     // Detect if user is on Mac for keyboard shortcut display
@@ -118,6 +119,16 @@ const GlobalSearch = () => {
     useEffect(() => {
         setSelectedIndex(-1);
     }, [searchResults]);
+
+    // Scroll selected item into view
+    useEffect(() => {
+        if (selectedIndex >= 0 && resultsContainerRef.current) {
+            const selectedElement = resultsContainerRef.current.querySelector(`[data-index="${selectedIndex}"]`);
+            if (selectedElement) {
+                selectedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+    }, [selectedIndex]);
 
     // Handle escape key to close and arrow key navigation
     useEffect(() => {
@@ -229,7 +240,7 @@ const GlobalSearch = () => {
                         )}
                     </div>
 
-                    <div className={searchStyle.searchResults}>
+                    <div className={searchStyle.searchResults} ref={resultsContainerRef}>
                         {loading ? (
                             <div className={searchStyle.loadingContainer}>
                                 <ProgressSpinner style={{ width: "20px", height: "20px" }} />
@@ -262,6 +273,7 @@ const GlobalSearch = () => {
                                                     return (
                                                         <div
                                                             key={`project-${project.id}`}
+                                                            data-index={index}
                                                             className={`${searchStyle.resultItem} ${isSelected ? searchStyle.selected : ''}`}
                                                             onClick={() => handleSelectItem(project, 'project')}
                                                         >
@@ -309,6 +321,7 @@ const GlobalSearch = () => {
                                                     return (
                                                         <div
                                                             key={`client-${client.id}`}
+                                                            data-index={globalIndex}
                                                             className={`${searchStyle.resultItem} ${isSelected ? searchStyle.selected : ''}`}
                                                             onClick={() => handleSelectItem(client, 'client')}
                                                         >
@@ -359,6 +372,7 @@ const GlobalSearch = () => {
                                                     return (
                                                         <div
                                                             key={`supplier-${supplier.id}`}
+                                                            data-index={globalIndex}
                                                             className={`${searchStyle.resultItem} ${isSelected ? searchStyle.selected : ''}`}
                                                             onClick={() => handleSelectItem(supplier, 'supplier')}
                                                         >
