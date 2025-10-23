@@ -208,7 +208,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
         if (!rowData.order) return <span className='text-capitalize' style={{ color: '#344054', fontSize: '14px' }}>{rowData.type}</span>;
         return <div className='d-flex flex-column'>
             <span style={{ color: '#344054', fontSize: '14px' }}>{rowData?.order?.reference || "-"}</span>
-            <span className='font-14' style={{ color: '#98A2B3' }}>{rowData?.order?.number} | {rowData?.order?.client?.name}</span>
+            <span className='font-14' style={{ color: '#98A2B3' }}><Link className={`${style.linkToProjectCard}`} to={`/management?unique_id=${rowData?.order?.unique_id}`}>{rowData?.order?.number}</Link> | {rowData?.order?.client?.name}</span>
         </div>;
     };
 
