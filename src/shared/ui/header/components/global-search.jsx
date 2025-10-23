@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { useGlobalSearch } from '../../../hooks/useGlobalSearch';
+import { useGlobalSearch } from '../../../hooks/use-global-search';
 import { 
     formatProjectResult, 
     formatClientResult, 

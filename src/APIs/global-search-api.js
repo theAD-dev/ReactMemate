@@ -28,7 +28,7 @@ export const globalSearch = async (query, searchTypes = ['projects', 'clients'],
  * Search Projects by Reference and Project Number
  */
 export const searchProjects = async (query, limit = 10) => {
-  const endpoint = `/management/`;
+  const endpoint = `/projects/search/`;
   const options = {
     method: 'GET',
   };
@@ -153,7 +153,7 @@ const filterProjects = (projects, query) => {
   return projects.filter(project => 
     (project.number?.toLowerCase()?.includes(searchTerm)) ||
     (project.reference?.toLowerCase()?.includes(searchTerm)) ||
-    (project.client?.name?.toLowerCase()?.includes(searchTerm))
+    (project.unique_id?.toLowerCase()?.includes(searchTerm))
   );
 };
 
