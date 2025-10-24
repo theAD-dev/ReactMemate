@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.33bee8f8.css",
-    "main.js": "/static/js/main.8edb7432.js",
+    "main.css": "/static/css/main.43086aed.css",
+    "main.js": "/static/js/main.992da45e.js",
     "static/css/7817.1485a52e.chunk.css": "/static/css/7817.1485a52e.chunk.css",
     "static/js/7817.dad0af21.chunk.js": "/static/js/7817.dad0af21.chunk.js",
     "static/css/7063.629fae81.chunk.css": "/static/css/7063.629fae81.chunk.css",
@@ -9,7 +9,7 @@
     "static/css/3666.550db1a8.chunk.css": "/static/css/3666.550db1a8.chunk.css",
     "static/js/3666.339c3333.chunk.js": "/static/js/3666.339c3333.chunk.js",
     "static/css/1843.04030e55.chunk.css": "/static/css/1843.04030e55.chunk.css",
-    "static/js/1843.7b66a380.chunk.js": "/static/js/1843.7b66a380.chunk.js",
+    "static/js/1843.d77b1554.chunk.js": "/static/js/1843.d77b1554.chunk.js",
     "static/css/2306.5a3e6300.chunk.css": "/static/css/2306.5a3e6300.chunk.css",
     "static/js/2306.ba2615e6.chunk.js": "/static/js/2306.ba2615e6.chunk.js",
     "static/css/6519.fd8e6e53.chunk.css": "/static/css/6519.fd8e6e53.chunk.css",
@@ -136,7 +136,7 @@
     "static/css/7968.3d91221c.chunk.css": "/static/css/7968.3d91221c.chunk.css",
     "static/js/7968.0fb4a01d.chunk.js": "/static/js/7968.0fb4a01d.chunk.js",
     "static/css/8708.b30b23d7.chunk.css": "/static/css/8708.b30b23d7.chunk.css",
-    "static/js/8708.59c952e4.chunk.js": "/static/js/8708.59c952e4.chunk.js",
+    "static/js/8708.b0645d3b.chunk.js": "/static/js/8708.b0645d3b.chunk.js",
     "static/css/5748.5dd36288.chunk.css": "/static/css/5748.5dd36288.chunk.css",
     "static/js/5748.70dd7bb1.chunk.js": "/static/js/5748.70dd7bb1.chunk.js",
     "static/css/4782.a313d50e.chunk.css": "/static/css/4782.a313d50e.chunk.css",
@@ -381,8 +381,8 @@
     "static/media/envelope.svg": "/static/media/envelope.c9c11cfa6a43774942324c9ac7f33f2d.svg",
     "static/media/sale-01.svg": "/static/media/sale-01.74c52636eaacc72e4c5a7a89e51203b5.svg",
     "static/media/arrow.svg": "/static/media/arrow.39453b4ea8b344e3bb6f41c5a35a5b74.svg",
-    "main.33bee8f8.css.map": "/static/css/main.33bee8f8.css.map",
-    "main.8edb7432.js.map": "/static/js/main.8edb7432.js.map",
+    "main.43086aed.css.map": "/static/css/main.43086aed.css.map",
+    "main.992da45e.js.map": "/static/js/main.992da45e.js.map",
     "7817.1485a52e.chunk.css.map": "/static/css/7817.1485a52e.chunk.css.map",
     "7817.dad0af21.chunk.js.map": "/static/js/7817.dad0af21.chunk.js.map",
     "7063.629fae81.chunk.css.map": "/static/css/7063.629fae81.chunk.css.map",
@@ -390,7 +390,7 @@
     "3666.550db1a8.chunk.css.map": "/static/css/3666.550db1a8.chunk.css.map",
     "3666.339c3333.chunk.js.map": "/static/js/3666.339c3333.chunk.js.map",
     "1843.04030e55.chunk.css.map": "/static/css/1843.04030e55.chunk.css.map",
-    "1843.7b66a380.chunk.js.map": "/static/js/1843.7b66a380.chunk.js.map",
+    "1843.d77b1554.chunk.js.map": "/static/js/1843.d77b1554.chunk.js.map",
     "2306.5a3e6300.chunk.css.map": "/static/css/2306.5a3e6300.chunk.css.map",
     "2306.ba2615e6.chunk.js.map": "/static/js/2306.ba2615e6.chunk.js.map",
     "6519.fd8e6e53.chunk.css.map": "/static/css/6519.fd8e6e53.chunk.css.map",
@@ -517,7 +517,7 @@
     "7968.3d91221c.chunk.css.map": "/static/css/7968.3d91221c.chunk.css.map",
     "7968.0fb4a01d.chunk.js.map": "/static/js/7968.0fb4a01d.chunk.js.map",
     "8708.b30b23d7.chunk.css.map": "/static/css/8708.b30b23d7.chunk.css.map",
-    "8708.59c952e4.chunk.js.map": "/static/js/8708.59c952e4.chunk.js.map",
+    "8708.b0645d3b.chunk.js.map": "/static/js/8708.b0645d3b.chunk.js.map",
     "5748.5dd36288.chunk.css.map": "/static/css/5748.5dd36288.chunk.css.map",
     "5748.70dd7bb1.chunk.js.map": "/static/js/5748.70dd7bb1.chunk.js.map",
     "4782.a313d50e.chunk.css.map": "/static/css/4782.a313d50e.chunk.css.map",
@@ -653,7 +653,7 @@
     "2553.be34c9c0.chunk.js.map": "/static/js/2553.be34c9c0.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.33bee8f8.css",
-    "static/js/main.8edb7432.js"
+    "static/css/main.43086aed.css",
+    "static/js/main.992da45e.js"
   ]
 }
