@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Search, X } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { useGlobalSearch } from '../../../hooks/useGlobalSearch';
+import { useGlobalSearch } from '../../../hooks/use-global-search';
 import { 
     formatProjectResult, 
     formatClientResult, 
@@ -15,9 +15,14 @@ import ImageAvatar from '../../image-with-fallback/image-avatar';
 
 const GlobalSearch = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(-1);
     const searchRef = useRef(null);
     const inputRef = useRef(null);
+    const resultsContainerRef = useRef(null);
     const navigate = useNavigate();
+    
+    // Detect if user is on Mac for keyboard shortcut display
+    const isMac = typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
     const {
         inputValue,
@@ -27,6 +32,24 @@ const GlobalSearch = () => {
         loading,
         clearSearch
     } = useGlobalSearch();
+
+    // Global keyboard shortcut to open search (Cmd+/ or Ctrl+/)
+    useEffect(() => {
+        const handleGlobalKeyDown = (event) => {
+            if ((event.metaKey || event.ctrlKey) && event.key === '/') {
+                event.preventDefault();
+                setIsOpen(true);
+                setTimeout(() => {
+                    inputRef.current?.focus();
+                }, 100);
+            }
+        };
+
+        document.addEventListener('keydown', handleGlobalKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        };
+    }, []);
 
     // Restore search term from session storage on mount
     useEffect(() => {
@@ -38,65 +61,11 @@ const GlobalSearch = () => {
         }
     }, [inputValue, setInputValue]);
 
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (searchRef.current && !searchRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isOpen]);
-
-    // Handle escape key to close and arrow key navigation
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === 'Escape') {
-                setIsOpen(false);
-                return;
-            }
-            
-            // Add keyboard navigation for search results
-            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                event.preventDefault();
-                // Future enhancement: implement result navigation
-                console.log('Arrow key navigation - to be implemented');
-            }
-            
-            if (event.key === 'Enter' && isOpen) {
-                // Future enhancement: select highlighted result
-                console.log('Enter key selection - to be implemented');
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener('keydown', handleKeyDown);
-        }
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [isOpen]);
-
-    // Handle search icon click
-    const handleSearchClick = () => {
-        setIsOpen(true);
-        setTimeout(() => {
-            inputRef.current?.focus();
-        }, 100);
-    };
-
     // Handle item selection
-    const handleSelectItem = (item, type) => {
+    const handleSelectItem = useCallback((item, type) => {
         console.log('Navigating to:', type, item);
         setIsOpen(false);
+        setSelectedIndex(-1);
         
         // Store search term in session storage for potential back navigation
         if (debouncedValue) {
@@ -127,6 +96,106 @@ const GlobalSearch = () => {
             default:
                 console.log('Unknown type:', type);
         }
+    }, [debouncedValue, navigate]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
+
+    // Reset selected index when search results change
+    useEffect(() => {
+        setSelectedIndex(-1);
+    }, [searchResults]);
+
+    // Scroll selected item into view
+    useEffect(() => {
+        if (selectedIndex >= 0 && resultsContainerRef.current) {
+            const selectedElement = resultsContainerRef.current.querySelector(`[data-index="${selectedIndex}"]`);
+            if (selectedElement) {
+                selectedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+    }, [selectedIndex]);
+
+    // Handle escape key to close and arrow key navigation
+    useEffect(() => {
+        const getAllResults = () => {
+            const results = [];
+            if (debouncedValue.length >= 2) {
+                if (searchResults.projects) {
+                    searchResults.projects.forEach(item => results.push({ item, type: 'project' }));
+                }
+                if (searchResults.clients) {
+                    searchResults.clients.forEach(item => results.push({ item, type: 'client' }));
+                }
+                if (searchResults.suppliers) {
+                    searchResults.suppliers.forEach(item => results.push({ item, type: 'supplier' }));
+                }
+            }
+            return results;
+        };
+        
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                setIsOpen(false);
+                setSelectedIndex(-1);
+                return;
+            }
+            
+            const allResults = getAllResults();
+            
+            // Arrow key navigation for search results
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                setSelectedIndex(prev => 
+                    prev < allResults.length - 1 ? prev + 1 : 0
+                );
+            }
+            
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                setSelectedIndex(prev => 
+                    prev > 0 ? prev - 1 : allResults.length - 1
+                );
+            }
+            
+            if (event.key === 'Enter' && isOpen && selectedIndex >= 0) {
+                event.preventDefault();
+                const selectedResult = allResults[selectedIndex];
+                if (selectedResult) {
+                    handleSelectItem(selectedResult.item, selectedResult.type);
+                }
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, selectedIndex, searchResults, handleSelectItem, debouncedValue]);
+
+    // Handle search icon click
+    const handleSearchClick = () => {
+        setIsOpen(true);
+        setTimeout(() => {
+            inputRef.current?.focus();
+        }, 100);
     };
 
     // Handle clear search
@@ -154,11 +223,16 @@ const GlobalSearch = () => {
                         <input
                             ref={inputRef}
                             type="text"
-                            placeholder="Search projects, clients, suppliers..."
+                            placeholder="Search"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             className={searchStyle.searchInput}
                         />
+                        {!inputValue && (
+                            <div className={searchStyle.shortcutHint}>
+                                {isMac ? '⌘' : '⌃'}/
+                            </div>
+                        )}
                         {inputValue && (
                             <button onClick={handleClear} className={searchStyle.clearButton}>
                                 <X size={14} />
@@ -166,7 +240,7 @@ const GlobalSearch = () => {
                         )}
                     </div>
 
-                    <div className={searchStyle.searchResults}>
+                    <div className={searchStyle.searchResults} ref={resultsContainerRef}>
                         {loading ? (
                             <div className={searchStyle.loadingContainer}>
                                 <ProgressSpinner style={{ width: "20px", height: "20px" }} />
@@ -176,8 +250,7 @@ const GlobalSearch = () => {
                             <>
                                 {debouncedValue.length < 2 ? (
                                     <div className={searchStyle.emptyState}>
-                                        <Search size={24} color="#ccc" />
-                                        <p>Type at least 2 characters to search</p>
+                                        <p>Start typing to search projects, clients, and suppliers...</p>
                                     </div>
                                 ) : searchResults.total === 0 ? (
                                     <div className={searchStyle.emptyState}>
@@ -192,14 +265,16 @@ const GlobalSearch = () => {
                                                 <h6 className={searchStyle.sectionTitle}>
                                                     Projects ({searchResults.projects.length})
                                                 </h6>
-                                                {searchResults.projects.map((project) => {
+                                                {searchResults.projects.map((project, index) => {
                                                     const formatted = formatProjectResult(project);
                                                     const metadata = formatSearchMetadata(formatted);
+                                                    const isSelected = selectedIndex === index;
                                                     
                                                     return (
                                                         <div
                                                             key={`project-${project.id}`}
-                                                            className={searchStyle.resultItem}
+                                                            data-index={index}
+                                                            className={`${searchStyle.resultItem} ${isSelected ? searchStyle.selected : ''}`}
                                                             onClick={() => handleSelectItem(project, 'project')}
                                                         >
                                                             <div className={searchStyle.resultIcon}>
@@ -237,14 +312,17 @@ const GlobalSearch = () => {
                                                 <h6 className={searchStyle.sectionTitle}>
                                                     Clients ({searchResults.clients.length})
                                                 </h6>
-                                                {searchResults.clients.map((client) => {
+                                                {searchResults.clients.map((client, index) => {
                                                     const formatted = formatClientResult(client);
                                                     const metadata = formatSearchMetadata(formatted);
+                                                    const globalIndex = (searchResults.projects?.length || 0) + index;
+                                                    const isSelected = selectedIndex === globalIndex;
                                                     
                                                     return (
                                                         <div
                                                             key={`client-${client.id}`}
-                                                            className={searchStyle.resultItem}
+                                                            data-index={globalIndex}
+                                                            className={`${searchStyle.resultItem} ${isSelected ? searchStyle.selected : ''}`}
                                                             onClick={() => handleSelectItem(client, 'client')}
                                                         >
                                                             <div className={searchStyle.resultIcon}>
@@ -285,14 +363,17 @@ const GlobalSearch = () => {
                                                 <h6 className={searchStyle.sectionTitle}>
                                                     Suppliers ({searchResults.suppliers.length})
                                                 </h6>
-                                                {searchResults.suppliers.map((supplier) => {
+                                                {searchResults.suppliers.map((supplier, index) => {
                                                     const formatted = formatSupplierResult(supplier);
                                                     const metadata = formatSearchMetadata(formatted);
+                                                    const globalIndex = (searchResults.projects?.length || 0) + (searchResults.clients?.length || 0) + index;
+                                                    const isSelected = selectedIndex === globalIndex;
                                                     
                                                     return (
                                                         <div
                                                             key={`supplier-${supplier.id}`}
-                                                            className={searchStyle.resultItem}
+                                                            data-index={globalIndex}
+                                                            className={`${searchStyle.resultItem} ${isSelected ? searchStyle.selected : ''}`}
                                                             onClick={() => handleSelectItem(supplier, 'supplier')}
                                                         >
                                                             <div className={searchStyle.resultIcon}>
@@ -325,6 +406,26 @@ const GlobalSearch = () => {
                                 )}
                             </>
                         )}
+                    </div>
+                    
+                    {/* Navigation Help */}
+                    <div className={searchStyle.navigationHelp}>
+                        <div className={searchStyle.helpItem}>
+                            <span className={searchStyle.helpKey}>↑↓</span>
+                            <span>to navigate</span>
+                        </div>
+                        <div className={searchStyle.helpItem}>
+                            <span className={searchStyle.helpKey}>↵</span>
+                            <span>to select</span>
+                        </div>
+                        <div className={searchStyle.helpItem}>
+                            <span className={searchStyle.helpKey}>esc</span>
+                            <span>to close</span>
+                        </div>
+                        <div className={searchStyle.helpItem}>
+                            <span className={searchStyle.helpKey}>↵</span>
+                            <span>return to parent</span>
+                        </div>
                     </div>
                 </div>
             )}
