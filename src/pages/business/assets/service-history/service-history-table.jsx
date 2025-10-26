@@ -1,15 +1,25 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import clsx from 'clsx';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { Tag } from 'primereact/tag';
 import style from './service-history.module.scss';
 import { getVehicleServices } from '../../../../APIs/assets-api';
-import { formatDate } from '../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
+
+const formatDate = (timestamp) => {
+  if (!timestamp) return '-';
+  // Handle Unix timestamp (in seconds)
+  const date = new Date(+timestamp * 1000);
+  const formatter = new Intl.DateTimeFormat("en-AU", {
+    timeZone: 'Australia/Sydney',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+  return formatter.format(date);
+};
 
 const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, refetch }, ref) => {
   const { id } = useParams();
@@ -80,7 +90,7 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
   const invoiceNumberBodyTemplate = (rowData) => {
     return (
       <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
-        <span style={{ fontWeight: '500' }}>{rowData.invoice_number || '-'}</span>
+        <span style={{ fontWeight: '500' }}>{rowData.number || '-'}</span>
         <span className='font-12' style={{ color: '#98A2B3' }}>
           {rowData.date ? formatDate(rowData.date) : '-'}
         </span>
@@ -102,7 +112,7 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
 
   const upcomingDateBodyTemplate = (rowData) => {
     if (!rowData.upcoming_date) return '-';
-    
+
     const upcoming = new Date(rowData.upcoming_date);
     const today = new Date();
     const diffTime = upcoming - today;
@@ -128,9 +138,9 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
 
   const notesBodyTemplate = (rowData) => {
     if (!rowData.notes) return '-';
-    
-    const truncatedNotes = rowData.notes.length > 50 
-      ? `${rowData.notes.substring(0, 50)}...` 
+
+    const truncatedNotes = rowData.notes.length > 50
+      ? `${rowData.notes.substring(0, 50)}...`
       : rowData.notes;
 
     return (
@@ -168,57 +178,63 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
       sortOrder={sort?.sortOrder}
       onSort={onSort}
     >
-      <Column 
-        selectionMode="multiple" 
-        headerClassName='ps-4' 
-        bodyClassName={'show-on-hover border-right-0 ps-4'} 
-        headerStyle={{ width: '3rem', textAlign: 'center', border: 'none' }} 
+      <Column
+        selectionMode="multiple"
+        headerClassName='ps-4'
+        bodyClassName={'show-on-hover border-right-0 ps-4'}
+        headerStyle={{ width: '3rem', textAlign: 'center', border: 'none' }}
         frozen
       />
-      <Column 
-        field="invoice_number" 
-        header="Expense ID" 
-        body={invoiceNumberBodyTemplate} 
-        frozen 
-        sortable 
-        style={{ minWidth: '180px' }} 
-        headerClassName='shadowRight' 
+      <Column
+        field="number"
+        header="Expense ID"
+        body={invoiceNumberBodyTemplate}
+        frozen
+        sortable
+        style={{ minWidth: '150px', width: '150px', maxWidth: '150px' }}
+        headerClassName='shadowRight'
         bodyClassName='shadowRight'
       />
-      <Column 
-        field="odometer_km" 
-        header="Odometer (km)" 
-        body={odometerBodyTemplate} 
-        sortable 
-        style={{ minWidth: '140px' }}
+      <Column
+        field="number"
+        header="Reference"
+        body={() => '-'}
+        style={{ minWidth: '400px', width: '400px', maxWidth: '400px' }}
+      />
+      <Column
+        field="odometer_km"
+        header="Odometer (km)"
+        body={odometerBodyTemplate}
+        sortable
+        style={{ minWidth: '200px', maxWidth: '200px', width: '200px' }}
         bodyClassName="text-end"
       />
-      <Column 
-        field="date" 
-        header="Service Date" 
-        body={dateBodyTemplate} 
-        sortable 
-        style={{ minWidth: '130px' }}
+      <Column
+        field="date"
+        header="Service Date"
+        body={dateBodyTemplate}
+        sortable
+        style={{ minWidth: '150px', maxWidth: '150px', width: '150px' }}
       />
-      <Column 
-        field="upcoming_date" 
-        header="Upcoming Service" 
-        body={upcomingDateBodyTemplate} 
-        sortable 
-        style={{ minWidth: '160px' }}
+      <Column
+        field="upcoming_date"
+        header="Upcoming Service"
+        body={upcomingDateBodyTemplate}
+        sortable
+        style={{ minWidth: '150px', maxWidth: '150px', width: '150px' }}
       />
-      <Column 
-        field="cost" 
-        header="Cost" 
-        body={costBodyTemplate} 
-        sortable 
-        style={{ minWidth: '120px' }}
+      <Column
+        field="cost"
+        header="Cost"
+        body={costBodyTemplate}
+        sortable
+        style={{ minWidth: '200px', maxWidth: '200px', width: '200px' }}
         bodyClassName="text-end"
       />
-      <Column 
-        field="notes" 
-        header="Notes" 
-        body={notesBodyTemplate} 
+      <Column
+        field="notes"
+        header="Notes"
+        body={notesBodyTemplate}
         style={{ minWidth: '250px' }}
       />
     </DataTable>

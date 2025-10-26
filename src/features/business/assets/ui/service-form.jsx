@@ -19,7 +19,7 @@ import NewExpensesCreate from '../../../../components/Business/features/expenses
 const schema = yup.object({
     expense: yup.number()
         .required("Expense is required")
-        .nullable(),
+        .typeError("Expense is required"),
     odometer_km: yup.number()
         .required("Odometer reading is required")
         .min(0, "Odometer cannot be negative")
@@ -30,9 +30,6 @@ const schema = yup.object({
     upcoming_date: yup.date()
         .nullable()
         .min(yup.ref('date'), "Upcoming date must be after service date"),
-    cost: yup.number()
-        .required("Cost is required")
-        .min(0, "Cost cannot be negative"),
     notes: yup.string()
         .max(500, "Notes must be at most 500 characters"),
 });
@@ -41,7 +38,6 @@ const ServiceForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
     const [showCreateExpenseModal, setShowCreateExpenseModal] = useState(false);
     const [expenseRefetch, setExpenseRefetch] = useState(false);
     const [expenses, setExpenses] = useState([]);
-    console.log('expenses: ', expenses);
     const [expenseValue, setExpenseValue] = useState(defaultValues?.expense || '');
     const [hasMoreExpenses, setHasMoreExpenses] = useState(true);
     const [loadingExpenses, setLoadingExpenses] = useState(false);
@@ -218,8 +214,8 @@ const ServiceForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                     </div>
                 </Col>
 
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mb-4">
+                <Col sm={12}>
+                    <div className="d-flex flex-column mb-4">
                         <label className={clsx(styles.lable)}>Odometer (km) <span className='required'>*</span></label>
                         <div className={styles.inputGroup}>
                             <Controller
@@ -229,7 +225,7 @@ const ServiceForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                                     <InputNumber
                                         value={field.value}
                                         onValueChange={(e) => field.onChange(e.value)}
-                                        className={clsx(styles.inputText, { [styles.error]: errors.odometer_km }, 'p-0 pe-5')}
+                                        className={clsx(styles.inputText, { [styles.error]: errors.odometer_km }, 'p-0')}
                                         placeholder="Enter odometer reading"
                                         useGrouping={false}
                                         min={0}
@@ -240,33 +236,6 @@ const ServiceForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                             <span className={styles.unitText}>km</span>
                         </div>
                         {errors.odometer_km && <p className="error-message">{errors.odometer_km.message}</p>}
-                    </div>
-                </Col>
-
-                <Col sm={6}>
-                    <div className="d-flex flex-column gap-1 mb-4">
-                        <label className={clsx(styles.lable)}>Cost ($) <span className='required'>*</span></label>
-                        <IconField>
-                            <Controller
-                                name="cost"
-                                control={control}
-                                render={({ field }) => (
-                                    <InputNumber
-                                        prefix="$"
-                                        value={field.value}
-                                        onValueChange={(e) => field.onChange(e.value)}
-                                        style={{ height: '46px', padding: '0px' }}
-                                        className={clsx(styles.inputText, { [styles.error]: errors.cost })}
-                                        placeholder='$ Enter cost'
-                                        maxFractionDigits={2}
-                                        minFractionDigits={2}
-                                        min={0}
-                                    />
-                                )}
-                            />
-                            <InputIcon>{errors.cost && <img src={exclamationCircle} className='mb-3' alt="error" />}</InputIcon>
-                        </IconField>
-                        {errors.cost && <p className="error-message">{errors.cost.message}</p>}
                     </div>
                 </Col>
 

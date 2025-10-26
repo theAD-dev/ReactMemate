@@ -28,7 +28,7 @@ export const CreateNewVehicle = ({ visible, setVisible, setRefetch }) => {
     });
 
     const handleSubmit = async (data) => {
-        console.log('data: ', data);
+        
         mutation.mutate(data);
     };
 

@@ -38,8 +38,18 @@ export const CreateNewService = ({ visible, setVisible, setRefetch, vehicleId = 
         }
     });
 
+    function formatDateToYMD(date) {
+        if (!date) return '';
+        date = new Date(date);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     const handleSubmit = async (data) => {
-        console.log('Service form data:', data);
+        data.date = formatDateToYMD(data.date);
+        data.upcoming_date = formatDateToYMD(data.upcoming_date);
         mutation.mutate(data);
     };
 
@@ -50,12 +60,12 @@ export const CreateNewService = ({ visible, setVisible, setRefetch, vehicleId = 
     };
 
     return (
-        <Sidebar 
-            visible={visible} 
-            position="right" 
-            onHide={() => setVisible(false)} 
-            modal={false} 
-            dismissable={false} 
+        <Sidebar
+            visible={visible}
+            position="right"
+            onHide={() => setVisible(false)}
+            modal={false}
+            dismissable={false}
             style={{ width: '702px' }}
             content={({ closeIconRef, hide }) => (
                 <div className='create-sidebar d-flex flex-column'>
@@ -80,21 +90,21 @@ export const CreateNewService = ({ visible, setVisible, setRefetch, vehicleId = 
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button 
-                            type='button' 
-                            onClick={(e) => { 
-                                e.stopPropagation(); 
-                                setVisible(false); 
-                            }} 
+                        <Button
+                            type='button'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setVisible(false);
+                            }}
                             className='outline-button'
                         >
                             Cancel
                         </Button>
-                        <Button 
-                            type='button' 
-                            disabled={mutation.isPending} 
-                            onClick={handleExternalSubmit} 
-                            className='solid-button' 
+                        <Button
+                            type='button'
+                            disabled={mutation.isPending}
+                            onClick={handleExternalSubmit}
+                            className='solid-button'
                             style={{ minWidth: '75px' }}
                         >
                             {mutation.isPending ? <ProgressSpinner style={{ width: '20px', height: '20px' }} /> : "Save"}

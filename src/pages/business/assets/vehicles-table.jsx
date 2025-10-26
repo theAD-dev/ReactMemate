@@ -16,20 +16,6 @@ import NoDataFoundTemplate from '../../../ui/no-data-template/no-data-found-temp
 
 const formatDate = (timestamp) => {
     if (!timestamp) return '-';
-    
-    // Check if it's a YYYY-MM-DD string format
-    if (typeof timestamp === 'string' && timestamp.match(/^\d{4}-\d{2}-\d{2}/)) {
-        // Parse YYYY-MM-DD as UTC and convert to Sydney time for display
-        const date = new Date(timestamp + 'T00:00:00Z');
-        const formatter = new Intl.DateTimeFormat("en-AU", {
-            timeZone: 'Australia/Sydney',
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-        });
-        return formatter.format(date);
-    }
-    
     // Handle Unix timestamp (in seconds)
     const date = new Date(+timestamp * 1000);
     const formatter = new Intl.DateTimeFormat("en-AU", {
