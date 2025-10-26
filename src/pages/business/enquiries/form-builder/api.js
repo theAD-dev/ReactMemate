@@ -9,7 +9,28 @@ export async function saveFormToApi(payload) {
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`API ${res.status}: ${text || res.statusText}`);
+    let errorMessage = `API ${res.status}: ${text || res.statusText}`;
+    
+    // Try to parse validation errors
+    try {
+      const errorData = JSON.parse(text);
+      if (errorData && typeof errorData === 'object') {
+        // Format validation errors nicely
+        const errors = [];
+        for (const [field, messages] of Object.entries(errorData)) {
+          const fieldName = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          const errorMessages = Array.isArray(messages) ? messages : [messages];
+          errors.push(`${fieldName}: ${errorMessages.join(', ')}`);
+        }
+        if (errors.length > 0) {
+          errorMessage = errors.join('\n');
+        }
+      }
+    } catch (e) {
+      // Keep original error message if JSON parsing fails
+    }
+    
+    throw new Error(errorMessage);
   }
   return res.json();
 }
@@ -46,7 +67,28 @@ export async function updateFormToApi(id, payload) {
   });
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`API ${res.status}: ${text || res.statusText}`);
+    let errorMessage = `API ${res.status}: ${text || res.statusText}`;
+    
+    // Try to parse validation errors
+    try {
+      const errorData = JSON.parse(text);
+      if (errorData && typeof errorData === 'object') {
+        // Format validation errors nicely
+        const errors = [];
+        for (const [field, messages] of Object.entries(errorData)) {
+          const fieldName = field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          const errorMessages = Array.isArray(messages) ? messages : [messages];
+          errors.push(`${fieldName}: ${errorMessages.join(', ')}`);
+        }
+        if (errors.length > 0) {
+          errorMessage = errors.join('\n');
+        }
+      }
+    } catch (e) {
+      // Keep original error message if JSON parsing fails
+    }
+    
+    throw new Error(errorMessage);
   }
   return res.json();
 }
