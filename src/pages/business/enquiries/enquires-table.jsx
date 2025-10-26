@@ -1,11 +1,15 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { EnvelopeSlash, XCircle } from 'react-bootstrap-icons';
+import { useQuery } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { Dropdown } from 'primereact/dropdown';
 import { toast } from 'sonner';
-import { getListOfSubmissions } from '../../../APIs/enquiries-api';
+import { getListOfSubmissions, updateEnquirySubmission } from '../../../APIs/enquiries-api';
+import { getUserList, getMobileUserList } from '../../../APIs/task-api';
 import { useAuth } from '../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
+import { FallbackImage } from '../../../shared/ui/image-with-fallback/image-avatar';
 import Loader from '../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../ui/no-data-template/no-data-found-template';
 
@@ -32,9 +36,57 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [visible, setVisible] = useState(false);
-    const [editData, setEditData] = useState(null);
+    const [userGroups, setUserGroups] = useState([]);
     const limit = 25;
+
+    const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
+    const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
+
+    useEffect(() => {
+        const groups = [];
+        
+        // Desktop Users group
+        if (usersList?.data?.users?.length > 0) {
+            const activeDesktopUsers = usersList.data.users
+                .filter((user) => user?.is_active)
+                .map((user) => ({
+                    id: user?.id,
+                    first_name: user?.first_name,
+                    last_name: user?.last_name,
+                    photo: user?.photo || "",
+                    has_photo: user?.has_photo
+                }));
+            
+            if (activeDesktopUsers.length > 0) {
+                groups.push({
+                    label: 'Desktop User',
+                    items: activeDesktopUsers
+                });
+            }
+        }
+        
+        // Mobile Users group - only if has_work_subscription
+        if (session?.has_work_subscription && mobileUsersList?.data?.users?.length > 0) {
+            const activeMobileUsers = mobileUsersList.data.users
+                .filter((user) => user?.status !== 'disconnected')
+                .map((user) => ({
+                    id: user?.id,
+                    first_name: user?.first_name,
+                    last_name: user?.last_name,
+                    photo: user?.photo || "",
+                    has_photo: user?.has_photo
+                }));
+            
+            if (activeMobileUsers.length > 0) {
+                groups.push({
+                    label: 'Mobile User',
+                    items: activeMobileUsers
+                });
+            }
+        }
+        
+        setUserGroups(groups);
+    }, [usersList?.data, mobileUsersList?.data, session?.has_work_subscription]);
 
     useEffect(() => {
         setPage(1);
@@ -122,11 +174,89 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     };
 
     const assignedToBody = (rowData) => {
-        return <div className='d-flex align-items-center'>
-            <span style={{ color: '#667085' }}>
-                {rowData.assigned_to?.name || 'Unassigned'}
-            </span>
-        </div>;
+        const handleAssignChange = async (userId) => {
+            try {
+                await updateEnquirySubmission(rowData.id, { assigned_to: userId });
+                
+                // Find user from all groups
+                let foundUser = null;
+                for (const group of userGroups) {
+                    foundUser = group.items.find(u => u.id === userId);
+                    if (foundUser) break;
+                }
+                
+                // Update local state
+                setSubmissions(prev => 
+                    prev.map(sub => 
+                        sub.id === rowData.id 
+                            ? { ...sub, assigned_to: foundUser }
+                            : sub
+                    )
+                );
+                
+                toast.success('User assigned successfully');
+            } catch (error) {
+                console.error('Error assigning user:', error);
+                toast.error('Failed to assign user');
+            }
+        };
+
+        return (
+            <div className='d-flex align-items-center'>
+                <Dropdown
+                    value={rowData.assigned_to || null}
+                    onChange={(e) => handleAssignChange(e.value)}
+                    options={userGroups}
+                    optionLabel={(user) => `${user.first_name} ${user.last_name}`}
+                    optionValue="id"
+                    placeholder="Unassigned"
+                    optionGroupLabel="label"
+                    optionGroupChildren="items"
+                    filter
+                    filterInputAutoFocus={true}
+                    dropdownIcon={<></>}
+                    style={{
+                        width: '100%',
+                        border: 'none',
+                        background: 'transparent',
+                        boxShadow: 'none'
+                    }}
+                    panelStyle={{ minWidth: '200px' }}
+                    scrollHeight="400px"
+                    itemTemplate={(user) => (
+                        <div className='d-flex align-items-center gap-2'>
+                            <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                <FallbackImage photo={user?.photo} has_photo={user?.has_photo} is_business={false} size={17} />
+                            </div>
+                            <span style={{ fontSize: '14px', color: '#344054' }}>
+                                {user.first_name} {user.last_name}
+                            </span>
+                        </div>
+                    )}
+                    valueTemplate={(user) => {
+                        if (!rowData.assigned_to) return <span style={{ color: '#98A2B3', fontSize: '14px' }}>-</span>;
+                        
+                        // Find selected user from all groups
+                        let selectedUser = null;
+                        for (const group of userGroups) {
+                            selectedUser = group.items.find(u => u?.id === user?.id);
+                            if (selectedUser) break;
+                        }
+                        
+                        return selectedUser ? (
+                            <div className='d-flex align-items-center gap-2'>
+                                <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
+                                    <FallbackImage photo={selectedUser?.photo} has_photo={selectedUser?.has_photo} is_business={false} size={17} />
+                                </div>
+                                <span style={{ color: '#667085' }}>
+                                    {selectedUser.first_name} {selectedUser.last_name}
+                                </span>
+                            </div>
+                        ) : <span style={{ color: '#98A2B3' }}>-</span>;
+                    }}
+                />
+            </div>
+        );
     };
 
     const spamActionBody = (rowData) => {
