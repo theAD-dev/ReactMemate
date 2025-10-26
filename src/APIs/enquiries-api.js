@@ -18,7 +18,7 @@ export const getListOfForms = async (page, limit, search = "", order = "", isSho
   return fetchAPI(url.toString(), options);
 };
 
-export const getListOfSubmissions = async (orgId, page, limit, search = "", order = "", isShowDeleted) => {
+export const getListOfSubmissions = async (orgId, page, limit, search = "", order = "", isShowDeleted, filterType = "") => {
   const offset = (page - 1) * limit;
   const endpoint = `/inquiries/organization/${orgId}/submissions/`;
   const options = {
@@ -30,6 +30,17 @@ export const getListOfSubmissions = async (orgId, page, limit, search = "", orde
   if (search) url.searchParams.append("search", search);
   if (order) url.searchParams.append("ordering", order);
   if (isShowDeleted) url.searchParams.append('deleted', 1);
+  if (filterType) url.searchParams.append('source_type', filterType);
 
   return fetchAPI(url.toString(), options);
+};
+
+export const createEnquirySubmission = async (formId, data) => {
+  const endpoint = `/inquiries/form/${formId}/admin/submit/`;
+  const options = {
+    method: 'POST',
+    body: data,
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
 };
