@@ -1,12 +1,10 @@
 import React, { forwardRef } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { updateVehicle } from '../../../../APIs/assets-api';
 import VehicleForm from '../ui/vehicle-form';
 
 const EditVehicle = forwardRef(({ vehicle, setIsEdit, refetch, setIsPending, handleExternalSubmit, setVisible, setRefetch }, ref) => {
-  const queryClient = useQueryClient();
-
   const updateVehicleMutation = useMutation({
     mutationFn: (data) => updateVehicle(vehicle?.id, data),
     onMutate: () => {
@@ -26,13 +24,22 @@ const EditVehicle = forwardRef(({ vehicle, setIsEdit, refetch, setIsPending, han
     }
   });
 
+  function formatDateToYMD(date) {
+    if (!date) return '';
+    date = new Date(date);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   const handleSubmit = (data) => {
     // Format the data for API
     const formattedData = {
       ...data,
-      date_of_expiry: data.date_of_expiry ? new Date(data.date_of_expiry).toISOString().split('T')[0] : null,
-      date_of_purchase: data.date_of_purchase ? new Date(data.date_of_purchase).toISOString().split('T')[0] : null,
-      insurance_expiry: data.insurance_expiry ? new Date(data.insurance_expiry).toISOString().split('T')[0] : null,
+      date_of_expiry: formatDateToYMD(data.date_of_expiry),
+      date_of_purchase: formatDateToYMD(data.date_of_purchase),
+      insurance_expiry: formatDateToYMD(data.insurance_expiry),
     };
 
     updateVehicleMutation.mutate(formattedData);
@@ -42,20 +49,20 @@ const EditVehicle = forwardRef(({ vehicle, setIsEdit, refetch, setIsPending, han
   const defaultValues = vehicle ? {
     organization: vehicle.organization,
     registration_number: vehicle.registration_number || '',
-    date_of_expiry: vehicle.date_of_expiry || null,
+    date_of_expiry: vehicle.date_of_expiry ? new Date(vehicle.date_of_expiry * 1000) : null,
     make: vehicle.make || '',
     model: vehicle.model || '',
     year_manufactured: vehicle.year_manufactured || null,
     fuel_type: vehicle.fuel_type || '',
     vin_number: vehicle.vin_number || '',
     engine_number: vehicle.engine_number || '',
-    date_of_purchase: vehicle.date_of_purchase || null,
+    date_of_purchase: vehicle.date_of_purchase ? new Date(vehicle.date_of_purchase * 1000) : null,
     purchased_amount: vehicle.purchased_amount || null,
     odometer_km: vehicle.odometer_km || 0,
     driver: vehicle.driver || null,
     insurer: vehicle.insurer || '',
     insurance_policy_number: vehicle.insurance_policy_number || '',
-    insurance_expiry: vehicle.insurance_expiry || null,
+    insurance_expiry: vehicle.insurance_expiry ? new Date(vehicle.insurance_expiry * 1000) : null,
     receipt_number: vehicle.receipt_number || '',
     etag: vehicle.etag || '',
     colour: vehicle.colour || '',

@@ -11,6 +11,7 @@ import VehiclesTable from './vehicles-table';
 import { getListOfAssetCategories } from '../../../APIs/assets-api';
 import NodataImg from "../../../assets/images/img/NodataImg.png";
 import { CreateNewVehicle } from '../../../features/business/assets/create-new-vehicle/create-new-vehicle';
+import Loader from '../../../shared/ui/loader/loader';
 
 const existingAssetsColorCode = {
     "vehicles": {
@@ -157,21 +158,26 @@ const Assets = () => {
                 </div>
             </div>
             {
-                activeAssetType && activeAssetType === 'vehicles' && currentActiveAsset && (
-                    <>
-                        <VehiclesTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} />
-                        <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
-                    </>
-                )
-            }
-            {
-                !activeAssetType && (<div className='d-flex justify-content-center align-items-center' style={{ height: 'calc(100vh - 200px)' }}>
-                    <div className='position-relative d-flex align-items-center flex-column'>
-                        <img src={NodataImg} alt='no-data' style={{ width: '300px', objectFit: 'contain' }} />
-                        <h2 className={clsx(style.title)}>You have not enabled any assets</h2>
-                        <p className={clsx(style.subTitle)}>To use this feature, please enable at least one asset type via Settings &gt; Subscription </p>
+                listOfAssetCategoriesQuery.isLoading ? (
+                    <div className='d-flex justify-content-center align-items-center' style={{ height: 'calc(100vh - 200px)' }}>
+                        <Loader />
                     </div>
-                </div>)
+                ) : enrichedAssetCategories.length === 0 ? (
+                    <div className='d-flex justify-content-center align-items-center' style={{ height: 'calc(100vh - 200px)' }}>
+                        <div className='position-relative d-flex align-items-center flex-column'>
+                            <img src={NodataImg} alt='no-data' style={{ width: '300px', objectFit: 'contain' }} />
+                            <h2 className={clsx(style.title)}>You have not enabled any assets</h2>
+                            <p className={clsx(style.subTitle)}>To use this feature, please enable at least one asset type via Settings &gt; Subscription </p>
+                        </div>
+                    </div>
+                ) : (
+                    activeAssetType && activeAssetType === 'vehicles' && currentActiveAsset && (
+                        <>
+                            <VehiclesTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} />
+                            <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
+                        </>
+                    )
+                )
             }
         </>
     );
