@@ -200,6 +200,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
 }
 
 .projectIcon {
@@ -213,6 +215,13 @@
     justify-content: center;
     font-weight: 600;
     font-size: 14px;
+    position: relative;
+    transition: opacity 0.2s ease;
+}
+
+.resultItem:has(.archived) .projectIcon {
+    opacity: 0.6;
+    background: linear-gradient(135deg, #9ca3af 0%, #74788c 100%);
 }
 
 .jobIcon {
@@ -330,6 +339,13 @@
   font-size: 11px;
   font-weight: 500;
   text-transform: capitalize;
+}
+
+/* Project Status Badges */
+.resultBadge.archived {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
 }
 
 /* Responsive Design */

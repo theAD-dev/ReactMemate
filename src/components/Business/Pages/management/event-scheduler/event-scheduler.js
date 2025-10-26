@@ -142,6 +142,27 @@ function EventScheduler() {
     };
   }, []);
 
+  // Listen for global search result events to open project modal
+  useEffect(() => {
+    const handleSearchResult = (event) => {
+      const { type, item } = event.detail;
+      if (type === 'project') {
+        setProjectId(item.unique_id || item.id);
+        setProjectDetails({ 
+          number: item.number || "", 
+          reference: item.reference || "",
+          value: item.id 
+        });
+        setViewProjectModel(true);
+      }
+    };
+
+    window.addEventListener('openSearchResult', handleSearchResult);
+    return () => {
+      window.removeEventListener('openSearchResult', handleSearchResult);
+    };
+  }, []);
+
   const reInitialize = async () => {
     try {
       setIsReinitialize(true);

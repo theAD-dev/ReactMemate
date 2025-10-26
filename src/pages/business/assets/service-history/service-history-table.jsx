@@ -177,7 +177,7 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
       />
       <Column 
         field="invoice_number" 
-        header="Invoice Number" 
+        header="Expense ID" 
         body={invoiceNumberBodyTemplate} 
         frozen 
         sortable 

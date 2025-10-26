@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Search, X } from 'react-bootstrap-icons';
+import { Search, X, Folder } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useGlobalSearch } from '../../../hooks/use-global-search';
@@ -7,7 +7,8 @@ import {
     formatProjectResult, 
     formatClientResult, 
     formatSupplierResult,
-    formatSearchMetadata 
+    formatSearchMetadata,
+    getProjectStatusBadge
 } from '../../../utils/search-formatters';
 import style from '../header.module.scss';
 import searchStyle from './global-search.module.scss';
@@ -71,6 +72,14 @@ const GlobalSearch = () => {
         if (debouncedValue) {
             sessionStorage.setItem('globalSearchTerm', debouncedValue);
         }
+        
+        // Dispatch custom event before navigation to trigger modal opening on same page
+        window.dispatchEvent(new CustomEvent('openSearchResult', { 
+            detail: { 
+                type: type,
+                item: item
+            } 
+        }));
         
         // Navigate to appropriate page with specific targeting
         switch(type) {
@@ -278,7 +287,7 @@ const GlobalSearch = () => {
                                                             onClick={() => handleSelectItem(project, 'project')}
                                                         >
                                                             <div className={searchStyle.resultIcon}>
-                                                                <div className={searchStyle.projectIcon}>P</div>
+                                                                <Folder size={20} color="#344054" />
                                                             </div>
                                                             <div className={searchStyle.resultContent}>
                                                                 <div className={searchStyle.resultTitle}>
@@ -296,8 +305,8 @@ const GlobalSearch = () => {
                                                                 )}
                                                             </div>
                                                             {formatted.status && (
-                                                                <div className={searchStyle.resultBadge}>
-                                                                    {formatted.status}
+                                                                <div className={`${searchStyle.resultBadge} ${formatted.is_archived ? searchStyle.archived : ''}`}>
+                                                                    {getProjectStatusBadge(formatted)}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -377,7 +386,12 @@ const GlobalSearch = () => {
                                                             onClick={() => handleSelectItem(supplier, 'supplier')}
                                                         >
                                                             <div className={searchStyle.resultIcon}>
-                                                                <div className={searchStyle.supplierIcon}>S</div>
+                                                                <ImageAvatar 
+                                                                    photo={formatted.photo}
+                                                                    has_photo={formatted.has_photo}
+                                                                    is_business={formatted.is_business}
+                                                                    size={16}
+                                                                />
                                                             </div>
                                                             <div className={searchStyle.resultContent}>
                                                                 <div className={searchStyle.resultTitle}>
