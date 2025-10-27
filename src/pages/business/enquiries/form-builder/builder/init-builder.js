@@ -303,7 +303,7 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
         <button class="move-field-up" title="Up">↑</button>
         <button class="move-field-down" title="Down">↓</button>
         <button class="edit-field" title="Edit">✎</button>
-        <button class="remove-field" title="Remove">✖</button>
+        <button class="remove-field" title="Remove">⛌</button>
       </div>`;
   }
 
