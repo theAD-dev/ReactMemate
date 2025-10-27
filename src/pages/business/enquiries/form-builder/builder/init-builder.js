@@ -631,7 +631,7 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
     // Validate form title
     const titleEl = root.querySelector('#form-title');
     if (!titleEl || !titleEl.value.trim()) {
-      throw new Error('Survey title is required');
+      throw new Error('Form title is required');
     }
 
     // Validate Submit To email

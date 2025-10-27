@@ -325,8 +325,8 @@ export default function TempFormBuilder() {
               {/* Form Settings */}
               <div className="property-section">
                 <div className="form-field">
-                  <label>Survey title<span style={{ color: '#f04438' }}>*</span></label>
-                  <input id="form-title" placeholder="Enter survey title" />
+                  <label>Form title<span style={{ color: '#f04438' }}>*</span></label>
+                  <input id="form-title" placeholder="Enter form title" />
                 </div>
                 <div className="form-field">
                   <label>Survey description</label>
