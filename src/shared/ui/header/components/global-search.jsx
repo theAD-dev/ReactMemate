@@ -287,7 +287,9 @@ const GlobalSearch = () => {
                                                             onClick={() => handleSelectItem(project, 'project')}
                                                         >
                                                             <div className={searchStyle.resultIcon}>
-                                                                <Folder size={20} color="#344054" />
+                                                                <div className={searchStyle.projectIcon}>
+                                                                <Folder size={16} color="#344054" />
+                                                                </div>
                                                             </div>
                                                             <div className={searchStyle.resultContent}>
                                                                 <div className={searchStyle.resultTitle}>

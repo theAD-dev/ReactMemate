@@ -201,27 +201,23 @@
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid #e5e7eb;
 }
 
 .projectIcon {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 14px;
-    position: relative;
-    transition: opacity 0.2s ease;
+    border-radius: 4px;
+    border: 0.75px solid #ccc;
+    background: linear-gradient(180deg, #f9fafb 0%, #edf0f3 100%);
 }
 
 .resultItem:has(.archived) .projectIcon {
     opacity: 0.6;
-    background: linear-gradient(135deg, #9ca3af 0%, #74788c 100%);
 }
 
 .jobIcon {
