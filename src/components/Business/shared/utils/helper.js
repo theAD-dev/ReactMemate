@@ -39,19 +39,13 @@ export function formatMoney(number) {
 
 export const dateFormat = (dateInMiliSec, isDotformate) => {
   if (!dateInMiliSec) return "-";
-
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
   const date = new Date(1000 * +dateInMiliSec);
+  const formatter = new Intl.DateTimeFormat("en-AU", {
+    timeZone: 'Australia/Sydney',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
 
-  if(isDotformate) {
-    const dotFormattedDate = date.toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).replace(/\//g, '.');
-    return dotFormattedDate;
-  }
-
-  const formattedDate = date.toLocaleDateString('en-US', options)?.replace(/,/g, '');
-  return formattedDate;
+  return formatter.format(date);
 };

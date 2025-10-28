@@ -87,10 +87,10 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
     };
   }, [services, hasMoreData, loading]);
 
-  const invoiceNumberBodyTemplate = (rowData) => {
+  const serviceIdBodyTemplate = (rowData) => {
     return (
       <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
-        <span style={{ fontWeight: '500' }}>{rowData.number || '-'}</span>
+        <span style={{ fontWeight: '500' }}>{rowData.id || '-'}</span>
         <span className='font-12' style={{ color: '#98A2B3' }}>
           {rowData.date ? formatDate(rowData.date) : '-'}
         </span>
@@ -187,8 +187,8 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
       />
       <Column
         field="number"
-        header="Expense ID"
-        body={invoiceNumberBodyTemplate}
+        header="Service ID"
+        body={serviceIdBodyTemplate}
         frozen
         sortable
         style={{ minWidth: '150px', width: '150px', maxWidth: '150px' }}
@@ -197,9 +197,8 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
       />
       <Column
         field="number"
-        header="Reference"
-        body={() => '-'}
-        style={{ minWidth: '400px', width: '400px', maxWidth: '400px' }}
+        header="Expense"
+        style={{ minWidth: '150px', width: '150px', maxWidth: '150px' }}
       />
       <Column
         field="odometer_km"

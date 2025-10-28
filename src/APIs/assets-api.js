@@ -89,3 +89,13 @@ export const createNewService = async (vehicleId, data) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const linkExpenseToAsset = async (data) => {
+    const endpoint = `/assets/types/expense-links/create/`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};

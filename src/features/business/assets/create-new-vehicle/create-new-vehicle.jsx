@@ -27,9 +27,24 @@ export const CreateNewVehicle = ({ visible, setVisible, setRefetch }) => {
         }
     });
 
+    function formatDateToYMD(date) {
+        if (!date) return '';
+        date = new Date(date);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     const handleSubmit = async (data) => {
-        
-        mutation.mutate(data);
+        const formattedData = {
+            ...data,
+            date_of_expiry: formatDateToYMD(data.date_of_expiry),
+            date_of_purchase: formatDateToYMD(data.date_of_purchase),
+            insurance_expiry: formatDateToYMD(data.insurance_expiry),
+        };
+
+        mutation.mutate(formattedData);
     };
 
     const handleExternalSubmit = () => {

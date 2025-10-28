@@ -13,7 +13,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from "primereact/inputtext";
 import * as yup from 'yup';
 import styles from './vehicle-form.module.scss';
-import { getMobileUserList, getUserList } from '../../../../APIs/task-api';
+import { getUserList } from '../../../../APIs/task-api';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
@@ -34,7 +34,7 @@ const schema = yup.object({
     .min(1900, "Year must be at least 1900")
     .max(2100, "Year must be at most 2100"),
   fuel_type: yup.string()
-    .oneOf(["gasoline", "diesel", "hybrid", "electric", "hydrogen"], "Invalid fuel type"),
+    .oneOf(["gasoline", "diesel", "petrol", "hybrid", "electric", "hydrogen"], "Invalid fuel type"),
   vin_number: yup.string()
     .max(64, "VIN number must be at most 64 characters"),
   engine_number: yup.string()
@@ -62,10 +62,9 @@ const schema = yup.object({
     .max(64, "Trim must be at most 64 characters"),
 });
 
-const VehicleForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
+const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => {
   const { session } = useAuth();
   const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
-  const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
 
   const { control, register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
@@ -79,6 +78,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
   const fuelTypeOptions = [
     { value: 'gasoline', label: 'Gasoline' },
     { value: 'diesel', label: 'Diesel' },
+    { value: 'petrol', label: 'Petrol' },
     { value: 'hybrid', label: 'Hybrid' },
     { value: 'electric', label: 'Electric' },
     { value: 'hydrogen', label: 'Hydrogen' }
@@ -99,11 +99,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
         <Col sm={6}>
           <h2 className={styles.sectionTitle}>Vehicle Information</h2>
         </Col>
-        <Col sm={6}>
-          <div className="d-flex justify-content-end">
-            <span style={{ color: '#667085', fontSize: '14px' }}>Vehicle ID: ELT-339047-1</span>
-          </div>
-        </Col>
+        <Col sm={6}></Col>
       </Row>
 
       <Row className={clsx(styles.bgGreay)}>
@@ -324,7 +320,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                     placeholder="Enter ODO"
                     useGrouping={false}
                     min={0}
-                    max={2147483647}
+                    disabled={!!vehicleId}
                   />
                 )}
               />
@@ -356,23 +352,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues }, ref) => {
                         photo: user?.photo || "",
                         has_photo: user?.has_photo
                       })) || []
-                    },
-                    ...(session?.has_work_subscription
-                      ? [
-                        {
-                          label: 'Mobile User',
-                          items:
-                            mobileUsersList?.data?.users
-                              ?.filter((user) => user?.status !== 'disconnected')
-                              ?.map((user) => ({
-                                value: user?.id,
-                                label: `${user?.first_name} ${user?.last_name}` || user?.first_name || "-",
-                                photo: user?.photo || "",
-                                has_photo: user?.has_photo,
-                              })) || [],
-                        },
-                      ]
-                      : []),
+                    }
                   ],
                   onChange: (e) => {
                     field.onChange(e.value);

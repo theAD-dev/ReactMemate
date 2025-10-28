@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Plus, Calendar3, QuestionCircle, ExclamationCircleFill, Upload, PlusCircle, CheckCircleFill, Trash, InfoCircle } from 'react-bootstrap-icons';
 import { useDropzone } from 'react-dropzone';
@@ -22,7 +22,9 @@ import { Sidebar } from 'primereact/sidebar';
 import { Tooltip } from 'primereact/tooltip';
 import { toast } from 'sonner';
 import * as yup from 'yup';
+import { VehicleDropdown } from './assets-types/vehicle-dropdown';
 import styles from './expenses-form.module.scss';
+import { getListOfAssetCategories } from '../../../../../APIs/assets-api';
 import { getProjectsList, getXeroCodesList } from '../../../../../APIs/expenses-api';
 import { getListOfSuppliers } from '../../../../../APIs/SuppliersApi';
 import aiScanImg from '../../../../../assets/ai-scan.png';
@@ -75,7 +77,7 @@ const schema = yup
     })
     .required();
 
-const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier, projectId }, ref) => {
+const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier, projectId, asset, setAsset }, ref) => {
     const autoCompleteRef = useRef(null);
     const observerRef = useRef(null);
     const accessToken = localStorage.getItem("access_token");
@@ -321,6 +323,29 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         }
     };
 
+    const listOfAssetCategoriesQuery = useQuery({
+        queryKey: ['assetCategories'],
+        queryFn: getListOfAssetCategories,
+        staleTime: 0
+    });
+    
+    const assetCategories = useMemo(() => {
+        const data = listOfAssetCategoriesQuery?.data;
+        console.log('Raw asset categories data:', data);
+        
+        // Handle both array and object with results property
+        if (Array.isArray(data)) {
+            // Only filter by enabled if the property exists, otherwise return all
+            return data.filter(category => category.enabled !== false);
+        }
+        
+        if (data?.results && Array.isArray(data.results)) {
+            return data.results.filter(category => category.enabled !== false);
+        }
+        
+        return [];
+    }, [listOfAssetCategoriesQuery?.data]);
+
     const search = debounce((event) => {
         const query = event?.filter?.toLowerCase() || '';
         setSearchValue(query);
@@ -429,14 +454,17 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     // const departmentsList = useQuery({ queryKey: ['getDepartments'], queryFn: getDepartments });
     const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
 
-    const options = ['Assign to project', 'Assign to timeframe'];
+    const options = ['Assign to project', 'Assign to timeframe', 'Assign to Asset'];
     const [option, setOptionValue] = useState(defaultValues?.option || options[0]);
 
     const watchOrder = watch('order');
+
     useEffect(() => {
         if (watchOrder) trigger(['order']);
     }, [watchOrder]);
+
     const watchType = watch('type');
+
     const validateFields = () => {
         if (option === 'Assign to project' && !watchOrder) {
             setError("order", { type: "manual", message: "Order is required" });
@@ -444,6 +472,16 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
         if (option === 'Assign to timeframe' && !watchType) {
             setError("type", { type: "manual", message: "Type is required" });
+        }
+
+        if (option === 'Assign to Asset') {
+            if (!asset?.type) {
+                setError("assetType", { type: "manual", message: "Asset Category is required" });
+            }
+
+            if (!asset?.id) {
+                setError("assetId", { type: "manual", message: "Asset is required" });
+            }
         }
     };
 
@@ -912,8 +950,41 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                         {errors?.order && <p className="error-message">{errors.order?.message}</p>}
                                     </div>
                                 </Col>
-                            )
-                            : (
+                            ) : option === 'Assign to Asset' ? (
+                                <Col sm={12}>
+                                    <div className="d-flex flex-column gap-1 mt-4 mb-4">
+                                        <Row>
+                                            <Col sm={6}>
+                                                <label className={clsx(styles.lable)}>Asset Type</label>
+                                                <Dropdown
+                                                    options={(() => {
+                                                        const opts = assetCategories.map(category => ({
+                                                            value: category.id,
+                                                            label: category.asset_name
+                                                        }));
+                                                        return opts;
+                                                    })()}
+                                                    onChange={(e) => {
+                                                        setAsset({ type: e.value });
+                                                    }}
+                                                    className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors?.type })}
+                                                    style={{ height: '46px' }}
+                                                    value={asset?.type}
+                                                    placeholder="Select asset type"
+                                                    filter={false}
+                                                    loading={listOfAssetCategoriesQuery?.isFetching}
+                                                    emptyMessage="No asset types available"
+                                                    // showClear={asset?.type ? true : false}
+                                                />
+                                                {errors?.assetType && <p className="error-message">{errors.assetType?.message}</p>}
+                                            </Col>
+                                            {asset?.type && assetCategories.find(cat => cat.id === asset?.type)?.asset_name?.toLowerCase() === 'vehicles' && (
+                                                <VehicleDropdown asset={asset} setAsset={setAsset} errors={errors} />
+                                            )}
+                                        </Row>
+                                    </div>
+                                </Col>
+                            ) : (
                                 <Col sm={12}>
                                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
                                         <Tooltip position='top' target={`.info-timeinterval`} />

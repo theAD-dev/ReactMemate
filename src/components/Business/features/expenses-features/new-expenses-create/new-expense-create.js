@@ -6,16 +6,16 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import styles from './new-expense-create.module.scss';
+import { linkExpenseToAsset } from '../../../../../APIs/assets-api';
 import { createNewExpense } from '../../../../../APIs/expenses-api';
 import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 
-
-
-const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, projectReference }) => {
+const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, assetForExpense, projectReference, createNewService = false, createServiceFromExpense }) => {
     const url = window.location.href;
     const urlObj = new URL(url);
     const params = new URLSearchParams(urlObj.search);
     const [projectId, setProjectId] = useState(null);
+    const [asset, setAsset] = useState(null);
 
     const today = new Date();
     const tomorrow = new Date(today);
@@ -31,6 +31,13 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
     });
 
     useEffect(() => {
+        if (assetForExpense && assetForExpense.id && assetForExpense.type) {
+            setDefaultValues((prev) => ({ ...prev, option: 'Assign to Asset' }));
+            setAsset({ id: assetForExpense.id, type: assetForExpense.type });
+        }
+    }, [assetForExpense]);
+
+    useEffect(() => {
         const projectParamId = params.get('projectId') || expenseProjectId;
         const reference = params.get('reference') || projectReference;
         if (reference) {
@@ -38,7 +45,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
             urlObj.searchParams.delete('reference');
             window.history.replaceState({}, '', urlObj);
         }
- 
+
         if (projectParamId) {
             setProjectId(projectParamId);
             setDefaultValues((prev) => ({ ...prev, option: 'Assign to project' }));
@@ -47,11 +54,32 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
         }
     }, [projectId, setVisible]);
 
+    const expenseLinkMutation = useMutation({
+        mutationFn: (data) => linkExpenseToAsset(data),
+        onSuccess: (response) => {
+            console.log('response: ', response);
+            toast.success(`Expense linked to asset successfully`);
+        },
+        onError: (error) => {
+            console.error('Error linking expense to asset:', error);
+            toast.error('Failed to link expense to asset. Please try again.');
+        }
+    });
+
     const mutation = useMutation({
         mutationFn: (data) => createNewExpense(data),
         onSuccess: (response) => {
             console.log('response: ', response);
             toast.success(`Expense created successfully`);
+            if (asset && asset.type && asset.id) {
+                const linkData = {
+                    asset_type: asset.type,
+                    asset_id: asset.id,
+                    expense: response.id
+                };
+                expenseLinkMutation.mutate(linkData);
+                createNewService && createServiceFromExpense(response.id || 1043);
+            }
             handleClose();
             setRefetch((refetch) => !refetch);
         },
@@ -91,6 +119,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
             date: today,
             due_date: tomorrow
         });
+        setAsset(null);
     };
     return (
         <Sidebar visible={visible} position="right" onHide={handleClose} modal={false} dismissable={false} style={{ width: '702px' }}
@@ -116,12 +145,12 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
                             <h5>Expense Details</h5>
                         </div>
-                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} projectId={projectId} />
+                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} projectId={projectId}  asset={asset} setAsset={setAsset} />
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); handleClose(); }} className='outline-button' disabled={mutation.isPending}>Cancel</Button>
-                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending}>Save {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}/>}</Button>
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); handleClose(); }} className='outline-button' disabled={mutation.isPending || expenseLinkMutation.isPending}>Cancel</Button>
+                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending || expenseLinkMutation.isPending}>Save {(mutation.isPending || expenseLinkMutation.isPending) && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
                     </div>
                 </div>
             )}

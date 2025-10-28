@@ -75,6 +75,7 @@ const EditVehicle = forwardRef(({ vehicle, setIsEdit, refetch, setIsPending, han
   return (
     <VehicleForm
       ref={ref}
+      vehicleId={vehicle?.id}
       onSubmit={handleSubmit}
       defaultValues={defaultValues}
       isLoading={updateVehicleMutation.isPending}
