@@ -59,28 +59,28 @@ const Subscription = () => {
     },
   });
 
-  // Inquiries subscription mutations
+  // Enquiries subscription mutations
   const activeInquiriesMutation = useMutation({
     mutationFn: activeInquiriesSubscription,
     onSuccess: () => {
-      toast.success("Inquiries subscription activated successfully!");
+      toast.success("Enquiries subscription activated successfully!");
       window.location.reload();
     },
     onError: (error) => {
-      console.error("Error activating inquiries subscription:", error);
-      toast.error("Failed to activate inquiries subscription. Please try again.");
+      console.error("Error activating enquiries subscription:", error);
+      toast.error("Failed to activate enquiries subscription. Please try again.");
     },
   });
 
   const cancelInquiriesMutation = useMutation({
     mutationFn: cancelInquiriesSubscription,
     onSuccess: () => {
-      toast.success("Inquiries subscription canceled successfully!");
+      toast.success("Enquiries subscription canceled successfully!");
       window.location.reload();
     },
     onError: (error) => {
-      console.error("Error canceling inquiries subscription:", error);
-      toast.error("Failed to cancel inquiries subscription. Please try again.");
+      console.error("Error canceling enquiries subscription:", error);
+      toast.error("Failed to cancel enquiries subscription. Please try again.");
     },
   });
 
@@ -398,7 +398,7 @@ const Subscription = () => {
                         </div>
                         <div className="progressSubsIn">
                           <div className="d-flex justify-content-between mb-1">
-                            <h4>Inquiries</h4>
+                            <h4>Enquiries</h4>
                             <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.inquiries?.default || "0.00")}</div>
                           </div>
 
