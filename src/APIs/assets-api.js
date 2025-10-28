@@ -28,7 +28,7 @@ export const getListOfVehicles = async (page, limit, search = "", order = "", is
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     url.searchParams.append("limit", limit);
     url.searchParams.append("offset", offset);
-    if (search) url.searchParams.append("search", search);
+    if (search) url.searchParams.append("q", search);
     if (order) url.searchParams.append("ordering", order);
     if (isShowDeleted) url.searchParams.append('deleted', 1);
 
