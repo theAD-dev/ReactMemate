@@ -4,6 +4,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import style from './supplier-history.module.scss';
 import { getSupplierHistory } from '../../../../../APIs/SuppliersApi';
+import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import Loader from '../../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-found-template';
@@ -11,6 +12,7 @@ import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-foun
 
 const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, isShowDeleted }, ref) => {
   const { id } = useParams();
+  const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [expenses, setExpenses] = useState([]);
 
@@ -131,7 +133,7 @@ const SupplierHistoryTable = forwardRef(({ searchValue, selected, setSelected, i
   return (
     <DataTable ref={ref} value={expenses} scrollable selectionMode={'checkbox'} removableSort
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-      scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
+      scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
       loading={loading}
       loadingIcon={Loader}

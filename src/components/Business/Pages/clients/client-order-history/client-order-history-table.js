@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import style from './client-order-history.module.scss';
 import { bringBack, clientOrderHistory } from '../../../../../APIs/ClientsApi';
 import { fetchduplicateData } from '../../../../../APIs/SalesApi';
+import { useTrialHeight } from '../../../../../app/providers/trial-height-provider';
 import { formatDate } from '../../../../../shared/lib/date-format';
 import { formatAUD } from '../../../../../shared/lib/format-aud';
 import Loader from '../../../../../shared/ui/loader/loader';
@@ -22,6 +23,7 @@ import NoDataFoundTemplate from '../../../../../ui/no-data-template/no-data-foun
 const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue }, ref) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [clientOrders, setClientOrders] = useState([]);
   const [page, setPage] = useState(1);
@@ -324,7 +326,7 @@ const ClientOrderHistoryTable = forwardRef(({ selected, setSelected, searchValue
   return (
     <DataTable ref={ref} value={clientOrders} scrollable selectionMode={'checkbox'}
       columnResizeMode="expand" resizableColumns showGridlines size={'large'}
-      scrollHeight={"calc(100vh - 182px)"} className="border" selection={selected}
+      scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
       loading={loading}
       loadingIcon={Loader}
