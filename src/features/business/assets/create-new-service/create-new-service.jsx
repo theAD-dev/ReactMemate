@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
@@ -14,6 +14,7 @@ import ServiceForm from '../ui/service-form';
 export const CreateNewService = ({ visible, setVisible, setRefetch, vehicleId = 1 }) => {
     const formRef = useRef(null);
     const { id } = useParams();
+    const navigate = useNavigate();
     const [defaultValues,] = useState({});
     const [isDisabled, setIsDisabled] = useState(true);
     const [showCreateExpenseModal, setShowCreateExpenseModal] = useState(false);
@@ -38,6 +39,7 @@ export const CreateNewService = ({ visible, setVisible, setRefetch, vehicleId = 
             if (setRefetch) {
                 setRefetch((refetch) => !refetch);
             }
+            navigate('/assets?type=vehicles');
         },
         onError: (error) => {
             console.error('Error creating service:', error);

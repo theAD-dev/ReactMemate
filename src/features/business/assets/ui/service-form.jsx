@@ -33,7 +33,8 @@ const ServiceForm = forwardRef(({ onSubmit, defaultValues, setIsDisabled, setExp
     const getVehicleQuery = useQuery({
         queryKey: ['getVehicle', vehicleId],
         queryFn: () => getVehicle(vehicleId),
-        enabled: !!vehicleId
+        enabled: !!vehicleId,
+        staleTime: 0
     });
     const minOdometer = getVehicleQuery.data?.odometer_km || 0;
 
