@@ -4,6 +4,7 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import style from './service-history.module.scss';
 import { getVehicleServices } from '../../../../APIs/assets-api';
+import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
@@ -23,6 +24,7 @@ const formatDate = (timestamp) => {
 
 const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, refetch }, ref) => {
   const { id } = useParams();
+  const { trialHeight } = useTrialHeight();
   const observerRef = useRef(null);
   const [services, setServices] = useState([]);
   const [page, setPage] = useState(1);
@@ -167,7 +169,7 @@ const ServiceHistoryTable = forwardRef(({ selected, setSelected, searchValue, re
       resizableColumns
       showGridlines
       size={'large'}
-      scrollHeight={"calc(100vh - 182px)"}
+      scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`}
       className="border"
       selection={selected}
       onSelectionChange={(e) => setSelected(e.value)}
