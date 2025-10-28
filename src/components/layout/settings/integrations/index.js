@@ -7,40 +7,31 @@ import clsx from "clsx";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import * as yup from "yup";
 import EmailIntegrations from "./email-integration";
 import GoogleIntegrations from "./google-review-integration";
 import style from "./integration.module.scss";
+import MailchimpIntegration from "./mailchimp-integration";
 import StripeIntegrations from "./stripe-integrations";
 import TwilioIntegrations from "./twilio-integration";
 import XeroIntegration from "./xero-integration";
 import { getEmailIntegrations, getGoogleReviewIntegrations, getStripeIntegrations, getTwilioIntegrations, getXeroIntegrations } from "../../../../APIs/integrations-api";
+import { useAuth } from "../../../../app/providers/auth-provider";
 import googleAnalyticLogo from "../../../../assets/images/icon/googleAnalyticLogo.png";
 import googleCalLogo from "../../../../assets/images/icon/googleCalLogo.png";
 import googleLogo from "../../../../assets/images/icon/googleLogo.png";
 import stripelogo from "../../../../assets/images/icon/stripeLogo.png";
 import xeroLogo from "../../../../assets/images/icon/xeroLogo.png";
+import mailchimpLogo from "../../../../assets/images/mailchimp_icon.png";
 import twilioLogo from '../../../../assets/images/twilio-logo.png';
 
-const schema = yup.object().shape({
-  emails: yup.array().of(
-    yup.object().shape({
-      secret: yup
-        .string()
-        .email("Invalid secret address")
-
-        .required("secret is required"),
-      public: yup.string().required("public is required"),
-    })
-  ),
-});
 const Integrations = () => {
   const location = useLocation();
+  const { session } = useAuth();
   const [googleVisible, setGoogleVisible] = useState(false);
-  const [visible, setVisible] = useState(false);
   const [stripeVisible, setStripeVisible] = useState(false);
   const [twilioVisible, setTwilioVisible] = useState(false);
   const [emailVisible, setEmailVisible] = useState(false);
+  const [mailchimpVisible, setMailchimpVisible] = useState(false);
 
   const stripeIntegrationsQuery = useQuery({ queryKey: ['stripeIntegrations'], queryFn: getStripeIntegrations });
   const googleReviewIntegrationsQuery = useQuery({ queryKey: ['googleReviewIntegrations'], queryFn: getGoogleReviewIntegrations });
@@ -157,6 +148,28 @@ const Integrations = () => {
               <Col xs={4} className="pb-4">
                 <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
                   <div className={style.head}>
+                    <img src={mailchimpLogo} style={{ width: '65px', position: 'relative' }} alt={"Mailchimp"} />
+                    {
+                      <button className={session?.has_mailchimp ? style.connected : style.disconnected}>
+                        {session?.has_mailchimp ? "Connected" : "Disconnected"}
+                        <span className={style.dots}></span>
+                      </button>
+                    }
+                  </div>
+                  <div className={style.body}>
+                    <h3>{"Mailchimp"}</h3>
+                    <p>{"Integrate Mailchimp to send email notifications to your customers directly from the platform."}</p>
+                  </div>
+                  <div className={style.bottom}>
+                    <button className={style.infoButton} onClick={() => { setMailchimpVisible(true); }}>
+                      {!session?.has_mailchimp ? 'Connect' : 'Update'}
+                    </button>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={4} className="pb-4">
+                <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                  <div className={style.head}>
                     <div style={{ background: '#F9FAFB', }} className="d-flex justify-content-center align-items-center p-3 rounded-circle">
                       <Envelope size={32} color="#667085" />
                     </div>
@@ -227,9 +240,7 @@ const Integrations = () => {
                           <Button className="danger-outline-button">Disconnect</Button>
                         </>
                       ) : (
-                        <button disabled className={style.infoButton} onClick={() => {
-                          item.method === "stripe" ? setStripeVisible(true) : item.method === "googlereview" ? setGoogleVisible(true) : setVisible(true);
-                        }}>
+                        <button disabled className={style.infoButton}>
                           Connect
                         </button>
                       )}
@@ -245,6 +256,7 @@ const Integrations = () => {
       <TwilioIntegrations visible={twilioVisible} setVisible={setTwilioVisible} twilio={twilioIntegrationsQuery?.data} refetch={twilioIntegrationsQuery?.refetch} />
       <GoogleIntegrations visible={googleVisible} setVisible={setGoogleVisible} data={googleReviewIntegrationsQuery?.data} refetch={googleReviewIntegrationsQuery?.refetch} />
       <EmailIntegrations visible={emailVisible} setVisible={setEmailVisible} email={emailIntegrationsQuery?.data} refetch={emailIntegrationsQuery?.refetch} />
+      <MailchimpIntegration visible={mailchimpVisible} setVisible={setMailchimpVisible} mailchimp={{ mailchimp_api_key: "" }} refetch={() => window.location.reload()} />
     </>
   );
 };
