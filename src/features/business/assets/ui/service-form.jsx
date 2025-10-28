@@ -84,7 +84,8 @@ const ServiceForm = forwardRef(({ onSubmit, defaultValues, setIsDisabled, setExp
                                         className={clsx(styles.inputText, { [styles.error]: errors.odometer_km }, 'p-0')}
                                         placeholder="Enter odometer reading"
                                         useGrouping={false}
-                                        min={minOdometer || 0}
+                                        min={minOdometer + 1 || 0}
+                                        key={minOdometer}
                                     />
                                 )}
                             />
