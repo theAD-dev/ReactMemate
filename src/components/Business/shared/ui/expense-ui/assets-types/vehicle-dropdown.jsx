@@ -96,9 +96,9 @@ export const VehicleDropdown = ({ asset, setAsset, errors }) => {
                     return (
                         <div className='d-flex gap-2 align-items-center w-100'>
                             <div className='ellipsis-width' style={{ maxWidth: '350px' }}>
-                                <div style={{ fontWeight: '500' }}>{option?.registration_number || '-'}</div>
+                                <div style={{ fontWeight: '500' }}>{option?.make} {option?.model}</div>
                                 <div style={{ fontSize: '12px', color: '#98A2B3' }}>
-                                    {option?.make} {option?.model} {option?.year_manufactured && `(${option?.year_manufactured})`}
+                                    {option?.registration_number || '-'} {option?.year_manufactured && `(${option?.year_manufactured})`}
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ export const VehicleDropdown = ({ asset, setAsset, errors }) => {
                         asset?.id === option?.id ? (
                             <div className='d-flex gap-2 align-items-center w-100'>
                                 <div className='ellipsis-width' style={{ maxWidth: '350px' }}>
-                                    {option?.registration_number}
+                                    {option?.make} {option?.model}
                                 </div>
                             </div>
                         ) : null
