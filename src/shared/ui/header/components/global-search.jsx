@@ -425,7 +425,7 @@ const GlobalSearch = () => {
                     </div>
                     
                     {/* Navigation Help */}
-                    <div className={searchStyle.navigationHelp}>
+                    {/* <div className={searchStyle.navigationHelp}>
                         <div className={searchStyle.helpItem}>
                             <span className={searchStyle.helpKey}>↑↓</span>
                             <span>to navigate</span>
@@ -442,7 +442,7 @@ const GlobalSearch = () => {
                             <span className={searchStyle.helpKey}>↵</span>
                             <span>return to parent</span>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             )}
         </div>
