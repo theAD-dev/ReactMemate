@@ -123,3 +123,22 @@ export const mailchimpIntegrationsDelete = async () => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const getMailchimpLists = async () => {
+    const endpoint = '/settings/integrations/mailchimp/get-lists/';
+    const options = {
+        method: 'GET'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const addUserToMailchimpList = async (data) => {
+    const endpoint = '/settings/integrations/mailchimp/add-users/';
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
