@@ -13,7 +13,9 @@ import SidebarClientLoading from '../sidebar-client-loading/sidebar-client-loadi
 
 const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }) => {
   const formRef = useRef(null);
+  const [asset, setAsset] = useState(null);
   const [defaultValues, setDefaultValues] = useState({});
+
   const expense = useQuery({ queryKey: ['getExpense', id], queryFn: () => getExpense(id), enabled: !!id });
   const mutation = useMutation({
     mutationFn: (data) => updateExpense(id, data),
@@ -88,9 +90,12 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
 
   useEffect(() => {
     if (expense?.data) {
-      console.log('call......', expense?.data);
       const gstType = calculateGST(expense?.data?.nogst, expense?.data?.gst);
       const { subtotal, tax, totalAmount } = calculateAmounts(+expense?.data?.amount, gstType);
+
+      if (expense?.data?.asset) {
+        setAsset({ id: expense?.data?.asset?.asset_id, type: expense?.data?.asset.asset_type_id });
+      }
 
       setDefaultValues((others) => ({
         ...others,
@@ -111,7 +116,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
         subtotal,
         tax,
         totalAmount,
-        option: expense?.data?.order ? 'Assign to project' : 'Assign to timeframe',
+        option: expense?.data?.order ? 'Assign to project' : expense?.data?.asset ? 'Assign to asset' : 'Assign to timeframe',
         file: expense?.data?.file
       }));
     }
@@ -144,7 +149,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
                   <h5>Expense Details</h5>
                   <h6>Expense ID: {expense?.data?.number || "-"}</h6>
                 </div>
-                <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} />
+                <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} defaultSupplier={{ name: name, id: expense?.data?.supplier }} id={id} asset={asset} setAsset={setAsset} />
               </>
               : <SidebarClientLoading />
             }
@@ -152,7 +157,7 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
 
           <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
             <Button type='button' onClick={(e) => { e.stopPropagation(); setVisible(false); setEditData({}); }} className='outline-button' disabled={mutation.isPending}>Cancel</Button>
-            <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending}>Update {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }}/>}</Button>
+            <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending}>Update {mutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
           </div>
         </div>
       )}
