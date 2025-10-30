@@ -89,7 +89,7 @@ const FilesModel = ({ projectId }) => {
   const filesQuery = useQuery({
     queryKey: ['id', projectId],
     queryFn: () => getProjectFilesById(projectId),
-    enabled: !!projectId && !!viewShow,
+    enabled: !!projectId,
     retry: 1,
     staleTime: 0,
     cacheTime: 0,
@@ -209,7 +209,7 @@ const FilesModel = ({ projectId }) => {
   return (
     <>
       {/* View modal trigger */}
-      <Button className=" filebut fileActive" onClick={handleShow}>
+      <Button className={`filebut ${filesQuery?.data?.length ? 'fileActive' : ''}`} onClick={handleShow}>
         Files <img src={FolderFileIcon} alt="FolderFileIcon" />
       </Button>
 

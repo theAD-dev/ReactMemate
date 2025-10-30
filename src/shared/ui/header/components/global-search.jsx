@@ -307,7 +307,7 @@ const GlobalSearch = () => {
                                                                 )}
                                                             </div>
                                                             {formatted.status && (
-                                                                <div className={`${searchStyle.resultBadge} ${formatted.is_archived ? searchStyle.archived : ''}`}>
+                                                                <div className={`${searchStyle.resultBadge} ${formatted.is_archived ? searchStyle.archived : searchStyle.activeProject}`}>
                                                                     {getProjectStatusBadge(formatted)}
                                                                 </div>
                                                             )}

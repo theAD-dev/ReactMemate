@@ -339,9 +339,15 @@
 
 /* Project Status Badges */
 .resultBadge.archived {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fca5a5;
+  background: #fef3f2;
+  color: #b42318;
+  border: 1px solid #fecdca;
+}
+
+.resultBadge.activeProject {
+  background: #ebf8ff;
+  color: #067647;
+  border: 1px solid #abefc6;
 }
 
 /* Responsive Design */
