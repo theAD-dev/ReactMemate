@@ -17,6 +17,20 @@ import NoDataFoundTemplate from '../../../ui/no-data-template/no-data-found-temp
 
 const formatDate = (timestamp) => {
     if (!timestamp) return '-';
+    else {
+        // check format YYYY-MM-DD
+        const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+        if (datePattern.test(timestamp)) {
+            const date = new Date(timestamp);
+            const formatter = new Intl.DateTimeFormat("en-AU", {
+                timeZone: 'Australia/Sydney',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            return formatter.format(date);
+        }
+    }
     // Handle Unix timestamp (in seconds)
     const date = new Date(+timestamp * 1000);
     const formatter = new Intl.DateTimeFormat("en-AU", {
