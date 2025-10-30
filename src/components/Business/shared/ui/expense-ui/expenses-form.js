@@ -454,7 +454,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
     // const departmentsList = useQuery({ queryKey: ['getDepartments'], queryFn: getDepartments });
     const projectsList = useQuery({ queryKey: ['getProjectsList'], queryFn: getProjectsList });
 
-    const options = ['Assign to project', 'Assign to timeframe', 'Assign to Asset'];
+    const options = ['Assign to project', 'Assign to timeframe', 'Assign to asset'];
     const [option, setOptionValue] = useState(defaultValues?.option || options[0]);
 
     const watchOrder = watch('order');
@@ -474,7 +474,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
             setError("type", { type: "manual", message: "Type is required" });
         }
 
-        if (option === 'Assign to Asset') {
+        if (option === 'Assign to asset') {
             if (!asset?.type) {
                 setError("assetType", { type: "manual", message: "Asset Category is required" });
             }
@@ -950,7 +950,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                         {errors?.order && <p className="error-message">{errors.order?.message}</p>}
                                     </div>
                                 </Col>
-                            ) : option === 'Assign to Asset' ? (
+                            ) : option === 'Assign to asset' ? (
                                 <Col sm={12}>
                                     <div className="d-flex flex-column gap-1 mt-4 mb-4">
                                         <Row>

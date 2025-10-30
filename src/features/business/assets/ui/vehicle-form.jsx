@@ -24,7 +24,7 @@ const schema = yup.object({
     .required("Registration number is required")
     .min(1, "Registration number must be at least 1 character")
     .max(64, "Registration number must be at most 64 characters"),
-  date_of_expiry: yup.date().nullable(),
+  date_of_expiry: yup.date().required("Date of expiry is required").nullable(),
   make: yup.string()
     .max(64, "Make must be at most 64 characters"),
   model: yup.string()
@@ -39,7 +39,7 @@ const schema = yup.object({
     .max(64, "VIN number must be at most 64 characters"),
   engine_number: yup.string()
     .max(64, "Engine number must be at most 64 characters"),
-  date_of_purchase: yup.date().nullable(),
+  date_of_purchase: yup.date().required("Date of purchase is required").nullable(),
   purchased_amount: yup.number().nullable().min(0, "Purchase amount cannot be negative"),
   odometer_km: yup.number()
     .min(0, "Odometer cannot be negative")
@@ -49,7 +49,7 @@ const schema = yup.object({
     .max(128, "Insurer must be at most 128 characters"),
   insurance_policy_number: yup.string()
     .max(128, "Insurance policy number must be at most 128 characters"),
-  insurance_expiry: yup.date().nullable(),
+  insurance_expiry: yup.date().required("Insurance expiry is required").nullable(),
   receipt_number: yup.string()
     .max(128, "Receipt number must be at most 128 characters"),
   etag: yup.string()
@@ -120,7 +120,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Date Of Expiry</label>
+            <label className={clsx(styles.lable)}>Date Of Expiry <span className='required'>*</span></label>
             <Controller
               name="date_of_expiry"
               control={control}
@@ -256,7 +256,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Date of Purchase</label>
+            <label className={clsx(styles.lable)}>Date of Purchase <span className='required'>*</span></label>
             <Controller
               name="date_of_purchase"
               control={control}
@@ -438,7 +438,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Insurance Expiry</label>
+            <label className={clsx(styles.lable)}>Insurance Expiry <span className='required'>*</span></label>
             <Controller
               name="insurance_expiry"
               control={control}

@@ -159,7 +159,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
     };
 
     const nextServiceBody = (rowData) => {
-        return <span>{formatDate(rowData.next_service)}</span>;
+        return <span>{formatDate(rowData.next_service_date)}</span>;
     };
 
     const serviceBody = (rowData) => {
@@ -204,7 +204,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
     };
 
     const costPerKmBody = (rowData) => {
-        return <span>{rowData.cost_per_km ? `$${parseFloat(rowData.cost_per_km).toFixed(2)} per km` : "-"}</span>;
+        return <span>{rowData.per_km_cost ? `$${parseFloat(rowData.per_km_cost).toFixed(2)} per km` : "-"}</span>;
     };
 
     const costPerDayBody = (rowData) => {
@@ -247,7 +247,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
                 <Column header='Service/Expense' body={serviceBody} style={{ minWidth: '80px' }} />
                 <Column field='current_odometer' header='Current Odometer' body={currentOdometerBody} style={{ minWidth: '130px' }} />
                 <Column field='days_of_ownership' header='Days of Ownership' body={daysOfOwnershipBody} style={{ minWidth: '140px' }} />
-                <Column field='cost_per_km' header='Cost per km' body={costPerKmBody} style={{ minWidth: '120px' }} />
+                <Column field='per_km_cost' header='Cost per km' body={costPerKmBody} style={{ minWidth: '120px' }} />
                 <Column field='per_day_expense' header='Cost per day' body={costPerDayBody} style={{ minWidth: '120px' }} />
             </DataTable>
             {visible && editData?.id && <ViewVehicle visible={visible} setVisible={setVisible} editData={editData} setEditData={setEditData} onClose={() => { setVisible(false); setEditData(null); }} setRefetch={setRefetch} drivers={drivers} />}

@@ -32,7 +32,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
 
     useEffect(() => {
         if (assetForExpense && assetForExpense.id && assetForExpense.type) {
-            setDefaultValues((prev) => ({ ...prev, option: 'Assign to Asset' }));
+            setDefaultValues((prev) => ({ ...prev, option: 'Assign to asset' }));
             setAsset({ id: assetForExpense.id, type: assetForExpense.type });
         }
     }, [assetForExpense]);

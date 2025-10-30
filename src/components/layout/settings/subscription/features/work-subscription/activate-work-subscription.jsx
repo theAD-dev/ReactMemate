@@ -8,8 +8,9 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './activate-work-subscription.module.scss';
 import { activeWorkSubscription } from '../../../../../../APIs/settings-subscription-api';
+import { formatAUD } from '../../../../../../shared/lib/format-aud';
 
-export const ActivateWorkSubscription = () => {
+export const ActivateWorkSubscription = ({ defaultPrice, currentPrice }) => {
     const [showConfirmation, setShowConfirmation] = React.useState(false);
 
     const activeWorkMutation = useMutation({
@@ -48,7 +49,7 @@ export const ActivateWorkSubscription = () => {
             >
                 Cancel
             </Button>
-            <Button disabled={activeWorkMutation.isPending} className='solid-button' onClick={() => activeWorkMutation.mutate()}>Confirm & Activate $62.32/month
+            <Button disabled={activeWorkMutation.isPending} className='solid-button' onClick={() => activeWorkMutation.mutate()}>Confirm & Activate ${formatAUD(defaultPrice || "0.00")}/month
                 {activeWorkMutation.isPending && <ProgressSpinner style={{ width: '18px', height: '18px', marginLeft: '8px' }}></ProgressSpinner>}
             </Button>
         </div>
@@ -65,12 +66,12 @@ export const ActivateWorkSubscription = () => {
                     <Row className='gap-2 mb-2'>
                         <Col sm={6} className={style.col}>
                             <label className={style.colLabel}>Current  Cost</label>
-                            <p className={style.colValue1}>$0</p>
+                            <p className={style.colValue1}>${formatAUD(currentPrice || "0.00")}</p>
                             <p className={style.month}>/month</p>
                         </Col>
                         <Col sm={6} className={style.col}>
                             <label className={style.colLabel}>New cost</label>
-                            <p className={style.colValue}>$62.32</p>
+                            <p className={style.colValue}>${formatAUD(defaultPrice || "0.00")}</p>
                             <p className={style.month}>/month</p>
                         </Col>
                     </Row>
