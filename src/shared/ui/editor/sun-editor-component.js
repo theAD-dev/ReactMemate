@@ -201,26 +201,7 @@ const SunEditorComponent = ({
         }
     }, [enableS3Upload, s3UploadEndpoint, uploadId, base64ToFile]);
 
-    // Drag and drop handlers - DISABLED
-    const handleDragEnter = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }, []);
 
-    const handleDragLeave = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }, []);
-
-    const handleDragOver = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }, []);
-
-    const handleDrop = useCallback(async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }, []);
 
     // Render upload progress overlay
     const renderUploadProgress = () => {
@@ -486,10 +467,6 @@ const SunEditorComponent = ({
             <div
                 className={`sun-editor-wrapper ${className}`}
                 style={{ position: 'relative' }}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
             >
                 <SunEditor
                     setOptions={editorOptions}
