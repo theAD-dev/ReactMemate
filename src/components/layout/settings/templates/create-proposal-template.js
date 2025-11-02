@@ -89,8 +89,14 @@ const CreateProposalTemplate = () => {
         setErrors({});
 
         const newErrors = {};
-        if (!name) newErrors.name = true;
-        if (!image?.croppedImageBase64) newErrors.image = true;
+        if (!name) {
+            newErrors.name = true;
+            toast.error('Please add proposal name');
+        }
+        if (!image?.croppedImageBase64) {
+            newErrors.image = true;
+            toast.error('Please add proposal cover photo');
+        }
 
         const sectionErrors = sections.map((section) => {
             const sectionError = {};
