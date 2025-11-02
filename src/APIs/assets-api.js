@@ -28,7 +28,7 @@ export const getListOfVehicles = async (page, limit, search = "", order = "", is
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     url.searchParams.append("limit", limit);
     url.searchParams.append("offset", offset);
-    if (search) url.searchParams.append("search", search);
+    if (search) url.searchParams.append("q", search);
     if (order) url.searchParams.append("ordering", order);
     if (isShowDeleted) url.searchParams.append('deleted', 1);
 
@@ -82,6 +82,16 @@ export const getVehicleServices = async (vehicleId, page = 1, limit = 25, search
 
 export const createNewService = async (vehicleId, data) => {
     const endpoint = `/assets/vehicles/${vehicleId}/services/`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const linkExpenseToAsset = async (data) => {
+    const endpoint = `/assets/types/expense-links/create/`;
     const options = {
         method: 'POST',
         body: data

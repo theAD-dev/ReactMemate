@@ -18,7 +18,7 @@ const ServiceHistory = () => {
     const dt = useRef(null);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
-    const [showServiceModal, setShowServiceModal] = useState(false);
+    const [showServiceModal, setShowServiceModal] = useState(true);
     const [refetch, setRefetch] = useState(false);
 
     // Fetch vehicle details

@@ -41,7 +41,7 @@ const Header = () => {
 
     useEffect(() => {
         if (session) {
-            setIsVisibleNotificationBar(session?.is_trial || hasSubscriptionPaymentFailed || false);
+            setIsVisibleNotificationBar(session?.is_trial || hasSubscriptionPaymentFailed || session?.is_canceled ||  false);
         }
     }, [session, hasSubscriptionPaymentFailed]);
 
@@ -90,9 +90,11 @@ const Header = () => {
     return (
         <>
             {isVisibleNotificationBar && (
-                <div className={hasSubscriptionPaymentFailed ? style.subscriptionFailedNote : style.trialNote} style={{ height: `${trialHeight}px` }}>
+                <div className={(hasSubscriptionPaymentFailed || session?.is_canceled) ? style.subscriptionFailedNote : style.trialNote} style={{ height: `${trialHeight}px` }}>
                     {hasSubscriptionPaymentFailed ? (
                         <small><b>Payment for your subscription has failed. Please update your payment method.</b> Your subscription will be suspended in <b>{getDaysUntilSuspension(session?.suspension_date)} days</b> if no action is taken.</small>
+                    ) : session?.is_canceled ? (
+                        <small><b>Your subscription has been canceled.</b> You will continue to have access until the end of your billing cycle on <b>{formatDate(session?.cancel_at)}</b>.</small>
                     ) : (
                         <small>Your trial will end soon on {formatDate(session?.trial_end)}</small>
                     )}

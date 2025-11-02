@@ -2365,20 +2365,20 @@ color: #4285F4;
   line-height: 24px;
 }
 
-.projectCardButWrap button.filebut:hover {
+.projectCardButWrap button.filebut.fileActive {
   border-radius: 40px;
-  border: 1px solid #4285f4;
-  background: #fff;
+  padding: 10px 18px;
+  border: 1px solid #d9e8ff;
+  background: #f0f5ff;
   color: var(--Gray-700, #344054);
 }
 
-/* .projectCardButWrap button.fileActive {
-  border-radius: var(--radius-xs, 4px);
-  padding: 10px 18px;
-border: 1px solid #D9E8FF;
-background: #F0F5FF;
-color: #4285F4;
-} */
+.projectCardButWrap button.filebut:hover {
+  background: #fff;
+  border-radius: 40px;
+  color: var(--Gray-700, #344054);
+  border: 1px solid #4285f4 !important;
+}
 
 .projectCardModel .szh-menu {
   width: 204px;

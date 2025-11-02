@@ -6,6 +6,7 @@ import { PhoneInput } from 'react-international-phone';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -15,6 +16,8 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import * as yup from 'yup';
 import styles from './new-client-create.module.scss';
 import { getCities, getCountries, getStates, getClientCategories, getClientIndustries } from '../../../../../APIs/ClientsApi';
+import { getMailchimpLists } from '../../../../../APIs/integrations-api';
+import { useAuth } from '../../../../../app/providers/auth-provider';
 import exclamationCircle from "../../../../../assets/images/icon/exclamation-circle.svg";
 import FileUploader from '../../../../../ui/file-uploader/file-uploader';
 
@@ -33,16 +36,31 @@ const schema = yup.object({
     yup.object({
       email: yup.string().nullable().email('Invalid contact email format').test('is-valid', 'Contact email must be a valid email if provided', value => !value || yup.string().email().isValidSync(value)),
     })
-  )
+  ),
+  
+  // Mailchimp fields
+  add_to_mailchimp: yup.boolean(),
+  mailchimp_list_id: yup.string().when('add_to_mailchimp', {
+    is: true,
+    then: (schema) => schema.required('Please select a mailing list'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 }).required();
 
 const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, deleteAddress, deleteContact }, ref) => {
+  const { session } = useAuth();
   const [show, setShow] = useState(false);
+  const [addToMailchimp, setAddToMailchimp] = useState(false);
   const [addressIndex, setAddressIndex] = useState(0);
   const [deleteIndex, setDeleteIndex] = useState({ type: null, index: null });
 
   const categoriesQuery = useQuery({ queryKey: ['categories'], queryFn: getClientCategories });
   const industriesQuery = useQuery({ queryKey: ['industries'], queryFn: getClientIndustries });
+  const mailchimpListsQuery = useQuery({ 
+    queryKey: ['mailchimp-lists'], 
+    queryFn: getMailchimpLists,
+    enabled: addToMailchimp && session?.has_mailchimp
+  });
 
   const [countryId, setCountryId] = useState('');
   const [stateId, setStateId] = useState('');
@@ -70,6 +88,8 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
   });
   const { fields: contactFields, append: appendContact, remove: removeContact } = useFieldArray({ control, name: 'contact_persons' });
   const { fields: addressFields, append: appendAddress, remove: removeAddress } = useFieldArray({ control, name: 'addresses' });
+
+  const emailValue = watch('email');
 
   const deleteContactIndex = async (index, id) => {
     setDeleteIndex({ type: 'contact', index: index });
@@ -550,6 +570,77 @@ const BusinessForm = forwardRef(({ photo, setPhoto, onSubmit, defaultValues, del
           </div>
         </Col>
       </Row>
+
+      {session?.has_mailchimp && (
+        <>
+          <h2 className={clsx(styles.headingInputs)}>Mailchimp Integration</h2>
+          <Row className={clsx(styles.bgGreay)}>
+            <Col sm={12}>
+              <div className="d-flex align-items-center gap-2 mb-3">
+                <Controller
+                  name="add_to_mailchimp"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      inputId="add_to_mailchimp"
+                      checked={field.value || false}
+                      onChange={(e) => {
+                        field.onChange(e.checked);
+                        setAddToMailchimp(e.checked);
+                      }}
+                      disabled={!emailValue}
+                    />
+                  )}
+                />
+                <label htmlFor="add_to_mailchimp" className={clsx(styles.lable, 'mb-0')}>
+                  Add to Mailchimp mailing list
+                </label>
+              </div>
+              {!emailValue && (
+                <p className="text-muted" style={{ fontSize: '12px', marginTop: '-8px', marginBottom: '12px' }}>
+                  Please enter an email address to enable this option
+                </p>
+              )}
+            </Col>
+
+            {addToMailchimp && (
+              <Col sm={12}>
+                <div className="d-flex flex-column gap-1 mb-4">
+                  <label className={clsx(styles.lable)}>Mailing List<span className='required'>*</span></label>
+                  <Controller
+                    name="mailchimp_list_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        options={Array.isArray(mailchimpListsQuery?.data?.lists) 
+                          ? mailchimpListsQuery.data.lists.map((list) => ({
+                              value: list.id,
+                              label: list.name
+                            }))
+                          : []
+                        }
+                        onChange={(e) => {
+                          field.onChange(e.value);
+                        }}
+                        className={clsx(styles.dropdownSelect, 'dropdown-height-fixed', { [styles.error]: errors.mailchimp_list_id })}
+                        style={{ height: '46px' }}
+                        value={field.value}
+                        loading={mailchimpListsQuery?.isFetching}
+                        placeholder="Select a mailing list"
+                        scrollHeight="380px"
+                        filterInputAutoFocus={true}
+                        emptyMessage={mailchimpListsQuery?.isFetching ? "Loading..." : "No mailing lists found"}
+                      />
+                    )}
+                  />
+                  {errors.mailchimp_list_id && <p className="error-message">{errors.mailchimp_list_id.message}</p>}
+                </div>
+              </Col>
+            )}
+          </Row>
+        </>
+      )}
 
     </form>
   );

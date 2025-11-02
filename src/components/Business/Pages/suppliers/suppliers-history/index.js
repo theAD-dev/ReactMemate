@@ -24,6 +24,21 @@ const SupplierHistoryPage = () => {
 
   const supplierDetails = useQuery({ queryKey: ['supplier-read', id], queryFn: () => getSupplierById(id), enabled: !!id, retry: 1, cacheTime: 0 });
 
+  // Listen for global search result events to open sidebar
+  React.useEffect(() => {
+    const handleSearchResult = (event) => {
+      const { type } = event.detail;
+      if (type === 'supplier') {
+        setVisible(true);
+      }
+    };
+
+    window.addEventListener('openSearchResult', handleSearchResult);
+    return () => {
+      window.removeEventListener('openSearchResult', handleSearchResult);
+    };
+  }, []);
+
   const exportCSV = (selectionOnly) => {
     if (dt.current) {
       dt.current.exportCSV({ selectionOnly });

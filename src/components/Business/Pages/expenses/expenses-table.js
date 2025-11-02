@@ -205,6 +205,12 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
     };
 
     const intervalProjectBody = (rowData) => {
+        if (rowData.asset) {
+            return <div className='d-flex flex-column'>
+                <span className='text-capitalize' style={{ color: '#344054', fontSize: '14px' }}>{rowData.asset.asset_name}</span>
+                <span className='font-14' style={{ color: '#98A2B3' }}>Asset | {rowData.asset.asset_type_name}</span>
+            </div>;
+        }
         if (!rowData.order) return <span className='text-capitalize' style={{ color: '#344054', fontSize: '14px' }}>{rowData.type}</span>;
         return <div className='d-flex flex-column'>
             <span style={{ color: '#344054', fontSize: '14px' }}>{rowData?.order?.reference || "-"}</span>
@@ -335,7 +341,7 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
                 <Column field="file" header="File" body={FileBody} style={{ minWidth: '60px', textAlign: 'center', maxWidth: '60px', width: '60px' }}></Column>
                 <Column field="created" header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center'></Column>
                 <Column field='jobsdone' header="Total" body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }}></Column>
-                <Column field='type' header="Interval/Project" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'left' }}></Column>
+                <Column field='type' header="Interval/Project/Asset" body={intervalProjectBody} style={{ minWidth: '123px', textAlign: 'left' }}></Column>
                 <Column field='account_code.code' header="Account Code" body={accountCode} style={{ minWidth: '114px', textAlign: 'left' }} sortable></Column>
                 <Column field='total_requests' header="Xero/Myob" body={xeroBody} style={{ minWidth: '89px', textAlign: 'center' }}></Column>
                 {/* <Column field='department.name' header="Departments" body={departmentBody} style={{ minWidth: '140px' }} sortable></Column> */}

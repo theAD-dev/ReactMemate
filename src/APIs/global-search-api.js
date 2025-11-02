@@ -11,11 +11,11 @@ export const globalSearch = async (query, searchTypes = ['projects', 'clients'],
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   url.searchParams.append("q", query);
   url.searchParams.append("limit", limit);
-  
+
   // Add search types as comma-separated values
   if (searchTypes.length > 0) {
     url.searchParams.append("types", searchTypes.join(','));
@@ -32,12 +32,12 @@ export const searchProjects = async (query, limit = 10) => {
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  // Don't use search parameter as management API doesn't support it
-  // We'll filter client-side like the management page does
-  // Note: limit parameter kept for consistency, filtering happens client-side
-  
+  if (query) url.searchParams.append("search", query);
+  url.searchParams.append("limit", limit);
+  url.searchParams.append("offset", 0);
+
   return fetchAPI(url.toString(), options);
 };
 
@@ -49,7 +49,7 @@ export const searchJobs = async (query, limit = 10) => {
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   if (query) url.searchParams.append("search", query);
   url.searchParams.append("limit", limit);
@@ -66,7 +66,7 @@ export const searchTasks = async (query, limit = 10) => {
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   if (query) url.searchParams.append("search", query);
   url.searchParams.append("limit", limit);
@@ -83,7 +83,7 @@ export const searchInvoices = async (query, limit = 10) => {
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   if (query) url.searchParams.append("search", query);
   url.searchParams.append("limit", limit);
@@ -100,7 +100,7 @@ export const searchSuppliers = async (query, limit = 10) => {
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   if (query) url.searchParams.append("search", query);
   url.searchParams.append("limit", limit);
@@ -117,7 +117,7 @@ export const searchExpenses = async (query, limit = 10) => {
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   if (query) url.searchParams.append("search", query);
   url.searchParams.append("limit", limit);
@@ -134,7 +134,7 @@ export const searchClients = async (query, limit = 10) => {
   const options = {
     method: 'GET',
   };
-  
+
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   if (query) url.searchParams.append("search", query);
   url.searchParams.append("limit", limit);
@@ -149,8 +149,8 @@ export const searchClients = async (query, limit = 10) => {
 const filterProjects = (projects, query) => {
   if (!query) return projects;
   const searchTerm = query.toLowerCase();
-  
-  return projects.filter(project => 
+
+  return projects.filter(project =>
     (project.number?.toLowerCase()?.includes(searchTerm)) ||
     (project.reference?.toLowerCase()?.includes(searchTerm)) ||
     (project.unique_id?.toLowerCase()?.includes(searchTerm))
@@ -173,8 +173,8 @@ export const performUnifiedSearch = async (query, limit = 3) => {
 
   try {
     const [
-      projectsResponse, 
-      clientsResponse, 
+      projectsResponse,
+      clientsResponse,
       suppliersResponse
     ] = await Promise.all([
       searchProjects(query, limit).catch(() => ({ results: [], count: 0 })),
@@ -182,17 +182,13 @@ export const performUnifiedSearch = async (query, limit = 3) => {
       searchSuppliers(query, limit).catch(() => ({ results: [], count: 0 }))
     ]);
 
-    // Filter projects client-side since API doesn't support search
-    const allProjects = projectsResponse.results || projectsResponse || [];
-    const filteredProjects = filterProjects(allProjects, query).slice(0, limit);
-
     return {
-      projects: filteredProjects,
+      projects: projectsResponse.results || [],
       clients: clientsResponse.results || [],
       suppliers: suppliersResponse.results || [],
-      total: filteredProjects.length + 
-             (clientsResponse.count || clientsResponse.results?.length || 0) +
-             (suppliersResponse.count || suppliersResponse.results?.length || 0)
+      total: (projectsResponse.count || projectsResponse.results?.length || 0) +
+        (clientsResponse.count || clientsResponse.results?.length || 0) +
+        (suppliersResponse.count || suppliersResponse.results?.length || 0)
     };
   } catch (error) {
     console.error('Global search error:', error);

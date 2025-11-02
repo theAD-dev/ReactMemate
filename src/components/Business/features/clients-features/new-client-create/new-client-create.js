@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import BusinessForm from './business-form';
 import IndivisualForm from './indivisual-form';
 import styles from './new-client-create.module.scss';
+import { addUserToMailchimpList } from '../../../../../APIs/integrations-api';
 import { createFormData, handleApiRequest } from '../../../actions/indivisual-client-actions';
 
 const NewClientCreate = ({ visible, setVisible, refetch }) => {
@@ -32,8 +33,32 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
         console.log('indivisualFormSubmit: ', data);
 
         const formData = createFormData(data, photo);
-        const onSuccess = () => {
+        const onSuccess = async () => {
             toast.success(`New client created successfully`);
+            
+            // Handle Mailchimp integration if enabled
+            if (data.add_to_mailchimp && data.mailchimp_list_id && data.email) {
+                try {
+                    const mailchimpData = {
+                        list_id: data.mailchimp_list_id,
+                        email: data.email,
+                    };
+                    
+                    // Add optional fields if they exist
+                    if (data.firstname) mailchimpData.first_name = data.firstname;
+                    if (data.lastname) mailchimpData.last_name = data.lastname;
+                    if (data.phone) mailchimpData.phone = data.phone;
+                    if (data.birthday) mailchimpData.birthday = data.birthday;
+                    if (data.company) mailchimpData.company = data.company;
+                    
+                    await addUserToMailchimpList(mailchimpData);
+                    toast.success('User added to Mailchimp mailing list');
+                } catch (error) {
+                    console.error('Error adding user to Mailchimp:', error);
+                    toast.error('Client created but failed to add to Mailchimp');
+                }
+            }
+            
             setVisible(false);
             refetch((prev) => !prev);
         };
@@ -107,6 +132,27 @@ const NewClientCreate = ({ visible, setVisible, refetch }) => {
             });
             if (response.ok) {
                 toast.success(`New client created successfully`);
+                
+                // Handle Mailchimp integration if enabled
+                if (data.add_to_mailchimp && data.mailchimp_list_id && data.email) {
+                    try {
+                        const mailchimpData = {
+                            list_id: data.mailchimp_list_id,
+                            email: data.email,
+                        };
+                        
+                        // Add optional fields if they exist
+                        if (data.name) mailchimpData.company = data.name;
+                        if (data.phone) mailchimpData.phone = data.phone;
+                        
+                        await addUserToMailchimpList(mailchimpData);
+                        toast.success('Business added to Mailchimp mailing list');
+                    } catch (error) {
+                        console.error('Error adding business to Mailchimp:', error);
+                        toast.error('Client created but failed to add to Mailchimp');
+                    }
+                }
+                
                 setVisible(false);
                 refetch((prev) => !prev);
             } else {

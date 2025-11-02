@@ -7,11 +7,15 @@ import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import EnquiriesTable from './enquires-table';
 import style from './enquiries.module.scss';
+import CreateEnquiry from '../../../features/business/enquiries/create-enquiry/create-enquiry';
 
 const Enquiries = () => {
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
   const [selectedSubmissions, setSelectedSubmissions] = useState([]);
   const [isShowDeleted] = useState(false);
+  const [showCreateEnquiry, setShowCreateEnquiry] = useState(false);
+  const [refetchTrigger, setRefetchTrigger] = useState(false);
+  const [filterType, setFilterType] = useState('all'); // 'all', 'web', 'form', 'fb-in'
 
   return (
     <>
@@ -30,27 +34,48 @@ const Enquiries = () => {
           </div>
         </div>
         <div className="featureName d-flex align-items-center gap-3" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-          <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
+          <Link 
+            to={"/enquiries"} 
+            className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'all' })}
+            onClick={() => setFilterType('all')}
+          >
             <span className={style.topBarText}>All</span>
           </Link>
 
-          <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
+          <Link 
+            to={"/enquiries"} 
+            className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'web' })}
+            onClick={() => setFilterType('web')}
+          >
             <WindowSidebar color='#9E77ED' size={16} className='me-2' />
             <span className={style.topBarText}>Web</span>
           </Link>
 
-          <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
+          <Link 
+            to={"/enquiries"} 
+            className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'form' })}
+            onClick={() => setFilterType('form')}
+          >
             <InputCursorText color='#F79009' size={16} className='me-2' />
             <span className={style.topBarText}>Form</span>
           </Link>
 
-          <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
+          <Link 
+            to={"/enquiries"} 
+            className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'fb-in' })}
+            onClick={() => setFilterType('fb-in')}
+          >
             <Collection color='#084095' size={16} className='me-2' />
             <span className={style.topBarText}>Fb/In</span>
           </Link>
         </div>
         <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-          <Link to={"/enquiries/form-builder/new"}><Button className={`solid-button font-14 ${style.newButton}`}>New</Button></Link>
+          <Button 
+            className={`solid-button font-14 ${style.newButton}`}
+            onClick={() => setShowCreateEnquiry(true)}
+          >
+            New Enquiry
+          </Button>
           <Link to={"/enquiries/forms"}><Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button></Link>
         </div>
       </div>
@@ -60,6 +85,16 @@ const Enquiries = () => {
         selectedSubmissions={selectedSubmissions}
         setSelectedSubmissions={setSelectedSubmissions}
         isShowDeleted={isShowDeleted}
+        refetchTrigger={refetchTrigger}
+        filterType={filterType}
+      />
+
+      {/* Create Enquiry Sidebar */}
+      <CreateEnquiry 
+        refetchTrigger={setRefetchTrigger}
+        visible={showCreateEnquiry}
+        setVisible={setShowCreateEnquiry}
+        onSuccess={() => setRefetchTrigger(prev => !prev)}
       />
     </>
   );

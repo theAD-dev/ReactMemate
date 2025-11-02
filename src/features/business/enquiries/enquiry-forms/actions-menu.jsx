@@ -83,7 +83,7 @@ const ActionsMenu = ({ rowData }) => {
                         }}
                     >
                         <List color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Inquiries</span>
+                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Enquiries</span>
                     </div>
 
                     <div

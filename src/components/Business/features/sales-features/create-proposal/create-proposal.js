@@ -79,7 +79,6 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
     const [isLoading, setIsLoading] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [errors, setErrors] = useState({});
-    const [fileName, setFileName] = useState('');
     const [showSendModal, setShowSendModal] = useState(false);
     const [payload, setPayload] = useState({});
 
@@ -91,6 +90,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
     const proposalTemplateQuery = useQuery({
         queryKey: ["proposalTemplate"],
         queryFn: getProposalsTemplates,
+        staleTime: 0
     });
 
     const readProposalQuery = useQuery({
@@ -98,6 +98,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
         queryFn: () => getProposalBySalesId(unique_id),
         enabled: !!unique_id && isExist,
         retry: 0,
+        staleTime: 0
     });
 
     useEffect(() => {
@@ -111,6 +112,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
         queryFn: () => getProposalsTemplate(templateId),
         enabled: !!templateId,
         retry: 0,
+        staleTime: 0
     });
     const sendProposalAction = () => {
         // if (!templateId) return toast.error('Template is required');
@@ -161,6 +163,7 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
         }
 
         if (!image) {
+            toast.error('Please add proposal cover photo');
             newErrors.image = true;
         }
 
@@ -384,30 +387,6 @@ const CreateProposal = ({ show, setShow, refetch, contactPersons, isExist }) => 
                     {errors?.image && (
                         <p className="error-message mb-2 mx-auto">{"Image is required"}</p>
                     )}
-
-                    {/* <div className='d-flex gap-3 align-items-center mb-1'>
-                        <Button className='outline-button w-fit' style={{ position: 'relative', cursor: 'pointer' }}>
-                            Upload Image <Upload />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                style={{
-                                    position: 'absolute',
-                                    opacity: 0,
-                                    width: '100%',
-                                    height: '100%',
-                                    cursor: 'pointer',
-                                }}
-                            />
-                        </Button>
-                        {fileName && (
-                            <span>{fileName}</span>
-                        )}
-                    </div>
-                    {errors?.image && (
-                        <p className="error-message mb-2">{"Image is required"}</p>
-                    )} */}
                     <Accordion activeIndex={0} className='mt-3'>
                         {sections?.map((section, originalIndex) => ({ ...section, originalIndex }))?.filter(section => !section.delete)?.map((section, index) => (
                             <AccordionTab key={section?.id || `accordion-${index}`} className={clsx(style.accordion, { [style.error]: (errors?.sections?.[index]?.title || errors?.sections?.[index]?.description) ? true : false }, 'proposal-accordion')} header={`Paragraph ${index + 1}`}>

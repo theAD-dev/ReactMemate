@@ -9,6 +9,7 @@ import style from './assets.module.scss';
 import { getListOfVehicles } from '../../../APIs/assets-api';
 import { getMobileUserList, getUserList } from '../../../APIs/task-api';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
+import NewExpensesCreate from '../../../components/Business/features/expenses-features/new-expenses-create/new-expense-create';
 import ViewVehicle from '../../../features/business/assets/view-vehicle/view-vehicle';
 import { FallbackImage } from '../../../shared/ui/image-with-fallback/image-avatar';
 import Loader from '../../../shared/ui/loader/loader';
@@ -16,13 +17,29 @@ import NoDataFoundTemplate from '../../../ui/no-data-template/no-data-found-temp
 
 const formatDate = (timestamp) => {
     if (!timestamp) return '-';
+    else {
+        // check format YYYY-MM-DD
+        const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+        if (datePattern.test(timestamp)) {
+            const date = new Date(timestamp);
+            const formatter = new Intl.DateTimeFormat("en-AU", {
+                timeZone: 'Australia/Sydney',
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+            return formatter.format(date);
+        }
+    }
+    // Handle Unix timestamp (in seconds)
     const date = new Date(+timestamp * 1000);
-    const day = date.getDate();
-    const monthAbbreviation = new Intl.DateTimeFormat("en-US", {
-        month: "short",
-    }).format(date);
-    const year = date.getFullYear();
-    return `${day} ${monthAbbreviation} ${year}`;
+    const formatter = new Intl.DateTimeFormat("en-AU", {
+        timeZone: 'Australia/Sydney',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
+    return formatter.format(date);
 };
 
 const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch, setRefetch }, ref) => {
@@ -39,6 +56,9 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
 
     const [visible, setVisible] = useState(false);
     const [editData, setEditData] = useState(null);
+
+    const [showCreateExpenseModal, setShowCreateExpenseModal] = useState(false);
+    const [assetForExpense, setAssetForExpense] = useState(null);
 
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
     const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
@@ -128,6 +148,10 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
         return <span>{rowData.year_manufactured || "-"}</span>;
     };
 
+    const purchaseDateBody = (rowData) => {
+        return <span>{formatDate(rowData.date_of_purchase)}</span>;
+    };
+
     const regoBody = (rowData) => {
         return <span>{rowData.registration_number || "-"}</span>;
     };
@@ -149,22 +173,40 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
     };
 
     const nextServiceBody = (rowData) => {
-        return <span>{formatDate(rowData.next_service)}</span>;
+        return <span>{formatDate(rowData.next_service_date)}</span>;
     };
 
     const serviceBody = (rowData) => {
-        return <Link to={`/assets/vehicles/${rowData.id}/service-history`}>
-            <Tag value="Service" style={{
-                height: '22px',
-                minWidth: '60px',
-                borderRadius: '16px',
-                border: '1px solid #1AB2FF',
-                background: '#EBF8FF',
-                color: '#1AB2FF',
-                fontSize: '12px',
-                fontWeight: 500
-            }} />
-        </Link>;
+        return <div className='d-flex align-items-center gap-2'>
+            <Link to={`/assets/vehicles/${rowData.id}/service-history`}>
+                <Tag value="Service" style={{
+                    height: '22px',
+                    minWidth: '60px',
+                    borderRadius: '16px',
+                    border: '1px solid #1AB2FF',
+                    background: '#EBF8FF',
+                    color: '#1AB2FF',
+                    fontSize: '12px',
+                    fontWeight: 500
+                }} />
+            </Link>
+            <Tag value="Expense"
+                onClick={() => {
+                    setShowCreateExpenseModal(true);
+                    setAssetForExpense({ id: rowData.id, type: 1 });
+                }}
+                style={{
+                    height: '22px',
+                    minWidth: '60px',
+                    borderRadius: '16px',
+                    border: '1px solid #f96a94',
+                    background: 'linear-gradient(135deg, rgba(247, 79, 172, 0.1) 0%, rgba(252, 178, 79, 0.1) 100%), #fff',
+                    color: '#f96a94',
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    cursor: 'pointer'
+                }} />
+        </div>;
     };
 
     const currentOdometerBody = (rowData) => {
@@ -176,11 +218,11 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
     };
 
     const costPerKmBody = (rowData) => {
-        return <span>{rowData.cost_per_km ? `$${parseFloat(rowData.cost_per_km).toFixed(2)} per km` : "-"}</span>;
+        return <span>{rowData.per_km_cost ? `$${parseFloat(rowData.per_km_cost).toFixed(2)} per km` : "-"}</span>;
     };
 
     const costPerDayBody = (rowData) => {
-        return <span>{rowData.cost_per_day ? `$${parseFloat(rowData.cost_per_day).toFixed(2)} per day` : "-"}</span>;
+        return <span>{rowData.per_day_expense ? `$${parseFloat(rowData.per_day_expense).toFixed(2)} per day` : "-"}</span>;
     };
 
 
@@ -208,20 +250,29 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
                 rowClassName={rowClassName}
             >
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} style={{ zIndex: 2 }} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
-                <Column field='make' header='Make' body={VehicleNameBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '150px' }} sortable />
+                <Column field='make' header='Make' body={VehicleNameBody} headerClassName='paddingLeftHide shadowRight' bodyClassName='paddingLeftHide shadowRight' style={{ minWidth: '150px' }} sortable frozen />
                 <Column field='model' header='Model' body={modelBody} style={{ minWidth: '120px' }} />
                 <Column field='year_manufactured' header='Year' body={yearBody} style={{ minWidth: '80px' }} />
+                <Column field='date_of_purchase' header='Purchase Date' body={purchaseDateBody} style={{ minWidth: '80px' }} />
                 <Column field='registration_number' header='Rego' body={regoBody} style={{ minWidth: '100px' }} />
-                <Column field='driver' header='Driver' body={driverBody} style={{ minWidth: '120px' }} />
-                <Column field='rego_due' header='Rego Due' body={regoDueBody} style={{ minWidth: '120px' }} />
+                <Column field='rego_due' header='Rego Expiry' body={regoDueBody} style={{ minWidth: '120px' }} />
+                <Column field='driver' header='Assigned To' body={driverBody} style={{ minWidth: '120px' }} />
                 <Column field='next_service' header='Next Service' body={nextServiceBody} style={{ minWidth: '120px' }} />
-                <Column header='Service' body={serviceBody} style={{ minWidth: '80px' }} />
+                <Column header='Service/Expense' body={serviceBody} style={{ minWidth: '80px' }} />
                 <Column field='current_odometer' header='Current Odometer' body={currentOdometerBody} style={{ minWidth: '130px' }} />
                 <Column field='days_of_ownership' header='Days of Ownership' body={daysOfOwnershipBody} style={{ minWidth: '140px' }} />
-                <Column field='cost_per_km' header='Cost per km' body={costPerKmBody} style={{ minWidth: '120px' }} />
-                <Column field='cost_per_day' header='Cost per day' body={costPerDayBody} style={{ minWidth: '120px' }} />
+                <Column field='per_km_cost' header='Cost per km' body={costPerKmBody} style={{ minWidth: '120px' }} />
+                <Column field='per_day_expense' header='Cost per day' body={costPerDayBody} style={{ minWidth: '120px' }} />
             </DataTable>
             {visible && editData?.id && <ViewVehicle visible={visible} setVisible={setVisible} editData={editData} setEditData={setEditData} onClose={() => { setVisible(false); setEditData(null); }} setRefetch={setRefetch} drivers={drivers} />}
+            {showCreateExpenseModal && assetForExpense?.id && (
+                <NewExpensesCreate
+                    visible={showCreateExpenseModal}
+                    setVisible={setShowCreateExpenseModal}
+                    setRefetch={setRefetch}
+                    assetForExpense={assetForExpense}
+                />
+            )}
         </>
     );
 });

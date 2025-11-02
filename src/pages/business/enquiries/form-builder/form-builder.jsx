@@ -1,14 +1,17 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import * as Icon from 'react-bootstrap-icons';
 import { useParams } from 'react-router-dom';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { toast } from 'sonner';
 import { getFormById } from './api';
 import { defaultFormStyle } from './builder/default-style';
-import { initBuilder } from './builder/init-builder';
+import { initBuilder, cleanupBuilder } from './builder/init-builder';
 import './form-builder.css';
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
 
 // Inline SVG Icon component for field types
-const Icon = ({ type }) => {
+const FieldIcon = ({ type }) => {
   const props = { width: 22, height: 22, viewBox: '0 0 24 24', fill: 'none', stroke: '#2563eb', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' };
   switch (type) {
     case 'text':
@@ -51,13 +54,66 @@ export default function TempFormBuilder() {
   const { id } = useParams();
   const editId = id !== 'new' ? id : null;
 
+  // State management
+  const [toolboxCollapsed, setToolboxCollapsed] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState('designer'); // 'designer' or 'preview'
+
+  // Field types data
+  const fieldTypes = [
+    ['text', 'Single-Line Input'],
+    ['email', 'Email'],
+    ['number', 'Number'],
+    ['phone', 'Phone'],
+    ['textarea', 'Long Text'],
+    ['select', 'Dropdown'],
+    ['multiselect', 'Multi-Select Dropdown'],
+    ['radio', 'Radio Button Group'],
+    ['checkbox', 'Checkboxes'],
+    ['multicheckbox', 'Multiple Textboxes'],
+    ['date', 'Date'],
+    ['time', 'Time'],
+    ['html', 'HTML Content'],
+    ['consent', 'Consent']
+  ];
+
+  // Filter field types based on search
+  const filteredFieldTypes = fieldTypes.filter(([type, label]) => 
+    label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Handle preview
+  const handlePreview = useCallback(() => {
+    setActiveTab('preview');
+    // Trigger preview build from init-builder
+    setTimeout(() => {
+      const previewBtn = document.querySelector('#preview-btn');
+      if (previewBtn) {
+        previewBtn.click();
+      }
+    }, 100);
+  }, []);
+
+  // Handle undo/redo (these will be wired to init-builder)
+  const handleUndo = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('builder-undo'));
+  }, []);
+
+  const handleRedo = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('builder-redo'));
+  }, []);
+
   useEffect(() => {
     const orgId = session?.organization?.id;
     if (!orgId) return;               // wait until session is ready
     if (bootstrappedRef.current) return; // run only once
-    bootstrappedRef.current = true;
 
-    (async () => {
+    // Wait for DOM to be fully rendered
+    const timer = setTimeout(async () => {
+      bootstrappedRef.current = true;
+      
       try {
         if (editId) {
           const formJson = await getFormById(editId);
@@ -80,24 +136,124 @@ export default function TempFormBuilder() {
           getDefaultCss: () => defaultFormStyle,
         });
       }
-    })();
-  }, [session?.organization?.id]);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      cleanupBuilder(); // Clean up on unmount
+    };
+  }, [session?.organization?.id, editId]);
+
+  // Listen for save events from init-builder
+  useEffect(() => {
+    const handleSaveError = (e) => {
+      const errorMessage = e.detail?.message || 'Failed to save form';
+      toast.error(errorMessage, {
+        duration: 5000,
+      });
+      setSaving(false);
+    };
+
+    const handleSaveSuccess = () => {
+      toast.success('Form saved successfully!', {
+        duration: 3000,
+      });
+      setSaving(false);
+    };
+
+    const handleClearError = () => {
+      toast.dismiss();
+    };
+
+    window.addEventListener('builder-save-error', handleSaveError);
+    window.addEventListener('builder-save-success', handleSaveSuccess);
+    window.addEventListener('builder-clear-error', handleClearError);
+
+    return () => {
+      window.removeEventListener('builder-save-error', handleSaveError);
+      window.removeEventListener('builder-save-success', handleSaveSuccess);
+      window.removeEventListener('builder-clear-error', handleClearError);
+    };
+  }, []);
 
   return (
-    <div className="mf-builder" style={{ overflow: 'auto', height: `calc(100vh - 127px - ${trialHeight}px)` }}>
-      <div className="mf-container" >
-        <header>
-          <h1>Form Editor</h1>
-        </header>
+    <>
+      <div className="mf-builder" style={{ 
+        overflow: 'auto', 
+        height: `calc(100vh - 127px - ${trialHeight}px)`,
+        '--trial-height': `${trialHeight}px`
+      }}>
+        <div className="mf-container">
+          {/* Tabs Navigation */}
+          <div className="builder-tabs">
+            <div className="tabs-left">
+              <button 
+                className={`tab-btn ${activeTab === 'designer' ? 'active' : ''}`}
+                onClick={() => setActiveTab('designer')}
+              >
+                Designer
+              </button>
+              <button 
+                className={`tab-btn ${activeTab === 'preview' ? 'active' : ''}`}
+                onClick={handlePreview}
+              >
+                Preview
+              </button>
+            </div>
+            <div className="tabs-right">
+              <button className="icon-btn" title="Undo" onClick={handleUndo}>
+                <Icon.ArrowCounterclockwise size={18} />
+              </button>
+              <button className="icon-btn" title="Redo" onClick={handleRedo}>
+                <Icon.ArrowClockwise size={18} />
+              </button>
+              <button 
+                className="btn btn-primary" 
+                id="save-btn"
+                disabled={saving}
+              >
+                {saving ? (
+                  <>
+                    <ProgressSpinner style={{ width: '16px', height: '16px' }} strokeWidth="2" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Icon.Save size={16} />
+                    Save Form
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
 
-        <div className="editor-container">
-          {/* Field Types (drag sources) */}
-          <div className="fields-panel">
-            <h2>Field Types</h2>
+          {/* Designer Tab - Main Form Builder */}
+          <div className="editor-container" style={{ display: activeTab === 'designer' ? 'grid' : 'none' }}>
+            {/* Toolbox (Field Types) */}
+            <div className={`fields-panel ${toolboxCollapsed ? 'collapsed' : ''}`}>
+            <div className="panel-header">
+              <div className="panel-header-top">
+                <h2>{toolboxCollapsed ? '' : 'Toolbox'}</h2>
+                <button 
+                  className="collapse-btn" 
+                  onClick={() => setToolboxCollapsed(!toolboxCollapsed)}
+                  title={toolboxCollapsed ? 'Expand Toolbox' : 'Collapse Toolbox'}
+                >
+                  {toolboxCollapsed ? <Icon.ChevronRight size={18} /> : <Icon.ChevronLeft size={18} />}
+                </button>
+              </div>
+              {!toolboxCollapsed && (
+                <input 
+                  type="text" 
+                  placeholder="Type to search..." 
+                  className="search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              )}
+            </div>
             <div className="field-types">
-              {[
-                ['text', 'Text'], ['email', 'Email'], ['number', 'Number'], ['phone', 'Phone'], ['textarea', 'Text Area'], ['select', 'Dropdown'], ['multiselect', 'Multi Select'], ['radio', 'Radio Buttons'], ['checkbox', 'Checkbox'], ['multicheckbox', 'Multi Checkbox'], ['date', 'Date'], ['time', 'Time'], ['html', 'HTML Content'], ['consent', 'Consent']
-              ].map(([type, label]) => (
+              {filteredFieldTypes.map(([type, label]) => (
                 <div
                   key={type}
                   className="field-type"
@@ -107,62 +263,154 @@ export default function TempFormBuilder() {
                   aria-label={`Drag ${label} field`}
                   title={`Drag ${label} field`}
                 >
-                  <span className="icon"><Icon type={type} /></span>
-                  <span>{label}</span>
+                  <span className="icon"><FieldIcon type={type} /></span>
+                  {!toolboxCollapsed && <span>{label}</span>}
                 </div>
               ))}
             </div>
 
-            {/* Custom CSS */}
-            <div className="css-editor-container">
-              <h3>Custom CSS</h3>
-              <textarea id="form_style" className="code-editor" rows={10} defaultValue='' placeholder="Add custom CSS here (optional)" />
-              <p className="help-text">These styles will be applied to the embedded form.</p>
-            </div>
+            {!toolboxCollapsed && (
+              <div className="css-editor-container">
+                <h3>Custom CSS</h3>
+                <textarea id="form_style" className="code-editor" rows={10} defaultValue='' placeholder="Add custom CSS here (optional)" />
+                <p className="help-text">These styles will be applied to the embedded form.</p>
+              </div>
+            )}
           </div>
 
-          {/* Canvas */}
+          {/* Design Surface (Canvas) */}
           <div className="editor-panel">
+            <div className="panel-header-inline">
+              <h3>Design Surface</h3>
+            </div>
             <div className="form-preview" id="preview-container">
-              <h3>Form Preview</h3>
+              <div className="page-header">
+                <div>
+                  <h4>Page 1</h4>
+                  <p className="page-description">Description</p>
+                </div>
+              </div>
               <div className="empty-state">
-                <i className="fas fa-inbox" />
-                <p>Drag and drop fields from the left panel to build your form</p>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <path d="M3 9h18M9 21V9"/>
+                </svg>
+                <p>Drag and drop fields from the Toolbox to build your form</p>
               </div>
             </div>
           </div>
 
-          {/* Properties */}
+          {/* Property Grid - Field Properties First, then General settings */}
           <div className="field-properties" id="properties-container">
-            <h2>Field Properties</h2>
-            <div className="no-field-selected">
-              <p>Select a field to edit its properties</p>
+            {/* This will be dynamically filled by field properties when a field is selected */}
+            <div className="field-props-placeholder">
+              <div className="panel-header">
+                <h2>Properties</h2>
+              </div>
+              <div className="no-selection">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/>
+                  <path d="M7 10h10M7 14h6"/>
+                </svg>
+                <p>Select a field to edit its properties</p>
+              </div>
+            </div>
+
+            {/* General Settings - Always visible below field properties */}
+            <div className="general-settings">
+              <div className="panel-header">
+                <h2>General</h2>
+              </div>
+              
+              {/* Form Settings */}
+              <div className="property-section">
+                <div className="form-field">
+                  <label>Form title<span style={{ color: '#f04438' }}>*</span></label>
+                  <input id="form-title" placeholder="Enter form title" />
+                </div>
+                <div className="form-field">
+                  <label>Survey description</label>
+                  <textarea id="form-description" placeholder="Enter description" rows="3" />
+                </div>
+              </div>
+
+              {/* Additional Settings */}
+              <div className="property-section">
+                <h3 className="section-title">Settings</h3>
+                <div className="form-field">
+                  <label>Domain</label>
+                  <input id="form-domain" placeholder="Enter domain" defaultValue="https://memate.com.au/" />
+                </div>
+                <div className="form-field">
+                  <label>To Email<span style={{ color: '#f04438' }}>*</span></label>
+                  <input id="form-submit-to" placeholder="Enter email" />
+                </div>
+                <div className="form-field">
+                  <label>From Email</label>
+                  <input id="form-submit-from" placeholder="Enter email" />
+                </div>
+                <div className="form-field">
+                  <label>CC Email</label>
+                  <input id="form-cc-email" placeholder="Enter email" />
+                </div>
+                <div className="form-field">
+                  <label>BCC Email</label>
+                  <input id="form-bcc-email" placeholder="Enter email" />
+                </div>
+              </div>
+
+              {/* Messages */}
+              <div className="property-section">
+                <h3 className="section-title">Messages</h3>
+                <div className="form-field">
+                  <label>Thank you message</label>
+                  <input id="form-thank-you" placeholder="Enter message" />
+                </div>
+                <div className="form-field">
+                  <label>Error message</label>
+                  <input id="form-error-message" placeholder="Enter message" />
+                </div>
+                <div className="form-field">
+                  <label>Submit Button Label</label>
+                  <input id="form-submit-label" defaultValue="Submit" />
+                </div>
+                <div className="form-field">
+                  <label>Redirect URL</label>
+                  <input id="form-redirect-url" placeholder="Enter URL" />
+                </div>
+              </div>
+
+              {/* reCAPTCHA */}
+              <div className="property-section">
+                <h3 className="section-title">reCAPTCHA</h3>
+                <div className="form-field">
+                  <label>Site Key<span style={{ color: '#f04438' }}>*</span></label>
+                  <input id="form-recaptcha-key" placeholder="Enter site key" />
+                </div>
+                <div className="form-field">
+                  <label>Secret Key<span style={{ color: '#f04438' }}>*</span></label>
+                  <input id="form-recaptcha-secret" placeholder="Enter secret key" />
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Form Details */}
-          <div className="form-details" id="form-details-container">
-            <h2>Form Details</h2>
-            <div className="form-field"><label>Title</label><input id="form-title" placeholder="enter your title" /></div>
-            <div className="form-field"><label>Domain</label><input id="form-domain" placeholder="enter your domain" defaultValue="https://memate.com.au/" /></div>
-            <div className="form-field"><label>To Email</label><input id="form-submit-to" placeholder="enter submit to" /></div>
-            <div className="form-field"><label>From Email</label><input id="form-submit-from" placeholder="enter submit from" /></div>
-            <div className="form-field"><label>CC Email</label><input id="form-cc-email" placeholder="enter cc email" /></div>
-            <div className="form-field"><label>BCC Email</label><input id="form-bcc-email" placeholder="enter bcc email" /></div>
-            <div className="form-field"><label>Thank you message</label><input id="form-thank-you" placeholder="enter your thank you message" /></div>
-            <div className="form-field"><label>Error message</label><input id="form-error-message" placeholder="enter your error message" /></div>
-            <div className="form-field"><label>Submit Button Label</label><input id="form-submit-label" defaultValue="Submit" /></div>
-            <div className="form-field"><label>Redirect URL</label><input id="form-redirect-url" placeholder="enter redirect url" /></div>
-            <div className="form-field"><label>Google reCAPTCHA Site Key</label><input id="form-recaptcha-key" placeholder="enter your reCAPTCHA site key" /></div>
-            <div className="form-field"><label>Google reCAPTCHA Secret Key</label><input id="form-recaptcha-secret" placeholder="enter your reCAPTCHA secret key" /></div>
+        {/* Preview Tab - Shows the form preview */}
+        <div className="preview-tab-container" style={{ display: activeTab === 'preview' ? 'block' : 'none' }}>
+          <div className="preview-tab-header">
+            <h3>Form Preview</h3>
+            <button className="btn btn-secondary" onClick={() => setActiveTab('designer')}>
+              Back to Designer
+            </button>
           </div>
+          <div id="preview-form-container-tab" className="preview-form-content" />
         </div>
 
-        {/* Footer actions */}
-        <div className="editor-actions">
-          <button className="btn btn-secondary" id="preview-btn">Preview Form</button>
-          <button className="btn btn-primary" id="save-btn">Save Form</button>
-        </div>
+        {/* Footer actions - Removed from here, now in header */}
+        
+        {/* Hidden button for preview trigger */}
+        <button id="preview-btn" style={{ display: 'none' }} />
 
         {/* Preview Modal */}
         <div className="modal" id="preview-modal" style={{ display: 'none' }}>
@@ -201,5 +449,6 @@ export default function TempFormBuilder() {
         </div>
       </div>
     </div>
+    </>
   );
 }

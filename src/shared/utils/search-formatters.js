@@ -13,7 +13,8 @@ export const formatProjectResult = (project) => ({
     subtitle: project.number 
         ? `Number: ${project.number}` 
         : `ID: ${project.id}`,
-    status: project.status,
+    status: project.status === 'if' ? 'Archived' : 'Active',
+    is_archived: project.status === 'if' || false,
     client: project.client?.name,
     type: 'project',
     // Keep original data for navigation
@@ -78,7 +79,10 @@ export const formatSupplierResult = (supplier) => ({
     title: supplier.name || `Supplier #${supplier.id}`,
     subtitle: supplier.email || supplier.phone || supplier.address,
     contact: supplier.contact_person,
-    type: 'supplier'
+    type: 'supplier',
+    photo: supplier.photo,
+    has_photo: supplier.has_photo,
+    is_business: true
 });
 
 /**
@@ -164,6 +168,18 @@ export const getStatusColor = (status) => {
     };
     
     return statusMap[status?.toLowerCase()] || 'secondary';
+};
+
+/**
+ * Format project status badge for display
+ * @param {Object} project - Formatted project object
+ * @returns {string} Status text to display
+ */
+export const getProjectStatusBadge = (project) => {
+    if (project.is_archived) {
+        return 'Archived';
+    }
+    return project.status ? project.status.charAt(0).toUpperCase() + project.status.slice(1) : 'Active';
 };
 
 /**

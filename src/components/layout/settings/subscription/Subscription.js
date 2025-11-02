@@ -11,8 +11,8 @@ import ManageAssetTypes from "./features/manage-asset-types";
 import { ActivateWorkSubscription } from "./features/work-subscription/activate-work-subscription";
 import styles from "./subscription.module.scss";
 import { getAssetsTypes } from "../../../../APIs/assets-api";
-import { 
-  cancelWorkSubscription, 
+import {
+  cancelWorkSubscription,
   getSubscriptions,
   activeInquiriesSubscription,
   cancelInquiriesSubscription,
@@ -42,7 +42,7 @@ const Subscription = () => {
 
   const mobileUsersQuery = useQuery({ queryKey: ['mobile-users'], queryFn: getMobileUserList });
   const activeMobileUser = mobileUsersQuery?.data?.users?.filter((user) => user.status !== 'disconnected') || [];
-  const hasWorkSubscription = subscriptionQuery?.data?.work !== null ? true : false;
+  const hasWorkSubscription = session?.has_work_subscription || false;
 
   const assetsTypesQuery = useQuery({ queryKey: ['assets-types'], queryFn: getAssetsTypes, staleTime: 0 });
   const assetsTypes = assetsTypesQuery?.data?.results || [];
@@ -59,28 +59,28 @@ const Subscription = () => {
     },
   });
 
-  // Inquiries subscription mutations
+  // Enquiries subscription mutations
   const activeInquiriesMutation = useMutation({
     mutationFn: activeInquiriesSubscription,
     onSuccess: () => {
-      toast.success("Inquiries subscription activated successfully!");
+      toast.success("Enquiries subscription activated successfully!");
       window.location.reload();
     },
     onError: (error) => {
-      console.error("Error activating inquiries subscription:", error);
-      toast.error("Failed to activate inquiries subscription. Please try again.");
+      console.error("Error activating enquiries subscription:", error);
+      toast.error("Failed to activate enquiries subscription. Please try again.");
     },
   });
 
   const cancelInquiriesMutation = useMutation({
     mutationFn: cancelInquiriesSubscription,
     onSuccess: () => {
-      toast.success("Inquiries subscription canceled successfully!");
+      toast.success("Enquiries subscription canceled successfully!");
       window.location.reload();
     },
     onError: (error) => {
-      console.error("Error canceling inquiries subscription:", error);
-      toast.error("Failed to cancel inquiries subscription. Please try again.");
+      console.error("Error canceling enquiries subscription:", error);
+      toast.error("Failed to cancel enquiries subscription. Please try again.");
     },
   });
 
@@ -241,7 +241,10 @@ const Subscription = () => {
                                   </button>
                                 ) :
                                 hasPermission(role, PERMISSIONS.SETTINGS.SUBSCRIPTION.ACTIVE_WORK_SUBSCRIPTION) && (
-                                  <ActivateWorkSubscription />
+                                  <ActivateWorkSubscription
+                                    defaultPrice={subscriptionQuery?.data?.work?.default || "0.00"}
+                                    currentPrice={parseFloat(parseFloat(subscriptionQuery?.data?.work_user_cost || 0) * parseInt((subscriptionQuery?.data?.work?.max_workers || 0) - (hasWorkSubscription && subscriptionQuery?.data?.default_work_users || 0))).toFixed(2)}
+                                  />
                                 )
                             }
                           </div>
@@ -398,7 +401,7 @@ const Subscription = () => {
                         </div>
                         <div className="progressSubsIn">
                           <div className="d-flex justify-content-between mb-1">
-                            <h4>Inquiries</h4>
+                            <h4>Enquiries</h4>
                             <div className="subscriptionPrice active">${formatAUD(subscriptionQuery?.data?.inquiries?.default || "0.00")}</div>
                           </div>
 

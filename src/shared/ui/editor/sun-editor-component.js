@@ -25,7 +25,6 @@ const SunEditorComponent = ({
 
     // State for upload progress and drag states
     const [uploadProgress, setUploadProgress] = useState({});
-    const [dragState, setDragState] = useState(false);
     const [processingBase64, setProcessingBase64] = useState(false);
     
     // Cache to store already uploaded base64 images to prevent duplicate uploads
@@ -46,11 +45,25 @@ const SunEditorComponent = ({
         return () => clearInterval(cleanupInterval);
     }, []);
 
-    // Ref for SunEditor instance
-    const editorRef = useRef(null);
-    const editorInstanceRef = useRef(null);
+    // Auto-clear upload progress error/success after a delay
+    useEffect(() => {
+        if (uploadProgress.error || uploadProgress.success) {
+            const timer = setTimeout(() => {
+                setUploadProgress({});
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [uploadProgress.error, uploadProgress.success]);
 
-    // Utility function to check if an image is already hosted on S3
+    // Ref for SunEditor instance (populated in handleLoad)
+    const editorInstanceRef = useRef(null);
+    
+    // Keep currentContentRef in sync with value prop (for reference only)
+    const currentContentRef = useRef(value);
+    
+    useEffect(() => {
+        currentContentRef.current = value;
+    }, [value]);    // Utility function to check if an image is already hosted on S3
     const isS3Image = useCallback((src) => {
         if (!src || typeof src !== 'string') return false;
         
@@ -188,142 +201,7 @@ const SunEditorComponent = ({
         }
     }, [enableS3Upload, s3UploadEndpoint, uploadId, base64ToFile]);
 
-    // S3 upload function
-    const uploadToS3 = useCallback(async (file, url) => {
-        return axios.put(url, file, {
-            headers: {
-                "Content-Type": "",
-            },
-            onUploadProgress: (progressEvent) => {
-                const progress = Math.round(
-                    (progressEvent.loaded / progressEvent.total) * 100
-                );
-                setUploadProgress({ progress, uploading: true });
-            }
-        }).then((response) => {
-            // S3 returns 200 for successful uploads, check status
-            if (response.status === 200 || response.status === 201) {
-                setUploadProgress({ progress: 100, success: true, uploading: false });
-                const fileURL = url.split("?")[0] || "";
 
-                // console.log('S3 upload successful, inserting image:', fileURL);
-                // here we insert the image into the editor
-
-                toast.success('Image uploaded successfully');
-
-                // Clear progress after a delay
-                setTimeout(() => {
-                    setUploadProgress({});
-                }, 2000);
-            } else {
-                throw new Error(`Upload failed with status: ${response.status}`);
-            }
-
-        }).catch((err) => {
-            console.log('Error uploading to S3: ', err);
-            setUploadProgress({ progress: 0, error: true, uploading: false });
-            toast.error('Failed to upload image to S3');
-            throw err; // Re-throw to be caught by fileUploadBySignedURL
-        });
-    }, []);
-
-    // Get signed URL and upload file to S3
-    const fileUploadBySignedURL = useCallback(async (file) => {
-        if (!file || !enableS3Upload) return;
-
-        try {
-            const name = file?.name?.split(".")[0];
-            const fileExtension = file?.name?.split(".")?.pop();
-            const fileName = `proposal-images/${name}-${Date.now()}.${fileExtension}`;
-
-            setUploadProgress({ progress: 0, uploading: true });
-
-            const accessToken = localStorage.getItem('access_token');
-            const endpoint = s3UploadEndpoint || `${process.env.REACT_APP_BACKEND_API_URL}/proposals/file/${uploadId}/`;
-
-            const response = await axios.post(
-                endpoint,
-                { filename: fileName },
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                }
-            );
-
-            const { url } = response.data;
-            if (!url) {
-                setUploadProgress({ progress: 0, error: true, uploading: false });
-                toast.error("Failed to get upload URL. Please try again.");
-                return;
-            }
-
-            // Upload to S3 - this will handle its own success/error states
-            await uploadToS3(file, url);
-
-        } catch (error) {
-            // Only show error if it's not from S3 upload (which handles its own errors)
-            if (!error.message?.includes('Upload failed with status')) {
-                setUploadProgress({ progress: 0, error: true, uploading: false });
-                console.error("Error in fileUploadBySignedURL:", error);
-                toast.error("Failed to upload file. Please try again.");
-            }
-        }
-    }, [uploadToS3, enableS3Upload, s3UploadEndpoint, uploadId]);
-
-    // Drag and drop handlers
-    const handleDragEnter = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (enableS3Upload) {
-            setDragState(true);
-        }
-    }, [enableS3Upload]);
-
-    const handleDragLeave = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // Only hide drag overlay if we're leaving the editor completely
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX;
-        const y = e.clientY;
-
-        if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-            setDragState(false);
-        }
-    }, []);
-
-    const handleDragOver = useCallback((e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }, []);
-
-    const handleDrop = useCallback(async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setDragState(false);
-
-        if (!enableS3Upload) return;
-
-        const files = e.dataTransfer.files;
-        if (files && files.length > 0) {
-            const file = files[0];
-
-            // Validate file size (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                toast.error('File size must be less than 10MB');
-                return;
-            }
-
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                toast.error('Please select a valid image file');
-                return;
-            }
-
-            await fileUploadBySignedURL(file);
-        }
-    }, [fileUploadBySignedURL, enableS3Upload]);
 
     // Render upload progress overlay
     const renderUploadProgress = () => {
@@ -432,37 +310,7 @@ const SunEditorComponent = ({
         );
     };
 
-    // Render drag overlay
-    const renderDragOverlay = () => {
-        if (!dragState || !enableS3Upload) return null;
 
-        return (
-            <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                border: '2px dashed #3498db',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 999,
-                borderRadius: '4px'
-            }}>
-                <div style={{
-                    textAlign: 'center',
-                    color: '#3498db',
-                    fontSize: '16px',
-                    fontWeight: '500'
-                }}>
-                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>📁</div>
-                    Drop your image here
-                </div>
-            </div>
-        );
-    };
 
     // Default button configuration
     const getButtonList = () => {
@@ -530,18 +378,12 @@ const SunEditorComponent = ({
     };
 
     const handleChange = async (content) => {
-        
         // Check if S3 upload is enabled and content contains images
         if (enableS3Upload && content && typeof content === 'string') {
             const { base64Images, s3Images } = categorizeImages(content);
             
-            // Log image categorization for debugging
-           // console.log(`Image analysis: ${base64Images.length} base64, ${s3Images.length} S3, total images: ${base64Images.length + s3Images.length}`);
-            
             // Only process base64 images (skip S3 images to prevent re-upload)
             if (base64Images.length > 0) {
-                // console.log(`Found ${base64Images.length} new base64 image(s) to upload (skipping ${s3Images.length} existing S3 images)`);
-                
                 setProcessingBase64(true);
                 
                 try {
@@ -593,14 +435,6 @@ const SunEditorComponent = ({
         // Store the editor instance for later use
         editorInstanceRef.current = sunEditor;
 
-        // Also try to get the editor from the ref if available
-        if (editorRef.current) {
-            const refEditor = editorRef.current.getInstance();
-            if (refEditor && Object.keys(refEditor).length > 0) {
-                editorInstanceRef.current = refEditor;
-            }
-        }
-
         if (onLoad) {
             onLoad(sunEditor);
         }
@@ -625,37 +459,16 @@ const SunEditorComponent = ({
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                 }
-                
-                /* Remove all table borders in SunEditor */
-                .sun-editor-wrapper .se-wrapper-inner table,
-                .sun-editor-wrapper .se-wrapper-inner table td,
-                .sun-editor-wrapper .se-wrapper-inner table th,
-                .sun-editor-wrapper .se-wrapper-inner table tr {
-                    border: none !important;
-                    outline: none !important;
-                    border-collapse: collapse !important;
-                }
-                
-                /* Also remove borders when content is rendered outside editor */
-                .sun-editor-content table,
-                .sun-editor-content table td,
-                .sun-editor-content table th,
-                .sun-editor-content table tr {
-                    border: none !important;
-                    outline: none !important;
-                    border-collapse: collapse !important;
+                .sun-editor-wrapper .se-wrapper-inner *,
+                .sun-editor .se-resizing-container {
+                    z-index: 0 !important;
                 }
             `}</style>
             <div
                 className={`sun-editor-wrapper ${className}`}
                 style={{ position: 'relative' }}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
             >
                 <SunEditor
-                    ref={editorRef}
                     setOptions={editorOptions}
                     setContents={value}
                     onChange={handleChange}
@@ -664,9 +477,6 @@ const SunEditorComponent = ({
                     onBlur={handleBlur}
                     {...props}
                 />
-
-                {/* Drag Overlay */}
-                {renderDragOverlay()}
 
                 {/* Upload Progress Overlay */}
                 {renderUploadProgress()}

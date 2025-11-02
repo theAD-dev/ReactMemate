@@ -27,29 +27,8 @@ const FormsPage = () => {
                         <input type="text" placeholder="Search" value={inputValue} onChange={(e) => setInputValue(e.target.value)} className="border search-resource" style={{ borderRadius: '4px', width: '184px', border: '1px solid #D0D5DD', color: '#424242', paddingLeft: '36px', fontSize: '14px', height: '32px' }} />
                     </div>
                 </div>
-                <div className="featureName d-flex align-items-center gap-3" style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-                    <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
-                        <span className={style.topBarText}>All</span>
-                    </Link>
-
-                    <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
-                        <WindowSidebar color='#9E77ED' size={16} className='me-2' />
-                        <span className={style.topBarText}>Web</span>
-                    </Link>
-
-                    <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
-                        <InputCursorText color='#F79009' size={16} className='me-2' />
-                        <span className={style.topBarText}>Form</span>
-                    </Link>
-
-                    <Link to={"/enquiries"} className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink)}>
-                        <Collection color='#084095' size={16} className='me-2' />
-                        <span className={style.topBarText}>Fb/In</span>
-                    </Link>
-                </div>
                 <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
-                    <Link to={"/enquiries/form-builder/new"}><Button className='solid-button py-1 font-14'>New</Button></Link>
-                    <Link to={"/enquiries/forms"}><Button className='info-button py-1 font-14'>Set Up <Gear color='#158ECC' size={20} /></Button></Link>
+                    <Link to={"/enquiries/form-builder/new"}><Button className={`solid-button py-0 font-14 ${style.newButton}`}>New Form</Button></Link>
                 </div>
             </div>
             <EnquiryFormsTable />
