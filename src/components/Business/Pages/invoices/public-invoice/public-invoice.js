@@ -406,7 +406,7 @@ const PublicInvoice = () => {
                                 </div>
                                 <div className='border-bottom py-2 w-100 d-flex justify-content-between'>
                                     <div style={{ fontSize: '14px', }}>
-                                        Tax
+                                        Tax ({invoice?.xero_tax === 'in' ? '10% Inclusive' : invoice?.xero_tax === 'ex' ? '10% Exclusive' : '0%'})
                                     </div>
                                     <div style={{ fontSize: '18px', }}>${formatAUD(invoice?.gst)}</div>
                                 </div>
