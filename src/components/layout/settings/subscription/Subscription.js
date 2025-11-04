@@ -226,7 +226,7 @@ const Subscription = () => {
                             <div className="progressWrapSubs">
                               <div
                                 className="progress-bar bg-WorkBar"
-                                style={{ width: `${subscriptionQuery?.data?.work ? 100 : 0}%` }}
+                                style={{ width: `${hasWorkSubscription ? 100 : 0}%` }}
                               ></div>
                             </div>
                             <span>{hasWorkSubscription ? "ON" : "OFF"}</span>
