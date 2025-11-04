@@ -27,23 +27,23 @@ const FilePreview = ({ file }) => {
 
   if (isImage) {
     return (
-      <div 
-        style={{ 
-          width: '48px', 
-          height: '48px', 
-          borderRadius: '6px', 
+      <div
+        style={{
+          width: '48px',
+          height: '48px',
+          borderRadius: '6px',
           overflow: 'hidden',
           flexShrink: 0,
           background: '#E5E7EB'
         }}
       >
-        <img 
-          src={file.url} 
-          alt={file.key} 
-          style={{ 
-            width: '100%', 
-            height: '100%', 
-            objectFit: 'cover' 
+        <img
+          src={file.url}
+          alt={file.key}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
           }}
           onError={(e) => {
             e.target.style.display = 'none';
@@ -55,15 +55,15 @@ const FilePreview = ({ file }) => {
   }
 
   return (
-    <div 
-      style={{ 
-        width: '48px', 
-        height: '48px', 
-        borderRadius: '6px', 
+    <div
+      style={{
+        width: '48px',
+        height: '48px',
+        borderRadius: '6px',
         background: '#F9FAFB',
         border: '1px solid #E5E7EB',
-        display: 'flex', 
-        alignItems: 'center', 
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0
       }}
@@ -210,7 +210,11 @@ const FilesModel = ({ projectId }) => {
     <>
       {/* View modal trigger */}
       <Button className={`filebut ${filesQuery?.data?.length ? 'fileActive' : ''}`} onClick={handleShow}>
-        Files <img src={FolderFileIcon} alt="FolderFileIcon" />
+        Files
+        {filesQuery?.data?.length > 0 && (
+          <span className="ml-1 font-14">({filesQuery.data.length})</span>
+        )}
+        <img src={FolderFileIcon} alt="FolderFileIcon" />
       </Button>
 
       {/* View modal */}
@@ -264,32 +268,32 @@ const FilesModel = ({ projectId }) => {
             <div className='d-flex gap-2 flex-wrap'>
               {!filesQuery?.isLoading && filesQuery?.data?.map((file) => {
                 return (
-                  <div 
-                    key={file?.key} 
-                    style={{ 
-                      background: '#F9FAFB', 
-                      padding: '10px', 
-                      borderRadius: '8px', 
+                  <div
+                    key={file?.key}
+                    style={{
+                      background: '#F9FAFB',
+                      padding: '10px',
+                      borderRadius: '8px',
                       border: '1px solid #EAECF0',
                       height: 'fit-content',
                       width: 'calc(33.333% - 5.33px)',
                       minWidth: '200px'
-                    }} 
+                    }}
                     className='d-flex align-items-center justify-content-between gap-2'
                   >
-                    <Link 
-                      to={`${file.url}`} 
-                      target='_blank' 
+                    <Link
+                      to={`${file.url}`}
+                      target='_blank'
                       className='d-flex align-items-center gap-2'
                       style={{ flex: 1, minWidth: 0, textDecoration: 'none' }}
                     >
                       <FilePreview file={file} />
                       <div className='d-flex flex-column' style={{ flex: 1, minWidth: 0, fontSize: '13px' }}>
-                        <div 
-                          title={file?.key} 
-                          style={{ 
-                            overflow: 'hidden', 
-                            textOverflow: 'ellipsis', 
+                        <div
+                          title={file?.key}
+                          style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
                             fontWeight: '500',
                             color: '#344054',
@@ -301,14 +305,14 @@ const FilesModel = ({ projectId }) => {
                         <small style={{ color: '#667085', fontSize: '12px' }}>{formatFileSize(file?.size)}</small>
                       </div>
                     </Link>
-                    <div 
-                      className='d-flex align-items-center justify-content-center' 
-                      onClick={() => removeFile(file?.key)} 
+                    <div
+                      className='d-flex align-items-center justify-content-center'
+                      onClick={() => removeFile(file?.key)}
                       title='Delete file'
-                      style={{ 
-                        background: '#FEE4E2', 
-                        borderRadius: '50%', 
-                        width: '28px', 
+                      style={{
+                        background: '#FEE4E2',
+                        borderRadius: '50%',
+                        width: '28px',
                         height: '28px',
                         flexShrink: 0,
                         cursor: 'pointer',
@@ -317,8 +321,8 @@ const FilesModel = ({ projectId }) => {
                       onMouseEnter={(e) => e.currentTarget.style.background = '#FEF3F2'}
                       onMouseLeave={(e) => e.currentTarget.style.background = '#FEE4E2'}
                     >
-                      {deleteMutation?.isPending && deleteMutation?.variables === file?.key 
-                        ? <ProgressSpinner style={{ width: '14px', height: '14px' }} /> 
+                      {deleteMutation?.isPending && deleteMutation?.variables === file?.key
+                        ? <ProgressSpinner style={{ width: '14px', height: '14px' }} />
                         : <Trash size={14} color="#F04438" />
                       }
                     </div>

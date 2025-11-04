@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
@@ -64,7 +65,7 @@ const StartChat = ({ projectId, project }) => {
     };
 
     return (
-        <Button className={style.chatButton} disabled={loading || !socketRef.current || !isConnected} onClick={handleStartChat}>
+        <Button className={clsx(style.chatButton, 'text-nowrap')} disabled={loading || !socketRef.current || !isConnected} onClick={handleStartChat}>
             {loading && <ProgressSpinner style={{ width: '20px', height: '20px', marginRight: '8px' }} />}
             Start Chat
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">

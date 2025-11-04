@@ -309,7 +309,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
 
   return (
     <>
-      <Button disabled={!project?.booking_start} className={`calenBut calenActive ${styles.calendarButton}`} onClick={handleShow}>
+      <Button disabled={!project?.booking_start} className={`calenBut calenActive text-nowrap ${styles.calendarButton}`} onClick={handleShow}>
         Send to Calendar <img src={CalendarIcon} alt="Calendar" />
       </Button>
 

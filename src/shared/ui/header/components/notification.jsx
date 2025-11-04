@@ -1,7 +1,11 @@
 import { useState, useRef, useCallback } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
-import { Bell, Check, CheckAll } from 'react-bootstrap-icons';
+import { Bell, Check, CheckAll, Gear } from 'react-bootstrap-icons';
 import clsx from 'clsx';
+import briefcase from '../../../../assets/images/icon/briefcase.svg';
+import calendarTick from '../../../../assets/images/icon/calendar-tick.svg';
+import InvoicesIcon from '../../../../assets/images/icon/InvoicesIcon.svg';
+import SalesIcon from '../../../../assets/images/icon/SalesIcon.svg';
 import style from '../header.module.scss';
 import notificationStyle from './notification.module.scss';
 import { useNotifications } from '../../../hooks/use-notifications';
@@ -70,18 +74,33 @@ const Notification = () => {
 
     // Get notification icon based on type
     const getNotificationIcon = (type) => {
-        const iconMap = {
-            'invoice': '💰',
-            'quote': '📋',
-            'project': '📁',
-            'task': '✅',
-            'payment': '💳',
-            'client': '👤',
-            'system': '⚙️',
-            'reminder': '⏰',
-            'default': '🔔'
-        };
-        return iconMap[type] || iconMap.default;
+        switch (type) {
+            case 1:
+                return <img src={briefcase} alt="Job"/>;
+            case 2:
+                return <img src={calendarTick} alt="Task"/>;
+            case 3:
+                return <img src={SalesIcon} alt="Quote"/>;
+            case 4:
+                return <img src={InvoicesIcon} alt="Invoices"/>;
+            default:
+                return <Gear size={16} color='#475467'/>;
+        }
+    };
+
+    const getNotificationClass = (type) => {
+        switch (type) {
+            case 1:
+                return notificationStyle.jobNotification;
+            case 2:
+                return notificationStyle.taskNotification;
+            case 3:
+                return notificationStyle.quoteNotification;
+            case 4:
+                return notificationStyle.invoiceNotification;
+            default:
+                return '';
+        }
     };
 
     // Handle mark as read
@@ -192,7 +211,7 @@ const Notification = () => {
                                         onMouseEnter={() => setHoveredNotification(notification.id)}
                                         onMouseLeave={() => setHoveredNotification(null)}
                                     >
-                                        <div className={notificationStyle.notificationIcon}>
+                                        <div className={clsx(notificationStyle.notificationIcon, getNotificationClass(notification.type))}>
                                             {getNotificationIcon(notification.type)}
                                         </div>
 
@@ -220,7 +239,7 @@ const Notification = () => {
                                                         onClick={(e) => handleMarkAsRead(notification.id, e)}
                                                         title="Mark as read"
                                                     >
-                                                        <Check size={14} />
+                                                        <Check size={14} color='#D92D20' />
                                                     </button>
                                                 ) : (
                                                     <div className={notificationStyle.unreadDot}></div>
@@ -240,14 +259,6 @@ const Notification = () => {
                         </>
                     )}
                 </div>
-
-                {/* {filteredNotifications.length > 0 && (
-                    <div className={notificationStyle.footer}>
-                        <button className={notificationStyle.viewAllBtn}>
-                            View all notifications
-                        </button>
-                    </div>
-                )} */}
             </Dropdown.Menu>
         </Dropdown>
     );
