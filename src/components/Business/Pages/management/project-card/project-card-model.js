@@ -756,11 +756,11 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <Row className='projectCardButWrap'>
               <Col>
                 <ScheduleUpdate key={projectId} projectId={projectId} projectCardData={projectCardData} isFetching={isFetching} startDate={+cardData?.booking_start} endDate={+cardData?.booking_end} />
-                <Button className='expense expActive' onClick={() => setCreateExpenseVisible(true)}>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
+                <Button className='expense expActive text-nowrap' onClick={() => setCreateExpenseVisible(true)}>Create Expense <img src={ExpenseIcon} alt="Expense" /></Button>
                 {/* <Button className='createPo poActive'>Create PO  <img src={CreatePoIcon} alt="CreatePoIcon" /></Button> */}
                 {
                   profileData?.has_work_subscription &&<>
-                    <Button className='createJob jobActive' onClick={() => setVisible(true)}>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
+                    <Button className='createJob jobActive text-nowrap' onClick={() => setVisible(true)}>Create a Job <img src={Briefcase} alt="briefcase" /></Button>
                   </>
                 }
                 <GoogleReviewEmail clientId={cardData?.client} projectId={projectId} />

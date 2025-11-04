@@ -65,7 +65,7 @@ const ScheduleUpdate = ({ projectId, projectCardData, isFetching, startDate, end
                 {(dateRange?.startDate && dateRange?.endDate && !updateMutation.isPending) ? (
                     <DateRangeComponent isPending={updateMutation.isPending} startDate={dateRange.startDate} endDate={dateRange.endDate} />
                 ) : (
-                    <Button className={`schedule schActive`} style={{ minWidth: '201px', minHeight: '46px' }}>
+                    <Button className={`schedule schActive text-nowrap`} style={{ minWidth: '201px', minHeight: '46px' }}>
                         {updateMutation.isPending || isFetching ? <div className="dot-flashing" ></div>
                             : <span>Schedule Project  <img src={OrdersIcon} alt="OrdersIcon" /></span>}
                     </Button>
