@@ -33,6 +33,7 @@ export const useAccountCodeSyncMutations = () => {
         mutationFn: () => syncCode(),
         onSuccess: () => {
             toast.success(`Account codes synced successfully`);
+            window.location.reload();
         },
         onError: (error) => {
             console.error('Error syncing account codes:', error);
