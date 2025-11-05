@@ -99,3 +99,12 @@ export const linkExpenseToAsset = async (data) => {
     const url = new URL(`${API_BASE_URL}${endpoint}`);
     return fetchAPI(url.toString(), options);
 };
+
+export const deleteLinkedExpense = async (service_id) => {
+  const endpoint = `/assets/vehicles/services/${service_id}/delete/`;
+  const options = {
+    method: 'PATCH'
+  };
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  return fetchAPI(url.toString(), options);
+};

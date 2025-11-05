@@ -26,11 +26,13 @@ const schema = yup.object({
     .max(64, "Registration number must be at most 64 characters"),
   date_of_expiry: yup.date().required("Date of expiry is required").nullable(),
   make: yup.string()
+    .required("Make is required")
     .max(64, "Make must be at most 64 characters"),
   model: yup.string()
+    .required("Model is required")
     .max(64, "Model must be at most 64 characters"),
   year_manufactured: yup.number()
-    .nullable()
+    .required("Year manufactured is required")
     .min(1900, "Year must be at least 1900")
     .max(2100, "Year must be at most 2100"),
   fuel_type: yup.string()
@@ -40,14 +42,17 @@ const schema = yup.object({
   engine_number: yup.string()
     .max(64, "Engine number must be at most 64 characters"),
   date_of_purchase: yup.date().required("Date of purchase is required").nullable(),
-  purchased_amount: yup.number().nullable().min(0, "Purchase amount cannot be negative"),
+  purchased_amount: yup.number()
+  .required("Purchase amount is required")
+  .min(0, "Purchase amount cannot be negative"),
   odometer_km: yup.number()
-    .min(0, "Odometer cannot be negative")
-    .max(2147483647, "Odometer value is too large"),
+    .min(0, "Odometer cannot be negative"),
   driver: yup.number().nullable(),
   insurer: yup.string()
+    .required("Insurer is required")
     .max(128, "Insurer must be at most 128 characters"),
   insurance_policy_number: yup.string()
+    .required("Insurance policy number is required")
     .max(128, "Insurance policy number must be at most 128 characters"),
   insurance_expiry: yup.date().required("Insurance expiry is required").nullable(),
   receipt_number: yup.string()
@@ -120,7 +125,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Date Of Expiry <span className='required'>*</span></label>
+            <label className={clsx(styles.lable)}>Rego Expiry Date <span className='required'>*</span></label>
             <Controller
               name="date_of_expiry"
               control={control}
@@ -145,7 +150,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Make</label>
+            <label className={clsx(styles.lable)}>Make <span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.make && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
               <InputText
@@ -160,7 +165,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Model</label>
+            <label className={clsx(styles.lable)}>Model <span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.model && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
               <InputText
@@ -175,7 +180,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Year Manufactured</label>
+            <label className={clsx(styles.lable)}>Year Manufactured <span className='required'>*</span></label>
             <Controller
               name="year_manufactured"
               control={control}
@@ -281,7 +286,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Purchased Amount</label>
+            <label className={clsx(styles.lable)}>Purchased Amount <span className='required'>*</span></label>
             <IconField>
               <Controller
                 name="purchased_amount"
@@ -408,7 +413,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
       <Row className={clsx(styles.bgGreay)}>
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Insurer</label>
+            <label className={clsx(styles.lable)}>Insurer <span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.insurer && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
               <InputText
@@ -423,7 +428,7 @@ const VehicleForm = forwardRef(({ onSubmit, defaultValues, vehicleId }, ref) => 
 
         <Col sm={6}>
           <div className="d-flex flex-column gap-1 mb-4">
-            <label className={clsx(styles.lable)}>Insurance Policy Number</label>
+            <label className={clsx(styles.lable)}>Insurance Policy Number <span className='required'>*</span></label>
             <IconField>
               <InputIcon>{errors.insurance_policy_number && <img src={exclamationCircle} className='mb-3' />}</InputIcon>
               <InputText

@@ -69,10 +69,10 @@ export const CreateNewService = ({ visible, setVisible, setRefetch, vehicleId = 
         }
     };
 
-    const createServiceFromExpense = (expense) => {
+    const createServiceFromExpense = async (expense) => {
         if (expenseService) {
             expenseService.expense = expense;
-            mutation.mutate(expenseService);
+            await mutation.mutateAsync(expenseService);
         }
     };
 
