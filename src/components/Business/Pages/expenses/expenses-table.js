@@ -10,6 +10,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Tag } from 'primereact/tag';
 import { toast } from 'sonner';
 import style from './expenses.module.scss';
+import { deleteLinkedExpense } from '../../../../APIs/assets-api';
 import { deleteExpense, getListOfExpense } from "../../../../APIs/expenses-api";
 import { useAuth } from '../../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
@@ -244,6 +245,9 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
             setTotalMoney(prev => prev - rowData.total);
 
             timeoutRef.current = setTimeout(() => {
+                if (rowData.asset) {
+                    deleteLinkedExpense(rowData.asset.asset_id, rowData.asset.asset_type_id, rowData.id);
+                }
                 deleteMutation.mutate(rowData.id);
             }, 5000);
 
