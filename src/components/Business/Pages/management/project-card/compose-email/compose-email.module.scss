@@ -9,3 +9,80 @@
   font-weight: 400;
   line-height: 24px; /* 150% */
 }
+
+.emailStatus {
+  display: flex;
+  width: 200px;
+  padding: 12px 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 6px;
+  border: 1px solid var(--Gray-200, #eaecf0);
+  background: var(--Colors-Foreground-fg-white, #fff);
+}
+
+.disconnectedBadge {
+  border-radius: 16px;
+  background: #fef0c7;
+  color: #b54708;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.smsUnavailableText {
+  color: var(--Gray-800, #1d2939);
+  text-align: center;
+
+  /* Text md/Regular */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+}
+
+.settingsLink {
+  color: var(--Primary-600, #158ecc);
+
+  /* Text md/Regular */
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.disconnected {
+  border-radius: 16px;
+  border: 1px solid #fecdca;
+  background: #fef3f2;
+  padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px)
+    var(--spacing-xxs, 2px) var(--spacing-sm, 6px);
+  color: #b42318;
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  .dots {
+    width: 8px;
+    height: 8px;
+    color: #b42318;
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    background: #b42318;
+    display: inline-block;
+    border-radius: 100%;
+    margin-left: 6px;
+    padding: 0;
+    margin-right: 0;
+  }
+}

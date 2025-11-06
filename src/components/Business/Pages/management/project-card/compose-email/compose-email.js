@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { X } from "react-bootstrap-icons";
+import { Envelope, X } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "sonner";
 import style from "./compose-email.module.scss";
@@ -78,6 +79,18 @@ const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
         <Modal.Body>
           <div className="ContactModel">
             <p className={style.emailUnavailableText}>Email functionality is currently unavailable. To use this feature, please configure an email account via <Link to="/settings/integrations?openEmail=true" style={{ color: '#158ECC' }}>Settings &gt; Integrations</Link>.</p>
+          </div>
+          <div className={clsx("d-flex align-items-center justify-content-center flex-column gap-1 m-auto", style.emailStatus)}>
+            <div className={clsx("d-flex align-items-center justify-content-center")}>
+              <Envelope size={25} color="#667085" />
+              <h6 className="ms-2 mt-2" style={{ color: '#101828', fontSize: '16px', fontWeight: '400', lineHeight: '24px' }}>
+                Outgoing Email
+              </h6>
+            </div>
+            <span className={clsx("px-2 py-1", style.disconnected)}>
+              Pending
+              <span className={style.dots}></span>
+            </span>
           </div>
         </Modal.Body>
       </Modal>

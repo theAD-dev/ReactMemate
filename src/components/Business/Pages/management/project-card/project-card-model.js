@@ -7,12 +7,14 @@ import {
   Postcard,
   PlusCircle,
   PauseCircle,
-  Copy
+  Copy,
+  Trash
 } from "react-bootstrap-icons";
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -60,6 +62,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   const [showCostBreakdown, setShowCostBreakdown] = useState(false);
   const [visible, setVisible] = useState(false);
   const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
+  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
 
   //Real Cost Calculation
   const cs = parseFloat(cardData?.cost_of_sale) || 0;
@@ -226,12 +229,17 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
   };
 
   const declinecOrder = () => {
-    declinecOrderMutation.mutate(projectId);
+    setShowCancelConfirmation(true);
   };
 
   const canReturn = (isReturn) => {
     if (isReturn) return;
     updateReturnMutation.mutate(projectId);
+  };
+
+  const confirmCancelOrder = async () => {
+    setShowCancelConfirmation(false);
+    declinecOrderMutation.mutate(projectId);
   };
 
   useEffect(() => {
@@ -409,8 +417,86 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     }
   };
 
+  const headerElement = (
+    <div style={{ textAlign: 'center', paddingBottom: '0px' }}>
+      <h5 style={{ margin: 0, color: '#1D2939', fontSize: '18px', fontWeight: 600 }}>
+        Are you sure you want to cancel this order?
+      </h5>
+    </div>
+  );
+
+  const footerContent = (
+    <div className='d-flex justify-content-center gap-2'>
+      <Button className='outline-button' onClick={() => setShowCancelConfirmation(false)}>Keep Order</Button>
+      <Button className='danger-button' onClick={confirmCancelOrder} disabled={declinecOrderMutation.isPending}>
+        Cancel Order {declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '16px', height: '16px', color: '#fff', marginLeft: '8px' }} />}
+      </Button>
+    </div>
+  );
+
   return (
     <>
+      {/* Cancel Order Confirmation Modal */}
+      <Dialog 
+        visible={showCancelConfirmation} 
+        onHide={() => setShowCancelConfirmation(false)}
+        modal={true}
+        header={headerElement}
+        footer={footerContent}
+        className='custom-modal'
+        style={{ width: '550px' }}
+        onShow={() => {}}
+      >
+        <div className="d-flex flex-column align-items-center justify-content-center gap-4" style={{ padding: '24px 0' }}>
+          {/* Trash Icon */}
+          <div style={{
+            position: 'relative',
+            width: '140px',
+            height: '140px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            {/* Outer light gray circle */}
+            <div style={{
+              position: 'absolute',
+              width: '140px',
+              height: '140px',
+              borderRadius: '50%',
+              background: '#F3F4F6'
+            }}></div>
+            
+            {/* Inner gray circle with icon */}
+            <div style={{
+              position: 'relative',
+              width: '100px',
+              height: '100px',
+              borderRadius: '50%',
+              background: '#9CA3AF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1
+            }}>
+              <Trash size={48} color="#fff" strokeWidth={1.5} />
+            </div>
+          </div>
+
+          {/* Description */}
+          <p style={{
+            margin: 0,
+            color: '#4B5563',
+            fontSize: '15px',
+            textAlign: 'center',
+            lineHeight: '1.6'
+          }}>
+            This action will cancel the order and cannot be undone.
+            {cardData?.invoice_created && (<b>The invoice associated with this order will be permanently deleted.</b>)}
+          </p>
+        </div>
+      </Dialog>
+
+      {/* Main Project Card Modal */}
       <Modal
         show={viewShow}
         aria-labelledby="contained-modal-title-vcenter"

@@ -213,7 +213,7 @@ const Header = () => {
                                                     Suppliers
                                                 </NavLink>
                                             </li>
-                                            {/* {session?.has_assets_subscription && (
+                                            {session?.has_assets_subscription && (
                                                 <li>
                                                     <NavLink
                                                         to="/assets"
@@ -225,7 +225,7 @@ const Header = () => {
                                                         Assets
                                                     </NavLink>
                                                 </li>
-                                            )} */}
+                                            )}
                                         </ul>
                                     </Col>
                                     <Col>

@@ -11860,6 +11860,10 @@ tr:hover .linkText,
   z-index: 1060 !important;
 }
 
+.p-sidebar-mask-linkedExpense {
+  z-index: 1055 !important;
+}
+
 .departments-droppable .p-accordion-tab:not(.p-accordion-tab-active),
 .departments-droppable .p-accordion-tab .main-accordion-header {
   border: none !important;

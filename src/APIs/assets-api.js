@@ -101,15 +101,31 @@ export const linkExpenseToAsset = async (data) => {
 };
 
 export const deleteLinkedExpense = async (asset_id, asset_type_id, expense_id) => {
-  const endpoint = `/assets/expense-links/delete/`;
-  const options = {
-    method: 'POST',
-    body: {
-      expense: expense_id,
-      asset_type: asset_type_id,
-      asset_id: asset_id
-    }
-  };
-  const url = new URL(`${API_BASE_URL}${endpoint}`);
-  return fetchAPI(url.toString(), options);
+    const endpoint = `/assets/types/expense-links/delete/`;
+    const options = {
+        method: 'POST',
+        body: {
+            expense: expense_id,
+            asset_type: asset_type_id,
+            asset_id: asset_id
+        }
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const getLinkedExpenses = async (asset_type = 1, asset_id, page = 1, limit = 25, order = "-id") => {
+    const offset = (page - 1) * limit;
+    const endpoint = `/assets/types/expense-links/`;
+    const options = {
+        method: 'GET'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    url.searchParams.append("limit", limit);
+    url.searchParams.append("offset", offset);
+    url.searchParams.append("asset_type", asset_type);
+    url.searchParams.append("asset_id", asset_id);
+    if (order) url.searchParams.append("ordering", order);
+
+    return fetchAPI(url.toString(), options);
 };

@@ -2,14 +2,17 @@ import { useState, useRef, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { InfoCircle, X } from 'react-bootstrap-icons';
 import { useQuery } from '@tanstack/react-query';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
+import { Tag } from 'primereact/tag';
 import styles from './view-vehicle.module.scss';
-import { getVehicle, getVehicleServices } from '../../../../APIs/assets-api';
+import { getVehicle, getVehicleServices, getLinkedExpenses, deleteLinkedExpense } from '../../../../APIs/assets-api';
 import NewExpensesCreate from '../../../../components/Business/features/expenses-features/new-expenses-create/new-expense-create';
 import { formatMoney } from '../../../../components/Business/shared/utils/helper';
 import { formatAUD } from '../../../../shared/lib/format-aud';
-import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
+import ImageAvatar, { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import EditVehicle from '../edit-vehicle/edit-vechicle';
 
 const dateFormat = (timestamp) => {
@@ -25,10 +28,11 @@ const dateFormat = (timestamp) => {
     return formatter.format(date);
 };
 
-const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setRefetch, drivers }) => {
+const ViewVehicle = ({ visible, setVisible, editData, onClose, setRefetch, drivers }) => {
     const formRef = useRef(null);
     const [isPending, setIsPending] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [showLinkedExpensesSidebar, setShowLinkedExpensesSidebar] = useState(true);
     const id = editData?.id;
     const getVehicleQuery = useQuery({
         queryKey: ['getVehicle', id],
@@ -94,6 +98,32 @@ const ViewVehicle = ({ visible, setVisible, editData, setEditData, onClose, setR
                     </div>
                 )}
             ></Sidebar>
+            {
+                <Sidebar
+                    visible={showLinkedExpensesSidebar}
+                    header={
+                        <div style={{ borderBottom: '1px solid #EAECF0', width: '100%', padding: '0px 0px 10px 0px' }}>
+                            <div className="d-flex align-items-center gap-2 w-100">
+                                <div className={styles.circledesignstyle}>
+                                    <div className={styles.out}>
+                                        <InfoCircle size={24} color="#17B26A" />
+                                    </div>
+                                </div>
+                                <span style={{ color: '#344054', fontSize: '20px', fontWeight: 600 }}>Linked Expenses</span>
+                            </div>
+                        </div>
+                    }
+                    position="right"
+                    modal={false}
+                    dismissable={false}
+                    style={{ width: '1200px', paddingRight: '720px' }}
+                    maskClassName="p-sidebar-mask-linkedExpense"
+                    onHide={() => setShowLinkedExpensesSidebar(false)}
+                >
+                    {/* Linked Expenses Content Here */}
+                    <LinkedExpenseList vehicleId={id} />
+                </Sidebar>
+            }
             {showCreateExpenseModal && assetForExpense?.id && (
                 <NewExpensesCreate
                     visible={showCreateExpenseModal}
@@ -390,6 +420,215 @@ const ServiceHistoryList = ({ vehicleId }) => {
                             <ProgressSpinner style={{ width: '24px', height: '24px' }} />
                         </div>
                     )}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const LinkedExpenseList = ({ vehicleId }) => {
+    const [expenses, setExpenses] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMoreData, setHasMoreData] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const observerRef = useRef(null);
+    const lastItemRef = useRef(null);
+    const limit = 100;
+
+    useEffect(() => {
+        const fetchExpenses = async () => {
+            if (!vehicleId) return;
+            setLoading(true);
+
+            try {
+                const data = await getLinkedExpenses(1, vehicleId, page, limit, '-id');
+                if (page === 1) {
+                    setExpenses(data || []);
+                } else {
+                    if (data?.length > 0) {
+                        setExpenses(prev => {
+                            const existingIds = new Set(prev.map(expense => expense.id));
+                            const newData = data.filter(expense => !existingIds.has(expense.id));
+                            return [...prev, ...newData];
+                        });
+                    }
+                }
+                setHasMoreData(data.length === limit);
+            } catch (error) {
+                console.error('Error fetching linked expenses:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchExpenses();
+    }, [vehicleId, page]);
+
+    useEffect(() => {
+        if (!hasMoreData || loading) return;
+
+        observerRef.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && !loading) {
+                setPage(prevPage => prevPage + 1);
+            }
+        });
+
+        if (lastItemRef.current) {
+            observerRef.current.observe(lastItemRef.current);
+        }
+
+        return () => {
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+            }
+        };
+    }, [hasMoreData, loading]);
+
+    const formatDate = (timestamp) => {
+        if (!timestamp) return '-';
+        const date = new Date(+timestamp * 1000);
+        const formatter = new Intl.DateTimeFormat("en-AU", {
+            timeZone: 'Australia/Sydney',
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
+        return formatter.format(date);
+    };
+
+    // Table column formatters
+    const expenseIDBody = (rowData) => {
+        return (
+            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+                <span style={{ fontWeight: '400', color: '#667085' }}>{rowData.number?.split('-')[1] || rowData.number}</span>
+                <span style={{ fontSize: '12px', color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
+            </div>
+        );
+    };
+
+    const supplierBody = (rowData) => {
+        return (
+            <div className='d-flex align-items-center'>
+                <ImageAvatar has_photo={rowData?.supplier?.has_photo} photo={rowData?.supplier?.photo} is_business={true} size={16} />
+                <div className='d-flex flex-column gap-1'>
+                    <div className={`${styles.ellipsis}`}>{rowData.supplier?.name}</div>
+                    {rowData.deleted ?
+                        <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
+                </div>
+            </div>
+        );
+    };
+
+    const totalBody = (rowData) => {
+        return <div className={`d-flex align-items-center justify-content-end show-on-hover ${styles.fontStanderdSize}`}>
+            <div className={`${rowData.paid ? styles['paid-true'] : styles['paid-false']}`}>
+                ${formatAUD(rowData.total)}
+            </div>
+        </div>;
+    };
+
+    const accountCodeBody = (rowData) => {
+        return (
+            <span style={{ color: '#667085', fontSize: '14px' }}>
+                {rowData.account_code?.code}:{rowData.account_code?.name}
+            </span>
+        );
+    };
+
+    const referenceBody = (rowData) => {
+        return (
+            <span style={{ color: '#667085', fontSize: '14px' }} title={rowData.invoice_reference}>
+                {rowData.invoice_reference || '-'}
+            </span>
+        );
+    };
+
+    const dueDateBody = (rowData) => {
+        return (
+            <span style={{ color: '#667085', fontSize: '14px' }}>
+                {formatDate(rowData.due_date)}
+            </span>
+        );
+    };
+
+    if (!vehicleId) return null;
+
+    return (
+        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                {expenses.length === 0 && !loading ? (
+                    <div style={{
+                        padding: '48px 24px',
+                        textAlign: 'center',
+                        color: '#98A2B3',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flex: 1
+                    }}>
+                        <div style={{ fontSize: '14px', marginBottom: '8px' }}>No linked expenses found</div>
+                        <div style={{ fontSize: '12px', color: '#D0D5DD' }}>Expenses linked to this vehicle will appear here</div>
+                    </div>
+                ) : (
+                    <DataTable
+                        value={expenses}
+                        scrollable
+                        scrollHeight="flex"
+                        columnResizeMode="expand"
+                        resizableColumns
+                        showGridlines
+                        size="small"
+                        rowsPerPageOptions={[10, 25, 50]}
+                        paginator={false}
+                        loading={loading}
+                        emptyMessage="No linked expenses found"
+                        style={{ flex: 1 }}
+                        className="border"
+                    >
+                        <Column
+                            field="number"
+                            header="Expense ID"
+                            body={expenseIDBody}
+                            style={{ minWidth: '140px' }}
+                        ></Column>
+                        <Column
+                            field="supplier.name"
+                            header="Supplier"
+                            body={supplierBody}
+                            style={{ minWidth: '180px' }}
+                        ></Column>
+                        <Column
+                            field="invoice_reference"
+                            header="Reference"
+                            body={referenceBody}
+                            style={{ minWidth: '120px' }}
+                        ></Column>
+                        <Column
+                            field="due_date"
+                            header="Due Date"
+                            body={dueDateBody}
+                            style={{ minWidth: '120px' }}
+                        ></Column>
+                        <Column
+                            field="total"
+                            header="Total"
+                            body={totalBody}
+                            style={{ minWidth: '100px', textAlign: 'right' }}
+                        ></Column>
+                        <Column
+                            field="account_code"
+                            header="Account Code"
+                            body={accountCodeBody}
+                            style={{ minWidth: '150px' }}
+                        ></Column>
+                    </DataTable>
+                )}
+            </div>
+
+            {loading && (
+                <div style={{ padding: '16px', textAlign: 'center', borderTop: '1px solid #EAECF0' }}>
+                    <ProgressSpinner style={{ width: '24px', height: '24px' }} />
                 </div>
             )}
         </div>
