@@ -332,7 +332,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
 
     const assetCategories = useMemo(() => {
         const data = listOfAssetCategoriesQuery?.data;
-        console.log('Raw asset categories data:', data);
 
         // Handle both array and object with results property
         if (Array.isArray(data)) {
@@ -395,13 +394,11 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         if (suppliers.length > 0 && hasMoreData) {
             const timeout = setTimeout(() => {
                 const lastRow = document.querySelector('.supplier-dropdown .p-dropdown-items li.p-dropdown-item:last-child');
-                console.log('lastRow: ', lastRow);
 
                 if (lastRow) {
                     observerRef.current = new IntersectionObserver(entries => {
                         if (entries[0].isIntersecting) {
                             setPage(prevPage => prevPage + 1);
-                            console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
                         }
                     });
                     observerRef.current.observe(lastRow);
@@ -1296,6 +1293,7 @@ const ReviewExpense = React.memo(({ visible, onHide, defaultValues = {} }) => {
     const observerRef = useRef(null);
     const [supplierValue, setSupplierValue] = useState(defaultValues.supplier?.id || "");
     const [selectedSupplier, setSelectedSupplier] = useState(defaultValues.supplier || null);
+    console.log('selectedSupplier: ', selectedSupplier);
     const [suppliers, setSuppliers] = useState([]);
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState("");
@@ -1350,13 +1348,11 @@ const ReviewExpense = React.memo(({ visible, onHide, defaultValues = {} }) => {
         if (suppliers.length > 0 && hasMoreData) {
             const timeout = setTimeout(() => {
                 const lastRow = document.querySelector('.supplier-dropdown .p-dropdown-items li.p-dropdown-item:last-child');
-                console.log('lastRow: ', lastRow);
 
                 if (lastRow) {
                     observerRef.current = new IntersectionObserver(entries => {
                         if (entries[0].isIntersecting) {
                             setPage(prevPage => prevPage + 1);
-                            console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
                         }
                     });
                     observerRef.current.observe(lastRow);

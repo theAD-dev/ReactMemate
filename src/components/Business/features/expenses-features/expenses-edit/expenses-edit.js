@@ -21,7 +21,6 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
   const assignCodeToSupplierMutation = useMutation({
     mutationFn: (data) => assignCodeToSupplier(data.id, data.code),
     onSuccess: (response) => {
-      console.log('response: ', response);
       toast.success(`Account code assigned to supplier successfully`);
     },
     onError: (error) => {
@@ -68,6 +67,18 @@ const ExpensesEdit = ({ visible, setVisible, setEditData, id, name, setRefetch }
   });
 
   const handleSubmit = async (data, reset) => {
+    if (data.assign_account_code && data.service_code) {
+      await assignCodeToSupplierMutation.mutateAsync({ id: data.supplier, code: data.service_code });
+    }
+
+    if (data?.asset?.asset_id && ((data?.asset?.asset_id !== asset?.id && data?.asset?.asset_type_id === asset?.type) || data.option !== 'Assign to asset')) {
+      await deleteLinkedExpense(data?.asset?.asset_id, data?.asset?.asset_type_id, id);
+    }
+
+    if (data.option !== 'Assign to asset') {
+      setAsset(null);
+    }
+
     setDefaultValues((others) => ({
       ...others,
       ...data

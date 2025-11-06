@@ -167,9 +167,9 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     onSuccess: (response) => {
       if (response) {
         handleClose();
-        toast.success('Order has been successfully declined');
+        toast.success('Order has been successfully cancelled');
       } else {
-        toast.error(`Failed to decline the order. Please try again.`);
+        toast.error(`Failed to cancel the order. Please try again.`);
       }
     },
     onError: (error) => {
@@ -818,7 +818,7 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             <Row className='projectCardactionBut'>
               <Col className='actionLeftSide'>
                 <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined || declinecOrderMutation.isPending} className='declineAction'>
-                  <XCircle size={20} color='#912018' /> Decline Order
+                  <XCircle size={20} color='#912018' /> Cancel Order
                   {
                     declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
                   }

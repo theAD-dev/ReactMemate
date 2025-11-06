@@ -144,7 +144,7 @@ const Subscription = () => {
             <div className="content_wrapper">
               <div className={`listwrapper ${styles.listsubscription}`}>
                 <div className="topHeadStyle">
-                  <div className="border-bottom mb-4">
+                  <div className="border-bottom mb-4 w-100">
                     <h2>Subscription</h2>
                     <p className="font-14">
                       Here, you can manage your subscription, adding or

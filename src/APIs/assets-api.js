@@ -100,10 +100,15 @@ export const linkExpenseToAsset = async (data) => {
     return fetchAPI(url.toString(), options);
 };
 
-export const deleteLinkedExpense = async (service_id) => {
-  const endpoint = `/assets/vehicles/services/${service_id}/delete/`;
+export const deleteLinkedExpense = async (asset_id, asset_type_id, expense_id) => {
+  const endpoint = `/assets/expense-links/delete/`;
   const options = {
-    method: 'PATCH'
+    method: 'POST',
+    body: {
+      expense: expense_id,
+      asset_type: asset_type_id,
+      asset_id: asset_id
+    }
   };
   const url = new URL(`${API_BASE_URL}${endpoint}`);
   return fetchAPI(url.toString(), options);

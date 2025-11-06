@@ -266,7 +266,16 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 MB in bytes
+
     if (file) {
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`File size exceeds 15 MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)} MB.`);
+        setAttachmentFile(null);
+        return;
+      }
+
       setAttachmentFile({
         file,
         chatId,
@@ -304,8 +313,17 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     setIsDragOver(false);
 
     const files = e.dataTransfer.files;
+    const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 MB in bytes
+
     if (files && files.length > 0) {
       const file = files[0];
+
+      // Check file size
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`File size exceeds 15 MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)} MB.`);
+        return;
+      }
+
       setAttachmentFile({
         file,
         chatId,
