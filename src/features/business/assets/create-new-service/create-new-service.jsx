@@ -15,7 +15,9 @@ export const CreateNewService = ({ visible, setVisible, setRefetch, vehicleId = 
     const formRef = useRef(null);
     const { id } = useParams();
     const navigate = useNavigate();
-    const [defaultValues,] = useState({});
+    const [defaultValues,] = useState({
+        date: new Date(),
+    });
     const [isDisabled, setIsDisabled] = useState(true);
     const [showCreateExpenseModal, setShowCreateExpenseModal] = useState(false);
     const [assetForExpense, setAssetForExpense] = useState(null);
