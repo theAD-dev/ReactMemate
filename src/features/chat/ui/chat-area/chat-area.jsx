@@ -264,11 +264,69 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
     }
   };
 
+  // Allowed file extensions and MIME types for security
+  const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx', 'csv'];
+  const ALLOWED_MIME_TYPES = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'text/csv'
+  ];
+
+  // Restricted extensions (security threat)
+  const RESTRICTED_EXTENSIONS = ['exe', 'bat', 'cmd', 'com', 'scr', 'vbs', 'js', 'jar', 'zip', 'rar', '7z', 'tar', 'gz', 'iso', 'dmg', 'app', 'msi', 'dll', 'sys', 'mp4', 'avi', 'mov', 'mkv', 'flv', 'wmv', 'webm', 'm4v'];
+
+  const isFileTypeAllowed = (fileName, mimeType) => {
+    const fileExtension = fileName?.split('.')?.pop()?.toLowerCase();
+    
+    // Check if file extension is in restricted list
+    if (RESTRICTED_EXTENSIONS.includes(fileExtension)) {
+      return {
+        allowed: false,
+        reason: `File type (.${fileExtension}) is not allowed for security reasons. Videos, archives, and executable files cannot be uploaded.`
+      };
+    }
+
+    // Check if file extension is in allowed list
+    if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
+      return {
+        allowed: false,
+        reason: `File type (.${fileExtension}) is not supported. Allowed formats: ${ALLOWED_EXTENSIONS.join(', ')}`
+      };
+    }
+
+    // Check MIME type
+    if (mimeType && !ALLOWED_MIME_TYPES.includes(mimeType)) {
+      return {
+        allowed: false,
+        reason: `File MIME type (${mimeType}) is not allowed for security reasons.`
+      };
+    }
+
+    return { allowed: true };
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 MB in bytes
 
     if (file) {
+      // Check file type security
+      const fileTypeCheck = isFileTypeAllowed(file.name, file.type);
+      if (!fileTypeCheck.allowed) {
+        toast.error(fileTypeCheck.reason);
+        setAttachmentFile(null);
+        return;
+      }
+
       // Check file size
       if (file.size > MAX_FILE_SIZE) {
         toast.error(`File size exceeds 15 MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)} MB.`);
@@ -317,6 +375,13 @@ const ChatArea = ({ currentChat, socket, userId, chatId, onlineUsers = [], setCh
 
     if (files && files.length > 0) {
       const file = files[0];
+
+      // Check file type security
+      const fileTypeCheck = isFileTypeAllowed(file.name, file.type);
+      if (!fileTypeCheck.allowed) {
+        toast.error(fileTypeCheck.reason);
+        return;
+      }
 
       // Check file size
       if (file.size > MAX_FILE_SIZE) {
