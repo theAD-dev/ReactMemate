@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import clsx from 'clsx';
 import { Calendar } from 'primereact/calendar';
+import { Checkbox } from 'primereact/checkbox';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
@@ -328,21 +329,20 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         queryFn: getListOfAssetCategories,
         staleTime: 0
     });
-    
+
     const assetCategories = useMemo(() => {
         const data = listOfAssetCategoriesQuery?.data;
-        console.log('Raw asset categories data:', data);
-        
+
         // Handle both array and object with results property
         if (Array.isArray(data)) {
             // Only filter by enabled if the property exists, otherwise return all
             return data.filter(category => category.enabled !== false);
         }
-        
+
         if (data?.results && Array.isArray(data.results)) {
             return data.results.filter(category => category.enabled !== false);
         }
-        
+
         return [];
     }, [listOfAssetCategoriesQuery?.data]);
 
@@ -394,13 +394,11 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
         if (suppliers.length > 0 && hasMoreData) {
             const timeout = setTimeout(() => {
                 const lastRow = document.querySelector('.supplier-dropdown .p-dropdown-items li.p-dropdown-item:last-child');
-                console.log('lastRow: ', lastRow);
 
                 if (lastRow) {
                     observerRef.current = new IntersectionObserver(entries => {
                         if (entries[0].isIntersecting) {
                             setPage(prevPage => prevPage + 1);
-                            console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
                         }
                     });
                     observerRef.current.observe(lastRow);
@@ -563,6 +561,20 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
             setShowDocumentSidebar(true);
         }
     }, [defaultValues?.file]);
+
+    let accountCode = watch('account_code');
+    useEffect(() => {
+        const supplierServiceCode = selectedSupplier?.service?.code;
+        let findCode = xeroCodesList?.data?.find(code => code.code === supplierServiceCode);
+        if (supplierServiceCode && findCode?.id) {
+            setValue('assign_account_code', false);
+        } else if (!findCode?.id && accountCode && xeroCodesList?.data?.length) {
+            let findCode = xeroCodesList?.data?.find(code => code.id === accountCode);
+            setValue('service_code', findCode?.code || '');
+        } else {
+            setValue('service_code', '');
+        }
+    }, [accountCode, xeroCodesList?.data, setValue, selectedSupplier?.service?.code]);
 
     const handleReviewClick = () => {
         setShowReviewModal(true);
@@ -974,7 +986,6 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                                                     filter={false}
                                                     loading={listOfAssetCategoriesQuery?.isFetching}
                                                     emptyMessage="No asset types available"
-                                                    // showClear={asset?.type ? true : false}
                                                 />
                                                 {errors?.assetType && <p className="error-message">{errors.assetType?.message}</p>}
                                             </Col>
@@ -1062,6 +1073,25 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                             />
                             {errors?.account_code && <p className="error-message">{errors.account_code?.message}</p>}
                         </div>
+                        <div className="flex align-items-center">
+                            <Controller
+                                name="assign_account_code"
+                                control={control}
+                                render={({ field: { onChange, onBlur, value, ref } }) => (
+                                    <Checkbox
+                                        inputRef={ref}
+                                        checked={value}
+                                        defaultChecked={true}
+                                        onChange={(e) => {
+                                            onChange(e.checked);
+                                        }}
+                                        onBlur={onBlur}
+                                        disabled={(selectedSupplier?.service?.code || !supplierValue || !accountCode) ? true : false}
+                                    />
+                                )}
+                            />
+                            <label className="ms-2" style={{ position: 'relative', top: '1px', color: '#475467', fontSize: '14px', opacity: `${selectedSupplier?.service?.code || !supplierValue || !accountCode ? 0.5 : 1}` }}>Assign account code to the supplier</label>
+                        </div>
                     </Col>
                     {/* <Col sm={6}>
                         <div className="d-flex flex-column gap-1 mt-4 mb-4">
@@ -1125,26 +1155,7 @@ const ExpensesForm = forwardRef(({ onSubmit, defaultValues, id, defaultSupplier,
                     </Row>
                     : ""
                 }
-
-                {/* <div className="flex align-items-center">
-                <Controller
-                    name="notification"
-                    control={control}
-                    render={({ field: { onChange, onBlur, value, ref } }) => (
-                        <Checkbox
-                            inputRef={ref}
-                            checked={value}
-                            onChange={(e) => {
-                                onChange(e.checked);
-                            }}
-                            onBlur={onBlur}
-                        />
-                    )}
-                />
-                <label className="ms-2" style={{ position: 'relative', top: '1px', color: '#344054', fontWeight: 500, fontSize: '14px' }}>Send Email Notification when paid</label>
-            </div> */}
             </form>
-
             {
                 <Sidebar visible={showDocumentSideBar && links?.length} header={documentSidebarHeader} position="right" modal={false} dismissable={false} style={{ width: '1200px', paddingRight: '720px' }} maskClassName="p-sidebar-mask-document" onHide={() => setShowDocumentSidebar(false)}>
                     <FilePreview files={links} />
@@ -1282,11 +1293,11 @@ const ReviewExpense = React.memo(({ visible, onHide, defaultValues = {} }) => {
     const observerRef = useRef(null);
     const [supplierValue, setSupplierValue] = useState(defaultValues.supplier?.id || "");
     const [selectedSupplier, setSelectedSupplier] = useState(defaultValues.supplier || null);
+    console.log('selectedSupplier: ', selectedSupplier);
     const [suppliers, setSuppliers] = useState([]);
     const [page, setPage] = useState(1);
     const [searchValue, setSearchValue] = useState("");
     const [hasMoreData, setHasMoreData] = useState(true);
-    const [links, setLinks] = useState([]);
     const limit = 25;
 
     const search = debounce((event) => {
@@ -1337,13 +1348,11 @@ const ReviewExpense = React.memo(({ visible, onHide, defaultValues = {} }) => {
         if (suppliers.length > 0 && hasMoreData) {
             const timeout = setTimeout(() => {
                 const lastRow = document.querySelector('.supplier-dropdown .p-dropdown-items li.p-dropdown-item:last-child');
-                console.log('lastRow: ', lastRow);
 
                 if (lastRow) {
                     observerRef.current = new IntersectionObserver(entries => {
                         if (entries[0].isIntersecting) {
                             setPage(prevPage => prevPage + 1);
-                            console.log('entries[0].isIntersecting: ', entries[0].isIntersecting);
                         }
                     });
                     observerRef.current.observe(lastRow);

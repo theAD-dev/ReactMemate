@@ -56,3 +56,57 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.ellipsis {
+  white-space: nowrap;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fontStanderdSize {
+  align-items: center;
+  display: flex;
+  font-family: Inter;
+  color: #079455;
+  text-align: center;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 18px;
+  svg {
+    fill: #074d31;
+  }
+  .plusIcon {
+    background: #f6fef9;
+    border-radius: 16px;
+    border: 1px solid var(--Success-200, #a9efc5);
+    cursor: pointer;
+    display: inline-flex;
+    margin-left: 8px;
+    padding: 1px;
+  }
+  .paid-false {
+    color: #b42318;
+    text-align: center;
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 18px;
+    svg {
+      fill: #d92d20;
+    }
+    .plusIcon {
+      background: #f6fef9;
+      border-radius: 16px;
+      border: 1px solid var(--Error-200, #fecdca);
+      background: var(--Error-50, #fef3f2);
+      cursor: pointer;
+      display: inline-flex;
+      margin-left: 8px;
+      padding: 1px;
+    }
+  }
+}

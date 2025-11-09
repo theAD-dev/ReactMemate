@@ -7,7 +7,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import styles from './new-expense-create.module.scss';
 import { linkExpenseToAsset } from '../../../../../APIs/assets-api';
-import { createNewExpense } from '../../../../../APIs/expenses-api';
+import { assignCodeToSupplier, createNewExpense } from '../../../../../APIs/expenses-api';
 import ExpensesForm from '../../../shared/ui/expense-ui/expenses-form';
 
 const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, assetForExpense, projectReference, createNewService = false, createServiceFromExpense }) => {
@@ -68,7 +68,7 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
 
     const mutation = useMutation({
         mutationFn: (data) => createNewExpense(data),
-        onSuccess: (response) => {
+        onSuccess: async (response) => {
             console.log('response: ', response);
             toast.success(`Expense created successfully`);
             if (asset && asset.type && asset.id) {
@@ -77,8 +77,8 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
                     asset_id: asset.id,
                     expense: response.id
                 };
-                expenseLinkMutation.mutate(linkData);
-                createNewService && createServiceFromExpense(response.id || 1043);
+                await expenseLinkMutation.mutateAsync(linkData);
+                createNewService && await createServiceFromExpense(response.id);
             }
             handleClose();
             setRefetch((refetch) => !refetch);
@@ -89,12 +89,31 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
         }
     });
 
+    const assignCodeToSupplierMutation = useMutation({
+        mutationFn: (data) => assignCodeToSupplier(data.id, data.code),
+        onSuccess: (response) => {
+            console.log('response: ', response);
+            toast.success(`Account code assigned to supplier successfully`);
+        },
+        onError: (error) => {
+            console.error('Error assigning supplier code:', error);
+            toast.error('Failed to assign supplier code. Please try again.');
+        }
+    });
+
     const handleSubmit = async (data) => {
         delete data["gst-calculation"];
         delete data.option;
         delete data.subtotal;
         delete data.totalAmount;
         delete data.tax;
+
+        if (data.assign_account_code && data.service_code) {
+            await assignCodeToSupplierMutation.mutateAsync({ id: data.supplier, code: data.service_code });
+        }
+
+        delete data.assign_account_code;
+        delete data.service_code;
 
         if (!data.order) delete data.order;
         if (!data.type) data.type = 1;
@@ -145,12 +164,12 @@ const NewExpensesCreate = ({ visible, setVisible, setRefetch, expenseProjectId, 
                         <div className={`d-flex align-items-center mb-2 justify-content-between ${styles.expensesEditHead}`}>
                             <h5>Expense Details</h5>
                         </div>
-                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} projectId={projectId}  asset={asset} setAsset={setAsset} />
+                        <ExpensesForm ref={formRef} onSubmit={handleSubmit} defaultValues={defaultValues} projectId={projectId} asset={asset} setAsset={setAsset} />
                     </div>
 
                     <div className='modal-footer d-flex align-items-center justify-content-end gap-3' style={{ padding: '16px 24px', borderTop: "1px solid var(--Gray-200, #EAECF0)", height: '72px' }}>
-                        <Button type='button' onClick={(e) => { e.stopPropagation(); handleClose(); }} className='outline-button' disabled={mutation.isPending || expenseLinkMutation.isPending}>Cancel</Button>
-                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending || expenseLinkMutation.isPending}>Save {(mutation.isPending || expenseLinkMutation.isPending) && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
+                        <Button type='button' onClick={(e) => { e.stopPropagation(); handleClose(); }} className='outline-button' disabled={mutation.isPending || expenseLinkMutation.isPending || assignCodeToSupplierMutation.isPending}>Cancel</Button>
+                        <Button type='button' onClick={handleExternalSubmit} className='solid-button' style={{ minWidth: '70px' }} disabled={mutation.isPending || expenseLinkMutation.isPending || assignCodeToSupplierMutation.isPending}>Save {(mutation.isPending || expenseLinkMutation.isPending || assignCodeToSupplierMutation.isPending) && <ProgressSpinner style={{ width: '18px', height: '18px' }} />}</Button>
                     </div>
                 </div>
             )}
