@@ -71,8 +71,6 @@ const CompanyName = () => {
                     <div className="step "></div>
                     <div className="step"></div>
                     <div className="step active"></div>
-                    <div className="step"></div>
-                    <div className="step"></div>
                   </div>
 
                   <div className="formgroup">

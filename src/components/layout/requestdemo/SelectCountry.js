@@ -82,8 +82,6 @@ const SelectCountry = () => {
                     <div className="step"></div>
                     <div className="step active"></div>
                     <div className="step"></div>
-                    <div className="step"></div>
-                    <div className="step"></div>
                   </div>
                   <div className="formgroup timezoneWrapGroup">
                     <label>Country<span style={{ color: "#f04438" }}>*</span></label>

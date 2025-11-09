@@ -6015,8 +6015,12 @@ ul.szh-menu {
   border-radius: var(--radius-full, 9999px);
   background: var(--Colors-Background-bg-quaternary, #eaecf0);
   height: 8px;
-  width: 66.5px;
-  margin: 0 8px;
+  width: 135px;
+  margin: 0 0px;
+}
+
+.requestDemoWrap .step-progress .step:nth-child(2) {
+  margin: 0 16px;
 }
 
 .requestDemoWrap
@@ -8693,10 +8697,10 @@ ul.activeListPassword li.active {
 .boxLogin h1,
 .boxLogin h2 {
   color: var(--colorG1);
-  margin-bottom: 46px;
+  margin-bottom: 32px;
   margin-top: 0;
-  line-height: 44px;
-  font-size: 36px;
+  line-height: 34px;
+  font-size: 30px;
 }
 
 .lockIconStyle p {

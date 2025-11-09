@@ -24,7 +24,6 @@ const RequestHelp = ({ visible, setVisible }) => {
                 url="https://calendly.com/memate-support/30min"
                 styles={{
                     width: '80%',
-                    border: '1px solid #f2f2f2',
                     height: '850px',
                     margin: '0 auto',
                     minHeight: 'unset',

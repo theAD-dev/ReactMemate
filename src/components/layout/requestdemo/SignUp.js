@@ -46,8 +46,6 @@ const SignUp = () => {
                     <div className="step active"></div>
                     <div className="step"></div>
                     <div className="step"></div>
-                    <div className="step"></div>
-                    <div className="step"></div>
                   </div>
                   <div className="formgroup">
                     <label>First Name<span style={{ color: "#f04438" }}>*</span></label>

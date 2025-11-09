@@ -22,6 +22,7 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import { toast } from 'sonner';
 import AddNote from './add-note';
+import CancelProject from './cancel-project/cancel-project';
 import ComposeEmail from './compose-email/compose-email';
 import FilesModel from './files-management/files-model';
 import GoogleReviewEmail from './google-review/google-review';
@@ -417,85 +418,8 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
     }
   };
 
-  const headerElement = (
-    <div style={{ textAlign: 'center', paddingBottom: '0px' }}>
-      <h5 style={{ margin: 0, color: '#1D2939', fontSize: '18px', fontWeight: 600 }}>
-        Are you sure you want to cancel this order?
-      </h5>
-    </div>
-  );
-
-  const footerContent = (
-    <div className='d-flex justify-content-center gap-2'>
-      <Button className='outline-button' onClick={() => setShowCancelConfirmation(false)}>Keep Order</Button>
-      <Button className='danger-button' onClick={confirmCancelOrder} disabled={declinecOrderMutation.isPending}>
-        Cancel Order {declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '16px', height: '16px', color: '#fff', marginLeft: '8px' }} />}
-      </Button>
-    </div>
-  );
-
   return (
     <>
-      {/* Cancel Order Confirmation Modal */}
-      <Dialog 
-        visible={showCancelConfirmation} 
-        onHide={() => setShowCancelConfirmation(false)}
-        modal={true}
-        header={headerElement}
-        footer={footerContent}
-        className='custom-modal'
-        style={{ width: '550px' }}
-        onShow={() => {}}
-      >
-        <div className="d-flex flex-column align-items-center justify-content-center gap-4" style={{ padding: '24px 0' }}>
-          {/* Trash Icon */}
-          <div style={{
-            position: 'relative',
-            width: '140px',
-            height: '140px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            {/* Outer light gray circle */}
-            <div style={{
-              position: 'absolute',
-              width: '140px',
-              height: '140px',
-              borderRadius: '50%',
-              background: '#F3F4F6'
-            }}></div>
-            
-            {/* Inner gray circle with icon */}
-            <div style={{
-              position: 'relative',
-              width: '100px',
-              height: '100px',
-              borderRadius: '50%',
-              background: '#9CA3AF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1
-            }}>
-              <Trash size={48} color="#fff" strokeWidth={1.5} />
-            </div>
-          </div>
-
-          {/* Description */}
-          <p style={{
-            margin: 0,
-            color: '#4B5563',
-            fontSize: '15px',
-            textAlign: 'center',
-            lineHeight: '1.6'
-          }}>
-            This action will cancel the order and cannot be undone.
-            {cardData?.invoice_created && (<b>The invoice associated with this order will be permanently deleted.</b>)}
-          </p>
-        </div>
-      </Dialog>
-
       {/* Main Project Card Modal */}
       <Modal
         show={viewShow}
@@ -902,9 +826,15 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
               </Col>
             </Row>
             <Row className='projectCardactionBut'>
-              <Col className='actionLeftSide'>
+              <Col className='actionLeftSide' style={{ position: 'relative' }}>
+                <CancelProject 
+                  show={showCancelConfirmation}
+                  onClose={() => setShowCancelConfirmation(false)}
+                  onConfirm={confirmCancelOrder}
+                  isLoading={declinecOrderMutation.isPending}
+                />
                 <Button onClick={declinecOrder} disabled={!cardData?.can_be_declined || declinecOrderMutation.isPending} className='declineAction'>
-                  <XCircle size={20} color='#912018' /> Cancel Order
+                  <XCircle size={20} color='#912018' /> Cancel Project
                   {
                     declinecOrderMutation.isPending && <ProgressSpinner style={{ width: '20px', height: '20px', position: 'relative', top: '2px', left: '8px' }} />
                   }

@@ -90,17 +90,6 @@ const SelectDate = () => {
                 </div>
 
                 <div className="boxLogin w-100">
-                  <h1>
-                    Yes, I want to <span>sign up</span><br></br> for a demo
-                  </h1>
-                  <div className="step-progress">
-                    <div className="step"></div>
-                    <div className="step"></div>
-                    <div className="step"></div>
-                    <div className="step active" ></div>
-                    <div className="step"></div>
-                  </div>
-
                   <div className='calendly-container' style={{ padding: '0px 60px', position: 'relative', minHeight: '400px' }}>
                     {isLoading && (
                       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.7)', zIndex: 10 }}>
@@ -110,9 +99,11 @@ const SelectDate = () => {
                     <InlineWidget
                       url="https://calendly.com/memate/memate-demo"
                       styles={{
-                        width: '100%',
+                        width: '80%',
                         border: '1px solid #f2f2f2',
-                        height: '600px'
+                        height: '1100px',
+                        overflow: 'hidden',
+                        margin: '0 auto',
                       }}
                       prefill={{
                         name: `${first_name} ${last_name}`,
