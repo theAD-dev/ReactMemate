@@ -94,7 +94,7 @@ export const SupplierTable = forwardRef(({ searchValue, setTotalSuppliers, selec
 
     const ServicesBodyTemplate = (rowData) => {
         if (!rowData?.service) return "-";
-        return `${rowData?.service?.industry_name}: ${rowData?.service?.name} `;
+        return `${rowData?.service?.code} | ${rowData?.service?.industry_name}: ${rowData?.service?.name} `;
     };
 
     const emailBodyTemplate = (rowData) => {
