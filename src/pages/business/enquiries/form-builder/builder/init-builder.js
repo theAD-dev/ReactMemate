@@ -262,7 +262,8 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
 
     fieldsData[id] = seedDataFor(type);
     wireField(el, id, type);
-    selectField(id, type);
+    // Do not auto-select field when adding - let user click to select
+    // selectField(id, type);
     updateMoveButtons();
 
     // Save to history after adding field
@@ -725,7 +726,53 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
     }, 0);
   }
 
+  // Deselect field and hide properties
+  function deselectField() {
+    currentField = null;
+    // Remove selected class from all fields
+    preview.querySelectorAll('.preview-field').forEach(f => f.classList.remove('selected'));
+    
+    // Remove has-selection class from properties container
+    properties.classList.remove('has-selection');
+    
+    // Reset to placeholder
+    const placeholder = properties.querySelector('.field-props-placeholder');
+    if (placeholder) {
+      placeholder.innerHTML = `
+        <div class="panel-header">
+          <h2>Properties</h2>
+        </div>
+        <div class="no-selection">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="M7 10h10M7 14h6" />
+          </svg>
+          <p>Select a field to edit its properties</p>
+        </div>
+      `;
+    }
+  }
+
+  // Click outside handler to deselect fields
+  properties.addEventListener('click', (e) => {
+    // Check if click is outside of any input/select/textarea within properties
+    const isClickInProperties = e.target.closest('.property-group, .field-props-placeholder, .general-settings');
+    if (!isClickInProperties) {
+      deselectField();
+    }
+  });
+
+  // Also handle clicks on the preview area background to deselect
+  preview.addEventListener('click', (e) => {
+    // If click is not on a preview-field or its action buttons, deselect
+    const clickedField = e.target.closest('.preview-field');
+    if (!clickedField) {
+      deselectField();
+    }
+  });
+
   // Preview modal and tab
+
   if (previewBtn) {
     previewBtn.addEventListener('click', () => {
       const html = renderPreview(Object.values(fieldsData));
@@ -1038,6 +1085,9 @@ function addFieldFromData(f) {
 
   fieldsData[id] = data;
   wireField(el, id, type);
+  
+  // Do not auto-select field when hydrating - let user click to select
+  // selectField(id, type);
 
   const labelEl = el.querySelector('.form-field > label, .checkbox-field label');
   if (labelEl && data.label) labelEl.textContent = data.label;
@@ -1112,7 +1162,8 @@ function addFieldFromData(f) {
     }
   }
 
-  selectField(id, type);
+  // Do not auto-select field when adding from data - let user click to select
+  // selectField(id, type);
 }
 }
 
