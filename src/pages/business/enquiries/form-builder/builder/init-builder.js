@@ -457,7 +457,7 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
             <label>Validation Pattern (Regex)
               <input id="fp-regex" placeholder="e.g. ^[A-Za-z]{3,}$" value="${escapeAttr(data.regex || '')}">
             </label>
-            <p class="help-text">Optional. Add a regex pattern for validation.</p>
+            <p class="help-text text-start">Optional. Add a regex pattern for validation.</p>
             <label>Custom Error Message
               <input id="fp-errmsg" placeholder="e.g. Please enter only letters" value="${escapeAttr(data.error_message || '')}">
             </label>
@@ -485,54 +485,244 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       <div class="property-group"><button id="fp-apply" type="button">Update Field</button></div>
     `;
 
+    // Helper function to update preview in real-time - Comprehensive
+    const updateFieldPreview = () => {
+      const host = root.querySelector('#' + id);
+      if (!host) return;
+      
+      // Update label
+      const label = host.querySelector('.form-field > label, .checkbox-field label');
+      if (label) label.textContent = data.label;
+
+      // Update text-like inputs (text, email, number, phone, url, date, time)
+      if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(type)) {
+        const input = host.querySelector('input');
+        if (input) {
+          if (data.placeholder) input.placeholder = data.placeholder;
+          if (data.maxlength) input.maxLength = parseInt(data.maxlength, 10);
+          if (data.required) input.setAttribute('required', '');
+          else input.removeAttribute('required');
+        }
+      } 
+      // Update textarea
+      else if (type === 'textarea') {
+        const ta = host.querySelector('textarea');
+        if (ta) {
+          if (data.placeholder) ta.placeholder = data.placeholder;
+          if (data.maxlength) ta.maxLength = parseInt(data.maxlength, 10);
+          if (data.required) ta.setAttribute('required', '');
+          else ta.removeAttribute('required');
+        }
+      } 
+      // Update select
+      else if (type === 'select') {
+        const sel = host.querySelector('select');
+        if (sel) {
+          sel.innerHTML = `<option value="">${data.placeholder || 'Select an option'}</option>` +
+            (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
+          if (data.required) sel.setAttribute('required', '');
+          else sel.removeAttribute('required');
+        }
+      }
+      // Update multiselect
+      else if (type === 'multiselect') {
+        const sel = host.querySelector('select');
+        if (sel) {
+          sel.innerHTML = (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
+          if (data.required) sel.setAttribute('required', '');
+          else sel.removeAttribute('required');
+        }
+      }
+      // Update radio buttons
+      else if (type === 'radio') {
+        const wrap = host.querySelector('.form-field');
+        if (wrap) {
+          wrap.querySelectorAll('.radio-field').forEach(n => n.remove());
+          (data.options || []).forEach((o, i) => {
+            const div = document.createElement('div');
+            div.className = 'radio-field';
+            const rid = `${data.name}-${i}`;
+            div.innerHTML = `<input id="${rid}" type="radio" name="${escapeHtml(data.name)}" ${data.required ? 'required' : ''}>
+                             <label for="${rid}">${escapeHtml(o)}</label>`;
+            wrap.appendChild(div);
+          });
+        }
+      }
+      // Update multicheckbox
+      else if (type === 'multicheckbox') {
+        const wrap = host.querySelector('.form-field');
+        if (wrap) {
+          wrap.querySelectorAll('.checkbox-field').forEach(n => n.remove());
+          (data.options || []).forEach((o, i) => {
+            const div = document.createElement('div');
+            div.className = 'checkbox-field';
+            const cid = `${data.name}-${i}`;
+            div.innerHTML = `<input id="${cid}" type="checkbox" name="${escapeHtml(data.name)}[]" ${data.required ? 'required' : ''}>
+                             <label for="${cid}">${escapeHtml(o)}</label>`;
+            wrap.appendChild(div);
+          });
+        }
+      }
+      // Update checkbox
+      else if (type === 'checkbox') {
+        const cbl = host.querySelector('.checkbox-field label');
+        if (cbl) cbl.textContent = data.label;
+        const cbinput = host.querySelector('.checkbox-field input');
+        if (cbinput) {
+          if (data.required) cbinput.setAttribute('required', '');
+          else cbinput.removeAttribute('required');
+        }
+      }
+      // Update consent
+      else if (type === 'consent') {
+        const cbl = host.querySelector('.checkbox-field label');
+        if (cbl) cbl.textContent = data.label;
+        const cbinput = host.querySelector('.checkbox-field input');
+        if (cbinput) {
+          if (data.required) cbinput.setAttribute('required', '');
+          else cbinput.removeAttribute('required');
+        }
+      }
+      // Update button
+      else if (type === 'submit_button') {
+        const btn = host.querySelector('button');
+        if (btn) {
+          btn.textContent = data.button_text || 'Submit';
+          if (data.custom_style) btn.setAttribute('style', data.custom_style);
+          else btn.removeAttribute('style');
+        }
+      }
+      // Update HTML
+      else if (type === 'html') {
+        const block = host.querySelector('.html-content');
+        if (block) block.innerHTML = data.html || '<p></p>';
+      }
+    };
+
     if (['select', 'radio', 'multicheckbox', 'multiselect'].includes(type)) {
       const wrap = root.querySelector('#fp-options');
-      wrap.innerHTML = '';
-      (data.options || []).forEach((opt, i) => {
-        const row = document.createElement('div');
-        row.innerHTML = `<input data-i="${i}" value="${escapeAttr(opt)}"> <button data-i="${i}" class="rm" type="button">x</button>`;
-        wrap.appendChild(row);
-      });
+      
+      const renderOptions = () => {
+        wrap.innerHTML = '';
+        (data.options || []).forEach((opt, i) => {
+          const row = document.createElement('div');
+          row.innerHTML = `<input data-i="${i}" value="${escapeAttr(opt)}"> <button data-i="${i}" class="rm" type="button">x</button>`;
+          wrap.appendChild(row);
+        });
+      };
+      
+      renderOptions();
+      
       root.querySelector('#fp-addopt').onclick = () => {
         data.options.push(`Option ${data.options.length + 1}`);
-        selectField(id, type);
+        renderOptions();
+        attachRealtimeListeners(); // Re-attach listeners to new options
+        updateFieldPreview(); // Update preview
+        saveHistory();
       };
+      
       wrap.addEventListener('click', e => {
         if (e.target.classList.contains('rm')) {
           const i = +e.target.dataset.i;
           data.options.splice(i, 1);
-          selectField(id, type);
+          renderOptions();
+          updateFieldPreview(); // Update preview when option removed
+          saveHistory();
         }
       });
+      
       wrap.addEventListener('input', e => {
         if (e.target.matches('input[data-i]')) {
           data.options[+e.target.dataset.i] = e.target.value;
+          updateFieldPreview(); // Update preview when option text changed
+          saveHistory();
         }
       });
     }
 
-    root.querySelector('#fp-apply').onclick = () => {
-      data.label = val('#fp-label');
-      if (root.querySelector('#fp-name')) data.name = val('#fp-name');
-      if (root.querySelector('#fp-ph')) data.placeholder = val('#fp-ph');
-      if (root.querySelector('#fp-max')) data.maxlength = val('#fp-max');
-      if (root.querySelector('#fp-regex')) data.regex = val('#fp-regex');
-      if (root.querySelector('#fp-errmsg')) data.error_message = val('#fp-errmsg');
-      data.required = root.querySelector('#fp-req').checked;
-      if (type === 'html') data.html = val('#fp-html');
-      if (type === 'submit_button') {
-        data.button_text = val('#fp-btntext') || 'Submit';
-        data.custom_style = val('#fp-btncss') || '';
-      }
-      // Refresh simple label text in preview
-      const host = root.querySelector('#' + id);
-      const label = host.querySelector('.form-field > label, .checkbox-field label');
-      if (label) label.textContent = data.label;
-      toast.success('Field updated');
+    // Real-time property updates with event listeners
+    const attachRealtimeListeners = () => {
+      const labelEl = root.querySelector('#fp-label');
+      const phEl = root.querySelector('#fp-ph');
+      const maxEl = root.querySelector('#fp-max');
+      const regexEl = root.querySelector('#fp-regex');
+      const errmsgEl = root.querySelector('#fp-errmsg');
+      const reqEl = root.querySelector('#fp-req');
+      const htmlEl = root.querySelector('#fp-html');
+      const btntextEl = root.querySelector('#fp-btntext');
+      const btncssEl = root.querySelector('#fp-btncss');
 
-      // Save to history after updating field
-      saveHistory();
+      if (labelEl) {
+        labelEl.addEventListener('input', (e) => {
+          data.label = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (phEl) {
+        phEl.addEventListener('input', (e) => {
+          data.placeholder = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (maxEl) {
+        maxEl.addEventListener('input', (e) => {
+          data.maxlength = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (regexEl) {
+        regexEl.addEventListener('input', (e) => {
+          data.regex = e.target.value;
+          saveHistory();
+        });
+      }
+      if (errmsgEl) {
+        errmsgEl.addEventListener('input', (e) => {
+          data.error_message = e.target.value;
+          saveHistory();
+        });
+      }
+      if (reqEl) {
+        reqEl.addEventListener('change', (e) => {
+          data.required = e.target.checked;
+          updateFieldPreview(); // Update required attribute on inputs
+          saveHistory();
+        });
+      }
+      if (htmlEl) {
+        htmlEl.addEventListener('input', (e) => {
+          data.html = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (btntextEl) {
+        btntextEl.addEventListener('input', (e) => {
+          data.button_text = e.target.value || 'Submit';
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (btncssEl) {
+        btncssEl.addEventListener('input', (e) => {
+          data.custom_style = e.target.value || '';
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
     };
+
+    // Attach listeners and hide the update button
+    setTimeout(() => {
+      attachRealtimeListeners();
+      const applyBtn = root.querySelector('#fp-apply');
+      if (applyBtn) {
+        applyBtn.style.display = 'none';
+      }
+    }, 0);
   }
 
   // Preview modal and tab
