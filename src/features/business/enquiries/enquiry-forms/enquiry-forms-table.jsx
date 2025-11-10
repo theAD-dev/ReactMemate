@@ -12,7 +12,7 @@ import { formatDate } from '../../../../shared/lib/date-format';
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
-const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, ref) => {
+const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, setRefetch }, ref) => {
   const { trialHeight } = useTrialHeight();
   const navigate = useNavigate();
   const observerRef = useRef(null);
@@ -109,7 +109,7 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, r
   };
 
   const actionsBody = (rowData) => {
-    return <ActionsMenu rowData={rowData} />;
+    return <ActionsMenu rowData={rowData} setRefetch={setRefetch} />;
   };
 
   return (

@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Collection, Gear, InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import clsx from 'clsx';
 import { Button } from 'primereact/button';
 import { useDebounce } from 'primereact/hooks';
 import style from './forms.module.scss';
 import EnquiryFormsTable from '../../../../features/business/enquiries/enquiry-forms/enquiry-forms-table';
 
 const FormsPage = () => {
+    const [refetch, setRefetch] = useState(false);
     const [selected, setSelected] = useState(null);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     return (
@@ -31,7 +30,7 @@ const FormsPage = () => {
                     <Link to={"/enquiries/form-builder/new"}><Button className={`solid-button py-0 font-14 ${style.newButton}`}>New Form</Button></Link>
                 </div>
             </div>
-            <EnquiryFormsTable />
+            <EnquiryFormsTable refetch={refetch} setRefetch={setRefetch} />
         </>
     );
 };

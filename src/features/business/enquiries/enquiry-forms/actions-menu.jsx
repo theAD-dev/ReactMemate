@@ -3,9 +3,12 @@ import { Copy, List, Pencil, ThreeDotsVertical, Trash } from 'react-bootstrap-ic
 import { useNavigate } from 'react-router-dom';
 import { ControlledMenu, useClick } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
+import { useMutation } from '@tanstack/react-query';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
+import { deleteForm } from '../../../../APIs/enquiries-api';
 
-const ActionsMenu = ({ rowData }) => {
+const ActionsMenu = ({ rowData, setRefetch }) => {
     const navigate = useNavigate();
     const ref = useRef(null);
     const [isOpen, setOpen] = useState(false);
@@ -14,7 +17,7 @@ const ActionsMenu = ({ rowData }) => {
     const handleCopyEmbed = async () => {
         const host = process.env.REACT_APP_URL || window.location.origin;
         const snippet = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${rowData.id}"></` + `script>`;
-        
+
         try {
             await navigator.clipboard.writeText(snippet);
             toast.success('Embed code copied to clipboard');
@@ -32,10 +35,21 @@ const ActionsMenu = ({ rowData }) => {
         }
     };
 
+    const deleteMutation = useMutation({
+        mutationFn: (id) => deleteForm(id),
+        onSuccess: () => {
+            setRefetch(prev => !prev);
+            setOpen(false);
+            toast.success(`Form deleted successfully`);
+        },
+        onError: (error) => {
+            console.log('Failed to delete form: ', error);
+            toast.error(`Failed to delete form. Please try again.`);
+        }
+    });
+
     const handleDelete = () => {
-        // TODO: Implement delete functionality
-        toast.success('Form deleted successfully');
-        setOpen(false);
+        deleteMutation.mutate(rowData.id);
     };
 
     return (
@@ -91,7 +105,10 @@ const ActionsMenu = ({ rowData }) => {
                         onClick={handleDelete}
                     >
                         <Trash color='#B42318' size={20} />
-                        <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete</span>
+                        <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>
+                            Delete
+                            {deleteMutation.isPending && <ProgressSpinner style={{ width: '14px', height: '14px', marginLeft: '8px' }} />}
+                        </span>
                     </div>
                 </div>
             </ControlledMenu>

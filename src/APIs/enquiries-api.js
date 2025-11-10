@@ -54,3 +54,12 @@ export const updateEnquirySubmission = async (submissionId, data) => {
 
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
 };
+
+export const deleteForm = async (formId) => {
+  const endpoint = `/inquiries/form/${formId}/delete/`;
+  const options = {
+    method: 'PATCH',
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
