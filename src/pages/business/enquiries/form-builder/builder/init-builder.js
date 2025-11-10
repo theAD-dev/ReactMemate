@@ -738,12 +738,13 @@ function buildApiPayload() {
   const payload = {
     organization: defaultOrgId, // hard default as requested
     title: get('form-title'),
+    type: get('form-type') || 'web',
     domain: get('form-domain'),
     submit_to: get('form-submit-to'),
     submit_from: get('form-submit-from'),
     cc_email: get('form-cc-email'),
     bcc_email: get('form-bcc-email'),
-    thank_you_message: get('form-thank-you') || 'Thank you for reaching out. We’ll get back to you soon!',
+    thank_you_message: get('form-thank-you') || 'Thank you for reaching out. We\'ll get back to you soon!',
     error_message: get('form-error-message') || 'Something went wrong. Please try again later.',
     submit_button_label: get('form-submit-label') || 'Submit',
     custom_css: cssTextarea?.value ?? '',
@@ -782,6 +783,7 @@ function setVal(id, v) {
 function hydrateInitialForm(form) {
   // right-column details
   setVal('form-title', form.title);
+  setVal('form-type', form.type || 'web');
   setVal('form-domain', form.domain);
   setVal('form-submit-to', form.submit_to);
   setVal('form-submit-from', form.submit_from);
