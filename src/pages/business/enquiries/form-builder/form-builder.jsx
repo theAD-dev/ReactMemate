@@ -74,7 +74,6 @@ export default function TempFormBuilder() {
     ['multicheckbox', 'Multiple Textboxes'],
     ['date', 'Date'],
     ['time', 'Time'],
-    ['html', 'HTML Content'],
     ['consent', 'Consent']
   ];
 
