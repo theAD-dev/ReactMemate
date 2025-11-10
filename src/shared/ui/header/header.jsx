@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Placeholder, Row } from "react-bootstrap";
 import { XCircle } from "react-bootstrap-icons";
-import { Navigate, NavLink, useLocation } from "react-router-dom";
+import { Link, Navigate, NavLink, useLocation } from "react-router-dom";
 import clsx from "clsx";
 import SelectLocation from "./components/location-selection";
 import ProfileInfo from "./components/profile-info";
@@ -92,7 +92,7 @@ const Header = () => {
             {isVisibleNotificationBar && (
                 <div className={(hasSubscriptionPaymentFailed || session?.is_canceled) ? style.subscriptionFailedNote : style.trialNote} style={{ height: `${trialHeight}px` }}>
                     {hasSubscriptionPaymentFailed ? (
-                        <small><b>Payment for your subscription has failed. Please update your payment method.</b> Your subscription will be suspended in <b>{getDaysUntilSuspension(session?.suspension_date)} days</b> if no action is taken.</small>
+                        <small><b>Payment for your subscription has failed. Please update your payment method.</b> Your subscription will be suspended in <b>{getDaysUntilSuspension(session?.suspension_date)} days</b> if no action is taken. <Link style={{ color: '#FF584A', background: '#fff', borderRadius: '2px' }} className="px-2 py-1" to="/account-overdue">Pay now</Link></small>
                     ) : session?.is_canceled ? (
                         <small><b>Your subscription has been canceled.</b> You will continue to have access until the end of your billing cycle on <b>{formatDate(session?.cancel_at)}</b>.</small>
                     ) : (

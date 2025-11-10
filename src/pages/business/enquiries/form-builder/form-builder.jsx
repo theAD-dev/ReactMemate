@@ -329,7 +329,7 @@ export default function TempFormBuilder() {
                   <input id="form-title" placeholder="Enter form title" />
                 </div>
                 <div className="form-field">
-                  <label>Survey description</label>
+                  <label>Form description</label>
                   <textarea id="form-description" placeholder="Enter description" rows="3" />
                 </div>
               </div>

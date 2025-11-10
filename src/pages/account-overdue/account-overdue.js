@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
@@ -8,10 +9,31 @@ import styles from './account-overdue.module.scss';
 import { getPaymentMethodInfo, retryPayment } from '../../APIs/SettingsGeneral';
 import ChangePaymentMethod from '../../components/layout/settings/subscription/features/change-payment-method';
 
+const getUnpaidSubscriptions = async () => {
+    const accessToken = localStorage.getItem('access_token');
+    const response = await axios.post(
+        'https://dev.memate.com.au/api/v1/subscriptions/unpaid/',
+        {},
+        {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        }
+    );
+    return response.data;
+};
+
 const AccountOverdue = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const isAdmin = !(profileData?.type === "Admin") ? true : false;
     const [visible, setVisible] = useState(false);
+
+    const unpaidSubscriptionsQuery = useQuery({
+        queryKey: ['getUnpaidSubscriptions'],
+        queryFn: getUnpaidSubscriptions,
+        retry: 1,
+    });
 
     const paymentMethodInfoQuery = useQuery({
         queryKey: ['getPaymentMethodInfo'],
@@ -63,7 +85,7 @@ const AccountOverdue = () => {
                             <Button className="text-button bg-transparent" onClick={() => setVisible(true)}>Change</Button>
                         </div>
                         <button className={styles.payButton} onClick={handleRetryPayment} disabled={mutation.isPending}>
-                            {mutation.isPending ? "Loading..." : "Retry payment"}
+                            {mutation.isPending ? "Loading..." : `Retry payment - ${unpaidSubscriptionsQuery?.data?.currency || 'AUD'} ${unpaidSubscriptionsQuery?.data?.total_amount_due || '0.00'}`}
                         </button>
                     </div>
                     <div className="copywrite">© Memate {new Date().getFullYear()}</div>

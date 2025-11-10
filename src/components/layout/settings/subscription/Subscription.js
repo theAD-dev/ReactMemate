@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { ExclamationCircle } from "react-bootstrap-icons";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import axios from "axios";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from "sonner";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
@@ -27,7 +29,23 @@ import EnquiriesIcon from "../../../../assets/images/icon/enquiries.png";
 import ThemeImages from '../../../../assets/imgconstant';
 import { PERMISSIONS } from "../../../../shared/lib/access-control/permission";
 import { hasPermission } from "../../../../shared/lib/access-control/role-permission";
+import { formatDate } from "../../../../shared/lib/date-format";
 import { formatAUD } from "../../../../shared/lib/format-aud";
+
+const getUnpaidSubscriptions = async () => {
+  const accessToken = localStorage.getItem('access_token');
+  const response = await axios.post(
+    'https://dev.memate.com.au/api/v1/subscriptions/unpaid/',
+    {},
+    {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+  return response.data;
+};
 
 const Subscription = () => {
   const { role, session } = useAuth();
@@ -57,6 +75,12 @@ const Subscription = () => {
       console.error("Error canceling work subscription:", error);
       toast.error("Failed to cancel work subscription. Please try again.");
     },
+  });
+
+  const unpaidSubscriptionsQuery = useQuery({
+    queryKey: ['getUnpaidSubscriptions'],
+    queryFn: getUnpaidSubscriptions,
+    retry: 1,
   });
 
   // Enquiries subscription mutations
@@ -141,6 +165,20 @@ const Subscription = () => {
             </div>
           </div>
           <div className={`content_wrap_main pt-4`} style={{ paddingBottom: `${trialHeight}px` }}>
+            
+            <div className="content_wrapper1 ps-4 ms-1 pe-5">
+              <div className="topHeadStyle rounded mb-3">
+                <div className="pt-3 ps-4">
+                  <h2 className="Exclamation">
+                    <span>
+                      <ExclamationCircle color="#344054" size={20} />
+                    </span>
+                    <strong> Next Payment: </strong> Your next monthly payment ${formatAUD(unpaidSubscriptionsQuery?.data?.total_amount_due || 0)} is scheduled on {formatDate(unpaidSubscriptionsQuery?.data?.next_payment_attempt)}.
+                  </h2>
+                </div>
+              </div>
+            </div>
+            
             <div className="content_wrapper">
               <div className={`listwrapper ${styles.listsubscription}`}>
                 <div className="topHeadStyle">
