@@ -3,7 +3,6 @@ import { ExclamationCircle } from "react-bootstrap-icons";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from "sonner";
 import AddRemoveCompanyUser from "./features/add-remove-company-user";
@@ -22,6 +21,7 @@ import {
   cancelAssetsSubscription
 } from "../../../../APIs/settings-subscription-api";
 import { getDesktopUserList, getMobileUserList } from "../../../../APIs/settings-user-api";
+import { getUpcomingPayment } from "../../../../APIs/SettingsGeneral";
 import { useAuth } from "../../../../app/providers/auth-provider";
 import { useTrialHeight } from "../../../../app/providers/trial-height-provider";
 import assetsIcon from '../../../../assets/images/icon/assets.svg';
@@ -29,23 +29,7 @@ import EnquiriesIcon from "../../../../assets/images/icon/enquiries.png";
 import ThemeImages from '../../../../assets/imgconstant';
 import { PERMISSIONS } from "../../../../shared/lib/access-control/permission";
 import { hasPermission } from "../../../../shared/lib/access-control/role-permission";
-import { formatDate } from "../../../../shared/lib/date-format";
 import { formatAUD } from "../../../../shared/lib/format-aud";
-
-const getUnpaidSubscriptions = async () => {
-  const accessToken = localStorage.getItem('access_token');
-  const response = await axios.post(
-    'https://dev.memate.com.au/api/v1/subscriptions/unpaid/',
-    {},
-    {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-  return response.data;
-};
 
 const Subscription = () => {
   const { role, session } = useAuth();
@@ -77,9 +61,9 @@ const Subscription = () => {
     },
   });
 
-  const unpaidSubscriptionsQuery = useQuery({
-    queryKey: ['getUnpaidSubscriptions'],
-    queryFn: getUnpaidSubscriptions,
+  const upcomingPaymentQuery = useQuery({
+    queryKey: ['getUpcomingPayment'],
+    queryFn: getUpcomingPayment,
     retry: 1,
   });
 
@@ -133,7 +117,23 @@ const Subscription = () => {
     },
   });
 
+  const formatDate = (timestamp) => {
+    try {
+      const date = new Date(timestamp * 1000);
+      if (isNaN(date.getTime())) {
+        throw new Error("Invalid ISO date format. Use 'YYYY-MM-DDTHH:mm:ssZ' (e.g., '2025-03-25T14:15:22Z').");
+      }
 
+      const day = date.getUTCDate();
+      const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'Australia/Sydney' });
+      const year = date.getUTCFullYear();
+
+      return `${day} ${month} ${year}`;
+    } catch (err) {
+      console.log('err: ', err);
+      return "";
+    }
+  };
 
 
   return (
@@ -165,7 +165,7 @@ const Subscription = () => {
             </div>
           </div>
           <div className={`content_wrap_main pt-4`} style={{ paddingBottom: `${trialHeight}px` }}>
-            
+
             <div className="content_wrapper1 ps-4 ms-1 pe-5">
               <div className="topHeadStyle rounded mb-3">
                 <div className="pt-3 ps-4">
@@ -173,12 +173,12 @@ const Subscription = () => {
                     <span>
                       <ExclamationCircle color="#344054" size={20} />
                     </span>
-                    <strong> Next Payment: </strong> Your next monthly payment ${formatAUD(unpaidSubscriptionsQuery?.data?.total_amount_due || 0)} is scheduled on {formatDate(unpaidSubscriptionsQuery?.data?.next_payment_attempt)}.
+                    <strong> Next Payment: </strong> Your next monthly payment ${formatAUD(upcomingPaymentQuery?.data?.total || 0)} is scheduled on {formatDate(upcomingPaymentQuery?.data?.next_payment_attempt)}.
                   </h2>
                 </div>
               </div>
             </div>
-            
+
             <div className="content_wrapper">
               <div className={`listwrapper ${styles.listsubscription}`}>
                 <div className="topHeadStyle">

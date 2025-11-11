@@ -92,7 +92,7 @@ const Header = () => {
             {isVisibleNotificationBar && (
                 <div className={(hasSubscriptionPaymentFailed || session?.is_canceled) ? style.subscriptionFailedNote : style.trialNote} style={{ height: `${trialHeight}px` }}>
                     {hasSubscriptionPaymentFailed ? (
-                        <small><b>Payment for your subscription has failed. Please update your payment method.</b> Your subscription will be suspended in <b>{getDaysUntilSuspension(session?.suspension_date)} days</b> if no action is taken. <Link style={{ color: '#FF584A', background: '#fff', borderRadius: '2px' }} className="px-2 py-1" to="/account-overdue">Pay now</Link></small>
+                        <small><b>Payment for your subscription has failed. Please update your payment method.</b> Your subscription will be suspended in <b>{getDaysUntilSuspension(session?.suspension_date)} days</b> if no action is taken. <Link style={{ color: '#FF584A', background: '#fff', borderRadius: '2px' }} className="px-2 py-1" to="/account-overdue">Fix Now</Link></small>
                     ) : session?.is_canceled ? (
                         <small><b>Your subscription has been canceled.</b> You will continue to have access until the end of your billing cycle on <b>{formatDate(session?.cancel_at)}</b>.</small>
                     ) : (

@@ -96,7 +96,7 @@ const BillingInfo = () => {
       }
 
       const day = date.getUTCDate();
-      const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+      const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'Australia/Sydney' });
       const year = date.getUTCFullYear();
 
       return `${day} ${month} ${year}`;
