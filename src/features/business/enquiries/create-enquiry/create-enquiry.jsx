@@ -117,7 +117,7 @@ const buildDynamicSchema = (fields = []) => {
     return yup.object(schemaObj);
 };
 
-export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }) => {
+export const CreateEnquiry = ({ visible, setVisible, refetchTrigger }) => {
     const formRef = useRef(null);
     const loadingRef = useRef(false);
 
@@ -246,7 +246,6 @@ export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }
             setSelectedForm(null);
             setFormValue('');
             setVisible(false);
-            onSuccess && onSuccess();
             refetchTrigger && refetchTrigger((prev) => !prev);
         },
         onError: (error) => {

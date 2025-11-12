@@ -1,13 +1,14 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { EnvelopeSlash, InputCursorText, WindowSidebar, XCircle } from 'react-bootstrap-icons';
 import { useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import style from './enquiries.module.scss';
-import { getListOfSubmissions, updateEnquirySubmission } from '../../../APIs/enquiries-api';
+import { getListOfSubmissions, updateEnquirySubmission, deleteSubmission } from '../../../APIs/enquiries-api';
 import { getUserList, getMobileUserList } from '../../../APIs/task-api';
 import { useAuth } from '../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
@@ -41,7 +42,23 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const [hasMoreData, setHasMoreData] = useState(true);
     const [loading, setLoading] = useState(false);
     const [userGroups, setUserGroups] = useState([]);
+    const [loadingSubmissionId, setLoadingSubmissionId] = useState(null);
     const limit = 25;
+
+    const deleteSubmissionMutation = useMutation({
+        mutationFn: ({ formId, submissionId }) => deleteSubmission(formId, submissionId),
+        onSuccess: (_, { submissionId }) => {
+            // Remove deleted submission from list
+            setSubmissions(prev => prev.filter(sub => sub.id !== submissionId));
+            setLoadingSubmissionId(null);
+            toast.success('Submission marked as No Go');
+        },
+        onError: (error) => {
+            console.error('Error deleting submission:', error);
+            setLoadingSubmissionId(null);
+            toast.error('Failed to mark as No Go');
+        }
+    });
 
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
     const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
@@ -133,7 +150,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         };
 
         loadData();
-    }, [page, searchValue, tempSort, isShowDeleted, filterType, session?.organization?.id, submissions.length, refetchTrigger]);
+    }, [page, searchValue, tempSort, isShowDeleted, filterType, session?.organization?.id, submissions.length, refetchTrigger, formId]);
 
     useEffect(() => {
         if (submissions.length > 0 && hasMoreData) {
@@ -315,40 +332,49 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
 
     const noGoActionBody = (rowData) => {
         const handleNoGo = async () => {
-            try {
-                toast.success(`Marked as No Go: ${rowData.data?.name}`);
-                // TODO: Call API endpoint for marking as No Go
-            } catch (error) {
-                toast.error('Failed to mark as No Go');
-            }
+            setLoadingSubmissionId(rowData.id);
+            deleteSubmissionMutation.mutate({ 
+                formId: formId || rowData.form_id, 
+                submissionId: rowData.id 
+            });
         };
 
         return (
             <button
                 onClick={handleNoGo}
+                disabled={loadingSubmissionId === rowData.id}
                 style={{
                     padding: '0',
                     borderRadius: '8px',
                     border: '1px solid #EAECF0',
                     background: '#FFFFFF',
                     color: '#F04438',
-                    cursor: 'pointer',
+                    cursor: loadingSubmissionId === rowData.id ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     width: '42px',
-                    height: '42px'
+                    height: '42px',
+                    opacity: loadingSubmissionId === rowData.id ? 0.6 : 1
                 }}
                 onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#FEF3F2';
+                    if (loadingSubmissionId !== rowData.id) {
+                        e.currentTarget.style.background = '#FEF3F2';
+                    }
                 }}
                 onMouseLeave={(e) => {
-                    e.currentTarget.style.background = '#FFFFFF';
+                    if (loadingSubmissionId !== rowData.id) {
+                        e.currentTarget.style.background = '#FFFFFF';
+                    }
                 }}
                 title="Mark as No Go"
             >
-                <XCircle size={20} color="#D92D20" />
+                {loadingSubmissionId === rowData.id ? (
+                    <ProgressSpinner style={{ width: '20px', height: '20px' }} strokeWidth="4" />
+                ) : (
+                    <XCircle size={20} color="#D92D20" />
+                )}
             </button>
         );
     };

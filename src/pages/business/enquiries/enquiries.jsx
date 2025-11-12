@@ -94,7 +94,6 @@ const Enquiries = () => {
         refetchTrigger={setRefetchTrigger}
         visible={showCreateEnquiry}
         setVisible={setShowCreateEnquiry}
-        onSuccess={() => setRefetchTrigger(prev => !prev)}
       />
     </>
   );
