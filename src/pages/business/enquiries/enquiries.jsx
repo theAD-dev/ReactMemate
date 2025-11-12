@@ -60,14 +60,14 @@ const Enquiries = () => {
             <span className={style.topBarText}>Form</span>
           </Link>
 
-          <Link 
+          {/* <Link 
             to={"/enquiries"} 
             className={clsx('d-flex align-items-center px-2 py-1', style.subMenuLink, { [style.active]: filterType === 'fb-in' })}
             onClick={() => setFilterType('fb-in')}
           >
             <Collection color='#084095' size={16} className='me-2' />
             <span className={style.topBarText}>Fb/In</span>
-          </Link>
+          </Link> */}
         </div>
         <div className="right-side d-flex align-items-center" style={{ gap: '8px' }}>
           <Button 

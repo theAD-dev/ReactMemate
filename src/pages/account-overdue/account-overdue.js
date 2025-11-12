@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
 import { toast } from 'sonner';
 import styles from './account-overdue.module.scss';
-import { getPaymentMethodInfo, retryPayment } from '../../APIs/SettingsGeneral';
+import { getPaymentMethodInfo, getUpcomingPayment, retryPayment } from '../../APIs/SettingsGeneral';
 import ChangePaymentMethod from '../../components/layout/settings/subscription/features/change-payment-method';
+import { formatAUD } from '../../shared/lib/format-aud';
 
 const AccountOverdue = () => {
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const isAdmin = !(profileData?.type === "Admin") ? true : false;
     const [visible, setVisible] = useState(false);
+
+    const upcomingPaymentQuery = useQuery({
+        queryKey: ['getUpcomingPayment'],
+        queryFn: getUpcomingPayment,
+        retry: 1,
+    });
 
     const paymentMethodInfoQuery = useQuery({
         queryKey: ['getPaymentMethodInfo'],
@@ -31,6 +38,25 @@ const AccountOverdue = () => {
     });
 
     const handleRetryPayment = () => mutation.mutate();
+
+    const formatDate = (timestamp) => {
+        try {
+            const date = new Date(timestamp * 1000);
+            if (isNaN(date.getTime())) {
+                throw new Error("Invalid ISO date format. Use 'YYYY-MM-DDTHH:mm:ssZ' (e.g., '2025-03-25T14:15:22Z').");
+            }
+
+            const day = date.getUTCDate();
+            const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'Australia/Sydney' });
+            const year = date.getUTCFullYear();
+
+            return `${day} ${month} ${year}`;
+        } catch (err) {
+            console.log('err: ', err);
+            return "";
+        }
+    };
+
     return (
         <>
             <Row className='w-100 p-0 m-0'>
@@ -56,14 +82,14 @@ const AccountOverdue = () => {
                                     {
                                         paymentMethodInfoQuery?.isFetching
                                             ? <Skeleton width="10rem" className=""></Skeleton>
-                                            : <p className="mb-0 color-475467 font-14">Expiry {paymentMethodInfoQuery?.data?.exp_month > 9 ? (paymentMethodInfoQuery?.data?.exp_month || "-") : "0" + (paymentMethodInfoQuery?.data?.exp_month || "0")}/{paymentMethodInfoQuery?.data?.exp_year || "-"}</p>
+                                            : <p className="mb-0 color-475467 font-14 text-start">Expiry {paymentMethodInfoQuery?.data?.exp_month > 9 ? (paymentMethodInfoQuery?.data?.exp_month || "-") : "0" + (paymentMethodInfoQuery?.data?.exp_month || "0")}/{paymentMethodInfoQuery?.data?.exp_year || "-"}</p>
                                     }
                                 </div>
                             </div>
                             <Button className="text-button bg-transparent" onClick={() => setVisible(true)}>Change</Button>
                         </div>
                         <button className={styles.payButton} onClick={handleRetryPayment} disabled={mutation.isPending}>
-                            {mutation.isPending ? "Loading..." : "Retry payment"}
+                            {mutation.isPending ? "Loading..." : `Retry payment - $${formatAUD(upcomingPaymentQuery?.data?.total || 0)}`}
                         </button>
                     </div>
                     <div className="copywrite">© Memate {new Date().getFullYear()}</div>

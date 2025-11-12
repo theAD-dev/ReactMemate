@@ -262,7 +262,8 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
 
     fieldsData[id] = seedDataFor(type);
     wireField(el, id, type);
-    selectField(id, type);
+    // Do not auto-select field when adding - let user click to select
+    // selectField(id, type);
     updateMoveButtons();
 
     // Save to history after adding field
@@ -451,17 +452,17 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
         `<label>Placeholder <input id="fp-ph" value="${escapeHtml(data.placeholder || '')}"></label>` : '')}
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
-        `<label>Max Length <input id="fp-max" type="number" value="${escapeAttr(data.maxlength || '')}"></label>` : '')}
+        `<label>Max Length <input id="fp-max" min="0" type="number" value="${escapeAttr(data.maxlength || '')}"></label>` : '')}
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ? `
           <div class="property-subtle">
             <label>Validation Pattern (Regex)
               <input id="fp-regex" placeholder="e.g. ^[A-Za-z]{3,}$" value="${escapeAttr(data.regex || '')}">
             </label>
-            <p class="help-text">Optional. Add a regex pattern for validation.</p>
-            <label>Custom Error Message
-              <input id="fp-errmsg" placeholder="e.g. Please enter only letters" value="${escapeAttr(data.error_message || '')}">
+            <p class="help-text text-start">Optional. Add a regex pattern for validation.</p>
+            <label>Regex Error Message <span id="fp-errmsg-required" class="required" style="display: ${data.regex ? 'inline' : 'none'};">*</span>
+              <input id="fp-errmsg" placeholder="e.g. Please enter only letters" value="${escapeAttr(data.error_message || '')}" style="border-color: ${data.regex && !data.error_message ? '#dc3545' : ''};">
             </label>
-            <p class="help-text">Optional. Custom message to show when validation fails.</p>
+            <p class="help-text">Required when Validation Pattern is set. Custom message to show when validation fails.</p>
           </div>` : '')}
         <label class="inline"><input type="checkbox" id="fp-req" ${data.required ? 'checked' : ''}> <span>Required</span></label>
       </div>
@@ -485,57 +486,323 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       <div class="property-group"><button id="fp-apply" type="button">Update Field</button></div>
     `;
 
+    // Helper function to update preview in real-time - Comprehensive
+    const updateFieldPreview = () => {
+      const host = root.querySelector('#' + id);
+      if (!host) return;
+      
+      // Update label
+      const label = host.querySelector('.form-field > label, .checkbox-field label');
+      if (label) label.textContent = data.label;
+
+      // Update text-like inputs (text, email, number, phone, url, date, time)
+      if (['text', 'email', 'number', 'phone', 'url', 'date', 'time'].includes(type)) {
+        const input = host.querySelector('input');
+        if (input) {
+          if (data.placeholder) input.placeholder = data.placeholder;
+          if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+            input.maxLength = parseInt(data.maxlength, 10);
+          }
+          if (data.required) input.setAttribute('required', '');
+          else input.removeAttribute('required');
+        }
+      } 
+      // Update textarea
+      else if (type === 'textarea') {
+        const ta = host.querySelector('textarea');
+        if (ta) {
+          if (data.placeholder) ta.placeholder = data.placeholder;
+          if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+            ta.maxLength = parseInt(data.maxlength, 10);
+          }
+          if (data.required) ta.setAttribute('required', '');
+          else ta.removeAttribute('required');
+        }
+      } 
+      // Update select
+      else if (type === 'select') {
+        const sel = host.querySelector('select');
+        if (sel) {
+          sel.innerHTML = `<option value="">${data.placeholder || 'Select an option'}</option>` +
+            (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
+          if (data.required) sel.setAttribute('required', '');
+          else sel.removeAttribute('required');
+        }
+      }
+      // Update multiselect
+      else if (type === 'multiselect') {
+        const sel = host.querySelector('select');
+        if (sel) {
+          sel.innerHTML = (data.options || []).map(o => `<option>${escapeHtml(o)}</option>`).join('');
+          if (data.required) sel.setAttribute('required', '');
+          else sel.removeAttribute('required');
+        }
+      }
+      // Update radio buttons
+      else if (type === 'radio') {
+        const wrap = host.querySelector('.form-field');
+        if (wrap) {
+          wrap.querySelectorAll('.radio-field').forEach(n => n.remove());
+          (data.options || []).forEach((o, i) => {
+            const div = document.createElement('div');
+            div.className = 'radio-field';
+            const rid = `${data.name}-${i}`;
+            div.innerHTML = `<input id="${rid}" type="radio" name="${escapeHtml(data.name)}" ${data.required ? 'required' : ''}>
+                             <label for="${rid}">${escapeHtml(o)}</label>`;
+            wrap.appendChild(div);
+          });
+        }
+      }
+      // Update multicheckbox
+      else if (type === 'multicheckbox') {
+        const wrap = host.querySelector('.form-field');
+        if (wrap) {
+          wrap.querySelectorAll('.checkbox-field').forEach(n => n.remove());
+          (data.options || []).forEach((o, i) => {
+            const div = document.createElement('div');
+            div.className = 'checkbox-field';
+            const cid = `${data.name}-${i}`;
+            div.innerHTML = `<input id="${cid}" type="checkbox" name="${escapeHtml(data.name)}[]" ${data.required ? 'required' : ''}>
+                             <label for="${cid}">${escapeHtml(o)}</label>`;
+            wrap.appendChild(div);
+          });
+        }
+      }
+      // Update checkbox
+      else if (type === 'checkbox') {
+        const cbl = host.querySelector('.checkbox-field label');
+        if (cbl) cbl.textContent = data.label;
+        const cbinput = host.querySelector('.checkbox-field input');
+        if (cbinput) {
+          if (data.required) cbinput.setAttribute('required', '');
+          else cbinput.removeAttribute('required');
+        }
+      }
+      // Update consent
+      else if (type === 'consent') {
+        const cbl = host.querySelector('.checkbox-field label');
+        if (cbl) cbl.textContent = data.label;
+        const cbinput = host.querySelector('.checkbox-field input');
+        if (cbinput) {
+          if (data.required) cbinput.setAttribute('required', '');
+          else cbinput.removeAttribute('required');
+        }
+      }
+      // Update button
+      else if (type === 'submit_button') {
+        const btn = host.querySelector('button');
+        if (btn) {
+          btn.textContent = data.button_text || 'Submit';
+          if (data.custom_style) btn.setAttribute('style', data.custom_style);
+          else btn.removeAttribute('style');
+        }
+      }
+      // Update HTML
+      else if (type === 'html') {
+        const block = host.querySelector('.html-content');
+        if (block) block.innerHTML = data.html || '<p></p>';
+      }
+    };
+
     if (['select', 'radio', 'multicheckbox', 'multiselect'].includes(type)) {
       const wrap = root.querySelector('#fp-options');
-      wrap.innerHTML = '';
-      (data.options || []).forEach((opt, i) => {
-        const row = document.createElement('div');
-        row.innerHTML = `<input data-i="${i}" value="${escapeAttr(opt)}"> <button data-i="${i}" class="rm" type="button">x</button>`;
-        wrap.appendChild(row);
-      });
+      
+      const renderOptions = () => {
+        wrap.innerHTML = '';
+        (data.options || []).forEach((opt, i) => {
+          const row = document.createElement('div');
+          row.innerHTML = `<input data-i="${i}" value="${escapeAttr(opt)}"> <button data-i="${i}" class="rm" type="button">x</button>`;
+          wrap.appendChild(row);
+        });
+      };
+      
+      renderOptions();
+      
       root.querySelector('#fp-addopt').onclick = () => {
         data.options.push(`Option ${data.options.length + 1}`);
-        selectField(id, type);
+        renderOptions();
+        attachRealtimeListeners(); // Re-attach listeners to new options
+        updateFieldPreview(); // Update preview
+        saveHistory();
       };
+      
       wrap.addEventListener('click', e => {
         if (e.target.classList.contains('rm')) {
           const i = +e.target.dataset.i;
           data.options.splice(i, 1);
-          selectField(id, type);
+          renderOptions();
+          updateFieldPreview(); // Update preview when option removed
+          saveHistory();
         }
       });
+      
       wrap.addEventListener('input', e => {
         if (e.target.matches('input[data-i]')) {
           data.options[+e.target.dataset.i] = e.target.value;
+          updateFieldPreview(); // Update preview when option text changed
+          saveHistory();
         }
       });
     }
 
-    root.querySelector('#fp-apply').onclick = () => {
-      data.label = val('#fp-label');
-      if (root.querySelector('#fp-name')) data.name = val('#fp-name');
-      if (root.querySelector('#fp-ph')) data.placeholder = val('#fp-ph');
-      if (root.querySelector('#fp-max')) data.maxlength = val('#fp-max');
-      if (root.querySelector('#fp-regex')) data.regex = val('#fp-regex');
-      if (root.querySelector('#fp-errmsg')) data.error_message = val('#fp-errmsg');
-      data.required = root.querySelector('#fp-req').checked;
-      if (type === 'html') data.html = val('#fp-html');
-      if (type === 'submit_button') {
-        data.button_text = val('#fp-btntext') || 'Submit';
-        data.custom_style = val('#fp-btncss') || '';
-      }
-      // Refresh simple label text in preview
-      const host = root.querySelector('#' + id);
-      const label = host.querySelector('.form-field > label, .checkbox-field label');
-      if (label) label.textContent = data.label;
-      toast.success('Field updated');
+    // Real-time property updates with event listeners
+    const attachRealtimeListeners = () => {
+      const labelEl = root.querySelector('#fp-label');
+      const phEl = root.querySelector('#fp-ph');
+      const maxEl = root.querySelector('#fp-max');
+      const regexEl = root.querySelector('#fp-regex');
+      const errmsgEl = root.querySelector('#fp-errmsg');
+      const reqEl = root.querySelector('#fp-req');
+      const htmlEl = root.querySelector('#fp-html');
+      const btntextEl = root.querySelector('#fp-btntext');
+      const btncssEl = root.querySelector('#fp-btncss');
 
-      // Save to history after updating field
-      saveHistory();
+      if (labelEl) {
+        labelEl.addEventListener('input', (e) => {
+          data.label = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (phEl) {
+        phEl.addEventListener('input', (e) => {
+          data.placeholder = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (maxEl) {
+        maxEl.addEventListener('input', (e) => {
+          data.maxlength = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (regexEl) {
+        regexEl.addEventListener('input', (e) => {
+          data.regex = e.target.value;
+          
+          // Show/hide required indicator for error message
+          const requiredSpan = root.querySelector('#fp-errmsg-required');
+          const errmsgInput = root.querySelector('#fp-errmsg');
+          
+          if (requiredSpan) {
+            requiredSpan.style.display = data.regex ? 'inline' : 'none';
+          }
+          
+          // Highlight error message field if regex is set but error message is empty
+          if (errmsgInput) {
+            if (data.regex && !data.error_message) {
+              errmsgInput.style.borderColor = '#dc3545';
+            } else {
+              errmsgInput.style.borderColor = '';
+            }
+          }
+          
+          saveHistory();
+        });
+      }
+      if (errmsgEl) {
+        errmsgEl.addEventListener('input', (e) => {
+          data.error_message = e.target.value;
+          
+          // Remove red border when error message is filled
+          if (data.regex && data.error_message) {
+            e.target.style.borderColor = '';
+          } else if (data.regex && !data.error_message) {
+            e.target.style.borderColor = '#dc3545';
+          }
+          
+          saveHistory();
+        });
+      }
+      if (reqEl) {
+        reqEl.addEventListener('change', (e) => {
+          data.required = e.target.checked;
+          updateFieldPreview(); // Update required attribute on inputs
+          saveHistory();
+        });
+      }
+      if (htmlEl) {
+        htmlEl.addEventListener('input', (e) => {
+          data.html = e.target.value;
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (btntextEl) {
+        btntextEl.addEventListener('input', (e) => {
+          data.button_text = e.target.value || 'Submit';
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
+      if (btncssEl) {
+        btncssEl.addEventListener('input', (e) => {
+          data.custom_style = e.target.value || '';
+          updateFieldPreview();
+          saveHistory();
+        });
+      }
     };
+
+    // Attach listeners and hide the update button
+    setTimeout(() => {
+      attachRealtimeListeners();
+      const applyBtn = root.querySelector('#fp-apply');
+      if (applyBtn) {
+        applyBtn.style.display = 'none';
+      }
+    }, 0);
   }
 
+  // Deselect field and hide properties
+  function deselectField() {
+    currentField = null;
+    // Remove selected class from all fields
+    preview.querySelectorAll('.preview-field').forEach(f => f.classList.remove('selected'));
+    
+    // Remove has-selection class from properties container
+    properties.classList.remove('has-selection');
+    
+    // Reset to placeholder
+    const placeholder = properties.querySelector('.field-props-placeholder');
+    if (placeholder) {
+      placeholder.innerHTML = `
+        <div class="panel-header">
+          <h2>Properties</h2>
+        </div>
+        <div class="no-selection">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="M7 10h10M7 14h6" />
+          </svg>
+          <p>Select a field to edit its properties</p>
+        </div>
+      `;
+    }
+  }
+
+  // Click outside handler to deselect fields
+  properties.addEventListener('click', (e) => {
+    // Check if click is outside of any input/select/textarea within properties
+    const isClickInProperties = e.target.closest('.property-group, .field-props-placeholder, .general-settings');
+    if (!isClickInProperties) {
+      deselectField();
+    }
+  });
+
+  // Also handle clicks on the preview area background to deselect
+  preview.addEventListener('click', (e) => {
+    // If click is not on a preview-field or its action buttons, deselect
+    const clickedField = e.target.closest('.preview-field');
+    if (!clickedField) {
+      deselectField();
+    }
+  });
+
   // Preview modal and tab
+
   if (previewBtn) {
     previewBtn.addEventListener('click', () => {
       const html = renderPreview(Object.values(fieldsData));
@@ -657,6 +924,42 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       throw new Error('Please add at least one field to your form');
     }
 
+    // Validate that name and email fields are present and required
+    const fields = Object.values(fieldsData);
+    const nameField = fields.find(f => f.name === 'name');
+    const emailField = fields.find(f => f.name === 'email');
+
+    if (!nameField) {
+      throw new Error('A "name" field is required. Please add a field with name "name".');
+    }
+    if (!nameField.required) {
+      throw new Error('The "name" field must be marked as required.');
+    }
+
+    if (!emailField) {
+      throw new Error('An "email" field is required. Please add a field with name "email".');
+    }
+    if (!emailField.required) {
+      throw new Error('The "email" field must be marked as required.');
+    }
+
+    // Validate that if regex is set, error_message is required
+    Object.values(fieldsData).forEach((field) => {
+      if (field.regex && field.regex.trim() && !field.error_message) {
+        throw new Error(`Field "${field.label}" has a Validation Pattern but is missing a Custom Error Message. Custom Error Message is required when Validation Pattern is set.`);
+      }
+    });
+
+    // Validate that field names are unique (no duplicates)
+    const fieldNames = Object.values(fieldsData)
+      .map(f => f.name)
+      .filter(name => name); // Filter out empty names
+    
+    const duplicateNames = fieldNames.filter((name, idx, arr) => arr.indexOf(name) !== idx);
+    if (duplicateNames.length > 0) {
+      throw new Error(`Duplicate field name(s) found: "${duplicateNames.join('", "')}". Each field must have a unique name.`);
+    }
+
     const payload = buildApiPayload();
     const json = currentFormId
       ? await updateFormToApi(currentFormId, payload)
@@ -738,12 +1041,13 @@ function buildApiPayload() {
   const payload = {
     organization: defaultOrgId, // hard default as requested
     title: get('form-title'),
+    type: get('form-type') || 'web',
     domain: get('form-domain'),
     submit_to: get('form-submit-to'),
     submit_from: get('form-submit-from'),
     cc_email: get('form-cc-email'),
     bcc_email: get('form-bcc-email'),
-    thank_you_message: get('form-thank-you') || 'Thank you for reaching out. We’ll get back to you soon!',
+    thank_you_message: get('form-thank-you') || 'Thank you for reaching out. We\'ll get back to you soon!',
     error_message: get('form-error-message') || 'Something went wrong. Please try again later.',
     submit_button_label: get('form-submit-label') || 'Submit',
     custom_css: cssTextarea?.value ?? '',
@@ -760,7 +1064,10 @@ function buildApiPayload() {
 // helpers
 function val(sel) { return root.querySelector(sel)?.value || ''; }
 function capitalize(s) { return (s || '').charAt(0).toUpperCase() + (s || '').slice(1); }
-function escapeHtml(s = '') { return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function escapeHtml(s = '') { 
+  const str = String(s || '');
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); 
+}
 function escapeAttr(s = '') { return escapeHtml(s).replace(/"/g, '&quot;'); }
 
 function seedDefaultFields() {
@@ -782,6 +1089,7 @@ function setVal(id, v) {
 function hydrateInitialForm(form) {
   // right-column details
   setVal('form-title', form.title);
+  setVal('form-type', form.type || 'web');
   setVal('form-domain', form.domain);
   setVal('form-submit-to', form.submit_to);
   setVal('form-submit-from', form.submit_from);
@@ -846,6 +1154,9 @@ function addFieldFromData(f) {
 
   fieldsData[id] = data;
   wireField(el, id, type);
+  
+  // Do not auto-select field when hydrating - let user click to select
+  // selectField(id, type);
 
   const labelEl = el.querySelector('.form-field > label, .checkbox-field label');
   if (labelEl && data.label) labelEl.textContent = data.label;
@@ -855,14 +1166,18 @@ function addFieldFromData(f) {
     if (input) {
       if (type === 'phone') input.type = 'tel';
       if (data.placeholder) input.placeholder = data.placeholder;
-      if (data.maxlength) input.maxLength = parseInt(data.maxlength, 10);
+      if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+        input.maxLength = parseInt(data.maxlength, 10);
+      }
       if (data.required) input.required = true;
     }
   } else if (type === 'textarea') {
     const ta = el.querySelector('textarea');
     if (ta) {
       if (data.placeholder) ta.placeholder = data.placeholder;
-      if (data.maxlength) ta.maxLength = parseInt(data.maxlength, 10);
+      if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+        ta.maxLength = parseInt(data.maxlength, 10);
+      }
       if (data.required) ta.required = true;
     }
   } else if (type === 'select') {
@@ -920,7 +1235,8 @@ function addFieldFromData(f) {
     }
   }
 
-  selectField(id, type);
+  // Do not auto-select field when adding from data - let user click to select
+  // selectField(id, type);
 }
 }
 

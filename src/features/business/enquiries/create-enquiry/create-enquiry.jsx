@@ -1,16 +1,20 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { PlusCircle, X } from 'react-bootstrap-icons';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { Calendar } from 'primereact/calendar';
+import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from 'primereact/inputtextarea';
+import { MultiSelect } from 'primereact/multiselect';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { RadioButton } from 'primereact/radiobutton';
 import { Sidebar } from 'primereact/sidebar';
 import { toast } from 'sonner';
 import * as yup from 'yup';
@@ -18,18 +22,106 @@ import styles from './create-enquiry.module.scss';
 import { createEnquirySubmission, getListOfForms } from '../../../../APIs/enquiries-api';
 import exclamationCircle from "../../../../assets/images/icon/exclamation-circle.svg";
 
-const schema = yup.object({
-    form: yup.number()
-        .required("Form is required")
-        .typeError("Form is required"),
-    name: yup.string().required("Name is required"),
-    email: yup.string().email("Invalid email format").required("Email is required"),
-    phone: yup.string().required("Phone is required"),
-    message: yup.string().required("Message is required"),
-});
+/**
+ * Admin-side "Create Enquiry" renders dynamic fields from the selected form
+ * (same field model used by the public embed). We validate required fields,
+ * max length, and regex patterns based on form configuration.
+ */
+
+// Helper function to get error messages (supports multiple errors)
+const getErrorMessages = (fieldError) => {
+    if (!fieldError) return [];
+    if (fieldError.message) return [fieldError.message];
+    if (Array.isArray(fieldError)) return fieldError.filter(Boolean);
+    return [];
+};
+
+// Build dynamic schema based on selected form fields
+const buildDynamicSchema = (fields = []) => {
+    const schemaObj = {
+        form: yup.number()
+            .required("Form is required")
+            .typeError("Form is required"),
+    };
+
+    fields.forEach((field) => {
+        const fieldName = field.name;
+        if (!fieldName) return;
+
+        let fieldSchema = yup.mixed();
+
+        // Handle required validation - always use generic message
+        if (field.required) {
+            if (field.field_type === 'checkbox' || field.field_type === 'consent') {
+                fieldSchema = yup.boolean().required('This field is required');
+            } else if (field.field_type === 'multicheckbox' || field.field_type === 'multiselect') {
+                fieldSchema = yup.array().min(1, 'This field is required');
+            } else {
+                fieldSchema = yup.string().required('This field is required');
+            }
+        } else {
+            fieldSchema = yup.string().nullable();
+        }
+
+        // Handle max_length validation - always use generic message
+        if (field.max_length) {
+            fieldSchema = fieldSchema.max(field.max_length, `Max ${field.max_length} characters`);
+        }
+
+        // Handle regex validation - ONLY use custom error_message for regex
+        // Custom error_message from API is ONLY shown when regex validation fails
+        if (field.regex && typeof field.regex === 'string' && field.regex.trim()) {
+            try {
+                let regexPattern;
+                const regexStr = field.regex.trim();
+                
+                // Check if regex is in /pattern/flags format (e.g., /^[a-z]+$/i)
+                const regexMatch = regexStr.match(/^\/(.+)\/([gimuy]*)$/);
+                
+                if (regexMatch) {
+                    // Extract pattern and flags from /pattern/flags format
+                    const pattern = regexMatch[1];
+                    const flags = regexMatch[2] || '';
+                    regexPattern = new RegExp(pattern, flags);
+                } else {
+                    // Plain pattern without slashes
+                    regexPattern = new RegExp(regexStr);
+                }
+                
+                fieldSchema = fieldSchema.matches(
+                    regexPattern, 
+                    field.error_message || 'Invalid format'
+                );
+            } catch (e) {
+                console.warn(`Invalid regex pattern for field ${fieldName}:`, field.regex, e);
+            }
+        }
+
+        schemaObj[fieldName] = fieldSchema;
+
+        // Handle array fields (multicheckbox with [] naming)
+        if (field.field_type === 'multicheckbox' || field.field_type === 'checkbox') {
+            if (field.field_type === 'multicheckbox' || (field.field_type === 'checkbox' && field.options && field.options.length > 0)) {
+                const arrayFieldName = `${fieldName}[]`;
+                let arraySchema = yup.array();
+                
+                if (field.required) {
+                    arraySchema = arraySchema.min(1, 'This field is required');
+                }
+                
+                schemaObj[arrayFieldName] = arraySchema;
+            }
+        }
+    });
+
+    return yup.object(schemaObj);
+};
 
 export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }) => {
     const formRef = useRef(null);
+    const loadingRef = useRef(false);
+
+    // Forms dropdown state
     const [forms, setForms] = useState([]);
     const [formValue, setFormValue] = useState('');
     const [hasMoreForms, setHasMoreForms] = useState(true);
@@ -39,76 +131,110 @@ export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }
     const dropdownRef = useRef(null);
     const searchTimeoutRef = useRef(null);
 
-    const { control, register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
-        resolver: yupResolver(schema),
-        defaultValues: {
-            form: '',
-            name: '',
-            email: '',
-            phone: '',
-            message: ''
-        }
+    // Selected form detail (fields, meta)
+    const [selectedForm, setSelectedForm] = useState(null);
+    const dynamicFields = useMemo(() => selectedForm?.fields || [], [selectedForm]);
+
+    // Build validation schema based on selected form
+    const validationSchema = useMemo(() => {
+        return buildDynamicSchema(selectedForm?.fields || []);
+    }, [selectedForm?.fields]);
+
+    // react-hook-form with dynamic validation
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        setValue,
+        watch,
+    } = useForm({
+        resolver: yupResolver(validationSchema),
+        defaultValues: { form: '' },
+        mode: 'onBlur', // Validate on blur for better UX
     });
 
-    // Fetch forms with pagination and search
-    const fetchForms = useCallback(async (page = 1, resetList = false, searchQuery = '') => {
-        if (loadingForms) return;
-
-        setLoadingForms(true);
-        try {
-            const data = await getListOfForms(page, 25, searchQuery, '', false);
-            const newForms = data?.results || [];
-
-            if (resetList) {
-                setForms(newForms);
-                formPageRef.current = 1;
-            } else {
-                // Filter out duplicates using Set for O(1) lookup
-                setForms(prev => {
-                    const existingFormIds = new Set(prev.map(form => form.id));
-                    const uniqueNewForms = newForms.filter(form => !existingFormIds.has(form.id));
-                    return [...prev, ...uniqueNewForms];
-                });
+    // Fetch paginated forms (title, id, source_type, etc.)
+    const fetchForms = useCallback(
+        async (page = 1, resetList = false, searchQuery = '') => {
+            if (loadingRef.current) return;
+            loadingRef.current = true;
+            setLoadingForms(true);
+            try {
+                const data = await getListOfForms(page, 25, searchQuery, '', false);
+                const newForms = data?.results || [];
+                if (resetList) {
+                    setForms(newForms);
+                    formPageRef.current = 1;
+                } else {
+                    setForms((prev) => {
+                        const existingIds = new Set(prev.map((f) => f.id));
+                        const uniqueNew = newForms.filter((f) => !existingIds.has(f.id));
+                        return [...prev, ...uniqueNew];
+                    });
+                }
+                setHasMoreForms(newForms.length === 25);
+            } catch (error) {
+                console.error('Error fetching forms:', error);
+            } finally {
+                loadingRef.current = false;
+                setLoadingForms(false);
             }
+        },
+        []
+    );
 
-            setHasMoreForms(newForms.length === 25);
-        } catch (error) {
-            console.error('Error fetching forms:', error);
-        } finally {
-            setLoadingForms(false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // Initial + reactive fetches for the forms list
+    useEffect(() => {
+        fetchForms(1, true, '');
+    }, [fetchForms]);
 
-    // Reset page when search changes
     useEffect(() => {
         if (formSearchQuery) {
             formPageRef.current = 1;
         }
     }, [formSearchQuery]);
 
-    // Fetch data when page or search changes
     useEffect(() => {
         fetchForms(formPageRef.current, formPageRef.current === 1, formSearchQuery);
     }, [formSearchQuery, fetchForms]);
 
-    // Initial load
+    // Fetch full form definition when form selection changes
+    const formIdWatch = watch('form');
     useEffect(() => {
-        fetchForms(1, true, '');
-    }, [fetchForms]);
+        const formId = Number(formIdWatch);
+        if (!formId) {
+            setSelectedForm(null);
+            return;
+        }
+        let cancelled = false;
+        (async () => {
+            try {
+                const res = await fetch(`${process.env.REACT_APP_BACKEND_API_URL}/inquiries/form/${formId}/`);
+                const form = res.ok ? await res.json() : null;
+                if (!cancelled) setSelectedForm(form);
+            } catch (e) {
+                console.error('Failed to fetch form detail', e);
+                if (!cancelled) setSelectedForm(null);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, [formIdWatch]);
 
     // Handle scroll for infinite loading
     const handleFormScroll = useCallback((e) => {
-        const element = e.target;
-        const isAtBottom = Math.abs(element.scrollHeight - element.scrollTop - element.clientHeight) < 1;
-
+        const el = e.target;
+        const isAtBottom = Math.abs(el.scrollHeight - el.scrollTop - el.clientHeight) < 1;
         if (isAtBottom && hasMoreForms && !loadingForms) {
-            const nextPage = formPageRef.current + 1;
-            formPageRef.current = nextPage;
-            fetchForms(nextPage, false, formSearchQuery);
+            const next = formPageRef.current + 1;
+            formPageRef.current = next;
+            fetchForms(next, false, formSearchQuery);
         }
     }, [hasMoreForms, loadingForms, fetchForms, formSearchQuery]);
 
+    // Submit
     const mutation = useMutation({
         mutationFn: (data) => {
             const { form, ...enquiryData } = data;
@@ -117,25 +243,423 @@ export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }
         onSuccess: () => {
             toast.success('Enquiry created successfully');
             reset();
-            refetchTrigger((prev) => !prev);
+            setSelectedForm(null);
             setFormValue('');
             setVisible(false);
             onSuccess && onSuccess();
+            refetchTrigger && refetchTrigger((prev) => !prev);
         },
         onError: (error) => {
             console.error('Error creating enquiry:', error);
             toast.error(error?.response?.data?.message || 'Failed to create enquiry. Please try again.');
-        }
+        },
     });
 
     const onSubmit = (data) => {
-        mutation.mutate(data);
+        // Convert form data to FormData object for proper multiselect/multicheckbox handling
+        const formData = new FormData();
+        
+        // Add form ID
+        formData.append('form', data.form);
+        
+        // Add each field value
+        Object.entries(data).forEach(([key, value]) => {
+            if (key === 'form') return; // Already added
+            
+            // Handle array values (multiselect, multicheckbox with [] naming)
+            if (Array.isArray(value)) {
+                value.forEach((v) => {
+                    formData.append(key, v);
+                });
+            } else if (value !== null && value !== undefined) {
+                // Skip null/undefined values
+                formData.append(key, value);
+            }
+        });
+        
+        mutation.mutate(data); // Pass original data, backend will handle serialization
     };
 
     const handleExternalSubmit = () => {
         if (formRef.current) {
             formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
+    };
+
+    // Render a single dynamic field using PrimeReact/native inputs
+    const renderDynamicField = (field) => {
+        const type = String(field.field_type || '').toLowerCase();
+        const name = field.name || '';
+        const labelText = field.label || '';
+        const placeholder = field.placeholder || '';
+
+        // HTML block (read-only) – admin panel keeps layout; render as description
+        if (type === 'html') {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name || Math.random()}>
+                    <div dangerouslySetInnerHTML={{ __html: field.html || '' }} />
+                </div>
+            );
+        }
+
+        // For checkbox consent (single boolean) - no options, or explicitly consent type
+        if (type === 'consent' || (type === 'checkbox' && (!field.options || field.options.length === 0))) {
+            const inputId = `${name}-single`;
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <div className="d-flex align-items-center gap-2">
+                        <Checkbox
+                            inputId={inputId}
+                            name={name}
+                            onChange={(e) => setValue(name, e.checked)}
+                            checked={watch(name) || false}
+                        />
+                        <label htmlFor={inputId} className={clsx(styles.lable)} style={{ cursor: 'pointer' }}>
+                            {labelText}{field.required && <span className={styles.required}> *</span>}
+                        </label>
+                        <input type="hidden" {...register(name)} />
+                    </div>
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Multi-checkbox group when checkbox field has options - using PrimeReact Checkbox
+        if (type === 'checkbox' && field.options && field.options.length > 0) {
+            const base = name || 'checkbox';
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <div className="d-flex flex-column" style={{ gap: '.5rem' }}>
+                        {(field.options || []).map((opt, idx) => {
+                            const id = `${base}-${idx}`;
+                            const currentValues = watch(`${base}[]`) || [];
+                            const isChecked = currentValues.includes(opt);
+                            return (
+                                <div key={id} className="d-flex align-items-center gap-2">
+                                    <Checkbox
+                                        inputId={id}
+                                        value={opt}
+                                        onChange={() => {
+                                            const updated = isChecked 
+                                                ? currentValues.filter(v => v !== opt)
+                                                : [...currentValues, opt];
+                                            setValue(`${base}[]`, updated);
+                                        }}
+                                        checked={isChecked}
+                                    />
+                                    <label htmlFor={id} style={{ margin: 0, fontWeight: 'normal', cursor: 'pointer' }}>{opt}</label>
+                                    <input type="hidden" {...register(`${base}[]`)} />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {errors[`${base}[]`] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[`${base}[]`]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Radio group - using PrimeReact RadioButton
+        if (type === 'radio') {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <div className="d-flex flex-column" style={{ gap: '.5rem' }}>
+                        {(field.options || []).map((opt, idx) => {
+                            const id = `${name}-${idx}`;
+                            return (
+                                <div key={id} className="d-flex align-items-center gap-2">
+                                    <RadioButton
+                                        inputId={id}
+                                        name={name}
+                                        value={opt}
+                                        onChange={(e) => setValue(name, e.value)}
+                                        checked={watch(name) === opt}
+                                    />
+                                    <label htmlFor={id} style={{ margin: 0, fontWeight: 'normal', cursor: 'pointer' }}>{opt}</label>
+                                    <input type="hidden" {...register(name)} />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Multicheckbox group (explicit multicheckbox field type) - using PrimeReact Checkbox
+        if (type === 'multicheckbox') {
+            const base = name || 'multi';
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <div className="d-flex flex-column" style={{ gap: '.5rem' }}>
+                        {(field.options || []).map((opt, idx) => {
+                            const id = `${base}-${idx}`;
+                            const currentValues = watch(`${base}[]`) || [];
+                            const isChecked = currentValues.includes(opt);
+                            return (
+                                <div key={id} className="d-flex align-items-center gap-2">
+                                    <Checkbox
+                                        inputId={id}
+                                        value={opt}
+                                        onChange={() => {
+                                            const updated = isChecked 
+                                                ? currentValues.filter(v => v !== opt)
+                                                : [...currentValues, opt];
+                                            setValue(`${base}[]`, updated);
+                                        }}
+                                        checked={isChecked}
+                                    />
+                                    <label htmlFor={id} style={{ margin: 0, fontWeight: 'normal', cursor: 'pointer' }}>{opt}</label>
+                                    <input type="hidden" {...register(`${base}[]`)} />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {errors[`${base}[]`] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[`${base}[]`]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Select (single) - using PrimeReact Dropdown
+        if (type === 'select') {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <div style={{ display: 'none' }}>
+                        <input {...register(name)} />
+                    </div>
+                    <Dropdown
+                        value={watch(name) || ''}
+                        onChange={(e) => setValue(name, e.value)}
+                        options={field.options || []}
+                        placeholder={placeholder || 'Select an option'}
+                        className={clsx(styles.dropdownSelect, { [styles.error]: errors[name] })}
+                        style={{ height: '46px', width: '100%' }}
+                    />
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Select (multiple) - using PrimeReact MultiSelect
+        if (type === 'multiselect') {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <div style={{ display: 'none' }}>
+                        <input {...register(name)} />
+                    </div>
+                    <MultiSelect
+                        value={watch(name) || []}
+                        onChange={(e) => setValue(name, e.value)}
+                        options={field.options || []}
+                        placeholder={placeholder || 'Select options'}
+                        className={clsx(styles.dropdownSelect, { [styles.error]: errors[name] })}
+                        style={{ height: '46px', width: '100%' }}
+                    />
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Text-area using PrimeReact InputTextarea
+        if (type === 'textarea') {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <IconField>
+                        <InputIcon>
+                            {errors[name] && <img src={exclamationCircle} className='mb-3' alt="error" />}
+                        </InputIcon>
+                        <InputTextarea
+                            rows={5}
+                            placeholder={placeholder}
+                            className={clsx(styles.inputText, { [styles.error]: errors[name] })}
+                            {...register(name)}
+                        />
+                    </IconField>
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Date field - using PrimeReact Calendar
+        if (type === 'date') {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <div style={{ display: 'none' }}>
+                        <input {...register(name)} />
+                    </div>
+                    <Calendar
+                        value={watch(name) ? new Date(watch(name)) : null}
+                        onChange={(e) => {
+                            const dateString = e.value ? e.value.toISOString().split('T')[0] : '';
+                            setValue(name, dateString);
+                        }}
+                        placeholder={placeholder || 'Select a date'}
+                        dateFormat="dd/mm/yy"
+                        className={clsx({ [styles.error]: errors[name] })}
+                        style={{ width: '100%', border: '1px solid #d0d5dd' }}
+                    />
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Time field - using PrimeReact InputText with type time
+        if (type === 'time') {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <IconField>
+                        <InputIcon>
+                            {errors[name] && <img src={exclamationCircle} className='mb-3' alt="error" />}
+                        </InputIcon>
+                        <InputText
+                            type="time"
+                            placeholder={placeholder}
+                            className={clsx(styles.inputText, { [styles.error]: errors[name] })}
+                            {...register(name)}
+                        />
+                    </IconField>
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Text-like inputs (text, email, number, tel/phone, url) using PrimeReact InputText
+        const resolved = type === 'phone' ? 'tel' : type;
+        const allowed = ['text', 'email', 'number', 'tel', 'url'];
+        const inputType = allowed.includes(resolved) ? resolved : 'text';
+
+        if (allowed.includes(resolved)) {
+            return (
+                <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                    <label className={clsx(styles.lable)}>
+                        {labelText}{field.required && <span className={styles.required}> *</span>}
+                    </label>
+                    <IconField>
+                        <InputIcon>
+                            {errors[name] && <img src={exclamationCircle} className='mb-3' alt="error" />}
+                        </InputIcon>
+                        <InputText
+                            type={inputType}
+                            placeholder={placeholder}
+                            className={clsx(styles.inputText, { [styles.error]: errors[name] })}
+                            maxLength={field.max_length || undefined}
+                            {...register(name)}
+                        />
+                    </IconField>
+                    {errors[name] && (
+                        <div className="error-messages">
+                            {getErrorMessages(errors[name]).map((msg, idx) => (
+                                <p key={idx} className="error-message">{msg}</p>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Fallback for unknown types
+        return (
+            <div className="d-flex flex-column gap-1 mb-4" key={name}>
+                <label className={clsx(styles.lable)}>
+                    {labelText}{field.required && <span className={styles.required}> *</span>}
+                </label>
+                <IconField>
+                    <InputIcon>
+                        {errors[name] && <img src={exclamationCircle} className='mb-3' alt="error" />}
+                    </InputIcon>
+                    <InputText
+                        type="text"
+                        placeholder={placeholder}
+                        className={clsx(styles.inputText, { [styles.error]: errors[name] })}
+                        {...register(name)}
+                    />
+                </IconField>
+                {errors[name] && (
+                    <div className="error-messages">
+                        {getErrorMessages(errors[name]).map((msg, idx) => (
+                            <p key={idx} className="error-message">{msg}</p>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
     };
 
     return (
@@ -168,16 +692,18 @@ export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }
                         <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
                             <Row>
                                 <Col sm={12}>
-                                    <h2 className={styles.sectionTitle}>Enquiry Information</h2>
+                                    <h2 className={styles.sectionTitle}>
+                                        Enquiry Information {selectedForm && `(${selectedForm.title})`}
+                                    </h2>
                                 </Col>
                             </Row>
 
                             <Row className={clsx(styles.bgGreay)}>
                                 <Col sm={12}>
-                                    {/* Form Field */}
+                                    {/* Form selector */}
                                     <div className="d-flex flex-column gap-1 mb-4">
                                         <label className={clsx(styles.lable)}>Form <span className='required'>*</span></label>
-                                        <input type="hidden" {...register("form")} />
+                                        <input type="hidden" {...register('form')} />
                                         <Dropdown
                                             ref={dropdownRef}
                                             value={formValue}
@@ -195,41 +721,22 @@ export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }
                                             filter
                                             onFilter={(e) => {
                                                 const query = e.filter || '';
-
-                                                // Debounce the search query update
-                                                if (searchTimeoutRef.current) {
-                                                    clearTimeout(searchTimeoutRef.current);
-                                                }
-
-                                                searchTimeoutRef.current = setTimeout(() => {
-                                                    setFormSearchQuery(query);
-                                                }, 300);
+                                                if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+                                                searchTimeoutRef.current = setTimeout(() => setFormSearchQuery(query), 300);
                                             }}
                                             filterInputAutoFocus={true}
                                             scrollHeight="400px"
                                             onShow={() => {
-                                                // Attach scroll listener when dropdown opens
                                                 setTimeout(() => {
                                                     const panel = document.querySelector('.p-dropdown-items-wrapper');
-                                                    if (panel) {
-                                                        panel.addEventListener('scroll', handleFormScroll);
-                                                    }
+                                                    if (panel) panel.addEventListener('scroll', handleFormScroll);
                                                 }, 100);
                                             }}
                                             onHide={() => {
-                                                // Clear search timeout
-                                                if (searchTimeoutRef.current) {
-                                                    clearTimeout(searchTimeoutRef.current);
-                                                }
-
-                                                // Reset search query
+                                                if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
                                                 setFormSearchQuery('');
-
-                                                // Remove scroll listener when dropdown closes
                                                 const panel = document.querySelector('.p-dropdown-items-wrapper');
-                                                if (panel) {
-                                                    panel.removeEventListener('scroll', handleFormScroll);
-                                                }
+                                                if (panel) panel.removeEventListener('scroll', handleFormScroll);
                                             }}
                                             itemTemplate={(option) => (
                                                 <div className='d-flex flex-column' style={{ padding: '4px 0' }}>
@@ -243,103 +750,38 @@ export const CreateEnquiry = ({ visible, setVisible, onSuccess, refetchTrigger }
                                                     )}
                                                 </div>
                                             )}
-                                            valueTemplate={(option) => {
-                                                return (
-                                                    formValue ? (
-                                                        <span style={{ fontWeight: '500', color: '#344054' }}>
-                                                            {option.title || 'N/A'}
-                                                        </span>
-                                                    ) : null
-                                                );
-                                            }}
+                                            valueTemplate={(option) => (
+                                                formValue ? (
+                                                    <span style={{ fontWeight: '500', color: '#344054' }}>
+                                                        {option.title || 'N/A'}
+                                                    </span>
+                                                ) : null
+                                            )}
                                             emptyFilterMessage="No forms found"
                                         />
                                         {errors.form && <p className="error-message">{errors.form.message}</p>}
                                     </div>
                                 </Col>
 
-                                <Col sm={6}>
-                                    {/* Name Field */}
-                                    <div className="d-flex flex-column gap-1 mb-4">
-                                        <label className={clsx(styles.lable)}>
-                                            Name <span className='required'>*</span>
-                                        </label>
-                                        <IconField>
-                                            <InputIcon>
-                                                {errors.name && <img src={exclamationCircle} className='mb-3' alt="error" />}
-                                            </InputIcon>
-                                            <InputText
-                                                {...register("name")}
-                                                className={clsx(styles.inputText, { [styles.error]: errors.name })}
-                                                placeholder='Enter full name'
-                                            />
-                                        </IconField>
-                                        {errors.name && <p className="error-message">{errors.name.message}</p>}
-                                    </div>
-                                </Col>
+                                {/* Form description when selected */}
+                                {selectedForm && selectedForm.description && (
+                                    <Col sm={12}>
+                                        <p style={{ color: '#667085', fontSize: '14px', margin: '0 0 16px' }}>
+                                            {selectedForm.description}
+                                        </p>
+                                    </Col>
+                                )}
 
-                                <Col sm={6}>
-                                    {/* Email Field */}
-                                    <div className="d-flex flex-column gap-1 mb-4">
-                                        <label className={clsx(styles.lable)}>
-                                            Email <span className='required'>*</span>
-                                        </label>
-                                        <IconField>
-                                            <InputIcon>
-                                                {errors.email && <img src={exclamationCircle} className='mb-3' alt="error" />}
-                                            </InputIcon>
-                                            <InputText
-                                                {...register("email")}
-                                                className={clsx(styles.inputText, { [styles.error]: errors.email })}
-                                                placeholder='Enter email address'
-                                                type="email"
-                                            />
-                                        </IconField>
-                                        {errors.email && <p className="error-message">{errors.email.message}</p>}
-                                    </div>
-                                </Col>
-
-                                <Col sm={12}>
-                                    {/* Phone Field */}
-                                    <div className="d-flex flex-column gap-1 mb-4">
-                                        <label className={clsx(styles.lable)}>
-                                            Phone <span className='required'>*</span>
-                                        </label>
-                                        <IconField>
-                                            <InputIcon>
-                                                {errors.phone && <img src={exclamationCircle} className='mb-3' alt="error" />}
-                                            </InputIcon>
-                                            <InputText
-                                                {...register("phone")}
-                                                className={clsx(styles.inputText, { [styles.error]: errors.phone })}
-                                                placeholder='Enter phone number'
-                                            />
-                                        </IconField>
-                                        {errors.phone && <p className="error-message">{errors.phone.message}</p>}
-                                    </div>
-                                </Col>
-
-                                <Col sm={12}>
-                                    {/* Message Field */}
-                                    <div className="d-flex flex-column gap-1 mb-4">
-                                        <label className={clsx(styles.lable)}>
-                                            Message <span className='required'>*</span>
-                                        </label>
-                                        <Controller
-                                            name="message"
-                                            control={control}
-                                            render={({ field }) => (
-                                                <InputTextarea
-                                                    {...field}
-                                                    rows={5}
-                                                    className={clsx(styles.inputText, { [styles.error]: errors.message })}
-                                                    placeholder='Enter your message'
-                                                />
-                                            )}
-                                        />
-                                        {errors.message && <p className="error-message">{errors.message.message}</p>}
-                                    </div>
-                                </Col>
+                                {/* Dynamic fields from selected form */}
+                                {selectedForm && dynamicFields.length > 0 ? (
+                                    dynamicFields
+                                        .sort((a, b) => (a.order || 0) - (b.order || 0))
+                                        .map((field) => (
+                                            <Col sm={12} key={field.name || field.id}>
+                                                {renderDynamicField(field)}
+                                            </Col>
+                                        ))
+                                ) : null}
                             </Row>
                         </form>
                     </div>

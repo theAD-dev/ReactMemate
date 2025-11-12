@@ -658,7 +658,6 @@
   text-align: left;
 }
 .mf-builder .property-group {
-  border-top: 1px solid var(--border-light);
   padding-top: 20px;
   margin-top: 20px;
 }
@@ -683,14 +682,15 @@
   color: var(--text-secondary);
 }
 .mf-builder .property-group label.inline {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
+  margin: 12px 0px 0px 0px;
   justify-content: flex-start;
   text-align: left;
   width: auto;
   cursor: pointer;
+  
 }
 .mf-builder .property-group input,
 .mf-builder .property-group textarea,
@@ -728,13 +728,13 @@
 .mf-builder .property-subtle {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--border-light);
 }
 .mf-builder .help-text {
   margin: 4px 0 12px;
   font-size: 12px;
   color: var(--muted);
   font-style: italic;
+  text-align: left;
 }
 .mf-builder #fp-options > div {
   display: flex;

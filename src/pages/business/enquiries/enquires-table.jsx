@@ -1,10 +1,11 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
-import { EnvelopeSlash, XCircle } from 'react-bootstrap-icons';
+import { EnvelopeSlash, InputCursorText, WindowSidebar, XCircle } from 'react-bootstrap-icons';
 import { useQuery } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
 import { toast } from 'sonner';
+import style from './enquiries.module.scss';
 import { getListOfSubmissions, updateEnquirySubmission } from '../../../APIs/enquiries-api';
 import { getUserList, getMobileUserList } from '../../../APIs/task-api';
 import { useAuth } from '../../../app/providers/auth-provider';
@@ -44,7 +45,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
 
     useEffect(() => {
         const groups = [];
-        
+
         // Desktop Users group
         if (usersList?.data?.users?.length > 0) {
             const activeDesktopUsers = usersList.data.users
@@ -56,7 +57,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     photo: user?.photo || "",
                     has_photo: user?.has_photo
                 }));
-            
+
             if (activeDesktopUsers.length > 0) {
                 groups.push({
                     label: 'Desktop User',
@@ -64,7 +65,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 });
             }
         }
-        
+
         // Mobile Users group - only if has_work_subscription
         if (session?.has_work_subscription && mobileUsersList?.data?.users?.length > 0) {
             const activeMobileUsers = mobileUsersList.data.users
@@ -76,7 +77,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     photo: user?.photo || "",
                     has_photo: user?.has_photo
                 }));
-            
+
             if (activeMobileUsers.length > 0) {
                 groups.push({
                     label: 'Mobile User',
@@ -84,7 +85,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 });
             }
         }
-        
+
         setUserGroups(groups);
     }, [usersList?.data, mobileUsersList?.data, session?.has_work_subscription]);
 
@@ -148,28 +149,38 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
 
     const formTitleBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
-                <span style={{ color: '#344054', fontWeight: 500 }}>{rowData.form_title || "-"}</span>
-                <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.submitted_at)}</span>
+            <div className='d-flex align-items-center gap-2'>
+                {
+                    rowData.form_type == 'web' ? <div className={style.webIcon}>
+                        <WindowSidebar size={12} color='#9E77ED' />
+                    </div>
+                        : <div className={style.formIcon}>
+                            <InputCursorText size={12} color='#F79009' />
+                        </div>
+                }
+                <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+                    <span style={{ color: '#667085', fontSize: '14px' }}>{rowData.form_title || "-"}</span>
+                    <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.submitted_at)}</span>
+                </div>
             </div>
         </div>;
     };
 
     const nameBody = (rowData) => {
         return <div className='d-flex flex-column'>
-            <span style={{ color: '#344054' }}>{rowData.data?.name || '-'}</span>
+            <span style={{ color: '#667085' }}>{rowData.data?.name || '-'}</span>
         </div>;
     };
 
     const emailBody = (rowData) => {
         return <div className='d-flex flex-column'>
-            <span style={{ color: '#344054' }}>{rowData.data?.email || '-'}</span>
+            <span style={{ color: '#667085' }}>{rowData.data?.email || '-'}</span>
         </div>;
     };
 
     const phoneBody = (rowData) => {
         return <div className='d-flex flex-column'>
-            <span style={{ color: '#344054' }}>{rowData.data?.phone || '-'}</span>
+            <span style={{ color: '#667085' }}>{rowData.data?.phone || '-'}</span>
         </div>;
     };
 
@@ -177,23 +188,23 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         const handleAssignChange = async (userId) => {
             try {
                 await updateEnquirySubmission(rowData.id, { assigned_to: userId });
-                
+
                 // Find user from all groups
                 let foundUser = null;
                 for (const group of userGroups) {
                     foundUser = group.items.find(u => u.id === userId);
                     if (foundUser) break;
                 }
-                
+
                 // Update local state
-                setSubmissions(prev => 
-                    prev.map(sub => 
-                        sub.id === rowData.id 
+                setSubmissions(prev =>
+                    prev.map(sub =>
+                        sub.id === rowData.id
                             ? { ...sub, assigned_to: foundUser }
                             : sub
                     )
                 );
-                
+
                 toast.success('User assigned successfully');
             } catch (error) {
                 console.error('Error assigning user:', error);
@@ -228,27 +239,27 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                             <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
                                 <FallbackImage photo={user?.photo} has_photo={user?.has_photo} is_business={false} size={17} />
                             </div>
-                            <span style={{ fontSize: '14px', color: '#344054' }}>
+                            <span style={{ fontSize: '14px', color: '#667085' }}>
                                 {user.first_name} {user.last_name}
                             </span>
                         </div>
                     )}
                     valueTemplate={(user) => {
                         if (!rowData.assigned_to) return <span style={{ color: '#98A2B3', fontSize: '14px' }}>-</span>;
-                        
+
                         // Find selected user from all groups
                         let selectedUser = null;
                         for (const group of userGroups) {
                             selectedUser = group.items.find(u => u?.id === user?.id);
                             if (selectedUser) break;
                         }
-                        
+
                         return selectedUser ? (
                             <div className='d-flex align-items-center gap-2'>
                                 <div className='d-flex justify-content-center align-items-center' style={{ width: '24px', height: '24px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #dedede' }}>
                                     <FallbackImage photo={selectedUser?.photo} has_photo={selectedUser?.has_photo} is_business={false} size={17} />
                                 </div>
-                                <span style={{ color: '#667085' }}>
+                                <span style={{ color: '#667085', fontSize: '14px' }}>
                                     {selectedUser.first_name} {selectedUser.last_name}
                                 </span>
                             </div>
@@ -414,72 +425,73 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}
             >
-            <Column
-                selectionMode="multiple"
-                headerClassName='ps-4 border-end-0'
-                bodyClassName={'show-on-hover border-end-0 ps-4'}
-                headerStyle={{ width: '3rem', textAlign: 'center' }}
-                frozen
-            />
-            <Column
-                field="form_title"
-                header="Lead Source"
-                body={formTitleBody}
-                style={{ minWidth: '160px' }}
-                sortable
-            />
-            <Column
-                field="data.name"
-                header="Name"
-                body={nameBody}
-                style={{ minWidth: '160px' }}
-                headerClassName='shadowRight'
-                bodyClassName='shadowRight'
-            />
-            <Column
-                field="data.phone"
-                header="Phone"
-                body={phoneBody}
-                style={{ minWidth: '140px' }}
-            />
-            <Column
-                field="data.email"
-                header="Email"
-                body={emailBody}
-                style={{ minWidth: '220px' }}
-            />
-            <Column
-                header={
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        Assign To
-                        <span style={{ fontSize: '11px', color: '#98A2B3', fontWeight: 400 }}>A→Z</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#98A2B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="18 15 12 9 6 15"></polyline>
-                        </svg>
-                    </span>
-                }
-                body={assignedToBody}
-                style={{ minWidth: '180px' }}
-                sortable
-                field="assigned_to.name"
-            />
-            <Column
-                header="Spam"
-                body={spamActionBody}
-                style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
-            />
-            <Column
-                header="No Go"
-                body={noGoActionBody}
-                style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
-            />
-            <Column
-                header="Move to Quote"
-                body={moveToQuoteActionBody}
-                style={{ minWidth: '130px', maxWidth: '150px', width: '150px' }}
-            />
-        </DataTable>
-    </>
+                <Column
+                    selectionMode="multiple"
+                    headerClassName='ps-4 border-end-0'
+                    bodyClassName={'show-on-hover border-end-0'}
+                    headerStyle={{ width: '1rem', textAlign: 'center' }}
+                    frozen
+                />
+                <Column
+                    field="form_title"
+                    header="Lead Source"
+                    body={formTitleBody}
+                    style={{ minWidth: '160px' }}
+                    sortable
+                    headerClassName='shadowRight ps-0'
+                    bodyClassName='shadowRight ps-0'
+                    frozen
+                />
+                <Column
+                    field="data.name"
+                    header="Name"
+                    body={nameBody}
+                    style={{ minWidth: '160px' }}
+                />
+                <Column
+                    field="data.phone"
+                    header="Phone"
+                    body={phoneBody}
+                    style={{ minWidth: '140px' }}
+                />
+                <Column
+                    field="data.email"
+                    header="Email"
+                    body={emailBody}
+                    style={{ minWidth: '220px' }}
+                />
+                <Column
+                    header={
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            Assign To
+                            <span style={{ fontSize: '11px', color: '#98A2B3', fontWeight: 400 }}>A→Z</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#98A2B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </span>
+                    }
+                    body={assignedToBody}
+                    style={{ minWidth: '180px' }}
+                    sortable
+                    field="assigned_to.name"
+                />
+                <Column
+                    header="Spam"
+                    body={spamActionBody}
+                    style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
+                />
+                <Column
+                    header="No Go"
+                    body={noGoActionBody}
+                    style={{ minWidth: '90px', maxWidth: '90px', width: '90px', textAlign: 'center' }}
+                />
+                <Column
+                    header="Move to Quote"
+                    body={moveToQuoteActionBody}
+                    style={{ minWidth: '130px', maxWidth: '150px', width: '150px' }}
+                />
+            </DataTable>
+        </>
     );
 });
 

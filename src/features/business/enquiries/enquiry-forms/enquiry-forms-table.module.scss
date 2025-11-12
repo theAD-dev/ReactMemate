@@ -7,13 +7,33 @@
 }
 
 .deletedRow {
-  background-color: #FEF3F2 !important;
+  background-color: #fef3f2 !important;
 }
 
 .location {
   padding: 4px;
   border-radius: 4px;
   &:hover {
-    background-color: #F2FAFF;
+    background-color: #f2faff;
   }
+}
+
+.webIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #f2ebff 0%, #eee5ff 100%);
+}
+
+.formIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #fff9f1 0%, #fff0dc 100%);
 }

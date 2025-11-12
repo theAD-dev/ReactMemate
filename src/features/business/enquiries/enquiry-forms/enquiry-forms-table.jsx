@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
+import { InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -7,10 +8,11 @@ import ActionsMenu from './actions-menu';
 import style from './enquiry-forms-table.module.scss';
 import { getListOfForms } from '../../../../APIs/enquiries-api';
 import { useTrialHeight } from '../../../../app/providers/trial-height-provider';
+import { formatDate } from '../../../../shared/lib/date-format';
 import Loader from '../../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../../ui/no-data-template/no-data-found-template';
 
-const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, ref) => {
+const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, setRefetch }, ref) => {
   const { trialHeight } = useTrialHeight();
   const navigate = useNavigate();
   const observerRef = useRef(null);
@@ -69,13 +71,27 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, r
 
   const titleBody = (rowData) => {
     return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
-      <span>{rowData.title}</span>
+      <div className='d-flex align-items-center gap-2'>
+        {
+          rowData.type == 'web' ? <div className={style.webIcon}>
+            <WindowSidebar size={12} color='#9E77ED' />
+          </div>
+            : <div className={style.formIcon}>
+              <InputCursorText size={12} color='#F79009' />
+            </div>
+        }
+        <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
+          <span style={{ color: '#667085', fontSize: '14px' }}>{rowData.title || "-"}</span>
+          <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
+        </div>
+      </div>
+
       <Button label="Open" onClick={() => navigate(`/enquiries/form-builder/${rowData.id}`)} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
     </div>;
   };
 
   const domainBody = (rowData) => {
-    return <Link to={`https://${rowData.domain}`} target="_blank" className={style.ellipsis}>
+    return <Link to={`https://${rowData.domain}`} style={{ color: '#667085' }} target="_blank" className={style.ellipsis}>
       {rowData.domain}
     </Link>;
   };
@@ -93,7 +109,7 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, r
   };
 
   const actionsBody = (rowData) => {
-    return <ActionsMenu rowData={rowData} />;
+    return <ActionsMenu rowData={rowData} setRefetch={setRefetch} />;
   };
 
   return (
@@ -105,9 +121,9 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch }, r
       onSort={onSort}
       rowClassName={rowClassName}
     >
-      <Column field="id" header="ID" style={{ width: '70px' }} sortable />
+      <Column field="id" header="ID" style={{ width: '70px' }} />
       <Column field="title" header="Name" body={titleBody} style={{ minWidth: '150px' }} sortable />
-      <Column field="fields" header="Total Fields" body={(rowData) => <span>{rowData.fields?.length || 0}</span>} style={{ width: '100px', textAlign: 'right' }} sortable />
+      <Column field="fields" header="Total Fields" body={(rowData) => <span>{rowData.fields?.length || 0}</span>} style={{ width: '100px', textAlign: 'right', color: '#667085' }} sortable />
       <Column field="domain" header="Domain" body={domainBody} style={{ minWidth: '200px' }} sortable />
       <Column field="created" header="Created At" body={createdBody} style={{ minWidth: '120px', maxWidth: '200px', width: '120px' }} sortable />
       <Column field="submit_to" header="Submit To" body={(rowData) => <span style={{ color: '#667085' }}>{rowData.submit_to}</span>} style={{ minWidth: '250px' }} />

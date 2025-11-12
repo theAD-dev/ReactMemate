@@ -30,7 +30,7 @@ export const getListOfSubmissions = async (orgId, page, limit, search = "", orde
   if (search) url.searchParams.append("search", search);
   if (order) url.searchParams.append("ordering", order);
   if (isShowDeleted) url.searchParams.append('deleted', 1);
-  if (filterType) url.searchParams.append('source_type', filterType);
+  if (filterType) url.searchParams.append('type', filterType);
 
   return fetchAPI(url.toString(), options);
 };
@@ -50,6 +50,15 @@ export const updateEnquirySubmission = async (submissionId, data) => {
   const options = {
     method: 'PATCH',
     body: data,
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
+export const deleteForm = async (formId) => {
+  const endpoint = `/inquiries/form/${formId}/delete/`;
+  const options = {
+    method: 'PATCH',
   };
 
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
