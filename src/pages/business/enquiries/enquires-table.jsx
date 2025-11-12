@@ -1,5 +1,6 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { EnvelopeSlash, InputCursorText, WindowSidebar, XCircle } from 'react-bootstrap-icons';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -33,6 +34,8 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const observerRef = useRef(null);
     const [submissions, setSubmissions] = useState([]);
     const [page, setPage] = useState(1);
+    const [searchParams] = useSearchParams();
+    const formId = searchParams.get('formId');
     const [sort, setSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [tempSort, setTempSort] = useState({ sortField: 'id', sortOrder: -1 });
     const [hasMoreData, setHasMoreData] = useState(true);
@@ -91,7 +94,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
 
     useEffect(() => {
         setPage(1);
-    }, [searchValue, isShowDeleted, filterType, refetchTrigger]);
+    }, [searchValue, isShowDeleted, filterType, refetchTrigger, formId]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -113,7 +116,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                 filterParam = filterType;
             }
 
-            const data = await getListOfSubmissions(orgId, page, limit, searchValue, order, isShowDeleted, filterParam);
+            const data = await getListOfSubmissions(orgId, page, limit, searchValue, order, isShowDeleted, filterParam, formId);
 
             if (page === 1) setSubmissions(data.results);
             else {

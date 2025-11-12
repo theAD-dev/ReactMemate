@@ -18,9 +18,9 @@ export const getListOfForms = async (page, limit, search = "", order = "", isSho
   return fetchAPI(url.toString(), options);
 };
 
-export const getListOfSubmissions = async (orgId, page, limit, search = "", order = "", isShowDeleted, filterType = "") => {
+export const getListOfSubmissions = async (orgId, page, limit, search = "", order = "", isShowDeleted, filterType = "", formId = "") => {
   const offset = (page - 1) * limit;
-  const endpoint = `/inquiries/organization/${orgId}/submissions/`;
+  const endpoint = formId ? `/inquiries/form/${formId}/submissions/` : `/inquiries/organization/${orgId}/submissions/`;
   const options = {
     method: 'GET',
   };
