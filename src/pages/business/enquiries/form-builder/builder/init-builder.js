@@ -448,6 +448,7 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       </div>
       <div class="property-group">
         <h3>Basic</h3>
+        <label>Name <input id="fp-name" value="${escapeHtml(data.name)}" placeholder="e.g. name, email"></label>
         <label>Label <input id="fp-label" value="${escapeHtml(data.label)}"></label>
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
         `<label>Placeholder <input id="fp-ph" value="${escapeHtml(data.placeholder || '')}"></label>` : '')}
@@ -647,6 +648,7 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
 
     // Real-time property updates with event listeners
     const attachRealtimeListeners = () => {
+      const nameEl = root.querySelector('#fp-name');
       const labelEl = root.querySelector('#fp-label');
       const phEl = root.querySelector('#fp-ph');
       const maxEl = root.querySelector('#fp-max');
@@ -657,6 +659,12 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       const btntextEl = root.querySelector('#fp-btntext');
       const btncssEl = root.querySelector('#fp-btncss');
 
+      if (nameEl) {
+        nameEl.addEventListener('input', (e) => {
+          data.name = e.target.value;
+          saveHistory();
+        });
+      }
       if (labelEl) {
         labelEl.addEventListener('input', (e) => {
           data.label = e.target.value;
@@ -926,8 +934,9 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
 
     // Validate that name and email fields are present and required
     const fields = Object.values(fieldsData);
-    const nameField = fields.find(f => f.name === 'name');
-    const emailField = fields.find(f => f.name === 'email');
+    console.log('fields: ', fields);
+    const nameField = fields.find(f => f.name?.toLowerCase() === 'name');
+    const emailField = fields.find(f => f.name?.toLowerCase() === 'email');
 
     if (!nameField) {
       throw new Error('A "name" field is required. Please add a field with name "name".');
@@ -994,11 +1003,22 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       }
       if (copyBtn) copyBtn.textContent = 'Copied!';
       if (closeBtn) closeBtn.disabled = false;
+      
+      // Redirect to forms list after 1 second
+      setTimeout(() => {
+        window.location.href = '/enquiries/forms';
+      }, 1000);
     };
 
     if (copyBtn) copyBtn.onclick = doCopy;
-    if (closeBtn) closeBtn.onclick = () => { if (embedModal) embedModal.style.display = 'none'; };
-    if (xBtn) xBtn.onclick = () => { if (closeBtn && !closeBtn.disabled && embedModal) embedModal.style.display = 'none'; };
+    if (closeBtn) closeBtn.onclick = () => { 
+      if (embedModal) embedModal.style.display = 'none'; 
+      window.location.href = '/enquiries/forms';
+    };
+    if (xBtn) xBtn.onclick = () => { 
+      if (closeBtn && !closeBtn.disabled && embedModal) embedModal.style.display = 'none';
+      window.location.href = '/enquiries/forms';
+    };
 
     // Notify success
     window.dispatchEvent(new CustomEvent('builder-save-success'));
@@ -1072,8 +1092,8 @@ function escapeAttr(s = '') { return escapeHtml(s).replace(/"/g, '&quot;'); }
 
 function seedDefaultFields() {
   const defaults = [
-    { field_type: 'text', name: 'name', label: 'Name', placeholder: 'Enter your name', order: 0 },
-    { field_type: 'email', name: 'email', label: 'Email', placeholder: 'Enter your email', order: 1 },
+    { field_type: 'text', name: 'name', label: 'Name', placeholder: 'Enter your name', required: true, order: 0 },
+    { field_type: 'email', name: 'email', label: 'Email', placeholder: 'Enter your email', required: true, order: 1 },
     { field_type: 'phone', name: 'phone', label: 'Phone', placeholder: 'Enter your phone', order: 2 },
     { field_type: 'textarea', name: 'message', label: 'Message', placeholder: 'Type your message', order: 3 },
   ];
