@@ -1,5 +1,4 @@
 // src/builder/initBuilder.js
-import { toast } from 'sonner';
 import { saveFormToApi, updateFormToApi } from '../api';
 
 export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null }) {
@@ -132,9 +131,42 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
   if (initialForm) {
     try {
       hydrateInitialForm(initialForm);
+      
+      // Force update preview after hydration
+      setTimeout(() => {
+        const previewTitleEl = root.querySelector('#preview-form-title');
+        const previewDescriptionEl = root.querySelector('#preview-form-description');
+        const formTitleEl = root.querySelector('#form-title');
+        const formDescriptionEl = root.querySelector('#form-description');
+        
+        if (previewTitleEl && formTitleEl && formTitleEl.value) {
+          previewTitleEl.textContent = formTitleEl.value;
+        }
+        if (previewDescriptionEl && formDescriptionEl && formDescriptionEl.value) {
+          previewDescriptionEl.textContent = formDescriptionEl.value;
+        }
+      }, 100);
     } catch (err) {
       console.error('Hydration failed:', err);
     }
+  }
+
+  // Update preview title and description in real-time
+  const formTitleEl = root.querySelector('#form-title');
+  const formDescriptionEl = root.querySelector('#form-description');
+  const previewTitleEl = root.querySelector('#preview-form-title');
+  const previewDescriptionEl = root.querySelector('#preview-form-description');
+
+  if (formTitleEl && previewTitleEl) {
+    formTitleEl.addEventListener('input', (e) => {
+      previewTitleEl.textContent = e.target.value || 'Page 1';
+    });
+  }
+
+  if (formDescriptionEl && previewDescriptionEl) {
+    formDescriptionEl.addEventListener('input', (e) => {
+      previewDescriptionEl.textContent = e.target.value || 'Description';
+    });
   }
 
   // Field palette (delegated to support dragging from child elements reliably)
@@ -150,7 +182,7 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
           e.dataTransfer.setData('text/plain', item.dataset.type);
           e.dataTransfer.setData('application/x-field-type', item.dataset.type);
         }
-      } catch (_) { }
+      } catch (_) { /* Silently ignore errors */ }
     }, true);
   }
 
@@ -224,7 +256,7 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
         e.dataTransfer.getData('text/plain') ||
         e.dataTransfer.getData('field-type')
       )) || '';
-    } catch (_) { }
+    } catch (_) { /* Silently ignore errors */ }
     if (!type) return;
 
     // Add field at the determined position
@@ -1061,6 +1093,7 @@ function buildApiPayload() {
   const payload = {
     organization: defaultOrgId, // hard default as requested
     title: get('form-title'),
+    description: get('form-description'),
     type: get('form-type') || 'web',
     domain: get('form-domain'),
     submit_to: get('form-submit-to'),
@@ -1082,7 +1115,6 @@ function buildApiPayload() {
 }
 
 // helpers
-function val(sel) { return root.querySelector(sel)?.value || ''; }
 function capitalize(s) { return (s || '').charAt(0).toUpperCase() + (s || '').slice(1); }
 function escapeHtml(s = '') { 
   const str = String(s || '');
@@ -1111,6 +1143,7 @@ function hydrateInitialForm(form) {
   setVal('form-title', form.title);
   setVal('form-type', form.type || 'web');
   setVal('form-domain', form.domain);
+  setVal('form-description', form.description || form.meta?.description || '');
   setVal('form-submit-to', form.submit_to);
   setVal('form-submit-from', form.submit_from);
   setVal('form-cc-email', form.cc_email);
@@ -1122,14 +1155,20 @@ function hydrateInitialForm(form) {
   setVal('form-recaptcha-key', form.recaptcha_site_key);
   setVal('form-recaptcha-secret', form.recaptcha_secret_key);
 
+  // Update preview title and description
+  const previewTitleEl = root.querySelector('#preview-form-title');
+  const previewDescriptionEl = root.querySelector('#preview-form-description');
+  if (previewTitleEl) previewTitleEl.textContent = form.title || 'Page 1';
+  if (previewDescriptionEl) previewDescriptionEl.textContent = (form.description || form.meta?.description || '') || 'Description';
+
   // custom css
   if (cssTextarea && form.custom_css) {
     cssTextarea.value = form.custom_css;
   }
 
-  // fields canvas
+  // fields canvas - only remove field elements, keep page header
   const fields = (form.fields || []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  preview.innerHTML = '';
+  preview.querySelectorAll('.preview-field').forEach(f => f.remove());
   fieldsData = {};
   fieldCounter = 1;
 
