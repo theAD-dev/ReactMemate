@@ -95,7 +95,7 @@ export const enableAssetTypeSubscription = async (data) => {
 export const disableAssetTypeSubscription = async (data) => {
     const endpoint = `/assets/types/subscriptions/disable/`;
     const options = {
-        method: 'PUT',
+        method: 'POST',
         body: data,
     };
     const url = new URL(`${API_BASE_URL}${endpoint}`);

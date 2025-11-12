@@ -151,7 +151,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <div className='d-flex align-items-center gap-2'>
                 {
-                    rowData.type == 'web' ? <div className={style.webIcon}>
+                    rowData.form_type == 'web' ? <div className={style.webIcon}>
                         <WindowSidebar size={12} color='#9E77ED' />
                     </div>
                         : <div className={style.formIcon}>

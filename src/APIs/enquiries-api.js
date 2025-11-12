@@ -30,7 +30,7 @@ export const getListOfSubmissions = async (orgId, page, limit, search = "", orde
   if (search) url.searchParams.append("search", search);
   if (order) url.searchParams.append("ordering", order);
   if (isShowDeleted) url.searchParams.append('deleted', 1);
-  if (filterType) url.searchParams.append('source_type', filterType);
+  if (filterType) url.searchParams.append('type', filterType);
 
   return fetchAPI(url.toString(), options);
 };

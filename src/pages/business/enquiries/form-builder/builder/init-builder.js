@@ -452,17 +452,17 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
         `<label>Placeholder <input id="fp-ph" value="${escapeHtml(data.placeholder || '')}"></label>` : '')}
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ?
-        `<label>Max Length <input id="fp-max" type="number" value="${escapeAttr(data.maxlength || '')}"></label>` : '')}
+        `<label>Max Length <input id="fp-max" min="0" type="number" value="${escapeAttr(data.maxlength || '')}"></label>` : '')}
         ${(['text', 'email', 'number', 'phone', 'url', 'textarea'].includes(type) ? `
           <div class="property-subtle">
             <label>Validation Pattern (Regex)
               <input id="fp-regex" placeholder="e.g. ^[A-Za-z]{3,}$" value="${escapeAttr(data.regex || '')}">
             </label>
             <p class="help-text text-start">Optional. Add a regex pattern for validation.</p>
-            <label>Custom Error Message
-              <input id="fp-errmsg" placeholder="e.g. Please enter only letters" value="${escapeAttr(data.error_message || '')}">
+            <label>Regex Error Message <span id="fp-errmsg-required" class="required" style="display: ${data.regex ? 'inline' : 'none'};">*</span>
+              <input id="fp-errmsg" placeholder="e.g. Please enter only letters" value="${escapeAttr(data.error_message || '')}" style="border-color: ${data.regex && !data.error_message ? '#dc3545' : ''};">
             </label>
-            <p class="help-text">Optional. Custom message to show when validation fails.</p>
+            <p class="help-text">Required when Validation Pattern is set. Custom message to show when validation fails.</p>
           </div>` : '')}
         <label class="inline"><input type="checkbox" id="fp-req" ${data.required ? 'checked' : ''}> <span>Required</span></label>
       </div>
@@ -500,7 +500,9 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
         const input = host.querySelector('input');
         if (input) {
           if (data.placeholder) input.placeholder = data.placeholder;
-          if (data.maxlength) input.maxLength = parseInt(data.maxlength, 10);
+          if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+            input.maxLength = parseInt(data.maxlength, 10);
+          }
           if (data.required) input.setAttribute('required', '');
           else input.removeAttribute('required');
         }
@@ -510,7 +512,9 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
         const ta = host.querySelector('textarea');
         if (ta) {
           if (data.placeholder) ta.placeholder = data.placeholder;
-          if (data.maxlength) ta.maxLength = parseInt(data.maxlength, 10);
+          if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+            ta.maxLength = parseInt(data.maxlength, 10);
+          }
           if (data.required) ta.setAttribute('required', '');
           else ta.removeAttribute('required');
         }
@@ -677,12 +681,38 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       if (regexEl) {
         regexEl.addEventListener('input', (e) => {
           data.regex = e.target.value;
+          
+          // Show/hide required indicator for error message
+          const requiredSpan = root.querySelector('#fp-errmsg-required');
+          const errmsgInput = root.querySelector('#fp-errmsg');
+          
+          if (requiredSpan) {
+            requiredSpan.style.display = data.regex ? 'inline' : 'none';
+          }
+          
+          // Highlight error message field if regex is set but error message is empty
+          if (errmsgInput) {
+            if (data.regex && !data.error_message) {
+              errmsgInput.style.borderColor = '#dc3545';
+            } else {
+              errmsgInput.style.borderColor = '';
+            }
+          }
+          
           saveHistory();
         });
       }
       if (errmsgEl) {
         errmsgEl.addEventListener('input', (e) => {
           data.error_message = e.target.value;
+          
+          // Remove red border when error message is filled
+          if (data.regex && data.error_message) {
+            e.target.style.borderColor = '';
+          } else if (data.regex && !data.error_message) {
+            e.target.style.borderColor = '#dc3545';
+          }
+          
           saveHistory();
         });
       }
@@ -894,6 +924,42 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       throw new Error('Please add at least one field to your form');
     }
 
+    // Validate that name and email fields are present and required
+    const fields = Object.values(fieldsData);
+    const nameField = fields.find(f => f.name === 'name');
+    const emailField = fields.find(f => f.name === 'email');
+
+    if (!nameField) {
+      throw new Error('A "name" field is required. Please add a field with name "name".');
+    }
+    if (!nameField.required) {
+      throw new Error('The "name" field must be marked as required.');
+    }
+
+    if (!emailField) {
+      throw new Error('An "email" field is required. Please add a field with name "email".');
+    }
+    if (!emailField.required) {
+      throw new Error('The "email" field must be marked as required.');
+    }
+
+    // Validate that if regex is set, error_message is required
+    Object.values(fieldsData).forEach((field) => {
+      if (field.regex && field.regex.trim() && !field.error_message) {
+        throw new Error(`Field "${field.label}" has a Validation Pattern but is missing a Custom Error Message. Custom Error Message is required when Validation Pattern is set.`);
+      }
+    });
+
+    // Validate that field names are unique (no duplicates)
+    const fieldNames = Object.values(fieldsData)
+      .map(f => f.name)
+      .filter(name => name); // Filter out empty names
+    
+    const duplicateNames = fieldNames.filter((name, idx, arr) => arr.indexOf(name) !== idx);
+    if (duplicateNames.length > 0) {
+      throw new Error(`Duplicate field name(s) found: "${duplicateNames.join('", "')}". Each field must have a unique name.`);
+    }
+
     const payload = buildApiPayload();
     const json = currentFormId
       ? await updateFormToApi(currentFormId, payload)
@@ -998,7 +1064,10 @@ function buildApiPayload() {
 // helpers
 function val(sel) { return root.querySelector(sel)?.value || ''; }
 function capitalize(s) { return (s || '').charAt(0).toUpperCase() + (s || '').slice(1); }
-function escapeHtml(s = '') { return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function escapeHtml(s = '') { 
+  const str = String(s || '');
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); 
+}
 function escapeAttr(s = '') { return escapeHtml(s).replace(/"/g, '&quot;'); }
 
 function seedDefaultFields() {
@@ -1097,14 +1166,18 @@ function addFieldFromData(f) {
     if (input) {
       if (type === 'phone') input.type = 'tel';
       if (data.placeholder) input.placeholder = data.placeholder;
-      if (data.maxlength) input.maxLength = parseInt(data.maxlength, 10);
+      if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+        input.maxLength = parseInt(data.maxlength, 10);
+      }
       if (data.required) input.required = true;
     }
   } else if (type === 'textarea') {
     const ta = el.querySelector('textarea');
     if (ta) {
       if (data.placeholder) ta.placeholder = data.placeholder;
-      if (data.maxlength) ta.maxLength = parseInt(data.maxlength, 10);
+      if (data.maxlength && !isNaN(data.maxlength) && data.maxlength > 0) {
+        ta.maxLength = parseInt(data.maxlength, 10);
+      }
       if (data.required) ta.required = true;
     }
   } else if (type === 'select') {

@@ -64,6 +64,15 @@ export const updateVehicle = async (id, data) => {
     return fetchAPI(url.toString(), options);
 };
 
+export const deleteVehicle = async (id) => {
+    const endpoint = `/assets/vehicles/${id}/delete/`;
+    const options = {
+        method: 'PUT'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
 // Services API
 export const getVehicleServices = async (vehicleId, page = 1, limit = 25, search = "", order = "") => {
     const offset = (page - 1) * limit;

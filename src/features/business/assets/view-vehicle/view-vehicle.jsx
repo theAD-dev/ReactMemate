@@ -8,11 +8,12 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
 import { Tag } from 'primereact/tag';
 import styles from './view-vehicle.module.scss';
-import { getVehicle, getVehicleServices, getLinkedExpenses, deleteLinkedExpense } from '../../../../APIs/assets-api';
+import { getVehicle, getVehicleServices, getLinkedExpenses } from '../../../../APIs/assets-api';
 import NewExpensesCreate from '../../../../components/Business/features/expenses-features/new-expenses-create/new-expense-create';
 import { formatMoney } from '../../../../components/Business/shared/utils/helper';
 import { formatAUD } from '../../../../shared/lib/format-aud';
 import ImageAvatar, { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
+import DeleteVehicle from '../delete-vehicle/delete-vehicle';
 import EditVehicle from '../edit-vehicle/edit-vechicle';
 
 const dateFormat = (timestamp) => {
@@ -87,11 +88,14 @@ const ViewVehicle = ({ visible, setVisible, editData, onClose, setRefetch, drive
                                 </div>
                             ) : (
                                 <div className='d-flex align-items-center justify-content-between gap-3 w-100'>
-                                    <Button type='button' onClick={() => {
-                                        setShowCreateExpenseModal(true);
-                                        setAssetForExpense({ id: id, type: 1 });
-                                    }} className='outline-button'>Create Expense</Button>
-                                    <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Vehicle</Button>
+                                    <DeleteVehicle id={id} refetch={() => setRefetch((prev) => !prev)} onClose={onClose} />
+                                    <div className='d-flex align-items-center'>
+                                        <Button type='button' onClick={() => {
+                                            setShowCreateExpenseModal(true);
+                                            setAssetForExpense({ id: id, type: 1 });
+                                        }} className='outline-button'>Create Expense</Button>
+                                        <Button type='button' onClick={(e) => { e.stopPropagation(); setIsEdit(true); }} className='solid-button'>Edit Vehicle</Button>
+                                    </div>
                                 </div>
                             )}
                         </div>
