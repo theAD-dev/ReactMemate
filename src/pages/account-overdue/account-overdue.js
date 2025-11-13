@@ -39,24 +39,6 @@ const AccountOverdue = () => {
 
     const handleRetryPayment = () => mutation.mutate();
 
-    const formatDate = (timestamp) => {
-        try {
-            const date = new Date(timestamp * 1000);
-            if (isNaN(date.getTime())) {
-                throw new Error("Invalid ISO date format. Use 'YYYY-MM-DDTHH:mm:ssZ' (e.g., '2025-03-25T14:15:22Z').");
-            }
-
-            const day = date.getUTCDate();
-            const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'Australia/Sydney' });
-            const year = date.getUTCFullYear();
-
-            return `${day} ${month} ${year}`;
-        } catch (err) {
-            console.log('err: ', err);
-            return "";
-        }
-    };
-
     return (
         <>
             <Row className='w-100 p-0 m-0'>
