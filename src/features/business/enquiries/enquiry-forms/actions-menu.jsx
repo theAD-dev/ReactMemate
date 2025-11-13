@@ -92,7 +92,7 @@ const ActionsMenu = ({ rowData, setRefetch }) => {
                     <div
                         className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'
                         onClick={() => {
-                            navigate(`/enquiries/form-builder/inquiries?id=${rowData.id}`);
+                            navigate(`/enquiries?formId=${rowData.id}`);
                             setOpen(false);
                         }}
                     >

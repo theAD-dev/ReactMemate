@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Collection, Gear, InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
+import { Gear, InputCursorText, WindowSidebar } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
@@ -94,7 +94,6 @@ const Enquiries = () => {
         refetchTrigger={setRefetchTrigger}
         visible={showCreateEnquiry}
         setVisible={setShowCreateEnquiry}
-        onSuccess={() => setRefetchTrigger(prev => !prev)}
       />
     </>
   );

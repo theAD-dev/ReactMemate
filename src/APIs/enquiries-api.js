@@ -18,9 +18,9 @@ export const getListOfForms = async (page, limit, search = "", order = "", isSho
   return fetchAPI(url.toString(), options);
 };
 
-export const getListOfSubmissions = async (orgId, page, limit, search = "", order = "", isShowDeleted, filterType = "") => {
+export const getListOfSubmissions = async (orgId, page, limit, search = "", order = "", isShowDeleted, filterType = "", formId = "") => {
   const offset = (page - 1) * limit;
-  const endpoint = `/inquiries/organization/${orgId}/submissions/`;
+  const endpoint = formId ? `/inquiries/form/${formId}/submissions/` : `/inquiries/organization/${orgId}/submissions/`;
   const options = {
     method: 'GET',
   };
@@ -59,6 +59,16 @@ export const deleteForm = async (formId) => {
   const endpoint = `/inquiries/form/${formId}/delete/`;
   const options = {
     method: 'PATCH',
+  };
+
+  return fetchAPI(`${API_BASE_URL}${endpoint}`, options);
+};
+
+export const deleteSubmission = async (formId, submissionId) => {
+  const endpoint = `/inquiries/form/${formId}/submissions/delete/`;
+  const options = {
+    method: 'DELETE',
+    body: { id: submissionId }
   };
 
   return fetchAPI(`${API_BASE_URL}${endpoint}`, options);

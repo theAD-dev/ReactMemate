@@ -285,8 +285,8 @@ export default function TempFormBuilder() {
               <div className="form-preview" id="preview-container">
                 <div className="page-header">
                   <div>
-                    <h4>Page 1</h4>
-                    <p className="page-description">Description</p>
+                    <h4 id="preview-form-title">Page 1</h4>
+                    <p className="page-description" id="preview-form-description">Description</p>
                   </div>
                 </div>
                 <div className="empty-state" style={{ display: 'none' }}>
