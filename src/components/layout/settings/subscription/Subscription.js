@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "react-bootstrap";
 import { ExclamationCircle } from "react-bootstrap-icons";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
@@ -168,13 +169,14 @@ const Subscription = () => {
 
             <div className="content_wrapper1 ps-4 ms-1 pe-5">
               <div className="topHeadStyle rounded mb-3">
-                <div className="pt-3 ps-4">
+                <div className="w-100 pt-3 ps-4 d-flex align-items-center justify-content-between">
                   <h2 className="Exclamation">
                     <span>
                       <ExclamationCircle color="#344054" size={20} />
                     </span>
                     <strong> Next Payment: </strong> Your next monthly payment ${formatAUD(upcomingPaymentQuery?.data?.total || 0)} is scheduled on {formatDate(upcomingPaymentQuery?.data?.next_payment_attempt)}.
                   </h2>
+                  <Link className="border-0 p-0 me-4" to={"/account-overdue"}><Button className="outline-button py-1">Pay now</Button></Link>
                 </div>
               </div>
             </div>
