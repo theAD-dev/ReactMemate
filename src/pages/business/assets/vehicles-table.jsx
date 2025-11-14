@@ -9,7 +9,6 @@ import style from './assets.module.scss';
 import { getListOfVehicles } from '../../../APIs/assets-api';
 import { getMobileUserList, getUserList } from '../../../APIs/task-api';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
-import NewExpensesCreate from '../../../components/Business/features/expenses-features/new-expenses-create/new-expense-create';
 import ViewVehicle from '../../../features/business/assets/view-vehicle/view-vehicle';
 import { FallbackImage } from '../../../shared/ui/image-with-fallback/image-avatar';
 import Loader from '../../../shared/ui/loader/loader';
@@ -56,9 +55,6 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
 
     const [visible, setVisible] = useState(false);
     const [editData, setEditData] = useState(null);
-
-    const [showCreateExpenseModal, setShowCreateExpenseModal] = useState(false);
-    const [assetForExpense, setAssetForExpense] = useState(null);
 
     const usersList = useQuery({ queryKey: ['getUserList'], queryFn: getUserList });
     const mobileUsersList = useQuery({ queryKey: ['getMobileUserList'], queryFn: getMobileUserList });
@@ -190,22 +186,20 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
                     fontWeight: 500
                 }} />
             </Link>
-            <Tag value="Expense"
-                onClick={() => {
-                    setShowCreateExpenseModal(true);
-                    setAssetForExpense({ id: rowData.id, type: 1 });
-                }}
-                style={{
-                    height: '22px',
-                    minWidth: '60px',
-                    borderRadius: '16px',
-                    border: '1px solid #f96a94',
-                    background: 'linear-gradient(135deg, rgba(247, 79, 172, 0.1) 0%, rgba(252, 178, 79, 0.1) 100%), #fff',
-                    color: '#f96a94',
-                    fontSize: '12px',
-                    fontWeight: 500,
-                    cursor: 'pointer'
-                }} />
+            <Link to={`/assets/vehicles/${rowData.id}/expense-history`}>
+                <Tag value="Expense"
+                    style={{
+                        height: '22px',
+                        minWidth: '60px',
+                        borderRadius: '16px',
+                        border: '1px solid #f96a94',
+                        background: 'linear-gradient(135deg, rgba(247, 79, 172, 0.1) 0%, rgba(252, 178, 79, 0.1) 100%), #fff',
+                        color: '#f96a94',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        cursor: 'pointer'
+                    }} />
+            </Link>
         </div>;
     };
 
@@ -265,14 +259,6 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
                 <Column field='per_day_expense' header='Cost per day' body={costPerDayBody} style={{ minWidth: '120px' }} />
             </DataTable>
             {visible && editData?.id && <ViewVehicle visible={visible} setVisible={setVisible} editData={editData} setEditData={setEditData} onClose={() => { setVisible(false); setEditData(null); }} setRefetch={setRefetch} drivers={drivers} />}
-            {showCreateExpenseModal && assetForExpense?.id && (
-                <NewExpensesCreate
-                    visible={showCreateExpenseModal}
-                    setVisible={setShowCreateExpenseModal}
-                    setRefetch={setRefetch}
-                    assetForExpense={assetForExpense}
-                />
-            )}
         </>
     );
 });

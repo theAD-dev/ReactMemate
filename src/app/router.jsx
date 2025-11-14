@@ -109,6 +109,7 @@ const Enquiries = LazyLoader(lazy(() => import('../pages/business/enquiries/enqu
 const Forms = LazyLoader(lazy(() => import('../pages/business/enquiries/forms')));
 const FormBuilder = LazyLoader(lazy(() => import('../pages/business/enquiries/form-builder/form-builder')));
 const ServiceHistory = LazyLoader(lazy(() => import('../pages/business/assets/service-history')));
+const ExpenseHistory = LazyLoader(lazy(() => import('../pages/business/assets/expense-history')));
 
 const routes = [
     {
@@ -304,6 +305,11 @@ const routes = [
             {
               path: "assets/vehicles/:id/service-history",
               element: <ServiceHistory />,
+              errorElement: <UnknownError />,
+            },
+            {
+              path: "assets/vehicles/:id/expense-history",
+              element: <ExpenseHistory />,
               errorElement: <UnknownError />,
             },
             {

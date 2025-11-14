@@ -1,0 +1,240 @@
+.gobackBtn {
+  color: var(--Primary-700, #106b99);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  display: flex;
+  padding: var(--spacing-md, 8px) 14px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: 40px;
+  border: 1px solid var(--Primary-200, #a3e0ff);
+  background: var(--Primary-50, #ebf8ff);
+}
+
+.filterBox {
+  display: flex;
+  padding: var(--spacing-sm, 6px) var(--spacing-md, 8px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-md, 8px);
+  border-radius: var(--radius-xs, 4px);
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: #fff;
+  height: 32px;
+  width: 32px;
+}
+
+.active {
+  background: #ebf8ff !important;
+}
+
+.selectedCount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0px;
+  color: var(--Primary-500, #1ab2ff);
+}
+
+.vehicleName {
+  color: #344054;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.18px;
+}
+
+// Due date status styles
+.dueSoon {
+  color: #b42318 !important;
+  font-weight: 500 !important;
+}
+
+.dueMonth {
+  color: #b54708 !important;
+  font-weight: 500 !important;
+}
+
+.overdue {
+  color: #d92d20 !important;
+  font-weight: 600 !important;
+}
+
+// Paid/Unpaid styles
+.paidTrue {
+  color: #067647 !important;
+}
+
+.paidFalse {
+  color: #b54708 !important;
+}
+
+// Button styles
+.paidButton {
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--Success-200, #a9efc5);
+  background: var(--white, #fff);
+  color: var(--Gray-800, #1d2939);
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+}
+
+.paidButton:focus,
+.paidButton:hover,
+tr:hover .paidButton {
+  color: var(--Success-700, #067647);
+  border: 1px solid var(--Success-200, #abefc6);
+  background: var(--Success-50, #ecfdf3);
+}
+
+.notPaidButton {
+  color: var(--Gray-800, #1d2939);
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex: 1 0 0;
+  border-radius: 4px;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--white, #fff);
+}
+
+.notPaidButton:hover,
+.notPaidButton:focus,
+tr:hover .notPaidButton {
+  color: var(--Error-900, #7a271a);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  display: flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex: 1 0 0;
+  border-radius: 4px;
+  border: 1px solid var(--Error-200, #fecdca);
+  background: var(--Error-50, #fef3f2);
+}
+
+// Toast styles
+.customToast {
+  display: flex;
+  padding: 16px 16px 20px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--Gray-300, #d0d5dd);
+  background: var(--Base-White, #fff);
+  box-shadow: 0px 4px 6px -2px rgba(16, 24, 40, 0.03), 0px 12px 16px -4px rgba(16, 24, 40, 0.08);
+  width: 400px;
+}
+
+.outerToastIcon {
+  display: flex;
+  padding: 6px;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--Warning-100, #fef0c7);
+  background: var(--Warning-50, #fffaeb);
+}
+
+.toastIcon {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--Warning-200, #fedf89);
+  background: var(--Warning-100, #fef0c7);
+}
+
+.toastTitle {
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0;
+}
+
+.toastMessage {
+  color: var(--Gray-600, #475467);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0 0 8px 0;
+}
+
+// Xero shake animation
+.shakeText {
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.newButton,
+.newButton:hover,
+.newButton:focus,
+.newButton:active {
+  gap: 8px;
+  width: fit-content;
+  height: 28px;
+  display: flex;
+  font-size: 14px;
+  padding: 4px 14px;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+  background: var(--Primary-600, #158ecc) !important;
+  border: 1px solid var(--Primary-600, #158ecc) !important;
+}
