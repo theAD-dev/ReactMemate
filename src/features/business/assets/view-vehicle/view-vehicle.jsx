@@ -2,17 +2,14 @@ import { useState, useRef, useEffect } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { InfoCircle, X } from 'react-bootstrap-icons';
 import { useQuery } from '@tanstack/react-query';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Sidebar } from 'primereact/sidebar';
-import { Tag } from 'primereact/tag';
 import styles from './view-vehicle.module.scss';
 import { getVehicle, getVehicleServices, getLinkedExpenses } from '../../../../APIs/assets-api';
 import NewExpensesCreate from '../../../../components/Business/features/expenses-features/new-expenses-create/new-expense-create';
 import { formatMoney } from '../../../../components/Business/shared/utils/helper';
 import { formatAUD } from '../../../../shared/lib/format-aud';
-import ImageAvatar, { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
+import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import DeleteVehicle from '../delete-vehicle/delete-vehicle';
 import EditVehicle from '../edit-vehicle/edit-vechicle';
 
@@ -33,7 +30,6 @@ const ViewVehicle = ({ visible, setVisible, editData, onClose, setRefetch, drive
     const formRef = useRef(null);
     const [isPending, setIsPending] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [showLinkedExpensesSidebar, setShowLinkedExpensesSidebar] = useState(true);
     const id = editData?.id;
     const getVehicleQuery = useQuery({
         queryKey: ['getVehicle', id],
@@ -102,32 +98,6 @@ const ViewVehicle = ({ visible, setVisible, editData, onClose, setRefetch, drive
                     </div>
                 )}
             ></Sidebar>
-            {
-                <Sidebar
-                    visible={showLinkedExpensesSidebar}
-                    header={
-                        <div style={{ borderBottom: '1px solid #EAECF0', width: '100%', padding: '0px 0px 10px 0px' }}>
-                            <div className="d-flex align-items-center gap-2 w-100">
-                                <div className={styles.circledesignstyle}>
-                                    <div className={styles.out}>
-                                        <InfoCircle size={24} color="#17B26A" />
-                                    </div>
-                                </div>
-                                <span style={{ color: '#344054', fontSize: '20px', fontWeight: 600 }}>Linked Expenses</span>
-                            </div>
-                        </div>
-                    }
-                    position="right"
-                    modal={false}
-                    dismissable={false}
-                    style={{ width: '1200px', paddingRight: '720px' }}
-                    maskClassName="p-sidebar-mask-linkedExpense"
-                    onHide={() => setShowLinkedExpensesSidebar(false)}
-                >
-                    {/* Linked Expenses Content Here */}
-                    <LinkedExpenseList vehicleId={id} />
-                </Sidebar>
-            }
             {showCreateExpenseModal && assetForExpense?.id && (
                 <NewExpensesCreate
                     visible={showCreateExpenseModal}
@@ -290,6 +260,9 @@ const ViewSection = ({ vehicle, drivers }) => {
 
             <h5 className={styles.boxLabel}>Service History</h5>
             <ServiceHistoryList vehicleId={vehicle?.id} />
+
+            <h5 className={styles.boxLabel}>Expense History</h5>
+            <LinkedExpenseList vehicleId={vehicle?.id} />
         </>
     );
 };
@@ -437,7 +410,7 @@ const LinkedExpenseList = ({ vehicleId }) => {
     const [loading, setLoading] = useState(false);
     const observerRef = useRef(null);
     const lastItemRef = useRef(null);
-    const limit = 100;
+    const limit = 10;
 
     useEffect(() => {
         const fetchExpenses = async () => {
@@ -500,139 +473,69 @@ const LinkedExpenseList = ({ vehicleId }) => {
         return formatter.format(date);
     };
 
-    // Table column formatters
-    const expenseIDBody = (rowData) => {
-        return (
-            <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
-                <span style={{ fontWeight: '400', color: '#667085' }}>{rowData.number?.split('-')[1] || rowData.number}</span>
-                <span style={{ fontSize: '12px', color: '#98A2B3' }}>{formatDate(rowData.created)}</span>
-            </div>
-        );
-    };
-
-    const supplierBody = (rowData) => {
-        return (
-            <div className='d-flex align-items-center'>
-                <ImageAvatar has_photo={rowData?.supplier?.has_photo} photo={rowData?.supplier?.photo} is_business={true} size={16} />
-                <div className='d-flex flex-column gap-1'>
-                    <div className={`${styles.ellipsis}`}>{rowData.supplier?.name}</div>
-                    {rowData.deleted ?
-                        <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag> : ''}
-                </div>
-            </div>
-        );
-    };
-
-    const totalBody = (rowData) => {
-        return <div className={`d-flex align-items-center justify-content-end show-on-hover ${styles.fontStanderdSize}`}>
-            <div className={`${rowData.paid ? styles['paid-true'] : styles['paid-false']}`}>
-                ${formatAUD(rowData.total)}
-            </div>
-        </div>;
-    };
-
-    const accountCodeBody = (rowData) => {
-        return (
-            <span style={{ color: '#667085', fontSize: '14px' }}>
-                {rowData.account_code?.code}:{rowData.account_code?.name}
-            </span>
-        );
-    };
-
-    const referenceBody = (rowData) => {
-        return (
-            <span style={{ color: '#667085', fontSize: '14px' }} title={rowData.invoice_reference}>
-                {rowData.invoice_reference || '-'}
-            </span>
-        );
-    };
-
-    const dueDateBody = (rowData) => {
-        return (
-            <span style={{ color: '#667085', fontSize: '14px' }}>
-                {formatDate(rowData.due_date)}
-            </span>
-        );
-    };
-
     if (!vehicleId) return null;
 
     return (
-        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                {expenses.length === 0 && !loading ? (
-                    <div style={{
-                        padding: '48px 24px',
-                        textAlign: 'center',
-                        color: '#98A2B3',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flex: 1
-                    }}>
-                        <div style={{ fontSize: '14px', marginBottom: '8px' }}>No linked expenses found</div>
-                        <div style={{ fontSize: '12px', color: '#D0D5DD' }}>Expenses linked to this vehicle will appear here</div>
-                    </div>
-                ) : (
-                    <DataTable
-                        value={expenses}
-                        scrollable
-                        scrollHeight="flex"
-                        columnResizeMode="expand"
-                        resizableColumns
-                        showGridlines
-                        size="small"
-                        rowsPerPageOptions={[10, 25, 50]}
-                        paginator={false}
-                        loading={loading}
-                        emptyMessage="No linked expenses found"
-                        style={{ flex: 1 }}
-                        className="border"
-                    >
-                        <Column
-                            field="number"
-                            header="Expense ID"
-                            body={expenseIDBody}
-                            style={{ minWidth: '140px' }}
-                        ></Column>
-                        <Column
-                            field="supplier.name"
-                            header="Supplier"
-                            body={supplierBody}
-                            style={{ minWidth: '180px' }}
-                        ></Column>
-                        <Column
-                            field="invoice_reference"
-                            header="Reference"
-                            body={referenceBody}
-                            style={{ minWidth: '120px' }}
-                        ></Column>
-                        <Column
-                            field="due_date"
-                            header="Due Date"
-                            body={dueDateBody}
-                            style={{ minWidth: '120px' }}
-                        ></Column>
-                        <Column
-                            field="total"
-                            header="Total"
-                            body={totalBody}
-                            style={{ minWidth: '100px', textAlign: 'right' }}
-                        ></Column>
-                        <Column
-                            field="account_code"
-                            header="Account Code"
-                            body={accountCodeBody}
-                            style={{ minWidth: '150px' }}
-                        ></Column>
-                    </DataTable>
-                )}
-            </div>
+        <div className={styles.box} style={{ padding: '0', maxHeight: '300px', overflow: 'auto' }}>
+            {expenses.length === 0 && !loading ? (
+                <div style={{ padding: '24px', textAlign: 'center', color: '#98A2B3' }}>
+                    No expense history found
+                </div>
+            ) : (
+                <div>
+                    {expenses.map((expense, index) => (
+                        <div
+                            key={expense.id}
+                            ref={index === expenses.length - 1 ? lastItemRef : null}
+                            style={{
+                                padding: '16px 24px',
+                                borderBottom: index < expenses.length - 1 ? '1px solid #EAECF0' : 'none'
+                            }}
+                        >
+                            <div className='d-flex justify-content-between align-items-start mb-2'>
+                                <div>
+                                    <div style={{ fontWeight: '500', fontSize: '14px', color: '#344054' }}>
+                                        {expense.number || '-'}
+                                    </div>
+                                    {expense.supplier?.name && (
+                                        <div style={{ fontSize: '12px', color: '#98A2B3', marginTop: '4px' }}>
+                                            Supplier: {expense.supplier.name}
+                                        </div>
+                                    )}
+                                </div>
+                                <div style={{ fontWeight: '500', fontSize: '14px', color: '#344054' }}>
+                                    ${formatAUD(expense.total || 0)}
+                                </div>
+                            </div>
 
-            {loading && (
-                <div style={{ padding: '16px', textAlign: 'center', borderTop: '1px solid #EAECF0' }}>
-                    <ProgressSpinner style={{ width: '24px', height: '24px' }} />
+                            <div className='d-flex gap-3' style={{ fontSize: '13px', color: '#667085' }}>
+                                {expense.invoice_reference && (
+                                    <div>
+                                        <span style={{ color: '#98A2B3' }}>Reference: </span>
+                                        {expense.invoice_reference}
+                                    </div>
+                                )}
+                                {expense.due_date && (
+                                    <div>
+                                        <span style={{ color: '#98A2B3' }}>Due Date: </span>
+                                        {formatDate(expense.due_date)}
+                                    </div>
+                                )}
+                            </div>
+
+                            {expense.account_code && (
+                                <div style={{ marginTop: '8px', fontSize: '13px', color: '#667085' }}>
+                                    <span style={{ color: '#98A2B3' }}>Account Code: </span>
+                                    {expense.account_code.code}:{expense.account_code.name}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    {loading && (
+                        <div style={{ padding: '16px', textAlign: 'center' }}>
+                            <ProgressSpinner style={{ width: '24px', height: '24px' }} />
+                        </div>
+                    )}
                 </div>
             )}
         </div>
