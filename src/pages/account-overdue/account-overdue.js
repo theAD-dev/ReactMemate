@@ -33,7 +33,18 @@ const AccountOverdue = () => {
         },
         onError: (error) => {
             console.log('Error during retrying payment: ', error);
-            toast.error(`Failed to retry payment. Please try again.`);
+            
+            // Extract error message from the error object
+            let errorMessage = 'Failed to retry payment. Please try again.';
+            
+            if (error?.data?.detail) {
+                errorMessage = error.data.detail;
+            } else if (error?.message) {
+                errorMessage = error.message;
+            }
+            
+            // Display the error message
+            toast.error(errorMessage);
         }
     });
 

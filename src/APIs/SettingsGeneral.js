@@ -29,11 +29,25 @@ const fetchAPI = async (endpoint, options = {}) => {
   try {
     const url = new URL(`${endpoint}`);
     const response = await fetch(url, requestOptions);
+    
+    const contentType = response.headers.get('Content-Type');
+    
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      // Try to parse error response as JSON
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await response.json();
+        const error = new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
+        error.status = response.status;
+        error.data = errorData;
+        throw error;
+      } else {
+        const errorText = await response.text();
+        const error = new Error(errorText || `HTTP error! Status: ${response.status}`);
+        error.status = response.status;
+        throw error;
+      }
     }
 
-    const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       return await response.json();
     } else {
