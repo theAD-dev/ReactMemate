@@ -157,7 +157,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 16px 20px;
+  padding: 16px 8px 16px 20px;
   border-bottom: 1px solid var(--Gray-100, #f2f4f7);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -189,7 +189,7 @@
   width: 36px;
   height: 36px;
   border-radius: 6px;
-  background: var(--Gray-50, #F9FAFB);
+  background: var(--Gray-50, #f9fafb);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -264,24 +264,26 @@
 }
 
 .actions {
+  top: 30px;
   display: flex;
   align-items: center;
-  margin-left: 8px;
+  width: 20px;
+  height: 20px;
+  position: relative;
 }
 
 .markReadBtn {
+  padding: 3px;
   background: #fee4e2;
   border: none;
   border-radius: 40px;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  position: relative;
-  left: 10px;
 
   &:hover {
     background: var(--Primary-700, #fee4e2);
@@ -294,6 +296,8 @@
   height: 8px;
   border-radius: 50%;
   background: #d92d20;
+  position: relative;
+  left: 10px;
 }
 
 .footer {
@@ -503,4 +507,308 @@
       font-size: 13px;
     }
   }
+}
+
+.quoteAcceptedHeadingOne,
+.quoteChangesHeadingOne,
+.quoteDeclinedHeadingOne,
+.quoteDeclinedHeadingThree,
+.invoiceCreatedHeadingTwo {
+  color: var(--Gray-900, #101828);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.quoteAcceptedReference,
+.quoteChangesReference,
+.quoteDeclinedReference,
+.invoiceCreatedReference,
+.invoicePaidReference,
+.invoiceCanceledReference,
+.invoiceDeletedReference {
+  color: var(--Gray-700, #344054);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: 0.12px;
+  margin: 0px;
+}
+
+.quoteAcceptedHeadingTwo {
+  color: var(--Success-600, #079455);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.quoteAcceptedReference {
+  margin: 0px;
+  color: var(--Gray-700, #344054);
+
+/* Body small */
+font-family: Inter;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 22px; /* 183.333% */
+letter-spacing: 0.12px;
+}
+
+.quoteChangesHeadingTwo {
+  color: var(--Warning-600, #dc6803);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.quoteDeclinedHeadingTwo {
+  color: var(--Error-600, #d92d20);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.invoiceCreatedHeadingOne,
+.invoicePaidHeadingOne {
+  color: var(--Success-600, #079455);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.invoiceCanceledHeadingOne,
+.invoiceDeletedHeadingOne {
+  color: var(--Error-600, #d92d20);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.invoiceCanceledHeadingTwo,
+.invoicePaidHeadingTwo,
+.invoiceCreatedHeadingTwo,
+.invoiceDeletedHeadingTwo {
+  color: var(--Gray-700, #344054);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  margin: 0px;
+}
+
+.taskAssignedHeadingOne {
+  color: var(--Primary-600, #158ecc);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.taskAssignedHeadingTwo {
+  color: var(--Gray-600, #475467);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.taskAssignedParagraph {
+  color: var(--Gray-700, #344054);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  margin: 0px;
+}
+
+.taskCompletedHeadingOne {
+  color: var(--Success-600, #079455);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.taskCompletedHeadingTwo {
+  color: var(--Gray-600, #475467);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.taskCompletedParagraph {
+  color: var(--Gray-700, #344054);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  margin: 0px;
+}
+
+.taskDueHeadingOne {
+  color: var(--Warning-600, #dc6803);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.taskDueParagraph {
+  color: var(--Gray-700, #344054);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  margin: 0px;
+}
+
+.jobAcceptedHeadingOne {
+  color: var(--Success-600, #079455);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+  margin: 0px;
+}
+
+.jobAcceptedHeadingTwo {
+  color: var(--Gray-700, #344054);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+  margin: 0px;
+}
+
+.jobAcceptedParagraph {
+  color: var(--Gray-700, #344054);
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
+  margin: 0px;
+}
+
+.jobDeclinedHeadingOne {
+  margin: 0px;
+  color: var(--Error-600, #d92d20);
+
+  /* Body default bold */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.175px;
+}
+
+.jobDeclinedHeadingTwo {
+  margin: 0px;
+  color: var(--Gray-700, #344054);
+
+  /* body default medium */
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; /* 157.143% */
+  letter-spacing: 0.14px;
+}
+
+.jobDeclinedParagraph {
+  margin: 0px;
+  color: var(--Gray-700, #344054);
+
+  /* Body small */
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px; /* 183.333% */
+  letter-spacing: 0.12px;
 }
