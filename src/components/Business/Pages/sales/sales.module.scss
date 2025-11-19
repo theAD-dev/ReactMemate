@@ -49,3 +49,9 @@
   position: relative;
   border: 1px solid #dedede;
 }
+// Highlight row for notification redirects
+:global(.highlight-row) {
+  td {
+    background-color: #FFF4E6 !important;
+  }
+}

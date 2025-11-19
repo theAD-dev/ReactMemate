@@ -173,7 +173,12 @@ const TaskTable = forwardRef(({ searchValue, setTotal, selected, setSelected, re
         }
     };
 
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : '');
+    const rowClassName = (data) => {
+        const classes = [];
+        if (data?.deleted) classes.push(style.deletedRow);
+        if (data?.id) classes.push(`row-id-${data.id}`);
+        return classes.join(' ');
+    };
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;

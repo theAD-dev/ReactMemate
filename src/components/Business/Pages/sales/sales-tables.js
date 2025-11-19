@@ -426,7 +426,8 @@ const SalesTables = ({ profileData, salesData, fetchData, isLoading }) => {
             ) : (
               rows.map((row) => (
                 <tr data-saleuniqueid={row.saleUniqueId}
-                  key={row.id} className={selectedRows.includes(row.id) ? "selected-row" : ""}>
+                  key={row.id} 
+                  className={`${selectedRows.includes(row.id) ? "selected-row" : ""} ${row.unique_id ? `row-id-${row.unique_id}` : ""}`}>
                   <td style={{ width: 40 }}>
                     <label className="customCheckBox">
                       <input

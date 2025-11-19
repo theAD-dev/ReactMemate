@@ -297,7 +297,17 @@ const InvoicePage = () => {
 
         const highlightAndScroll = (row) => {
             row.classList.add('highlight-row');
-            setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+            
+            // Scroll within the table container without affecting page scroll
+            setTimeout(() => {
+                const tableContainer = row.closest('.p-datatable-wrapper');
+                if (tableContainer) {
+                    const rowTop = row.offsetTop;
+                    const containerHeight = tableContainer.clientHeight;
+                    const scrollPosition = rowTop - (containerHeight / 2) + (row.clientHeight / 2);
+                    tableContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                }
+            }, 100);
             
             // Remove highlight after 6 seconds
             setTimeout(() => {

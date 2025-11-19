@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import { Bell, Check, CheckAll, Gear } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import briefcase from '../../../../assets/images/icon/briefcase.svg';
 import calendarTick from '../../../../assets/images/icon/calendar-tick.svg';
@@ -14,6 +15,7 @@ const Notification = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [hoveredNotification, setHoveredNotification] = useState(null);
     const observerRef = useRef(null);
+    const navigate = useNavigate();
 
     const {
         notifications,
@@ -447,12 +449,32 @@ const Notification = () => {
     // Handle mark as read
     const handleMarkAsRead = (notificationId, event) => {
         event.stopPropagation();
+        event.preventDefault();
         markAsRead(notificationId);
     };
 
     // Handle notification click
     const handleNotificationClick = (notification) => {
-        console.log('handleNotificationClick: ', notification);
+        const type = notification.type;
+        const targetId = notification.target_id;
+        const searchContent = notification?.reference || notification?.title || notification?.number || '';
+     
+        if (type === 1) {
+            navigate(`/work/jobs?search=${encodeURIComponent(searchContent)}&targetId=${targetId}`);
+        } else if (type === 2) {
+            navigate(`/tasks?search=${encodeURIComponent(searchContent)}&targetId=${targetId}`);
+        } else if (type === 3) {
+            navigate(`/sales?search=${encodeURIComponent(searchContent)}&targetId=${targetId}`);
+        } else if (type === 4) {
+            navigate(`/invoices?search=${encodeURIComponent(searchContent)}&targetId=${targetId}`);
+        }
+
+        // Mark as read
+        if (!notification.read) {
+            markAsRead(notification.id);
+        }
+        // Close dropdown
+        setIsOpen(false);
     };
 
     return (

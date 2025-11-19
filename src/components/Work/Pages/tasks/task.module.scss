@@ -186,3 +186,9 @@ tr:hover .linkToProjectCard {
   width: 240px;
   padding: var(--spacing-md, 8px);
 }
+// Highlight row for notification redirects
+:global(.highlight-row) {
+  td {
+    background-color: #FFF4E6 !important;
+  }
+}
