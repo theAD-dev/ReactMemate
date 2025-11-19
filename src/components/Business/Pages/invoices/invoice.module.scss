@@ -379,3 +379,10 @@ tr:hover .payInvoiceButton.partialPaid,
   border: 1px solid var(--Warning-200, #FEDF89) !important;
   background: var(--Warning-50, #FFFAEB) !important;
 }
+
+// Highlight row for notification redirects
+:global(.highlight-row) {
+  td {
+    background-color: #FFF4E6 !important;
+  }
+}

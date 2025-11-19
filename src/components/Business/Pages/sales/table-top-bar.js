@@ -12,7 +12,7 @@ import {
   Person,
   PlusLg,
 } from "react-bootstrap-icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { useDebounce } from "primereact/hooks";
@@ -73,6 +73,9 @@ const TableTopBar = ({
   selectedRow,
   selectedRowCount,
 }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParamValue = searchParams.get('search');
+  const targetId = searchParams.get('targetId');
   const [totalAmount, setTotalAmount] = useState(0);
   const [avgProgress, setAvgProgress] = useState(0);
   const [progressWiseAmountAvg, setProgressWiseAmountAvg] = useState(0);
@@ -83,6 +86,7 @@ const TableTopBar = ({
   const [confetti, setConfetti] = useState(false);
   const filterDropdownRef = useRef(null);
   const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
+  const [shouldHighlight, setShouldHighlight] = useState(false);
 
   const projectManagerQuery = useQuery({ queryKey: ['project-manager'], queryFn: getProjectManager });
 
@@ -347,6 +351,61 @@ const TableTopBar = ({
   useEffect(() => {
     startFilter(filterState);
   }, [debouncedValue]);
+
+  // Handle search from notification redirect
+  useEffect(() => {
+    if (searchParamValue && targetId) {
+      setInputValue(searchParamValue);
+      setShouldHighlight(true);
+    }
+  }, [searchParamValue, targetId, setInputValue]);
+
+  // Wait for debounced value to change and data to load, then highlight
+  useEffect(() => {
+    if (!shouldHighlight || !targetId || debouncedValue !== searchParamValue) return;
+
+    const highlightAndScroll = (row) => {
+      row.classList.add('highlight-row');
+      
+      // Scroll within the table container without affecting page scroll
+      setTimeout(() => {
+        const tableContainer = row.closest('.table-responsive, .salesTableWrap');
+        if (tableContainer) {
+          const rowTop = row.offsetTop;
+          const containerHeight = tableContainer.clientHeight;
+          const scrollPosition = rowTop - (containerHeight / 2) + (row.clientHeight / 2);
+          tableContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+        }
+      }, 100);
+      
+      setTimeout(() => {
+        row.classList.remove('highlight-row');
+        setShouldHighlight(false);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete('search');
+        newSearchParams.delete('targetId');
+        setSearchParams(newSearchParams, { replace: true });
+      }, 6000);
+    };
+
+    const attemptHighlight = (delay, isRetry = false) => {
+      return setTimeout(() => {
+        const targetRow = document.querySelector(`.row-id-${targetId}`);
+        if (targetRow) {
+          highlightAndScroll(targetRow);
+        } else if (!isRetry) {
+          const retryTimer = attemptHighlight(1500, true);
+          return () => clearTimeout(retryTimer);
+        } else {
+          setShouldHighlight(false);
+          console.warn('Target row not found:', targetId);
+        }
+      }, delay);
+    };
+
+    const timer = attemptHighlight(800);
+    return () => clearTimeout(timer);
+  }, [shouldHighlight, targetId, debouncedValue, searchParamValue, searchParams, setSearchParams]);
 
   return (
     <>

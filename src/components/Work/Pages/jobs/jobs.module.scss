@@ -382,3 +382,9 @@ tr:hover .linkToProjectCard {
   text-underline-offset: auto;
   text-underline-position: from-font;
 }
+// Highlight row for notification redirects
+:global(.highlight-row) {
+  td {
+    background-color: #FFF4E6 !important;
+  }
+}

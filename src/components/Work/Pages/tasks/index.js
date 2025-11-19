@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Download, Filter } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
+import { useSearchParams } from 'react-router-dom';
 import { Checkbox } from 'primereact/checkbox';
 import { useDebounce } from 'primereact/hooks';
 import TaskTable from './task-table';
@@ -10,6 +11,9 @@ import CreateTask from '../../features/task/create-task/create-task';
 
 const TaskPage = () => {
     const dt = useRef(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParamValue = searchParams.get('search');
+    const targetId = searchParams.get('targetId');
     const [total, setTotal] = useState(0);
     const [visible, setVisible] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
@@ -17,6 +21,7 @@ const TaskPage = () => {
     const [refetch, setRefetch] = useState(false);
     const [showStatusFilter, setShowStatusFilter] = useState(false);
     const [filter, setFilter] = useState({ status: 'not-complete' });
+    const [shouldHighlight, setShouldHighlight] = useState(false);
 
     const exportCSV = (selectionOnly) => {
         if (dt.current) {
@@ -27,7 +32,7 @@ const TaskPage = () => {
     };
 
     // close the status filter when clicked outside
-    React.useEffect(() => {
+    useEffect(() => {
         const handleClickOutside = (event) => {
             if (showStatusFilter && !event.target.closest(`.${style.statusFilter}`) && !event.target.closest('.p-button')) {
                 setShowStatusFilter(false);
@@ -38,6 +43,63 @@ const TaskPage = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showStatusFilter]);
+
+    // Handle search from notification redirect
+    useEffect(() => {
+        if (searchParamValue && targetId) {
+            setInputValue(searchParamValue);
+            setShouldHighlight(true);
+            // Set filter to 'all' to include completed tasks in search
+            setFilter({ status: 'all' });
+        }
+    }, [searchParamValue, targetId, setInputValue]);
+
+    // Wait for debounced value to change and data to load, then highlight
+    useEffect(() => {
+        if (!shouldHighlight || !targetId || debouncedValue !== searchParamValue) return;
+
+        const highlightAndScroll = (row) => {
+            row.classList.add('highlight-row');
+            
+            // Scroll within the table container without affecting page scroll
+            setTimeout(() => {
+                const tableContainer = row.closest('.p-datatable-wrapper');
+                if (tableContainer) {
+                    const rowTop = row.offsetTop;
+                    const containerHeight = tableContainer.clientHeight;
+                    const scrollPosition = rowTop - (containerHeight / 2) + (row.clientHeight / 2);
+                    tableContainer.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                }
+            }, 100);
+            
+            setTimeout(() => {
+                row.classList.remove('highlight-row');
+                setShouldHighlight(false);
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.delete('search');
+                newSearchParams.delete('targetId');
+                setSearchParams(newSearchParams, { replace: true });
+            }, 6000);
+        };
+
+        const attemptHighlight = (delay, isRetry = false) => {
+            return setTimeout(() => {
+                const targetRow = document.querySelector(`.row-id-${targetId}`);
+                if (targetRow) {
+                    highlightAndScroll(targetRow);
+                } else if (!isRetry) {
+                    const retryTimer = attemptHighlight(1500, true);
+                    return () => clearTimeout(retryTimer);
+                } else {
+                    setShouldHighlight(false);
+                    console.warn('Target row not found:', targetId);
+                }
+            }, delay);
+        };
+
+        const timer = attemptHighlight(800);
+        return () => clearTimeout(timer);
+    }, [shouldHighlight, targetId, debouncedValue, searchParamValue, searchParams, setSearchParams]);
 
     return (
         <div className='jobs-page'>

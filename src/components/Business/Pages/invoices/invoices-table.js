@@ -342,7 +342,12 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         </React.Fragment>;
     };
 
-    const rowClassName = (data) => (data?.deleted ? style.deletedRow : "");
+    const rowClassName = (data) => {
+        let classes = "";
+        if (data?.deleted) classes += style.deletedRow + " ";
+        if (data?.unique_id) classes += `row-id-${data.unique_id}`;
+        return classes.trim();
+    };
 
     const onSort = (event) => {
         const { sortField, sortOrder } = event;
@@ -368,7 +373,7 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
                 <Column selectionMode="multiple" headerClassName='ps-4 border-end-0' bodyClassName={'show-on-hover border-end-0 ps-4'} headerStyle={{ width: '3rem', textAlign: 'center' }} frozen></Column>
                 <Column field="number" header="Invoice ID" body={InvoiceIDBody} headerClassName='paddingLeftHide' bodyClassName='paddingLeftHide' style={{ minWidth: '160px', maxWidth: '160px', width: '160px' }} frozen sortable></Column>
                 <Column field="" header="Invoice" body={InvoiceBody} style={{ minWidth: '114px', maxWidth: '114px', width: '114px' }} frozen></Column>
-                <Column field="client__name" exportField='client.name'  header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '295px', maxWidth: '295px', width: '295px' }} frozen sortable></Column>
+                <Column field="client__name" exportField='client.name' header="Customer A→Z" body={customerNameBody} headerClassName='shadowRight' bodyClassName='shadowRight' style={{ minWidth: '295px', maxWidth: '295px', width: '295px' }} frozen sortable></Column>
                 <Column field="reference" header="Invoice Reference" style={{ minWidth: '250px' }}></Column>
                 <Column field="invoice_due_date" exportField={(rowData) => formatDate(rowData.due_date)} header="Due Date" body={dueDate} style={{ minWidth: '56px' }} className='text-center' sortable></Column>
                 <Column field='amount' header="Total invoice" exportField={(rowData) => `$${formatAUD(rowData.amount)}`} body={totalBody} style={{ minWidth: '56px', textAlign: 'end' }} sortable></Column>
