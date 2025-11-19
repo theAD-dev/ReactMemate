@@ -11,7 +11,7 @@ import notificationStyle from './notification.module.scss';
 import { useNotifications } from '../../../hooks/use-notifications';
 
 const Notification = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [hoveredNotification, setHoveredNotification] = useState(null);
     const observerRef = useRef(null);
 
@@ -96,9 +96,6 @@ const Notification = () => {
     const getNotificationContent = (notification) => {
         const type = notification.type;
         const subType = notification.sub_type;
-        console.log('notification: ', notification);
-        console.log('type: ', type);
-        console.log('subType: ', subType);
 
         if (type === 1) { // Jobs
             if (subType === 'accepted') {
@@ -455,15 +452,7 @@ const Notification = () => {
 
     // Handle notification click
     const handleNotificationClick = (notification) => {
-        if (!notification.read) {
-            markAsRead(notification.id);
-        }
-        // Handle navigation based on notification type and target_id
-        if (notification.target_id) {
-            // You can customize this navigation logic based on notification type
-            // For now, we'll just log it - implement actual navigation as needed
-            console.log(`Navigate to ${notification.type} with target_id: ${notification.target_id}`);
-        }
+        console.log('handleNotificationClick: ', notification);
     };
 
     return (
