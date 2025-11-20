@@ -1038,6 +1038,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                             className={clsx(style.inputBox, 'p-0 outline-none')}
                                             hourFormat="24"
                                             showTime
+                                            stepMinute={15}
                                         />
                                         {errors?.start && (
                                             <p className="error-message mb-0">{"Start is required"}</p>
@@ -1063,6 +1064,7 @@ const CreateJob = ({ visible, setVisible, setRefetch = () => { }, workerId, isEd
                                                 className={clsx(style.inputBox, 'p-0 outline-none')}
                                                 hourFormat="24"
                                                 showTime
+                                                stepMinute={15}
                                             />
                                             {errors?.end && (
                                                 <p className="error-message mb-0">{"End is required"}</p>

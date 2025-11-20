@@ -352,6 +352,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                       setTimeout(() => document.body.click(), 100);
                     }}
                     showTime
+                    stepMinute={15}
                     showIcon
                     showButtonBar
                     todayButtonClassName="p-button-sm p-button-outlined"
@@ -385,6 +386,7 @@ const SendToCalendar = ({ projectId, project, projectCardData }) => {
                       setTimeout(() => document.body.click(), 100);
                     }}
                     showTime
+                    stepMinute={15}
                     showIcon
                     showButtonBar
                     todayButtonClassName="p-button-sm p-button-outlined"
