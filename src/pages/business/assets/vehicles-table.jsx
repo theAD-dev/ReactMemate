@@ -41,7 +41,7 @@ const formatDate = (timestamp) => {
     return formatter.format(date);
 };
 
-const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch, setRefetch }, ref) => {
+const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch, setRefetch, isShowDeleted }, ref) => {
     const { trialHeight } = useTrialHeight();
     const observerRef = useRef(null);
     const [drivers, setDrivers] = useState({});
@@ -76,7 +76,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
 
     useEffect(() => {
         setPage(1);  // Reset to page 1 whenever searchValue changes
-    }, [searchValue, refetch]);
+    }, [searchValue, refetch, isShowDeleted]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -86,7 +86,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
             if (tempSort?.sortOrder === 1) order = `${tempSort.sortField}`;
             else if (tempSort?.sortOrder === -1) order = `-${tempSort.sortField}`;
 
-            const data = await getListOfVehicles(page, limit, searchValue, order);
+            const data = await getListOfVehicles(page, limit, searchValue, order, isShowDeleted);
             if (page === 1) {
                 setAssets(data.results);
                 setHasMoreData(data.count > data.results.length);
@@ -109,7 +109,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
 
         loadData();
 
-    }, [page, searchValue, tempSort, refetch]);
+    }, [page, searchValue, tempSort, refetch, isShowDeleted]);
 
     useEffect(() => {
         if (assets.length > 0 && hasMoreData) {
@@ -129,7 +129,12 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
     const VehicleNameBody = (rowData) => {
         return <div className={`d-flex align-items-center justify-content-between show-on-hover`}>
             <div className='d-flex flex-column' style={{ lineHeight: '1.385' }}>
-                <span>{rowData.make || "-"}</span>
+                <div className='d-flex align-items-center gap-2'>
+                    <span>{rowData.make || "-"}</span>
+                    {rowData.deleted && (
+                        <Tag value="Deleted" style={{ height: '22px', width: '59px', borderRadius: '16px', border: '1px solid #FECDCA', background: '#FEF3F2', color: '#912018', fontSize: '12px', fontWeight: 500 }}></Tag>
+                    )}
+                </div>
                 <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.created_at)}</span>
             </div>
             <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id }); }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
@@ -237,7 +242,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
                 onSelectionChange={(e) => setSelected(e.value)}
                 loading={loading}
                 loadingIcon={Loader}
-                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue} />}
+                emptyMessage={<NoDataFoundTemplate isDataExist={!!searchValue || !!isShowDeleted} />}
                 sortField={sort?.sortField}
                 sortOrder={sort?.sortOrder}
                 onSort={onSort}

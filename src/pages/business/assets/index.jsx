@@ -1,11 +1,12 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Button } from 'react-bootstrap';
-import { BoxSeam, Download, Filter, Truck } from 'react-bootstrap-icons';
+import { BoxSeam, Download, Eye, EyeSlash, Filter, Truck } from 'react-bootstrap-icons';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useDebounce } from 'primereact/hooks';
+import { TieredMenu } from 'primereact/tieredmenu';
 import style from './assets.module.scss';
 import VehiclesTable from './vehicles-table';
 import { getListOfAssetCategories } from '../../../APIs/assets-api';
@@ -33,9 +34,11 @@ const DefaultAssetIcon = ({ color = '#000000', size = 16 }) => (
 
 const Assets = () => {
     const dt = useRef(null);
+    const menu = useRef(null);
     const [refetch, setRefetch] = useState(false);
     const [visible, setVisible] = useState(false);
     const [selected, setSelected] = useState(null);
+    const [isShowDeleted, setIsShowDeleted] = useState(false);
     const [inputValue, debouncedValue, setInputValue] = useDebounce('', 400);
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -108,7 +111,15 @@ const Assets = () => {
                             : (
                                 <>
                                     <div className='filtered-box'>
-                                        <button className={`${style.filterBox}`} onClick={() => { }}><Filter size={20} /></button>
+                                        <button className={`${style.filterBox}`} onClick={(e) => menu.current.toggle(e)}><Filter size={20} /></button>
+                                        <TieredMenu model={[{
+                                            label: <div onClick={() => setIsShowDeleted(!isShowDeleted)} className='d-flex align-items-center text-nowrap gap-3 p'>
+                                                {
+                                                    isShowDeleted ? (<>Hide Deleted Vehicles <EyeSlash /></>)
+                                                        : (<>Show Deleted Vehicles <Eye /></>)
+                                                }
+                                            </div>,
+                                        }]} className={clsx(style.menu)} popup ref={menu} breakpoint="767px" />
                                     </div>
 
                                     <div className="searchBox" style={{ position: 'relative' }}>
@@ -173,7 +184,7 @@ const Assets = () => {
                 ) : (
                     activeAssetType && activeAssetType === 'vehicles' && currentActiveAsset && (
                         <>
-                            <VehiclesTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} />
+                            <VehiclesTable ref={dt} searchValue={debouncedValue} selected={selected} setSelected={setSelected} refetch={refetch} setRefetch={setRefetch} isShowDeleted={isShowDeleted} />
                             <CreateNewVehicle visible={visible} setVisible={setVisible} setRefetch={setRefetch} />
                         </>
                     )
