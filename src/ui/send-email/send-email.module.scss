@@ -86,7 +86,7 @@
   box-shadow: none !important;
   border: 1px solid var(--Border, #d0d5dd);
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow: auto;
 }
 
