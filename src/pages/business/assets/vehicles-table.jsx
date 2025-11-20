@@ -179,7 +179,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
 
     const serviceBody = (rowData) => {
         return <div className='d-flex align-items-center gap-2'>
-            <Link to={`/assets/vehicles/${rowData.id}/service-history`}>
+            <Link to={`/assets/vehicles/${rowData.id}/history?filterType=services`}>
                 <Tag value="Service" style={{
                     height: '22px',
                     minWidth: '60px',
@@ -191,7 +191,7 @@ const VehiclesTable = forwardRef(({ searchValue, selected, setSelected, refetch,
                     fontWeight: 500
                 }} />
             </Link>
-            <Link to={`/assets/vehicles/${rowData.id}/expense-history`}>
+            <Link to={`/assets/vehicles/${rowData.id}/history?filterType=expenses`}>
                 <Tag value="Expense"
                     style={{
                         height: '22px',
