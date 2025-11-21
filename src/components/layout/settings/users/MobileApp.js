@@ -107,15 +107,21 @@ const MobileApp = React.memo(() => {
         const anchorProps = useClick(isOpen, setOpen);
 
         return <React.Fragment>
-            <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
+            <div style={{ position: 'relative' }}>
+                <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
 
-            <ControlledMenu
-                state={isOpen ? 'open' : 'closed'}
-                anchorRef={ref}
-                onClose={() => setOpen(false)}
-                className={"threeDots-setting"}
-                menuStyle={{ padding: '4px', width: '171px', textAlign: 'left' }}
-            >
+                <ControlledMenu
+                    state={isOpen ? 'open' : 'closed'}
+                    anchorRef={ref}
+                    onClose={() => setOpen(false)}
+                    menuClassName="action-menu-portal"
+                    menuStyle={{ padding: '4px', width: '171px', textAlign: 'left' }}
+                    portal={{ target: document.body }}
+                    align="end"
+                    position="anchor"
+                    direction="bottom"
+                    overflow="auto"
+                >
                 <div className='d-flex flex-column'>
                     {
                         (data.status === "invited" || data.status === "connected") && <>
@@ -145,6 +151,7 @@ const MobileApp = React.memo(() => {
                     }
                 </div>
             </ControlledMenu>
+            </div>
         </React.Fragment>;
     };
 

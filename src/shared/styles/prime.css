@@ -519,6 +519,11 @@ tr.p-datatable-emptymessage td {
   transform: translate(-50%, -50%);
 }
 
+.szh-menu-container.action-menu-portal {
+  z-index: 10000 !important;
+  position: fixed !important;
+}
+
 .p-dropdown-panel {
   z-index: 3100 !important;
 }
