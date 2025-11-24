@@ -54,21 +54,27 @@ const ActionsMenu = ({ rowData, setRefetch }) => {
 
     return (
         <React.Fragment>
-            <ThreeDotsVertical
-                size={24}
-                color="#667085"
-                className='cursor-pointer'
-                ref={ref}
-                {...anchorProps}
-            />
+            <div style={{ position: 'relative' }}>
+                <ThreeDotsVertical
+                    size={24}
+                    color="#667085"
+                    className='cursor-pointer'
+                    ref={ref}
+                    {...anchorProps}
+                />
 
-            <ControlledMenu
-                state={isOpen ? 'open' : 'closed'}
-                anchorRef={ref}
-                onClose={() => setOpen(false)}
-                className={"threeDots"}
-                menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
-            >
+                <ControlledMenu
+                    state={isOpen ? 'open' : 'closed'}
+                    anchorRef={ref}
+                    onClose={() => setOpen(false)}
+                    menuClassName="action-menu-portal"
+                    menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
+                    portal={{ target: document.body }}
+                    align="end"
+                    position="anchor"
+                    direction="bottom"
+                    overflow="auto"
+                >
                 <div className='d-flex flex-column gap-2'>
                     <div
                         className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2'
@@ -112,6 +118,7 @@ const ActionsMenu = ({ rowData, setRefetch }) => {
                     </div>
                 </div>
             </ControlledMenu>
+            </div>
         </React.Fragment>
     );
 };

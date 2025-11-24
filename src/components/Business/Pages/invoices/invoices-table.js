@@ -307,38 +307,44 @@ const InvoiceTable = forwardRef(({ searchValue, setTotal, setTotalMoney, selecte
         const anchorProps = useClick(isOpen, setOpen);
 
         return <React.Fragment>
-            <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
-
-            <ControlledMenu
-                state={isOpen ? 'open' : 'closed'}
-                anchorRef={ref}
-                onClose={() => setOpen(false)}
-                className={"threeDots"}
-                menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
-            >
-                <div className='d-flex flex-column gap-2'>
-                    <SendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
-                    <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
-                    <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
-                        <Files color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
-                        {duplicateMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+            <div style={{ position: 'relative' }}>
+                <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
+                <ControlledMenu
+                    state={isOpen ? 'open' : 'closed'}
+                    anchorRef={ref}
+                    onClose={() => setOpen(false)}
+                    menuClassName="action-menu-portal"
+                    menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
+                    portal={{ target: document.body }}
+                    align="end"
+                    position="anchor"
+                    direction="bottom"
+                    overflow="auto"
+                >
+                    <div className='d-flex flex-column gap-2'>
+                        <SendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
+                        <ResendInvoiceEmail projectId={rowData.unique_id} clientId={rowData?.client?.id} isAction={true} />
+                        <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await duplicateMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
+                            <Files color='#667085' size={20} />
+                            <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Duplicate project</span>
+                            {duplicateMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                        </div>
+                        <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
+                            <FileEarmarkSpreadsheet color='#667085' size={20} />
+                            <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
+                        </div>
+                        {
+                            hasPermission(role, PERMISSIONS.INVOICE.DELETE) && (
+                                <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
+                                    <Trash color='#B42318' size={20} />
+                                    <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
+                                    {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                                </div>
+                            )
+                        }
                     </div>
-                    <div className='d-flex align-items-center gap-3 hover-greay px-2 py-2' style={{ opacity: .5 }}>
-                        <FileEarmarkSpreadsheet color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Create credit note</span>
-                    </div>
-                    {
-                        hasPermission(role, PERMISSIONS.INVOICE.DELETE) && (
-                            <div className='d-flex align-items-center cursor-pointer gap-3 hover-greay px-2 py-2' onClick={async () => { await deleteMutation.mutateAsync(rowData.unique_id); setOpen(false); }}>
-                                <Trash color='#B42318' size={20} />
-                                <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete invoice</span>
-                                {deleteMutation?.variables === rowData.unique_id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
-                            </div>
-                        )
-                    }
-                </div>
-            </ControlledMenu>
+                </ControlledMenu>
+            </div>
         </React.Fragment>;
     };
 

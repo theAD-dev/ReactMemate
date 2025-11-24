@@ -1,7 +1,8 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { EnvelopeSlash, InputCursorText, WindowSidebar, XCircle } from 'react-bootstrap-icons';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
@@ -12,6 +13,7 @@ import { getListOfSubmissions, updateEnquirySubmission, deleteSubmission } from 
 import { getUserList, getMobileUserList } from '../../../APIs/task-api';
 import { useAuth } from '../../../app/providers/auth-provider';
 import { useTrialHeight } from '../../../app/providers/trial-height-provider';
+import ViewEnquiryLead from '../../../features/business/enquiries/view-enquiry-lead/view-enquiry-lead';
 import { FallbackImage } from '../../../shared/ui/image-with-fallback/image-avatar';
 import Loader from '../../../shared/ui/loader/loader';
 import NoDataFoundTemplate from '../../../ui/no-data-template/no-data-found-template';
@@ -32,6 +34,7 @@ const formatDate = (timestamp) => {
 const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelectedSubmissions, isShowDeleted, filterType, refetchTrigger }, ref) => {
     const { trialHeight } = useTrialHeight();
     const { session } = useAuth();
+    const navigate = useNavigate();
     const observerRef = useRef(null);
     const [submissions, setSubmissions] = useState([]);
     const [page, setPage] = useState(1);
@@ -43,6 +46,8 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
     const [loading, setLoading] = useState(false);
     const [userGroups, setUserGroups] = useState([]);
     const [loadingSubmissionId, setLoadingSubmissionId] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [editData, setEditData] = useState(null);
     const limit = 25;
 
     const deleteSubmissionMutation = useMutation({
@@ -183,6 +188,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.submitted_at)}</span>
                 </div>
             </div>
+            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, leadData: rowData }); }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
         </div>;
     };
 
@@ -379,14 +385,9 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
         );
     };
 
-    const moveToQuoteActionBody = (rowData) => {
+    const moveToQuoteActionBody = () => {
         const handleMoveToQuote = async () => {
-            try {
-                toast.success(`Moved to Quote: ${rowData.data?.name}`);
-                // TODO: Call API endpoint for moving to quote
-            } catch (error) {
-                toast.error('Failed to move to quote');
-            }
+            navigate(`/sales/newquote/selectyourclient/new-clients?`);
         };
 
         return (
@@ -520,6 +521,16 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     style={{ minWidth: '130px', maxWidth: '150px', width: '150px' }}
                 />
             </DataTable>
+            {visible && editData?.id && (
+                <ViewEnquiryLead
+                    visible={visible}
+                    editData={editData}
+                    onClose={() => {
+                        setVisible(false);
+                        setEditData(null);
+                    }}
+                />
+            )}
         </>
     );
 });

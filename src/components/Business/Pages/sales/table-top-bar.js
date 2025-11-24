@@ -465,7 +465,7 @@ const TableTopBar = ({
                 {salesData && salesData?.length > 0 ? (
                   <p className="flexEndStyle styleT3">
                     Total{" "}
-                    <span className="styleT2">
+                    <span className="styleT2" style={{ whiteSpace: 'nowrap' }}>
                       {rows?.length ? (
                         <> {rows?.length}</>
                       ) : (

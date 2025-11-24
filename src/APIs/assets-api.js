@@ -30,7 +30,9 @@ export const getListOfVehicles = async (page, limit, search = "", order = "", is
     url.searchParams.append("offset", offset);
     if (search) url.searchParams.append("q", search);
     if (order) url.searchParams.append("ordering", order);
-    if (isShowDeleted) url.searchParams.append('deleted', 1);
+    if (isShowDeleted) {
+        url.searchParams.append('is_deleted', 'true');
+    }
 
     return fetchAPI(url.toString(), options);
 };
@@ -66,6 +68,15 @@ export const updateVehicle = async (id, data) => {
 
 export const deleteVehicle = async (id) => {
     const endpoint = `/assets/vehicles/${id}/delete/`;
+    const options = {
+        method: 'PATCH'
+    };
+    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    return fetchAPI(url.toString(), options);
+};
+
+export const restoreVehicle = async (id) => {
+    const endpoint = `/assets/vehicles/${id}/restore/`;
     const options = {
         method: 'PATCH'
     };

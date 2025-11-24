@@ -1,0 +1,35 @@
+.leadInfoSection {
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #F2F4F7;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #344054;
+    min-width: 140px;
+    flex-shrink: 0;
+}
+
+.value {
+    font-size: 14px;
+    font-weight: 400;
+    color: #667085;
+    flex: 1;
+    text-align: right;
+    word-break: break-word;
+}

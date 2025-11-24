@@ -12,6 +12,7 @@ import { formatAUD } from '../../../../shared/lib/format-aud';
 import { FallbackImage } from '../../../../shared/ui/image-with-fallback/image-avatar';
 import DeleteVehicle from '../delete-vehicle/delete-vehicle';
 import EditVehicle from '../edit-vehicle/edit-vechicle';
+import RestoreVehicle from '../restore-vehicle/restore-vehicle';
 
 const dateFormat = (timestamp) => {
     if (!timestamp) return '-';
@@ -84,8 +85,12 @@ const ViewVehicle = ({ visible, setVisible, editData, onClose, setRefetch, drive
                                 </div>
                             ) : (
                                 <div className='d-flex align-items-center justify-content-between gap-3 w-100'>
-                                    <DeleteVehicle id={id} refetch={() => setRefetch((prev) => !prev)} onClose={onClose} />
-                                    <div className='d-flex align-items-center'>
+                                    {vehicleData?.is_deleted ? (
+                                        <RestoreVehicle id={id} refetch={() => setRefetch((prev) => !prev)} onClose={onClose} />
+                                    ) : (
+                                        <DeleteVehicle id={id} refetch={() => setRefetch((prev) => !prev)} onClose={onClose} />
+                                    )}
+                                    <div className='d-flex align-items-center gap-2'>
                                         <Button type='button' onClick={() => {
                                             setShowCreateExpenseModal(true);
                                             setAssetForExpense({ id: id, type: 1 });

@@ -299,20 +299,27 @@ const ExpensesTable = forwardRef(({ searchValue, setTotal, setTotalMoney, select
 
         return (
             <React.Fragment>
-                <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
-                <ControlledMenu
-                    state={isOpen ? 'open' : 'closed'}
-                    anchorRef={ref}
-                    onClose={() => setOpen(false)}
-                    className={"threeDots"}
-                    menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
-                >
-                    <div className='d-flex align-items-center cursor-pointer gap-2 hover-greay px-2 py-2' onClick={deleteExpense}>
-                        <Trash color='#B42318' size={20} />
-                        <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete expense</span>
-                        {deleteMutation?.variables === rowData.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
-                    </div>
-                </ControlledMenu>
+                <div style={{ position: 'relative' }}>
+                    <ThreeDotsVertical size={24} color="#667085" className='cursor-pointer' ref={ref} {...anchorProps} />
+                    <ControlledMenu
+                        state={isOpen ? 'open' : 'closed'}
+                        anchorRef={ref}
+                        onClose={() => setOpen(false)}
+                        menuClassName="action-menu-portal"
+                        menuStyle={{ padding: '4px', width: '241px', textAlign: 'left' }}
+                        portal={{ target: document.body }}
+                        align="end"
+                        position="anchor"
+                        direction="bottom"
+                        overflow="auto"
+                    >
+                        <div className='d-flex align-items-center cursor-pointer gap-2 hover-greay px-2 py-2' onClick={deleteExpense}>
+                            <Trash color='#B42318' size={20} />
+                            <span style={{ color: '#B42318', fontSize: '16px', fontWeight: 500 }}>Delete expense</span>
+                            {deleteMutation?.variables === rowData.id ? <ProgressSpinner style={{ width: '20px', height: '20px' }}></ProgressSpinner> : ""}
+                        </div>
+                    </ControlledMenu>
+                </div>
             </React.Fragment>
         );
     };
