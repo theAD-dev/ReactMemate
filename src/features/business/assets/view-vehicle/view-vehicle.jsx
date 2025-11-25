@@ -86,9 +86,9 @@ const ViewVehicle = ({ visible, setVisible, editData, onClose, setRefetch, drive
                             ) : (
                                 <div className='d-flex align-items-center justify-content-between gap-3 w-100'>
                                     {vehicleData?.is_deleted ? (
-                                        <RestoreVehicle id={id} refetch={() => setRefetch((prev) => !prev)} onClose={onClose} />
+                                        <RestoreVehicle id={id} refetch={() => { setRefetch((prev) => !prev); getVehicleQuery?.refetch(); }} onClose={onClose} />
                                     ) : (
-                                        <DeleteVehicle id={id} refetch={() => setRefetch((prev) => !prev)} onClose={onClose} />
+                                        <DeleteVehicle id={id} refetch={() => { setRefetch((prev) => !prev); getVehicleQuery?.refetch(); }} onClose={onClose} />
                                     )}
                                     <div className='d-flex align-items-center gap-2'>
                                         <Button type='button' onClick={() => {
