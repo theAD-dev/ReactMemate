@@ -429,7 +429,7 @@ const Overview = () => {
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
                 </Link>
-                <Link to={"#"} className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/google-analytics"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>

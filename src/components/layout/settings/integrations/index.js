@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import EmailIntegrations from "./email-integration";
+import GaIntegration from "./ga-integration";
 import GoogleIntegrations from "./google-review-integration";
 import style from "./integration.module.scss";
 import MailchimpIntegration from "./mailchimp-integration";
@@ -28,6 +29,7 @@ const Integrations = () => {
   const location = useLocation();
   const { session } = useAuth();
   const [googleVisible, setGoogleVisible] = useState(false);
+  const [gaLinked, setGaLinked] = useState(false);
   const [stripeVisible, setStripeVisible] = useState(false);
   const [twilioVisible, setTwilioVisible] = useState(false);
   const [emailVisible, setEmailVisible] = useState(false);
@@ -48,15 +50,7 @@ const Integrations = () => {
       status: false,
       isConnected: false,
       img: googleCalLogo,
-    },
-    {
-      id: 5,
-      title: "Google Analytic Widgets",
-      method: "googleanalytic",
-      content: `Add Google Analytics to monitor your website's online performance effortlessly.`,
-      status: false,
-      isConnected: false,
-      img: googleAnalyticLogo,
+      disabled: true,
     },
   ];
 
@@ -217,6 +211,26 @@ const Integrations = () => {
                 </div>
               </Col>
 
+              <Col xs={4} className="pb-4">
+                <div className={clsx(style.BoxGridWrap, 'h-100')} style={{ position: 'relative' }}>
+                  <div className={style.head}>
+                    <img src={googleAnalyticLogo} alt={"Google Analytics"} />
+                    {
+                      <button className={gaLinked ? style.connected : style.disconnected}>
+                        {gaLinked ? "Connected" : "Disconnected"}
+                        <span className={style.dots}></span>
+                      </button>
+                    }
+                  </div>
+                  <div className={style.body}>
+                    <h3>{"Google Analytics"}</h3>
+                    <p>{"Link GA4 to show users, sessions, engaged time, and top pages on your dashboard."}</p>
+                  </div>
+                  <div className={style.bottom}>
+                    <GaIntegration onStatus={setGaLinked} refetch={() => window.location.reload()} />
+                  </div>
+                </div>
+              </Col>
 
               {integrationsData.map((item) => (
                 <Col key={item.id} xs={4} className="pb-4">
