@@ -58,47 +58,6 @@ const GaIntegration = ({ onStatus, refetch }) => {
       setConnecting(false);
       return;
     }
-
-    const timer = setInterval(async () => {
-      try {
-        // Check if linked (this will work even with cross-origin popup)
-        const isLinked = await checkLinked();
-        console.log('GA Link Status:', isLinked);
-        
-        if (isLinked) {
-          // Close the popup and clear the interval
-          popup.close();
-          clearInterval(timer);
-          setConnecting(false);
-          toast.success("Google Analytics linked!");
-          
-          // Refetch to update UI
-          if (refetch) {
-            refetch();
-          }
-        }
-      } catch (error) {
-        console.log("Checking status...", error.message);
-      }
-
-      // Clear interval if the popup is closed before completion
-      if (popup && popup.closed) {
-        clearInterval(timer);
-        setConnecting(false);
-        
-        // Do a final check after popup closes
-        setTimeout(async () => {
-          const finalCheck = await checkLinked();
-          console.log('Final check after popup closed:', finalCheck);
-          if (finalCheck) {
-            toast.success("Google Analytics linked!");
-            if (refetch) {
-              refetch();
-            }
-          }
-        }, 1000);
-      }
-    }, 500); // Check every 500ms like Xero
   };
 
   return (
