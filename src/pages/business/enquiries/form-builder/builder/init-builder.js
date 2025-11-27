@@ -1033,6 +1033,18 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
     const copyBtn = root.querySelector('#copy-embed-btn');
     const closeBtn = root.querySelector('#close-embed-btn');
     const xBtn = embedModal ? embedModal.querySelector('[data-close-embed]') : null;
+    const modalTitle = embedModal ? embedModal.querySelector('.modal-header h2') : null;
+    const modalDescription = embedModal ? embedModal.querySelector('.modal-content > p') : null;
+
+    // Update modal content based on form type
+    if (modalTitle) {
+      modalTitle.textContent = savedFormType === 'form' ? 'Form Link' : 'Embed this Form';
+    }
+    if (modalDescription) {
+      modalDescription.textContent = savedFormType === 'form' 
+        ? 'Copy the link below to share your form.'
+        : 'Copy the snippet below and paste it into your website where you want the form to appear.';
+    }
 
     if (snippetEl) snippetEl.value = contentToShow;
     if (closeBtn) closeBtn.disabled = true; // must copy before closing
