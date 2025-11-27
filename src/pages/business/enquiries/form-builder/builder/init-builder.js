@@ -1012,21 +1012,35 @@ export function initBuilder({ defaultOrgId, initialForm = null }) {
       currentFormId = json.id;
     }
 
-    // Build embed code and show modal
-    const embedCode = `<script src="${process.env.REACT_APP_URL}/astatic/inquiries/embed.js" data-form-id="${json?.id}"></` + `script>`;
+    // Get public_key and determine content to show based on form type
+    const publicKey = json?.public_key || json?.id;
+    const savedFormType = formTypeEl?.value || 'web';
+
+    // Build embed code or direct link based on form type
+    let contentToShow;
+    if (savedFormType === 'form') {
+      // For type "form", show the direct link
+      const apiBase = process.env.REACT_APP_BACKEND_API_URL || 'https://app.memate.com.au/api/v1';
+      contentToShow = `${apiBase}/inquiries/form/page/${publicKey}/`;
+    } else {
+      // For type "web", show the embed code using the domain from response
+      const host = process.env.REACT_APP_URL || window.location.origin;
+      contentToShow = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${publicKey}"></` + `script>`;
+    }
+
     const embedModal = root.querySelector('#embed-modal');
     const snippetEl = root.querySelector('#embed-snippet');
     const copyBtn = root.querySelector('#copy-embed-btn');
     const closeBtn = root.querySelector('#close-embed-btn');
     const xBtn = embedModal ? embedModal.querySelector('[data-close-embed]') : null;
 
-    if (snippetEl) snippetEl.value = embedCode;
+    if (snippetEl) snippetEl.value = contentToShow;
     if (closeBtn) closeBtn.disabled = true; // must copy before closing
     if (embedModal) embedModal.style.display = 'block';
 
     const doCopy = async () => {
       try {
-        await navigator.clipboard.writeText(embedCode);
+        await navigator.clipboard.writeText(contentToShow);
       } catch (_) {
         // Fallback for older browsers
         if (snippetEl && snippetEl.select) {

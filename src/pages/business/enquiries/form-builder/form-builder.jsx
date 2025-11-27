@@ -445,7 +445,6 @@ export default function TempFormBuilder() {
                 readOnly
                 rows={4}
                 style={{
-                  width: '100%',
                   boxSizing: 'border-box',
                   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
                 }}
