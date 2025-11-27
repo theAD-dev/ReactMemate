@@ -1,7 +1,7 @@
 // src/builder/initBuilder.js
 import { saveFormToApi, updateFormToApi } from '../api';
 
-export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null }) {
+export function initBuilder({ defaultOrgId, initialForm = null }) {
   // Guard against double binding in React StrictMode (dev) or accidental re-calls
   if (typeof window === 'undefined') {
     return;
@@ -22,12 +22,6 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
   const cssTextarea = root.querySelector('#form_style');
   const previewBtn = root.querySelector('#preview-btn');
   const saveBtn = root.querySelector('#save-btn');
-
-  // Fill default CSS only when empty
-  if (cssTextarea && !cssTextarea.value && typeof getDefaultCss === 'function') {
-    const css = getDefaultCss();
-    if (css) cssTextarea.value = css;
-  }
 
   // Internal state (must exist before any hydration uses it)
   let fieldCounter = 1;
@@ -947,15 +941,22 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       throw new Error('Submit To email address is required');
     }
 
-    // Enforce Google reCAPTCHA site key required
-    const siteKeyEl = root.querySelector('#form-recaptcha-key');
-    if (!siteKeyEl || !siteKeyEl.value.trim()) {
-      throw new Error('Google reCAPTCHA site key is required');
-    }
-    // Enforce Google reCAPTCHA secret key required
-    const secretKeyEl = root.querySelector('#form-recaptcha-secret');
-    if (!secretKeyEl || !secretKeyEl.value.trim()) {
-      throw new Error('Google reCAPTCHA secret key is required');
+    // Get form type
+    const formTypeEl = root.querySelector('#form-type');
+    const formType = formTypeEl?.value || 'web';
+
+    // Only validate reCAPTCHA fields for 'web' type forms
+    if (formType === 'web') {
+      // Enforce Google reCAPTCHA site key required
+      const siteKeyEl = root.querySelector('#form-recaptcha-key');
+      if (!siteKeyEl || !siteKeyEl.value.trim()) {
+        throw new Error('Google reCAPTCHA site key is required');
+      }
+      // Enforce Google reCAPTCHA secret key required
+      const secretKeyEl = root.querySelector('#form-recaptcha-secret');
+      if (!secretKeyEl || !secretKeyEl.value.trim()) {
+        throw new Error('Google reCAPTCHA secret key is required');
+      }
     }
 
     // Check if form has at least one field
@@ -1089,13 +1090,13 @@ function buildApiPayload() {
   }));
 
   const get = id => (root.querySelector('#' + id)?.value || '').trim();
+  const formType = get('form-type') || 'web';
 
   const payload = {
     organization: defaultOrgId, // hard default as requested
     title: get('form-title'),
     description: get('form-description'),
-    type: get('form-type') || 'web',
-    domain: get('form-domain'),
+    type: formType,
     submit_to: get('form-submit-to'),
     submit_from: get('form-submit-from'),
     cc_email: get('form-cc-email'),
@@ -1104,10 +1105,15 @@ function buildApiPayload() {
     error_message: get('form-error-message') || 'Something went wrong. Please try again later.',
     submit_button_label: get('form-submit-label') || 'Submit',
     custom_css: cssTextarea?.value ?? '',
-    recaptcha_site_key: get('form-recaptcha-key'),
-    recaptcha_secret_key: get('form-recaptcha-secret'),
     fields
   };
+
+  // Only include domain and reCAPTCHA fields for 'web' type forms
+  if (formType === 'web') {
+    payload.domain = get('form-domain');
+    payload.recaptcha_site_key = get('form-recaptcha-key');
+    payload.recaptcha_secret_key = get('form-recaptcha-secret');
+  }
 
   const redirect = get('form-redirect-url');
   if (redirect) payload.redirect_url = redirect;

@@ -230,7 +230,7 @@ const Header = () => {
                                     </Col>
                                     <Col>
                                         <ul className="middle">
-                                            {/* {session?.has_inquiries_subscription && (
+                                            {session?.has_inquiries_subscription && (
                                                 <li>
                                                     <NavLink
                                                         to="/enquiries"
@@ -242,7 +242,7 @@ const Header = () => {
                                                         Enquiries
                                                     </NavLink>
                                                 </li>
-                                            )} */}
+                                            )}
                                             <li>
                                                 <NavLink
                                                     to="/sales"

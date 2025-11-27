@@ -1185,7 +1185,7 @@ const AnalyticsPage = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              {topPages.slice(0, 10).map((page, index) => {
+                              {topPages.map((page, index) => {
                                 const maxViews = topPages[0]?.views || 1;
                                 const viewsPercent = (page.views / maxViews) * 100;
                                 const isTopThree = index < 3;
@@ -1369,26 +1369,6 @@ const AnalyticsPage = () => {
                             </tbody>
                           </table>
                         </div>
-
-                        {topPages.length > 10 && (
-                          <div style={{
-                            marginTop: '16px',
-                            padding: '16px',
-                            background: 'linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%)',
-                            borderRadius: '12px',
-                            textAlign: 'center',
-                            border: '1px dashed #D0D5DD'
-                          }}>
-                            <span style={{
-                              color: '#475467',
-                              fontSize: '13px',
-                              fontFamily: 'Inter',
-                              fontWeight: 500
-                            }}>
-                              + {topPages.length - 10} more pages tracked
-                            </span>
-                          </div>
-                        )}
                       </CardBody>
                     </Card>
                   </Col>
