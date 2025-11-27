@@ -112,6 +112,10 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, set
     return <ActionsMenu rowData={rowData} setRefetch={setRefetch} />;
   };
 
+  const indexBody = (rowData, options) => {
+    return <span style={{ color: '#667085' }}>{options.rowIndex + 1}</span>;
+  };
+
   return (
     <DataTable ref={ref} value={forms} scrollable columnResizeMode="expand" resizableColumns showGridlines size={'large'} scrollHeight={`calc(100vh - 175px - ${trialHeight}px)`} className="border" loading={loading}
       loadingIcon={Loader}
@@ -121,7 +125,7 @@ const EnquiryFormsTable = forwardRef(({ searchValue, isShowDeleted, refetch, set
       onSort={onSort}
       rowClassName={rowClassName}
     >
-      <Column field="id" header="ID" style={{ width: '70px' }} />
+      <Column field="id" header="ID" body={indexBody} style={{ width: '70px' }} />
       <Column field="title" header="Name" body={titleBody} style={{ minWidth: '150px' }} sortable />
       <Column field="fields" header="Total Fields" body={(rowData) => <span>{rowData.fields?.length || 0}</span>} style={{ width: '100px', textAlign: 'right', color: '#667085' }} sortable />
       <Column field="domain" header="Domain" body={domainBody} style={{ minWidth: '200px' }} sortable />
