@@ -77,7 +77,13 @@ const DepartmentQuote = React.memo(({ payload, setPayload, setTotals, refetch, p
       } else {
         setPayload((others) => ({ ...others, contact_person: person.id }));
       }
-      setContactPersons(clientQuery.data?.contact_persons);
+
+      const contactPersons = [
+        ...(clientQuery?.data?.contact_persons || []),
+        ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
+      ];
+
+      setContactPersons(contactPersons);
     }
   }, [clientQuery.data]);
 

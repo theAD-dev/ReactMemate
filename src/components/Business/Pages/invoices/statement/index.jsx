@@ -16,7 +16,10 @@ const AccountStatement = () => {
     const clientName = new URLSearchParams(window.location.search).get('client');
     const clientId = new URLSearchParams(window.location.search).get('clientId');
     const clientDetails = useQuery({ queryKey: ['client-read', clientId], queryFn: () => getClientById(clientId), enabled: !!clientId, retry: 1, cacheTime: 0, staleTime: 0 });
-    const clientContactPersons = clientDetails?.data?.contact_persons || [];
+    const clientContactPersons = [
+        ...(clientDetails?.data?.contact_persons || []),
+        ...(clientDetails?.data?.email ? [{email: clientDetails?.data?.email}] : [])
+    ];
 
     const downloadFormLink = async () => {
         const fileLink = pdfUrl;

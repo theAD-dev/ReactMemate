@@ -17,6 +17,10 @@ const GoogleReviewEmail = ({ clientId, projectId }) => {
         enabled: !!clientId,
         retry: 1,
     });
+    const contactPersons = [
+        ...(clientQuery?.data?.contact_persons || []),
+        ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
+    ];
 
     const mutation = useMutation({
         mutationFn: (data) => sendComposeEmail(projectId, "google-review", data),
@@ -33,7 +37,7 @@ const GoogleReviewEmail = ({ clientId, projectId }) => {
     return (
         <>
             <Button className='googleBut googleActive' onClick={handleShow}>Review  <img src={GoogleReview} alt="GoogleReview" /></Button>
-            <SendDynamicEmailForm show={viewShow} mutation={mutation} isLoading={false} setShow={setViewShow} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} defaultTemplateId={'Google Review'} />
+            <SendDynamicEmailForm show={viewShow} mutation={mutation} isLoading={false} setShow={setViewShow} setPayload={setPayload} contactPersons={contactPersons} defaultTemplateId={'Google Review'} />
         </>
     );
 };

@@ -14,13 +14,17 @@ const InvoiceCreate = ({ clientId, projectId, isLoading, create, projectCardData
         enabled: !!clientId,
         retry: 1,
     });
+    const contactPersons = [
+        ...(clientQuery?.data?.contact_persons || []),
+        ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
+    ];
 
     return (
         <>
             <Button className='InvoiceAction InvoiceActive me-3' onClick={() => setShow(true)}>
               {isCreated ? "Resend" : "Create"} Invoice  <img src={InvoicesIcon} alt="Invoices" />
             </Button>
-            <SendInvoiceEmailForm projectId={projectId} show={show} create={create} isLoading={isLoading} setShow={setShow} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} projectCardData={projectCardData} isCreated={isCreated}/>
+            <SendInvoiceEmailForm projectId={projectId} show={show} create={create} isLoading={isLoading} setShow={setShow} setPayload={setPayload} contactPersons={contactPersons} projectCardData={projectCardData} isCreated={isCreated}/>
         </>
     );
 };

@@ -33,6 +33,10 @@ const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
     enabled: !!clientId,
     retry: 1,
   });
+  const contactPersons = [
+      ...(clientQuery?.data?.contact_persons || []),
+      ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
+  ];
 
   const mutation = useMutation({
     mutationFn: (data) => sendComposeEmail(projectId, "", data),
@@ -96,7 +100,7 @@ const ComposeEmail = ({ clientId, projectId, projectCardData }) => {
       </Modal>
 
       {/* Compose email modal */}
-      <SendDynamicEmailForm show={viewShow} isLoading={false} mutation={mutation} setShow={setViewShow} setPayload={setPayload} contactPersons={clientQuery?.data?.contact_persons || []} isComposeEmail={true} />
+      <SendDynamicEmailForm show={viewShow} isLoading={false} mutation={mutation} setShow={setViewShow} setPayload={setPayload} contactPersons={contactPersons} isComposeEmail={true} />
     </>
   );
 };
