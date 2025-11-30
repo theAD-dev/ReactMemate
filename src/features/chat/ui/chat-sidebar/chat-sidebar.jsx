@@ -24,6 +24,7 @@ const ChatSidebar = ({
   };
 
   const totalUserGroup = Object.entries(chatData).filter(([, group]) => !group.project_id && !group.job_number);
+  const privateGroupUnreadCount = totalUserGroup.reduce((acc, [, group]) => acc + (group.unread_count || 0), 0);
   const projectGroup = Object.entries(chatData).filter(([, group]) => group.project_id || group.job_number)
     .filter(([, group]) => {
       const groupName = group?.name || "Unknown Group";
@@ -31,6 +32,7 @@ const ChatSidebar = ({
       const matchesArchived = archivedVisible || !(group.archived_by?.length > 0);
       return matchesSearch && matchesArchived;
     });
+  const projectGroupUnreadCount = projectGroup.reduce((acc, [, group]) => acc + (group.unread_count || 0), 0);
 
   return (
     <div className={styles.chatSidebar}>
@@ -42,7 +44,7 @@ const ChatSidebar = ({
               <svg xmlns="http://www.w3.org/2000/svg" width="8" height="9" viewBox="0 0 8 9" fill="none">
                 <circle cx="4" cy="4.5" r="3" fill="#17B26A" />
               </svg>
-              <span>0</span>
+              <span>{onlineUsers?.length || 0}</span>
             </div>
           </div>
           <div className="d-flex align-items-center gap-2">
@@ -76,14 +78,14 @@ const ChatSidebar = ({
             onClick={() => setActiveTab('users')}
           >
             <span>Users</span>
-            <div>{totalUserGroup?.length || 0}</div>
+            <div>{privateGroupUnreadCount || 0}</div>
           </div>
           <div
             className={clsx(styles.tabButton, { [styles.active]: activeTab === 'projects' })}
             onClick={() => setActiveTab('projects')}
           >
             <span>Projects</span>
-            <div>{projectGroup?.length || 0}</div>
+            <div>{projectGroupUnreadCount || 0}</div>
           </div>
         </div>
       </div>
