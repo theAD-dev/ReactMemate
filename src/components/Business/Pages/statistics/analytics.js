@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import clsx from 'clsx';
 import { Chart } from 'primereact/chart';
+import { ProgressSpinner } from "primereact/progressspinner";
 import { toast } from "sonner";
 import style from './statistics.module.scss';
 import { getGaProperties, getGaReports } from "../../../../APIs/analytics-api";
@@ -357,9 +358,7 @@ const AnalyticsPage = () => {
                 {propertiesQuery.isLoading && (
                     <div className={style.centerContent}>
                         <div className="text-center">
-                            <div className={clsx("spinner-border text-primary", style.loadingSpinner)} role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
+                            <ProgressSpinner style={{ width: '30px', height: '30px' }}/>
                             <p className={clsx("mt-3", style.loadingText)}>Connecting to Google Analytics...</p>
                         </div>
                     </div>
