@@ -1,7 +1,7 @@
 // src/builder/initBuilder.js
 import { saveFormToApi, updateFormToApi } from '../api';
 
-export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null }) {
+export function initBuilder({ defaultOrgId, initialForm = null }) {
   // Guard against double binding in React StrictMode (dev) or accidental re-calls
   if (typeof window === 'undefined') {
     return;
@@ -22,12 +22,6 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
   const cssTextarea = root.querySelector('#form_style');
   const previewBtn = root.querySelector('#preview-btn');
   const saveBtn = root.querySelector('#save-btn');
-
-  // Fill default CSS only when empty
-  if (cssTextarea && !cssTextarea.value && typeof getDefaultCss === 'function') {
-    const css = getDefaultCss();
-    if (css) cssTextarea.value = css;
-  }
 
   // Internal state (must exist before any hydration uses it)
   let fieldCounter = 1;
@@ -947,15 +941,22 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       throw new Error('Submit To email address is required');
     }
 
-    // Enforce Google reCAPTCHA site key required
-    const siteKeyEl = root.querySelector('#form-recaptcha-key');
-    if (!siteKeyEl || !siteKeyEl.value.trim()) {
-      throw new Error('Google reCAPTCHA site key is required');
-    }
-    // Enforce Google reCAPTCHA secret key required
-    const secretKeyEl = root.querySelector('#form-recaptcha-secret');
-    if (!secretKeyEl || !secretKeyEl.value.trim()) {
-      throw new Error('Google reCAPTCHA secret key is required');
+    // Get form type
+    const formTypeEl = root.querySelector('#form-type');
+    const formType = formTypeEl?.value || 'web';
+
+    // Only validate reCAPTCHA fields for 'web' type forms
+    if (formType === 'web') {
+      // Enforce Google reCAPTCHA site key required
+      const siteKeyEl = root.querySelector('#form-recaptcha-key');
+      if (!siteKeyEl || !siteKeyEl.value.trim()) {
+        throw new Error('Google reCAPTCHA site key is required');
+      }
+      // Enforce Google reCAPTCHA secret key required
+      const secretKeyEl = root.querySelector('#form-recaptcha-secret');
+      if (!secretKeyEl || !secretKeyEl.value.trim()) {
+        throw new Error('Google reCAPTCHA secret key is required');
+      }
     }
 
     // Check if form has at least one field
@@ -1011,21 +1012,47 @@ export function initBuilder({ defaultOrgId, getDefaultCss, initialForm = null })
       currentFormId = json.id;
     }
 
-    // Build embed code and show modal
-    const embedCode = `<script src="${process.env.REACT_APP_URL}/astatic/inquiries/embed.js" data-form-id="${json?.id}"></` + `script>`;
+    // Get public_key and determine content to show based on form type
+    const publicKey = json?.public_key || json?.id;
+    const savedFormType = formTypeEl?.value || 'web';
+
+    // Build embed code or direct link based on form type
+    let contentToShow;
+    if (savedFormType === 'form') {
+      // For type "form", show the direct link
+      const apiBase = process.env.REACT_APP_BACKEND_API_URL || 'https://app.memate.com.au/api/v1';
+      contentToShow = `${apiBase}/inquiries/form/page/${publicKey}/`;
+    } else {
+      // For type "web", show the embed code using the domain from response
+      const host = process.env.REACT_APP_URL || window.location.origin;
+      contentToShow = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${publicKey}"></` + `script>`;
+    }
+
     const embedModal = root.querySelector('#embed-modal');
     const snippetEl = root.querySelector('#embed-snippet');
     const copyBtn = root.querySelector('#copy-embed-btn');
     const closeBtn = root.querySelector('#close-embed-btn');
     const xBtn = embedModal ? embedModal.querySelector('[data-close-embed]') : null;
+    const modalTitle = embedModal ? embedModal.querySelector('.modal-header h2') : null;
+    const modalDescription = embedModal ? embedModal.querySelector('.modal-content > p') : null;
 
-    if (snippetEl) snippetEl.value = embedCode;
+    // Update modal content based on form type
+    if (modalTitle) {
+      modalTitle.textContent = savedFormType === 'form' ? 'Form Link' : 'Embed this Form';
+    }
+    if (modalDescription) {
+      modalDescription.textContent = savedFormType === 'form' 
+        ? 'Copy the link below to share your form.'
+        : 'Copy the snippet below and paste it into your website where you want the form to appear.';
+    }
+
+    if (snippetEl) snippetEl.value = contentToShow;
     if (closeBtn) closeBtn.disabled = true; // must copy before closing
     if (embedModal) embedModal.style.display = 'block';
 
     const doCopy = async () => {
       try {
-        await navigator.clipboard.writeText(embedCode);
+        await navigator.clipboard.writeText(contentToShow);
       } catch (_) {
         // Fallback for older browsers
         if (snippetEl && snippetEl.select) {
@@ -1089,13 +1116,13 @@ function buildApiPayload() {
   }));
 
   const get = id => (root.querySelector('#' + id)?.value || '').trim();
+  const formType = get('form-type') || 'web';
 
   const payload = {
     organization: defaultOrgId, // hard default as requested
     title: get('form-title'),
     description: get('form-description'),
-    type: get('form-type') || 'web',
-    domain: get('form-domain'),
+    type: formType,
     submit_to: get('form-submit-to'),
     submit_from: get('form-submit-from'),
     cc_email: get('form-cc-email'),
@@ -1104,10 +1131,15 @@ function buildApiPayload() {
     error_message: get('form-error-message') || 'Something went wrong. Please try again later.',
     submit_button_label: get('form-submit-label') || 'Submit',
     custom_css: cssTextarea?.value ?? '',
-    recaptcha_site_key: get('form-recaptcha-key'),
-    recaptcha_secret_key: get('form-recaptcha-secret'),
     fields
   };
+
+  // Only include domain and reCAPTCHA fields for 'web' type forms
+  if (formType === 'web') {
+    payload.domain = get('form-domain');
+    payload.recaptcha_site_key = get('form-recaptcha-key');
+    payload.recaptcha_secret_key = get('form-recaptcha-secret');
+  }
 
   const redirect = get('form-redirect-url');
   if (redirect) payload.redirect_url = redirect;

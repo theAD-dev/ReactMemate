@@ -35,7 +35,7 @@ const StatisticsPage = () => {
                     <ClipboardData color='#084095' size={16} className='me-2' />
                     <span className={style.topbartext}>Reports</span>
                 </Link>
-                <Link className={clsx('d-flex align-items-center px-2 py-1', style.disabledLink)}>
+                <Link to={"/statistics/google-analytics"} className={clsx('d-flex align-items-center px-2 py-1')}>
                     <Google color='#F79009' size={16} className='me-2' />
                     <span className={style.topbartext}>GA Widgets</span>
                 </Link>
@@ -93,7 +93,7 @@ const StatisticsPage = () => {
                             Offers various reports to assist in analysing business directions and the details of money flow.
                         </p>
                     </Link>
-                    <Link className={clsx(style.box, style.disabledLink)}>
+                    <Link to={"/statistics/google-analytics"} className={clsx(style.box)}>
                         <div className={clsx(style.executiveBox, style.executiveBox6)}>
                             <Google color='#F79009' size={40} />
                         </div>

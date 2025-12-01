@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toast } from 'sonner';
 import { getFormById } from './api';
-import { defaultFormStyle } from './builder/default-style';
 import { initBuilder, cleanupBuilder } from './builder/init-builder';
 import './form-builder.css';
 import { useAuth } from '../../../../app/providers/auth-provider';
@@ -59,6 +58,7 @@ export default function TempFormBuilder() {
   const [searchTerm, setSearchTerm] = useState('');
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('designer'); // 'designer' or 'preview'
+  const [formType, setFormType] = useState('web');
 
   // Field types data
   const fieldTypes = [
@@ -117,22 +117,21 @@ export default function TempFormBuilder() {
         if (editId) {
           const formJson = await getFormById(editId);
           console.log('formJson: ', formJson);
+          // Set form type from loaded data
+          setFormType(formJson.type || 'web');
           initBuilder({
             defaultOrgId: orgId,
-            getDefaultCss: () => defaultFormStyle,
             initialForm: formJson,
           });
         } else {
           initBuilder({
             defaultOrgId: orgId,
-            getDefaultCss: () => defaultFormStyle,
           });
         }
       } catch (e) {
         console.error('Failed to load form for editing:', e);
         initBuilder({
           defaultOrgId: orgId,
-          getDefaultCss: () => defaultFormStyle,
         });
       }
     }, 100);
@@ -325,7 +324,7 @@ export default function TempFormBuilder() {
                 <div className="property-section">
                   <div className="form-field">
                     <label>Form Type</label>
-                    <select id="form-type" defaultValue="enquiry">
+                    <select id="form-type" defaultValue="web" onChange={(e) => setFormType(e.target.value)}>
                       <option value="web">Web</option>
                       <option value="form">Form</option>
                     </select>
@@ -343,10 +342,12 @@ export default function TempFormBuilder() {
                 {/* Additional Settings */}
                 <div className="property-section">
                   <h3 className="section-title">Settings</h3>
-                  <div className="form-field">
-                    <label>Domain</label>
-                    <input id="form-domain" placeholder="Enter domain" defaultValue="https://memate.com.au/" />
-                  </div>
+                  {formType === 'web' && (
+                    <div className="form-field">
+                      <label>Domain</label>
+                      <input id="form-domain" placeholder="Enter domain" defaultValue="https://memate.com.au/" />
+                    </div>
+                  )}
                   <div className="form-field">
                     <label>To Email<span style={{ color: '#f04438' }}>*</span></label>
                     <input id="form-submit-to" placeholder="Enter email" />
@@ -387,17 +388,19 @@ export default function TempFormBuilder() {
                 </div>
 
                 {/* reCAPTCHA */}
-                <div className="property-section">
-                  <h3 className="section-title">reCAPTCHA</h3>
-                  <div className="form-field">
-                    <label>Site Key<span style={{ color: '#f04438' }}>*</span></label>
-                    <input id="form-recaptcha-key" placeholder="Enter site key" />
+                {formType === 'web' && (
+                  <div className="property-section">
+                    <h3 className="section-title">reCAPTCHA</h3>
+                    <div className="form-field">
+                      <label>Site Key<span style={{ color: '#f04438' }}>*</span></label>
+                      <input id="form-recaptcha-key" placeholder="Enter site key" />
+                    </div>
+                    <div className="form-field">
+                      <label>Secret Key<span style={{ color: '#f04438' }}>*</span></label>
+                      <input id="form-recaptcha-secret" placeholder="Enter secret key" />
+                    </div>
                   </div>
-                  <div className="form-field">
-                    <label>Secret Key<span style={{ color: '#f04438' }}>*</span></label>
-                    <input id="form-recaptcha-secret" placeholder="Enter secret key" />
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -442,7 +445,6 @@ export default function TempFormBuilder() {
                 readOnly
                 rows={4}
                 style={{
-                  width: '100%',
                   boxSizing: 'border-box',
                   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
                 }}

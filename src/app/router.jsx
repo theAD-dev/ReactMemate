@@ -29,6 +29,7 @@ const Executive = LazyLoader(lazy(() => import('../components/Business/Pages/sta
 const KeyResultsPage = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/key-results')));
 const Overview = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/overview')));
 const SalesConversion = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/sales-conversion')));
+const AnalyticsPage = LazyLoader(lazy(() => import('../components/Business/Pages/statistics/analytics')));
 const SupplierPage = LazyLoader(lazy(() => import('../components/Business/Pages/suppliers')));
 const SupplierHistoryPage = LazyLoader(lazy(() => import('../components/Business/Pages/suppliers/suppliers-history')));
 const PublicQuotation = LazyLoader(lazy(() => import('../components/Business/Pages/sales/public-quotation/quotation')));
@@ -373,6 +374,11 @@ const routes = [
                     {
                         path: "profitability",
                         element: <Profitability />,
+                        errorElement: <UnknownError />,
+                    },
+                    {
+                        path: "google-analytics",
+                        element: <AnalyticsPage />,
                         errorElement: <UnknownError />,
                     },
                 ],

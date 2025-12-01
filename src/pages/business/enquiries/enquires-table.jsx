@@ -188,7 +188,7 @@ const EnquiriesTable = forwardRef(({ searchValue, selectedSubmissions, setSelect
                     <span className='font-12' style={{ color: '#98A2B3' }}>{formatDate(rowData.submitted_at)}</span>
                 </div>
             </div>
-            <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, leadData: rowData }); }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text />
+            {/* <Button label="Open" onClick={() => { setVisible(true); setEditData({ id: rowData?.id, leadData: rowData }); }} className='primary-text-button ms-3 show-on-hover-element not-show-checked' text /> */}
         </div>;
     };
 

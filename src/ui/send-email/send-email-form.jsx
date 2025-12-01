@@ -262,7 +262,6 @@ const SendEmailForm = ({ show, setShow, contactPersons, setPayload, save, defaul
         emails = emails.filter((email) =>
             email.toLowerCase().includes(query)
         );
-        console.log('emails: ', emails);
 
         setFilteredEmails(emails);
     };

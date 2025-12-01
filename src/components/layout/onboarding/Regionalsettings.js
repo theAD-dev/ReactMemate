@@ -86,15 +86,15 @@ const Regionalsettings = () => {
         <title>MeMate - Onboarding - Regional Settings</title>
       </Helmet>
       <div className='requestDemoWrap'>
-        <div className="logohead" style={{ zIndex: 10 }}>
-          <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Loin Logo" /></Link>
-        </div>
-        <div className="copywrite">© Memate {new Date().getFullYear()}</div>
         <div className='OnboardingStep1'>
           <form>
             <div className="loginPage">
-              <div className="boxinfo">
-                <div className="boxLogin">
+              <div className="boxinfo" style={{ overflow: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div className="d-flex w-100 p-4 pb-5">
+                  <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Logo" /></Link>
+                </div>
+
+                <div className="boxLogin mb-4">
                   <h2>
                     Customize Your<br /> Regional <span>Settings</span>
                   </h2>
@@ -130,7 +130,7 @@ const Regionalsettings = () => {
 
                   {/* Address */}
                   <div className="formgroup">
-                    <label>Street Address</label>
+                    <label>Street Address<span style={{ color: "#f04438" }}>*</span></label>
                     <InputText
                       value={address}
                       className={`customInputText ${fieldErrors.address ? 'error-border' : ''}`}
@@ -233,6 +233,8 @@ const Regionalsettings = () => {
                     {!loading && <img src={arrowRight} alt="Arrow Right" />}
                   </button>
                 </div>
+
+                <div className="copy-write w-100 text-start p-4 pt-5">© Memate {new Date().getFullYear()}</div>
               </div>
 
               <div

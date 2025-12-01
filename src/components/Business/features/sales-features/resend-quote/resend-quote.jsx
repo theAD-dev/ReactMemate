@@ -43,6 +43,10 @@ const ResendQuoteEmail = ({ viewShow, setViewShow, clientId, projectId, projectC
         enabled: !!clientId && viewShow,
         retry: 1,
     });
+    const contactPersons = [
+        ...(clientQuery?.data?.contact_persons || []),
+        ...(clientQuery?.data?.email ? [{email: clientQuery?.data?.email}] : [])
+    ];
 
     const mutation = useMutation({
         mutationFn: (data) => resendQuoteEmail(projectId, data),
@@ -59,7 +63,7 @@ const ResendQuoteEmail = ({ viewShow, setViewShow, clientId, projectId, projectC
     });
 
     return (
-        <SendDynamicEmailForm show={viewShow} setShow={setViewShow} mutation={mutation} contactPersons={clientQuery?.data?.contact_persons || []} setPayload={setPayload} defaultTemplateId={"Resend Quote"} isAddingContact={isAddingContact}/>
+        <SendDynamicEmailForm show={viewShow} setShow={setViewShow} mutation={mutation} contactPersons={contactPersons} setPayload={setPayload} defaultTemplateId={"Resend Quote"} isAddingContact={isAddingContact}/>
     );
 };
 

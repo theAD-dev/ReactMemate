@@ -67,14 +67,15 @@ const Discovermemate = () => {
 
   return (
     <div className="requestDemoWrap">
-      <div className="logohead" style={{ zIndex: 10 }}>
-        <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Logo" /></Link>
-      </div>
       <div className="OnboardingStep1">
         <form onSubmit={handleSubmit}>
           <div className="loginPage">
-            <div className="boxinfo d-flex flex-column py-4" style={{ overflow: 'auto' }}>
-              <div className="boxLogin">
+            <div className="boxinfo" style={{ overflow: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="d-flex w-100 p-4 pb-5">
+                <Link to={`${process.env.REACT_APP_STATIC_WEBSITE_URL}`}><img src={LoinLogo} alt="Logo" /></Link>
+              </div>
+
+              <div className="boxLogin mb-4">
                 <h2 className="mb-3">
                   10-Day <span>Free Trial</span> Discover <span>Memate</span>
                 </h2>
@@ -139,7 +140,7 @@ const Discovermemate = () => {
                 </button>
               </div>
 
-              <div className="copywrite-n text-left w-100 mt-3 ps-4">© Memate {new Date().getFullYear()}</div>
+              <div className="copy-write w-100 text-start p-4 pt-5">© Memate {new Date().getFullYear()}</div>
             </div>
             <div
               className="sliderRight BusinessPlanwrap"
@@ -147,9 +148,12 @@ const Discovermemate = () => {
                 backgroundImage: `url(${LinepatternBottom}), url(${Linepatterntop})`,
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "left bottom, right top",
+                overflow: 'auto',
+                padding: '40px 20px',
               }}
             >
-              <div className="BusinessPlanBox" style={{ position: "relative" }}>
+
+              <div className="BusinessPlanBox" style={{ position: "relative", marginTop: '100px' }}>
                 <div className="badgePlan" style={{ position: "absolute", top: "-15px", left: "40%", fontSize: "12px", color: "#344054", fontWeight: '500' }}>
                   Cancel Anytime
                 </div>
@@ -186,6 +190,7 @@ const Discovermemate = () => {
                   without immediate charges.
                 </p>
               </div>
+
             </div>
           </div>
         </form>

@@ -6009,6 +6009,7 @@ ul.szh-menu {
   align-items: center;
   justify-content: center;
   margin-bottom: 43px;
+  gap: 10px;
 }
 
 .requestDemoWrap .step-progress .step {
@@ -6017,10 +6018,6 @@ ul.szh-menu {
   height: 8px;
   width: 135px;
   margin: 0 0px;
-}
-
-.requestDemoWrap .step-progress .step:nth-child(2) {
-  margin: 0 16px;
 }
 
 .requestDemoWrap
@@ -6510,7 +6507,7 @@ ul.szh-menu {
   margin-bottom: 32px;
   margin-top: 0;
   line-height: 44px;
-  font-size: 36px;
+  font-size: 30px;
 }
 
 .requestDemoWrap .boxinfo .boxLogin {
@@ -8728,7 +8725,7 @@ ul.activeListPassword li.active {
   color: var(--color1);
   display: inline-block;
   margin: 0;
-  font-size: 36px;
+  font-size: 30px;
 }
 
 .logohead {

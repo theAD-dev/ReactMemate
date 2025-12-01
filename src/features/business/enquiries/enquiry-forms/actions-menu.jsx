@@ -15,21 +15,42 @@ const ActionsMenu = ({ rowData, setRefetch }) => {
     const anchorProps = useClick(isOpen, setOpen);
 
     const handleCopyEmbed = async () => {
-        const host = process.env.REACT_APP_URL || window.location.origin;
-        const snippet = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${rowData.id}"></` + `script>`;
+        const publicKey = rowData.public_key;
+        
+        // Check if public_key exists
+        if (!publicKey) {
+            toast.error('Public key not available for this form');
+            setOpen(false);
+            return;
+        }
+
+        let contentToCopy;
+        let successMessage;
+
+        if (rowData.type === 'form') {
+            // For type "form", copy the direct link
+            const apiBase = process.env.REACT_APP_BACKEND_API_URL || 'https://app.memate.com.au/api/v1';
+            contentToCopy = `${apiBase}/inquiries/form/page/${publicKey}/`;
+            successMessage = 'Form link copied to clipboard';
+        } else {
+            // For type "web", copy the embed code
+            const host =  process.env.REACT_APP_URL || window.location.origin;
+            contentToCopy = `<script src="${host}/astatic/inquiries/embed.js" data-form-id="${publicKey}"></` + `script>`;
+            successMessage = 'Embed code copied to clipboard';
+        }
 
         try {
-            await navigator.clipboard.writeText(snippet);
-            toast.success('Embed code copied to clipboard');
+            await navigator.clipboard.writeText(contentToCopy);
+            toast.success(successMessage);
         } catch (error) {
             // Fallback for browsers that don't support clipboard API
             const ta = document.createElement('textarea');
-            ta.value = snippet;
+            ta.value = contentToCopy;
             document.body.appendChild(ta);
             ta.select();
             document.execCommand && document.execCommand('copy');
             document.body.removeChild(ta);
-            toast.success('Embed code copied to clipboard');
+            toast.success(successMessage);
         } finally {
             setOpen(false);
         }
@@ -81,7 +102,9 @@ const ActionsMenu = ({ rowData, setRefetch }) => {
                         onClick={handleCopyEmbed}
                     >
                         <Copy color='#667085' size={20} />
-                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>Copy Embed</span>
+                        <span style={{ color: '#101828', fontSize: '16px', fontWeight: 500 }}>
+                            {rowData.type === 'form' ? 'Copy Link' : 'Copy Embed'}
+                        </span>
                     </div>
 
                     <div
