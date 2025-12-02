@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'react-bootstrap-icons';
+import { X, Envelope, Telephone, Person, Calendar, FileText } from 'react-bootstrap-icons';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -26,7 +26,15 @@ const formatDate = (timestamp) => {
     return formatter.format(date);
 };
 
+const formatFieldLabel = (key) => {
+    return key
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+};
+
 const ViewEnquiryLead = ({ visible, editData, onClose }) => {
+    console.log('editData: ', editData);
     const [isFetching] = useState(false);
     const [leadData, setLeadData] = useState(null);
 
@@ -57,118 +65,177 @@ const ViewEnquiryLead = ({ visible, editData, onClose }) => {
             enforceFocus={false}
             size="xl"
         >
-            <Modal.Header className="mb-0 pb-0 justify-content-between">
-                <div className="modelHeader" style={{ flex: '1', maxWidth: "calc(100% - 100px)" }}>
-                    <ul className='d-flex align-items-center'>
-                        <li className='me-1 d-flex align-items-center'>
-                            <span className='cardId text-nowrap' style={{ fontSize: '18px', fontWeight: 600, color: '#101828' }}>
-                                Lead Details
-                            </span>
-                        </li>
-                    </ul>
+            <Modal.Header className={style.modalHeader}>
+                <div className={style.headerContent}>
+                    <div className={style.headerIcon}>
+                        <FileText size={20} color="#17B26A" />
+                    </div>
+                    <div className={style.headerText}>
+                        <h2 className={style.headerTitle}>Lead Details</h2>
+                        {leadData?.form_title && (
+                            <p className={style.headerSubtitle}>{leadData.form_title}</p>
+                        )}
+                    </div>
                 </div>
-                <div className='d-flex align-items-center' style={{ gap: '15px' }}>
-                    <button className='CustonCloseModal' onClick={handleClose}>
-                        <X size={24} color='#667085' />
-                    </button>
-                </div>
+                <button className={style.closeButton} onClick={handleClose} aria-label="Close">
+                    <X size={24} />
+                </button>
             </Modal.Header>
             <Modal.Body className='p-0'>
-                <div className="ContactModel">
-                    <Row className="text-left mt-0 projectCardMain">
-                        <Col sm={6} className='orderDiscription'>
-                            <strong>Lead Information</strong>
-                            <div className='customScrollBar'>
+                <div className={style.modalContent}>
+                    <Row className="g-0">
+                        <Col lg={6} className={style.leftColumn}>
+                            <div className={style.sectionHeader}>
+                                <h3>Lead Information</h3>
+                            </div>
+                            <div className={style.scrollContainer}>
                                 {isFetching ? (
-                                    <ProgressSpinner style={{ width: '30px', height: '30px' }} />
+                                    <div className={style.loadingContainer}>
+                                        <ProgressSpinner style={{ width: '40px', height: '40px' }} />
+                                    </div>
                                 ) : (
                                     <div className={style.leadInfoSection}>
-                                        <div className={style.infoRow}>
-                                            <span className={style.label}>Form Title:</span>
-                                            <span className={style.value}>{leadData?.form_title || '-'}</span>
+                                        {/* Primary Contact Information */}
+                                        {leadData?.data?.name && (
+                                            <div className={style.infoCard}>
+                                                <div className={style.infoIcon}>
+                                                    <Person size={18} />
+                                                </div>
+                                                <div className={style.infoContent}>
+                                                    <span className={style.infoLabel}>Name</span>
+                                                    <span className={style.infoValue}>{leadData.data.name}</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {leadData?.data?.email && (
+                                            <div className={style.infoCard}>
+                                                <div className={style.infoIcon}>
+                                                    <Envelope size={18} />
+                                                </div>
+                                                <div className={style.infoContent}>
+                                                    <span className={style.infoLabel}>Email</span>
+                                                    <a href={`mailto:${leadData.data.email}`} className={style.infoLink}>
+                                                        {leadData.data.email}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {leadData?.data?.phone && (
+                                            <div className={style.infoCard}>
+                                                <div className={style.infoIcon}>
+                                                    <Telephone size={18} />
+                                                </div>
+                                                <div className={style.infoContent}>
+                                                    <span className={style.infoLabel}>Phone</span>
+                                                    <a href={`tel:${leadData.data.phone}`} className={style.infoLink}>
+                                                        {leadData.data.phone}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Form Metadata */}
+                                        <div className={style.divider}>
+                                            <span>Form Details</span>
                                         </div>
+
                                         <div className={style.infoRow}>
-                                            <span className={style.label}>Form Type:</span>
-                                            <span className={style.value}>
+                                            <span className={style.label}>Form Type</span>
+                                            <span className={style.badge}>
                                                 {leadData?.form_type === 'web' ? 'Web Form' : 'Custom Form'}
                                             </span>
                                         </div>
-                                        <div className={style.infoRow}>
-                                            <span className={style.label}>Submitted At:</span>
-                                            <span className={style.value}>{formatDate(leadData?.submitted_at)}</span>
-                                        </div>
-                                        <div className={style.infoRow}>
-                                            <span className={style.label}>Name:</span>
-                                            <span className={style.value}>{leadData?.data?.name || '-'}</span>
-                                        </div>
-                                        <div className={style.infoRow}>
-                                            <span className={style.label}>Email:</span>
-                                            <span className={style.value}>{leadData?.data?.email || '-'}</span>
-                                        </div>
-                                        <div className={style.infoRow}>
-                                            <span className={style.label}>Phone:</span>
-                                            <span className={style.value}>{leadData?.data?.phone || '-'}</span>
-                                        </div>
-                                        
-                                        {/* Display other form fields */}
-                                        {leadData?.data && Object.entries(leadData.data).map(([key, value]) => {
-                                            if (!['name', 'email', 'phone'].includes(key) && value) {
-                                                return (
-                                                    <div key={key} className={style.infoRow}>
-                                                        <span className={style.label}>
-                                                            {key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}:
-                                                        </span>
-                                                        <span className={style.value}>{value}</span>
-                                                    </div>
-                                                );
-                                            }
-                                            return null;
-                                        })}
 
-                                        {leadData?.assigned_to && (
+                                        {leadData?.submitted_at && (
                                             <div className={style.infoRow}>
-                                                <span className={style.label}>Assigned To:</span>
+                                                <span className={style.label}>Submitted At</span>
                                                 <span className={style.value}>
-                                                    {leadData.assigned_to.first_name} {leadData.assigned_to.last_name}
+                                                    <Calendar size={14} className="me-1" />
+                                                    {formatDate(leadData.submitted_at)}
                                                 </span>
                                             </div>
+                                        )}
+
+                                        {/* Additional Form Fields - Table Format */}
+                                        {leadData?.data && Object.entries(leadData.data).filter(([key, value]) => 
+                                            !['name', 'email', 'phone'].includes(key) && value
+                                        ).length > 0 && (
+                                            <div className={style.tableContainer}>
+                                                <table className={style.dataTable}>
+                                                    <tbody>
+                                                        {Object.entries(leadData.data).map(([key, value]) => {
+                                                            if (!['name', 'email', 'phone'].includes(key) && value) {
+                                                                return (
+                                                                    <tr key={key}>
+                                                                        <td className={style.tableLabel}>{formatFieldLabel(key)}</td>
+                                                                        <td className={style.tableValue}>{value}</td>
+                                                                    </tr>
+                                                                );
+                                                            }
+                                                            return null;
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
+
+                                        {/* Assignment Information */}
+                                        {leadData?.assigned_to && (
+                                            <>
+                                                <div className={style.divider}>
+                                                    <span>Assignment</span>
+                                                </div>
+                                                <div className={style.infoRow}>
+                                                    <span className={style.label}>Assigned To</span>
+                                                    <span className={style.value}>
+                                                        {leadData.assigned_to.first_name} {leadData.assigned_to.last_name}
+                                                    </span>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                 )}
                             </div>
                         </Col>
-                        <Col sm={6} className='projectHistoryCol'>
-                            <Row>
-                                <Col className='tabModelMenu d-flex justify-content-between align-items-center p-0'>
-                                    <AddNote submissionId={editData?.id} />
-                                    <NewTask submission={leadData} reInitialize={reInitialize} />
-                                    <SendSMS submissionId={editData?.id} phone={leadData?.data?.phone} />
-                                    <ComposeEmail submissionId={editData?.id} email={leadData?.data?.email} />
-                                </Col>
-                            </Row>
-                            <Row className='projectHistoryWrap'>
-                                <Col className='p-0'>
+                        <Col lg={6} className={style.rightColumn}>
+                            <div className={style.actionsRow}>
+                                <AddNote submissionId={editData?.id} />
+                                <NewTask submission={leadData} reInitialize={reInitialize} />
+                                <SendSMS submissionId={editData?.id} phone={leadData?.data?.phone} />
+                                <ComposeEmail submissionId={editData?.id} email={leadData?.data?.email} />
+                            </div>
+                            <div className={style.activitySection}>
+                                <div className={style.sectionHeader}>
                                     <h3>Activity History</h3>
-                                    <div className='projectHistoryScroll'>
-                                        {/* TODO: Implement activity history */}
-                                        <div className='projectHistorygroup'>
-                                            <p style={{ color: '#98A2B3', fontSize: '14px' }}>
-                                                No activity history available yet.
-                                            </p>
+                                </div>
+                                <div className={style.activityScroll}>
+                                    {/* TODO: Implement activity history */}
+                                    <div className={style.emptyState}>
+                                        <div className={style.emptyIcon}>
+                                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="48" height="48" rx="24" fill="#F9FAFB"/>
+                                                <path d="M24 16V32M16 24H32" stroke="#98A2B3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
                                         </div>
+                                        <p className={style.emptyText}>No activity history available yet.</p>
+                                        <p className={style.emptySubtext}>
+                                            Activities like notes, tasks, emails, and SMS will appear here.
+                                        </p>
                                     </div>
-                                </Col>
-                            </Row>
+                                </div>
+                            </div>
                         </Col>
                     </Row>
                 </div>
             </Modal.Body>
-            <Modal.Footer className='d-flex justify-content-end gap-2 border-top pt-3'>
-                <Button variant="outline-secondary" onClick={handleClose}>
+            <Modal.Footer className={style.modalFooter}>
+                <Button className="outline-button" onClick={handleClose}>
                     Close
                 </Button>
                 <Button 
-                    variant="primary" 
+                    className="solid-button"
                     onClick={() => {
                         // TODO: Implement move to quote functionality
                         console.log('Move to Quote clicked');
