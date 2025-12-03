@@ -110,13 +110,15 @@
   }
 
   div {
+    width: 25px;
+    height: 25px;
     display: flex;
-    padding: 2px 8px;
+    justify-content: center;
     align-items: center;
-    border-radius: 16px;
-    border: 1px solid var(--gray-200, #eaecf0);
-    background: var(--gray-50, #f9fafb);
-    color: var(--gray-700, #344054);
+    border-radius: 40px;
+    border: 1px solid #FDB022;
+    background: #FDB022;
+    color: #fff;
     text-align: center;
     font-family: Inter;
     font-size: 12px;

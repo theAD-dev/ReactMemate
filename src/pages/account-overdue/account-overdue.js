@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { ArrowLeftShort, BoxArrowRight } from 'react-bootstrap-icons';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from 'primereact/button';
 import { Skeleton } from 'primereact/skeleton';
@@ -10,6 +12,7 @@ import ChangePaymentMethod from '../../components/layout/settings/subscription/f
 import { formatAUD } from '../../shared/lib/format-aud';
 
 const AccountOverdue = () => {
+    const navigate = useNavigate();
     const profileData = JSON.parse(window.localStorage.getItem('profileData') || '{}');
     const isAdmin = !(profileData?.type === "Admin") ? true : false;
     const [visible, setVisible] = useState(false);
@@ -30,19 +33,20 @@ const AccountOverdue = () => {
         mutationFn: retryPayment,
         onSuccess: () => {
             toast.success(`Retry payment updated successfully.`);
+            navigate("/");
         },
         onError: (error) => {
             console.log('Error during retrying payment: ', error);
-            
+
             // Extract error message from the error object
             let errorMessage = 'Failed to retry payment. Please try again.';
-            
+
             if (error?.data?.detail) {
                 errorMessage = error.data.detail;
             } else if (error?.message) {
                 errorMessage = error.message;
             }
-            
+
             // Display the error message
             toast.error(errorMessage);
         }
@@ -53,8 +57,13 @@ const AccountOverdue = () => {
     return (
         <>
             <Row className='w-100 p-0 m-0'>
-                <Col sm={6} className={styles.leftSection}>
-                    <div className="logohead"><img src="/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt="Loin Logo" /></div>
+                <Col sm={6} className={styles.leftSection} style={{ position: 'relative' }}>
+                    <div className="logohead">
+                        <img src="/static/media/logo.ffcbd441341cd06abd1f3477ebf7a12a.svg" alt="Loin Logo" />
+                    </div>
+
+                    <Link to={"/logout"}><Button className='outline-button' style={{ position: 'absolute', top: '15px', right: '15px', fontSize: '14px' }}>Logout <BoxArrowRight size={18} color='#344054' /></Button></Link>
+
                     <div style={{ width: 'fit-content', maxWidth: "calc(100% - 0px)" }} className='d-flex flex-column justify-content-center text-center mx-auto'>
                         <div className={styles.topHeading}>
                             <h1 className={styles.heading}>Your Account Overdue</h1>
@@ -84,6 +93,10 @@ const AccountOverdue = () => {
                         <button className={styles.payButton} onClick={handleRetryPayment} disabled={mutation.isPending}>
                             {mutation.isPending ? "Loading..." : `Retry payment - $${formatAUD(upcomingPaymentQuery?.data?.total || 0)}`}
                         </button>
+                        <Link className="backToLogin" to="/login" style={{ color: '#475467', fontWeight: '600', fontSize: '14px', marginTop: '32px' }}>
+                            <ArrowLeftShort color="#475467" size={20} />
+                            Back to log in
+                        </Link>
                     </div>
                     <div className="copywrite">© Memate {new Date().getFullYear()}</div>
                 </Col>
