@@ -27,6 +27,7 @@ import ComposeEmail from './compose-email/compose-email';
 import FilesModel from './files-management/files-model';
 import GoogleReviewEmail from './google-review/google-review';
 import InvoiceCreate from './invoice-create/invoice-create';
+import MailchimpIntegration from './mailchimp/mailchimp-integration';
 import NewTask from './new-task';
 import ProjectCardFilter from './project-card-filter';
 import ScheduleUpdate from './schedule-update';
@@ -485,11 +486,15 @@ const ProjectCardModel = ({ viewShow, setViewShow, projectId, project, statusOpt
             </ul>
           </div>
           <div className='d-flex align-items-center' style={{ gap: '15px' }}>
+            <MailchimpIntegration 
+              projectId={projectId}
+              clientEmail={cardData?.email}
+              clientName={cardData?.client?.name}
+            />
+            
             <Link to={`/api/v1/project-card/${projectId}/pdf/`} target='_blank'>
               <Button variant="light" className='rounded-circle px-2' title='Project Card'><Postcard color="#344054" size={20} /></Button>
-            </Link>
-
-            <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
+            </Link>            <Link to={`/api/v1/sales/${projectId}/label/`} target='_blank' title='Label'>
               <Button variant="light" className='rounded-circle px-2'><Tag color="#344054" size={20} /></Button>
             </Link>
 
